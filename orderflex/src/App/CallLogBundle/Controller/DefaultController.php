@@ -21,9 +21,10 @@ use App\CallLogBundle\Form\CalllogMessageCacheType;
 use App\OrderformBundle\Entity\Message;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,8 +106,7 @@ class DefaultController extends OrderAbstractController
 
 //    /**
 //     * Resources
-//     * @Route("/check-encounter-location/", name="calllog_check_encounter_location", options={"expose"=true})
-//     * @Method("POST")
+//     * @Route("/check-encounter-location/", name="calllog_check_encounter_location", methods={"POST"}, options={"expose"=true})
 //     */
 //    public function checkLocationAction(Request $request)
 //    {

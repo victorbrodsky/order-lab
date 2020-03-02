@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class UploadController extends OrderAbstractController {
 
-    //@Method("DELETE") causes problem: no permission
+    //Method("DELETE") causes problem: no permission
     /**
      * @Route("/file-delete", name="employees_file_delete", methods={"GET", "POST", "DELETE"})
      */

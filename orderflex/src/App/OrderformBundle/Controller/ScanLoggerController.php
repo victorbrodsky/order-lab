@@ -20,9 +20,10 @@ namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Form\LoggerType;
 
@@ -39,8 +40,7 @@ class ScanLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      *
-     * @Route("/", name="scan_logger")
-     * @Method("GET")
+     * @Route("/", name="scan_logger", methods={"GET"})
      * @Template("AppOrderformBundle/Logger/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -51,8 +51,7 @@ class ScanLoggerController extends LoggerController
 
 
     /**
-     * @Route("/user/{id}/all", name="scan_logger_user_all")
-     * @Method("GET")
+     * @Route("/user/{id}/all", name="scan_logger_user_all", methods={"GET"})
      * @Template("AppOrderformBundle/Logger/index.html.twig")
      */
     public function getAuditLogAllAction(Request $request)

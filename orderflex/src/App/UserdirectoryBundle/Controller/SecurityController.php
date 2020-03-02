@@ -53,7 +53,7 @@ class SecurityController extends OrderAbstractController
 //    }
 
     /**
-     * //@Method("GET")
+     * //Method("GET")
      *
      * @Route("/directory/login", name="directory_login")
      * @Route("/login", name="employees_login")

@@ -19,9 +19,10 @@ namespace App\OrderformBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\OrderformBundle\Entity\Status;
 use App\OrderformBundle\Form\StatusType;
 
@@ -36,8 +37,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Lists all Status entities.
 //     *
-//     * @Route("/", name="status")
-//     * @Method("GET")
+//     * @Route("/", name="status", methods={"GET"})
 //     * @Template()
 //     */
 //    public function indexAction()
@@ -53,8 +53,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Creates a new Status entity.
 //     *
-//     * @Route("/", name="status_create")
-//     * @Method("POST")
+//     * @Route("/", name="status_create", methods={"POST"})
 //     * @Template("AppOrderformBundle/Status/new.html.twig")
 //     */
 //    public function createAction(Request $request)
@@ -99,8 +98,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Displays a form to create a new Status entity.
 //     *
-//     * @Route("/new", name="status_new")
-//     * @Method("GET")
+//     * @Route("/new", name="status_new", methods={"GET"})
 //     * @Template()
 //     */
 //    public function newAction()
@@ -117,8 +115,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Finds and displays a Status entity.
 //     *
-//     * @Route("/{id}", name="status_show")
-//     * @Method("GET")
+//     * @Route("/{id}", name="status_show", methods={"GET"})
 //     * @Template()
 //     */
 //    public function showAction($id)
@@ -142,8 +139,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Displays a form to edit an existing Status entity.
 //     *
-//     * @Route("/{id}/edit", name="status_edit")
-//     * @Method("GET")
+//     * @Route("/{id}/edit", name="status_edit", methods={"GET"})
 //     * @Template()
 //     */
 //    public function editAction($id)
@@ -187,8 +183,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Edits an existing Status entity.
 //     *
-//     * @Route("/{id}", name="status_update")
-//     * @Method("PUT")
+//     * @Route("/{id}", name="status_update", methods={"PUT"})
 //     * @Template("AppOrderformBundle/Status/edit.html.twig")
 //     */
 //    public function updateAction(Request $request, $id)
@@ -220,8 +215,7 @@ class StatusController extends OrderAbstractController
 //    /**
 //     * Deletes a Status entity.
 //     *
-//     * @Route("/{id}", name="status_delete")
-//     * @Method("DELETE")
+//     * @Route("/{id}", name="status_delete", methods={"DELETE"})
 //     */
 //    public function deleteAction(Request $request, $id)
 //    {

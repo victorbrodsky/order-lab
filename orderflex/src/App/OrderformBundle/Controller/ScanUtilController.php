@@ -21,8 +21,9 @@ use App\UserdirectoryBundle\Controller\UtilController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\OrderformBundle\Helper\FormHelper;
@@ -37,8 +38,7 @@ use App\OrderformBundle\Helper\FormHelper;
 class ScanUtilController extends UtilController {
 
     /**
-     * @Route("/common/generic/{name}", name="scan_get_generic_select2")
-     * @Method("GET")
+     * @Route("/common/generic/{name}", name="scan_get_generic_select2", methods={"GET"})
      */
     public function getGenericAction( Request $request, $name ) {
 
@@ -83,8 +83,7 @@ class ScanUtilController extends UtilController {
 ////////////////// we can convert almost all functions below to use getGenericAction method by using js getComboboxGeneric(null,'embedderinstruction',_embedderinstruction,false,'','scan');
 
     /**
-     * @Route("/stain", name="get-stain")
-     * @Method("GET")
+     * @Route("/stain", name="get-stain", methods={"GET"})
      */
     public function getStainsAction(Request $request) {
 
@@ -130,8 +129,7 @@ class ScanUtilController extends UtilController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/procedure", name="get-procedure")
-     * @Method("GET")
+     * @Route("/procedure", name="get-procedure", methods={"GET"})
      */
     public function getProcedureAction(Request $request) {
 
@@ -170,8 +168,7 @@ class ScanUtilController extends UtilController {
     }
     
     /**
-     * @Route("/organ", name="get-organ")
-     * @Method("GET")
+     * @Route("/organ", name="get-organ", methods={"GET"})
      */
     public function getOrgansAction(Request $request) {
 
@@ -208,8 +205,7 @@ class ScanUtilController extends UtilController {
 
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/scanregion", name="get-scanregion")
-     * @Method("GET")
+     * @Route("/scanregion", name="get-scanregion", methods={"GET"})
      */
     public function getScanRegionAction(Request $request) {
 
@@ -323,8 +319,7 @@ class ScanUtilController extends UtilController {
     
     /**
      * Displays a form to create a new Message + Scan entities.
-     * @Route("/delivery", name="get-orderdelivery")
-     * @Method("GET")
+     * @Route("/delivery", name="get-orderdelivery", methods={"GET"})
      */
     public function getOrderDeliveryAction(Request $request) {
 
@@ -417,8 +412,7 @@ class ScanUtilController extends UtilController {
 
 
     /**
-     * @Route("/partname", name="get-partname")
-     * @Method("GET")
+     * @Route("/partname", name="get-partname", methods={"GET"})
      */
     public function getPartnameAction(Request $request) {
 
@@ -454,8 +448,7 @@ class ScanUtilController extends UtilController {
     }
 
     /**
-     * @Route("/blockname", name="get-blockname")
-     * @Method("GET")
+     * @Route("/blockname", name="get-blockname", methods={"GET"})
      */
     public function getBlocknameAction(Request $request) {
 
@@ -491,8 +484,7 @@ class ScanUtilController extends UtilController {
     }
 
     /**
-     * @Route("/accessiontype", name="get-accessiontype")
-     * @Method("GET")
+     * @Route("/accessiontype", name="get-accessiontype", methods={"GET"})
      */
     public function getAccessionTypeAction(Request $request) {
 
@@ -535,8 +527,7 @@ class ScanUtilController extends UtilController {
     }
 
     /**
-     * @Route("/mrntype", name="get-mrntype")
-     * @Method("GET")
+     * @Route("/mrntype", name="get-mrntype", methods={"GET"})
      */
     public function getMrnTypeAction(Request $request) {
 
@@ -596,8 +587,7 @@ class ScanUtilController extends UtilController {
 
 
     /**
-     * @Route("/slidetype", name="get-slidetype")
-     * @Method("GET")
+     * @Route("/slidetype", name="get-slidetype", methods={"GET"})
      */
     public function getSlideTypesAction(Request $request) {
 
@@ -622,9 +612,8 @@ class ScanUtilController extends UtilController {
 
 
     /**
-     * @Route("/optionalusereducational", name="get-optionalusereducational")
-     * @Route("/optionaluserresearch", name="get-optionaluserresearch")
-     * @Method("GET")
+     * @Route("/optionalusereducational", name="get-optionalusereducational", methods={"GET"})
+     * @Route("/optionaluserresearch", name="get-optionaluserresearch", methods={"GET"})
      */
     public function getOptionalUserAction(Request $request) {
 
@@ -708,8 +697,7 @@ class ScanUtilController extends UtilController {
 
 
     /**
-     * @Route("/account", name="get-account")
-     * @Method("GET")
+     * @Route("/account", name="get-account", methods={"GET"})
      */
     public function getAccountAction(Request $request) {
 
@@ -742,8 +730,7 @@ class ScanUtilController extends UtilController {
 
 
     /**
-     * @Route("/urgency", name="get-urgency")
-     * @Method("GET")
+     * @Route("/urgency", name="get-urgency", methods={"GET"})
      */
     public function getUrgencyAction(Request $request) {
 
@@ -778,8 +765,7 @@ class ScanUtilController extends UtilController {
     }
 
     /**
-     * @Route("/returnlocation", name="scan_get_returnlocation")
-     * @Method("GET")
+     * @Route("/returnlocation", name="scan_get_returnlocation", methods={"GET"})
      */
     public function getReturnLocationAction(Request $request) {
 
@@ -874,8 +860,7 @@ class ScanUtilController extends UtilController {
      * TODO: optimize this function. Error: Out of memory: https://c.med.cornell.edu/order/scan/util/common/encounterReferringProvider?cycle=new&sitename=call-log-book
      *
      * Get all users and user wrappers combined
-     * @Route("/common/proxyuser", name="scan_get_proxyuser")
-     * @Method("GET")
+     * @Route("/common/proxyuser", name="scan_get_proxyuser", methods={"GET"})
      */
     public function getProxyusersAction(Request $request) {
 
@@ -1038,8 +1023,7 @@ class ScanUtilController extends UtilController {
 
     /**
      * Get all users and user wrappers combined
-     * @Route("/common/encounterReferringProvider", name="scan_get_encounterReferringProvider")
-     * @Method("GET")
+     * @Route("/common/encounterReferringProvider", name="scan_get_encounterReferringProvider", methods={"GET"})
      */
     public function getEncounterReferringProvidersAction(Request $request) {
         //echo "get encounterReferringProvider<br>";
@@ -1048,8 +1032,7 @@ class ScanUtilController extends UtilController {
 
     /**
      * Get all users and user wrappers combined
-     * @Route("/common/encounterAttendingPhysician", name="scan_get_encounterAttendingPhysician")
-     * @Method("GET")
+     * @Route("/common/encounterAttendingPhysician", name="scan_get_encounterAttendingPhysician", methods={"GET"})
      */
     public function getEncounterAttendingPhysiciansAction(Request $request) {
         //echo "get encounterReferringProvider<br>";
@@ -1057,8 +1040,7 @@ class ScanUtilController extends UtilController {
     }
 
     /**
-     * @Route("/common/get-encounter-referring-provider/", name="scan_get_encounterreferringprovider", options={"expose"=true})
-     * @Method("GET")
+     * @Route("/common/get-encounter-referring-provider/", name="scan_get_encounterreferringprovider", methods={"GET"}, options={"expose"=true})
      */
     public function getEncounterReferringProviderByNameAction(Request $request) {
 

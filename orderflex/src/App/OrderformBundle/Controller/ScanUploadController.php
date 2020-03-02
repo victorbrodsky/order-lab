@@ -26,9 +26,9 @@ namespace App\OrderformBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\UploadController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,16 +37,14 @@ use Symfony\Component\HttpFoundation\Response;
 class ScanUploadController extends UploadController {
 
     /**
-     * @Route("/file-delete", name="scan_file_delete")
-     * @Method({"GET", "POST", "DELETE"})
+     * @Route("/file-delete", name="scan_file_delete", methods={"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
 
     /**
-     * @Route("/file-download/{id}/{eventtype}", name="scan_file_download", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-download/{id}/{eventtype}", name="scan_file_download", methods={"GET"}, requirements={"id" = "\d+"})
      */
     public function downloadFileAction(Request $request, $id, $eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype);
@@ -55,8 +53,7 @@ class ScanUploadController extends UploadController {
     /**
      * $id - document id
      *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="scan_file_view", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/file-view/{id}/{viewType}/{eventtype}", methods={"GET"}, name="scan_file_view", requirements={"id" = "\d+"})
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('scan.sitename'),$eventtype,$viewType);
@@ -79,8 +76,7 @@ class ScanUploadController extends UploadController {
 
 
     /**
-     * @Route("/image-viewer/{system}/{type}/{tablename}/{imageid}", name="scan_image_viewer", requirements={"imageid" = "\d+"})
-     * @Method("GET")
+     * @Route("/image-viewer/{system}/{type}/{tablename}/{imageid}", name="scan_image_viewer", methods={"GET"}, requirements={"imageid" = "\d+"})
      */
     public function imageFileAction($system,$type,$tablename,$imageid) {
 

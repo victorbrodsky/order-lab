@@ -18,9 +18,10 @@
 namespace App\OrderformBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,9 +39,8 @@ class ScanUserController extends UserController
 {
 
     /**
-     * @Route("/users", name="scan_listusers")
-     * @Route("/users/previous", name="scan_listusers_previous")
-     * @Method("GET")
+     * @Route("/users", name="scan_listusers", methods={"GET"})
+     * @Route("/users/previous", name="scan_listusers_previous", methods={"GET"})
      * @Template("AppOrderformBundle/Admin/users.html.twig")
      */
     public function indexUserAction(Request $request)
@@ -66,8 +66,7 @@ class ScanUserController extends UserController
 
 
     /**
-     * @Route("/user/{id}", name="scan_showuser", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/user/{id}", name="scan_showuser", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function showUserAction(Request $request, $id)
@@ -100,8 +99,7 @@ class ScanUserController extends UserController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="scan_user_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/edit-user-profile/{id}", name="scan_user_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function editUserAction(Request $request, $id)
@@ -134,8 +132,7 @@ class ScanUserController extends UserController
     }
 
     /**
-     * @Route("/edit-user-profile/{id}", name="scan_user_update")
-     * @Method("PUT")
+     * @Route("/edit-user-profile/{id}", name="scan_user_update", methods={"PUT"})
      * @Template("AppOrderformBundle/Profile/edit_user.html.twig")
      */
     public function updateUserAction(Request $request, $id)
@@ -278,8 +275,7 @@ class ScanUserController extends UserController
 
 
     /**
-     * @Route("/lockunlock/change/{id}/{status}", name="scan_lockunlock_change", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/lockunlock/change/{id}/{status}", name="scan_lockunlock_change", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template()
      */
     public function lockUnlockChangeAction(Request $request, $id, $status) {
@@ -309,8 +305,7 @@ class ScanUserController extends UserController
 ////////////////////////// Below Controller methods for scan site-settings only. Currently not used. ///////////////////////////////////////
 
     /**
-     * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/site-settings/show/user/{id}", name="scan_order_settings_show", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function showScanSettingsAction($id)
@@ -324,8 +319,7 @@ class ScanUserController extends UserController
     }
 
     /**
-     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_edit", requirements={"id" = "\d+"})
-     * @Method("GET")
+     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_edit", methods={"GET"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function editScanSettingsAction($id)
@@ -399,8 +393,7 @@ class ScanUserController extends UserController
     }
 
     /**
-     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_update", requirements={"id" = "\d+"})
-     * @Method("PUT")
+     * @Route("/site-settings/edit/user/{id}", name="scan_order_settings_update", methods={"PUT"}, requirements={"id" = "\d+"})
      * @Template("AppOrderformBundle/Admin/site-settings.html.twig")
      */
     public function updateScanSettingsAction(Request $request, $id)

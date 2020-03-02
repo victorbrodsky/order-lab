@@ -55,8 +55,7 @@ class ScanOrderController extends OrderAbstractController {
     /**
      * Lists all Message entities.
      *
-     * @Route("/", name="scan_home")
-     * @Method("GET")
+     * @Route("/", name="scan_home", methods={"GET"})
      * @Template("AppOrderformBundle/Default/home.html.twig")
      */
     public function indexAction( Request $request ) {
@@ -95,9 +94,8 @@ class ScanOrderController extends OrderAbstractController {
     /**
      * Lists all Message entities.
      *
-     * @Route("/my-scan-orders", name="my-scan-orders")
-     * @Route("/incoming-scan-orders", name="incoming-scan-orders")
-     * @Method("GET")
+     * @Route("/my-scan-orders", name="my-scan-orders", methods={"GET"})
+     * @Route("/incoming-scan-orders", name="incoming-scan-orders", methods={"GET"})
      * @Template("AppOrderformBundle/ScanOrder/index.html.twig")
      */
     public function orderListAction( Request $request ) {
@@ -287,8 +285,7 @@ class ScanOrderController extends OrderAbstractController {
     /**
      * Deletes a Message entity.
      *
-     * @Route("/scan-order/{id}/delete", name="scanorder_delete")
-     * @Method("DELETE")
+     * @Route("/scan-order/{id}/delete", name="scanorder_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {
@@ -326,8 +323,7 @@ class ScanOrderController extends OrderAbstractController {
     /**
      * Change status of message
      *
-     * @Route("/scan-order/{id}/status/{status}/", name="scanorder_status")
-     * @Method("GET")
+     * @Route("/scan-order/{id}/status/{status}/", name="scanorder_status", methods={"GET"})
      * @Template()
      */
     public function statusAction(Request $request, $id, $status) {
@@ -813,8 +809,7 @@ class ScanOrderController extends OrderAbstractController {
 
     /**
      * Find accession by #
-     * @Route("/scanorder-complex-search", name="scanorder-complex-search")
-     * @Method("POST")
+     * @Route("/scanorder-complex-search", name="scanorder-complex-search", methods={"POST"})
      */
     public function getSearchViewAjaxAction( Request $request ) {
 

@@ -45,7 +45,7 @@ class ListController extends OrderAbstractController
     protected $sitename = "employees";
     protected $postPath = null;
 
-    //@Method({"GET","POST"}) @Method("GET") //TODO: why method GET does not work for handleRequest https://symfony.com/doc/current/form/action_method.html
+    //Method({"GET","POST"}) Method("GET") //TODO: why method GET does not work for handleRequest https://symfony.com/doc/current/form/action_method.html
     /**
      * Lists all entities.
      *

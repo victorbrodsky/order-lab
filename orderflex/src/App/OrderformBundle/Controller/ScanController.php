@@ -20,9 +20,10 @@ namespace App\OrderformBundle\Controller;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 
 use App\OrderformBundle\Entity\Imaging;
 use App\OrderformBundle\Entity\Slide;
@@ -40,8 +41,7 @@ class ScanController extends OrderAbstractController
     /**
      * Lists all Scan entities.
      *
-     * @Route("/", name="scan")
-     * @Method("GET")
+     * @Route("/", name="scan", methods={"GET"})
      * @Template()
      */
     public function indexAction()
@@ -57,8 +57,7 @@ class ScanController extends OrderAbstractController
     /**
      * Creates a new Scan entity.
      *
-     * @Route("/", name="scan_create")
-     * @Method("POST")
+     * @Route("/", name="scan_create", methods={"POST"})
      * @Template("AppOrderformBundle/Imaging/new_orig.html.twig")
      */
     public function createAction(Request $request)
@@ -112,8 +111,7 @@ class ScanController extends OrderAbstractController
     /**
      * Displays a form to create a new Scan entity.
      *
-     * @Route("/new", name="scan_new")
-     * @Method("GET")
+     * @Route("/new", name="scan_new", methods={"GET"})
      * @Template()
      */
     public function newAction()
@@ -137,8 +135,7 @@ class ScanController extends OrderAbstractController
     /**
      * Finds and displays a Scan entity.
      *
-     * @Route("/{id}", name="scan_show")
-     * @Method("GET")
+     * @Route("/{id}", name="scan_show", methods={"GET"})
      * @Template()
      */
     public function showAction($id)
@@ -162,8 +159,7 @@ class ScanController extends OrderAbstractController
     /**
      * Displays a form to edit an existing Imaging entity.
      *
-     * @Route("/{id}/edit", name="scan_edit")
-     * @Method("GET")
+     * @Route("/{id}/edit", name="scan_edit", methods={"GET"})
      * @Template()
      */
     public function editAction($id)
@@ -189,8 +185,7 @@ class ScanController extends OrderAbstractController
     /**
      * Edits an existing Imaging entity.
      *
-     * @Route("/{id}", name="scan_update")
-     * @Method("PUT")
+     * @Route("/{id}", name="scan_update", methods={"PUT"})
      * @Template("AppOrderformBundle/Imaging/edit.html.twig")
      */
     public function updateAction(Request $request, $id)
@@ -223,8 +218,7 @@ class ScanController extends OrderAbstractController
     /**
      * Deletes a Imaging entity.
      *
-     * @Route("/{id}", name="scan_delete")
-     * @Method("DELETE")
+     * @Route("/{id}", name="scan_delete", methods={"DELETE"})
      */
     public function deleteAction(Request $request, $id)
     {

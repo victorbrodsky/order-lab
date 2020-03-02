@@ -19,9 +19,10 @@ namespace App\OrderformBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,8 +62,7 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/setloginvisit/", name="scan_setloginvisit")
-     * @Method("GET")
+     * @Route("/setloginvisit/", name="scan_setloginvisit", methods={"GET"})
      */
     public function setAjaxLoginVisit( Request $request )
     {
@@ -85,8 +85,7 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/scan-order/no-permission", name="scan-nopermission")
-     * @Method("GET")
+     * @Route("/scan-order/no-permission", name="scan-nopermission", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Security/nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
@@ -101,8 +100,7 @@ class ScanSecurityController extends SecurityController
 
    
 //    /**
-//     * @Route("/login_check", name="login_check")
-//     * @Method("POST")
+//     * @Route("/login_check", name="login_check", methods={"POST"})
 //     * @Template("AppOrderformBundle/ScanOrder/new_orig.html.twig")
 //     */
 //    public function loginCheckAction( Request $request )
@@ -128,8 +126,7 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor")
-     * @Method("GET")
+     * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor", methods={"GET"})
      * @Template("AppOrderformBundle/Security/load-roles-from-pacsvendor.html.twig")
      */
     public function loadRolesFromPacsvendorAction()

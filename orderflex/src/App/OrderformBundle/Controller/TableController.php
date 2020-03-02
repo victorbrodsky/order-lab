@@ -32,9 +32,10 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 use App\OrderformBundle\Entity\Message;
@@ -626,8 +627,7 @@ class TableController extends OrderAbstractController {
     /**
      * Creates a new Table Message.
 
-     * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit")
-     * @Method("POST")
+     * @Route("/scan-order/multi-slide-table-view/submit", name="table_create_submit", methods={"POST"})
      * @Template("AppOrderformBundle/MultiScanOrder/newtable.html.twig")
      */
     public function multyCreateAction(Request $request, ScanEmailUtil $scanEmailUtil)
