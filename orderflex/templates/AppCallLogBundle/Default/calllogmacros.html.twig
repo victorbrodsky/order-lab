@@ -532,7 +532,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#calllog-Referring-Provider-{{ encounter.vars.value.id }}">
-                        Referring Provider
+                        Healthcare Provider
                     </a>
                 </h4>
             </div>
@@ -780,7 +780,7 @@
                     <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
                 {% endif %}
 
-                {#Edit Referring Provider Profile#}
+                {#Edit Healthcare Provider Profile#}
                 {% for referringProvider in validEncounter.getReferringProviders %}
                     {% if referringProvider %}
                         {% set linkedUser = referringProvider.obtainLinkedUser %}
@@ -789,10 +789,10 @@
                             {% set linkedUserId = linkedUser.getId() %}
                         {% endif %}
                         {% if linkedUserId %}
-                            <li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
+                            <li><a href="{{ path('calllog_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Healthcare Provider Profile</a></li>
                         {% else %}
                             {% if referringProvider.getField and referringProvider.getField.getId %}
-                                <li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Referring Provider Profile</a></li>
+                                <li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Healthcare Provider Profile</a></li>
                             {% endif %}
                         {% endif %}
                     {% endif %}
@@ -1299,7 +1299,7 @@
                 <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}</th>
-                <th>{{ knp_pagination_sortable(messages, 'Referring Provider', 'referringProviderWrapper.name') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'Healthcare Provider', 'referringProviderWrapper.name') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Author', 'authorInfos.displayName') }}</th>
                 <th>Actions</th>
@@ -1311,7 +1311,7 @@
                 <th>Patient Name</th>
                 <th>MRN</th>
                 <th>Location</th>
-                <th>Referring Provider</th>
+                <th>Healthcare Provider</th>
                 <th>Call Issue</th>
                 <th>Author</th>
             {% endif %}

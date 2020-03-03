@@ -62,7 +62,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#calllog-encounter-referringprovider">
-                    Referring Provider
+                    Healthcare Provider
                 </a>
             </h4>
         </div>
@@ -71,10 +71,10 @@
 
                 {% if encounter.referringProviders|length == 0 %}
 
-                    {{ formmacros.simplefield( "Referring Provider Name:", null, "", "disabled" ) }}
-                    {{ formmacros.simplefield( "Referring Provider Specialty:", null, "", "disabled" ) }}
-                    {{ formmacros.simplefield( "Referring Provider Phone Number:", null, "", "disabled" ) }}
-                    {{ formmacros.simplefield( "Referring Provider E-Mail:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Healthcare Provider Name:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Healthcare Provider Specialty:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Healthcare Provider Phone Number:", null, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Healthcare Provider E-Mail:", null, "", "disabled" ) }}
 
                 {% else %}
 
@@ -82,16 +82,16 @@
                     {% for referringProvider in encounter.referringProviders %}
 
                         {#{{ formmacros.field(referringProvider.field) }}#}
-                        {{ formmacros.simplefield( "Referring Provider Name:", referringProvider.field, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Healthcare Provider Name:", referringProvider.field, "", "disabled" ) }}
 
                         {#{{ formmacros.field(referringProvider.referringProviderSpecialty) }}#}
-                        {{ formmacros.simplefield( "Referring Provider Specialty:", referringProvider.referringProviderSpecialty, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Healthcare Provider Specialty:", referringProvider.referringProviderSpecialty, "", "disabled" ) }}
 
                         {#{{ formmacros.field(referringProvider.referringProviderPhone) }}#}
-                        {{ formmacros.simplefield( "Referring Provider Phone Number:", referringProvider.referringProviderPhone, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Healthcare Provider Phone Number:", referringProvider.referringProviderPhone, "", "disabled" ) }}
 
                         {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
-                        {{ formmacros.simplefield( "Referring Provider E-Mail:", referringProvider.referringProviderEmail, "", "disabled" ) }}
+                        {{ formmacros.simplefield( "Healthcare Provider E-Mail:", referringProvider.referringProviderEmail, "", "disabled" ) }}
 
                     {% endfor %}
 

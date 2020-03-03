@@ -189,7 +189,7 @@ class CallLogUtilForm
         //referringProviderInfo
         $referringProviderInfo = $encounter->obtainReferringProviderInfo();
         if( $referringProviderInfo ) {
-            $html .= $this->getTrField("Referring Provider ", $referringProviderInfo);
+            $html .= $this->getTrField("Healthcare Provider ", $referringProviderInfo);
         }
 
         //Location

@@ -2012,7 +2012,8 @@ class CallEntryController extends OrderAbstractController
             'referringProviders-readonly' => false,
             'readonlyLocationType' => true, //lock the "Location Type" field (with the default "Encounter Location" value in it)
             'enableDocumentUpload' => $enableDocumentUpload,
-            'defaultAccessionType' => $defaultAccessionType
+            'defaultAccessionType' => $defaultAccessionType,
+            //'user_security_utility' => $this->get('user_security_utility')
             //'accessiontypes' => $accessiontypes
         );
 
@@ -3815,7 +3816,7 @@ class CallEntryController extends OrderAbstractController
         $ews->setCellValue('C1', 'Patient Name');
         $ews->setCellValue('D1', 'MRN');
         $ews->setCellValue('E1', 'Location');
-        $ews->setCellValue('F1', 'Referring Provider');
+        $ews->setCellValue('F1', 'Healthcare Provider');
         $ews->setCellValue('G1', 'Call Issue');
         $ews->setCellValue('H1', 'Author');
 
@@ -3861,7 +3862,7 @@ class CallEntryController extends OrderAbstractController
             $ews->setCellValue('D'.$row, $mrnsStr);
 
 
-            //Location and Referring Provider
+            //Location and Healthcare Provider
             $locationArr = array();
             $refProviderArr = array();
             foreach( $message->getEncounter() as $encounter ) {
@@ -3877,7 +3878,7 @@ class CallEntryController extends OrderAbstractController
             $locationStr = implode("\n",$locationArr);
             $ews->setCellValue('E'.$row, $locationStr);
 
-            //Referring Provider
+            //Healthcare Provider
             $refProviderStr = implode("\n",$refProviderArr);
             $ews->setCellValue('F'.$row, $refProviderStr);
 
@@ -4053,7 +4054,7 @@ class CallEntryController extends OrderAbstractController
 //                'Patient Name',         //2 - C
 //                'MRN',                  //3 - D
 //                'Location',             //4 - E
-//                'Referring Provider',   //5 - F
+//                'Healthcare Provider',   //5 - F
 //                'Call Issue',           //6 - G
 //                'Author'                //7 - H
 //            ],
@@ -4066,7 +4067,7 @@ class CallEntryController extends OrderAbstractController
                 'Patient Name',         //2 - C
                 'MRN',                  //3 - D
                 'Location',             //4 - E
-                'Referring Provider',   //5 - F
+                'Healthcare Provider',   //5 - F
                 'Call Issue',           //6 - G
                 'Author'                //7 - H
             ],
@@ -4158,7 +4159,7 @@ class CallEntryController extends OrderAbstractController
 
             if(0) {//testing encounter
 
-                //Location and Referring Provider
+                //Location and Healthcare Provider
                 $locationArr = array();
                 $refProviderArr = array();
                 foreach ($message->getEncounter() as $encounter) {
@@ -4177,7 +4178,7 @@ class CallEntryController extends OrderAbstractController
                 //$ews->setCellValue('E'.$row, $locationStr);
                 $data[4] = $locationStr;
 
-                //Referring Provider
+                //Healthcare Provider
                 $refProviderStr = implode("\n", $refProviderArr);
                 //$ews->setCellValue('F'.$row, $refProviderStr);
                 $data[5] = $refProviderStr;

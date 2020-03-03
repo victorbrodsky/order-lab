@@ -65,7 +65,7 @@ class EncounterReferringProviderType extends AbstractType
 
 
         $builder->add('field', ScanCustomSelectorType::class, array(
-            'label' => 'Referring Provider Name:',
+            'label' => 'Healthcare Provider Name:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
             'disabled' => $this->params['referringProviders-readonly'],
             'required' => false,
@@ -74,7 +74,7 @@ class EncounterReferringProviderType extends AbstractType
         ));
 
         $builder->add('referringProviderSpecialty', ScanCustomSelectorType::class, array(
-            'label' => 'Referring Provider Specialty:',
+            'label' => 'Healthcare Provider Specialty:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderSpecialty'),
             'disabled' => $this->params['referringProviders-readonly'],
             'required' => false,
@@ -82,13 +82,13 @@ class EncounterReferringProviderType extends AbstractType
         ));
 
         $builder->add('referringProviderPhone', null, array(
-            'label' => 'Referring Provider Phone Number:',
+            'label' => 'Healthcare Provider Phone Number:',
             'disabled' => $this->params['referringProviders-readonly'],
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('referringProviderEmail', null, array(
-            'label' => 'Referring Provider E-Mail:',
+            'label' => 'Healthcare Provider E-Mail:',
             'attr' => array('class'=>'form-control'),
             'disabled' => $this->params['referringProviders-readonly'],
         ));

@@ -170,7 +170,7 @@ class CalllogFilterType extends AbstractType
         $builder->add('referringProvider', ChoiceType::class, array(
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Healthcare Provider"),
             'choices' => $this->params['referringProviders'],
             //'choices_as_values' => true,
         ));

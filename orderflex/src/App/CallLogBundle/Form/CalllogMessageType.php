@@ -150,32 +150,54 @@ class CalllogMessageType extends AbstractType
                 'prototype_name' => '__accession__',
             ));
         }
-        if(0) {
+        if(1) {
             //As not-mapped accession type and number
-            $builder->add( 'accessionType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:AccessionType',
-                //'choice_label' => 'name',
+//            $builder->add( 'accessionType', EntityType::class, array(
+//                'class' => 'AppOrderformBundle:AccessionType',
+//                //'choice_label' => 'name',
+//                'label' => 'Accession Type:',
+//                'required' => false,
+//                'multiple' => false,
+//                'mapped' => false,
+//                'data' => $this->params['defaultAccessionType'],
+//                'attr' => array('class' => 'combobox combobox-width accessiontype-combobox skip-server-populate accessiontype'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+
+            //accession type
+            $attr = array('class' => 'ajax-combobox combobox combobox-width accessiontype-combobox', 'type' => 'hidden'); //combobox
+            $options = array(
                 'label' => 'Accession Type:',
-                'required' => false,
-                'multiple' => false,
+                'required' => true,
+                'attr' => $attr,
                 'mapped' => false,
-                'data' => $this->params['defaultAccessionType'],
-                'attr' => array('class' => 'combobox combobox-width accessiontype'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-            ));
+                'classtype' => 'accessiontype',
+            );
+            if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
+                $options['data'] = 1; //new
+                $defaultScanAccessionType = $this->params['defaultAccessionType'];
+                if( $defaultScanAccessionType ) {
+                    $options['data'] = $defaultScanAccessionType->getId();
+                } else {
+                    $options['data'] = 1; //new
+                }
+            }
+            $builder->add('accessionType', ScanCustomSelectorType::class, $options);
+
+
             $builder->add('accessionNumber', null, array(
                 'label' => 'Accession Number:',
                 'required' => false,
                 'mapped' => false,
-                'attr' => array('class' => 'form-control keyfield accessionnumber-mask')
+                'attr' => array('class' => 'form-control keyfield accession-mask')
             ));
         }
 

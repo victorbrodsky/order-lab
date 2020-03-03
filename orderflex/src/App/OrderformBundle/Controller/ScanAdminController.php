@@ -2202,7 +2202,7 @@ class ScanAdminController extends AdminController
         $em = $this->getDoctrine()->getManager();
 
         $elements = array(
-            "Contact Referring Provider",
+            "Contact Healthcare Provider",
             "Order a medication",
             "Order blood products",
             "Check lab results",

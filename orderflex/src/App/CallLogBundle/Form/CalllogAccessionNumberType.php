@@ -81,7 +81,7 @@ class CalllogAccessionNumberType extends AbstractType
             'label' => 'Accession Number:',
             'required' => false,
             //'data' => $this->params['accessionnumber'],
-            'attr' => array('class' => 'form-control keyfield accessionnumber-mask')
+            'attr' => array('class' => 'form-control keyfield accession-mask')
         ));
 
 

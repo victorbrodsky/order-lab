@@ -589,10 +589,10 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     var email = holder.find(".patient-email").val();
     email = trimWithCheck(email);
 
-    var accessionnumber = holder.find(".accessionnumber-mask").val();
+    var accessionnumber = holder.find(".accession-mask").val();
     accessionnumber = trimWithCheck(accessionnumber);
 
-    var accessiontype = holder.find(".accessiontype").select2('val');
+    var accessiontype = holder.find(".accessiontype-combobox").select2('val');
     accessiontype = trimWithCheck(accessiontype);
 
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
@@ -635,7 +635,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
             searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn;
         }
         if( !searchedStr && accessionnumber && accessiontype ) {
-            searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype").select2('data').text+"; Accession Number: "+accessionnumber;
+            searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype-combobox").select2('val').text+"; Accession Number: "+accessionnumber;
         }
         if( !searchedStr && dob && lastname ) {
             var firstnameStr = "";
@@ -1966,7 +1966,7 @@ function calllogSubmitForm(btn,messageStatus) {
         }
     }
 
-    //C- Uniqueness of the Referring Provider Name. Fields are locked and not possible to modify them.
+    //C- Uniqueness of the Healthcare Provider Name. Fields are locked and not possible to modify them.
     //return; //testing
 
     ///////// if the other fields in that accordion remain empty and only "Lab Result Date" has a value, do not write it to the DB. /////////
