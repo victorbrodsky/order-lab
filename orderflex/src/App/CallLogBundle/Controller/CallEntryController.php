@@ -228,7 +228,7 @@ class CallEntryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
-        //$userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->get('user_service_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$sitename = $this->getParameter('calllog.sitename');
 
@@ -835,7 +835,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         if( $patientPhone ) {
-            $phoneCanonical = $this->obtainPhoneCanonical($patientPhone);
+            $phoneCanonical = $calllogUtil->obtainPhoneCanonical($patientPhone);
             $dql->andWhere("patient.phoneCanonical LIKE :patientPhone");
             $queryParameters['patientPhone'] = "%" . $phoneCanonical . "%";
             $advancedFilter++;
@@ -932,7 +932,7 @@ class CallEntryController extends OrderAbstractController
             }
             if( $calllogsearchtype == 'Last Name' || $calllogsearchtype == 'Last Name similar to' ) {
                 if( $metaphone ) {
-                    $this->userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
+                    $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {
                     $dql->andWhere("lastname.status='valid'");
                     $dql->andWhere("LOWER(lastname.field) LIKE LOWER(:search)");
@@ -2291,556 +2291,68 @@ class CallEntryController extends OrderAbstractController
         return $response;
     }
 
-    //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)
-    // and to verify before creating patient if already exists (calllog_create_patient)
     public function searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false ) {
-
         //$userServiceUtil = $this->get('user_service_utility');
+        $calllogUtil = $this->get('calllog_util');
 
-        $mrntype = trim($request->get('mrntype')); //ID of mrn type
-        $mrn = trim($request->get('mrn'));
-        $accessionnumber = trim($request->get('accessionnumber'));
-        $accessiontype = trim($request->get('accessiontype'));
-        $dob = trim($request->get('dob'));
-        $lastname = trim($request->get('lastname'));
-        $firstname = trim($request->get('firstname'));
-        $phone = trim($request->get('phone'));
-        $email = trim($request->get('email'));
-        $metaphone = trim($request->get('metaphone'));
+//        if( $params ) {
+//            //echo "params true<br>";
+//            $mrntype = ( array_key_exists('mrntype', $params) ? $params['mrntype'] : null);
+//            $mrn = ( array_key_exists('mrn', $params) ? $params['mrn'] : null);
+//            $accessionnumber = ( array_key_exists('accessionnumber', $params) ? $params['accessionnumber'] : null);
+//            $accessiontype = ( array_key_exists('accessiontype', $params) ? $params['accessiontype'] : null);
+//            $dob = ( array_key_exists('dob', $params) ? $params['dob'] : null);
+//            $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
+//            $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
+//            $phone = ( array_key_exists('phone', $params) ? $params['phone'] : null);
+//            $email = ( array_key_exists('email', $params) ? $params['email'] : null);
+//            $metaphone = ( array_key_exists('metaphone', $params) ? $params['metaphone'] : null);
+//        }
+
+        if( !$params ) {
+//            $mrntype = trim($request->get('mrntype')); //ID of mrn type
+//            $mrn = trim($request->get('mrn'));
+//            $accessionnumber = trim($request->get('accessionnumber'));
+//            $accessiontype = trim($request->get('accessiontype'));
+//            $dob = trim($request->get('dob'));
+//            $lastname = trim($request->get('lastname'));
+//            $firstname = trim($request->get('firstname'));
+//            $phone = trim($request->get('phone'));
+//            $email = trim($request->get('email'));
+//            $metaphone = trim($request->get('metaphone'));
+
+            $params = array(
+                'mrntype' => trim($request->get('mrntype')),
+                'mrn' => trim($request->get('mrn')),
+                'accessionnumber' => trim($request->get('accessionnumber')),
+                'accessiontype' => trim($request->get('accessiontype')),
+                'dob' => trim($request->get('dob')),
+                'lastname' => trim($request->get('lastname')),
+                'firstname' => trim($request->get('firstname')),
+                'phone' => trim($request->get('phone')),
+                'email' => trim($request->get('email')),
+                'metaphone' => trim($request->get('metaphone'))
+            );
+        }
+
         //echo "phone=".$phone.", email=".$email."<br>";
         //print_r($allgets);
         //echo "metaphone=".$metaphone."<br>";
         //exit('1');
 
-        $exactMatch = true;
-        $matchAnd = true;
+        $accessionnumber = ( array_key_exists('accessionnumber', $params) ? $params['accessionnumber'] : null);
+        $accessiontype = ( array_key_exists('accessiontype', $params) ? $params['accessiontype'] : null);
 
-        if( $params ) {
-            //echo "params true<br>";
-            $mrntype = ( array_key_exists('mrntype', $params) ? $params['mrntype'] : null);
-            $mrn = ( array_key_exists('mrn', $params) ? $params['mrn'] : null);
-            $accessionnumber = ( array_key_exists('accessionnumber', $params) ? $params['accessionnumber'] : null);
-            $accessiontype = ( array_key_exists('accessiontype', $params) ? $params['accessiontype'] : null);
-            $dob = ( array_key_exists('dob', $params) ? $params['dob'] : null);
-            $lastname = ( array_key_exists('lastname', $params) ? $params['lastname'] : null);
-            $firstname = ( array_key_exists('firstname', $params) ? $params['firstname'] : null);
-            $phone = ( array_key_exists('phone', $params) ? $params['phone'] : null);
-            $email = ( array_key_exists('email', $params) ? $params['email'] : null);
-            $metaphone = ( array_key_exists('metaphone', $params) ? $params['metaphone'] : null);
-        }
-
-        //echo "mrntype=".$mrntype."<br>";
-        //echo "mrn=".$mrn."<br>";
-
-        if( $turnOffMetaphone ) {
-            $metaphone = null;
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $parameters = array();
-
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
-        $dql = $repository->createQueryBuilder("patient");
-        $dql->leftJoin("patient.mrn", "mrn");
-        $dql->leftJoin("patient.dob", "dob");
-        $dql->leftJoin("patient.lastname", "lastname");
-        $dql->leftJoin("patient.firstname", "firstname");
-        $dql->leftJoin("patient.encounter", "encounter");
-        $dql->leftJoin("encounter.patlastname", "encounterLastname");
-        $dql->leftJoin("encounter.patfirstname", "encounterFirstname");
-
-        //$dql->where("mrn.status = :statusValid");
-
-        $where = false;
-        $searchBy = "unknown parameters";
-        $searchArr = array();
-
-        if( $mrntype ) {
-            $calllogUtil = $this->get('calllog_util');
-            //$calllogUtil = $this->calllogUtil;
-            $mrntype = $calllogUtil->convertAutoGeneratedMrntype($mrntype,true);
-        }
-
-        //echo "mrntype=".$mrntype."<br>";
-        //echo "mrn=".$mrn."<br>";
-
-        //mrn
-        if( $mrntype && $mrn ) {
-
-            //echo "mrntype=".$mrntype."<br>";
-            //echo "mrn=".$mrn."<br>";
-
-            $dql->andWhere("mrn.keytype = :keytype");
-            $parameters['keytype'] = $mrntype->getId();
-
-            if( $exactMatch ) {
-                $mrnClean = ltrim($mrn, '0');
-                //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
-                if( $mrn === $mrnClean ) {
-                    //echo "equal <br>";
-                    $dql->andWhere("mrn.field = :mrn");
-                    $parameters['mrn'] = $mrn;
-                } else {
-                    //echo "not equal <br>";
-                    $dql->andWhere("mrn.field = :mrn OR mrn.field = :mrnClean");
-                    $parameters['mrn'] = $mrn;
-                    $parameters['mrnClean'] = $mrnClean;
-                }
-
-            } else {
-                $dql->andWhere("LOWER(mrn.field) LIKE LOWER(:mrn)");
-                $parameters['mrn'] = '%' . $mrn . '%';
-            }
-
-            $dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
-            $parameters['statusValid'] = 'valid';
-            $parameters['statusAlias'] = 'alias';
-
-            $where = true;
-            $searchArr[] = "MRN Type: ".$mrntype."; MRN: ".$mrn;
-        }
-
-        //accession
+        //accession (If anything was entered into the Accession Number field, ignore content of all other fields)
         if( $accessionnumber && $accessiontype ) {
-
-            $calllogUtil = $this->get('calllog_util');
-            //$calllogUtil = $this->calllogUtil;
-            $accessiontype = $calllogUtil->convertAutoGeneratedAccessiontype($accessiontype,true);
-
-            $dql->leftJoin("encounter.procedure", "procedure");
-            $dql->leftJoin("procedure.accession", "accession");
-            $dql->leftJoin("accession.accession", "accessionaccession");
-
-            //echo "accessiontype=".$accessiontype."<br>";
-            //echo "accessionnumber=".$accessionnumber."<br>";
-
-            $dql->andWhere("accessionaccession.keytype = :keytype");
-            $parameters['keytype'] = $accessiontype->getId();
-
-            if( $exactMatch ) {
-                $accessionnumberClean = ltrim($accessionnumber, '0');
-                //echo "accessionnumber: ".$accessionnumber."?=".$accessionnumberClean."<br>";
-                if( $accessionnumber === $accessionnumberClean ) {
-                    //echo "equal <br>";
-                    $dql->andWhere("accessionaccession.field = :accessionnumber");
-                    $parameters['accessionnumber'] = $accessionnumber;
-                } else {
-                    //echo "not equal <br>";
-                    $dql->andWhere("accessionaccession.field = :accessionnumber OR accessionaccession.field = :accessionnumberClean");
-                    $parameters['accessionnumber'] = $accessionnumber;
-                    $parameters['accessionnumberClean'] = $accessionnumberClean;
-                }
-
-            } else {
-                $dql->andWhere("LOWER(accessionaccession.field) LIKE LOWER(:accession)");
-                $parameters['accession'] = '%' . $accessionnumber . '%';
-            }
-
-            $dql->andWhere("accessionaccession.status = :statusValid OR accessionaccession.status = :statusAlias");
-            $parameters['statusValid'] = 'valid';
-            $parameters['statusAlias'] = 'alias';
-
-            $where = true;
-            $searchArr[] = "Accession Type: ".$accessiontype."; Accession Number: ".$accessionnumber;
-        }
-
-        //DOB
-        if( $dob && ($where == false || $matchAnd == true) ) {
-            //echo "dob=".$dob."<br>";
-            $searchArr[] = "DOB: " . $dob;
-            //echo "doblen=".strlen($dob);
-            if( strlen($dob) == 10 ) {
-                $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
-                //return $d && $d->format($format) === $date;
-                //echo "dob=".$dob." => ".$dobDateTime."<br>";
-                $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
-                $dql->andWhere("dob.field = :dob");
-                $parameters['dob'] = $dobDateTime;
-                $where = true;
-            } else {
-                $searchArr[] = "DOB '$dob' is not in the valid format (mm/dd/YYYY)";
-            }
-        }
-
-//        //Last Name Only
-//        if( $lastname && !$firstname && ($where == false || $matchAnd == true) ) {
-//
-//            //$lastname = "Doe";
-//            echo "lastname=".$lastname."<br>";
-//            $searchArr[] = "Last Name: " . $lastname;
-//
-//            $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-//            $statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
-//
-//            if ($exactMatch) {
-//                ////$dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-//                $dql->andWhere("(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)");
-//                $parameters['lastname'] = $lastname;
-//            } else {
-//                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-//            }
-//
-//            //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-//            //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-//
-//            $parameters['statusValid'] = 'valid';
-//            $parameters['statusAlias'] = 'alias';
-//
-//            $where = true;
-//        }
-
-//        //First Name Only
-//        if( $firstname && !$lastname && ($where == false || $matchAnd == true) ) {
-//
-//            //$firstname = "Linda";
-//            echo "firstname=".$firstname."<br>";
-//            $searchArr[] = "First Name: " . $firstname;
-//
-//            $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-//            $statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
-//
-//            if( $exactMatch ) {
-//                ////$dql->andWhere("firstname.field = :firstname OR encounterFirstname.field = :firstname");
-//                $dql->andWhere("(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)");
-//                $parameters['firstname'] = $firstname;
-//            } else {
-//                $dql->andWhere("firstname.field LIKE :firstname OR encounterFirstname.field LIKE :firstname");
-//                $parameters['firstname'] = '%' . $firstname . '%';
-//            }
-//
-//            $dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-//            $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-//            $parameters['statusValid'] = 'valid';
-//            $parameters['statusAlias'] = 'alias';
-//
-//            $where = true;
-//        }
-
-        //$lastname = null;
-        //$firstname = null;
-        //Last Name AND First Name
-        if( ($lastname || $firstname) && ($where == false || $matchAnd == true) ) {
-            //$lastname = "Doe";
-            //echo "1 lastname=".$lastname."<br>";
-            //echo "1 firstname=".$firstname."<br>";
-
-            $searchCriterionArr = array();
-
-            //only last name
-            if( $lastname && !$firstname ) {
-                $searchArr[] = "Last Name: " . $lastname;
-
-                $statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-
-                if( $metaphone ) {
-                    $lastnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters);
-                    if( $lastnameCriterion ) {
-                        $searchCriterionArr[] = $lastnameCriterion . " AND " . $statusStr;
-
-                        $parameters['statusValid'] = 'valid';
-                        $parameters['statusAlias'] = 'alias';
-
-                        $where = true;
-                    }
-                } else {
-                    //exact search
-                    $searchCriterionArr[] = "LOWER(lastname.field) LIKE LOWER(:lastname) AND $statusStr";
-                    $parameters['lastname'] = "%".$lastname."%";
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-                    $where = true;
-                }
-                //$statusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                ////$statusEncounterStr = "(encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias)";
-                ////$searchCriterionArr[] = "(lastname.field = :lastname AND $statusStr) OR (encounterLastname.field = :lastname AND $statusEncounterStr)";
-
-                //$searchCriterionArr[] = "lastname.field = :lastname AND $statusStr";
-                //$parameters['lastname'] = $lastname;
-                //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
-                //$parameters['lastname'] = '%'.$lastname.'%';
-
-                //status
-                //$dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-                //$dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-                //$parameters['statusValid'] = 'valid';
-                //$parameters['statusAlias'] = 'alias';
-                //$where = true;
-            }
-
-            //only first name
-            if( $firstname && !$lastname ) {
-                $searchArr[] = "First Name: " . $firstname;
-
-                $statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-
-                if( $metaphone ) {
-                    $firstnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters);
-                    if( $firstnameCriterion ) {
-                        $searchCriterionArr[] = $firstnameCriterion . " AND " . $statusStr;
-
-                        $parameters['statusValid'] = 'valid';
-                        $parameters['statusAlias'] = 'alias';
-
-                        $where = true;
-                    }
-                } else {
-                    //exact search
-                    $searchCriterionArr[] = "LOWER(firstname.field) LIKE LOWER(:firstname) AND $statusStr";
-                    $parameters['firstname'] = "%".$firstname."%";
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-                    $where = true;
-                }
-
-                //$statusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                ////$statusEncounterStr = "(encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias)";
-                ////$searchCriterionArr[] = "(firstname.field = :firstname AND $statusStr) OR (encounterFirstname.field = :firstname AND $statusEncounterStr)";
-                //$searchCriterionArr[] = "firstname.field = :firstname AND $statusStr";
-                //$parameters['firstname'] = $firstname;
-
-                //status
-                //$dql->andWhere("firstname.status = :statusValid OR firstname.status = :statusAlias");
-                //$dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-                //$parameters['statusValid'] = 'valid';
-                //$parameters['statusAlias'] = 'alias';
-                //$where = true;
-            }
-
-            if( $firstname && $lastname ) {
-                $searchArr[] = "Last Name: " . $lastname;
-                $searchArr[] = "First Name: " . $firstname;
-
-                if( $metaphone ) {
-
-                    $lastnameStatusStr = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    $lastnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("lastname.field","lastname.fieldMetaphone",$lastname,$parameters,"lastname");
-                    if ($lastnameCriterion) {
-                        $searchCriterionArr[] = $lastnameCriterion . " AND " . $lastnameStatusStr;
-                        //$searchCriterionArr[] = $lastnameCriterion;
-
-                        $parameters['statusValid'] = 'valid';
-                        $parameters['statusAlias'] = 'alias';
-
-                        $where = true;
-                    }
-
-                    $firstnameStatusStr = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    $firstnameCriterion = $this->userServiceUtil->getMetaphoneStrLike("firstname.field","firstname.fieldMetaphone",$firstname,$parameters,"firstname");
-                    if ($firstnameCriterion) {
-                        $searchCriterionArr[] = $firstnameCriterion . " AND " . $firstnameStatusStr;
-                        //$searchCriterionArr[] = $firstnameCriterion;
-
-                        $parameters['statusValid'] = 'valid';
-                        $parameters['statusAlias'] = 'alias';
-
-                        $where = true;
-                    }
-
-                } else {
-
-                    //exact search
-                    //last name: status
-                    $statusStrLastname = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
-                    //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
-                    //$parameters['lastname'] = '%'.$lastname.'%';
-                    $searchCriterionArr[] = "lastname.field = :lastname AND $statusStrLastname";
-                    $parameters['lastname'] = $lastname;
-
-                    //first name: status
-                    $statusStrFirstname = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
-                    //$searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
-                    //$parameters['firstname'] = '%'.$firstname.'%';
-                    $searchCriterionArr[] = "firstname.field = :firstname AND $statusStrFirstname";
-                    $parameters['firstname'] = $firstname;
-
-                    $parameters['statusValid'] = 'valid';
-                    $parameters['statusAlias'] = 'alias';
-                    $where = true;
-
-                }//if
-
-                //testing
-                if(0) {
-                    echo "metaphone=".$metaphone."<br>";
-                    echo "<pre>";
-                    print_r($searchCriterionArr);
-                    echo "</pre>";
-                    echo "parameters:"."<br><pre>";
-                    print_r($parameters);
-                    echo "</pre>";
-                    exit();
-                }
-            }
-
-            if( count($searchCriterionArr) > 0 ) {
-                //" OR " or " AND "
-                $searchCriterionStr = implode(" AND ", $searchCriterionArr);
-                $dql->andWhere($searchCriterionStr);
-            }
-        }
-
-//        //Last Name AND DOB
-//        if( $lastname && $dob && ($where == false || $matchAnd == true) ) {
-//            $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
-//            //echo "dob=".$dob." => ".$dobDateTime."<br>";
-////            $dql->andWhere("dob.field = :dob AND (lastname.field = :lastname OR encounterLastname.field = :lastname)");
-////            $parameters['lastname'] = $lastname;
-////            $parameters['dob'] = $dobDateTime;
-//
-//            $dql->andWhere("dob.field = :dob");
-//            $parameters['dob'] = $dobDateTime;
-//
-//            if ($exactMatch) {
-//                $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-//                $parameters['lastname'] = $lastname;
-//            } else {
-//                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-//                $parameters['lastname'] = '%' . $lastname . '%';
-//            }
-//
-//            $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
-//            $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-//            $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-//            $parameters['statusValid'] = 'valid';
-//            $parameters['statusAlias'] = 'alias';
-//
-//            $searchArr[] = "DOB: " . $dob . ", Last Name: " . $lastname;
-//
-//            if ($firstname) {
-//                $dql->andWhere("firstname.field = :firstname OR encounterFirstname.field = :firstname");
-//                $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-//                $parameters['firstname'] = $firstname;
-//
-//                $searchArr[] = ", First Name: " . $firstname;
-//            }
-//
-//            $where = true;
-//        }
-
-//        //Last Name only
-//        if( $lastname && ($where == false || $matchAnd == true) ) {
-//            echo "lastname=".$lastname."<br>";
-//            if( $exactMatch ) {
-//                $dql->andWhere("lastname.field = :lastname OR encounterLastname.field = :lastname");
-//                $parameters['lastname'] = $lastname;
-//            } else {
-//                $dql->andWhere("lastname.field LIKE :lastname OR encounterLastname.field LIKE :lastname");
-//                $parameters['lastname'] = '%' . $lastname . '%';
-//            }
-//
-//            $dql->andWhere("lastname.status = :statusValid OR lastname.status = :statusAlias");
-//            $dql->andWhere("encounterLastname.status = :statusValid OR encounterLastname.status = :statusAlias");
-//            $parameters['statusValid'] = 'valid';
-//            $parameters['statusAlias'] = 'alias';
-//
-//            $searchArr[] = "Last Name: ".$lastname;
-//
-//            if( $firstname ) {
-//                $dql->andWhere("encounterFirstname.status = :statusValid OR encounterFirstname.status = :statusAlias");
-//
-//                if( $exactMatch ) {
-//                    $dql->andWhere("firstname.field = :firstname OR encounterFirstname.field = :firstname");
-//                    $parameters['firstname'] = $firstname;
-//                } else {
-//                    $dql->andWhere("firstname.field LIKE :firstname OR encounterFirstname.field LIKE :firstname");
-//                    $parameters['firstname'] = '%' . $firstname . '%';
-//                }
-//
-//                $searchArr[] = ", First Name: ".$firstname;
-//            }
-//
-//            $where = true;
-//        }
-
-
-//        //firstname, Last Name AND DOB
-//        if( $lastname && $firstname && $dob ) {
-//            $dql->andWhere("lastname.field = :lastname AND firstname.field = :firstname");
-//            $parameters['lastname'] = $lastname;
-//            $parameters['firstname'] = $firstname;
-//            $where = true;
-//        }
-
-        //phone & email: search as AND
-        //echo "phone=".$phone.", email=".$email."<br>";
-        //if( $phone && ($where == false || $matchAnd == true) ) {
-        if( $phone ) {
-            $searchArr[] = "Phone: " . $phone;
-            //$statusStr = "(patient.phoneCanonical = :phoneCanonical)";
-            //$searchCriterionArr[] = $statusStr;
-            $dql->andWhere("(patient.phoneCanonical LIKE :phoneCanonical)");
-            $phoneCanonical = $this->obtainPhoneCanonical($phone);
-            //echo "phoneCanonical=".$phoneCanonical."<br>";
-            $parameters['phoneCanonical'] = "%".$phoneCanonical."%";
-            $where = true;
-        }
-
-        //if( $email && ($where == false || $matchAnd == true) ) {
-        if( $email ) {
-            $searchArr[] = "E-Mail: " . $email;
-            //$statusStr = "(patient.emailCanonical = :emailCanonical)";
-            $dql->andWhere("(patient.emailCanonical LIKE :emailCanonical)");
-            //$searchCriterionArr[] = $statusStr;
-            $emailCanonical = strtolower($email);
-            $parameters['emailCanonical'] = "%".$emailCanonical."%";
-            $where = true;
-        }
-
-
-        if( count($searchArr) > 0 ) {
-            $searchBy = implode("; ",$searchArr);
-        }
-
-        if( $where ) {
-
-            $query = $em->createQuery($dql);
-            $query->setParameters($parameters);
-            $patients = $query->getResult();
-
-            //testing
-            //echo "sql=".$query->getSql()."<br>";
-            //echo "parameters:"."<br><pre>";
-            //print_r($query->getParameters());
-            //exit();
-            //echo "</pre>";
-//            echo "<br>";
-//            foreach( $patients as $patient ) {
-//                echo "ID=".$patient->getId().": ".$patient->getFullPatientName()."<br>";
-//                echo "patient=".$patient."<br>";
-//            }
-//            exit('patients count='.count($patients));
-
-            //log search action
-            if( $evenlog ) {
-                if( count($patients) == 0 ) {
-                    $patientEntities = null;
-                } else {
-                    $patientEntities = $patients;
-                }
-                $user = $this->get('security.token_storage')->getToken()->getUser();
-                $userSecUtil = $this->container->get('user_security_utility');
-                $eventType = "Patient Searched";
-                $event = "Patient searched by ".$searchBy;
-                $event = $event . "; found ".count($patients)." patient(s).";
-                $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'),$event,$user,$patientEntities,$request,$eventType); //searchPatient
-            }
-
+            return $calllogUtil->searchByAccession($request,$params,$evenlog,$turnOffMetaphone);
         } else {
-            $patients = array();
+            return $calllogUtil->searchPatientByMrn($request,$params,$evenlog,$turnOffMetaphone);
         }
 
-        //search for merged
-        //$calllogUtil = $this->get('calllog_util');
-        //$patients = $calllogUtil->getAllMergedPatients( $patients );
-        //exit('Finished.');
-
-        $res = array();
-        $res['patients'] = $patients;
-        $res['searchStr'] = $searchBy;
-
-        return $res;
     }
+
+    
 
 
     /**
@@ -4366,11 +3878,11 @@ class CallEntryController extends OrderAbstractController
         $logger->notice($msg);
     }
 
-    public function obtainPhoneCanonical($phone) {
-        //echo "original phone=".$phoneCanonical."<br>";
-        $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
-        $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
-        //exit("phoneCanonical=".$phoneCanonical);
-        return $phoneCanonical;
-    }
+//    public function obtainPhoneCanonical($phone) {
+//        //echo "original phone=".$phoneCanonical."<br>";
+//        $phoneCanonical = str_replace(' ', '', $phone); // Replaces all spaces with hyphens.
+//        $phoneCanonical = preg_replace('/[^0-9]/', '', $phoneCanonical); // Removes special chars.
+//        //exit("phoneCanonical=".$phoneCanonical);
+//        return $phoneCanonical;
+//    }
 }

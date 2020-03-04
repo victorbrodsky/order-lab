@@ -379,7 +379,7 @@ class CalllogTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Referring Provider")')->count()
+            $crawler->filter('html:contains("Healthcare Provider")')->count()
         );
         $this->assertGreaterThan(
             0,
