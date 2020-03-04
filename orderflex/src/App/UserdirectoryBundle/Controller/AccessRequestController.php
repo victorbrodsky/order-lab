@@ -1832,7 +1832,8 @@ class AccessRequestController extends OrderAbstractController
             //$userServiceUtil = $this->container->get('user_service_utility');
             //$encoder = $userServiceUtil->getUserEncoder($user);
             $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
+            //$encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
+            $encoded = $encoder->encodePassword($user,$plainPassword);
             //exit("set encoded=[".$encoded."]");
 
             $user->setPassword($encoded);

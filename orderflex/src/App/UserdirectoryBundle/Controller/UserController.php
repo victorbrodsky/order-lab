@@ -136,6 +136,14 @@ class UserController extends OrderAbstractController
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');
 
+        //$encoder = $this->get('security.password_encoder');
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$encoder = $userServiceUtil->getEncoder();
+        //$plainPassword = "123";
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$encoded = $encoder->encodePassword($user, $plainPassword);
+        //exit("encoded=[$encoded]");
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

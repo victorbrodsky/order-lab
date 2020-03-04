@@ -42,6 +42,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -67,7 +68,8 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices = parent::getSubscribedServices();
 
         //$subscribedServices['security.authentication_utils'] = '?'.AuthenticationUtils::class;
-
+        $subscribedServices['security.password_encoder'] = '?'.UserPasswordEncoderInterface::class;
+        
         $subscribedServices['user_security_utility'] = '?'.UserSecurityUtil::class;
         $subscribedServices['user_generator'] = '?'.UserGenerator::class;
         $subscribedServices['user_download_utility'] = '?'.UserDownloadUtil::class;
