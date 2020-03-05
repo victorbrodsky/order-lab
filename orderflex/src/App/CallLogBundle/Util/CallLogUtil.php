@@ -4197,6 +4197,8 @@ class CallLogUtil
 
         $parameters = array();
 
+        //if accession 
+
         $repository = $em->getRepository('AppOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
@@ -4291,6 +4293,7 @@ class CallLogUtil
 
             $patients = $patientsData['patients'];
             $searchStr = $patientsData['searchStr'];
+            $searchBy = $searchBy . "; " . $searchStr;
 
             if( count($patients) > 0 ) {
                 if( count($patients) == 1 ) {
@@ -4319,6 +4322,25 @@ class CallLogUtil
                 }
             }
 
+            //lastname
+            $patientLastName = $this->obtainStatusField('lastname', "valid");
+            if( $lastname && $lastname != $patientLastName ) {
+                $samePatient = false;
+            }
+
+            //firstname
+            $patientFirstName = $this->obtainStatusField('firstname', "valid");
+            if( $firstname && $firstname != $patientFirstName ) {
+                $samePatient = false;
+            }
+
+            //dob
+            $patientDob = $this->obtainStatusField('dob', "valid");
+            echo "dob=".$dob."<br>";
+            echo "patientDob=".$patientDob."<br>";
+            if( $dob && $dob != $patientDob ) { //$dob->format('m/d/Y')
+                $samePatient = false;
+            }
 
             if( $samePatient ) {
                 //Populate all fields, show previous notes

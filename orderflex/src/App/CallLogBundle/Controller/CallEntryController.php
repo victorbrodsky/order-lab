@@ -24,6 +24,7 @@ namespace App\CallLogBundle\Controller;
 use App\CallLogBundle\Util\CallLogUtil;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
+use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
@@ -1580,6 +1581,32 @@ class CallEntryController extends OrderAbstractController
 //            }
 
             //exit('111');
+
+            //if accession number exists => create new Accession and link it to Message and Patient (if exists)
+            //add accession for patient info section
+            if(1) {
+                $accessionType = $form['accessionType']->getData();
+                $accessionNumber = $form['accessionNumber']->getData();
+                echo "accession: type=".$accessionType.", number=".$accessionNumber."<br>";
+                if( $accessionType && $accessionNumber ) {
+                    $status = 'valid';
+                    $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
+                    $accession = new Accession(false, $status, $user, $sourcesystem); //$withfields=false, $status='invalid', $provider=null, $source=null
+                    $accessionAccession = new AccessionAccession($status, $user, $sourcesystem);
+                    //add accession type
+                    $accessionAccession->setKeytype($accessionType);
+                    //add accession number
+                    $accessionAccession->setField($accessionNumber);
+                    $accessionDate = new AccessionAccessionDate($status, $user, $sourcesystem);
+                    $accession->addAccession($accessionAccession);
+                    $accession->addAccessionDate($accessionDate);
+                    $message->addAccession($accession);
+
+                    $accessions = $message->getAccession();
+                    echo "accessions count=".count($accessions)."<br>";
+                }
+            }
+            exit('after adding accession');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
