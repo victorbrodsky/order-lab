@@ -4284,12 +4284,59 @@ class CallLogUtil
         }
         ///////// EOF 1. Search by Accession ///////////////
 
-        if( count($patients) > 0 ) {
+        if( count($patients) == 0 ) {
+
+            ///////// Search by Patient info (use a regular logic searchPatientByMrn) ///////////////
+            $patientsData =  $this->searchPatientByMrn($request,$params,$evenlog,$turnOffMetaphone);
+
+            $patients = $patientsData['patients'];
+            $searchStr = $patientsData['searchStr'];
+
+            if( count($patients) > 0 ) {
+                if( count($patients) == 1 ) {
+                    //TODO: Add this accession to this patient
+                } else {
+                    //TODO: Multiple patients
+                }
+            } else {
+                //TODO: Add new patient record and accession number
+            }
+
+        } elseif ( count($patients) == 1 ) {
+
+            $patient = $patients[0];
+            $samePatient = true;
+            //Compare entered patient info
+
+            //mrn
+            $mrnRes = $patient->obtainStatusField('mrn', "valid");
+            if( $mrn && $mrntype ) {
+                if( $mrntype && $mrntype != $mrnRes->getKeytype() ) {
+                    $samePatient = false;
+                }
+                if( $mrn && $mrn != $mrnRes->getField() ) {
+                    $samePatient = false;
+                }
+            }
+
+
+            if( $samePatient ) {
+                //Populate all fields, show previous notes
+            } else {
+                //Not the same patient
+                $patients = array();
+                $searchBy = $searchBy . " " . "Entered patient information does not match entered accession number.";
+            }
+
+        } elseif ( count($patients) > 1 ) {
+
+            //We should have only one patient associated with Accession
+            $searchBy = $searchBy . " " . "Multiple patients associated with this accession number.";
 
         } else {
 
-            ///////// Search by Patient info ///////////////
-            
+            //We should not reach this place
+            $searchBy = $searchBy . " " . "Logical error. Found patients: " . count($patients);
         }
 
 
