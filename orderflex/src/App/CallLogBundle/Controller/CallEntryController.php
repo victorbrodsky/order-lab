@@ -25,6 +25,7 @@ use App\CallLogBundle\Util\CallLogUtil;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
+use App\OrderformBundle\Entity\Procedure;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
@@ -1589,24 +1590,27 @@ class CallEntryController extends OrderAbstractController
                 $accessionNumber = $form['accessionNumber']->getData();
                 echo "accession: type=".$accessionType.", number=".$accessionNumber."<br>";
                 if( $accessionType && $accessionNumber ) {
-                    $status = 'valid';
-                    $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
-                    $accession = new Accession(false, $status, $user, $sourcesystem); //$withfields=false, $status='invalid', $provider=null, $source=null
-                    $accessionAccession = new AccessionAccession($status, $user, $sourcesystem);
-                    //add accession type
-                    $accessionAccession->setKeytype($accessionType);
-                    //add accession number
-                    $accessionAccession->setField($accessionNumber);
-                    $accessionDate = new AccessionAccessionDate($status, $user, $sourcesystem);
-                    $accession->addAccession($accessionAccession);
-                    $accession->addAccessionDate($accessionDate);
+//                    $status = 'valid';
+//                    $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
+//                    $accession = new Accession(false, $status, $user, $sourcesystem); //$withfields=false, $status='invalid', $provider=null, $source=null
+//                    $accessionAccession = new AccessionAccession($status, $user, $sourcesystem);
+//                    //add accession type
+//                    $accessionAccession->setKeytype($accessionType);
+//                    //add accession number
+//                    $accessionAccession->setField($accessionNumber);
+//                    $accessionDate = new AccessionAccessionDate($status, $user, $sourcesystem);
+//                    $accession->addAccession($accessionAccession);
+//                    $accession->addAccessionDate($accessionDate);
+
+                    $accession = $calllogUtil->createNewAccession($accessionNumber,$accessionType,$user);
+                    $em->persist($accession);
                     $message->addAccession($accession);
 
                     $accessions = $message->getAccession();
                     echo "accessions count=".count($accessions)."<br>";
                 }
             }
-            exit('after adding accession');
+            //exit('after adding accession');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
@@ -2432,6 +2436,8 @@ class CallEntryController extends OrderAbstractController
         $sex = trim($request->get('sex'));
         $phone = trim($request->get('phone'));
         $email = trim($request->get('email'));
+        $accessionnumber = trim($request->get('accessionnumber'));
+        $accessiontype = trim($request->get('accessiontype'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
         //echo "mrntype=".$mrntype."<br>";
@@ -2657,7 +2663,24 @@ class CallEntryController extends OrderAbstractController
             $createdWithArr[] = "DOB: " . $dob;
         }
 
-
+        if( $accessiontype && $accessionnumber ) {
+            //create accession and add it to this new patient
+            $accession = $calllogUtil->createNewAccession($accessionnumber,$accessiontype,$user);
+            if( $accession ) {
+                $createdWithArr[] = "Accession Number: " . $accessionnumber . " (" . $accessiontype . ")";
+                $em->persist($accession);
+                //Patient->Encounter->Procedure->Accession
+                //Create new Encounter
+                $encounter = new Encounter(false, $status, $user, $sourcesystem);
+                $em->persist($encounter);
+                $patient->addEncounter($encounter);
+                //Create new Procedure
+                $procedure = new Procedure(false, $status, $user, $sourcesystem);
+                $em->persist($procedure);
+                $encounter->addProcedure($procedure);
+                $procedure->addAccession($accession);
+            }
+        }
 
         if( $withEncounter ) {
             //create an encounter for this new patient with the First Name, Last Name, Middle Name, Suffix, and sex (if any)

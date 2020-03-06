@@ -67,7 +67,7 @@ class MrnTypeTransformer implements DataTransformerInterface
         //echo "data transformer type=".$type."<br>";
 
         //if( is_int($type) ) {
-        if( strval($type) == strval(intval($type)) ) {
+        if( !is_object($type) && strval($type) == strval(intval($type)) ) {
             $type = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }

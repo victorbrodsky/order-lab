@@ -225,6 +225,23 @@ class CallLogUtilForm
         return $this->getTable($html);
     }
 
+    public function getAccessionInfoHtml( $message, $status )
+    {
+        //$userServiceUtil = $this->container->get('user_service_utility');
+
+        $html = $this->getTrSection("Accession Info");
+
+        $accessions = $message->getAccession();
+
+        if( count($accessions) > 0 ) {
+            $accession = $accessions[0];
+            $html .= $this->getTrField("Accession Number",$accession->obtainFullObjectName());
+            return $this->getTable($html);
+        }
+
+        return NULL;
+    }
+
     public function getEntryHtml( $message, $status ) {
 
         $html = $this->getTrSection("Entry");

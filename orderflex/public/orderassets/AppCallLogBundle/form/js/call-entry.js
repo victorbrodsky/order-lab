@@ -125,6 +125,12 @@ function addnewCalllogPatient(holderId) {
     var email = holder.find(".patient-email").val();
     email = trimWithCheck(email);
 
+    var accessionnumber = holder.find(".accession-mask").val();
+    accessionnumber = trimWithCheck(accessionnumber);
+
+    var accessiontype = holder.find(".accessiontype-combobox").select2('val');
+    accessiontype = trimWithCheck(accessiontype);
+    
     if( email ) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if( re.test(String(email).toLowerCase()) ) {
@@ -177,6 +183,9 @@ function addnewCalllogPatient(holderId) {
         creationStr += " Phone: "+phone+" ";
     if( email )
         creationStr += " E-Mail: "+email+" ";
+    if( accessiontype && accessionnumber ) {
+        creationStr += " Accession Number: "+accessionnumber+" ("+holder.find(".accessiontype-combobox").select2('data').text+")";
+    }
 
     confirmMsg = confirmMsg + creationStr;
 
@@ -206,7 +215,7 @@ function addnewCalllogPatient(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, phone: phone, email: email, suffix: suffix, sex: sex, metaphone:metaphone  },
+        data: {mrntype: mrntype, mrn: mrn, dob: dob, lastname: lastname, firstname: firstname, middlename: middlename, phone: phone, email: email, suffix: suffix, sex: sex, metaphone:metaphone, accessiontype:accessiontype, accessionnumber:accessionnumber  },
     }).success(function(data) {
         //console.log("output="+data);
 
@@ -632,10 +641,11 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         }
         //ok
         if( !searchedStr && mrn && mrntype ) {
-            searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('data').text+"; MRN: "+mrn;
+            searchedStr = " (searched for MRN Type: "+holder.find(".mrntype-combobox").select2('val').text+"; MRN: "+mrn;
         }
         if( !searchedStr && accessionnumber && accessiontype ) {
-            searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype-combobox").select2('val').text+"; Accession Number: "+accessionnumber;
+            //searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype-combobox").select2('val').text+"; Accession Number: "+accessionnumber;
+            searchedStr = " (searched for Accession Number: "+accessionnumber+" ("+holder.find(".accessiontype-combobox").select2('val').text+")";
         }
         if( !searchedStr && dob && lastname ) {
             var firstnameStr = "";
@@ -842,6 +852,16 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
 
         //un-hide/show a button called "Add New Patient Registration"
         if( allowCreateNewPatient ) {
+            //If Accession field does not exist use title: Add New Patient Record
+            //If Accession field exists use title: Add New Patient Record and Accession Number
+            if( calllogAccessionExists() ) {
+                var addNewPatientBtnTitle = "Add New Patient Record and Accession Number";
+            } else {
+                var addNewPatientBtnTitle = "Add New Patient Record";
+            }
+            //console.log("addNewPatientBtnTitle="+addNewPatientBtnTitle);
+            //holder.find('#addnew_patient_button').prop('title', addNewPatientBtnTitle);
+            holder.find('#addnew_patient_button').html(addNewPatientBtnTitle);
             holder.find('#addnew_patient_button').show(_transTime);
         }
         processed = true;
@@ -857,6 +877,17 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
         //un-hide/show a button called "Add New Patient Registration" because no unique patient has been found
         if( patLen > 1 ) {
             if( allowCreateNewPatient ) {
+                //If Accession field does not exist use title: Add New Patient Record
+                //If Accession field exists use title: Add New Patient Record and Accession Number
+                if( calllogAccessionExists() ) {
+                    var addNewPatientBtnTitle = "Add New Patient Record and Accession Number";
+                } else {
+                    var addNewPatientBtnTitle = "Add New Patient Record";
+                }
+                //console.log("addNewPatientBtnTitle="+addNewPatientBtnTitle);
+                //holder.find('#addnew_patient_button').prop('title', addNewPatientBtnTitle);
+                //$('#addnew_patient_button').attr('title', addNewPatientBtnTitle);
+                holder.find('#addnew_patient_button').html(addNewPatientBtnTitle);
                 holder.find('#addnew_patient_button').show(_transTime);
             }
         }
@@ -1254,6 +1285,9 @@ function disableAllFields(disable,holderId) {
     disableField(holder.find(".patient-phone"),disable);
 
     disableField(holder.find(".patient-email"),disable);
+
+    disableField(holder.find(".accession-mask"),disable);
+    disableSelectFieldCalllog(holder.find(".accessiontype-combobox"),disable);
 
     //console.log("disableAllFields: finished");
 }
@@ -2765,3 +2799,14 @@ function calllogUpdateTaskBtnClicked(btn,cycle) {
         //$(btn).attr("disabled", false);
     });
 }
+
+
+function calllogAccessionExists() {
+    var accessionnumber = $(".accession-mask").val();
+    var accessiontype = $(".accessiontype-combobox").select2('val');
+    if( accessiontype && accessionnumber ) {
+        return true;
+    }
+    return false;
+}
+
