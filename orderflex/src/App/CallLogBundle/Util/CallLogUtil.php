@@ -439,6 +439,8 @@ class CallLogUtil
 
             //'patientInfoStr' => "Patient ID# ".$patient->getId().": ",    //.$masterStr.": "//testing
             'patientInfoStr' => $patient->getId(),
+            
+            //'accessions' => $patient->obtainAccessions()
 
         );
 

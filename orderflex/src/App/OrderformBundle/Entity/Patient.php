@@ -1467,6 +1467,8 @@ class Patient extends ObjectAbstract
         return $this->getMrn();
     }
 
+
+
 //    public function obtainValidDob() {
 //        foreach( $this->getDob() as $dob ) {
 //            if( $dob->getStatus() == 'valid' ) {
@@ -1837,4 +1839,9 @@ class Patient extends ObjectAbstract
 //
 //        return implode(", ",$locationArr);
     }
+
+//    public function obtainAccessions() {
+//
+//    }
+
 }
