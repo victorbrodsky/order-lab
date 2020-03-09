@@ -4138,7 +4138,7 @@ class CallLogUtil
         return $body;
     }
     
-    public function searchPatientByMrnAccession($request, $params, $evenlog=false, $turnOffMetaphone=false) {
+    public function searchPatientByAccession($request, $params, $evenlog=false, $turnOffMetaphone=false) {
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $calllogUtil = $this->container->get('calllog_util');
@@ -4352,7 +4352,7 @@ class CallLogUtil
         );
 
         return $patientsData;
-    }//searchPatientByMrnAccession
+    }//searchPatientByAccession
 
 
     //search patients: used by JS when search for patient in the new entry page (calllog_search_patient)

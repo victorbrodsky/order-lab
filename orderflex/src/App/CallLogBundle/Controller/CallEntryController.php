@@ -2416,7 +2416,7 @@ class CallEntryController extends OrderAbstractController
 
         //accession (If anything was entered into the Accession Number field, ignore content of all other fields)
         if( $accessionnumber && $accessiontype ) {
-            return $calllogUtil->searchPatientByMrnAccession($request,$params,$evenlog,$turnOffMetaphone);
+            return $calllogUtil->searchPatientByAccession($request,$params,$evenlog,$turnOffMetaphone);
         } else {
             return $calllogUtil->searchPatientByMrn($request,$params,$evenlog,$turnOffMetaphone);
         }

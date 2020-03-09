@@ -176,7 +176,7 @@ class CalllogMessageType extends AbstractType
             $attr = array('class' => 'ajax-combobox combobox combobox-width accessiontype-combobox', 'type' => 'hidden'); //combobox
             $options = array(
                 'label' => 'Accession Type:',
-                'required' => true,
+                'required' => false,
                 'attr' => $attr,
                 'mapped' => false,
                 'classtype' => 'accessiontype',

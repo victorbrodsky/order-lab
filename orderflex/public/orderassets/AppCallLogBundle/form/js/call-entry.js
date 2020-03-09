@@ -22,6 +22,7 @@
 var _transTime = 500;
 var _patients = [];
 var _mrntype_original = null;
+_addAccessionCliked = false;
 
 function initCallLogPage() {
     listnereAccordionMasterPatientParent();
@@ -562,6 +563,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     //addnew patient button
     holder.find('#addnew_patient_button').hide(_transTime);
     holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    //$("#add_accession_to_this_patient_button_holder").html(null);
 
     var searchedStr = "";
 
@@ -752,7 +754,7 @@ function callloghasNumber(myString) {
     return (/\d/.test(myString));
 }
 
-function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, allowCreateNewPatient, accessionFound) {
+function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, allowCreateNewPatient, accessionFound ) {
 
     var holder = getHolder(holderId);
 
@@ -774,6 +776,7 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
     holder.find('#add_patient_to_list_button').hide(_transTime);
 
     holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    //$("#add_accession_to_this_patient_button_holder").html(null);
 
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
     showCalllogCallentryForm(false);
@@ -817,10 +820,19 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
         //     disableAllFields(true, holderId);
         // }
 
-        if( holder.find('#add_accession_to_this_patient_button') || holder.find('#add_accession_to_this_patient_button')|length > 0 ) {
+        //if( holder.find('#add_accession_to_this_patient_button') || holder.find('#add_accession_to_this_patient_button')|length > 0 ) {
+        if( _addAccessionCliked === false ) {
             console.log('show "Add Accession Number" button');
             //show button "Add Accession Number to this patient"
             holder.find('#add_accession_to_this_patient_button').show(_transTime);
+            _addAccessionCliked = false;
+
+            // var addAccessionButtonHtml = '<button id="add_accession_to_this_patient_button" type="button" ' +
+            //     'class="btn btn-lg btn-success span4" align="center" ' +
+            //     'onclick="populatePatientsInfo()" ' +
+            //     'style="float:left; min-width:100%; display:none;" '+
+            //     '>Add Accession Number to this Patient Record</button>';
+            // $("#add_accession_to_this_patient_button_holder").html(addAccessionButtonHtml);
 
             allowCreateNewPatient = false;
             processed = true;
@@ -955,8 +967,9 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
 
 function calllogAddAccessionToThisPatient(holderId) {
     var holder = getHolder(holderId);
-    //holder.find('#add_accession_to_this_patient_button').hide(_transTime);
-    holder.find('#add_accession_to_this_patient_button').remove();
+    holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    //holder.find('#add_accession_to_this_patient_button').remove();
+    _addAccessionCliked = true;
     holder.find('#search_patient_button').click();
 }
 
@@ -1027,13 +1040,21 @@ function createPatientsTableCalllog( patients, holderId ) {
 
     matchingPatientsHtml = matchingPatientsHeaderHtml + matchingPatientsHtml + "</tbody></table></div>";
 
+    if( calllogAccessionExists() ) {
+        var selectPatientBtnTitle = "Add Accession Number to Selected Patient";
+    } else {
+        var selectPatientBtnTitle = "Select Patient";
+    }
+
     matchingPatientsHtml = matchingPatientsHtml +
         '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
         //' id="matchingPatientBtn-'+holderId+'"'+
         ' class="btn btn-success btn-lg span4 matchingPatientBtn" align="center"'+
         ' disabled'+
         ' onclick="matchingPatientBtnClick(\''+holderId+'\')"'+
-        '>Select Patient</button></p>';
+        //'>Select Patient</button></p>'
+        '>'+selectPatientBtnTitle+'</button></p>'
+    ;
 
     matchingPatientsHtml = matchingPatientsHtml +
             '<div id="calllog-select-patient-danger-box" class="alert alert-danger" style="display: none; margin: 5px;"></div>';
