@@ -588,8 +588,8 @@ class CallEntryController extends OrderAbstractController
             $dql->andWhere($nodeChildSelectStr);
         }
 
+        //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter."<br>";
         if( $searchFilter ) {
-
             //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
@@ -661,10 +661,11 @@ class CallEntryController extends OrderAbstractController
             }
         }//if searchFilter
 
-        if( $mrntypeFilter ) {
-            $dql->andWhere("mrn.keytype = :keytype");
-            $queryParameters['keytype'] = $mrntypeFilter;
-        }
+        //filter only by mrn type even if the search parameter is empty
+//        if( $mrntypeFilter ) {
+//            $dql->andWhere("mrn.keytype = :keytype");
+//            $queryParameters['keytype'] = $mrntypeFilter;
+//        }
 
         //This single filter should work in the "OR" mode for these three fields: Submitter, Signee, Editor
         //Don't use: Referring Provider - encounter->referringProviders[]->field(userWrapper)->user(User)
@@ -2215,6 +2216,12 @@ class CallEntryController extends OrderAbstractController
         $searchedArr[] = "(Searched for ".$searchedStr.")";
         //echo "patients=".count($patients)."<br>";
 
+        if( array_key_exists("accessionFound",$patientsData) ) {
+            $accessionFound = $patientsData['accessionFound'];
+        } else {
+            $accessionFound = false;
+        }
+
         if( count($patients) == 0 ) {
             //search again, but only by mrn
             $params = array();
@@ -2233,6 +2240,38 @@ class CallEntryController extends OrderAbstractController
                 $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
                 $searchedArr[] = "<br>MRN $mrnStrict of MRN type $mrntypeStrict appears to belong to a patient $patientInfoStrict";
                 $allowCreateNewPatient = false;
+            }
+        }
+
+        if( count($patients) == 0 ) {
+            //search again, but only by accession
+            $params = array();
+            $accessiontype = trim($request->get('accessiontype'));
+            $accessionnumber = trim($request->get('accessionnumber'));
+            if( $accessionnumber && $accessiontype ) {
+                $params['accessiontype'] = $accessiontype;
+                $params['accessionnumber'] = $accessionnumber;
+                $patientsDataStrict = $this->searchPatient($request, true, $params);
+                $patientsStrict = $patientsDataStrict['patients'];
+
+                if( array_key_exists("accessionFound",$patientsDataStrict) ) {
+                    $accessionFound = $patientsDataStrict['accessionFound'];
+                } else {
+                    $accessionFound = false;
+                }
+
+                //$searchedStrStrict = $patientsDataStrict['searchStr'];
+                if( $accessionFound ) {
+                    foreach ($patientsStrict as $patientStrict) {
+                        //$accessionRes = $patientStrict->obtainStatusField('accession', "valid");
+                        //$accessiontypeStrict = $accessionRes->getKeytype();
+                        //$accessionStrict = $accessionRes->getField();
+                        //Accession 001 of Accession type NYH Accession appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
+                        $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
+                        $searchedArr[] = "<br>Accession $accessionnumber of Accession type $accessiontype appears to belong to a patient $patientInfoStrict";
+                        $allowCreateNewPatient = false;
+                    }
+                }
             }
         }
 
@@ -2315,6 +2354,7 @@ class CallEntryController extends OrderAbstractController
         $resData['patients'] = $patientsArr;
         $resData['searchStr'] = implode("; ",$searchedArr);
         $resData['allowCreateNewPatient'] = $allowCreateNewPatient;
+        $resData['accessionFound'] = $accessionFound;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

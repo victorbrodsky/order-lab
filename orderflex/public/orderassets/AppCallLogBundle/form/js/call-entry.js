@@ -235,7 +235,7 @@ function addnewCalllogPatient(holderId) {
             // mrntype.prop("readonly", false);
             // mrnid.prop("readonly", false);
             // return; //testing!!!
-            populatePatientsInfo(data.patients,creationStr,holderId,true,null);
+            populatePatientsInfo(data.patients,creationStr,holderId,true,null,null);
 
             //console.log("Patient has been created");
             //hide find patient and add new patient
@@ -561,6 +561,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
 
     //addnew patient button
     holder.find('#addnew_patient_button').hide(_transTime);
+    holder.find('#add_accession_to_this_patient_button').hide(_transTime);
 
     var searchedStr = "";
 
@@ -689,7 +690,11 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     }
 
     var singleMatch = false;
-    if( (mrn && mrntype) || (accessionnumber && accessiontype) || (dob && lastname) ) {
+    if( (mrn && mrntype) || (dob && lastname) ) {
+        singleMatch = true;
+    }
+
+    if( accessionnumber && accessiontype ) {
         singleMatch = true;
     }
 
@@ -710,6 +715,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         var data = resData.patients;
         var searchedStr = resData.searchStr;
         var allowCreateNewPatient = resData.allowCreateNewPatient;
+        var accessionFound = resData.accessionFound;
 
         if( data ) {
             var firstKey = Object.keys(data)[0];
@@ -717,13 +723,13 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
                 var firstElement = data[firstKey];
                 if( firstElement && firstElement.hasOwnProperty("id") ) {
                     //console.log("patient found: searchedStr="+searchedStr);
-                    populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient);
+                    populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient, accessionFound);
                     dataOk = true;
                 }
             }
             if( data.length == 0 ) {
                 //console.log("no patient found: searchedStr="+searchedStr);
-                populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient);
+                populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient, accessionFound);
                 dataOk = true;
             }
         }
@@ -746,7 +752,7 @@ function callloghasNumber(myString) {
     return (/\d/.test(myString));
 }
 
-function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCreateNewPatient) {
+function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, allowCreateNewPatient, accessionFound) {
 
     var holder = getHolder(holderId);
 
@@ -767,6 +773,8 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
 
     holder.find('#add_patient_to_list_button').hide(_transTime);
 
+    holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
     showCalllogCallentryForm(false);
 
@@ -775,6 +783,49 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
     //console.log(_patients);
 
     var processed = false;
+
+    //Check for accession
+    // var accessionnumber = holder.find(".accession-mask").val();
+    // accessionnumber = trimWithCheck(accessionnumber);
+    // var accessiontype = holder.find(".accessiontype-combobox").select2('val');
+    // accessiontype = trimWithCheck(accessiontype);
+    // if( accessionFound === false && patLen == 1 && accessionnumber && accessiontype ) {
+    //     console.log("Accession number not found for a single patient");
+    //     processed = true;
+    // }
+
+    console.log("accessionFound="+accessionFound);
+
+    if( calllogAccessionExists() && accessionFound === true ) {
+        allowCreateNewPatient = false;
+    }
+
+    if( calllogAccessionExists() && accessionFound === false && patLen == 1 ) {
+
+        //var patient = patients[0];
+        // var patient = getFirstPatient(patients);
+        // if (patient == null) {
+        //     alert("No first patient found in the patient array");
+        // }
+        //
+        // var patMergedLen = getMergedPatientInfoLength(patient);
+        // //console.log('patMergedLen='+patMergedLen);
+        //
+        // if( patMergedLen == 0 && processed == false ) {
+        //     //console.log('single patient populate');
+        //     populatePatientInfo(patient, false, true, holderId); //single patient found
+        //     disableAllFields(true, holderId);
+        // }
+
+        if( holder.find('#add_accession_to_this_patient_button') || holder.find('#add_accession_to_this_patient_button')|length > 0 ) {
+            console.log('show "Add Accession Number" button');
+            //show button "Add Accession Number to this patient"
+            holder.find('#add_accession_to_this_patient_button').show(_transTime);
+
+            allowCreateNewPatient = false;
+            processed = true;
+        }
+    }
 
     if( patLen == 1 && singleMatch ) {
 
@@ -900,6 +951,13 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
         console.log("Logical error. Search patients not processed. patLen="+patLen);
     }
     //console.log("populate Patients Info: finished");
+}
+
+function calllogAddAccessionToThisPatient(holderId) {
+    var holder = getHolder(holderId);
+    //holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    holder.find('#add_accession_to_this_patient_button').remove();
+    holder.find('#search_patient_button').click();
 }
 
 function createPatientsTableCalllog( patients, holderId ) {

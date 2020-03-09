@@ -4166,6 +4166,7 @@ class CallLogUtil
 
         $exactMatch = true;
         $matchAnd = true;
+        $accessionFound = false;
 
         //echo "mrntype=".$mrntype."<br>";
         //echo "mrn=".$mrn."<br>";
@@ -4288,6 +4289,7 @@ class CallLogUtil
 
             $patient = $patients[0];
             $samePatient = true;
+            $accessionFound = true;
             //Compare entered patient info
 
             //mrn
@@ -4334,6 +4336,7 @@ class CallLogUtil
 
             //We should have only one patient associated with Accession
             $searchBy = $searchBy . " " . "Multiple patients associated with this accession number.";
+            $accessionFound = true;
 
         } else {
 
@@ -4344,7 +4347,8 @@ class CallLogUtil
 
         $patientsData = array(
             'patients' => $patients,
-            'searchStr' => $searchBy
+            'searchStr' => $searchBy,
+            'accessionFound' => $accessionFound
         );
 
         return $patientsData;
