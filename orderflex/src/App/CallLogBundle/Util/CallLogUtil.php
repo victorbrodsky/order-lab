@@ -4140,8 +4140,8 @@ class CallLogUtil
     
     public function searchPatientByAccession($request, $params, $evenlog=false, $turnOffMetaphone=false) {
 
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $calllogUtil = $this->container->get('calllog_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$calllogUtil = $this->container->get('calllog_util');
         $em = $this->em;
 
         $mrntype = ( array_key_exists('mrntype', $params) ? $params['mrntype'] : null);
@@ -4155,18 +4155,19 @@ class CallLogUtil
         $email = ( array_key_exists('email', $params) ? $params['email'] : null);
         $metaphone = ( array_key_exists('metaphone', $params) ? $params['metaphone'] : null);
 
+        $exactMatch = true;
+        //$matchAnd = true;
+        $accessionFound = false;
+
         if( !$accessionnumber || !$accessiontype ) {
-            return null;
+            //return null;
             $patientsData = array(
                 'patients' => array(),
+                'accessionFound' => $accessionFound,
                 'searchStr' => "Logical Error: no accession is provided"
             );
             return $patientsData;
         }
-
-        $exactMatch = true;
-        $matchAnd = true;
-        $accessionFound = false;
 
         //echo "mrntype=".$mrntype."<br>";
         //echo "mrn=".$mrn."<br>";
@@ -4194,7 +4195,7 @@ class CallLogUtil
 
         //$dql->where("mrn.status = :statusValid");
 
-        $where = false;
+        //$where = false;
         $searchBy = "unknown parameters";
         $searchArr = array();
 
@@ -4287,10 +4288,11 @@ class CallLogUtil
 
         } elseif ( count($patients) == 1 ) {
 
+            ///////// Compare entered patient info with found by accession /////////
+
             $patient = $patients[0];
             $samePatient = true;
             $accessionFound = true;
-            //Compare entered patient info
 
             //mrn
             $mrnRes = $patient->obtainStatusField('mrn', "valid");
@@ -4324,13 +4326,40 @@ class CallLogUtil
                 $samePatient = false;
             }
 
+            //email
+            $patientEmail = $patient->getEmailCanonical();
+            if( $email && strtolower($email) != $patientEmail ) {
+                $samePatient = false;
+            }
+
+            //phone
+            $patientPhone = $patient->getPhoneCanonical();
+            if( $phone && $patientPhone ) {
+                $phone = str_replace(" ","",$phone);
+                $phone = str_replace("-","",$phone);
+                $phone = str_replace("(","",$phone);
+                $phone = str_replace(")","",$phone);
+
+                $patientPhone = str_replace(" ","",$patientPhone);
+                $patientPhone = str_replace("-","",$patientPhone);
+                $patientPhone = str_replace("(","",$patientPhone);
+                $patientPhone = str_replace(")","",$patientPhone);
+
+                if( $phone && strtolower($phone) != $patientPhone ) {
+                    $samePatient = false;
+                }
+            }
+
             if( $samePatient ) {
                 //Populate all fields, show previous notes
             } else {
+                //$accessionFound but (count(patients) == 0) => found patient does not match entered patient's info
                 //Not the same patient
                 $patients = array();
                 $searchBy = $searchBy . " " . "Entered patient information does not match entered accession number.";
             }
+
+            ///////// EOF Compare entered patient info with found by accession /////////
 
         } elseif ( count($patients) > 1 ) {
 
@@ -4725,6 +4754,64 @@ class CallLogUtil
         }
 
         return NULL;
+    }
+
+    public function getPatientsByAccessions( $request, $accessionnumber, $accessiontype ) {
+
+        $output = null;
+        $patients = array();
+        $res = array(
+            'output' => $output,
+            'patients' => $patients
+        );
+        
+        if( !$accessionnumber || !$accessiontype ) {
+            return $res;
+        }
+
+        $accessionParams = array();
+        $accessionParams['accessiontype'] = $accessiontype;
+        $accessionParams['accessionnumber'] = $accessionnumber;
+        $patientsDataStrict = $this->searchPatientByAccession($request, false, $accessionParams);
+        $patientsStrict = $patientsDataStrict['patients'];
+
+        if (array_key_exists("accessionFound", $patientsDataStrict)) {
+            $accessionFound = $patientsDataStrict['accessionFound'];
+        } else {
+            $accessionFound = false;
+        }
+
+        //$searchedStrStrict = $patientsDataStrict['searchStr'];
+        if( $accessionFound ) {
+
+            $searchedArr = array();
+
+            foreach( $patientsStrict as $patientStrict ) {
+                //Accession 001 of Accession type NYH Accession appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
+                $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
+                $searchedArr[] = "<br>Accession $accessionnumber of Accession type $accessiontype appears to belong to a patient $patientInfoStrict";
+            }
+
+            if( count($patientsStrict) > 0 ) {
+                $output = "Can not create a new Patient. The patient with specified Accession already exists:<br>";
+                if( $accessiontype ) {
+                    $output .= "Accession Type: ".$accessiontype."<br>";
+                }
+                if( $accessionnumber ) {
+                    $output .= "Accession: " . $accessionnumber . "<br>";
+                }
+
+                if( count($searchedArr) > 0 ) {
+                    $output .= implode("<br>",$searchedArr);
+                }
+            }
+
+        }//if( $accessionFound )
+
+        $res['output'] = $output;
+        $res['patients'] = $patientsStrict;
+
+        return $res;
     }
 
     public function obtainPhoneCanonical($phone) {

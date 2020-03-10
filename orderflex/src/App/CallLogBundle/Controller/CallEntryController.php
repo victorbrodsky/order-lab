@@ -1603,7 +1603,36 @@ class CallEntryController extends OrderAbstractController
 //                    $accession->addAccession($accessionAccession);
 //                    $accession->addAccessionDate($accessionDate);
 
-                    $accession = $calllogUtil->createNewAccession($accessionNumber,$accessionType,$user);
+                    //$accessionExistingRes = $calllogUtil->getPatientsByAccessions($request,$accessionNumber,$accessionType); // /entry/save
+                    //$accessionExistingOutput = $accessionExistingRes['output'];
+                    //$accessionExistingPatients = $accessionExistingRes['patients'];
+//                    if( count($accessionExistingPatients) > 0 ) {
+//                        foreach($accessionExistingPatients as $accessionExistingPatient) {
+//                            //compare patients
+//                        }
+//                        throw new \Exception("Can not add a new Accession number $accessionNumber ($accessionType) to this Patient with ID #".$patient->getId().": ".$accessionExistingOutput);
+//                    }
+
+                    $accessionParams = array();
+                    $accessionParams['accessiontype'] = $accessionType;
+                    $accessionParams['accessionnumber'] = $accessionNumber;
+                    $patientsDataStrict = $this->searchPatientByAccession($request, false, $accessionParams);
+                    $patientsStrict = $patientsDataStrict['patients'];
+                    if (array_key_exists("accessionFound", $patientsDataStrict)) {
+                        $accessionFound = $patientsDataStrict['accessionFound'];
+                    } else {
+                        $accessionFound = false;
+                    }
+                    //$accessionFound but (count(patients) == 0) => found patient by accession does not match entered patient's info
+                    if( $accessionFound && count($patientsStrict) == 0 ) {
+                        throw new \Exception(
+                            "Found patient by accession does not match entered patient's info. Can not add a new Accession number $accessionNumber ($accessionType) to this Patient: ".
+                            $patient->obtainPatientInfoTitle('valid',null,false)
+                        );
+                    }
+
+                    //TODO:
+                    $accession = $calllogUtil->createNewOrFindAccession($accessionNumber,$accessionType,$user); // /entry/save
                     $em->persist($accession);
                     $message->addAccession($accession);
 
@@ -2118,16 +2147,16 @@ class CallEntryController extends OrderAbstractController
         //$message->addPatient($patient);
 
         //add accession for patient info section
-        if(0) {
-            $accession = new Accession();
-            $status = 'invalid';
-            $provider = null;
-            $source = null;
-            $accession->addAccession(new AccessionAccession($status, $provider, $source));
-            $message->addAccession($accession);
-            //$accessions = $message->getAccession();
-            //echo "accessions count=".count($accessions)."<br>";
-        }
+//        if(0) {
+//            $accession = new Accession();
+//            $status = 'invalid';
+//            $provider = null;
+//            $source = null;
+//            $accession->addAccession(new AccessionAccession($status, $provider, $source));
+//            $message->addAccession($accession);
+//            //$accessions = $message->getAccession();
+//            //echo "accessions count=".count($accessions)."<br>";
+//        }
 
         return $message;
     }
@@ -2548,6 +2577,7 @@ class CallEntryController extends OrderAbstractController
         $mrnParams = array();
         $mrnParams['mrntype'] = $mrntype;
         $mrnParams['mrn'] = $mrn;
+        //searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false )
         $patientsDataStrict = $this->searchPatient( $request, true, $mrnParams );
         $patientsStrict = $patientsDataStrict['patients'];
         if( count($patientsStrict) > 0 ) {
@@ -2580,6 +2610,7 @@ class CallEntryController extends OrderAbstractController
 
         //search by the rest of the parameters
         $turnOffMetaphone = true;
+        //searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false )
         $patientsData = $this->searchPatient($request,false,null,$turnOffMetaphone);
         $patients = $patientsData['patients'];
 
@@ -2613,6 +2644,65 @@ class CallEntryController extends OrderAbstractController
             $response->setContent(json_encode($res));
             return $response;
         }
+
+        //search by Accession
+        if( $accessionnumber && $accessiontype ) {
+
+//            $accessionParams = array();
+//            $accessionParams['accessiontype'] = $accessiontype;
+//            $accessionParams['accessionnumber'] = $accessionnumber;
+//            $patientsDataStrict = $this->searchPatient($request, true, $accessionParams);
+//            $patientsStrict = $patientsDataStrict['patients'];
+//
+//            if (array_key_exists("accessionFound", $patientsDataStrict)) {
+//                $accessionFound = $patientsDataStrict['accessionFound'];
+//            } else {
+//                $accessionFound = false;
+//            }
+//
+//            //$searchedStrStrict = $patientsDataStrict['searchStr'];
+//            if( $accessionFound ) {
+//
+//                $searchedArr = array();
+//
+//                foreach( $patientsStrict as $patientStrict ) {
+//                    //Accession 001 of Accession type NYH Accession appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
+//                    $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
+//                    $searchedArr[] = "<br>Accession $accessionnumber of Accession type $accessiontype appears to belong to a patient $patientInfoStrict";
+//                }
+//
+//                if( count($patientsStrict) > 0 ) {
+//                    $output = "Can not create a new Patient. The patient with specified Accession already exists:<br>";
+//                    if( $accessiontype ) {
+//                        $output .= "Accession Type: ".$accessiontype."<br>";
+//                    }
+//                    if( $accessionnumber ) {
+//                        $output .= "Accession: " . $accessionnumber . "<br>";
+//                    }
+//
+//                    if( count($searchedArr) > 0 ) {
+//                        $output .= implode("<br>",$searchedArr);
+//                    }
+//
+//                    $res['patients'] = null;
+//                    $res['output'] = $output;
+//                    $response->setContent(json_encode($res));
+//                    return $response;
+//                }
+//
+//            }//if( $accessionFound )
+
+            $accessionExistingRes = $calllogUtil->getPatientsByAccessions($request,$accessionnumber,$accessiontype); // /patient/create
+            $accessionExistingOutput = $accessionExistingRes['output'];
+            $accessionExistingPatients = $accessionExistingRes['patients'];
+            if( $accessionExistingOutput && count($accessionExistingPatients) > 0 ) {
+                $res['patients'] = null;
+                $res['output'] = $accessionExistingOutput;
+                $response->setContent(json_encode($res));
+                return $response;
+            }
+
+        }//if( $accessionnumber && $accessiontype )
 
         //testing
         if(0) {
@@ -2705,7 +2795,7 @@ class CallEntryController extends OrderAbstractController
 
         if( $accessiontype && $accessionnumber ) {
             //create accession and add it to this new patient
-            $accession = $calllogUtil->createNewAccession($accessionnumber,$accessiontype,$user);
+            $accession = $calllogUtil->createNewAccession($accessionnumber,$accessiontype,$user); // /patient/create
             if( $accession ) {
                 $createdWithArr[] = "Accession Number: " . $accessionnumber . " (" . $accessiontype . ")";
                 $em->persist($accession);

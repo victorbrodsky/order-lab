@@ -1949,6 +1949,8 @@ function calllogSubmitForm(btn,messageStatus) {
     }
     /////// EOF If the user enters patient info, does NOT press the "Find Patient" button (or presses it, but does not select a patient) ////////
 
+    //Check if accession is already associated with another patient (calllog_search_patient)
+    
     ///////////// if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
     var messageCategoryError = null;
     var messageHolder = $('.ajax-combobox-messageCategory').closest('.composite-tree-holder');
