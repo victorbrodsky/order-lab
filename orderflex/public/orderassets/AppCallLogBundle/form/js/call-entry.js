@@ -606,6 +606,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
 
     var accessiontype = holder.find(".accessiontype-combobox").select2('val');
     accessiontype = trimWithCheck(accessiontype);
+    console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
 
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
@@ -932,7 +933,7 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
 
     if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
 
-        //console.log("show table with found patients");
+        console.log("show table with found patients");
         //show table with found patients
         populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);
@@ -978,6 +979,15 @@ function createPatientsTableCalllog( patients, holderId ) {
     var holder = getHolder(holderId);
     var hasMaster = false;
     var matchingPatientsHtml = "";
+
+    if( calllogAccessionExists() ) {
+        var selectPatientBtnTitle = "Add Accession Number to Selected Patient";
+        //var accessionHeader = '<th>Accession</th>';
+    } else {
+        var selectPatientBtnTitle = "Select Patient";
+        //var accessionHeader = null;
+    }
+    var accessionHeader = '<th>Accession</th>';
 
     //for( var i = 0; i < patients.length; i++ ) {
     for( var i in patients ) {
@@ -1027,6 +1037,7 @@ function createPatientsTableCalllog( patients, holderId ) {
 
     matchingPatientsHeaderHtml +=
         '<th>MRN</th>' +
+        accessionHeader +
         '<th>Last Name</th>' +
         '<th>First Name</th>' +
         '<th>Middle Name</th>' +
@@ -1039,12 +1050,6 @@ function createPatientsTableCalllog( patients, holderId ) {
         '<tbody>';
 
     matchingPatientsHtml = matchingPatientsHeaderHtml + matchingPatientsHtml + "</tbody></table></div>";
-
-    if( calllogAccessionExists() ) {
-        var selectPatientBtnTitle = "Add Accession Number to Selected Patient";
-    } else {
-        var selectPatientBtnTitle = "Select Patient";
-    }
 
     matchingPatientsHtml = matchingPatientsHtml +
         '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
@@ -1135,12 +1140,21 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
             '</ul></div>';
     }
 
+
+    // if( typeof accessionHeader === 'undefined'  ) {
+    //     var accessionInfo = null;
+    // } else {
+    //     var accessionInfo = '<td>'+patient.accessions+'</td>';
+    // }
+
     patientsHtml +=
         '<td id="calllog-patientid-'+patient.id+'">'+
         patient.patientInfoStr +
         patient.mrn+' ('+patient.mrntypestr+')'+
         //hasMergedPatients +
         '</td>'+
+        //accessionInfo+
+        '<td>'+patient.accessions+'</td>'+
         '<td>'+patient.lastname+'</td>'+
         '<td>'+patient.firstname+'</td>'+
         '<td>'+patient.middlename+'</td>'+
@@ -1949,7 +1963,7 @@ function calllogSubmitForm(btn,messageStatus) {
     }
     /////// EOF If the user enters patient info, does NOT press the "Find Patient" button (or presses it, but does not select a patient) ////////
 
-    //Check if accession is already associated with another patient (calllog_search_patient)
+    //Check if accession is already associated with another patient (calllog_search_patient)?
     
     ///////////// if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
     var messageCategoryError = null;

@@ -1587,10 +1587,16 @@ class CallEntryController extends OrderAbstractController
             //if accession number exists => create new Accession and link it to Message and Patient (if exists)
             //add accession for patient info section
             if(1) {
-                $accessionType = $form['accessionType']->getData();
+                //$accessionType = $form['accessionType']->getData();
+                $accessionType = $request->request->get('accessionType');
                 $accessionNumber = $form['accessionNumber']->getData();
                 echo "accession: type=".$accessionType.", number=".$accessionNumber."<br>";
+                //print_r($form);
+                //$data = $form->getData();
+                //print_r($data);
+                exit('before adding accession');
                 if( $accessionType && $accessionNumber ) {
+                    //exit('before adding accession');
 //                    $status = 'valid';
 //                    $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
 //                    $accession = new Accession(false, $status, $user, $sourcesystem); //$withfields=false, $status='invalid', $provider=null, $source=null
@@ -1626,21 +1632,21 @@ class CallEntryController extends OrderAbstractController
                     //$accessionFound but (count(patients) == 0) => found patient by accession does not match entered patient's info
                     if( $accessionFound && count($patientsStrict) == 0 ) {
                         throw new \Exception(
-                            "Found patient by accession does not match entered patient's info. Can not add a new Accession number $accessionNumber ($accessionType) to this Patient: ".
+                            "Found patient by accession does not match entered patient's info. ".
+                            "Can not add a new Accession number $accessionNumber ($accessionType) to this Patient: ".
                             $patient->obtainPatientInfoTitle('valid',null,false)
                         );
                     }
 
-                    //TODO:
-                    $accession = $calllogUtil->createNewOrFindAccession($accessionNumber,$accessionType,$user); // /entry/save
+                    $accession = $calllogUtil->createNewOrFindExistingAccession($accessionNumber,$accessionType,$user); // /entry/save
                     $em->persist($accession);
                     $message->addAccession($accession);
 
                     $accessions = $message->getAccession();
-                    echo "accessions count=".count($accessions)."<br>";
+                    echo "accessions [$accessionNumber ($accessionType)] count=".count($accessions)."<br>";
                 }
             }
-            //exit('after adding accession');
+            exit('after adding accession');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
@@ -2698,6 +2704,15 @@ class CallEntryController extends OrderAbstractController
             if( $accessionExistingOutput && count($accessionExistingPatients) > 0 ) {
                 $res['patients'] = null;
                 $res['output'] = $accessionExistingOutput;
+                $response->setContent(json_encode($res));
+                return $response;
+            }
+
+            //Just in case check again DB just by accession number/type. Accession must not exist in DB.
+            $accession = $calllogUtil->findExistingAccession($accessionnumber,$accessiontype);
+            if( $accession ) {
+                $res['patients'] = null;
+                $res['output'] = "Can not create a new patient with existing accession number. Accession $accessionnumber ($accessiontype) already exists in DB and belongs to another patient.";
                 $response->setContent(json_encode($res));
                 return $response;
             }

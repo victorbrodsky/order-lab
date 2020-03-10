@@ -185,10 +185,12 @@ class CalllogMessageType extends AbstractType
                 $options['data'] = 1; //new
                 $defaultScanAccessionType = $this->params['defaultAccessionType'];
                 if( $defaultScanAccessionType ) {
+                    //echo "set accessionType <br>";
                     $options['data'] = $defaultScanAccessionType->getId();
                 } else {
                     $options['data'] = 1; //new
                 }
+                //$options['data'] = $defaultScanAccessionType->getId();
             }
             $builder->add('accessionType', ScanCustomSelectorType::class, $options);
 
