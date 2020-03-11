@@ -1197,6 +1197,13 @@ class ScanAdminController extends AdminController
                         ),
                         'Test' => array(
                         ),
+                    ),
+                    'Critical Result Notification' => array(
+                        //Service level
+                        'Dermatopathology' => array(
+                            //Issue level
+                            'Malignancy'
+                        )
                     )
                 ),
                 'Procedure Note'
