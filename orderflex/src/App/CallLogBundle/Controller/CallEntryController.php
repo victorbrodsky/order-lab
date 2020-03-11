@@ -1472,6 +1472,7 @@ class CallEntryController extends OrderAbstractController
 //        $mrntype = trim($request->get('mrntype'));
         $mrn = null;
         $mrntype = null;
+        $accession = null;
 
         $title = "Save Entry";
 
@@ -1587,14 +1588,10 @@ class CallEntryController extends OrderAbstractController
             //if accession number exists => create new Accession and link it to Message and Patient (if exists)
             //add accession for patient info section
             if(1) {
-                //$accessionType = $form['accessionType']->getData();
-                $accessionType = $request->request->get('accessionType');
+                $accessionType = $form['accessionType']->getData();
                 $accessionNumber = $form['accessionNumber']->getData();
-                echo "accession: type=".$accessionType.", number=".$accessionNumber."<br>";
-                //print_r($form);
-                //$data = $form->getData();
-                //print_r($data);
-                exit('before adding accession');
+                //echo "accession: typeName=".$accessionType.", typeID=".$accessionType->getId().", number=".$accessionNumber."<br>";
+                //exit('before adding accession');
                 if( $accessionType && $accessionNumber ) {
                     //exit('before adding accession');
 //                    $status = 'valid';
@@ -1622,7 +1619,7 @@ class CallEntryController extends OrderAbstractController
                     $accessionParams = array();
                     $accessionParams['accessiontype'] = $accessionType;
                     $accessionParams['accessionnumber'] = $accessionNumber;
-                    $patientsDataStrict = $this->searchPatientByAccession($request, false, $accessionParams);
+                    $patientsDataStrict = $calllogUtil->searchPatientByAccession($request, $accessionParams, false);
                     $patientsStrict = $patientsDataStrict['patients'];
                     if (array_key_exists("accessionFound", $patientsDataStrict)) {
                         $accessionFound = $patientsDataStrict['accessionFound'];
@@ -1642,11 +1639,11 @@ class CallEntryController extends OrderAbstractController
                     $em->persist($accession);
                     $message->addAccession($accession);
 
-                    $accessions = $message->getAccession();
-                    echo "accessions [$accessionNumber ($accessionType)] count=".count($accessions)."<br>";
+                    //$accessions = $message->getAccession();
+                    //echo "accessions [$accessionNumber ($accessionType)] count=".count($accessions)."<br>";
                 }
             }
-            exit('after adding accession');
+            //exit('after adding accession');
 
             $patientInfoDummyEncounter = null;
             $newEncounter = null;
@@ -1867,6 +1864,16 @@ class CallEntryController extends OrderAbstractController
                     //echo $name."<br>";
                     //exit('1');
 
+                    //Add accession if exists to the patient if exists (via $newEncounter)
+                    if( $accession && $patient ) {
+                        //Create new Procedure
+                        $sourcesystem = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
+                        $procedure = new Procedure(false, 'valid', $user, $sourcesystem);
+                        $em->persist($procedure);
+                        $newEncounter->addProcedure($procedure);
+                        $procedure->addAccession($accession);
+                    }
+
                     //exit('Exit Case 1');
                     //$em->persist($patient);
                     if( !$testing ) {
@@ -1912,6 +1919,7 @@ class CallEntryController extends OrderAbstractController
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
                 }
                 //////////////////// EOF Processing ////////////////////////
+
 
                 //set encounter as message's input
                 //$message->addInputObject($newEncounter);

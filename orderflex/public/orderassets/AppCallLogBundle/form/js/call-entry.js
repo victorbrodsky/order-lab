@@ -1380,7 +1380,9 @@ function disableAllFields(disable,holderId) {
     disableField(holder.find(".patient-email"),disable);
 
     disableField(holder.find(".accession-mask"),disable);
-    disableSelectFieldCalllog(holder.find(".accessiontype-combobox"),disable);
+    disableAccessionSelectFieldCalllog(holder.find(".accessiontype-combobox"),disable);
+    //oleg_calllogformbundle_messagetype_accessionType
+    //disableAccessionSelectFieldCalllog($('#oleg_calllogformbundle_messagetype_accessionType'),disable);
 
     //console.log("disableAllFields: finished");
 }
@@ -1423,6 +1425,20 @@ function disableSelectFieldCalllog(fieldEl,disable) {
         fieldEl.prop('disabled', true);
     } else {
         fieldEl.prop('disabled', false);
+    }
+}
+function disableAccessionSelectFieldCalllog(fieldEl,disable) {
+    if( disable ) {
+        //fieldEl.prop('disabled', true);
+        //fieldEl.prop('readonly', true);
+        //fieldEl.select2({disabled:'readonly'});
+        //fieldEl.select2({disabled:true});
+        fieldEl.select2("readonly", true);
+    } else {
+        //fieldEl.prop('disabled', false);
+        //fieldEl.prop('readonly', false);
+        //fieldEl.select2({disabled:false});
+        fieldEl.select2("readonly", false);
     }
 }
 
