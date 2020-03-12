@@ -43,6 +43,7 @@ use App\UserdirectoryBundle\Entity\CollaborationTypeList;
 use App\UserdirectoryBundle\Entity\CommentGroupType;
 use App\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
 use App\UserdirectoryBundle\Entity\FormNode;
+use App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList;
 use App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList;
 use App\UserdirectoryBundle\Entity\ImportanceList;
 use App\UserdirectoryBundle\Entity\LabResultFlagList;
@@ -922,6 +923,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateAdministratorAction");
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
+        $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         $logger->notice("Finished setObjectTypeForAllLists");
@@ -1032,6 +1034,7 @@ class AdminController extends OrderAbstractController
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
             'Administrator generation='.$adminRes.', '.
             'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
+            'HealthcareProviderCommunicationsList='.$count_HealthcareProviderCommunicationsList.', '.
             'BloodProductTransfused='.$count_BloodProductTransfused.', '.
             'TransfusionReactionType='.$count_TransfusionReactionType.', '.
             'BloodTypeList='.$count_BloodTypeList.', '.
@@ -5966,6 +5969,37 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new HealthcareProviderSpecialtiesList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateHealthcareProviderCommunicationsList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Inbound",
+            "Outbound"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new HealthcareProviderCommunicationList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);

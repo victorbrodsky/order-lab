@@ -57,6 +57,13 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
      */
     private $referringProviderEmail;
 
+    /**
+     * Initial Communication: Inbound, Outbound
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist","remove"})
+     * @ORM\JoinColumn(name="referringProviderCommunication", referencedColumnName="id")
+     */
+    private $referringProviderCommunication;
 
 
     /**
@@ -73,6 +80,22 @@ class EncounterReferringProvider extends EncounterArrayFieldAbstract
     public function setReferringProviderSpecialty($referringProviderSpecialty)
     {
         $this->referringProviderSpecialty = $referringProviderSpecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferringProviderCommunication()
+    {
+        return $this->referringProviderCommunication;
+    }
+
+    /**
+     * @param mixed $referringProviderCommunication
+     */
+    public function setReferringProviderCommunication($referringProviderCommunication)
+    {
+        $this->referringProviderCommunication = $referringProviderCommunication;
     }
 
     /**

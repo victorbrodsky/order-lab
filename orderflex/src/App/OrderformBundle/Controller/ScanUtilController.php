@@ -1054,6 +1054,7 @@ class ScanUtilController extends UtilController {
         $specialty = null;
         $phone = null;
         $email = null;
+        $communication = null;
 
         //echo 'compare: '.strval($providerId).' ?= '.strval(intval($providerId))."<br>";
         if( strval($providerId) == strval(intval($providerId)) ) {
@@ -1077,7 +1078,7 @@ class ScanUtilController extends UtilController {
                     }
                 }
 
-                if( $provider->getReferringProviderSpecialty() ) {
+                if( $provider->getReferringProviderPhone() ) {
                     $phone = $provider->getReferringProviderPhone();
                 } else {
                     if( $userWrapper ) {
@@ -1085,11 +1086,19 @@ class ScanUtilController extends UtilController {
                     }
                 }
 
-                if( $provider->getReferringProviderSpecialty() ) {
+                if( $provider->getReferringProviderEmail() ) {
                     $email = $provider->getReferringProviderEmail();
                 } else {
                     if( $userWrapper ) {
                         $email = $userWrapper->getUserWrapperEmail();
+                    }
+                }
+
+                if( $provider->getReferringProviderCommunication() ) {
+                    $communication = $provider->getReferringProviderCommunication()->getId();
+                } else {
+                    if( $userWrapper ) {
+                        $communication = $userWrapper->getUserWrapperCommunication();
                     }
                 }
             }
@@ -1118,6 +1127,7 @@ class ScanUtilController extends UtilController {
         $output['referringProviderSpecialty'] = $specialty;
         $output['referringProviderPhone'] = $phone;
         $output['referringProviderEmail'] = $email;
+        $output['referringProviderCommunication'] = $communication;
 
 //        print "<pre>";
 //        print_r($output);

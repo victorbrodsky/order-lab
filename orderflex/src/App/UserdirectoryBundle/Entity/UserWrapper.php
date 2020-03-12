@@ -104,6 +104,13 @@ class UserWrapper extends ListAbstract {
      */
     private $userWrapperSource;
 
+    /**
+     * Initial Communication: Inbound, Outbound
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist","remove"})
+     */
+    private $userWrapperCommunication;
+
 
 
     /**
@@ -168,6 +175,22 @@ class UserWrapper extends ListAbstract {
     public function setUserWrapperSpecialty($userWrapperSpecialty)
     {
         $this->userWrapperSpecialty = $userWrapperSpecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperCommunication()
+    {
+        return $this->userWrapperCommunication;
+    }
+
+    /**
+     * @param mixed $userWrapperCommunication
+     */
+    public function setUserWrapperCommunication($userWrapperCommunication)
+    {
+        $this->userWrapperCommunication = $userWrapperCommunication;
     }
 
     /**

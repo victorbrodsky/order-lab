@@ -2419,7 +2419,7 @@ function calllogEncounterReferringProviderListener(holderId) {
     return;
 }
 function calllogEncounterReferringProviderPopulate( holder, data ) {
-    var fieldNames = ['referringProviderSpecialty','referringProviderPhone','referringProviderEmail'];
+    var fieldNames = ['referringProviderSpecialty','referringProviderPhone','referringProviderEmail','referringProviderCommunication'];
 
     for( var i = 0; i < fieldNames.length; i++ ) {
         //text += fieldNames[i] + "<br>";

@@ -92,6 +92,14 @@ class EncounterReferringProviderType extends AbstractType
             'attr' => array('class'=>'form-control'),
             'disabled' => $this->params['referringProviders-readonly'],
         ));
+        
+        $builder->add('referringProviderCommunication', ScanCustomSelectorType::class, array(
+            'label' => 'Healthcare Provider Initial Communication:',
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderCommunication'),
+            'disabled' => $this->params['referringProviders-readonly'],
+            'required' => false,
+            'classtype' => 'referringProviderCommunication'
+        ));
 
     }
 

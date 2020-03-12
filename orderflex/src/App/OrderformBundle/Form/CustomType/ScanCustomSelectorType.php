@@ -133,6 +133,9 @@ class ScanCustomSelectorType extends AbstractType {
             case "referringProviderSpecialty":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'HealthcareProviderSpecialtiesList');
                 break;
+            case "referringProviderCommunication":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'HealthcareProviderCommunicationList');
+                break;
 
 //            case "returnSlide":
 //                $transformer = new  GenericTreeTransformer($this->om, $username, 'Location');

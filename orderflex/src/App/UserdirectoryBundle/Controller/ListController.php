@@ -121,6 +121,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/", name="eventobjecttypes-list", methods={"GET"})
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list", methods={"GET"})
+     * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication-list", methods={"GET"})
      * @Route("/list/object-types/", name="objecttypes-list", methods={"GET"})
      * @Route("/list/form-nodes/", name="formnodes-list", methods={"GET"}, options={"expose"=true})
      * @Route("/list/object-type-texts/", name="objecttypetexts-list", methods={"GET"}, options={"expose"=true})
@@ -597,6 +598,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/", name="eventobjecttypes_create", methods={"POST"})
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create", methods={"POST"})
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create", methods={"POST"})
+     * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication_create", methods={"POST"})
      * @Route("/list/object-types/", name="objecttypes_create", methods={"POST"})
      * @Route("/list/form-nodes/", name="formnodes_create", methods={"POST"}, options={"expose"=true})
      * @Route("/list/object-type-texts/", name="objecttypetexts_create", methods={"POST"}, options={"expose"=true})
@@ -907,6 +909,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/new", name="eventobjecttypes_new", methods={"GET"})
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new", methods={"GET"})
+     * @Route("/list/healthcare-provider-initial-communications/new", name="healthcareprovidercommunication_new", methods={"GET"})
      * @Route("/list/object-types/new", name="objecttypes_new", methods={"GET"})
      * @Route("/list/form-nodes/new", name="formnodes_new", methods={"GET"}, options={"expose"=true})
      * @Route("/list/object-type-texts/new", name="objecttypetexts_new", methods={"GET"}, options={"expose"=true})
@@ -1175,6 +1178,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_show", methods={"GET"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show", methods={"GET"})
+     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_show", methods={"GET"})
      * @Route("/list/object-types/{id}", name="objecttypes_show", methods={"GET"})
      * @Route("/list/form-nodes/{id}", name="formnodes_show", methods={"GET"}, options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_show", methods={"GET"}, options={"expose"=true})
@@ -1438,6 +1442,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/{id}/edit", name="eventobjecttypes_edit", methods={"GET"})
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit", methods={"GET"})
+     * @Route("/list/healthcare-provider-initial-communications/{id}/edit", name="healthcareprovidercommunication_edit", methods={"GET"})
      * @Route("/list/object-types/{id}/edit", name="objecttypes_edit", methods={"GET"})
      * @Route("/list/form-nodes/{id}/edit", name="formnodes_edit", methods={"GET"}, options={"expose"=true})
      * @Route("/list/object-type-texts/{id}/edit", name="objecttypetexts_edit", methods={"GET"}, options={"expose"=true})
@@ -1739,6 +1744,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_update", methods={"PUT"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update", methods={"PUT"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update", methods={"PUT"})
+     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_update", methods={"PUT"})
      * @Route("/list/object-types/{id}", name="objecttypes_update", methods={"PUT"})
      * @Route("/list/form-nodes/{id}", name="formnodes_update", methods={"PUT"}, options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_update", methods={"PUT"}, options={"expose"=true})
@@ -2510,6 +2516,10 @@ class ListController extends OrderAbstractController
                 $className = "HealthcareProviderSpecialtiesList";
                 $displayName = "Healthcare Provider Specialties";
                 break;
+            case "healthcareprovidercommunication":
+                $className = "HealthcareProviderCommunicationList";
+                $displayName = "Healthcare Provider Initial Communications";
+                break;
             case "objecttypes":
                 $className = "ObjectTypeList";
                 $displayName = "Object Types";
@@ -3219,6 +3229,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_delete", methods={"DELETE"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete", methods={"DELETE"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete", methods={"DELETE"})
+     * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_delete", methods={"DELETE"})
      * @Route("/list/object-types/{id}", name="objecttypes_delete", methods={"DELETE"})
      * @Route("/list/form-nodes/{id}", name="formnodes_delete", methods={"DELETE"}, options={"expose"=true})
      * @Route("/list/object-type-texts/{id}", name="objecttypetexts_delete", methods={"DELETE"}, options={"expose"=true})

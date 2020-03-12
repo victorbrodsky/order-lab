@@ -1459,6 +1459,12 @@ class CallLogUtil
                     $userWrapper->setUserWrapperSpecialty($specialty);
                 }
 
+                //$referringProviderCommunication
+                $communication = $referringProvider->getReferringProviderCommunication();
+                if( $communication && !$userWrapper->getUserWrapperCommunication() ) {
+                    $userWrapper->setUserWrapperCommunication($communication);
+                }
+
                 //source
                 if( $source && !$userWrapper->getUserWrapperSource() ) {
                     $userWrapper->setUserWrapperSource($source);

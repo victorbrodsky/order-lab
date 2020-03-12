@@ -57,6 +57,7 @@ var _proxyuser = [];
 var _encounterReferringProvider = [];
 var _encounterAttendingPhysician = [];
 var _referringProviderSpecialty = [];
+var _referringProviderCommunication = [];
 var _locationName = [];
 
 //generic select2 fields
@@ -141,6 +142,7 @@ function customCombobox() {
         getComboboxGeneric(null,'encounterReferringProvider',_encounterReferringProvider,false,'','scan');
         getComboboxGeneric(null,'encounterAttendingPhysician',_encounterAttendingPhysician,false,'','scan');
         getComboboxGeneric(null,'referringProviderSpecialty',_referringProviderSpecialty,false);
+        getComboboxGeneric(null,'referringProviderCommunication',_referringProviderCommunication,false);
         getComboboxGeneric(null,'locationName',_locationName,false,'');
     }
 

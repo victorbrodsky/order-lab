@@ -93,6 +93,8 @@
                         {#{{ formmacros.field(referringProvider.referringProviderEmail) }}#}
                         {{ formmacros.simplefield( "Healthcare Provider E-Mail:", referringProvider.referringProviderEmail, "", "disabled" ) }}
 
+                        {{ formmacros.simplefield( "Healthcare Provider Initial Communication:", referringProvider.referringProviderCommunication, "", "disabled" ) }}
+
                     {% endfor %}
 
                 {% endif %}
