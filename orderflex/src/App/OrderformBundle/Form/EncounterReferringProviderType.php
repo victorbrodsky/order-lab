@@ -98,6 +98,7 @@ class EncounterReferringProviderType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderCommunication'),
             'disabled' => $this->params['referringProviders-readonly'],
             'required' => false,
+            //'data' => 1,
             'classtype' => 'referringProviderCommunication'
         ));
 

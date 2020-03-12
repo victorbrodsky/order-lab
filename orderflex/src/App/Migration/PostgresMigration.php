@@ -88,10 +88,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //CREATE SEQUENCE transres_committeereview_id_seq
-        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
-            echo $this->counter.":###Ignore2 ".$sql.$newline;
-            return FALSE;
-        }
+//        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
+//            echo $this->counter.":###Ignore2 ".$sql.$newline;
+//            return FALSE;
+//        }
 
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {

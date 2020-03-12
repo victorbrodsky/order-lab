@@ -1329,6 +1329,23 @@ class CallEntryController extends OrderAbstractController
                 }
             }
 
+            //set Initial Communication to "Inbound" ($encounter2->referringProviders->referringProviderCommunication->referringProviderCommunication)
+            $referingProvider = null;
+            $referingProviders = $encounter2->getReferringProviders();
+            if( count($referingProviders) > 0 ) {
+                $referingProvider = $referingProviders[0];
+            } else {
+                //__construct( $status = 'valid', $provider = null, $source = null )
+                //$encounterReferringProvider = new EncounterReferringProvider('valid',$user,$system);
+                //$encounter2->addReferringProvider($encounterReferringProvider);
+            }
+            if( $referingProvider ) {
+                $defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
+                if( $defaultCommunication ) {
+                    $referingProvider->setReferringProviderCommunication($defaultCommunication);
+                }
+            }
+
             //testing
             //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
             //$calllogUtil->checkNextEncounterGeneratedId();

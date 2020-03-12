@@ -1490,7 +1490,12 @@ class UserServiceUtil {
             "Invoice"                   => "invoice/show",
         );
 
-        $url = $mapArr[$className];
+        if (array_key_exists($className,$mapArr))
+        {
+            $url = $mapArr[$className];
+        } else {
+            $url = null;
+        }
 
         return $url;
     }
