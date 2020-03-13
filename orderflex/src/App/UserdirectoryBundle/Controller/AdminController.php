@@ -30,6 +30,7 @@ use App\TranslationalResearchBundle\Entity\ProjectTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
+use App\UserdirectoryBundle\Entity\AdditionalCommunicationList;
 use App\UserdirectoryBundle\Entity\AuthorshipRoles;
 use App\UserdirectoryBundle\Entity\BloodProductTransfusedList;
 use App\UserdirectoryBundle\Entity\BloodTypeList;
@@ -931,6 +932,7 @@ class AdminController extends OrderAbstractController
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
         $count_BloodTypeList = $this->generateBloodTypeList();
+        $count_AdditionalCommunicationList = $this->generateAdditionalCommunicationList();
         $count_TransfusionAntibodyScreenResultsList = $this->generateTransfusionAntibodyScreenResultsList();
         $count_TransfusionDATResultsList = $this->generateTransfusionDATResultsList();
         $count_TransfusionCrossmatchResultsList = $this->generateTransfusionCrossmatchResultsList();
@@ -1038,6 +1040,7 @@ class AdminController extends OrderAbstractController
             'BloodProductTransfused='.$count_BloodProductTransfused.', '.
             'TransfusionReactionType='.$count_TransfusionReactionType.', '.
             'BloodTypeList='.$count_BloodTypeList.', '.
+            'AdditionalCommunicationList='.$count_AdditionalCommunicationList.', '.
             'TransfusionAntibodyScreenResultsList='.$count_TransfusionAntibodyScreenResultsList.', '.
             'TransfusionDATResultsList='.$count_TransfusionDATResultsList.', '.
             'TransfusionCrossmatchResultsList='.$count_TransfusionCrossmatchResultsList.', '.
@@ -6843,6 +6846,7 @@ class AdminController extends OrderAbstractController
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
+            "additionalcommunications" => array('AdditionalCommunicationList','additionalcommunications-list','Additional Communication List'),
         );
 
         if( $withcustom ) {
@@ -7796,7 +7800,28 @@ class AdminController extends OrderAbstractController
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Form Node Fields generated='.$count
+            'CallLog Form Node Fields generated='.$count
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //exit("Form Node Tree generated: ".$count);
+    }
+
+    /**
+     * @Route("/list/generate-dermatopathology-form-node-tree/", name="employees_generate_dermatopathology_form_node_tree", methods={"GET"})
+     */
+    public function generateFormNodeDermatopathologyAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $formNodeUtil = $this->get('user_formnode_utility');
+        $count = $formNodeUtil->generateDermatopathologyFormNode();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Dermatopathology Form Node Fields generated='.$count
         );
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
@@ -8210,6 +8235,38 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new BloodTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateAdditionalCommunicationList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "will be necessary",
+            "completed",
+            "not needed"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:AdditionalCommunicationList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new AdditionalCommunicationList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

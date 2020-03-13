@@ -130,6 +130,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/", name="objecttypestrings-list", methods={"GET"})
      * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns-list", methods={"GET"})
      * @Route("/list/blood-types/", name="bloodtypes-list", methods={"GET"})
+     * @Route("/list/additional-communications/", name="additionalcommunications-list", methods={"GET"})
      * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults-list", methods={"GET"})
      * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults-list", methods={"GET"})
      * @Route("/list/transfusion-dat-results/", name="transfusiondatresults-list", methods={"GET"})
@@ -607,6 +608,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/", name="objecttypestrings_create", methods={"POST"})
      * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns_create", methods={"POST"})
      * @Route("/list/blood-types/", name="bloodtypes_create", methods={"POST"})
+     * @Route("/list/additional-communications/", name="additionalcommunications_create", methods={"POST"})
      * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults_create", methods={"POST"})
      * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults_create", methods={"POST"})
      * @Route("/list/transfusion-dat-results/", name="transfusiondatresults_create", methods={"POST"})
@@ -918,6 +920,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/new", name="objecttypestrings_new", methods={"GET"})
      * @Route("/list/object-type-dropdowns/new", name="objecttypedropdowns_new", methods={"GET"})
      * @Route("/list/blood-types/new", name="bloodtypes_new", methods={"GET"})
+     * @Route("/list/additional-communications/new", name="additionalcommunications_new", methods={"GET"})
      * @Route("/list/transfusion-antibody-screen-results/new", name="transfusionantibodyscreenresults_new", methods={"GET"})
      * @Route("/list/transfusion-crossmatch-results/new", name="transfusioncrossmatchresults_new", methods={"GET"})
      * @Route("/list/transfusion-dat-results/new", name="transfusiondatresults_new", methods={"GET"})
@@ -1187,6 +1190,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/{id}", name="objecttypestrings_show", methods={"GET"})
      * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_show", methods={"GET"})
      * @Route("/list/blood-types/{id}", name="bloodtypes_show", methods={"GET"})
+     * @Route("/list/additional-communications/{id}", name="additionalcommunications_show", methods={"GET"})
      * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_show", methods={"GET"})
      * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_show", methods={"GET"})
      * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_show", methods={"GET"})
@@ -1451,6 +1455,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/{id}/edit", name="objecttypestrings_edit", methods={"GET"})
      * @Route("/list/object-type-dropdowns/{id}/edit", name="objecttypedropdowns_edit", methods={"GET"})
      * @Route("/list/blood-types/{id}/edit", name="bloodtypes_edit", methods={"GET"})
+     * @Route("/list/additional-communications/{id}/edit", name="additionalcommunications_edit", methods={"GET"})
      * @Route("/list/transfusion-antibody-screen-results/{id}/edit", name="transfusionantibodyscreenresults_edit", methods={"GET"})
      * @Route("/list/transfusion-crossmatch-results/{id}/edit", name="transfusioncrossmatchresults_edit", methods={"GET"})
      * @Route("/list/transfusion-dat-results/{id}/edit", name="transfusiondatresults_edit", methods={"GET"})
@@ -1753,6 +1758,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/{id}", name="objecttypestrings_update", methods={"PUT"})
      * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_update", methods={"PUT"})
      * @Route("/list/blood-types/{id}", name="bloodtypes_update", methods={"PUT"})
+     * @Route("/list/additional-communications/{id}", name="additionalcommunications_update", methods={"PUT"})
      * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_update", methods={"PUT"})
      * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_update", methods={"PUT"})
      * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_update", methods={"PUT"})
@@ -2552,6 +2558,10 @@ class ListController extends OrderAbstractController
                 $className = "BloodTypeList";
                 $displayName = "Blood Type List";
                 break;
+            case "additionalcommunications":
+                $className = "AdditionalCommunicationList";
+                $displayName = "Additional Communication List";
+                break;
             case "transfusionantibodyscreenresults":
                 $className = "TransfusionAntibodyScreenResultsList";
                 $displayName = "Transfusion Antibody Screen Results List";
@@ -3238,6 +3248,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-strings/{id}", name="objecttypestrings_delete", methods={"DELETE"})
      * @Route("/list/object-type-dropdowns/{id}", name="objecttypedropdowns_delete", methods={"DELETE"})
      * @Route("/list/blood-types/{id}", name="bloodtypes_delete", methods={"DELETE"})
+     * @Route("/list/additional-communications/{id}", name="additionalcommunications_delete", methods={"DELETE"})
      * @Route("/list/transfusion-antibody-screen-results/{id}", name="transfusionantibodyscreenresults_delete", methods={"DELETE"})
      * @Route("/list/transfusion-crossmatch-results/{id}", name="transfusioncrossmatchresults_delete", methods={"DELETE"})
      * @Route("/list/transfusion-dat-results/{id}", name="transfusiondatresults_delete", methods={"DELETE"})

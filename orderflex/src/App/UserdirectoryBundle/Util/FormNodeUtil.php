@@ -3507,6 +3507,96 @@ class FormNodeUtil
     }
 
 
+    public function generateDermatopathologyFormNode() {
+        $em = $this->em;
+        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        //root
+        $categories = array(
+            'All Forms' => array('Critical Result Notification'),
+        );
+        $count = 10;
+        $level = 0;
+        $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
+        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Critical Result Notification');
+        //echo "rootNode=".$parentNode."<br>";
+
+        //Create separate "Form" node for each Message Category.
+        // "Form Group" and "Form" nodes are always hidden.
+        // "Form Section" is always visible.
+        $count = 0;
+
+        // Critical Result Notification->Dermatopathology
+        $this->createDermatopathologyFormNode($parentNode);
+        $count++;
+
+        //exit('EOF message category');
+
+        return round($count);
+    }
+    public function createDermatopathologyFormNode($parent) {
+
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+        //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
+        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text, HTML');
+        //echo "objectTypeForm=".$objectTypeForm."<br>";
+
+        //$messageCategoryName = "Pathology Call Log Entry";
+
+        //"Pathology Call Log Entry" [Form]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "Dermatopathology",
+            'objectType' => $objectTypeForm,
+        );
+        $DermatopathologyForm = $this->createV2FormNode($formParams); //$formNode
+        $this->setMessageCategoryListLink("Dermatopathology",$DermatopathologyForm);
+
+        //Notification Info (Section)
+        $formParams = array(
+            'parent' => $DermatopathologyForm,
+            'name' => "Notification Info",
+            'objectType' => $objectTypeSection,
+        );
+        $notificationInfoSection = $this->createV2FormNode($formParams);
+
+        //Provider successfully notified: [checkmark] Form Field - Checkbox
+        $objectTypeCheckbox = $this->getObjectTypeByName('Form Field - Checkbox');
+        $formParams = array(
+            'parent' => $notificationInfoSection,
+            'name' => "Provider successfully notified",
+            'objectType' => $objectTypeCheckbox,
+            'showLabel' => true,
+        );
+        $checkmark = $this->createV2FormNode($formParams);
+
+        //Additional communication: (radio button) will be necessary (radio button) completed (radio button) not needed
+        //Form Field - Radio Button
+        $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
+        $formParams = array(
+            'parent' => $notificationInfoSection,
+            'name' => "Additional communication",
+            //'placeholder' => "Additional communication",
+            'objectType' => $objectTypeRadioButton,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
+            'className' => "AdditionalCommunicationList"
+        );
+        $radio = $this->createV2FormNode($formParams);
+
+        //Comment Text
+        $formParams = array(
+            'parent' => $notificationInfoSection,
+            'name' => "Comment",
+            'objectType' => $objectTypeText,
+            'showLabel' => false,
+        );
+        $commentText = $this->createV2FormNode($formParams);
+
+        return $DermatopathologyForm;
+    }
 
 
     //run by: /list/generate-test-form-node-tree/
