@@ -275,6 +275,15 @@ class CallLogEditController extends CallEntryController
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
             $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
 
+            $messageAccessions = $message->getAccession();
+            if( count($messageAccessions) > 0 ) {
+                $messageAccession = $messageAccessions[0];
+                $messageAccessionStr = $messageAccession->obtainFullValidKeyName();
+                if( $messageAccessionStr ) {
+                    $title = $title . " | " . $messageAccessionStr; // /entry/edit
+                }
+            }
+
             //edit: get message's encounter location
             $messageEncounters = $message->getEncounterLocationInfos();
             if( $messageEncounters ) {

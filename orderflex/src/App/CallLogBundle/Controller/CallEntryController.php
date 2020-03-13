@@ -3166,6 +3166,15 @@ class CallEntryController extends OrderAbstractController
             );
             $titleBody = '<a href="'.$linkUrl.'" target="_blank">'.$title.'</a>';
 
+            $messageAccessions = $message->getAccession();
+            if( count($messageAccessions) > 0 ) {
+                $messageAccession = $messageAccessions[0];
+                $messageAccessionStr = $messageAccession->obtainFullValidKeyName();
+                if( $messageAccessionStr ) {
+                    $titleBody = $titleBody . " | " . $messageAccessionStr; // /entry/view
+                }
+            }
+
             //view: get message's encounter location
             $messageEncounters = $message->getEncounterLocationInfos();
             if( $messageEncounters ) {
