@@ -34,7 +34,7 @@ class HealthcareProviderCommunicationList extends ListAbstract
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="HealthcareProviderSpecialtiesList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="HealthcareProviderCommunicationList", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
