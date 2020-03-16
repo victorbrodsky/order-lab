@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 //Pre-Generating: php bin/console cache:clear
 //Pre-Generating: php bin/console doctrine:cache:clear-metadata
+
+//Status: php bin/console doctrine:migrations:status
 //Generate: php bin/console doctrine:migrations:diff
 
 //Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing

@@ -85,16 +85,19 @@ class TranslationalResearchSecurityController extends SecurityController
     }
 
     public function getMessageToUsers() {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $sitename = $this->container->getParameter('translationalresearch.sitename');
-        $showMessageToUsers = $userSecUtil->getSiteSettingParameter('showMessageToUsers',$sitename);
-        if( $showMessageToUsers ) {
-            $messageToUsers = $userSecUtil->getSiteSettingParameter('messageToUsers',$sitename);
-        } else {
-            $messageToUsers = null;
-        }
+        $transresUtil = $this->container->get('transres_util');
+        return $transresUtil->getTrpMessageToUsers();
 
-        return $messageToUsers;
+//        //$sitename = $this->getParameter('translationalresearch.sitename');
+//        //$showMessageToUsers = $userSecUtil->getSiteSettingParameter('showMessageToUsers',$sitename);
+//        $showMessageToUsers = $transresUtil->getTransresSiteProjectParameter('notifyEmail');
+//        if( $showMessageToUsers ) {
+//            $messageToUsers = $transresUtil->getTransresSiteProjectParameter('messageToUsers');
+//        } else {
+//            $messageToUsers = null;
+//        }
+//
+//        return $messageToUsers;
     }
 
 }

@@ -23,6 +23,13 @@
     <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
 
+    {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% if messageToUsers is defined and messageToUsers %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h5>
+    {% endif %}
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>

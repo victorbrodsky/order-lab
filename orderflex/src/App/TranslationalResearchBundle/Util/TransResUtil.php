@@ -5900,4 +5900,16 @@ class TransResUtil
 
         return $loggers;
     }
+
+    public function getTrpMessageToUsers($project=null) {
+        //$transresUtil = $this->container->get('transres_util');
+        $showMessageToUsers = $this->getTransresSiteProjectParameter('notifyEmail',$project);
+        if( $showMessageToUsers ) {
+            $messageToUsers = $this->getTransresSiteProjectParameter('messageToUsers',$project);
+        } else {
+            $messageToUsers = null;
+        }
+
+        return $messageToUsers;
+    }
 }
