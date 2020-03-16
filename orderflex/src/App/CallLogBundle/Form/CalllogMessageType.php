@@ -65,6 +65,10 @@ class CalllogMessageType extends AbstractType
             $this->params['message.proxyuser.label'] = 'Ordering Provider(s):';
         }
 
+        if( !array_key_exists('showAccession', $this->params) ) {
+            $this->params['showAccession'] = true;
+        }
+
     }
         
     
@@ -133,24 +137,26 @@ class CalllogMessageType extends AbstractType
             ));
         //}
 
-        if(0) {
-            //As object
-            $builder->add('accession', CollectionType::class, array(
-                'entry_type' => CalllogAccessionType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $this->params,
-                    'form_custom_value_entity' => $this->entity
-                ),
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'label' => false,//" ",
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__accession__',
-            ));
-        }
-        if(1) {
+//        if(0) {
+//            //As object
+//            $builder->add('accession', CollectionType::class, array(
+//                'entry_type' => CalllogAccessionType::class,
+//                'entry_options' => array(
+//                    'form_custom_value' => $this->params,
+//                    'form_custom_value_entity' => $this->entity
+//                ),
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'label' => false,//" ",
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__accession__',
+//            ));
+//        }
+
+        //showAccession
+        if( $this->params['showAccession'] ) {
             //As not-mapped accession type and number
             $builder->add( 'accessionType', EntityType::class, array(
                 'class' => 'AppOrderformBundle:AccessionType',
@@ -172,28 +178,28 @@ class CalllogMessageType extends AbstractType
                 },
             ));
             //accession type
-            if(0) {
-                $attr = array('class' => 'ajax-combobox combobox combobox-width accessiontype-combobox', 'type' => 'hidden'); //combobox
-                $options = array(
-                    'label' => 'Accession Type:',
-                    'required' => false,
-                    'attr' => $attr,
-                    'mapped' => false,
-                    'classtype' => 'accessiontype',
-                );
-                if ($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
-                    $options['data'] = 1; //new
-                    $defaultScanAccessionType = $this->params['defaultAccessionType'];
-                    if ($defaultScanAccessionType) {
-                        //echo "set accessionType <br>";
-                        $options['data'] = $defaultScanAccessionType->getId();
-                    } else {
-                        $options['data'] = 1; //new
-                    }
-                    //$options['data'] = $defaultScanAccessionType->getId();
-                }
-                $builder->add('accessionType', ScanCustomSelectorType::class, $options);
-            }
+//            if(0) {
+//                $attr = array('class' => 'ajax-combobox combobox combobox-width accessiontype-combobox', 'type' => 'hidden'); //combobox
+//                $options = array(
+//                    'label' => 'Accession Type:',
+//                    'required' => false,
+//                    'attr' => $attr,
+//                    'mapped' => false,
+//                    'classtype' => 'accessiontype',
+//                );
+//                if ($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
+//                    $options['data'] = 1; //new
+//                    $defaultScanAccessionType = $this->params['defaultAccessionType'];
+//                    if ($defaultScanAccessionType) {
+//                        //echo "set accessionType <br>";
+//                        $options['data'] = $defaultScanAccessionType->getId();
+//                    } else {
+//                        $options['data'] = 1; //new
+//                    }
+//                    //$options['data'] = $defaultScanAccessionType->getId();
+//                }
+//                $builder->add('accessionType', ScanCustomSelectorType::class, $options);
+//            }
 
             $builder->add('accessionNumber', null, array(
                 'label' => 'Accession Number:',
@@ -201,7 +207,7 @@ class CalllogMessageType extends AbstractType
                 'mapped' => false,
                 'attr' => array('class' => 'form-control keyfield accession-mask')
             ));
-        }
+        }//$this->params['showAccession']
 
         if( $this->params['previousEncounters'] ) {
             if (1) {

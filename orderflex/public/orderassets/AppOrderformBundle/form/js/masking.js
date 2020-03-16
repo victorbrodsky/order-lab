@@ -413,7 +413,11 @@ function swicthMaskAccessionTypeText(elem,accField,text) {
 function noMaskError( element ) {
     //console.log( "complete="+ element.inputmask("isComplete")+", !allZeros="+!allZeros(element) );
 
-    var keytypeText = getKeyGroupParent(element).find('.accessiontype-combobox').select2('data').text;
+    if( getKeyGroupParent(element).find('.accessiontype-combobox').select2('data') ) {
+        var keytypeText = getKeyGroupParent(element).find('.accessiontype-combobox').select2('data').text;
+    } else {
+        var keytypeText = null;
+    }
 
     //console.log( "no mask error: keytypeText="+ keytypeText );
 

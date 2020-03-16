@@ -389,26 +389,27 @@ class CalllogFilterType extends AbstractType
         ));
         
         //Accession's Initial Communication
-        echo "defaultCommunication=".$this->params['defaultCommunication']."<br>";
+        //echo "defaultCommunication=".$this->params['defaultCommunication']."<br>";
         $builder->add('referringProviderCommunicationFilter', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
             'label' => false,
             'required' => false,
-            'mapped' => false,
+            //'mapped' => false,
             'data' => $this->params['defaultCommunication'],
-            'empty_data' => $this->params['defaultCommunication'],
+            //'empty_data' => $this->params['defaultCommunication'],
             'attr' => array('class' => 'combobox', 'placeholder' => "Initial Communication"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
                     ->orderBy("u.orderinlist","ASC");
             },
         ));
-//        $builder->add('mrntype', ChoiceType::class, array(
+//        //same as mrntype
+//        $builder->add('referringProviderCommunicationFilter', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => false,
-//            'choices' => $this->params['mrntypeChoices'],
-//            'data' => $this->params['mrntypeDefault'],
-//            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
+//            'choices' => $this->params['referringProviderCommunicationChoices'],
+//            'data' => $this->params['defaultCommunication'],
+//            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "Initial Communication"),
 //        ));
         
         $builder->add( 'accessionTypeFilter', EntityType::class, array(

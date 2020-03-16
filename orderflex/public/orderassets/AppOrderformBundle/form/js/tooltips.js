@@ -270,7 +270,11 @@ function setTypeTooltip( keytypeElement ) {
         return false;
     }
 
-    var keytypeText = keytypeElement.select2('data').text;
+    if( keytypeElement.select2('data') ) {
+        var keytypeText = keytypeElement.select2('data').text;
+    } else {
+        var keytypeText = null;
+    }
     //console.log('keytypeText='+keytypeText);
 
     keytypeElement = keytypeElement.parent().find('div').first();

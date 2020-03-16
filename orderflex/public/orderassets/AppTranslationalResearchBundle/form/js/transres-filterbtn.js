@@ -30,33 +30,33 @@ function changeFilterColorButton() {
 
     //datepicker
     filterForm.find('.datepicker-only-year').on('change',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
     filterForm.find('.datepicker').on('change',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
 
     //combobox
     filterForm.find('.combobox').on('change',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
 
     //select
     filterForm.find('select').on('change',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
 
     //text
     filterForm.find('text').on('input',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
 
     //input
     filterForm.find('input').on('input',function() {
-        chnageBtnColorGreen(filterBtn);
+        changeBtnColorGreen(filterBtn);
     });
 
-    function chnageBtnColorGreen(filterBtn) {
+    function changeBtnColorGreen(filterBtn) {
         filterBtn.removeClass('btn-default');
         filterBtn.addClass('btn-success');
     }

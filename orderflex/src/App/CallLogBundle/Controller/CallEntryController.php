@@ -411,6 +411,12 @@ class CallEntryController extends OrderAbstractController
         if( $defaultCommunication ) {
             $defaultCommunication = $defaultCommunication->getId();
         }
+//        $referringProviderCommunications = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findBy(array('type'=>array('default','user-added')));
+//        $referringProviderCommunicationChoices = array();
+//        foreach( $referringProviderCommunications as $referringProviderCommunication ) {
+//            echo "referringProviderCommunication=".$referringProviderCommunication.", id=".$referringProviderCommunication->getId()."<br>";
+//            $referringProviderCommunicationChoices[$referringProviderCommunication->getName()] = $referringProviderCommunication->getId();
+//        }
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
 
         $params = array(
@@ -427,6 +433,7 @@ class CallEntryController extends OrderAbstractController
             'tasks' => $tasks,
             'attachmentTypesChoice' => $attachmentTypesChoice,
             'defaultCommunication' => $defaultCommunication,
+            //'referringProviderCommunicationChoices' => $referringProviderCommunicationChoices,
             //'defaultAccessionType' => $defaultAccessionType,
             'metaphone' => $metaphone
         );
@@ -1646,8 +1653,15 @@ class CallEntryController extends OrderAbstractController
             //if accession number exists => create new Accession and link it to Message and Patient (if exists)
             //add accession for patient info section
             if(1) {
-                $accessionType = $form['accessionType']->getData();
-                $accessionNumber = $form['accessionNumber']->getData();
+                $accessionType = null;
+                $accessionNumber = null;
+                if( $form->has('accessionType') ) {
+                    $accessionType = $form['accessionType']->getData();
+                }
+                if( $form->has('accessionNumber') ) {
+                    $accessionNumber = $form['accessionNumber']->getData();
+                }
+
                 //echo "accession: typeName=".$accessionType.", typeID=".$accessionType->getId().", number=".$accessionNumber."<br>";
                 //exit('before adding accession');
                 if( $accessionType && $accessionNumber ) {
@@ -2124,6 +2138,7 @@ class CallEntryController extends OrderAbstractController
         $enableDocumentUpload = $userSecUtil->getSiteSettingParameter('enableDocumentUpload',$sitename);
 
         $defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
+        $showAccession = $userSecUtil->getSiteSettingParameter('showAccession',$sitename);
 
         $params = array(
             'cycle' => $cycle,  //'new',
@@ -2146,6 +2161,7 @@ class CallEntryController extends OrderAbstractController
             'readonlyLocationType' => true, //lock the "Location Type" field (with the default "Encounter Location" value in it)
             'enableDocumentUpload' => $enableDocumentUpload,
             'defaultAccessionType' => $defaultAccessionType,
+            'showAccession' => $showAccession
             //'user_security_utility' => $this->get('user_security_utility')
             //'accessiontypes' => $accessiontypes
         );

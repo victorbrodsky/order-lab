@@ -118,19 +118,19 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-xs-4" align="left">
-                {{ form_widget(filterform.accessionTypeFilter) }}
-            </div>
+        {#<div class="row">#}
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.accessionTypeFilter) }}#}
+            {#</div>#}
 
-            <div class="col-xs-4" align="left">
-                {{ form_widget(filterform.accessionNumberFilter) }}
-            </div>
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.accessionNumberFilter) }}#}
+            {#</div>#}
 
-            <div class="col-xs-4" align="left">
-                {{ form_widget(filterform.referringProviderCommunicationFilter) }}
-            </div>
-        </div>
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.referringProviderCommunicationFilter) }}#}
+            {#</div>#}
+        {#</div>#}
 
         {#<div class="row">#}
             {#<div class="col-xs-2" align="left">#}
@@ -157,19 +157,19 @@
         <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
             <div class="panel-body">
 
-                {#<div class="row">#}
-                    {#<div class="col-xs-4" align="left">#}
-                        {#{{ form_widget(filterform.accessionTypeFilter) }}#}
-                    {#</div>#}
+                <div class="row">
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.accessionTypeFilter) }}
+                    </div>
 
-                    {#<div class="col-xs-4" align="left">#}
-                        {#{{ form_widget(filterform.accessionNumberFilter) }}#}
-                    {#</div>#}
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.accessionNumberFilter) }}
+                    </div>
 
-                    {#<div class="col-xs-4" align="left">#}
-                        {#{{ form_widget(filterform.referringProviderCommunicationFilter) }}#}
-                    {#</div>#}
-                {#</div>#}
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.referringProviderCommunicationFilter) }}
+                    </div>
+                </div>
 
                 <br>
                 <div class="row">
@@ -325,25 +325,25 @@
 
             //datepicker
             filterForm.find('.datepicker').on('change',function() {
-                chnageBtnColorGreen(filterBtn);
+                changeBtnColorGreen(filterBtn);
             });
 
             //combobox
             filterForm.find('.combobox').on('change',function() {
-                chnageBtnColorGreen(filterBtn);
+                changeBtnColorGreen(filterBtn);
             });
 
             //text
             filterForm.find('text').on('input',function() {
-                chnageBtnColorGreen(filterBtn);
+                changeBtnColorGreen(filterBtn);
             });
 
             //input
             filterForm.find('input').on('input',function() {
-                chnageBtnColorGreen(filterBtn);
+                changeBtnColorGreen(filterBtn);
             });
 
-            function chnageBtnColorGreen(filterBtn) {
+            function changeBtnColorGreen(filterBtn) {
                 filterBtn.removeClass('btn-default');
                 filterBtn.addClass('btn-success');
             }

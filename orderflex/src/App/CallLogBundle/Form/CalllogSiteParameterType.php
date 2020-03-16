@@ -101,6 +101,28 @@ class CalllogSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control geo-field-county')
         ));
 
+        $builder->add('defaultInitialCommunication', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
+            'choice_label' => 'name',
+            'label' => 'Default Initial Communication:',
+            'required'=> false,
+            'attr' => array('class'=>'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('showAccession', null, array(
+            'label' => 'Show Accession Number:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('city', null, array(
             'label' => 'City:',
             'required' => false,
