@@ -5903,7 +5903,7 @@ class TransResUtil
 
     public function getTrpMessageToUsers($project=null) {
         //$transresUtil = $this->container->get('transres_util');
-        $showMessageToUsers = $this->getTransresSiteProjectParameter('notifyEmail',$project);
+        $showMessageToUsers = $this->getTransresSiteProjectParameter('showMessageToUsers',$project);
         if( $showMessageToUsers ) {
             $messageToUsers = $this->getTransresSiteProjectParameter('messageToUsers',$project);
         } else {
