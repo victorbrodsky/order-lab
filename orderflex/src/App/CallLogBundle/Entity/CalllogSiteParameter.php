@@ -135,7 +135,21 @@ class CalllogSiteParameter
      * @ORM\Column(type="string", nullable=true)
      */
     private $defaultAccessionPrefix;
+
+    /**
+     * Default Initial Communication
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList", cascade={"persist"})
+     */
+    private $defaultInitialCommunication;
     
+    /**
+     * Show Accession Number fields
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showAccession;
+
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -399,8 +413,37 @@ class CalllogSiteParameter
         $this->defaultAccessionPrefix = $defaultAccessionPrefix;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getDefaultInitialCommunication()
+    {
+        return $this->defaultInitialCommunication;
+    }
 
+    /**
+     * @param mixed $defaultInitialCommunication
+     */
+    public function setDefaultInitialCommunication($defaultInitialCommunication)
+    {
+        $this->defaultInitialCommunication = $defaultInitialCommunication;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowAccession()
+    {
+        return $this->showAccession;
+    }
+
+    /**
+     * @param mixed $showAccession
+     */
+    public function setShowAccession($showAccession)
+    {
+        $this->showAccession = $showAccession;
+    }
     
 
 }

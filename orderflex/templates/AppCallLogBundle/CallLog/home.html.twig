@@ -36,6 +36,11 @@
     </h4>
     {#<br>#}
 
+    {#JS variable for Accession mask#}
+    {% if cycle is not defined %}
+        {% set cycle = 'new' %}
+    {% endif %}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
     {#Search Form#}
     <div class="well form-search">
@@ -113,6 +118,20 @@
 
         </div>
 
+        <div class="row">
+            <div class="col-xs-4" align="left">
+                {{ form_widget(filterform.accessionTypeFilter) }}
+            </div>
+
+            <div class="col-xs-4" align="left">
+                {{ form_widget(filterform.accessionNumberFilter) }}
+            </div>
+
+            <div class="col-xs-4" align="left">
+                {{ form_widget(filterform.referringProviderCommunicationFilter) }}
+            </div>
+        </div>
+
         {#<div class="row">#}
             {#<div class="col-xs-2" align="left">#}
             {#</div>#}
@@ -138,6 +157,21 @@
         <div id="calllog-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
             <div class="panel-body">
 
+                {#<div class="row">#}
+                    {#<div class="col-xs-4" align="left">#}
+                        {#{{ form_widget(filterform.accessionTypeFilter) }}#}
+                    {#</div>#}
+
+                    {#<div class="col-xs-4" align="left">#}
+                        {#{{ form_widget(filterform.accessionNumberFilter) }}#}
+                    {#</div>#}
+
+                    {#<div class="col-xs-4" align="left">#}
+                        {#{{ form_widget(filterform.referringProviderCommunicationFilter) }}#}
+                    {#</div>#}
+                {#</div>#}
+
+                <br>
                 <div class="row">
                     <div class="col-xs-2" align="left">
                         {{ form_widget(filterform.author) }}
@@ -260,7 +294,6 @@
             toggleBtnListener();
 
             //taskStatusBtnListener();
-
         });
 
         function toggleBtnListener() {

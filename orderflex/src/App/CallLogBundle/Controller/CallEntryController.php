@@ -216,7 +216,7 @@ class CallEntryController extends OrderAbstractController
             //'messageCategoryInfoNode' => $messageCategoryInfoNode, //all messages will show only form fields for this message category node
             'eventObjectTypeId' => $eventObjectTypeId,
             'patientListId' => $defaultPatientListId,
-            'shownavbarfilter' => false
+            'shownavbarfilter' => false,
             //'navbarfilterform' => $navbarfilterform->createView()
             //'sitename' => $this->getParameter('calllog.sitename')
             //'calllogsearch' => $calllogsearch,
@@ -231,8 +231,8 @@ class CallEntryController extends OrderAbstractController
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $userServiceUtil = $this->get('user_service_utility');
-        //$userSecUtil = $this->get('user_security_utility');
-        //$sitename = $this->getParameter('calllog.sitename');
+        $userSecUtil = $this->get('user_security_utility');
+        $sitename = $this->getParameter('calllog.sitename');
 
         //$route = $request->get('_route');
         //$title = "Call Case List";
@@ -271,6 +271,10 @@ class CallEntryController extends OrderAbstractController
         $patientEmail = null;
         $sortBy = null;
         $attachmentType = null;
+
+        $referringProviderCommunicationFilter = null;
+        $accessionTypeFilter = null;
+        $accessionNumberFilter = null;
 
         //4 Tasks
         $task = null;
@@ -402,6 +406,13 @@ class CallEntryController extends OrderAbstractController
         }
         ////////// EOF attachmentTypes //////////
 
+        //$defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
+        $defaultCommunication = $userSecUtil->getSiteSettingParameter('defaultInitialCommunication',$sitename);
+        if( $defaultCommunication ) {
+            $defaultCommunication = $defaultCommunication->getId();
+        }
+        //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
@@ -415,6 +426,8 @@ class CallEntryController extends OrderAbstractController
             'messageCategoryType' => $messageCategoryTypeId,
             'tasks' => $tasks,
             'attachmentTypesChoice' => $attachmentTypesChoice,
+            'defaultCommunication' => $defaultCommunication,
+            //'defaultAccessionType' => $defaultAccessionType,
             'metaphone' => $metaphone
         );
         $filterform = $this->createForm(CalllogFilterType::class, null, array(
@@ -444,6 +457,10 @@ class CallEntryController extends OrderAbstractController
         $taskUpdatedBy = $filterform['taskUpdatedBy']->getData();
         $taskAddedBy = $filterform['taskAddedBy']->getData();
         $attachmentType = $filterform['attachmentType']->getData();
+
+        $referringProviderCommunicationFilter = $filterform['referringProviderCommunicationFilter']->getData();
+        $accessionTypeFilter = $filterform['accessionTypeFilter']->getData();
+        $accessionNumberFilter = $filterform['accessionNumberFilter']->getData();
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -868,6 +885,29 @@ class CallEntryController extends OrderAbstractController
             $advancedFilter++;
         }
 
+//        $referringProviderCommunicationFilter = $filterform['referringProviderCommunicationFilter']->getData();
+//        $accessionTypeFilter = $filterform['accessionTypeFilter']->getData();
+//        $accessionNumberFilter = $filterform['accessionNumberFilter']->getData();
+        if( $referringProviderCommunicationFilter ) {
+            $dql->andWhere("referringProviders.referringProviderCommunication = :referringProviderCommunicationId");
+            $queryParameters['referringProviderCommunicationId'] = $referringProviderCommunicationFilter->getId();
+            $advancedFilter++;
+        }
+        if( $accessionTypeFilter || $accessionNumberFilter ) {
+            $dql->leftJoin("message.accession", "accession");
+            $dql->leftJoin("accession.accession", "accessionaccession");
+            if ($accessionTypeFilter) {
+                $dql->andWhere("accessionaccession.keytype = :accessionKeytypeId");
+                $queryParameters['accessionKeytypeId'] = $accessionTypeFilter->getId();
+                $advancedFilter++;
+            }
+            if ($accessionNumberFilter) {
+                $dql->andWhere("accessionaccession.field LIKE :accessionNumber");
+                $queryParameters['accessionNumber'] = "%" . $accessionNumberFilter . "%";
+                $advancedFilter++;
+            }
+        }
+
 //        $tasks = array(
 //            "With or without tasks" =>      "with-without-tasks",
 //            "With Tasks" =>                 "with-tasks",
@@ -1184,7 +1224,7 @@ class CallEntryController extends OrderAbstractController
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
-        //$sitename = $this->getParameter('calllog.sitename');
+        $sitename = $this->getParameter('calllog.sitename');
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -1340,7 +1380,8 @@ class CallEntryController extends OrderAbstractController
                 //$encounter2->addReferringProvider($encounterReferringProvider);
             }
             if( $referingProvider ) {
-                $defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
+                //$defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
+                $defaultCommunication = $userSecUtil->getSiteSettingParameter('defaultInitialCommunication',$sitename);
                 if( $defaultCommunication ) {
                     $referingProvider->setReferringProviderCommunication($defaultCommunication);
                 }

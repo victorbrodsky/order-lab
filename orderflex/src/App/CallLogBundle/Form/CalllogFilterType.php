@@ -387,6 +387,56 @@ class CalllogFilterType extends AbstractType
             'multiple' => false,
             //'choices_as_values' => true,
         ));
+        
+        //Accession's Initial Communication
+        echo "defaultCommunication=".$this->params['defaultCommunication']."<br>";
+        $builder->add('referringProviderCommunicationFilter', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
+            'label' => false,
+            'required' => false,
+            'mapped' => false,
+            'data' => $this->params['defaultCommunication'],
+            'empty_data' => $this->params['defaultCommunication'],
+            'attr' => array('class' => 'combobox', 'placeholder' => "Initial Communication"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->orderBy("u.orderinlist","ASC");
+            },
+        ));
+//        $builder->add('mrntype', ChoiceType::class, array(
+//            'label' => false,
+//            'required' => false,
+//            'choices' => $this->params['mrntypeChoices'],
+//            'data' => $this->params['mrntypeDefault'],
+//            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
+//        ));
+        
+        $builder->add( 'accessionTypeFilter', EntityType::class, array(
+            'class' => 'AppOrderformBundle:AccessionType',
+            //'choice_label' => 'name',
+            'label' => false,
+            'required' => false,
+            'multiple' => false,
+            //'mapped' => false,
+            //'data' => $this->params['defaultAccessionType'],
+            'attr' => array('class' => 'combobox combobox-width accessiontype-combobox skip-server-populate accessiontype', 'placeholder' => "Accession Type"),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('accessionNumberFilter', null, array(
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'form-control keyfield accession-mask', 'placeholder' => "Accession Number")
+        ));       
+
 
     }
 

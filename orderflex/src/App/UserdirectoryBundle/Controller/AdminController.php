@@ -6846,6 +6846,7 @@ class AdminController extends OrderAbstractController
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
+            "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
             "additionalcommunications" => array('AdditionalCommunicationList','additionalcommunications-list','Additional Communication List'),
         );
 
