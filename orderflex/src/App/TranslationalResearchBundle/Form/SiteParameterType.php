@@ -240,6 +240,17 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('showMessageToUsers', null, array(
+            'label' => 'Show TRP Message to Users:',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('messageToUsers', null, array(
+            'label' => 'TRP Message to Users:',
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         $builder->add('emailNoteConcern', null, array(
             'label' => "Translational Research Email Notification Asking To Contact With Concerns:",
             'required' => false,

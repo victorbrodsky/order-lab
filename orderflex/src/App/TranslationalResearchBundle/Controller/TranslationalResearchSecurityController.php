@@ -84,6 +84,18 @@ class TranslationalResearchSecurityController extends SecurityController
         return parent::idlelogoutAction($request,$flag);
     }
 
+    public function getMessageToUsers() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('translationalresearch.sitename');
+        $showMessageToUsers = $userSecUtil->getSiteSettingParameter('showMessageToUsers',$sitename);
+        if( $showMessageToUsers ) {
+            $messageToUsers = $userSecUtil->getSiteSettingParameter('messageToUsers',$sitename);
+        } else {
+            $messageToUsers = null;
+        }
+
+        return $messageToUsers;
+    }
 
 }
 

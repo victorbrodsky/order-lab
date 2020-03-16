@@ -35,6 +35,12 @@
         {#{{ title }}#}
     {#</h2>#}
 
+    {% if messageToUsers is defined and messageToUsers %}
+        <h2 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h2>
+    {% endif %}
+
 <br>
 
 {% for flashMessage in app.flashes('notice') %}

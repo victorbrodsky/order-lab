@@ -283,6 +283,20 @@ class TransResSiteParameters {
     private $notifyEmail;
 
     /**
+     * Show TRP Message to Users
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showMessageToUsers;
+
+    /**
+     * TRP Message to Users
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $messageToUsers;
+
+    /**
      * Translational Research Email Notification Asking To Contact With Concerns:
      * Please review the deliverables and comments (if any), and if you have any concerns,
      * contact the Translational Research group by emailing User Name (email)...
@@ -1304,8 +1318,37 @@ class TransResSiteParameters {
         $this->completedNoInvoiceRequestReminderBody = $completedNoInvoiceRequestReminderBody;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShowMessageToUsers()
+    {
+        return $this->showMessageToUsers;
+    }
 
+    /**
+     * @param mixed $showMessageToUsers
+     */
+    public function setShowMessageToUsers($showMessageToUsers)
+    {
+        $this->showMessageToUsers = $showMessageToUsers;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getMessageToUsers()
+    {
+        return $this->messageToUsers;
+    }
+
+    /**
+     * @param mixed $messageToUsers
+     */
+    public function setMessageToUsers($messageToUsers)
+    {
+        $this->messageToUsers = $messageToUsers;
+    }
 
 
 

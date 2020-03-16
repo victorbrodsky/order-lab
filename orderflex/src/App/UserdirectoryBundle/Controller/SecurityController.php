@@ -215,16 +215,23 @@ class SecurityController extends OrderAbstractController
             }
         }
 
+        $messageToUsers = $this->getMessageToUsers();
+
         $formArr = array(
                             'last_username' => $lastUsername,   // last username entered by the user
                             'error'         => $error,
                             'sitename'     => $sitename,
                             'logo'  => $logoPath,
+                            'messageToUsers' => $messageToUsers,
                             'logoHeight' => 80,
                             'logoWidth' => 300
                         );
 
         return $formArr;
+    }
+
+    public function getMessageToUsers() {
+        return null;
     }
 
 
