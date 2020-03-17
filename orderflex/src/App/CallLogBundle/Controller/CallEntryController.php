@@ -909,7 +909,7 @@ class CallEntryController extends OrderAbstractController
                 $advancedFilter++;
             }
             if ($accessionNumberFilter) {
-                $dql->andWhere("accessionaccession.field LIKE :accessionNumber");
+                $dql->andWhere("LOWER(accessionaccession.field) LIKE LOWER(:accessionNumber)");
                 $queryParameters['accessionNumber'] = "%" . $accessionNumberFilter . "%";
                 $advancedFilter++;
             }

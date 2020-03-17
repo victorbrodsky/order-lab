@@ -1087,6 +1087,7 @@ class Encounter extends ObjectAbstract
             if( $refProvider->getReferringProviderPhone() ) {
                 $contactInfo .= $refProvider->getReferringProviderPhone();
             }
+            
             //[ReferringProviderEmail]
             if( $refProvider->getReferringProviderEmail() ) {
                 if( $contactInfo ) {

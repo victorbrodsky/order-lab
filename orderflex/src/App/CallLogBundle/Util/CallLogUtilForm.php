@@ -192,6 +192,13 @@ class CallLogUtilForm
             $html .= $this->getTrField("Healthcare Provider ", $referringProviderInfo);
         }
 
+        foreach( $encounter->getReferringProviders() as $refProvider ) {
+            $communication = $refProvider->getReferringProviderCommunication();
+            if( $communication ) {
+                $html .= $this->getTrField("Initial Communication ", $communication->getName());
+            }
+        }
+
         //Location
         $location = $encounter->obtainLocationInfo();
         if( $location ) {
