@@ -4832,11 +4832,12 @@ class TransResUtil
 
         $piArr = array();
         foreach( $project->getPrincipalInvestigators() as $pi) {
-            $piArr[] = $pi->getUsernameOptimal();
+            $piArr[] = $pi->getNameEmail(); //getUsernameOptimal();
         }
         //$ews->setCellValue('C'.$rowCount, implode("\n",$piArr));
         //$ews->getStyle('C'.$rowCount)->getAlignment()->setWrapText(true);
-        $data[2] = implode("\n",$piArr);
+        //$data[2] = implode("\n",$piArr);
+        $data[2] = implode("; ",$piArr);
 
         $projectTitle = $project->getTitle();
         if( !$projectTitle ) {
