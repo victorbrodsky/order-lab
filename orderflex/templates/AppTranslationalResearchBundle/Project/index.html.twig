@@ -11,7 +11,26 @@
 
     <h4 class="text-info" align="center">
         {{ title|raw }}
+        {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
+            <label
+                    for="download-spreadsheet-form-indexpage" tabindex="0"
+                    data-toggle="tooltip"
+                    title="Export all matching project summaries to a spreadsheet">
+                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </label>
+        {% endif %}
     </h4>
+
+    {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
+        <form action="{{ path('translationalresearch_download_projects_excel_post') }}" method="post">
+            <input type="hidden" name="ids" value="{{ allProjectIdsArr|join(',') }}">
+            <button type="submit"
+                    id="download-spreadsheet-form-indexpage"
+                    class="btn hidden"
+            ><span class="fa fa-file-excel-o" aria-hidden="true"></span> Export all matching project summaries to a spreadsheet</button>
+        </form>
+    {% endif %}
+
     {#{{ projects.getTotalItemCount }}#}
 
 {% if filterError is not defined or (filterError is defined and not filterError) %}

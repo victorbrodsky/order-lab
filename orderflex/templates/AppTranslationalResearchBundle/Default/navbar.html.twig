@@ -524,15 +524,23 @@
                                     >Investigator Statistics</a>
                                 </li>
 
-                                {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
-                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                    <li>
+                                {#{% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}#}
+                                    {#<input type="hidden" name="projectids" value="{{ allProjectIdsArr|join(',') }}">#}
+                                    {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                    {#<li>#}
                                         {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(','),'limit':500}) }}">#}
                                             {#<i class="fa fa-file-excel-o"></i> Export the first 500 matching project summaries to spreadsheet</a>#}
-                                        <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">
-                                            <i class="fa fa-file-excel-o"></i> Export all matching project summaries to a spreadsheet</a>
-                                    </li>
-                                {% endif %}
+                                        {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">#}
+                                            {#<i class="fa fa-file-excel-o"></i> Export all matching project summaries to a spreadsheet</a>#}
+                                        {#<form action="{{ path('translationalresearch_download_projects_excel_post') }}" method="post">#}
+                                            {#<input type="hidden" name="ids" value="{{ allProjectIdsArr|join(',') }}">#}
+                                            {#<button type="submit"#}
+                                                    {#id="download-spreadsheet-form"#}
+                                                    {#class="btn"#}
+                                            {#><span class="fa fa-file-excel-o" aria-hidden="true"></span> Export all matching project summaries to a spreadsheet</button>#}
+                                        {#</form>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
 
                                 {#<hr>#}
                                 {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}

@@ -2455,6 +2455,9 @@ class ProjectController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        //$projectids = $request->query->get('projectids');
+        //exit("projectids=".$projectids);
+
         //$limit = 2; //testing
         //exit("ids=".$ids);
         //exit("limit=".$limit);
@@ -2534,6 +2537,46 @@ class ProjectController extends OrderAbstractController
         exit();
     }
 
+    /**
+     * @Route("/download-projects-spreadsheet-post", methods={"POST"}, name="translationalresearch_download_projects_excel_post")
+     */
+    public function downloadApplicantListExcelPostAction(Request $request) {
+
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //$ids = $request->query->get('projectids');
+        $ids = $request->request->get('ids');
+        //exit("ids=".$ids);
+
+        $limit = null;
+        //exit("ids=".$ids);
+        //exit("limit=".$limit);
+
+        if( $ids ) {
+            if( is_array($ids) && count($ids) == 0 ) {
+                exit("No Projects to Export to Excel");
+            }
+        }
+
+        if( !$ids ) {
+            exit("No Projects to Export to Excel");
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Projects-".date('m-d-Y').".xlsx";
+
+        $projectIdsArr = explode(',', $ids);
+
+        //Spout uses less memory
+        $transresUtil->createProjectExcelSpout($projectIdsArr,$fileName,$limit);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        exit();
+    }
 
 
 }
