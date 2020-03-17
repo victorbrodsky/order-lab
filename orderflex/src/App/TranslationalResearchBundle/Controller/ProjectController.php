@@ -2447,7 +2447,7 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
-     * @Route("/download-projects-spreadsheet/{ids}/{limit}", name="translationalresearch_download_projects_excel")
+     * @Route("/download-projects-spreadsheet/{ids}/{limit}", methods={"GET"}, name="translationalresearch_download_projects_excel")
      */
     public function downloadApplicantListExcelAction(Request $request, $ids=null, $limit=null) {
 
