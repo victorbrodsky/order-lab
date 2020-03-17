@@ -4247,7 +4247,11 @@ class TransResRequestUtil
 
             $data[0] = $transResRequest->getOid();
 
-            $data[1] = $transResRequest->getSubmitter();
+            $submitter = $transResRequest->getSubmitter();
+            if( $submitter ) {
+                $submitter = $submitter->getNameEmail();
+            }
+            $data[1] = $submitter;
 
             $createdDateStr = NULL;
             $createdDate = $transResRequest->getCreateDate();

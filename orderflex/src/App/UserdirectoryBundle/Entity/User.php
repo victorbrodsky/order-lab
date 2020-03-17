@@ -2170,6 +2170,13 @@ class User extends UserBase {
         return null;
     }
 
+    //Get "name <email>"
+    public function getNameEmail() {
+        $email = $this->getSingleEmail();
+        $optimalUserName = $this->getUsernameOptimal();
+        return $optimalUserName." <".$email.">";
+    }
+
     public function isInUserArray( $users ) {
         if( !$users ) {
             return false;
