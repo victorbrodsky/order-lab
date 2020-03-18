@@ -52,6 +52,18 @@ class SecurityController extends OrderAbstractController
 //        //exit("my login check!");
 //    }
 
+//    /**
+//     * @Route("/login_check", name="dummy_login_check")
+//     * @Route("/directory/login_check", name="employees_dummy_login_check")
+//     * @Route("/call-log-book/login_check", name="calllog_dummy_login_check")
+//     */
+//    public function loginCheckAction( Request $request )
+//    {
+//        //Reroute to home page
+//        //exit("Reroute to home page");
+//        return $this->redirect( $this->generateUrl('main_common_home') );
+//    }
+
     /**
      * //Method("GET")
      *

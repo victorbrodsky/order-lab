@@ -181,7 +181,7 @@
 
             {% if app.user is defined %}
                 <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-                <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.user) }}" />
+                <input type="hidden" id="user-preferences-tooltip" value="{{ user_security_utility.getTooltip(app.user) }}" />
             {% endif %}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
