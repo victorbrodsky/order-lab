@@ -3235,7 +3235,6 @@ class CallEntryController extends OrderAbstractController
                 } else {
                     $accessionTypeId = null;
                 }
-                $accessionTypeId = null;
                 $accessionNumber = $messageAccessionArr['field'];
 //                $accessionRes = $messageAccession->obtainStatusField('accession', "valid");
 //                if( $accessionRes->getKeytype() ) {
