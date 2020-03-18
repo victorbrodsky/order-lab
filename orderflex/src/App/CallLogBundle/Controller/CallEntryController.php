@@ -3226,8 +3226,34 @@ class CallEntryController extends OrderAbstractController
             $messageAccessions = $message->getAccession();
             if( count($messageAccessions) > 0 ) {
                 $messageAccession = $messageAccessions[0];
-                $messageAccessionStr = $messageAccession->obtainFullValidKeyName();
+                //$messageAccessionStr = $messageAccession->obtainFullValidKeyName();
+                $messageAccessionArr = $messageAccession->obtainFullValidKeyNameArr();
+                $messageAccessionStr = $messageAccessionArr['keyStr'];
+                $accessionType = $messageAccessionArr['keytype'];
+                if( $accessionType ) {
+                    $accessionTypeId = $accessionType->getId();
+                } else {
+                    $accessionTypeId = null;
+                }
+                $accessionTypeId = null;
+                $accessionNumber = $messageAccessionArr['field'];
+//                $accessionRes = $messageAccession->obtainStatusField('accession', "valid");
+//                if( $accessionRes->getKeytype() ) {
+//                    $accessionType = $accessionRes->getKeytype()->getId();
+//                } else {
+//                    $accessionType = NULL;
+//                }
+//                $accessionNumber = $accessionRes->getField();
                 if( $messageAccessionStr ) {
+                    $linkAccessionUrl = $this->generateUrl(
+                        "calllog_home",
+                        array(
+                            'filter[accessionTypeFilter]'=>$accessionTypeId,
+                            'filter[accessionNumberFilter]'=>$accessionNumber,
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $messageAccessionStr = '<a href="'.$linkAccessionUrl.'" target="_blank">'.$messageAccessionStr.'</a>';
                     $titleBody = $titleBody . " | " . $messageAccessionStr; // /entry/view
                 }
             }

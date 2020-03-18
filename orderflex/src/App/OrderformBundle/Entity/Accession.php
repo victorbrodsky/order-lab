@@ -388,6 +388,31 @@ class Accession extends ObjectAbstract {
         return $keyStr;
     }
 
+    public function obtainFullValidKeyNameArr() {
+        //$keyStr = "";
+        $keyArr = array();
+        $keyArr['keytype'] = null;
+        $keyArr['field'] = null;
+        $keyArr['keyStr'] = null;
+
+        $key = $this->obtainValidField('accession');
+        if( $key ) {
+            //$keyStr = $key->obtainOptimalName();
+            if( $key->getKeytype() ) {
+                $keyStr = $key->getKeytype()->getOptimalName() . ": " . $key->getField();
+                $keyArr['keytype'] = $key->getKeytype();
+                $keyArr['field'] = $key->getField();
+                $keyArr['keyStr'] = $keyStr;
+            } else {
+                $keyStr = $key->getField();
+                $keyArr['keytype'] = null;
+                $keyArr['field'] = $key->getField();
+                $keyArr['keyStr'] = $keyStr;
+            }
+        }
+
+        return $keyArr;
+    }
 
     public function obtainKeyField() {
         return $this->getAccession();
