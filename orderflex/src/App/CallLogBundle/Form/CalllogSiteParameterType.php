@@ -123,6 +123,11 @@ class CalllogSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('showAccessionHome', null, array(
+            'label' => 'Show Accession Number on the Homepage:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('city', null, array(
             'label' => 'City:',
             'required' => false,

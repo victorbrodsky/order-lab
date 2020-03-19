@@ -46,7 +46,7 @@
 /src/App/UserdirectoryBundle/Cert/*
 
 ### Migrations ###
-/src/Migrations/*.php
+#/src/Migrations/*.php
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

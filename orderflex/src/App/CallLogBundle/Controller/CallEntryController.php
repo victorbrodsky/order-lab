@@ -465,9 +465,9 @@ class CallEntryController extends OrderAbstractController
         $taskAddedBy = $filterform['taskAddedBy']->getData();
         $attachmentType = $filterform['attachmentType']->getData();
 
-        $referringProviderCommunicationFilter = $filterform['referringProviderCommunicationFilter']->getData();
-        $accessionTypeFilter = $filterform['accessionTypeFilter']->getData();
-        $accessionNumberFilter = $filterform['accessionNumberFilter']->getData();
+        $initialCommunicationFilter = $filterform['initialCommunication']->getData();
+        $accessionTypeFilter = $filterform['accessionType']->getData();
+        $accessionNumberFilter = $filterform['accessionNumber']->getData();
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -530,6 +530,10 @@ class CallEntryController extends OrderAbstractController
         $dql->leftJoin("author.infos","authorInfos");
 
         $dql->leftJoin("message.messageCategory","messageCategory");
+
+        $dql->leftJoin("message.accession", "accession");
+        $dql->leftJoin("accession.accession", "accessionaccession");
+        
         //$dql->where("institution.id = ".$pathology->getId());
 
         //sortBy
@@ -891,28 +895,22 @@ class CallEntryController extends OrderAbstractController
             }
             $advancedFilter++;
         }
-
-//        $referringProviderCommunicationFilter = $filterform['referringProviderCommunicationFilter']->getData();
-//        $accessionTypeFilter = $filterform['accessionTypeFilter']->getData();
-//        $accessionNumberFilter = $filterform['accessionNumberFilter']->getData();
-        if( $referringProviderCommunicationFilter ) {
+        
+        if( $initialCommunicationFilter ) {
             $dql->andWhere("referringProviders.referringProviderCommunication = :referringProviderCommunicationId");
-            $queryParameters['referringProviderCommunicationId'] = $referringProviderCommunicationFilter->getId();
+            $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter->getId();
             $advancedFilter++;
         }
-        if( $accessionTypeFilter || $accessionNumberFilter ) {
-            $dql->leftJoin("message.accession", "accession");
-            $dql->leftJoin("accession.accession", "accessionaccession");
-            if ($accessionTypeFilter) {
-                $dql->andWhere("accessionaccession.keytype = :accessionKeytypeId");
-                $queryParameters['accessionKeytypeId'] = $accessionTypeFilter->getId();
-                $advancedFilter++;
-            }
-            if ($accessionNumberFilter) {
-                $dql->andWhere("LOWER(accessionaccession.field) LIKE LOWER(:accessionNumber)");
-                $queryParameters['accessionNumber'] = "%" . $accessionNumberFilter . "%";
-                $advancedFilter++;
-            }
+        
+        if ($accessionTypeFilter) {
+            $dql->andWhere("accessionaccession.keytype = :accessionKeytypeId");
+            $queryParameters['accessionKeytypeId'] = $accessionTypeFilter->getId();
+            $advancedFilter++;
+        }
+        if ($accessionNumberFilter) {
+            $dql->andWhere("LOWER(accessionaccession.field) LIKE LOWER(:accessionNumber)");
+            $queryParameters['accessionNumber'] = "%" . $accessionNumberFilter . "%";
+            $advancedFilter++;
         }
 
 //        $tasks = array(
@@ -3223,10 +3221,10 @@ class CallEntryController extends OrderAbstractController
             );
             $titleBody = '<a href="'.$linkUrl.'" target="_blank">'.$title.'</a>';
 
+            //Accession
             $messageAccessions = $message->getAccession();
             if( count($messageAccessions) > 0 ) {
                 $messageAccession = $messageAccessions[0];
-                //$messageAccessionStr = $messageAccession->obtainFullValidKeyName();
                 $messageAccessionArr = $messageAccession->obtainFullValidKeyNameArr();
                 $messageAccessionStr = $messageAccessionArr['keyStr'];
                 $accessionType = $messageAccessionArr['keytype'];
@@ -3236,19 +3234,12 @@ class CallEntryController extends OrderAbstractController
                     $accessionTypeId = null;
                 }
                 $accessionNumber = $messageAccessionArr['field'];
-//                $accessionRes = $messageAccession->obtainStatusField('accession', "valid");
-//                if( $accessionRes->getKeytype() ) {
-//                    $accessionType = $accessionRes->getKeytype()->getId();
-//                } else {
-//                    $accessionType = NULL;
-//                }
-//                $accessionNumber = $accessionRes->getField();
                 if( $messageAccessionStr ) {
                     $linkAccessionUrl = $this->generateUrl(
                         "calllog_home",
                         array(
-                            'filter[accessionTypeFilter]'=>$accessionTypeId,
-                            'filter[accessionNumberFilter]'=>$accessionNumber,
+                            'filter[accessionType]'=>$accessionTypeId,
+                            'filter[accessionNumber]'=>$accessionNumber,
                         ),
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );

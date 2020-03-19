@@ -1293,6 +1293,8 @@
         {% set headFlag = "sortable" %}
     {% endif %}
 
+    {% set showAccessionHome = user_security_utility.getSiteSettingParameter('showAccession',sitename) %}
+
     {#table-striped table-hover#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>
@@ -1306,6 +1308,12 @@
                 <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
+
+                {#if Show Accession Number on the Homepage#}
+                {% if showAccessionHome %}
+                    <th>{{ knp_pagination_sortable(messages, 'Accession', 'accessionaccession.field') }}</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Healthcare Provider', 'referringProviderWrapper.name') }}</th>
                 <th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>
@@ -1411,6 +1419,17 @@
                         {{ calllogmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
                     {% endfor %}
                 </td>
+
+                {#if Show Accession Number on the Homepage#}
+                {% if showAccessionHome %}
+                    <td class="rowlink-skip">
+                        {% for accession in message.accession %}
+                            {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
+                            {#{% set hrefLabel = thisPatient.obtainFullValidKeyName %}#}
+                            {{ calllogmacros.getHrefHomePageFilteredByAccession(accession) }}<br>
+                        {% endfor %}
+                    </td>
+                {% endif %}
 
                 {#Location#}
                 <td class="rowlink-skip">
@@ -1551,6 +1570,18 @@
     {% set mrn = patientEntity.obtainValidField('mrn') %}
     {% if mrn and mrn.field and mrn.keytype %}
         <a href="{{ path('calllog_home', { 'filter[search]': mrn.field, 'filter[mrntype]': mrn.keytype.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ hrefLabel|raw }}</a>
+    {% else %}
+        {{ hrefLabel|raw }}
+    {% endif %}
+{% endmacro %}
+
+{% macro getHrefHomePageFilteredByAccession( accession, hrefLabel ) %}
+    {% set accessionArr = accession.obtainFullValidKeyNameArr() %}
+    {% set accessionNumber = accessionArr.field %}
+    {% set accessionType = accessionArr.keytype %}
+    {% set accessionStr = accessionArr.keyStr %}
+    {% if accessionStr %}
+        <a href="{{ path('calllog_home', { 'filter[accessionType]': accessionType.id, 'filter[accessionNumber]': accessionNumber, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ accessionStr|raw }}</a>
     {% else %}
         {{ hrefLabel|raw }}
     {% endif %}

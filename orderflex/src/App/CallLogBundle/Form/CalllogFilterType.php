@@ -388,9 +388,9 @@ class CalllogFilterType extends AbstractType
             //'choices_as_values' => true,
         ));
         
-        //Accession's Initial Communication
+        //Accession's Initial Communication (referringProviderCommunicationFilter)
         //echo "defaultCommunication=".$this->params['defaultCommunication']."<br>";
-        $builder->add('referringProviderCommunicationFilter', EntityType::class, array(
+        $builder->add('initialCommunication', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
             'label' => false,
             'required' => false,
@@ -412,7 +412,7 @@ class CalllogFilterType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "Initial Communication"),
 //        ));
         
-        $builder->add( 'accessionTypeFilter', EntityType::class, array(
+        $builder->add( 'accessionType', EntityType::class, array(
             'class' => 'AppOrderformBundle:AccessionType',
             //'choice_label' => 'name',
             'label' => false,
@@ -432,7 +432,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
-        $builder->add('accessionNumberFilter', null, array(
+        $builder->add('accessionNumber', null, array(
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'form-control keyfield accession-mask', 'placeholder' => "Accession Number")

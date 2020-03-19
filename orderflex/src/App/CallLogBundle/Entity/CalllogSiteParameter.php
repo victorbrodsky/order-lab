@@ -150,6 +150,13 @@ class CalllogSiteParameter
      */
     private $showAccession;
 
+    /**
+     * Show Accession Number on the Homepage
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showAccessionHome;
+
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -444,6 +451,23 @@ class CalllogSiteParameter
     {
         $this->showAccession = $showAccession;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShowAccessionHome()
+    {
+        return $this->showAccessionHome;
+    }
+
+    /**
+     * @param mixed $showAccessionHome
+     */
+    public function setShowAccessionHome($showAccessionHome)
+    {
+        $this->showAccessionHome = $showAccessionHome;
+    }
+
     
 
 }
