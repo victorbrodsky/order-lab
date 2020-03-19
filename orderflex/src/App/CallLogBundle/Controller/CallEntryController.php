@@ -901,7 +901,7 @@ class CallEntryController extends OrderAbstractController
             $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter->getId();
             $advancedFilter++;
         }
-        
+
         if ($accessionTypeFilter) {
             $dql->andWhere("accessionaccession.keytype = :accessionKeytypeId");
             $queryParameters['accessionKeytypeId'] = $accessionTypeFilter->getId();
