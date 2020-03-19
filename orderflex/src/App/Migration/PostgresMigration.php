@@ -19,6 +19,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //Update:   php bin/console doctrine:schema:update --force
 //Status:   php bin/console doctrine:migrations:status
 
+//Show versions: php bin/console doctrine:migrations:status --show-versions
+//Delete Unavailable Migrations: php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --delete
+
 //Pre-Generating: php bin/console cache:clear
 //Pre-Generating: php bin/console doctrine:cache:clear-metadata
 
