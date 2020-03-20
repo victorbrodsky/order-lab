@@ -42,18 +42,16 @@ class CrnEntryMessage extends OrderBase {
      */
     private $addPatientToList;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="PatientListHierarchy")
-//     **/
-//    private $patientList;
     /**
+     * Create different branch for Crn (https://127.0.0.1/scan/admin/list/patient-lists-tree/)
+     *
      * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="crnEntryMessages" )
      * @ORM\JoinTable(name="scan_crnEntryMessage_patientList")
      **/
     private $patientLists;
 
     /**
-     * Call Log Entry Tags
+     * Crn Entry Tags
      * @ORM\ManyToMany(targetEntity="CrnEntryTagsList", inversedBy="crnEntryMessages" )
      * @ORM\JoinTable(name="scan_crnEntryMessage_entryTag")
      **/
@@ -163,17 +161,20 @@ class CrnEntryMessage extends OrderBase {
     private $documents;
 
     /**
+     * Attachment Types. The same as Call Log (Shared List)
+     *
      * @ORM\ManyToOne(targetEntity="CrnAttachmentTypeList")
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     private $crnAttachmentType;
 
     /**
-     * Tasks for Call Log
+     * Tasks Types. The same as Call Log (Shared List)
      *
      * @ORM\OneToMany(targetEntity="CrnTask", mappedBy="crnEntryMessage", cascade={"persist"})
      **/
     private $crnTasks;
+
 
 
     public function __construct() {
