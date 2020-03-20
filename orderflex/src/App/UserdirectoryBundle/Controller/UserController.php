@@ -1876,6 +1876,7 @@ class UserController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $authUtil = $this->get('authenticator_utility');
         
         $resArr = null;
         $primaryPublicUserId = null;
@@ -1907,7 +1908,6 @@ class UserController extends OrderAbstractController
             return $response;
         }
 
-        $authUtil = $this->get('authenticator_utility');
         if( $inputType == "lastName" ) {
             //TODO: test multiple search results
             $searchRes = $authUtil->searchMultipleUserLdap($searchvalue, $inputType);

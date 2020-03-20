@@ -87,7 +87,11 @@ services:
         exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
 
     App\UserdirectoryBundle\User\Model\:
-            resource: '../src/App/UserdirectoryBundle/User/Model'
+        resource: '../src/App/UserdirectoryBundle/User/Model'
+
+    App\UserdirectoryBundle\Security\Authentication\:
+        resource: '../src/App/UserdirectoryBundle/Security/Authentication'
+        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomAuthenticator.php,CustomGuardAuthenticator.php,LoginSuccessHandler.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

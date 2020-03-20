@@ -27,6 +27,8 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 
 use App\OrderformBundle\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -46,7 +48,7 @@ class AuthUtil {
     //private $supportedUsertypesLdap = null; //array('ldap-user');
     //private $supportedUsertypesLocal = array('local-user');
 
-    public function __construct( $container, $em, RequestStack $requestStack=null )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em, RequestStack $requestStack=null )
     {
         $this->container = $container;
         $this->em = $em;

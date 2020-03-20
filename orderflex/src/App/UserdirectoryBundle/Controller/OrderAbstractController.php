@@ -26,6 +26,7 @@ use App\TranslationalResearchBundle\Util\TransResImportData;
 use App\TranslationalResearchBundle\Util\TransResPermissionUtil;
 use App\TranslationalResearchBundle\Util\TransResRequestUtil;
 use App\TranslationalResearchBundle\Util\TransResUtil;
+use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
@@ -77,6 +78,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['user_formnode_utility'] = '?'.FormNodeUtil::class;
         $subscribedServices['user_service_utility'] = '?'.UserServiceUtil::class;
         $subscribedServices['user_manager'] = '?'.UserManager::class;
+        $subscribedServices['authenticator_utility'] = '?'.AuthUtil::class;
 
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
         $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;
