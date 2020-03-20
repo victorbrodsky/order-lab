@@ -51,7 +51,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {% if is_granted('ROLE_CALLLOG_USER') %}
+            {% if is_granted('ROLE_CRN_USER') %}
                 <!-- this is for mobile devices - top menu -->
                 <a class="navbar-brand visible-xs visible-sm" href="{{ path(crn_sitename~'_home') }}">Home</a>
             {% endif %}
@@ -60,7 +60,7 @@
         {#<br>#}
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
-            {% if is_granted('ROLE_CALLLOG_USER') %}
+            {% if is_granted('ROLE_CRN_USER') %}
 
                 <ul class="nav navbar-nav">
 
@@ -120,12 +120,12 @@
                     </li>
 
 
-                    {#{% if is_granted('ROLE_CALLLOG_DATA_QUALITY') || is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
+                    {#{% if is_granted('ROLE_CRN_DATA_QUALITY') || is_granted('ROLE_CRN_PATHOLOGY_ATTENDING') %}#}
 
                     <li id="nav-bar-dataquality" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+                            {% if is_granted('ROLE_CRN_DATA_QUALITY') %}
                                 <li><a href="{{ path(crn_sitename~'_find_and_edit_patient_record') }}">Edit Patient Info</a></li>
                                 <li><a href="{{ path(crn_sitename~'_merge_patient_records') }}">Merge Patient Records</a></li>
                                 <li><a href="{{ path(crn_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
@@ -135,7 +135,7 @@
                                 <li><a href="{{ path(crn_sitename~'_export_csv',app.request.query.all) }}">Export the first 500 matching entries in .CSV</a></li>
                                 <li><a href="{{ path(crn_sitename~'_export_csv_all',app.request.query.all) }}">Export all matching entrees in .CSV</a></li>
                             {% endif %}
-                            {#{% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
+                            {#{% if is_granted('ROLE_CRN_PATHOLOGY_ATTENDING') %}#}
                                 {#<li>#}
                                     {#<a href="{{ path(crn_sitename~'_edit_patient_record') }}">Critical Result Notification Resources</a>#}
                                     {#<a href="{{ path(crn_sitename~'_siteparameters_resources_edit') }}">Edit Critical Result Notification Resources</a>#}
@@ -154,7 +154,7 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {#Search in navbar#}
-                {% if is_granted('ROLE_CALLLOG_USER') %}
+                {% if is_granted('ROLE_CRN_USER') %}
 
                     {% if shownavbarfilter is not defined or shownavbarfilter %}
                         {#<li id="nav-bar-metaphone">#}
@@ -193,7 +193,7 @@
 
                 {% endif %}
 
-                {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+                {% if is_granted('ROLE_CRN_ADMIN') %}
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -227,7 +227,7 @@
                 {% endif %}
 
 
-                {% if is_granted('ROLE_CALLLOG_USER') %}
+                {% if is_granted('ROLE_CRN_USER') %}
 
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>

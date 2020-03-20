@@ -316,8 +316,8 @@
                                 {{ crnmacros.crnEntryDocuments(message,cycle) }}
                             {% endif %}
 
-                            {#1message.crnEntryMessage.crnTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
-                            {% if message.getCalllogEntryMessage() and message.getCalllogEntryMessage().getCalllogTasks()|length > 0 %}
+                            {#1message.crnEntryMessage.crnTasks|length={{ message.getCrnEntryMessage().getCrnTasks()|length }}<br>#}
+                            {% if message.getCrnEntryMessage() and message.getCrnEntryMessage().getCrnTasks()|length > 0 %}
                                 {{ crnmacros.crnTaskList(form,cycle) }}
                             {% endif %}
 
@@ -377,7 +377,7 @@
 
             {{ crn_util_form.getEntryTagsHtml(message,status)|raw }}
 
-            {{ crn_util_form.getCalllogAuthorsHtml(message,sitename)|raw }}
+            {{ crn_util_form.getCrnAuthorsHtml(message,sitename)|raw }}
 
             </div>
 

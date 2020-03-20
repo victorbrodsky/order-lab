@@ -502,6 +502,12 @@ class Message {
      */
     private $calllogEntryMessage;
 
+    /**
+     * Critical Result Notification Entry
+     * @ORM\OneToOne(targetEntity="CrnEntryMessage", inversedBy="message", cascade={"persist","remove"})
+     */
+    private $crnEntryMessage;
+
     ////////////////////////// EOF Specific Messages //////////////////////////
 
 
@@ -2070,6 +2076,23 @@ class Message {
         $this->calllogEntryMessage = $calllogEntryMessage;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCrnEntryMessage()
+    {
+        return $this->crnEntryMessage;
+    }
+
+    /**
+     * @param mixed $crnEntryMessage
+     */
+    public function setCrnEntryMessage($crnEntryMessage)
+    {
+        $this->crnEntryMessage = $crnEntryMessage;
+    }
+
+    
 
     /////////////////////// EOF Getters and Setters of Specific Orders ///////////////////////
 

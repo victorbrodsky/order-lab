@@ -301,12 +301,12 @@
                     <div class="col-xs-2">
                         <button id="search_patient_button" type="button"
                                 class="btn btn-lg btn-success span4" align="center"
-                                onclick="findCalllogPatient('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
+                                onclick="findCrnPatient('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
                         >Find Patient</button>
                         <button
                                 id="reenter_patient_button{{ reenterPatientIdPrefix }}" type="button"
                                 class="btn btn-lg btn-success span4" align="center"
-                                onclick="clearCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                onclick="clearCrnPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                         >Re-enter Patient</button>
                     </div>
 
@@ -315,7 +315,7 @@
                             <button
                                     id="add_patient_to_list_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="addCalllogPatientToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                    onclick="addCrnPatientToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                             >Add Patient to List</button>
                         </div>
                     {% endif %}
@@ -325,7 +325,7 @@
                             <button
                                     id="addnew_patient_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="addnewCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                    onclick="addnewCrnPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                             >Add New Patient Record</button>
                         </div>
                         <div id="add_accession_to_this_patient_button_holder" class="col-xs-3">
@@ -809,7 +809,7 @@
             {% endif %}
 
             {#Test cache as XML#}
-            {#{% if is_granted('ROLE_CALLLOG_ADMIN') %}#}
+            {#{% if is_granted('ROLE_CRN_ADMIN') %}#}
                 <li>
                     <a href="{{ path('crn_single_export_csv', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">
                         Export this entry to CSV
@@ -817,7 +817,7 @@
                 </li>
             {#{% endif %}#}
 
-            {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+            {% if is_granted('ROLE_CRN_ADMIN') %}
             <li>
                 <a href="{{ path('crn_update_cache_manually', {'id': message.id}) }}" target="_blank">
                     Manually update cache
@@ -1001,7 +1001,7 @@
                                       {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
                                 </a>
                             {% endif %}
-                            {% set crnAttachmentType = message.crnEntryMessage.getCalllogAttachmentType() %}
+                            {% set crnAttachmentType = message.crnEntryMessage.getCrnAttachmentType() %}
                             {% if crnAttachmentType %}
                                 &nbsp;({{ crnAttachmentType }})
                             {% endif %}
@@ -1065,8 +1065,8 @@
 
                 {% else %}
                     {#view/show#}
-                    {#2message.crnEntryMessage.crnTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
-                    {% for crnTask in message.getCalllogEntryMessage().getCalllogTasks() %}
+                    {#2message.crnEntryMessage.crnTasks|length={{ message.getCrnEntryMessage().getCrnTasks()|length }}<br>#}
+                    {% for crnTask in message.getCrnEntryMessage().getCrnTasks() %}
                         <div class="well well-sm">
 
                             {% if 0 %}
@@ -1134,9 +1134,9 @@
     {% endif %}
 
     {% if prototype == "prototype" %}
-        {% set formCalllogTask = crnTask.vars.prototype %}
+        {% set formCrnTask = crnTask.vars.prototype %}
     {% else %}
-        {% set formCalllogTask = crnTask %}
+        {% set formCrnTask = crnTask %}
     {% endif %}
 
     {% set wellclass = "alert-default well well-sm" %}
@@ -1150,34 +1150,34 @@
         {#{% else %}#}
         {#{% endif %}#}
 
-        {#{{ form_widget(formCalllogTask.id) }}#}
+        {#{{ form_widget(formCrnTask.id) }}#}
 
-        {#{% if formCalllogTask.status is defined %}#}
-            {#{{ formmacros.checkbox(formCalllogTask.status) }}#}
+        {#{% if formCrnTask.status is defined %}#}
+            {#{{ formmacros.checkbox(formCrnTask.status) }}#}
         {#{% endif %}#}
 
-        {#{{ formmacros.field(formCalllogTask.crnTaskType) }}#}
-        {#{{ formmacros.field(formCalllogTask.description) }}#}
+        {#{{ formmacros.field(formCrnTask.crnTaskType) }}#}
+        {#{{ formmacros.field(formCrnTask.description) }}#}
 
 
         {#make it as a row#}
         <div class="row">
             <div class="col-xs-1">
-                {{ form_widget(formCalllogTask.id) }}
+                {{ form_widget(formCrnTask.id) }}
             </div>
 
             {% if 0 %}
                 {#With Titles#}
                 <div class="col-xs-1" title="Check to mark as Completed" data-toggle="tooltip">
-                    {% if formCalllogTask.status is defined %}
-                        {{ form_row(formCalllogTask.status) }}
+                    {% if formCrnTask.status is defined %}
+                        {{ form_row(formCrnTask.status) }}
                     {% endif %}
                 </div>
                 <div class="col-xs-2" align="left">
-                    {{ form_row(formCalllogTask.crnTaskType) }}
+                    {{ form_row(formCrnTask.crnTaskType) }}
                 </div>
                 <div class="col-xs-7" align="left">
-                    {{ form_row(formCalllogTask.description) }}
+                    {{ form_row(formCrnTask.description) }}
                 </div>
                 <div class="col-xs-1" align="left">
                     {% if cycle != "show" and showAddDeleteBtn %}
@@ -1192,15 +1192,15 @@
             {% else %}
                 {#No Titles#}
                 <div class="col-xs-1" align="right" title="Check to mark as Completed" data-toggle="tooltip">
-                    {% if formCalllogTask.status is defined %}
-                        {{ form_widget(formCalllogTask.status) }}
+                    {% if formCrnTask.status is defined %}
+                        {{ form_widget(formCrnTask.status) }}
                     {% endif %}
                 </div>
                 <div class="col-xs-2" align="left">
-                    {{ form_widget(formCalllogTask.crnTaskType) }}
+                    {{ form_widget(formCrnTask.crnTaskType) }}
                 </div>
                 <div class="col-xs-7" align="left">
-                    {{ form_widget(formCalllogTask.description) }}
+                    {{ form_widget(formCrnTask.description) }}
                 </div>
                 <div class="col-xs-1" align="left">
                     {% if cycle != "show" and showAddDeleteBtn %}

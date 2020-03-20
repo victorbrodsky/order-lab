@@ -223,7 +223,7 @@
     {{ crnmacros.patientInfoSection(patientForm,cycle,holderId,'Add Patient',formtype) }}
 
     {#Manage Patient Lists#}
-    {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+    {% if is_granted('ROLE_CRN_DATA_QUALITY') %}
         <br>
         <p>
             <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}"

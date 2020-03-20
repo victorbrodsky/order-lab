@@ -81,8 +81,8 @@
 
 
 //            //overwrite
-//            replaceCalllogPatientToPopulate = function(patientToPopulate,holderId) {
-//                console.log("merge recrords overwrite replace Calllog PatientToPopulate");
+//            replaceCrnPatientToPopulate = function(patientToPopulate,holderId) {
+//                console.log("merge recrords overwrite replace Crn PatientToPopulate");
 //                return patientToPopulate;
 //            }
 
@@ -91,8 +91,8 @@
         });
 
         //overwrite
-        getCalllogPatientToPopulate = function(holderId) {
-            //console.log("merge recrords overwrite replace Calllog PatientToPopulate");
+        getCrnPatientToPopulate = function(holderId) {
+            //console.log("merge recrords overwrite replace Crn PatientToPopulate");
             var holder = getHolder(holderId);
             var index = holder.find('#crn-matching-patients-table-'+holderId).find('.active').attr('id');
             //console.log('patient id to populate='+index);

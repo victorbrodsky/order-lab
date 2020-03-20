@@ -29,7 +29,7 @@
 
     <h4 class="text-info" align="center">
         {{ title }}
-        {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
+        {% if is_granted('ROLE_CRN_PATHOLOGY_ATTENDING') %}
             <a href="{{ path(crn_sitename~'_siteparameters_resources_edit') }}">[Edit]</a>
         {% endif %}
     </h4>
