@@ -1,0 +1,262 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#   navigation menu   #}
+
+{#{% import _self as navbarmacros %}#}
+{#{% macro searchBoxContent(  patientsearchtype ) %}#}
+    {#<li>#}
+        {#<a#}
+            {#href="{{ path(scan_sitename~'_home',{'searchtype':searchtype}) }}">{{ searchtype }}#}
+            {#href="#" onclick="setCrnSearchtypeAction('{{ patientsearchtype}}');return false;">{{ patientsearchtype}}#}
+        {#</a>#}
+    {#</li>#}
+{#{% endmacro %}#}
+
+{% block navbar %}
+
+    {#{% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}#}
+
+    {% if titleheadroom is defined %}
+        {#alert alert-info#}
+        <div id="user-headroom-header"
+             class="text-center headroom headroom-hidden"
+             style="border-color: #ffffff; background-image:linear-gradient(to bottom,#ffffff 0,#ffffff 100%); color: #31708f;"
+        >
+            {{ titleheadroom|raw }}
+        </div>
+    {% endif %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    {#<div class="container-fluid">#}
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_CALLLOG_USER') %}
+                <!-- this is for mobile devices - top menu -->
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(crn_sitename~'_home') }}">Home</a>
+            {% endif %}
+        </div>
+
+        {#<br>#}
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+            {% if is_granted('ROLE_CALLLOG_USER') %}
+
+                <ul class="nav navbar-nav">
+
+                    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-crnhome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(crn_sitename~'_home') }}">
+                            <span class="glyphicon glyphicon-phone-alt"></span> Home
+                        </a>
+                    </li>
+
+                    {#<li id="nav-bar-alerts" class="divider-vertical">#}
+                        {#{% set alerts = 2 %}#}
+                        {#{% if alerts is defined and alerts > 0 %}#}
+                            {#<a id="incoming-orders-menu-title" href="{{ path(crn_sitename~'_alerts') }}">Alerts</a><!--#}
+                                            {#--><a id="incoming-orders-menu-badge"#}
+                                                  {#class="element-with-tooltip-always"#}
+                                                  {#title="Signout Issues" data-toggle="tooltip"#}
+                                                  {#data-placement="bottom"#}
+                                                  {#href="{{ path(crn_sitename~'_alerts') }}"#}
+                                            {#><span class="badge alert-danger">({{ alerts }} New)</span></a>#}
+                        {#{% else %}#}
+                            {#<a href="{{ path(crn_sitename~'_alerts') }}">#}
+                                {#Alerts#}
+                            {#</a>#}
+                        {#{% endif %}#}
+                    {#</li>#}
+
+                    <li id="nav-bar-crnentry"><a href="{{ path(crn_sitename~'_crnentry') }}">New Entry</a></li>
+
+                    <li id="nav-bar-mycrnentrees"><a href="{{ path(crn_sitename~'_my_generation_log') }}">My Entrees</a></li>
+
+                    {#<li id="nav-bar-patientlist"><a href="{{ path(crn_sitename~'_complex_patient_list') }}">Lists</a></li>#}
+                    {% set crnLists = crn_util.getPatientList() %}
+                    <li id="nav-bar-patientlist" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lists<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% for list in crnLists %}
+                                {#http://localhost/order/scan/admin/list/critical-result-notification-complex-patients/#}
+                                <li><a href="{{ list.url }}">{{list.name}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+
+                    <li id="nav-bar-tasks" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tasks<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                                <li><a href="{{ path(crn_sitename~'_tasks_todo') }}">To Do</a></li>
+                                <li><a href="{{ path(crn_sitename~'_tasks_i_added') }}">Tasks I Added</a></li>
+                                <li><a href="{{ path(crn_sitename~'_tasks_i_updated') }}">Tasks I Updated</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="nav-bar-resources">
+                        <a href="{{ path(crn_sitename~'_resources') }}">Resources</a>
+                    </li>
+
+
+                    {#{% if is_granted('ROLE_CALLLOG_DATA_QUALITY') || is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
+
+                    <li id="nav-bar-dataquality" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+                                <li><a href="{{ path(crn_sitename~'_find_and_edit_patient_record') }}">Edit Patient Info</a></li>
+                                <li><a href="{{ path(crn_sitename~'_merge_patient_records') }}">Merge Patient Records</a></li>
+                                <li><a href="{{ path(crn_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
+                                <li><a href="{{ path(crn_sitename~'_set_master_patient_record') }}">Set master record</a></li>
+                            {% endif %}
+                            {% if shownavbarfilter is defined and shownavbarfilter == false %}
+                                <li><a href="{{ path(crn_sitename~'_export_csv',app.request.query.all) }}">Export the first 500 matching entries in .CSV</a></li>
+                                <li><a href="{{ path(crn_sitename~'_export_csv_all',app.request.query.all) }}">Export all matching entrees in .CSV</a></li>
+                            {% endif %}
+                            {#{% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
+                                {#<li>#}
+                                    {#<a href="{{ path(crn_sitename~'_edit_patient_record') }}">Critical Result Notification Resources</a>#}
+                                    {#<a href="{{ path(crn_sitename~'_siteparameters_resources_edit') }}">Edit Critical Result Notification Resources</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
+                        </ul>
+                    </li>
+
+                    {#{% endif %}#}
+
+                </ul>
+
+            {% endif %}
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {#Search in navbar#}
+                {% if is_granted('ROLE_CALLLOG_USER') %}
+
+                    {% if shownavbarfilter is not defined or shownavbarfilter %}
+                        {#<li id="nav-bar-metaphone">#}
+                            {#<div class="nav-bar-checkbox">#}
+                                {#Search similar-sounding names:<input id="search_metaphone" name="search_metaphone" class="" style="margin:0; width: 20px;" type="checkbox">#}
+                            {#</div>#}
+                        {#</li>#}
+                        {#testing: https://www.bootply.com/JVmUT4RhnR https://www.bootply.com/T7XXw0VSNj#}
+
+                        <li id="nav-bar-crnsearch">
+                            {% set navbarfilterform = crn_util.getNavbarFilterForm(app.request) %}
+                            {#<form class="navbar-form navbar-left form-inline" role="search" id="crnsearchform" name="crnsearchform" method="get" action="{{ path('crn_home') }}">#}
+                            {{ form_start(navbarfilterform, {'action': path('crn_home'), 'attr': {'id':"crnsearchform", 'class': 'navbar-form navbar-left form-inline'}}) }}
+                                <div class="input-group">
+                                    {{ form_widget(navbarfilterform.searchtype) }}
+                                    <div class="form-group has-feedback">
+                                        {{ form_widget(navbarfilterform.search) }}
+                                        <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn"
+                                              onclick="setCrnSearchtypeAction();" aria-hidden="true"></span>
+                                    </div>
+                                    {#{% if navbarfilterform.metaphone is defined %}#}
+                                    {#{% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}#}
+                                        {#{{ form_widget(navbarfilterform.metaphone) }}#}
+                                        {#<div#}
+                                            {#data-toggle="tooltip" title="Search similar-sounding names in the whole page"#}
+                                        {#>#}
+                                            {#{{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}#}
+                                        {#</div>#}
+                                    {#{% endif %}#}
+                                </div>
+                                {#{{ form_rest(navbarfilterform) }}#}
+                            {#</form>#}
+                            {{ form_end(navbarfilterform) }}
+                        </li>
+                    {% endif %}
+
+                {% endif %}
+
+                {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path(crn_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(crn_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(crn_sitename~'_authorized_users') }}">Authorized Users</a></li>
+
+                            <li class="divider"></li>
+                            <li><a href="{{ path(crn_sitename~'_logger') }}">Event Log</a></li>
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
+                                <li><a href="{{ path(crn_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                            {#Update cached values now#}
+                            <hr>
+                            <li><a
+                                    general-data-confirm="Are you sure you want to update cache? It might requires multiple re-runs."
+                                    target="_blank"
+                                    href="{{ path(crn_sitename~'_update_cache_values_now') }}">Update cached values now
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                {% endif %}
+
+
+                {% if is_granted('ROLE_CALLLOG_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(crn_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(crn_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(crn_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+            </div>
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

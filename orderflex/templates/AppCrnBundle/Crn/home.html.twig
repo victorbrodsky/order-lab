@@ -1,0 +1,357 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCrnBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {#{% if messages and messages|length > 0 %}#}
+            {#( {{ messages.getTotalItemCount }} )#}
+        {#{% endif %}#}
+    </h4>
+    {#<br>#}
+
+    {#JS variable for Accession mask#}
+    {% if cycle is not defined %}
+        {% set cycle = 'new' %}
+    {% endif %}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#Search Form#}
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+
+        {#basic search#}
+        {#<div class="row">#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.sortBy) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-3" align="left" data-toggle="tooltip" title="Start Date">#}
+                {#{{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}#}
+            {#</div>#}
+            {#<div class="col-xs-3" align="left" data-toggle="tooltip" title="End Date">#}
+                {#{{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-2" style="padding-left: 0px;">#}
+                {#<div class="btn-group btn-group-sm">#}
+                        {#<span data-toggle="buttons-checkbox">#}
+                            {#<div#}
+                                    {#data-toggle="collapse"#}
+                                    {#href="#crn-AdvancedSearch"#}
+                                    {#class="btn btn-default btn-sm toggle-btn-state"#}
+                                    {#data-active-class="advance-search-wrench"#}
+                            {#>#}
+                                    {#<span class="glyphicon glyphicon-wrench"></span>#}
+                            {#</div>#}
+                        {#</span>#}
+                    {#<button id="Search_button" type="submit" class="btn btn-default btn-sm">Filter</button>#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#<br>#}
+
+        <div class="row">
+            <div class="col-xs-1" style="padding-left: 3px;">
+                {{ form_widget(filterform.sortBy) }}
+            </div>
+
+            <div class="col-xs-1" align="left" data-toggle="tooltip" title="Start Date" style="padding-left: 3px;">
+                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-1" align="left" data-toggle="tooltip" title="End Date" style="padding-left: 3px;">
+                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+            </div>
+
+            {#<div class="col-xs-2" align="left">#}
+                {#{{ form_widget(filterform.entryTags) }}#}
+            {#</div>#}
+            <div class="col-xs-3" align="left" style="padding-left: 3px;">
+                {{ form_widget(filterform.messageCategory) }}
+            </div>
+            <div class="col-xs-4" style="padding-left: 3px; padding-right: 0px;">
+                {{ form_widget(filterform.mrntype) }}
+                {{ form_widget(filterform.search) }}
+            </div>
+
+            <div class="col-xs-2" style="padding-left: 0px;">
+                <div class="btn-group btn-group-sm" style="padding-left: 0px; padding-right: 0px;">
+                    <span data-toggle="buttons-checkbox">
+                        <div
+                            data-toggle="collapse"
+                            href="#crn-AdvancedSearch"
+                            class="btn btn-default btn-sm toggle-btn-state"
+                            data-active-class="advance-search-wrench"
+                        >
+                            <span class="glyphicon glyphicon-wrench"></span>
+                        </div>
+                    </span>
+                    <button id="Search_button" type="submit" class="btn btn-default btn-sm">Filter</button>
+                </div>
+            </div>
+
+        </div>
+
+        {#<div class="row">#}
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.accessionType) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.accessionNumber) }}#}
+            {#</div>#}
+
+            {#<div class="col-xs-4" align="left">#}
+                {#{{ form_widget(filterform.initialCommunication) }}#}
+            {#</div>#}
+        {#</div>#}
+
+        {#<div class="row">#}
+            {#<div class="col-xs-2" align="left">#}
+            {#</div>#}
+            {#<div class="col-xs-8">#}
+                {#{{ form_widget(filterform.mrntype) }}#}
+                {#{{ form_widget(filterform.search) }}#}
+            {#</div>#}
+            {#<div class="col-xs-2" align="left">#}
+            {#</div>#}
+        {#</div>#}
+
+
+        {#advanced search#}
+        {% if advancedFilter %}
+            {% set advacedCollapse = 'in' %}
+        {% else %}
+            {% set advacedCollapse = '' %}
+        {% endif %}
+        {#<br>#}
+        {#<div class="row">#}
+            {#<a data-toggle="collapse" href="#crn-AdvancedSearch">Advanced Search</a>#}
+        {#</div>#}
+        <div id="crn-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.accessionType) }}
+                    </div>
+
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.accessionNumber) }}
+                    </div>
+
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.initialCommunication) }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.author) }}
+                    </div>
+
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.referringProvider) }}
+                    </div>
+
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.referringProviderSpecialty) }}
+                    </div>
+
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.encounterLocation) }}
+                    </div>
+
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.institution) }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.messageStatus) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.patientListTitle) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.attending) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.entryTags) }}
+                    </div>
+                    <div class="col-xs-4" align="left">
+                        {{ form_widget(filterform.entryBodySearch) }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.task) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskType) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskUpdatedBy) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.taskAddedBy) }}
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.patientPhone) }}
+                    </div>
+                    <div class="col-xs-3" align="left">
+                        {{ form_widget(filterform.patientEmail) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                        {{ form_widget(filterform.attachmentType) }}
+                    </div>
+                    <div class="col-xs-2" align="left">
+                    </div>
+                    <div class="col-xs-2" align="left">
+                    </div>
+                </div>
+
+                {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-3" align="left">
+                            {{ form_label(filterform.metaphone) }}
+                            {{ form_widget(filterform.metaphone) }}
+
+                            {#{% if edit_form.maintenance is defined %}#}
+                            {#{{ formmacros.checkbox(edit_form.maintenance) }}#}
+                            {#{% endif %}#}
+                        </div>
+                    </div>
+                {% else %}
+                    {% do filterform.metaphone.setRendered %}
+                {% endif %}
+
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+
+        {{ form_end(filterform) }}
+    </div>
+    {#</p>#}
+
+    {#Call Case List#}
+    {#<br>#}
+
+    {{ crnmacros.crnEntriesTable(messages,eventObjectTypeId,patientListId,"sortable") }}
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(messages) }}
+    </div>
+
+
+{% endblock %}
+
+{% block additionaljs %}
+    <script language="Javascript">
+
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            changeFilterColorButton("#Search_button");
+
+            toggleBtnListener();
+
+            //taskStatusBtnListener();
+        });
+
+        function toggleBtnListener() {
+            //$('.toggle-btn-state').click(function(e) {
+            //$(this).toggleClass('toggle-btn-state-active');
+            // if( $(this).hasClass('toggle-btn-state-active') ) {
+            //     $(this).removeClass('toggle-btn-state-active').addClass('toggle-btn-state-inactive');
+            // }
+            // if( $(this).hasClass('toggle-btn-state-inactive') ) {
+            //     $(this).removeClass('toggle-btn-state-inactive').addClass('toggle-btn-state-active');
+            // }
+            //
+            // e.preventDefault();
+            //});
+
+            //Default: if #crn-AdvancedSearch has "collapse in" => grey
+            if( $("#crn-AdvancedSearch").hasClass("in") ) {
+                //$('.toggle-btn-state').toggleClass('toggle-btn-state-active');
+                $('.toggle-btn-state').toggleClass('active');
+            }
+        }
+
+        //I think the "Filter" button needs to turn green if any of the fields
+        // in the filter well are modified. When the "Filter" button is pressed
+        // it should become grey again.
+        function changeFilterColorButton( btnId ) {
+            var filterBtn = $(btnId);
+            var filterForm = filterBtn.closest('.form-search');
+
+            //datepicker
+            filterForm.find('.datepicker').on('change',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //combobox
+            filterForm.find('.combobox').on('change',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //text
+            filterForm.find('text').on('input',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //input
+            filterForm.find('input').on('input',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            function changeBtnColorGreen(filterBtn) {
+                filterBtn.removeClass('btn-default');
+                filterBtn.addClass('btn-success');
+            }
+
+        }
+
+    </script>
+
+
+{% endblock %}
+

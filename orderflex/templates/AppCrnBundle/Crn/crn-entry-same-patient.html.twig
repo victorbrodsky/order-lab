@@ -1,0 +1,263 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCrnBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+{% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+{% import "AppUserdirectoryBundle/FormNode/formnodemacros.html.twig" as formnodemacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info crn-title" align="center">
+        {{ title|raw }}
+    </h4>
+
+    <br>
+
+    {% if formnodetrigger is not defined %}
+        {% set formnodetrigger = 1 %}
+    {% endif %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="crn" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+    <input type="hidden" id="mrn" value="{{ mrn }}" />
+    <input type="hidden" id="mrntype" value="{{ mrntype }}" />
+    {#<input type="hidden" id="encounterid" value="{{ encounterid }}" />#}
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+
+    <input type="hidden" id="readonlyPatient" value="{{ readonlyPatient }}" />
+    <input type="hidden" id="readonlyEncounter" value="{{ readonlyEncounter }}" />
+
+    {{ crnmacros.taskPrototype(form,cycle) }}
+
+    <div id="crn-patient-list">
+
+    {% set holderId = "patient-holder-1" %}
+
+    {{ form_start(form,{'attr': {'id': 'crn-new-entry-form'}, 'method': 'POST', 'action': path('crn_save_entry_same_patient',{'readonlyPatient':readonlyPatient,'readonlyEncounter':readonlyEncounter})}) }}
+
+        <input type="hidden" id="messageStatusJs" name="messageStatusJs" value="" />
+
+        {{ form_errors(form) }}
+
+        {% set patientForm = form.patient|first %}
+
+        {#patientForm.id:{{ patientForm.vars.value.id }}<br>#}
+        {{ form_row(patientForm.id) }}
+
+
+        {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
+        {% for encounter in form.encounter if encounter.vars.value.status == 'valid' %}
+
+            {#encounter.vars.value.id={{ encounter.vars.value.id }}#}
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#crn-EncounterInfo-{{ encounter.vars.value.id }}">
+                            Encounter Info
+                        </a>
+                    </h4>
+                </div>
+                <div id="crn-EncounterInfo-{{ encounter.vars.value.id }}" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        {% set status = 'Submitted' %}
+                        {{ form_row(encounter.id) }}
+                        {{ form_row(encounter.status) }}
+
+                        {% if encounter.number is defined %}
+                            {{ formmacros.inputArrayField(encounter.number,"new","encounternumber","key","","","",status) }}
+                        {% endif %}
+
+                        {#previous encounter drop down menu#}
+                        {% if form.encounterKeytype is defined %}
+                            {{ formmacros.field(form.encounterKeytype) }}
+                        {% endif %}
+                        {% if form.previousEncounters is defined %}
+                            {{ formmacros.field(form.previousEncounters) }}
+                        {% endif %}
+                        {% if form.previousEncounterId is defined %}
+                            {{ formmacros.field(form.previousEncounterId) }}
+                        {% endif %}
+
+                        {{ formmacros.inputArrayField(encounter.date,cycle,"encounterdate","date","","","",status) }}
+
+                        {% if cycle == "new" %}
+                            <div style="display: none;">
+                        {% endif %}
+                        {{ formmacros.field(encounter.encounterStatus) }}
+                        {{ formmacros.inputArrayField(encounter.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
+                        {% if cycle == "new" %}
+                            </div>
+                        {% endif %}
+
+                        {{ formmacros.field(encounter.provider) }}
+
+                        {% for attendingPhysician in encounter.attendingPhysicians %}
+                            {{ formmacros.field(attendingPhysician.field) }}
+                        {% endfor %}
+
+                        {{ crnmacros.referingProviderObject(encounter) }}
+
+                        {{ crnmacros.trackerContactinfoForm(encounter,cycle,status) }}
+
+                        {#Update Patient Info: encounter with status='valid'#}
+                        {{ crnmacros.updatePatientInfoSection(encounter,cycle,status) }}
+
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-primary -->
+
+        {% endfor %} {#encounter#}
+
+
+
+        {# Entry #}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#crn-Entry">
+                        Entry
+                    </a>
+                </h4>
+            </div>
+            <div id="crn-Entry" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {#Message Fields        #}
+                    <p>
+                        {#Message Type: Message->messageCategory#}
+                        {% if form.messageCategory is defined %}
+                            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+                        {% endif %}
+                        {% if form.messageStatus is defined %}
+                            {{ formmacros.field(form.messageStatus) }}
+                        {% endif %}
+
+                        {% if cycle == "new" %}
+                            <div style="display: none;">
+                        {% endif %}
+                        {#Message Version#}
+                        {{ formmacros.field(form.version) }}
+                        {#Amendment Reason#}
+                        {% if form.amendmentReason is defined %}
+                            {{ formmacros.field(form.amendmentReason) }}
+                        {% endif %}
+                        {% if cycle == "new" %}
+                            </div>
+                        {% endif %}
+                    </p>
+
+                    {#Patient List    #}
+                    {{ crnmacros.crnPatientList(form,cycle) }}
+
+                    <div id="form-node-holder"></div>
+
+                    {{ crnmacros.crnEntryDocuments(form,cycle) }}
+
+                    {{ crnmacros.crnTaskList(form,cycle) }}
+
+                    {{ crnmacros.crnEntryTags(form,cycle) }}
+                    {# EOF Entry #}
+
+            </div> <!-- panel-body -->
+          </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-primary -->
+        {# EOF Entry #}
+
+        <p>
+            {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="crnSubmitForm('save-draft');">Save Draft</button>#}
+            {#<button class="btn btn-lg btn-primary btn-success" name="btnSubmit" type="button" onclick="crnSubmitForm('submit');">Submit</button>#}
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-3" align="right">
+                    <button
+                            id="save-draft-btn"
+                            class="btn btn-success"
+                            name="btnSubmit"
+                            type="button"
+                            onclick="crnSubmitForm(this,'Draft');"
+                            style="min-width: 100%"
+                    >Save Draft</button>
+                </div>
+                <div class="col-lg-3" align="left">
+                    <div class="input-group">
+                        <input type="password" id="crn-user-password" class="form-control" placeholder="Enter password" style="min-width: 100%">
+                        <span class="input-group-btn">
+                            <button id="signed-btn" class="btn btn-success" name="btnSubmit" type="button" onclick="crnSubmitForm(this,'Signed');">Finalize and Sign</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+                <div class="col-lg-3"></div>
+            </div><!-- /.row -->
+        </p>
+
+        {#{{ form_row(form._token) }}#}
+        {#{{ form_rest(form) }}#}
+
+    {#</form>#}
+    {{ form_end(form,{'render_rest': false}) }}
+
+    </div>
+
+    <div id="crn-msg-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+    <div id="crn-msg-success-box" class="alert alert-success" style="display: none; margin-top: 5px; margin-bottom: 5px;"></div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+<script language="Javascript">
+
+
+
+    $(document).ready(function() {
+        //hide all alias
+        //crnHideAllAlias(true,true);
+        //crnHideAllAlias(true,true,'crn-encounterInfo-holder');
+
+        //init
+        initCrnPage();
+
+        //preset mrn and mrn-type
+        crnPresetMrnMrntype('patient-holder-1');
+
+        //show entry form for "Add Entry (New Encounter)" and "Add Entry (Same Encounter)"
+//        var readonlyPatient = $('#readonlyPatient').val();
+//        var readonlyEncounter = $('#readonlyEncounter').val();
+//        if( readonlyPatient == true || readonlyEncounter == true ) {
+//            showCalllogCallentryForm(true);
+//        }
+
+    });
+
+
+</script>
+{% endblock %}

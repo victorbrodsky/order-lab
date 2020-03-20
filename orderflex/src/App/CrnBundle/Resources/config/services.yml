@@ -1,0 +1,54 @@
+parameters:
+
+    crn.sitename: crn
+    crn.uploadpath:
+
+
+twig:
+    globals:
+        crn_sitename: '%crn.sitename%'
+        #service
+        crn_util: "@crn_util"
+
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+#                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
+
+    crn_authentication_handler:
+        class: App\CrnBundle\Security\Authentication\CrnLoginSuccessHandler
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    crn_role_voter:
+        class: App\CrnBundle\Security\Voter\CrnRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    crn_permission_voter:
+        class: App\CrnBundle\Security\Voter\CrnPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    crn_util:
+        class: App\CrnBundle\Util\CrnUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    crn_util_form:
+        public: true
+        class: App\CrnBundle\Util\CrnUtilForm
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+
+#    App\CrnBundle\Controller\CrnEntryController: ~
+#        arguments: ["@crn_util","@user_service_utility"]
+#    App\CrnBundle\Controller\DataQualityController: ~
+#        arguments: ["@crn_util","@user_service_utility"]
+

@@ -1,0 +1,248 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#testing#}
+{#{% if testing is defined and testing %}#}
+    {#{% extends "AppCrnBundle/Default/base.html.twig" %}#}
+{#{% endif %}#}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{#{% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}#}
+{#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+{#{% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}#}
+
+{#{% block header %}{% endblock %}#}
+
+{#{% block content %}#}
+
+{% set holderId = "patient-holder-1" %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#crn-previous-entries">
+                {{ title|raw }}
+            </a>
+        </h4>
+    </div>
+    <div id="crn-previous-entries" class="panel-collapse collapse in">
+        <div class="panel-body">
+
+        {% if filterform is defined and filterform %}
+        <p>
+        {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
+        {{ form_start(filterform, {'action': path(route_path), 'attr': {'class': 'well form-search'}}) }}
+            {#<div class="well">#}
+
+                {#basic search#}
+                <div class="row">
+
+                    <div class="col-xs-3"></div>
+
+                    <div class="col-xs-3" align="right">
+                        {{ form_widget(filterform.messageCategory) }}
+                    </div>
+
+                    <div class="col-xs-1" align="left">
+                        <button id="Search_button" type="button" class="btn btn-default"
+                                onclick="crnListPreviousEntriesForPatient( '{{ holderId }}', $('#filter_messageCategory').val() )"
+                        >Filter</button>
+                    </div>
+
+                    <div class="col-xs-5"></div>
+
+                </div>
+
+                {#{{ form_rest(filterform) }}#}
+            {#</div>#}
+        {#</form>#}
+        {{ form_end(filterform) }}
+        </p>
+        {% endif %}
+
+        {#Messages List#}
+
+        <table class="records_list table table-hover table-condensed table-striped text-left">
+            <thead>
+            <tr>
+                {% if 0 %}
+                    <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Encounter Date', 'encounter.creationdate') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Location', 'encounter.location') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Message Type', 'messageCategory.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Healthcare Provider', 'referringProviderWrapper.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Attending', 'attendingPhysicianWrapper.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Message Status', 'messageStatus.name') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Submitter', 'provider.displayName') }}</th>
+                    <th>{{ knp_pagination_sortable(messages, 'Signee', 'signee.displayName') }}</th>
+                {% else %}
+                    <th>ID</th>
+                    <th>Encounter Date</th>
+                    <th>Last Modified</th>
+                    <th>Location</th>
+                    <th>Message Type</th>
+                    <th>Healthcare Provider</th>
+                    <th>Attending</th>
+                    <th>Message Status</th>
+                    <th>Submitter</th>
+                    <th>Signee</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+
+            {% set count = 0 %}
+            {% for message in messages if count < limit %}
+
+                {% set count = count + 1 %}
+                {% set trclassname = "" %}
+                {#{% if message.messageStatus.name == 'Deleted' %}#}
+                    {#{% set trclassname = "order-reject-status" %}#}
+                {#{% endif %}#}
+
+                {% if messageid is defined and messageid and message.id == messageid %}
+                    {% set trclassname = "success" %}
+                {% endif %}
+
+                <tr class="{{ trclassname }}">
+
+                    {#style="display: none;"#}
+                    <td >
+                        <a href="{{ path(crn_sitename~'_crnentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                    </td>
+
+                    {#Encounter Date#}
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {% set encounterDate = encounter.obtainStatusField('date','valid') %}
+                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}
+                            <br>
+                        {% endfor %}
+                    </td>
+
+                    {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
+                    <td>
+                        {% if message.version > 1 %}
+                            {% if message.editorInfos|length > 0 %}
+                                {#{{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}#}
+                                {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
+                            {% else %}
+                                {#{{ message.orderdate|date('m/d/Y H:i') }}#}
+                                {{ crn_util.getOrderSimpleDateStr(message,"") }}
+                            {% endif %}
+                        {% else %}
+                            {#{{ message.orderdate|date('m/d/Y H:i') }}#}
+                            {{ crn_util.getOrderSimpleDateStr(message,"") }}
+                        {% endif %}
+                    </td>
+
+                    {#Location#}
+                    <td>
+                        {{  message.getEncounterLocationInfos() }}
+                    </td>
+
+                    <td>
+                        {{  message.messageCategory.getNodeNameWithParents }}
+                    </td>
+
+                    {#referringProviders#}
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {% for referringProvider in encounter.referringProviders %}
+                                {{ referringProvider.field.getFullName }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    </td>
+
+                    {#Attending#}
+                    <td>
+                        {% for encounter in message.encounter %}
+                            {% for attendingPhysician in encounter.attendingPhysicians %}
+                                {{ attendingPhysician.field.getFullName }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        {% if message.messageStatus %}
+                            {{ message.messageStatus.name }}
+                        {% endif %}
+                    </td>
+
+                    {#Submitter#}
+                    <td>
+                        {{ message.provider.getUsernameOptimal }}
+                    </td>
+
+                    {#Signee#}
+                    <td>
+                        {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
+                            {{ message.signeeInfo.modifiedBy.getUsernameOptimal }}
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {#<tr class="table-no-border {{ trclassname }}">#}
+                    {#<td style="display: none">#}
+                        {#<a href="{{ path(crn_sitename~'_crnentry_view', { 'messageId': message.id }) }}" target="_blank">{{ message.id }}</a>#}
+                    {#</td>#}
+                    {#<td colspan="9">#}
+                        {#{{ message.getMessageTitleStr }}<br>#}
+                        {#<p>History/Findings: This is an example of a previously entered crn.</p>#}
+                        {#<p>Impression/Outcome: This is an example of an impression and outcome.</p>#}
+                        {#<p>Laboratory Results: This is an example of an impression and outcome</p>#}
+                        {#{% if messageCategoryInfoNode is not defined %}#}
+                            {#{% set messageCategoryInfoNode = message.messageCategory %}#}
+                        {#{% endif %}#}
+                        {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,messageCategoryInfoNode)|raw }}#}
+                    {#</td>#}
+                {#</tr>#}
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {# display navigation #}
+        {#<div class="navigation">#}
+            {#{{ knp_pagination_render(messages) }}#}
+        {#</div>#}
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-primary -->
+
+{#{% endblock %}#}
+
+{#{% block additionaljs %}#}
+    {#<script language="Javascript">#}
+
+        {#$(document).ready(function() {#}
+
+            {#//init#}
+            {#var filterSelectBox = $('.filter-message-category');#}
+            {#specificRegularCombobox(filterSelectBox);#}
+
+        {#});#}
+
+    {#</script>#}
+{#{% endblock %}#}
+
+ 
+    
+   

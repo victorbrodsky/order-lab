@@ -1,0 +1,108 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCrnBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
+            <a href="{{ path(crn_sitename~'_siteparameters_resources_edit') }}">[Edit]</a>
+        {% endif %}
+    </h4>
+
+
+    {#{% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}#}
+    {#<a role="button" data-toggle="collapse" href="#collapseInstitutionUserTree" onclick="displayInstitutionUserTree('default');">Organizational Tree</a>#}
+    {#<div id="collapseInstitutionUserTree" class="panel-collapse collapse">#}
+        {#{{ treemacros.jstreemacros('composite-tree','UserdirectoryBundle','Institution_User','employees_showuser','nosearch') }}#}
+    {#</div>#}
+
+<pre>
+<div class="text-left">
+    {{ resourcesText|raw }}
+</div>
+</pre>
+
+{#{% if 0 %}#}
+{#<pre>#}
+{#<div class="text-left">#}
+
+{#1- Transfusion Medicine#}
+
+    {#- Platelets#}
+    {#- First Dose Platelets#}
+    {#- Third+ Dose Platelets#}
+    {#- Complex Platelet Summary#}
+    {#- Plasma#}
+    {#- Cryoprecipitate#}
+    {#- Factors#}
+    {#- RBCs#}
+    {#- Transfusion Reaction#}
+    {#- MTP and Emergency#}
+    {#- Other#}
+    {#- Links#}
+        {#<a href="https://teams.nyp.org//sites/Clinical/Lab/WCTMCT/default.aspx">- TM/CT Administrative Sharepoint Site</a>#}
+        {#<a href="https://teams.nyp.org/sites/Clinical/TMCS/default.aspx">- TM/CT Clinical Sharepoint Site</a>#}
+        {#<a href="https://infonet.nyp.org/Lab/Pages/Transfusion.aspx">- TM/CT Infonet Site</a>#}
+
+{#2- Microbiology#}
+
+    {#- Antibiotic Sensitivity Approval#}
+    {#- Viracor Testing#}
+    {#- Critical Value#}
+
+{#3- Coagulation#}
+
+    {#- Critical Value#}
+
+{#4- Hematology#}
+
+    {#- Peripheral Blood Smear Review#}
+
+{#5- Chemistry#}
+
+    {#- Critical Value#}
+    {#- Aberrant analyte#}
+
+{#6- Cytogenetics#}
+
+{#7- Molecular#}
+
+{#8- Links#}
+
+    {#<a href="http://ita5.nyp.org">- Citrix Web VPN</a>#}
+    {#<a href="https://infonet.nyp.org">- Infonet</a>#}
+    {#<a href="https://inyp.nyp.org/inyp/">- iNYP</a>#}
+    {#<a href="https://nyp.labqms.com/">- SoftTech Document Management</a>#}
+    {#<a href="https://www.testmenu.com/nyphweillcornell">- Cornell Clinical Laboratories</a>#}
+
+{#</div>#}
+{#</pre>#}
+{#{% endif %}#}
+
+{% endblock %}
+

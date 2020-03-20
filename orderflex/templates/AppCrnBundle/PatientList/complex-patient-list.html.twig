@@ -1,0 +1,311 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppCrnBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+    {% set holderId = "patient-holder-1" %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="crn" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="mrn" value="{{ mrn }}" />
+    <input type="hidden" id="mrntype" value="{{ mrntype }}" />
+
+
+    <input type="hidden" id="patientListId" value="{{ patientListId }}" />
+
+    {#Search Form#}
+
+    {#<form id="CallCaseSearchForm" class="form-vertical" role="form">#}
+
+        {#<div class="well">#}
+
+            {#<div id="crn-AdvancedSearch" class="panel-collapse collapse in">#}
+                {#<div class="panel-body">#}
+
+                    {#<div class="row">#}
+
+                        {#<div class="col-xs-5" align="left">#}
+                            {#<input class="form-control form-control-modif not-mapped-simplefield" type="text" value="" placeholder="Search free text">#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-4" align="left" class="form_body_toggle_btn">#}
+                            {#<select id="Field" name="Field" class="combobox" style="float:right;width: 70%">#}
+                                {#<option value="All Fields">All Fields</option>#}
+                                {#<option value="MRN">ID</option>#}
+                                {#<option value="MRN">Active</option>#}
+                                {#<option value="Patient Name">Patient Name</option>#}
+                                {#<option value="MRN">MRN</option>#}
+                                {#<option value="In/Out">In/Out</option>#}
+                                {#<option value="Educational">HLA A</option>#}
+                                {#<option value="Pending Signout">HLA B</option>#}
+                                {#<option value="Call Issue">Rogosin PRA</option>#}
+                                {#<option value="Product Status">Product Status</option>#}
+                            {#</select>#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-2" align="left" class="form_body_toggle_btn">#}
+                            {#<select id="Logic" name="Logic" class="combobox" style="float:right;width: 70%">#}
+                                {#<option value="And">And</option>#}
+                                {#<option value="Not">Not</option>#}
+                                {#<option value="Or">Or</option>#}
+                                {#<option value="Exact Match">Exact Match</option>#}
+                            {#</select>#}
+                        {#</div>#}
+
+                        {#<div class="col-xs-1" align="left">#}
+                        {#<button id="Search_button" type="button" class="btn btn-lg btn-info" align="center" style="float:left; width:100%">Search</button>#}
+                        {#</div>#}
+                        {#<div class="col-xs-1" align="left">#}
+                        {#</div>#}
+
+                    {#</div>#}
+
+                {#</div> <!-- panel-body -->#}
+            {#</div> <!-- panel-collapse -->#}
+
+        {#</div>#}
+
+    {#</form>#}
+
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            {#<th>{{ knp_pagination_sortable(patientNodes, 'ID', 'patient.id') }}</th>#}
+            <th>{{ knp_pagination_sortable(patientNodes, 'Last Name', 'lastname.field') }}</th>
+            <th>{{ knp_pagination_sortable(patientNodes, 'First Name', 'firstname.field') }}</th>
+            <th>{{ knp_pagination_sortable(patientNodes, 'MRN', 'mrn.field') }}</th>
+            {#<th>{{ knp_pagination_sortable(patientNodes, 'Date of Last Entry', 'mrn.field') }}</th>#}
+            <th>Date of Last Entry</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {% for patientNode in patientNodes if patientNode.patient %}
+
+            {% set patient = patientNode.patient %}
+            {% set mrn = patient.obtainValidField('mrn') %}
+            {% if mrn and mrn.field and mrn.keytype %}
+                {% set mrnNumber = mrn.field %}
+                {% set mrnTypeId = mrn.keytype.id %}
+            {% else %}
+                {% set mrnNumber = null %}
+                {% set mrnTypeId = null %}
+            {% endif %}
+
+            {% set trclassname = "" %}
+            {#{% if patient.status == 'Deleted' %}#}
+                {#{% set trclassname = "order-reject-status" %}#}
+            {#{% endif %}#}
+
+            <tr class="{{ trclassname }}">
+
+                <td style="display: none;">
+                    {#<a href="{{ path(crn_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
+                    <a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                </td>
+
+                {#Last Name#}
+                <td>
+                    {#{% for lastname in patient.lastname %}#}
+                        {#{{  lastname }} ({{ lastname.status }})<br>#}
+                    {#{% endfor %}#}
+
+                    {#{{ patient.obtainValidField('lastname') }}#}
+
+                    {#should we use obtainStatusFieldArray('lastname','valid') to show all valid fields?#}
+                    {% set displayLastnameStatus = false %}
+                    {% set patientLastnames = patient.obtainStatusFieldArrayOrAll('lastname','valid') %}
+                    {% if patientLastnames|length > 1 %}
+                        {% set displayLastnameStatus = false %}
+                    {% endif %}
+                    {% for lastname in patientLastnames %}
+                        {#{% if lastname.status != 'valid' %}#}
+                            {#{{  lastname }} ({{ lastname.status }})#}
+                        {#{% else %}#}
+                            {#{{  lastname }}#}
+                        {#{% endif %}#}
+                        {{  lastname }} {% if displayLastnameStatus %}({{ lastname.status }}){% endif %}
+                        <br>
+                    {% endfor %}
+                </td>
+
+                {#First Name#}
+                <td>
+                    {#{% for firstname in patient.firstname %}#}
+                        {#{{  firstname }} ({{ firstname.status }})<br>#}
+                    {#{% endfor %}#}
+
+                    {#{{ patient.obtainValidField('firstname') }}#}
+
+                    {#should we use obtainStatusFieldArray('firstname','valid') to show all valid fields?#}
+                    {% set displayFirstnameStatus = false %}
+                    {% set patientFirstnames = patient.obtainStatusFieldArrayOrAll('firstname','valid') %}
+                    {% if patientFirstnames|length > 1 %}
+                        {% set displayFirstnameStatus = false %}
+                    {% endif %}
+                    {% for firstname in patientFirstnames %}
+                        {#firstname.status={{ firstname.status }}#}
+                        {#{% if firstname.status != 'valid' %}#}
+                            {#{{  firstname }} ({{ firstname.status }})#}
+                        {#{% else %}#}
+                            {#{{  firstname }}#}
+                        {#{% endif %}#}
+                        {{  firstname }} {% if displayFirstnameStatus %}({{ firstname.status }}){% endif %}
+                        <br>
+                    {% endfor %}
+                </td>
+
+                {#MRN#}
+                <td>
+                    {#{% for mrn in patient.mrn %}#}
+                        {#{{  mrn.obtainOptimalName }}<br>#}
+                    {#{% endfor %}#}
+                    {{ patient.obtainFullValidKeyName }}
+                </td>
+
+                {#Date of Last Entry#}
+                <td>
+                    {{ crn_util.getLastEntryDate(patient) }}
+                </td>
+
+                <td class="rowlink-skip">
+                    {{ crnmacros.patientListAction(patient,patientListId) }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(patientNodes) }}
+    </div>
+
+
+    {#TODO: create Patient chooser#}
+    {#<p>#}
+        {#<a href="{{ path('crn_show_patient_chooser') }}" target="_blank">Add Patient</a>#}
+    {#</p>#}
+    {{ crnmacros.patientInfoSection(patientForm,cycle,holderId,'Add Patient',formtype) }}
+
+    {#Manage Patient Lists#}
+    {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+        <br>
+        <p>
+            <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}"
+               target="_blank">Manage Patient Lists</a>
+        </p>
+    {% endif %}
+
+    {#Call Case List#}
+    {#<table class="table table-hover table-condensed table-striped text-left">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th><a translationCount="" class="sortable" href="#">ID</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Active</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Last Name</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">First Name</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">MRN</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">In/Out</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">HLA A</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">HLA B</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Rogosin Date</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Rogosin PRA</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">NYBC Date</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Product Status</a></th>#}
+            {#<th><a translationCount="" class="sortable" href="#">Expires</a></th>#}
+            {#<th>Actions</th>#}
+        {#</tr>#}
+        {#</thead>#}
+
+        {#<tbody class="rowlink" data-link="row">#}
+
+            {#ID,Active,lastName,firstName,MRN,InOut,HLAA,HLAB,RogosinDate,RogosinPRA,NYBCDate,ProductStatus,Expires#}
+            {#{{ crnmacros.complexPatient('14','Yes','Doe','Linda','7412345','IN','A(074))','B(074)','2/2/2015','80%','2/2/2015','Ordered','2/14/2015') }}#}
+            {#{{ crnmacros.complexPatient('15','Yes','Doe','Joe','7412346','IN','A(074))','B(074)','2/12/2015','80%','2/12/2015','Ordered','2/16/2015') }}#}
+            {#{{ crnmacros.complexPatient('16','Yes','Doe','John','7412347','IN','A(074))','B(074)','2/12/2015','80%','2/12/2015','Ordered','2/16/2015') }}#}
+
+        {#<!-- Display of entry body data -->#}
+        {#</tbody>#}
+    {#</table>#}
+    {#<div class="navigation">#}
+        {#<div class="row">#}
+            {#<hr />#}
+            {#<div class="col-lg-12">#}
+                {#<ul class="pagination">#}
+                    {#<li class="disabled"><a href="#">&laquo;</a></li>#}
+                    {#<li class="active"><a href="#">1</a></li>#}
+                    {#<li><a href="#">2</a></li>#}
+                    {#<li><a href="#">3</a></li>#}
+                    {#<li><a href="#">4</a></li>#}
+                    {#<li><a href="#">5</a></li>#}
+                    {#<li><a href="#">&raquo;</a></li>#}
+                {#</ul>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+    <br>
+    {#<p>#}
+        {#<input id="edit_{{ ID }}" class="btn btn-primary center-block" type="button" value="Add"/>#}
+    {#</p>#}
+
+    <br><br>
+
+{% endblock %}
+
+{% block additionaljs %}
+    <script language="Javascript">
+
+
+
+        $(document).ready(function() {
+            //hide all alias
+            //crnHideAllAlias(true,true);
+            //crnHideAllAlias(true,true,'crn-encounterInfo-holder');
+
+            //init
+            initCrnPage();
+
+            //preset mrn and mrn-type
+            crnPresetMrnMrntype('patient-holder-1');
+
+        });
+
+
+    </script>
+{% endblock %}

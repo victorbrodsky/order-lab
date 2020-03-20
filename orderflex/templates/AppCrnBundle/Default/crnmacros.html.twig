@@ -1,0 +1,1663 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% macro simpleDateField(label,value,placeholder) %}
+
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right">
+            <label>{{ label|raw }}</label>
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+            <div class="input-group input-group-reg date allow-future-date">
+                <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value }}" placeholder="{{ placeholder }}">
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    </p>
+
+{% endmacro %}
+
+{% macro singleDateField(value,placeholder) %}
+    {#<p>#}
+        <div class="input-group input-group-reg date allow-future-date">
+            <input class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value }}" placeholder="{{ placeholder }}">
+            <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+    {#</p>#}
+{% endmacro %}
+
+
+{% macro complexPatient(ID,Active,lastName,firstName,MRN,InOut,HLAA,HLAB,RogosinDate,RogosinPRA,NYBCDate,ProductStatus,Expires) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+    <tr class="">
+        <td> <a href="#">{{ ID }}</a> </td>
+        <td>{{ Active }}</td>
+        <td>{{ lastName }}</td>
+        <td>{{ firstName }}</td>
+        <td>{{ MRN }}</td>
+        <td>{{ InOut }}</td>
+        <td>{{ HLAA }}</td>
+        <td>{{ HLAB }}</td>
+        <td>{{ RogosinDate }}</td>
+        <td>{{ RogosinPRA }}</td>
+        <td>{{ NYBCDate }}</td>
+        <td>{{ ProductStatus }}</td>
+        <td>{{ Expires }}</td>
+
+        <td class="rowlink-skip">
+
+            <!-- Modal -->
+            <div class="modal fade" id="edit_{{ ID }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close comment_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title text-center" id="myModalLabel">Edit Complex Patient ID {{ ID }}</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="modal_error_4" class="modal_error_div"></div>
+
+                            <form id="addcomment_form">
+
+                                {{ formmacros.simplefield('Active:',Active,'input') }}
+                                {{ formmacros.simplefield('Last Name:',lastName,'input') }}
+                                {{ formmacros.simplefield('First Name:',firstName,'input') }}
+                                {{ formmacros.simplefield('In/Out:',InOut,'input') }}
+                                {{ formmacros.simplefield('HLAA:',HLAA,'input') }}
+                                {{ formmacros.simplefield('HLAB:',HLAB,'input') }}
+                                {{ crnmacros.simpleDateField('Rogosin Date:',RogosinDate,'Rogosin Date') }}
+                                {{ formmacros.simplefield('RogosinPRA:',RogosinPRA,'input') }}
+                                {{ crnmacros.simpleDateField('NYBC Date:',NYBCDate,'NYBC Date') }}
+                                {{ formmacros.simplefield('Product Status:',ProductStatus,'input') }}
+                                {{ crnmacros.simpleDateField('Expires:',Expires,'Expires') }}
+
+                                <div class="center-block">
+                                    <input id="edit_{{ ID }}" class="btn btn-primary center-block" type="button" value="Edit"/>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Action <span class="caret"></span>
+                </button>
+
+
+                <ul class="dropdown-menu dropdown-menu-right">
+
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#edit_{{ ID }}">Edit</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+        </td>
+    </tr>
+{% endmacro %}
+
+
+{% macro patientInfoSectionView(form,encounterPatientInfo,cycle,holderId,title,formtype) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div id="{{holderId}}" class="crn-patient-holder">
+
+        {#form.vars.value.id={{ form.vars.value.id }}#}
+        <input type="hidden" id="crn-patient-id-{{holderId}}" class="crn-patient-id" value="{{ form.vars.value.id }}" />
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="crn-patient-panel-title" data-toggle="collapse" href="#crn-PatientInformation-{{holderId}}">
+                        {#{{ title }}#}
+                        {{ form.vars.value.obtainPatientInfoSimple|raw }}
+                    </a>
+                </h4>
+            </div>
+            <div id="crn-PatientInformation-{{holderId}}" class="crn-patient-information-panel panel-collapse collapse">
+                <div class="panel-body">
+
+                    <br>
+
+                    <div id="crn-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
+
+                    <div id="crn-matching-patients" style="display: none; margin-top: 5px;"></div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
+
+    </div>
+
+{% endmacro %}
+
+{#form - patient form#}
+{% macro patientInfoSection(form,cycle,holderId,title,formtype,messageForm) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div id="{{holderId}}" class="crn-patient-holder">
+
+    {#form.vars.value.id={{ form.vars.value.id }}#}
+    <input type="hidden" id="crn-patient-id-{{holderId}}" class="crn-patient-id" value="{{ form.vars.value.id }}" />
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="crn-patient-panel-title" data-toggle="collapse" href="#crn-PatientInformation-{{holderId}}">
+                    {{ title }}
+                </a>
+            </h4>
+        </div>
+        <div id="crn-PatientInformation-{{holderId}}" class="crn-patient-information-panel panel-collapse collapse in">
+            <div class="panel-body">
+
+                {{ form_errors(form) }}
+
+                {#{{ form_widget(form.id) }}#}
+                {{ form_row(form.id) }}
+
+                {#Master radio#}
+                {% if formtype == 'merge' %}
+                    {#<input type="radio" name="gender" value="male"> Male<br>#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <label>Master Merge Record:</label>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            <input type="radio" name="crn-patient-master-record" value="{{ form.vars.value.id }}" class="crn-patient-id-radio">
+                        </div>
+                    </div>
+                    </p>
+                {% endif %}
+
+                <div class="crn-search-fields">
+
+                    {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                        {#metaphone checkbox#}
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <strong>Search similar-sounding names:</strong>
+                            </div>
+                            <div class="col-xs-6" align="left">
+                                {#name="search[metaphone]" class="navbar-search-metaphone"#}
+                                <input id="search_metaphone" style="margin:0; width: 20px;" value="1" type="checkbox">
+                            </div>
+                        </div>
+                        </p>
+                    {% endif %}
+
+
+                    {% for mrn in form.mrn %}
+                        {#{% if mrn.status == 'valid' or not mrn.vars.value.field %}#}
+                            {{ formmacros.field(mrn.keytype) }}
+                            {{ formmacros.field(mrn.field) }}
+                        {#{% endif %}#}
+                    {% endfor %}
+
+                    {% for dob in form.dob %}
+                        {{ formmacros.fieldDateLabel(dob.field,'regular-datepicker') }}
+                    {% endfor %}
+
+                    {% set status = 'Submitted' %}
+
+                    {% set encounterPatientInfo = null %}
+                    {% set readonlyEncounter = false %}
+                    {% for encounter in form.encounter %}
+                        {% if encounter.vars.value.status == 'invalid' or encounter.vars.value.status == 'dummy' %}
+                            {% set encounterPatientInfo = encounter %}
+                        {% endif %}
+                        {% if encounter.vars.value.id %}
+                            {% set readonlyEncounter = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if encounterPatientInfo is defined and encounterPatientInfo %}
+                        <div class="alias-group">
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                {#{% if formMetaphone is defined %}#}
+                    {#{{ formmacros.checkbox(formMetaphone) }}#}
+                {#{% endif %}#}
+
+                {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
+                <div id="encounter-info" class="panel-collapse collapse">
+                    {% if encounterPatientInfo is defined and encounterPatientInfo %}
+                        {{ form_row(encounterPatientInfo.status) }}
+
+                        <div class="alias-group">
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                            {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                        </div>
+                        {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
+
+                    {% endif %}
+                </div>
+
+                <div id="patient-email-phone">
+                    {{ formmacros.field(form.phone) }}
+                    {{ formmacros.field(form.email) }}
+                </div>
+
+                {#{% if messageForm is defined and messageForm.accession is defined %}#}
+                    {#{% for accession in messageForm.accession %}#}
+                            {#{% for accessionaccession in accession.accession %}#}
+                                {#{{ formmacros.field(accessionaccession.keytype) }}#}
+                                {#{{ formmacros.field(accessionaccession.field) }}#}
+                            {#{% endfor %}#}
+                    {#{% endfor %}#}
+                {#{% endif %}#}
+                {% if messageForm is defined %}
+                    {% if messageForm.accessionType is defined %}
+                        {{ formmacros.field(messageForm.accessionType) }}
+                    {% endif %}
+                    {% if messageForm.accessionNumber is defined %}
+                        {{ formmacros.field(messageForm.accessionNumber) }}
+                    {% endif %}
+                {% endif %}
+
+                {% if readonlyEncounter %}
+                    {% set reenterPatientIdPrefix = "_always_hidden" %}
+                {% else %}
+                    {% set reenterPatientIdPrefix = "" %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-xs-5"></div>
+                    <div class="col-xs-2">
+                        <button id="search_patient_button" type="button"
+                                class="btn btn-lg btn-success span4" align="center"
+                                onclick="findCalllogPatient('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
+                        >Find Patient</button>
+                        <button
+                                id="reenter_patient_button{{ reenterPatientIdPrefix }}" type="button"
+                                class="btn btn-lg btn-success span4" align="center"
+                                onclick="clearCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                        >Re-enter Patient</button>
+                    </div>
+
+                    {% if formtype == 'add-patient-to-list' %}
+                        <div class="col-xs-2">
+                            <button
+                                    id="add_patient_to_list_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="addCalllogPatientToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Add Patient to List</button>
+                        </div>
+                    {% endif %}
+
+                    {% if formtype == 'crn-entry' %}
+                        <div class="col-xs-3">
+                            <button
+                                    id="addnew_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="addnewCalllogPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Add New Patient Record</button>
+                        </div>
+                        <div id="add_accession_to_this_patient_button_holder" class="col-xs-3">
+                            <button
+                                    id="add_accession_to_this_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="crnAddAccessionToThisPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Add Accession Number to this Patient Record</button>
+                        </div>
+                        <div class="col-xs-3">
+                            <button
+                                    id="edit_patient_button" type="button"
+                                    class="btn btn-lg btn-success span4" align="center"
+                                    onclick="editPatientBtn('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                            >Edit Patient Info</button>
+                        </div>
+                    {% endif %}
+
+                    <div class="col-xs-5"></div>
+                </div>
+
+                <br>
+
+                <div id="crn-danger-box" class="alert alert-danger" style="display: none; margin-top: 5px;"></div>
+
+                <div id="crn-matching-patients" style="display: none; margin-top: 5px;"></div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    </div>
+
+{% endmacro %}
+
+
+{#TODO: change "Location Name" to be a Select2 dropdown list of all locations filtered by Location type = "Encounter Location"#}
+{#Selecting the Encounter Location from the dropdown should load all of its corresponding values into the other fields of this accordion (phone number, etc) via AJAX.#}
+{% macro trackerContactinfoForm( entity, cycle, status ) %}
+
+    {% if entity.vars.value.id %}
+        {% set orderUniqueId = entity.vars.value.id %}
+    {% else %}
+        {% set orderUniqueId = 0 %}
+    {% endif %}
+
+    {% if entity.tracker.spots is defined and entity.tracker.spots|length > 0 %}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+        {% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+        {% set sitename = 'scan' %}
+        {% set currentUser = app.user %}
+        {% set counter = 0 %}
+
+        {% for spot in entity.tracker.spots %}
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+
+                    {% set uniqueId = orderUniqueId~"_"~counter %}
+
+                    {#<button#}
+                            {#id="form_body_toggle_entitycontactinfo_{{ uniqueId }}" type="button"#}
+                            {#class="btn btn-default btn-xs form_body_toggle_btn glyphicon glyphicon-folder-close pull-left"#}
+                            {#onclick="crnToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');">#}
+                    {#</button>#}
+
+                    {#{% set panelTitle = spot.currentLocation.vars.value.name %}#}
+                    {#{% if not panelTitle %}#}
+                        {#{% set panelTitle = "Encounter's Location" %}#}
+                    {#{% endif %}#}
+
+                    {% set panelTitle = "Encounter's Location" %}
+                    {% if cycle == "show" %}
+                        {% set currentPanelTitle = spot.currentLocation.vars.value.name %}
+                        {% if currentPanelTitle %}
+                            {% set panelTitle = currentPanelTitle %}
+                        {% endif %}
+                    {% endif %}
+
+                    <h4 class="panel-title">
+                        {#{% if cycle != 'show' %}#}
+                            {#<a#}
+                                {#href="javascript:;"#}
+                                {#onclick="crnToggleSingleEncounterPanel(this,'#form_body_entitycontactinfo_{{ uniqueId }}');"#}
+                            {#>#}
+                                {#{{ panelTitle }}#}
+                            {#</a>#}
+                        {#{% else %}#}
+                            <a class="crn-patient-panel-title" data-toggle="collapse" href="#form_body_entitycontactinfo_{{uniqueId}}">
+                                {{ panelTitle }}
+                            </a>
+                        {#{% endif %}#}
+                    </h4>
+                </div>
+
+                <div id="form_body_entitycontactinfo_{{ uniqueId }}" class="panel-body collapse">
+                    {#{{ usermacros.locationObject(spot.currentLocation,cycle,'user-locations','noprototype',sitename,currentUser,'editable') }}#}
+                    {{ crnmacros.locationSimpleObject(entity,spot.currentLocation,cycle,'user-locations','noprototype',sitename,currentUser,'editable') }}
+                </div>
+            </div>
+
+            {% set counter = counter + 1 %}
+        {% endfor %}
+    {% else %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Encounter's Location Not Provided</h4>
+            </div>
+            <div id="form_body_entitycontactinfo_{{ orderUniqueId }}" class="panel-body collapse">
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro updatePatientInfoSection( encounter, cycle, status ) %}
+    {#encounter.vars.value.id={{ encounter.vars.value.id }}<br>#}
+    {#{% if cycle != "show" and not encounter.vars.value.id %}#}
+    {% if cycle != "show" %}
+        {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="crn-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                        Update Patient Info
+                    </a>
+                </h4>
+            </div>
+            <div id="form_body_encounterInfo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div id="crn-encounterInfo-holder">
+                        {{ formmacros.inputArrayField(encounter.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                        {{ formmacros.inputArrayField(encounter.patsex,cycle,"encounterpatsex","","","","",status) }}
+                        {#{{ formmacros.field(encounter.patientDob) }}#}
+                        {{ formmacros.fieldDateLabel(encounter.patientDob,'regular-datepicker') }}
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-default -->
+    {% endif %}
+{% endmacro %}
+
+{% macro locationSimpleObject( encounter, field, cycle, classname, prototype, sitename, entity, editable ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {{ formmacros.field(formfield.id) }}
+
+    {% if encounter.locationName is defined %}
+        {{ formmacros.field(encounter.locationName) }}
+        <div style="display: none">
+            {{ formmacros.field(formfield.name) }}
+        </div>
+    {% else %}
+        {{ formmacros.field(formfield.name) }}
+    {% endif %}
+
+    {% if formfield.locationTypes is defined %}
+        {{ formmacros.field(formfield.locationTypes) }}
+    {% endif %}
+
+    {% if formfield.institution is defined %}
+        {#{{ formmacros.field_notempty(formfield.institution,cycle) }}#}
+        {{ treemacros.compositeTreeNode(formfield.institution,cycle,"noprototype") }}
+    {% endif %}
+
+    {{ usermacros.emailPhoneField(formfield.phone,cycle,'phone',"") }}
+
+    {% if formfield.room is defined %}
+        {{ formmacros.field_notempty(formfield.room,cycle) }}
+    {% endif %}
+
+    {% if formfield.suite is defined %}
+        {{ formmacros.field_notempty(formfield.suite,cycle) }}
+    {% endif %}
+
+    {% if formfield.floor is defined %}
+        {{ formmacros.field(formfield.floor) }}
+    {% endif %}
+
+    {% if formfield.floorSide is defined %}
+        {{ formmacros.field(formfield.floorSide) }}
+    {% endif %}
+
+    {{ formmacros.field(formfield.building) }}
+
+    {{ usermacros.geoLocation(formfield,cycle,prototype) }}
+
+    {{ formmacros.field_notempty(formfield.comment,cycle) }}
+
+{% endmacro %}
+
+
+{% macro referingProviderObject( encounter, cycle, classname, prototype ) %}
+
+    {% if encounter and encounter.referringProviders is defined and encounter.referringProviders|length > 0 %}
+
+        {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#crn-Referring-Provider-{{ encounter.vars.value.id }}">
+                        Healthcare Provider
+                    </a>
+                </h4>
+            </div>
+            <div id="crn-Referring-Provider-{{ encounter.vars.value.id }}" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                        {#{{ formmacros.inputArrayField(encounter.referringProviders,cycle,"encounterreferringprovider","","","","",status) }}#}
+                        {% for referringProvider in encounter.referringProviders %}
+                            {#{{ formmacros.field_show_user( encounter, "referringProviders", cycle ) }}#}
+                            {{ formmacros.field(referringProvider.field) }}
+                            {{ formmacros.field(referringProvider.referringProviderSpecialty) }}
+                            {{ formmacros.field(referringProvider.referringProviderPhone) }}
+                            {{ formmacros.field(referringProvider.referringProviderEmail) }}
+                            {{ formmacros.field(referringProvider.referringProviderCommunication) }}
+                        {% endfor %}
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-primary -->
+
+    {% endif %}
+
+{% endmacro %}
+
+{#message is an entity#}
+{% macro crnAuthors( message, cycle, sitename, mainPanelClass ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel {{ mainPanelClass }}">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#crn-Authors">
+                    {% if message.version|number_format > 1 %}
+                        Authors
+                    {% else %}
+                        Author
+                    {% endif %}
+                </a>
+            </h4>
+        </div>
+        <div id="crn-Authors" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {#Submitter#}
+                {% set authorHref = path(sitename~'_showuser',{'id':message.provider.getId()}) %}
+                {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~message.provider.getUsernameOptimal()~'</a>' %}
+                {{ formmacros.simplefield( "Submitter:", hreflink, "", "disabled" ) }}
+
+                {#Submitted on#}
+                {{ formmacros.simplefield("Submitted on:", user_service_utility.getOrderDateStr(message), "", "disabled") }}
+
+                {#Submitter role(s) at submission time:#}
+                {% set firstEditorInfo = message.getEditorInfos()|first %}
+                {% if firstEditorInfo %}
+                    {% if firstEditorInfo.modifierRoles|length > 0 %}
+                        {% set editorRoles = user_security_utility.getRolesByRoleNames(firstEditorInfo.modifierRoles) %}
+                        {{ formmacros.simplefield("Submitter role(s) at submission time:", editorRoles, "", "disabled") }}
+                    {% else %}
+                        {{ formmacros.simplefield("Submitter role(s) at submission time:", "No roles", "", "disabled") }}
+                    {% endif %}
+                {% endif %}
+
+                {#Message Status#}
+                {{ formmacros.simplefield("Message Status:", message.messageStatus.name, "", "disabled") }}
+                {% if message.messageStatus.name == "Signed" and message.signeeInfo %}
+                    {% if message.signeeInfo.modifiedBy %}
+                        {% set authorHref = path(sitename~'_showuser',{'id':message.signeeInfo.modifiedBy.getId()}) %}
+                        {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~message.signeeInfo.modifiedBy.getUsernameOptimal()~'</a>' %}
+                        {{ formmacros.simplefield( "Signed by:", hreflink, "", "disabled" ) }}
+                    {% endif %}
+                    {% if message.signeeInfo.modifiedOn %}
+                        {% set signedDate = message.signeeInfo.modifiedOn|date('m/d/Y') ~ " at " ~ message.signeeInfo.modifiedOn|date('h:i a (T)') %}
+                        {{ formmacros.simplefield("Signed on:", signedDate, "", "disabled") }}
+                    {% endif %}
+                    {% if message.signeeInfo.modifierRoles|length > 0 %}
+                        {% set signeeRoles = user_security_utility.getRolesByRoleNames(message.signeeInfo.modifierRoles) %}
+                        {{ formmacros.simplefield("Signee role(s) at signature time:", signeeRoles, "", "disabled") }}
+                    {% else %}
+                        {{ formmacros.simplefield("Signee role(s) at signature time:", "No roles", "", "disabled") }}
+                    {% endif %}
+                {% endif %}
+
+                {#IF "Message Version">1 (2 or more), display the following three fields:#}
+                {% if message.version|number_format > 1 %}
+                    {% set lastEditorInfo = message.getEditorInfos()|last %}
+                    {% if lastEditorInfo %}
+                        {% if lastEditorInfo.modifiedBy %}
+                            {% set authorHref = path(sitename~'_showuser',{'id':lastEditorInfo.modifiedBy.getId()}) %}
+                            {% set hreflink = '<a target="_blank" href="'~authorHref|raw~'">'~lastEditorInfo.modifiedBy.getUsernameOptimal()~'</a>' %}
+                            {{ formmacros.simplefield( "Last edited by:", hreflink, "", "disabled" ) }}
+                        {% endif %}
+                        {% if lastEditorInfo.modifiedOn %}
+                            {% set editedDate = lastEditorInfo.modifiedOn|date('m/d/Y') ~ " at " ~ lastEditorInfo.modifiedOn|date('h:i a (T)') %}
+                            {{ formmacros.simplefield("Last edited on:", editedDate, "", "disabled") }}
+                        {% endif %}
+                        {% if lastEditorInfo.modifierRoles|length > 0 %}
+                            {% set editorRoles = user_security_utility.getRolesByRoleNames(lastEditorInfo.modifierRoles) %}
+                            {{ formmacros.simplefield("Editor role(s) at edit submission time:", editorRoles, "", "disabled") }}
+                        {% else %}
+                            {{ formmacros.simplefield("Editor role(s) at edit submission time:", "No roles", "", "disabled") }}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+
+{% endmacro %}
+
+{% macro indexAction( message, eventObjectTypeId, patientListId ) %}
+
+    {#Get patient (if exists)#}
+    {% set patient = NULL %}
+    {% set mrnNumber = NULL %}
+    {% set mrnTypeId = NULL %}
+    {% if message.patient|length > 0 %}
+        {% set patient = message.patient|first %}
+        {% set mrn = patient.obtainValidField('mrn') %}
+        {% if mrn and mrn.field and mrn.keytype %}
+            {% set mrnNumber = mrn.field %}
+            {% set mrnTypeId = mrn.keytype.id %}
+        {% endif %}
+    {% endif %}
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Action <span class="caret"></span>
+        </button>
+
+
+        <ul class="dropdown-menu dropdown-menu-right">
+
+            {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+                <li><a
+                    data-confirm="Are you sure you would like to edit entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('crn_crnentry_edit', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+                    >Edit Entry</a></li>
+            {% else %}
+                <li><a
+                    data-confirm="Are you sure you would like to amend entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('crn_crnentry_amend', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+                    >Amend Entry</a></li>
+            {% endif %}
+
+            {% if message.messageStatus and message.messageStatus.name != "Deleted" %}
+                {#Are you sure you would like to delete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
+                <li><a
+                    data-confirm="Are you sure you would like to delete entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('crn_delete', {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+                    >Delete Entry</a></li>
+            {% endif %}
+            {% if message.messageStatus and message.messageStatus.name == "Deleted" %}
+                {#Are you sure you would like to undelete entry 123 for patient FirstName LastName (MRN Type: MRN)?#}
+                <li><a
+                    data-confirm="Are you sure you would like to undelete entry {{message.getMessageOidVersion}} for patient {{message.getPatientNameMrnInfo}}?"
+                    href="{{ path('crn_undelete', {'messageOid': message.oid, 'messageVersion':message.version}) }}">Undelete Entry</a></li>
+            {% endif %}
+
+            {% if patient and mrnNumber and mrnTypeId %}
+                <li><a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}"
+                       target="_blank">View Previous Entries</a>
+                </li>
+            {% endif %}
+
+            {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                {#eventlog DB id#}
+                {#<li><a href="{{ path('crn_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}" target="_blank">View Event Log</a></li>#}
+                <li><a
+                     href="{{ path('crn_event-log-per-object_log', {'filter[objectType][]': eventObjectTypeId,'filter[objectId]': crn_util.getAllMessagesByOid(message.oid)}) }}"
+                     target="_blank">View Event Log</a>
+                </li>
+            {% endif %}
+
+            {#{% if message.patient|length > 0 %}#}
+            {% if patient %}
+                {% if mrnNumber and mrnTypeId %}
+                {#{% set patient = message.patient|first %}#}
+                {#{% set mrn = patient.obtainValidField('mrn') %}#}
+                {#{% if mrn and mrn.field and mrn.keytype %}#}
+                    {#{% set mrnNumber = mrn.field %}#}
+                    {#{% set mrnTypeId = mrn.keytype.id %}#}
+                    {#{% if mrnNumber and mrnTypeId %}#}
+
+                        {#Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
+                        {% set validEncounter = message.getValidEncounter() %}
+                        {% set validEncounterNumber = validEncounter.obtainValidField('number') %}
+                        {% set encounterNumber = validEncounterNumber.field %}
+                        {% set encounterTypeId = validEncounterNumber.keytype.id %}
+                        {% set encounterVersion = validEncounter.version %}
+
+                        {#http://collage.med.cornell.edu/order/critical-result-notification/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
+                        {#without version 'encounter-version':encounterVersion => use latest version#}
+                        <li><a
+                                    href="{{ path('crn_crnentry', {
+                                        'mrntype':mrnTypeId,
+                                        'mrn':mrnNumber,
+                                        'encounter-type':encounterTypeId,
+                                        'encounter-number':encounterNumber
+                                    }) }}"
+                                    target="_blank">Add Entry (Same Encounter)</a>
+                        </li>
+
+                        <li><a
+                                    href="{{ path('crn_crnentry', {
+                                        'mrntype':mrnTypeId,
+                                        'mrn':mrnNumber,
+                                        'encounter-type':encounterTypeId,
+                                        'encounter-number':encounterNumber,
+                                        'message-type':message.messageCategory.id
+                                    }) }}"
+                                    target="_blank">Add Entry (Same Encounter & Type)</a>
+                        </li>
+
+                        <li><a href="{{ path('crn_crnentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
+
+                        <li><a href="{{ path('crn_crnentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
+
+                        <li><a href="{{ path('crn_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">View Patient Record</a></li>
+
+                        {#Not used because, this link gives 500 error. Use 'Edit Patient Demographics' instead.#}
+                        {#<li><a href="{{ path('crn_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>#}
+
+                        <li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
+
+                        {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
+                            <li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Un-merge Patient Record</a></li>
+                        {% endif %}
+                    {#{% endif %}#}
+                {% endif %}
+
+                <li><a href="{{ path('crn_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a></li>
+
+                <li><a data-confirm="Are you sure you want to add this patient to Complex List?"
+                       href="{{ path('crn_add_patient_to_list', { 'patientListId': patientListId, 'patientId': patient.id}) }}"
+                       target="_blank">Add to Complex List</a>
+                </li>
+            {% endif %}
+
+            {% set validEncounter = message.getValidEncounter %}
+            {% if validEncounter %}
+
+                {% set locationId = validEncounter.obtainTrackerSpotsLocationId %}
+                {% if locationId %}
+                    <li><a href="{{ path('employees_locations_pathaction_edit_standalone', { 'id': locationId}) }}" target="_blank">Edit Encounter Location</a></li>
+                {% endif %}
+
+                {#Edit Healthcare Provider Profile#}
+                {% for referringProvider in validEncounter.getReferringProviders %}
+                    {% if referringProvider %}
+                        {% set linkedUser = referringProvider.obtainLinkedUser %}
+                        {% set linkedUserId = null %}
+                        {% if linkedUser %}
+                            {% set linkedUserId = linkedUser.getId() %}
+                        {% endif %}
+                        {% if linkedUserId %}
+                            <li><a href="{{ path('crn_user_edit', { 'id': referringProvider.obtainLinkedUser.getId}) }}" target="_blank">Edit Healthcare Provider Profile</a></li>
+                        {% else %}
+                            {% if referringProvider.getField and referringProvider.getField.getId %}
+                                <li><a href="{{ path('userwrappers_edit', { 'id': referringProvider.getField.getId}) }}" target="_blank">Edit Healthcare Provider Profile</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+            {% endif %}
+
+            {#Test cache as XML#}
+            {#{% if is_granted('ROLE_CALLLOG_ADMIN') %}#}
+                <li>
+                    <a href="{{ path('crn_single_export_csv', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">
+                        Export this entry to CSV
+                    </a>
+                </li>
+            {#{% endif %}#}
+
+            {% if is_granted('ROLE_CALLLOG_ADMIN') %}
+            <li>
+                <a href="{{ path('crn_update_cache_manually', {'id': message.id}) }}" target="_blank">
+                    Manually update cache
+                </a>
+            </li>
+            {% endif %}
+
+            {#TODO: Add Entry (Same Encounter) and Add Entry (Same Encounter & Type)#}
+            {#Same Encounter#}
+            {#{% if message.patient|length > 0 %}#}
+
+                {#{% set mrn = message.patient|first.obtainValidField('mrn') %}#}
+                {#{% if mrn %}#}
+
+                    {#{% set mrnNumber = mrn.field %}#}
+                    {#{% set mrnTypeId = mrn.keytype.id %}#}
+
+                    {#{% set validEncounter = message.getValidEncounter() %}#}
+                    {#{% set validEncounterNumber = validEncounter.obtainValidField('number') %}#}
+                    {#{% set encounterNumber = validEncounterNumber.field %}#}
+                    {#{% set encounterTypeId = validEncounterNumber.keytype.id %}#}
+                    {#{% set encounterVersion = validEncounter.version %}#}
+
+                    {#http://collage.med.cornell.edu/order/critical-result-notification/entry/new?mrn-type=1&mrn=1&encounter-type=1&encounter-number=1#}
+                    {#without version 'encounter-version':encounterVersion => use latest version#}
+                    {#<li><a#}
+                            {#href="{{ path('crn_crnentry', {#}
+                                {#'mrntype':mrnTypeId,#}
+                                {#'mrn':mrnNumber,#}
+                                {#'encounter-type':encounterTypeId,#}
+                                {#'encounter-number':encounterNumber#}
+                            {#}) }}"#}
+                            {#target="_blank">Add Entry (Same Encounter)</a>#}
+                    {#</li>#}
+
+                    {#<li><a#}
+                            {#href="{{ path('crn_crnentry', {#}
+                                {#'mrntype':mrnTypeId,#}
+                                {#'mrn':mrnNumber,#}
+                                {#'encounter-type':encounterTypeId,#}
+                                {#'encounter-number':encounterNumber,#}
+                                {#'message-type':message.messageCategory.id#}
+                            {#}) }}"#}
+                            {#target="_blank">Add Entry (Same Encounter & Type)</a>#}
+                    {#</li>#}
+
+                {#{% endif %}#}
+            {#{% endif %}#}
+
+            {#<li><a href="#">View Entry History & Comments</a></li>#}
+            {#<li>#}
+                {#<a href="#" data-toggle="modal" data-target="#addComment_{{ message.id }}">Add Comment</a>#}
+            {#</li>#}
+            {#<li><a data-confirm="Are you sure you want to duplicate data?" data-ok="Duplicate" data-cancel="Do not duplicate" class="action-cancel-status" href="#">Generate new entry for same patient issue</a>#}
+            {#</li>#}
+
+        </ul>
+
+    </div>
+
+{% endmacro %}
+
+{#Patient List#}
+{% macro crnPatientList( message, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#crn-PatientList">
+                    Patient List
+                </a>
+            </h4>
+        </div>
+        <div id="crn-PatientList" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {#"Add patient to the list: [v]"#}
+                {{ formmacros.checkbox(message.crnEntryMessage.addPatientToList) }}
+
+                {#List Title:#}
+                {#{% if message.crnEntryMessage.patientList is defined %}#}
+                    {#{{ treemacros.compositeTreeNode(message.crnEntryMessage.patientLists,cycle,"noprototype") }}#}
+                    {{ formmacros.field(message.crnEntryMessage.patientLists) }}
+                {#{% endif %}#}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+{% endmacro %}
+
+
+{% macro crnEntryTags( message, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#crn-EntryTags">
+                    Search aides and time tracking
+                </a>
+            </h4>
+        </div>
+        <div id="crn-EntryTags" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {{ formmacros.field(message.crnEntryMessage.entryTags) }}
+                {{ formmacros.field(message.crnEntryMessage.timeSpentMinutes) }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+{% endmacro %}
+
+{#message - form for cycle new/edit and object for view#}
+{% macro crnEntryDocuments( message, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    {% if message.crnEntryMessage.documents is defined %}
+
+        {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
+            {#<div id="form-prototype-data"#}
+                 {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+                 {#data-uploadurl = "{{ oneup_uploader_endpoint('crn_gallery') }}"#}
+                 {#data-userid = "{{ app.user.id }}"#}
+            {#></div>#}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#crn-documents">
+                            Document(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="crn-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        {{ formmacros.field(message.crnEntryMessage.crnAttachmentType) }}
+
+                        <p>
+                        <div class="well form-element-holder user-documents">
+                            <label class="col-xs-12 control-label">Document(s)</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {% if message.crnEntryMessage.documents is defined %}
+                                        {# Attachment Type #}
+                                        {#{{ formmacros.field(message.crnEntryMessage.crnAttachmentType) }}#}
+
+                                        {{ usermacros.documentsContainer(null,message.crnEntryMessage.documents,cycle,'noprototype',8,'default','Critical Result Notification Entry Document') }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-default -->
+        {% else %}
+            {#show document cycle = {{ cycle }}<br>#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#crn-documents">
+                            Document(s)
+                        </a>
+                    </h4>
+                </div>
+                <div id="crn-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        {% for documentObj in message.crnEntryMessage.documents %}
+                            Attachment {{ loop.index }}: {{ documentObj.getTitle() }}
+                            {#{{ documentObj.getFullServerPath() }}#}
+                            {% if documentObj.id %}
+                                {% set sitename = crn_sitename %}
+                                <a
+                                   target="_blank"
+                                   href="{{ path(sitename~'_file_view', { 'id': documentObj.id }) }}">
+                                      {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})
+                                </a>
+                            {% endif %}
+                            {% set crnAttachmentType = message.crnEntryMessage.getCalllogAttachmentType() %}
+                            {% if crnAttachmentType %}
+                                &nbsp;({{ crnAttachmentType }})
+                            {% endif %}
+                        {% endfor %}
+
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-default -->
+
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}
+
+{#message - form for cycle new/edit and object for view#}
+{% macro crnTaskList( message, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+    {% set sitename = crn_sitename %}
+
+    {#message is form here#}
+    {#<div id="form-prototype-data"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('crn_gallery') }}"#}
+         {#data-userid = "{{ app.user.id }}"#}
+
+         {#data-prototype-crn-tasks = "{{ crnmacros.taskForm(message.crnEntryMessage.crnTasks,cycle,'crn-tasks','prototype',sitename,1)|e }}"#}
+    {#></div>#}
+
+    {#TODO: make a view, when message is an object#}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#crn-tasklist">
+                    Tasks
+                </a>
+            </h4>
+        </div>
+        <div id="crn-tasklist" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {% if cycle == "new" or cycle == "edit" or cycle == "amend" %}
+
+                    <div class="crn-tasks-holder">
+                        {#message.messageCategory.crnTasks={{ message.crnEntryMessage.crnTasks|length }}#}
+                        {% for crnTask in message.crnEntryMessage.crnTasks %}
+                            {#{{ formmacros.checkbox(crnTask.status) }}#}
+                            {#{{ formmacros.field(crnTask.crnTaskType) }}#}
+                            {#{{ formmacros.field(crnTask.description) }}#}
+
+                            {{ crnmacros.taskForm(crnTask, cycle, 'crn-tasks', 'noprototype', sitename, 1) }}
+                        {% endfor %}
+
+                        {% if cycle != "show" %}
+                            {{ usermacros.addNewObjectBtn(cycle,'crn-tasks','Add Task',null,null) }}
+                        {% endif %}
+                    </div>
+
+                {% else %}
+                    {#view/show#}
+                    {#2message.crnEntryMessage.crnTasks|length={{ message.getCalllogEntryMessage().getCalllogTasks()|length }}<br>#}
+                    {% for crnTask in message.getCalllogEntryMessage().getCalllogTasks() %}
+                        <div class="well well-sm">
+
+                            {% if 0 %}
+
+                                <p align="center">{{ crnTask.getTaskInfo() }}</p>
+                                {#{{ formmacros.simplefield("Status:", crnTask.status, "", "disabled") }}#}
+                                {{ formmacros.simplefield_checkbox( "Status:", crnTask.status, "", "disabled" ) }}
+                                {{ formmacros.simplefield("Task Type:", crnTask.crnTaskType, "", "disabled") }}
+                                {{ formmacros.simplefield("Description:", crnTask.description, "", "disabled") }}
+
+                            {% else %}
+
+                                {#{{ crn_util.getTasksInfo(message)|raw }}#}
+
+                                <p align="center">{{ crnTask.getTaskInfo() }}</p>
+
+                            <div class="row">
+
+                                <div class="col-xs-1" align="right">
+                                    {#<div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>#}
+                                        {#{{ crnTask.status|raw }}#}
+                                    {#</div>#}
+                                    {% if crnTask.status %}
+                                        {% set checked = 'checked' %}
+                                    {% else %}
+                                        {% set checked = '' %}
+                                    {% endif %}
+                                    <div class="not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>
+                                        <input type="checkbox" {{ checked }} disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-3" align="left">
+                                    <div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>
+                                        {{ crnTask.crnTaskType|raw }}
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-8" align="left">
+                                    {#<div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled>#}
+                                        {#{{ crnTask.description|raw }}#}
+                                    {#</div>#}
+                                    <textarea class="form-control textarea" disabled>{{ crnTask.description|raw }}</textarea>
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-default -->
+
+{% endmacro %}
+{% macro taskForm( crnTask, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formCalllogTask = crnTask.vars.prototype %}
+    {% else %}
+        {% set formCalllogTask = crnTask %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {#{% if cycle != "show" and showAddDeleteBtn %}#}
+            {#<div class="text-right">#}
+                {#<button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
+            {#</div>#}
+            {#<br>#}
+        {#{% else %}#}
+        {#{% endif %}#}
+
+        {#{{ form_widget(formCalllogTask.id) }}#}
+
+        {#{% if formCalllogTask.status is defined %}#}
+            {#{{ formmacros.checkbox(formCalllogTask.status) }}#}
+        {#{% endif %}#}
+
+        {#{{ formmacros.field(formCalllogTask.crnTaskType) }}#}
+        {#{{ formmacros.field(formCalllogTask.description) }}#}
+
+
+        {#make it as a row#}
+        <div class="row">
+            <div class="col-xs-1">
+                {{ form_widget(formCalllogTask.id) }}
+            </div>
+
+            {% if 0 %}
+                {#With Titles#}
+                <div class="col-xs-1" title="Check to mark as Completed" data-toggle="tooltip">
+                    {% if formCalllogTask.status is defined %}
+                        {{ form_row(formCalllogTask.status) }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-2" align="left">
+                    {{ form_row(formCalllogTask.crnTaskType) }}
+                </div>
+                <div class="col-xs-7" align="left">
+                    {{ form_row(formCalllogTask.description) }}
+                </div>
+                <div class="col-xs-1" align="left">
+                    {% if cycle != "show" and showAddDeleteBtn %}
+                        <br>
+                        <button
+                                type="button"
+                                class="btn btn-default"
+                                onClick="removeExistingObject(this,'{{ classname }}','Are you sure you want to remove this task?')" ><span class="glyphicon glyphicon-remove"></span></button>
+                    {% else %}
+                    {% endif %}
+                </div>
+            {% else %}
+                {#No Titles#}
+                <div class="col-xs-1" align="right" title="Check to mark as Completed" data-toggle="tooltip">
+                    {% if formCalllogTask.status is defined %}
+                        {{ form_widget(formCalllogTask.status) }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-2" align="left">
+                    {{ form_widget(formCalllogTask.crnTaskType) }}
+                </div>
+                <div class="col-xs-7" align="left">
+                    {{ form_widget(formCalllogTask.description) }}
+                </div>
+                <div class="col-xs-1" align="left">
+                    {% if cycle != "show" and showAddDeleteBtn %}
+                        <button
+                                type="button"
+                                class="btn btn-default"
+                                onClick="removeExistingObject(this,'{{ classname }}','Are you sure you want to remove this task?')" ><span class="glyphicon glyphicon-remove"></span></button>
+                    {% else %}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endmacro %}
+{% macro taskPrototype(form,cycle) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+    {#prototype must be defined after form tag#}
+    {% set sitename = crn_sitename %}
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('crn_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+         data-prototype-crn-tasks = "{{ crnmacros.taskForm(form.crnEntryMessage.crnTasks,cycle,'crn-tasks','prototype',sitename,1)|e }}"
+    ></div>
+{% endmacro %}
+
+{% macro patientListAction( patient, patientListId ) %}
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Action <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-right">
+
+            {% set mrn = patient.obtainValidField('mrn') %}
+            {% if mrn and mrn.field and mrn.keytype %}
+                {% set mrnNumber = mrn.field %}
+                {% set mrnTypeId = mrn.keytype.id %}
+                {% if mrnNumber and mrnTypeId %}
+                    <li><a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}"
+                           target="_blank">Show all entries</a>
+                    </li>
+
+                    <li><a href="{{ path('crn_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
+                           target="_blank">View Patient Record</a>
+                    </li>
+
+                    <li>
+                        {#<a href="{{ path('crn_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"#}
+                           {#target="_blank">Edit Patient Record</a>#}
+                        <a href="{{ path('crn_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a>
+                    </li>
+
+                    <li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                           target="_blank">Merge Patient Record</a>
+                    </li>
+
+                    {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
+                        <li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                               target="_blank">Un-merge Patient Record</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+                {% if patientListId is defined and patientListId %}
+                    <li><a data-confirm="Are you sure you want to remove this patient from this list?"
+                           href="{{ path('crn_remove_patient_from_list', { 'patientId': patient.id, 'patientListId': patientListId }) }}"
+                           target="_blank">Remove patient from this list</a>
+                    </li>
+                {% endif %}
+
+
+            {% endif %}
+
+        </ul>
+
+    </div>
+
+{% endmacro %}
+
+{% macro crnEntriesTable( messages, eventObjectTypeId, patientListId, headFlag ) %}
+    {% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+
+    {% if headFlag is not defined or not headFlag %}
+        {% set headFlag = "sortable" %}
+    {% endif %}
+
+    {% set showAccessionHome = user_security_utility.getSiteSettingParameter('showAccessionHome',crn_sitename) %}
+
+    {#table-striped table-hover#}
+    <table class="records_list table table-condensed text-left my-table-class">
+        <thead>
+        <tr>
+
+            {% if headFlag == "sortable" %}
+                <th>{{ knp_pagination_sortable(messages, 'ID', 'message.oid') }}</th>
+                {#Sorting by creation of the original entry date by default#}
+                {#<th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>#}
+
+                <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'Patient Name', 'lastname.field') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'MRN', 'mrn.field') }}</th>
+
+                {#if Show Accession Number on the Homepage#}
+                {% if showAccessionHome %}
+                    <th>{{ knp_pagination_sortable(messages, 'Accession', 'accessionaccession.field') }}</th>
+                {% endif %}
+
+                <th>{{ knp_pagination_sortable(messages, 'Location', 'currentLocation.name') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'Healthcare Provider', 'referringProviderWrapper.name') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'Call Issue', 'messageCategory.name') }}</th>
+                <th>{{ knp_pagination_sortable(messages, 'Author', 'authorInfos.displayName') }}</th>
+                <th>Actions</th>
+            {% endif %}
+
+            {% if headFlag == "simple" %}
+                <th>ID</th>
+                <th>Last Modified</th>
+                <th>Patient Name</th>
+                <th>MRN</th>
+                <th>Location</th>
+                <th>Healthcare Provider</th>
+                <th>Call Issue</th>
+                <th>Author</th>
+            {% endif %}
+
+        </tr>
+        </thead>
+        {#<tbody data-link="row" class="rowlink">#}
+
+        {% set count = 0 %}
+        {% for message in messages %}
+
+            {% if count is odd %}
+                {% set trclassname = "table-row-separator-gray" %}
+            {% else %}
+                {% set trclassname = "table-row-separator-white" %}
+            {% endif %}
+            {% set count = count + 1 %}
+
+            {% if message.messageStatus.name == 'Deleted' %}
+                {% set trclassname = "order-reject-status" %}
+                {#{% set trclassname = "order-delete-status" %}#}
+            {% endif %}
+
+            {#https://jsfiddle.net/dqq5B/670/#}
+            {#<tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">#}
+            <tbody class="table-tbody-hover {{ trclassname }}">
+
+            {#<tr style="border-bottom: 1px solid #C6C6C6;">#}
+            <tr class="rowlink" data-link="row" style="border-bottom: 1px solid #C6C6C6;">
+
+                {#ID#}
+                <td>
+                    {#{% set messageStatusStr = null %}#}
+                    {#{% if message.messageStatus and "Draft" in message.messageStatus.name %}#}
+                        {#{% set messageStatusStr = "<br>Draft" %}#}
+                    {#{% endif %}#}
+                    {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
+                    <a
+                        class="crn_entry_view_link"
+                        href="{{ path(crn_sitename~'_crnentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}"
+                        target="_blank"
+                    >{{ message.getMessageOidVersion }}</a>
+                    {% if message.messageStatus and "Draft" in message.messageStatus.name %}
+                        <br>Draft
+                    {% endif %}
+                </td>
+
+                {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
+                {% if message.version > 1 %}
+                    {% set initialMessage = crn_util.getInitialMessage(message) %}
+                    <td data-toggle="tooltip"
+                        data-container="body"
+                        {#title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}"#}
+                        title="Initially submitted: {{ crn_util.getOrderSimpleDateStr(initialMessage) }}"
+                    >
+                        {#message.id={{ message.id }}<br>#}
+                        {#message.version={{ message.version }}<br>#}
+                        {#message.editorInfos|length={{ message.editorInfos|length }}<br>#}
+                        {% if message.editorInfos|length > 0 %}
+                            {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
+                        {% else %}
+                            {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                            {{ crn_util.getOrderSimpleDateStr(message) }}
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td>
+                        {#message.id={{ message.id }}<br>#}
+                        {#message.version={{ message.version }}<br>#}
+                        {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                        {{ crn_util.getOrderSimpleDateStr(message) }}
+                    </td>
+                {% endif %}
+
+                {#Patient Name#}
+                <td class="rowlink-skip crn-patient-name">
+                    {% for thisPatient in message.patient %}
+                        {#{{  thisPatient.getFullPatientName|raw }}<br>#}
+                        {% set hrefLabel = thisPatient.getFullPatientName %}
+                        {{ crnmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
+                    {% endfor %}
+                </td>
+
+                {#MRN#}
+                <td class="rowlink-skip">
+                    {% for thisPatient in message.patient %}
+                        {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
+                        {% set hrefLabel = thisPatient.obtainFullValidKeyName %}
+                        {{ crnmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
+                    {% endfor %}
+                </td>
+
+                {#if Show Accession Number on the Homepage#}
+                {% if showAccessionHome %}
+                    <td class="rowlink-skip">
+                        {% for accession in message.accession %}
+                            {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
+                            {#{% set hrefLabel = thisPatient.obtainFullValidKeyName %}#}
+                            {{ crnmacros.getHrefHomePageFilteredByAccession(accession) }}<br>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+                {#Location#}
+                <td class="rowlink-skip">
+                    {% for encounter in message.encounter %}
+                        {#{{ encounter.obtainLocationInfo }}<br>#}
+                        {{ crnmacros.getHrefHomePageFilteredByLocation(encounter) }}<br>
+                    {% endfor %}
+                </td>
+
+                {#referringProviders#}
+                <td class="rowlink-skip">
+                    {% for encounter in message.encounter %}
+                        {% for referringProvider in encounter.referringProviders %}
+                            {#referringProvider.field - UserWrapper#}
+                            {#referringProvider.field.user - User#}
+                            {% if referringProvider.field %}
+                                {#{{ referringProvider.field.getFullName }}<br>#}
+                                {% set referringProviderName = referringProvider.field.getFullName %}
+                                {% if referringProvider.field.user %}
+                                    <a href="{{ path('crn_home', { 'filter[referringProvider]': referringProvider.field.user.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ referringProviderName|raw }}</a>
+                                {% else %}
+                                    {{ referringProviderName|raw }}<br>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </td>
+
+                {#Call Issue#}
+                <td class="rowlink-skip">
+                    {#{{  message.messageCategory.getNodeNameWithParents }}#}
+                    {% set messageCategoryStr = message.messageCategory.getName() ~ "_" ~ message.messageCategory.id %}
+                    <a href="{{ path('crn_home', { 'filter[messageCategory]': messageCategoryStr, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.messageCategory.getNodeNameWithParents|raw }}</a>
+                </td>
+
+                {#Author#}
+                {% if message.version > 1 %}
+                    {#show a black tooltip with authors of previous versions if there is more than one#}
+                    {% set datatoggle = 'data-toggle=tooltip' %}
+                    {% set datacontainer = 'data-container=body' %}
+                    {% set datatitle = crn_util.getPreviousAuthorsInfoStr(message) %}
+                {% else %}
+                    {% set datatoggle = "" %}
+                    {% set datacontainer = "" %}
+                    {% set datatitle = "" %}
+                {% endif %}
+                <td class="rowlink-skip"
+                    {#{{ datatoggle }}#}
+                    {#{{ datacontainer }}#}
+                    {#{{ datatitle }}#}
+                    data-toggle="tooltip"
+                    data-container="body"
+                    title="{{ datatitle }}"
+                >
+                    {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+                        {% if message.provider %}
+                            {#{{ message.provider.getUsernameOptimal }}<br>#}
+                            {#<a href="{{ path('crn_home', { 'filter[author]': message.provider.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.provider.getUsernameOptimal|raw }}</a>#}
+                            {% set thisAuthor = message.provider %}
+                        {% endif %}
+                    {% else %}
+                        {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
+                            {% set thisAuthor = message.signeeInfo.modifiedBy %}
+                        {% else %}
+                            {% set thisAuthor = message.provider %}
+                        {% endif %}
+                        {#{% if thisAuthor %}#}
+                            {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
+                            {#<a href="{{ path('crn_showuser', { 'id': message.signeeInfo.modifiedBy.id }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}</a><br>#}
+                            {#<a href="{{ path('crn_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>#}
+                            {#<a href="{{ path('crn_home', { 'filter[author]': thisAuthor.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ thisAuthor.getUsernameOptimal|raw }}</a>#}
+                        {#{% endif %}#}
+                    {% endif %}
+                    {% if thisAuthor is defined and thisAuthor %}
+                        {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
+                        {#<a href="{{ path('crn_showuser', { 'id': message.signeeInfo.modifiedBy.id }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}</a><br>#}
+                        {#<a href="{{ path('crn_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>#}
+                        <a href="{{ path('crn_home', { 'filter[author]': thisAuthor.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ thisAuthor.getUsernameOptimal|raw }}</a>
+                    {% endif %}
+                </td>
+
+                {% if headFlag == "sortable" %}
+                    <td class="rowlink-skip">
+                        {{ crnmacros.indexAction(message,eventObjectTypeId,patientListId) }}
+                    </td>
+                {% endif %}
+
+            </tr>
+            {#<tr class="table-no-border rowlink">#}
+            <tr data-link="row" class="table-no-border rowlink">
+                <td style="display: none">
+                    <a href="{{ path(crn_sitename~'_crnentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                </td>
+
+                {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}#}
+                {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,true,trclassname)|raw }}
+
+                {#http://jsfiddle.net/dqq5B/524/#}
+                {#<td colspan=9>#}
+                    {#<table class = "table table-hover table-condensed">#}
+                        {#{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}#}
+                    {#</table>#}
+                {#</td>#}
+
+                {#<br><p>#}
+                {#<table class="table">#}
+                    {#$result#}
+                {#</table>#}
+                {#</p><br>#}
+            </tr>
+            {{ crn_util.getTasksInfo(message)|raw }}
+            </tbody>
+
+        {% endfor %}
+
+        {#</tbody>#}
+    </table>
+{% endmacro %}
+
+{% macro crnWarningMessageWithLatestEncounter( message, encounter ) %}
+    {% set editPageWithLatestEncounterUrl = crn_util.getUrlWithLatestEncounterIfDifferent(message.vars.value,encounter.vars.value) %}
+    {% if editPageWithLatestEncounterUrl %}
+        <div class="alert alert-danger" role="alert">
+            {{ editPageWithLatestEncounterUrl|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+{% macro crnWarningMessageWithLatestEncounterEntity( message, encounter ) %}
+    {% set editPageWithLatestEncounterUrl = crn_util.getUrlWithLatestEncounterIfDifferent(message,encounter) %}
+    {% if editPageWithLatestEncounterUrl %}
+        <div class="alert alert-danger" role="alert">
+            {{ editPageWithLatestEncounterUrl|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro getHrefHomePageFilteredByPatient( patientEntity, hrefLabel ) %}
+    {% set mrn = patientEntity.obtainValidField('mrn') %}
+    {% if mrn and mrn.field and mrn.keytype %}
+        <a href="{{ path('crn_home', { 'filter[search]': mrn.field, 'filter[mrntype]': mrn.keytype.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ hrefLabel|raw }}</a>
+    {% else %}
+        {{ hrefLabel|raw }}
+    {% endif %}
+{% endmacro %}
+
+{% macro getHrefHomePageFilteredByAccession( accession, hrefLabel ) %}
+    {% set accessionArr = accession.obtainFullValidKeyNameArr() %}
+    {% set accessionNumber = accessionArr.field %}
+    {% set accessionType = accessionArr.keytype %}
+    {% set accessionStr = accessionArr.keyStr %}
+    {% if accessionStr %}
+        <a href="{{ path('crn_home', { 'filter[accessionType]': accessionType.id, 'filter[accessionNumber]': accessionNumber, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ accessionStr|raw }}</a>
+    {% else %}
+        {{ hrefLabel|raw }}
+    {% endif %}
+{% endmacro %}
+
+{% macro getHrefHomePageFilteredByLocation( encounter ) %}
+    {% set locationInfo = encounter.obtainLocationInfo %}
+    {% set encounterLocationId = encounter.obtainTrackerSpotsLocationId %}
+    {% if locationInfo %}
+        <a href="{{ path('crn_home', { 'filter[encounterLocation]': encounterLocationId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ locationInfo|raw }}</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro encounterDateTimeWithTimezone( dates, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% for date in dates|reverse %}
+        <p>
+        <div class="row">
+            {{ form_errors(date.field) }}
+            {{ form_errors(date.field) }}
+            <div class="col-xs-6" align="right">
+                {{ form_label(date.field) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(date.field) }}
+                    <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+                {% if date.time is defined %}
+                    {{ form_widget(date.time) }}
+                {% endif %}
+            </div>
+        </div>
+        </p>
+        {{ formmacros.field(date.timezone) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro crnEntryCache( message, cycle ) %}
+    {#show cache!<br>#}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="crn-patient-panel-title" data-toggle="collapse" href="#crn-cache">
+                    Cache
+                </a>
+            </h4>
+        </div>
+        <div id="crn-cache" class="crn-cache-panel panel-collapse collapse">
+            <div class="panel-body">
+
+                {{ formmacros.simplefield("Cached entry content in XML:", message.getFormnodesCache, "textarea", "disabled") }}
+                {#<pre lang="xml" >{{message.getFormnodesCache}}</pre>#}
+
+                {{ formmacros.simplefield("Cached patient mrn content:", message.getPatientMrnCache, "", "disabled") }}
+                {{ formmacros.simplefield("Cached patient name content:", message.getPatientNameCache, "", "disabled") }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+{% endmacro %}
+
+{% macro crnInputArray( label, arrayValues ) %}
+    {#show cache!<br>#}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% for value in arrayValues %}
+        {% if value.status == 'valid' %}
+            {{ formmacros.simplefield( label, value.getField(), "", "disabled" ) }}
+        {% else %}
+            {{ formmacros.simplefield( label, null, "", "disabled" ) }}
+        {% endif %}
+    {% endfor %}
+
+{% endmacro %}
+
