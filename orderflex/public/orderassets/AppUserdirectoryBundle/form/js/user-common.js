@@ -559,6 +559,9 @@ function siteNameMapper(full) {
     if( url.indexOf("call-log-book") !== -1 ) {
         sitename = 'call-log-book';
     }
+    if( url.indexOf("critical-result-notifications") !== -1 ) {
+        sitename = 'critical-result-notifications';
+    }
     if( url.indexOf("fellowship-applications") !== -1 ) {
         sitename = 'fellowship-applications';
     }

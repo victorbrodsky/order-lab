@@ -328,7 +328,8 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             throw new AuthenticationException('Invalid username or password');
         }
 
-        $authUtil = new AuthUtil($this->container,$this->em);
+        //$authUtil = new AuthUtil($this->container,$this->em);
+        $authUtil = $this->container->get('authenticator_utility');
 
         $user = null;
 

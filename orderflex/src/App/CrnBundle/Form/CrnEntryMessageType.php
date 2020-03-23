@@ -143,7 +143,7 @@ class CrnEntryMessageType extends AbstractType
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
 //        ));
             $builder->add('crnAttachmentType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:CrnAttachmentTypeList',
+                'class' => 'AppOrderformBundle:CalllogAttachmentTypeList',
                 //'choice_label' => 'name',
                 'label' => 'Attachment Type:',
                 'required' => false,
@@ -161,7 +161,8 @@ class CrnEntryMessageType extends AbstractType
             ));
         }
 
-        if(1) {
+        //TODO: convert to single task
+        if(0) {
             $builder->add('crnTasks', CollectionType::class, array(
                 'entry_type' => CrnTaskType::class,
                 'entry_options' => array(

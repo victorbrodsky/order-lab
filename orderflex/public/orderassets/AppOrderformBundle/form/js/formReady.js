@@ -43,6 +43,10 @@ $(document).ready(function() {
         setNavBar("call-log-book");
     }
 
+    if( $('#nav-bar-crnsearch') ) {
+        setNavBar("critical-result-notifications");
+    }
+
     initAdd();
 
     expandTextarea();

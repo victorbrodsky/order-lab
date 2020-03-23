@@ -217,6 +217,7 @@ class HomeController extends OrderAbstractController {
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
             'call-log-book' => 'calllog',
+            'critical-result-notifications' => 'crn',
             'translational-research' => 'translationalresearch'
         );
 

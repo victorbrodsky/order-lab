@@ -1057,6 +1057,11 @@ class SiteParameters {
     private $calllogResources;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\CrnBundle\Entity\CrnSiteParameter", cascade={"persist","remove"})
+     */
+    private $crnSiteParameter;
+
+    /**
      * Navbar Employee List Filter Institution #1: [Dropdown with WCM selected]
      *
      * @ORM\ManyToOne(targetEntity="Institution")
@@ -3807,6 +3812,22 @@ class SiteParameters {
     public function setCalllogSiteParameter($calllogSiteParameter)
     {
         $this->calllogSiteParameter = $calllogSiteParameter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCrnSiteParameter()
+    {
+        return $this->crnSiteParameter;
+    }
+
+    /**
+     * @param mixed $crnSiteParameter
+     */
+    public function setCrnSiteParameter($crnSiteParameter)
+    {
+        $this->crnSiteParameter = $crnSiteParameter;
     }
 
     /**

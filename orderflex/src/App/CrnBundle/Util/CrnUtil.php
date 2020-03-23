@@ -1142,12 +1142,16 @@ class CrnUtil
         $event = $event . " [Message Entry ID#" . $message->getMessageOidVersion() . "; Status: " . $message->getMessageStatus()->getName() . "]";
 
         //Tasks Info
-        $taskInfoArr = array();
-        foreach( $message->getCrnEntryMessage()->getCrnTasks() as $task ) {
-            $taskInfoArr[] = $task->getTaskFullInfo();
-        }
-        if( count($taskInfoArr) > 0 ) {
-            $event = $event . "<br><br>" . implode("<br>",$taskInfoArr);
+//        $taskInfoArr = array();
+//        foreach( $message->getCrnEntryMessage()->getCrnTasks() as $task ) {
+//            $taskInfoArr[] = $task->getTaskFullInfo();
+//        }
+//        if( count($taskInfoArr) > 0 ) {
+//            $event = $event . "<br><br>" . implode("<br>",$taskInfoArr);
+//        }
+        $crnTask = $message->getCrnEntryMessage()->getCrnTask();
+        if( $crnTask ) {
+            $event = $event . "<br><br>" . implode("<br>",$crnTask->getTaskFullInfo());
         }
 
         //exit('event='.$event);
@@ -3887,71 +3891,71 @@ class CrnUtil
         return $newDocument;
     }
 
-    public function processCrnTask($message,$originalTasks) {
-        // remove the relationship between the CrnEntryMessage and the Task
-
-//        //testing
-//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-//            echo "Current task=".$task."<br>";
-//        }
+//    public function processCrnTask($message,$originalTasks) {
+//        // remove the relationship between the CrnEntryMessage and the Task
+//
+////        //testing
+////        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+////            echo "Current task=".$task."<br>";
+////        }
+////        foreach($originalTasks as $task) {
+////            echo "Original task=".$task."<br>";
+////        }
+//
+//        $crnEntryMessage = $message->getCrnEntryMessage();
+//
+//        $taskUpdateArr = array();
 //        foreach($originalTasks as $task) {
-//            echo "Original task=".$task."<br>";
+//            //if( false === $crnEntryMessage->getCrnTasks()->contains($task) ) {
+//            if( $this->taskExists($task,$crnEntryMessage->getCrnTasks()) === false ) {
+//                //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
+//                $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
+//                // remove the Task from the Tag
+//                $crnEntryMessage->getCrnTasks()->removeElement($task);
+//                // if it was a many-to-one relationship, remove the relationship like this
+//                //$task->setCrnEntryMessage(null);
+//                //$this->em->persist($task);
+//                // if you wanted to delete the Tag entirely, you can also do that
+//                //$this->em->remove($task);
+//            }
 //        }
-
-        $crnEntryMessage = $message->getCrnEntryMessage();
-
-        $taskUpdateArr = array();
-        foreach($originalTasks as $task) {
-            //if( false === $crnEntryMessage->getCrnTasks()->contains($task) ) {
-            if( $this->taskExists($task,$crnEntryMessage->getCrnTasks()) === false ) {
-                //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
-                $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
-                // remove the Task from the Tag
-                $crnEntryMessage->getCrnTasks()->removeElement($task);
-                // if it was a many-to-one relationship, remove the relationship like this
-                //$task->setCrnEntryMessage(null);
-                //$this->em->persist($task);
-                // if you wanted to delete the Tag entirely, you can also do that
-                //$this->em->remove($task);
-            }
-        }
-
-        //set creator for remaining tasks
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        foreach( $crnEntryMessage->getCrnTasks() as $task ) {
-
-            //remove empty tasks
-            if( $task->isEmpty() ) {
-                $taskUpdateArr[] = "Removed empty (no description) task: ".$task->getTaskFullInfo();
-                $crnEntryMessage->removeCrnTask($task);
-                $task->setCrnEntryMessage(NULL);
-            }
-
-            if( !$task->getCreatedBy() ) {
-                $task->setCreatedBy($user);
-            }
-        }
-
-        $taskUpdateStr = NULL;
-        if( count($taskUpdateArr) > 0 ) {
-            $taskUpdateStr = implode("<br>", $taskUpdateArr);
-        }
-
-//        //testing
-//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-//            echo "Final task=".$task."<br>";
+//
+//        //set creator for remaining tasks
+//        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+//        foreach( $crnEntryMessage->getCrnTasks() as $task ) {
+//
+//            //remove empty tasks
+//            if( $task->isEmpty() ) {
+//                $taskUpdateArr[] = "Removed empty (no description) task: ".$task->getTaskFullInfo();
+//                $crnEntryMessage->removeCrnTask($task);
+//                $task->setCrnEntryMessage(NULL);
+//            }
+//
+//            if( !$task->getCreatedBy() ) {
+//                $task->setCreatedBy($user);
+//            }
 //        }
-
-        return $taskUpdateStr;
-    }
-    public function taskExists($task,$tasks) {
-        foreach($tasks as $thisTask) {
-            if( $thisTask->getId() == $task->getId() ) {
-                return true;
-            }
-        }
-        return false;
-    }
+//
+//        $taskUpdateStr = NULL;
+//        if( count($taskUpdateArr) > 0 ) {
+//            $taskUpdateStr = implode("<br>", $taskUpdateArr);
+//        }
+//
+////        //testing
+////        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+////            echo "Final task=".$task."<br>";
+////        }
+//
+//        return $taskUpdateStr;
+//    }
+//    public function taskExists($task,$tasks) {
+//        foreach($tasks as $thisTask) {
+//            if( $thisTask->getId() == $task->getId() ) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public function getTasksInfo( $message ) {
 

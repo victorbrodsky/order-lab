@@ -2173,7 +2173,8 @@ class UserController extends OrderAbstractController
         if( $testing ) {
             $searchRes = array('dummy'); //testing
         } else {
-            $authUtil = new AuthUtil($this->container,$em);
+            //$authUtil = new AuthUtil($this->container,$em);
+            $authUtil = $this->get('authenticator_utility');
             $searchRes = $authUtil->searchLdap($publicUserId);
         }
 

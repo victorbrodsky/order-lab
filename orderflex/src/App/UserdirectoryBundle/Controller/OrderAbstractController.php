@@ -11,6 +11,8 @@ namespace App\UserdirectoryBundle\Controller;
 use App\CallLogBundle\Util\CallLogUtil;
 
 use App\CallLogBundle\Util\CallLogUtilForm;
+use App\CrnBundle\Util\CrnUtil;
+use App\CrnBundle\Util\CrnUtilForm;
 use App\FellAppBundle\Util\FellAppImportPopulateUtil;
 use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
@@ -82,6 +84,9 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['calllog_util'] = '?'.CallLogUtil::class;
         $subscribedServices['calllog_util_form'] = '?'.CallLogUtilForm::class;
+
+        $subscribedServices['crn_util'] = '?'.CrnUtil::class;
+        $subscribedServices['crn_util_form'] = '?'.CrnUtilForm::class;
 
         $subscribedServices['fellapp_util'] = '?'.FellAppUtil::class;
         $subscribedServices['fellapp_importpopulate_util'] = '?'.FellAppImportPopulateUtil::class;

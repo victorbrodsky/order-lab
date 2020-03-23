@@ -74,7 +74,7 @@ class CrnTaskType extends AbstractType
         $taskTypeDefault = null;
         if( $this->params['cycle'] == 'new' ) {
             $em = $this->params["em"];
-            $taskTypeDefault = $em->getRepository('AppOrderformBundle:CrnTaskTypeList')->findOneByName("Other");
+            $taskTypeDefault = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName("Other");
             //Testing: Order blood products
             //$taskTypeDefault = $em->getRepository('AppOrderformBundle:CrnTaskTypeList')->findOneByName("Order blood products");
         }

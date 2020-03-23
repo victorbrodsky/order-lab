@@ -143,6 +143,11 @@ class CrnSiteParameterType extends AbstractType
             },
         ));
 
+        $builder->add('crnResource', null, array(
+            'label' => 'Resources:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         //state
 //        $stateArray = array(
 //            'class' => 'AppUserdirectoryBundle:States',

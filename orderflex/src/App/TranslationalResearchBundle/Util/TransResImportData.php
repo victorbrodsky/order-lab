@@ -2116,7 +2116,8 @@ class TransResImportData
         }
 
         //first search this user if exists in ldap directory
-        $authUtil = new AuthUtil($this->container,$this->em);
+        //$authUtil = new AuthUtil($this->container,$this->em);
+        $authUtil = $this->container->get('authenticator_utility');
         $searchRes = $authUtil->searchLdap($cwid);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
             $logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);

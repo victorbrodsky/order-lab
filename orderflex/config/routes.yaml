@@ -146,6 +146,11 @@ calllog_login_check:
 calllog_logout:
     path:   /call-log-book/logout
 
+crn_login_check:
+    path:   /critical-result-notifications/login_check
+crn_logout:
+    path:   /critical-result-notifications/logout
+
 translationalresearch_login_check:
     path:   /translational-research/login_check
 translationalresearch_logout:

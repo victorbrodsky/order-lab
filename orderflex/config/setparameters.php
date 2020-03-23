@@ -129,7 +129,7 @@ $container->setParameter('transres.uploadpath',$transresuploadpath);
 $callloguploadpath = "calllog";
 $container->setParameter('calllog.uploadpath',$callloguploadpath);
 //crn
-$callloguploadpath = "crn";
+$crnuploadpath = "crn";
 $container->setParameter('crn.uploadpath',$crnuploadpath);
 
 //exit("1");

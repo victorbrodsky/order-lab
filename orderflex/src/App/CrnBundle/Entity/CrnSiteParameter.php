@@ -157,6 +157,12 @@ class CrnSiteParameter
      */
     private $showAccessionHome;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $crnResource;
+
+
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -467,6 +473,25 @@ class CrnSiteParameter
     {
         $this->showAccessionHome = $showAccessionHome;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCrnResource()
+    {
+        return $this->crnResource;
+    }
+
+    /**
+     * @param mixed $crnResource
+     */
+    public function setCrnResource($crnResource)
+    {
+        $this->crnResource = $crnResource;
+    }
+
+    
+
 
     
 

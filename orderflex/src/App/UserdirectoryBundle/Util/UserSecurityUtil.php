@@ -691,6 +691,9 @@ class UserSecurityUtil {
         if( $sitename == 'calllog' ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
         }
+        if( $sitename == 'crn' ) {
+            $defaultSourceSystemName = 'ORDER Critical Result Notifications';
+        }
         if ($sitename == 'deidentifier' ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
@@ -737,6 +740,9 @@ class UserSecurityUtil {
 
         if( strpos($url, $subdomain.'/call-log-book/') !== false ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
+        }
+        if( strpos($url, $subdomain.'/critical-result-notifications/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Critical Result Notifications';
         }
 //        if( strpos($url, '/order/deidentifier/') !== false ) {
 //            $defaultSourceSystemName = 'ORDER Deidentifier';

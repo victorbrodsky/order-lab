@@ -58,7 +58,7 @@ class CrnFilterType extends AbstractType
         ));
 
         $builder->add('entryTags', EntityType::class, array(
-            'class' => 'AppOrderformBundle:CrnEntryTagsList',
+            'class' => 'AppCrnBundle:CrnEntryTagsList',
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -317,7 +317,7 @@ class CrnFilterType extends AbstractType
             //'choices_as_values' => true,
         ));
         $builder->add('taskType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:CrnTaskTypeList',
+            'class' => 'AppOrderformBundle:CalllogTaskTypeList',
             'label' => false,
             'required' => false,
             //'choice_label' => 'name',

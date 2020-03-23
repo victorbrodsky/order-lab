@@ -25,6 +25,7 @@ use App\CrnBundle\Util\CrnUtil;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
+use App\OrderformBundle\Entity\CalllogTask;
 use App\OrderformBundle\Entity\Procedure;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -396,7 +397,7 @@ class CrnEntryController extends OrderAbstractController
         );
 
         ////////// attachmentTypes //////////
-        $attachmentTypes = $em->getRepository('AppOrderformBundle:CrnAttachmentTypeList')->findBy(array('type'=>array('default','user-added')));
+        $attachmentTypes = $em->getRepository('AppOrderformBundle:CalllogAttachmentTypeList')->findBy(array('type'=>array('default','user-added')));
         $attachmentTypesChoice = array();
         //add: "With attachments", "Without attachments"
         $attachmentTypesChoice["With attachments"] = "With attachments";
@@ -514,7 +515,7 @@ class CrnEntryController extends OrderAbstractController
         $dql->leftJoin("patient.firstname","firstname");
         $dql->leftJoin("message.encounter","encounter");
         $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
-        $dql->leftJoin("crnEntryMessage.crnTasks","crnTasks");
+        $dql->leftJoin("crnEntryMessage.crnTask","crnTask");
 
         $dql->leftJoin("encounter.referringProviders","referringProviders");
         $dql->leftJoin("referringProviders.field","referringProviderWrapper");
@@ -926,25 +927,25 @@ class CrnEntryController extends OrderAbstractController
             $advancedFilter++;
         }
         if( $task == "with-tasks" ) {
-            $dql->andWhere("crnTasks.id IS NOT NULL");
+            $dql->andWhere("crnTask.id IS NOT NULL");
             $advancedFilter++;
         }
         if( $task == "with-outstanding-tasks" ) {
-            $dql->andWhere("crnTasks.status = false");
+            $dql->andWhere("crnTask.status = false");
             $advancedFilter++;
         }
         if( $task == "with-completed-tasks" ) {
-            $dql->andWhere("crnTasks.status = true");
+            $dql->andWhere("crnTask.status = true");
             $advancedFilter++;
         }
         if( $task == "without-tasks" ) {
-            $dql->andWhere("crnTasks.id IS NULL");
+            $dql->andWhere("crnTask.id IS NULL");
             $advancedFilter++;
         }
 
         //taskType
         if( $taskType ) {
-            $dql->leftJoin("crnTasks.crnTaskType","crnTaskType");
+            $dql->leftJoin("crnTask.crnTaskType","crnTaskType");
             $dql->andWhere("crnTaskType.id = :taskTypeId");
             $queryParameters['taskTypeId'] = $taskType->getId();
             $advancedFilter++;
@@ -952,14 +953,14 @@ class CrnEntryController extends OrderAbstractController
 
         //taskUpdatedBy statusUpdatedBy
         if( $taskUpdatedBy ) {
-            $dql->leftJoin("crnTasks.statusUpdatedBy","statusUpdatedBy");
+            $dql->leftJoin("crnTask.statusUpdatedBy","statusUpdatedBy");
             $dql->andWhere("statusUpdatedBy.id = :statusUpdatedById");
             $queryParameters['statusUpdatedById'] = $taskUpdatedBy->getId();
             $advancedFilter++;
         }
 
         if( $taskAddedBy ) {
-            $dql->leftJoin("crnTasks.createdBy","createdBy");
+            $dql->leftJoin("crnTask.createdBy","createdBy");
             $dql->andWhere("createdBy.id = :createdById");
             $queryParameters['createdById'] = $taskAddedBy->getId();
             $advancedFilter++;
@@ -1547,10 +1548,10 @@ class CrnEntryController extends OrderAbstractController
         $message = $this->createCrnEntryMessage($user,$permittedInstitutions,$system); //save
 
         // Create an ArrayCollection of the current Task objects in the database
-        $originalTasks = new ArrayCollection();
-        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-            $originalTasks->add($task);
-        }
+//        $originalTasks = new ArrayCollection();
+//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+//            $originalTasks->add($task);
+//        }
 
         $showPreviousEncounters = true;
         $form = $this->createCrnEntryForm($message,$mrntype,$mrn,$cycle,false,$showPreviousEncounters); ///entry/save
@@ -1746,7 +1747,7 @@ class CrnEntryController extends OrderAbstractController
 //                }
 //            }
             //process Task sections
-            $taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks); //Save New Critical Result Notification Entry
+            //$taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks); //Save New Critical Result Notification Entry
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCrnEntryMessage()); //Save new entry
@@ -2224,9 +2225,13 @@ class CrnEntryController extends OrderAbstractController
         }
 
         //add crn task
-        if( count($crnEntryMessage->getCrnTasks()) == 0 ) {
-            $task = new CrnTask($user);
-            $crnEntryMessage->addCrnTask($task);
+//        if( count($crnEntryMessage->getCrnTasks()) == 0 ) {
+//            $task = new CrnTask($user);
+//            $crnEntryMessage->addCrnTask($task);
+//        }
+        if( !$crnEntryMessage->getCrnTask() ) {
+            $task = new CalllogTask($user);
+            $crnEntryMessage->setCrnTask($task);
         }
 
         //add patient

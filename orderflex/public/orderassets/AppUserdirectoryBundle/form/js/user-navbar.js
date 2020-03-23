@@ -54,6 +54,17 @@ function calllogsearchNavbarBoxInit() {
     });
 }
 
+function crnsearchNavbarBoxInit() {
+    //console.log('crnsearchNavbarBox Init');
+    $("#search_search").on( "keydown", function(event) {
+        //console.log('crnsearchform event='+event.which);
+        if(event.which == 13) {
+            event.preventDefault();
+            $('#crnsearchform').submit();
+        }
+    });
+}
+
 //get search input field with id=calllogsearchform-search and redirect to path /patients/search?searchtype=search
 function setCallLogSearchtypeAction() {
     //console.log('searchtype='+key);
@@ -223,6 +234,9 @@ function setNavBar(sitename) {
     else if( sitename == "call-log-book" ){
         setCallLogNavBar();
     }
+    else if( sitename == "critical-result-notifications" ){
+        setCrnNavBar();
+    }
     else if( sitename == "translational-research" ){
         setTranslationalResearchNavBar();
     }
@@ -367,6 +381,64 @@ function setCallLogNavBar() {
     }
 
     //if( full.indexOf("/call-log-book/re-identify") !== -1 ) {
+    //    id = null;
+    //}
+
+    //$('#nav-bar-'+id).addClass('active');
+    userAddActiveClass(id);
+}
+
+function setCrnNavBar() {
+
+    crnsearchNavbarBoxInit();
+
+    var id = 'crnhome';
+
+    var full = window.location.pathname;
+
+    if( full.indexOf("/critical-result-notifications/alerts/") !== -1 ) {
+        id = 'alerts';
+    }
+
+    if( full.indexOf("/critical-result-notifications/entry/new") !== -1 ) {
+        id = 'callentry';
+    }
+
+    if( full.indexOf("/critical-result-notifications/entry/view") !== -1 ) {
+        id = 'callentry-dummy';
+    }
+
+    if( full.indexOf("/patient-list/") !== -1 ) {
+        id = 'patientlist';
+    }
+    if( full.indexOf("/recent-patients") !== -1 ) {
+        id = 'patientlist';
+    }
+
+    if( full.indexOf("/critical-result-notifications/resources/") !== -1 ) {
+        id = 'resources';
+    }
+
+    if( full.indexOf("/critical-result-notifications/tasks/") !== -1 ) {
+        id = 'tasks';
+    }
+
+    if( full.indexOf("/critical-result-notifications/merge-patient-records") !== -1 ||
+        full.indexOf("/critical-result-notifications/un-merge-patient-records") !== -1 ||
+        full.indexOf("/critical-result-notifications/edit-patient-record") !== -1 ||
+        full.indexOf("/critical-result-notifications/find-and-edit-patient-record") !== -1 ||
+        full.indexOf("/critical-result-notifications/set-master-patient-record") !== -1
+    ) {
+        id = 'dataquality';
+    }
+
+    id = commonNavBar(full,id);
+
+    if( full.indexOf("/critical-result-notifications/event-log/event-log-per-user-per-event-type/") !== -1 ) {
+        id = 'mycalllogentrees';
+    }
+
+    //if( full.indexOf("/critical-result-notifications/re-identify") !== -1 ) {
     //    id = null;
     //}
 

@@ -39,7 +39,7 @@ abstract class OrderBase {
     /**
      * Instruction (datetime, author, author roles, text)
      *
-     * @ORM\ManyToOne(targetEntity="Instruction", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Instruction", cascade={"persist","remove"})
      */
     protected $instruction;
 

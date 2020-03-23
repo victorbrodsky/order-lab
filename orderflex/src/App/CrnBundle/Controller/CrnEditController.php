@@ -500,10 +500,10 @@ class CrnEditController extends CrnEntryController
         $message = $this->createCrnEntryMessage($user,$permittedInstitutions,$system);
 
         // Create an ArrayCollection of the current Task objects in the database
-        $originalTasks = new ArrayCollection();
-        foreach($originalMessage->getCrnEntryMessage()->getCrnTasks() as $task) {
-            $originalTasks->add($task);
-        }
+//        $originalTasks = new ArrayCollection();
+//        foreach($originalMessage->getCrnEntryMessage()->getCrnTasks() as $task) {
+//            $originalTasks->add($task);
+//        }
 //        foreach($originalTasks as $task) {
 //            echo "Original task=".$task."<br>";
 //        }
@@ -624,7 +624,7 @@ class CrnEditController extends CrnEntryController
             //exit('333');
 
             //process Task sections
-            $taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks);
+            //$taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks);
             //echo "taskUpdateStr=".$taskUpdateStr."<br>";
             //exit('111');
 

@@ -567,7 +567,8 @@ class SecurityController extends OrderAbstractController
 
         $token = new UsernamePasswordToken($username, $password, $providerKey);
 
-        $authUtil = new AuthUtil($this->container,$em);
+        //$authUtil = new AuthUtil($this->container,$em);
+        $authUtil = $this->get('authenticator_utility');
 
         $authUSer = $authUtil->authenticateUserToken($user,$token,$userProvider);
 

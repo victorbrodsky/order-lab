@@ -317,9 +317,13 @@
                             {% endif %}
 
                             {#1message.crnEntryMessage.crnTasks|length={{ message.getCrnEntryMessage().getCrnTasks()|length }}<br>#}
-                            {% if message.getCrnEntryMessage() and message.getCrnEntryMessage().getCrnTasks()|length > 0 %}
+                            {#{% if message.getCrnEntryMessage() and message.getCrnEntryMessage().getCrnTasks()|length > 0 %}#}
+                                {#{{ crnmacros.crnTaskList(form,cycle) }}#}
+                            {#{% endif %}#}
+                            {% if message.getCrnEntryMessage() and message.getCrnEntryMessage().getCrnTask() %}
                                 {{ crnmacros.crnTaskList(form,cycle) }}
                             {% endif %}
+
 
                             {% if message.crnEntryMessage and message.crnEntryMessage.entryTags %}
                                 {{ crnmacros.crnEntryTags(form,cycle) }}

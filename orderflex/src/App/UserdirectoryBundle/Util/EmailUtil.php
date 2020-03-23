@@ -98,6 +98,9 @@ class EmailUtil {
             if (strpos($url, "/call-log-book/") !== false) {
                 $sitenameAbbreviation = "calllog";
             }
+            if (strpos($url, "/critical-result-notifications/") !== false) {
+                $sitenameAbbreviation = "crn";
+            }
             if (strpos($url, "/vacation-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
             }

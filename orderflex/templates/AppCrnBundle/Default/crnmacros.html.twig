@@ -1050,13 +1050,15 @@
 
                     <div class="crn-tasks-holder">
                         {#message.messageCategory.crnTasks={{ message.crnEntryMessage.crnTasks|length }}#}
-                        {% for crnTask in message.crnEntryMessage.crnTasks %}
+                        {#{% for crnTask in message.crnEntryMessage.crnTasks %}#}
                             {#{{ formmacros.checkbox(crnTask.status) }}#}
                             {#{{ formmacros.field(crnTask.crnTaskType) }}#}
                             {#{{ formmacros.field(crnTask.description) }}#}
 
-                            {{ crnmacros.taskForm(crnTask, cycle, 'crn-tasks', 'noprototype', sitename, 1) }}
-                        {% endfor %}
+                            {#{{ crnmacros.taskForm(crnTask, cycle, 'crn-tasks', 'noprototype', sitename, 1) }}#}
+                        {#{% endfor %}#}
+
+                        {{ crnmacros.taskForm(message.crnEntryMessage.crnTask, cycle, 'crn-tasks', 'noprototype', sitename, 1) }}
 
                         {% if cycle != "show" %}
                             {{ usermacros.addNewObjectBtn(cycle,'crn-tasks','Add Task',null,null) }}
@@ -1066,7 +1068,10 @@
                 {% else %}
                     {#view/show#}
                     {#2message.crnEntryMessage.crnTasks|length={{ message.getCrnEntryMessage().getCrnTasks()|length }}<br>#}
-                    {% for crnTask in message.getCrnEntryMessage().getCrnTasks() %}
+                    {#{% for crnTask in message.getCrnEntryMessage().getCrnTasks() %}#}
+
+                        {% set crnTask = message.getCrnEntryMessage().getCrnTask() %}
+
                         <div class="well well-sm">
 
                             {% if 0 %}
@@ -1117,7 +1122,7 @@
                             {% endif %}
 
                         </div>
-                    {% endfor %}
+                    {#{% endfor %}#}
                 {% endif %}
 
             </div> <!-- panel-body -->
@@ -1227,7 +1232,7 @@
          data-userurllink = "{{ usermacros.userUrlLink()|e }}"
          data-uploadurl = "{{ oneup_uploader_endpoint('crn_gallery') }}"
          data-userid = "{{ app.user.id }}"
-         data-prototype-crn-tasks = "{{ crnmacros.taskForm(form.crnEntryMessage.crnTasks,cycle,'crn-tasks','prototype',sitename,1)|e }}"
+         data-prototype-crn-tasks = "{{ crnmacros.taskForm(form.crnEntryMessage.crnTask,cycle,'crn-tasks','prototype',sitename,1)|e }}"
     ></div>
 {% endmacro %}
 

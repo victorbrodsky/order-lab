@@ -2677,6 +2677,7 @@ class AdminController extends OrderAbstractController
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
             'call-log-book' => 'calllog',
+            'critical-result-notifications' => 'crn',
             'translational-research' => 'translationalresearch'
         );
         return $elements;
@@ -3643,6 +3644,7 @@ class AdminController extends OrderAbstractController
             'ORDER Employee Directory',
             'ORDER Deidentifier',
             'ORDER Call Log Book',
+            'ORDER Critical Result Notifications',
             'ORDER Fellowship Applications',
             'ORDER Vacation Request',
             'ORDER Translational Research',
@@ -7384,6 +7386,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_CALLLOG_', 'call-log-book' );
 
+            $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
 
@@ -8848,9 +8851,15 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $elements = array(
-//            "Sign out issue",
-//            "Educational",
-//            "Red Book"
+            "Follow Up Needed",
+            "Addendum Needed",
+            "Amendment Needed",
+            "Specimen Issue",
+            "Requisition Form Issue",
+            "Patient ID Issue",
+            "Melanoma",
+            "Basal Cell Carcinoma",
+            "Squamous Cell Carcinoma"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -8858,7 +8867,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:CrnEntryTagsList')->findOneByName($name);
+            $entity = $em->getRepository('AppCrnBundle:CrnEntryTagsList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }

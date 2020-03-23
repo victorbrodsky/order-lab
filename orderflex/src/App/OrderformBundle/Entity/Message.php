@@ -504,7 +504,7 @@ class Message {
 
     /**
      * Critical Result Notification Entry
-     * @ORM\OneToOne(targetEntity="CrnEntryMessage", inversedBy="message", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\CrnBundle\Entity\CrnEntryMessage", inversedBy="message", cascade={"persist","remove"})
      */
     private $crnEntryMessage;
 

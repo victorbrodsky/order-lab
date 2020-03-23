@@ -1168,7 +1168,8 @@ class UtilController extends OrderAbstractController {
         
         $em = $this->getDoctrine()->getManager();
 
-        $authUtil = new AuthUtil($this->container,$em);
+        //$authUtil = new AuthUtil($this->container,$em);
+        $authUtil = $this->get('authenticator_utility');
         
         //search this user if exists in ldap directory
         //$searchRes might be -1 => can not bind to LDAP server, meaning running on testing localhost outside cornell.edu network => user is ok

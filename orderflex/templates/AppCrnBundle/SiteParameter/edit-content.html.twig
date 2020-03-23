@@ -78,6 +78,8 @@
 
                 {{ formmacros.checkbox(form.enableDocumentUpload) }}
 
+                {{ formmacros.field(form.crnResource) }}
+
                 {% if cycle == "show" %}
                     <p>
                         <a class="btn btn-primary" href="{{ path('crn_siteparameters_edit_specific_site_parameters') }}">Edit</a>
