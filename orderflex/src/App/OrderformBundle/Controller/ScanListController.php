@@ -182,6 +182,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/", name="calllogentrytags-list", methods={"GET"})
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes-list", methods={"GET"})
      * @Route("/calllog-task-types/", name="calllogtasktypes-list", methods={"GET"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/index.html.twig")
      */
@@ -243,6 +244,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/", name="calllogentrytags_create", methods={"POST"})
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes_create", methods={"POST"})
      * @Route("/calllog-task-types/", name="calllogtasktypes_create", methods={"POST"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -304,6 +306,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/new", name="calllogentrytags_new", methods={"GET"})
      * @Route("/calllog-attachment-types/new", name="calllogattachmenttypes_new", methods={"GET"})
      * @Route("/calllog-task-types/new", name="calllogtasktypes_new", methods={"GET"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -365,6 +368,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_show", methods={"GET"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_show", methods={"GET"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show", methods={"GET"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/show.html.twig")
      */
@@ -426,6 +430,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/{id}/edit", name="calllogentrytags_edit", methods={"GET"})
      * @Route("/calllog-attachment-types/{id}/edit", name="calllogattachmenttypes_edit", methods={"GET"})
      * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit", methods={"GET"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -487,6 +492,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_update", methods={"PUT"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_update", methods={"PUT"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update", methods={"PUT"})
+     * 
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -767,6 +773,7 @@ class ScanListController extends ListController
      * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_delete", methods={"DELETE"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_delete", methods={"DELETE"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_delete", methods={"DELETE"})
+     * 
      *
      *
      */

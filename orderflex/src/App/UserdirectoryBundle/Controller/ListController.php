@@ -261,6 +261,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list", methods={"GET"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list", methods={"GET"})
      * @Route("/list/visa-status/", name="visastatus-list", methods={"GET"})
+     * @Route("/list/crn-entry-tags/", name="crnentrytags-list", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
@@ -739,6 +740,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create", methods={"POST"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create", methods={"POST"})
      * @Route("/list/visastatus/", name="visastatus_create", methods={"POST"})
+     * @Route("/list/crn-entry-tags/", name="crnentrytags_create", methods={"POST"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1051,6 +1053,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new", methods={"GET"})
      * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new", methods={"GET"})
      * @Route("/list/visastatus/new", name="visastatus_new", methods={"GET"})
+     * @Route("/list/crn-entry-tags/new", name="crnentrytags_new", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1321,6 +1324,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show", methods={"GET"})
      * @Route("/list/visastatus/{id}", name="visastatus_show", methods={"GET"})
+     * @Route("/list/crn-entry-tags/{id}", name="crnentrytags_show", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
@@ -1586,6 +1590,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit", methods={"GET"})
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit", methods={"GET"})
+     * @Route("/list/crn-entry-tags/{id}/edit", name="crnentrytags_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -1889,6 +1894,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update", methods={"PUT"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update", methods={"PUT"})
      * @Route("/list/visastatus/{id}", name="visastatus_update", methods={"PUT"})
+     * @Route("/list/crn-entry-tags/{id}", name="crnentrytags_update", methods={"PUT"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
@@ -2692,6 +2698,11 @@ class ListController extends OrderAbstractController
                 $displayName = "Visa Status";
                 $bundleName = "FellAppBundle";
                 break;
+            case "crnentrytags":
+                $className = "CrnEntryTagsList";
+                $displayName = "Crn Entry Tags List";
+                $bundleName = "CrnBundle";
+                break;
 
             case "custom000":
                 $className = "Custom000List";
@@ -3379,7 +3390,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete", methods={"DELETE"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete", methods={"DELETE"})
      * @Route("/list/visastatus/{id}", name="visastatus_delete", methods={"DELETE"})
-     *
+     * @Route("/list/crn-entry-tags/{id}", name="crnentrytags_delete", methods={"DELETE"})
      *
      *
      */

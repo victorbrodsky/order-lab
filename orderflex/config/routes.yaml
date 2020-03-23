@@ -47,6 +47,12 @@ app_calllog:
     prefix:   /call-log-book
     schemes:  ['%connection_channel%']
 
+app_crn:
+    resource: "App/CrnBundle/Controller/"
+    type:     annotation
+    prefix:   /critical-result-notifications
+    schemes:  ['%connection_channel%']
+
 app_orderform:
     resource: "App/OrderformBundle/Controller/"
     type:     annotation

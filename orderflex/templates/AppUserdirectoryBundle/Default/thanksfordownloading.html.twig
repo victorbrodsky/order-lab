@@ -43,6 +43,10 @@
         {% include 'AppCallLogBundle/Default/navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'crn' %}
+        {% include 'AppCrnBundle/Default/navbar.html.twig' %}
+    {% endif %}
+
     {% if sitename == 'translationalresearch' %}
         {% include 'AppTranslationalResearchBundle/Default/navbar.html.twig' %}
     {% endif %}

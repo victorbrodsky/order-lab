@@ -47,6 +47,7 @@ imports:
     - { resource: "../src/App/VacReqBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DeidentifierBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
 #    - { resource: "../src/App/*/Resources/config/services.yml" }
 #    - { resource: "../src/App/UserdirectoryBundle/Resources/config/setparameters.php" } #must run after importing services
@@ -110,6 +111,8 @@ services:
     App\CallLogBundle\Controller\:
         resource: '../src/App/CallLogBundle/Controller/'
 #        tags: ['controller.service_arguments']
+    App\CrnBundle\Controller\:
+        resource: '../src/App/CrnBundle/Controller/'
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
 #        tags: ['controller.service_arguments']
@@ -233,6 +236,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%calllog.uploadpath%'
+        crn_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%crn.uploadpath%'
 
 #sensio_framework_extra:
 #    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead

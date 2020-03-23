@@ -95,6 +95,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/CallLogBundle/Entity'
                         prefix: 'App\CallLogBundle\Entity'
                         alias: 'AppCallLogBundle'
+                    App\CrnBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/CrnBundle/Entity'
+                        prefix: 'App\CrnBundle\Entity'
+                        alias: 'AppCrnBundle'
                     App\TranslationalResearchBundle:
                         is_bundle: false
                         type: annotation

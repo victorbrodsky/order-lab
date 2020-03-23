@@ -164,7 +164,7 @@ class CalllogEntryMessage extends OrderBase {
 
     /**
      * @ORM\ManyToOne(targetEntity="CalllogAttachmentTypeList")
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="calllogattachmenttype_id", referencedColumnName="id", nullable=true)
      */
     private $calllogAttachmentType;
 

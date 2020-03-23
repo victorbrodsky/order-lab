@@ -118,6 +118,10 @@
             <p><a href="{{ path('calllog_home') }}">Call Log Book</a></p>
         {% endif %}
 
+        {% if user_security_utility.isSiteShowLinkNavbar(crn_sitename) %}
+            <p><a href="{{ path('crn_home') }}">Critical Result Notifications</a></p>
+        {% endif %}
+
         {% if user_security_utility.isSiteShowLinkNavbar(translationalresearch_sitename) %}
             <p><a href="{{ path('translationalresearch_home') }}">Translational Research</a></p>
         {% endif %}

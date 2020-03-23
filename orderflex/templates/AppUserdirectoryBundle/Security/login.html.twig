@@ -70,6 +70,11 @@
             {% set favicon = 'glyphicons-442-phone-alt.png' %}
         {% endif %}
 
+        {% if sitename == crn_sitename %}
+            {% set title = "Critical Result Notifications" %}
+            {% set favicon = 'glyphicons-halflings-42.png' %}
+        {% endif %}
+
         {% if sitename == translationalresearch_sitename %}
             {% set title = "Translational Research" %}
             {% set favicon = 'glyphicons-342-briefcase.png' %}

@@ -15,8 +15,9 @@
  *  limitations under the License.
  */
 
-namespace App\OrderformBundle\Entity;
+namespace App\CrnBundle\Entity;
 
+use App\OrderformBundle\Entity\OrderBase;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
@@ -24,12 +25,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="scan_crnEntryMessage")
+ * @ORM\Table(name="crn_crnEntryMessage")
  */
 class CrnEntryMessage extends OrderBase {
 
     /**
-     * @ORM\OneToOne(targetEntity="Message", mappedBy="crnEntryMessage")
+     * @ORM\OneToOne(targetEntity="App\OrderformBundle\Entity\Message", mappedBy="crnEntryMessage")
      **/
     protected $message;
 
@@ -41,21 +42,6 @@ class CrnEntryMessage extends OrderBase {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $addPatientToList;
-
-    /**
-     * Create different branch for Crn (https://127.0.0.1/scan/admin/list/patient-lists-tree/)
-     *
-     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="crnEntryMessages" )
-     * @ORM\JoinTable(name="scan_crnEntryMessage_patientList")
-     **/
-    private $patientLists;
-
-    /**
-     * Crn Entry Tags
-     * @ORM\ManyToMany(targetEntity="CrnEntryTagsList", inversedBy="crnEntryMessages" )
-     * @ORM\JoinTable(name="scan_crnEntryMessage_entryTag")
-     **/
-    private $entryTags;
 
     /**
      * Amount of Time Spent in Minutes
@@ -108,7 +94,7 @@ class CrnEntryMessage extends OrderBase {
 
     /**
      * Patient MRN Type Backup
-     * @ORM\ManyToOne(targetEntity="MrnType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MrnType", cascade={"persist"})
      */
     private $patientMRNTypeBackup;
 
@@ -120,7 +106,7 @@ class CrnEntryMessage extends OrderBase {
 
     /**
      * Encounter Number Type Backup
-     * @ORM\ManyToOne(targetEntity="EncounterType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\EncounterType", cascade={"persist"})
      */
     private $encounterTypeBackup;
 
@@ -132,7 +118,7 @@ class CrnEntryMessage extends OrderBase {
 
     /**
      * Encounter Date Backup
-     * @ORM\OneToOne(targetEntity="EncounterDate", cascade={"persist","remove"})
+     * @ORM\OneToOne(targetEntity="App\OrderformBundle\Entity\EncounterDate", cascade={"persist","remove"})
      */
     private $encounterDateBackup;
 
@@ -163,18 +149,46 @@ class CrnEntryMessage extends OrderBase {
     /**
      * Attachment Types. The same as Call Log (Shared List)
      *
-     * @ORM\ManyToOne(targetEntity="CrnAttachmentTypeList")
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogAttachmentTypeList")
      * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
      */
     private $crnAttachmentType;
 
+    //    /**
+//     * Create different branch for Crn (https://127.0.0.1/scan/admin/list/patient-lists-tree/) and inverse crnEntryMessages in PatientListHierarchy
+//     *
+//     * @ORM\ManyToMany(targetEntity="PatientListHierarchy", inversedBy="crnEntryMessages" )
+//     * @ORM\JoinTable(name="scan_crnEntryMessage_patientList")
+//     **/
+//    private $patientLists;
+    /**
+     * @ORM\ManyToMany(targetEntity="App\OrderformBundle\Entity\PatientListHierarchy", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="crn_crnentrymessage_patientlist",
+     *      joinColumns={@ORM\JoinColumn(name="crnentrymessage_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="patientlist_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $patientLists;
+
+    /**
+     * Crn Entry Tags
+     * @ORM\ManyToMany(targetEntity="CrnEntryTagsList", inversedBy="crnEntryMessages" )
+     * @ORM\JoinTable(name="crn_crnentrymessage_entrytag")
+     **/
+    private $entryTags;
+
+//    /**
+//     * Tasks Types. The same as Call Log (Shared List)
+//     *
+//     * @ORM\OneToMany(targetEntity="App\OrderformBundle\Entity\CalllogTask", mappedBy="crnEntryMessage", cascade={"persist"})
+//     **/
+//    private $crnTasks;
     /**
      * Tasks Types. The same as Call Log (Shared List)
-     *
-     * @ORM\OneToMany(targetEntity="CrnTask", mappedBy="crnEntryMessage", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogTask", cascade={"persist"})
      **/
-    private $crnTasks;
-
+    private $crnTask;
 
 
     public function __construct() {
@@ -182,7 +196,7 @@ class CrnEntryMessage extends OrderBase {
         $this->patientLists = new ArrayCollection();
         $this->entryTags = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->crnTasks = new ArrayCollection();
+        //$this->crnTasks = new ArrayCollection();
 
     }
 
@@ -432,22 +446,39 @@ class CrnEntryMessage extends OrderBase {
         $this->crnAttachmentType = $crnAttachmentType;
     }
 
-    public function addCrnTask($item)
+    /**
+     * @return mixed
+     */
+    public function getCrnTask()
     {
-        if( $item && !$this->crnTasks->contains($item) ) {
-            $item->setCrnEntryMessage($this);
-            $this->crnTasks->add($item);
-        }
-        return $this;
+        return $this->crnTask;
     }
-    public function removeCrnTask($item)
+
+    /**
+     * @param mixed $crnTask
+     */
+    public function setCrnTask($crnTask)
     {
-        $this->crnTasks->removeElement($item);
+        $this->crnTask = $crnTask;
     }
-    public function getCrnTasks()
-    {
-        return $this->crnTasks;
-    }
+
+//    public function addCrnTask($item)
+//    {
+//        if( $item && !$this->crnTasks->contains($item) ) {
+//            $item->setCrnEntryMessage($this);
+//            $this->crnTasks->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeCrnTask($item)
+//    {
+//        $this->crnTasks->removeElement($item);
+//    }
+//    public function getCrnTasks()
+//    {
+//        return $this->crnTasks;
+//    }
+
 
 
     

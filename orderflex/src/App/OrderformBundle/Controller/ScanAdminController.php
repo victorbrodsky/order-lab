@@ -22,6 +22,7 @@ namespace App\OrderformBundle\Controller;
 
 
 
+//use App\CrnBundle\Entity\CrnEntryTagsList;
 use App\OrderformBundle\Entity\AmendmentReasonList;
 use App\OrderformBundle\Entity\CalllogAttachmentTypeList;
 use App\OrderformBundle\Entity\CalllogEntryTagsList;
@@ -215,6 +216,7 @@ class ScanAdminController extends AdminController
         $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
         $count_generateCalllogAttachmentTypeList = $this->generateCalllogAttachmentTypeList();
         $count_generateCalllogTaskTypeList = $this->generateCalllogTaskTypeList();
+        //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
 
         $msg =
             'Generated Tables: '.
@@ -255,6 +257,7 @@ class ScanAdminController extends AdminController
             'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
             'CalllogAttachmentTypeList='.$count_generateCalllogAttachmentTypeList.', '.
             'CalllogTaskTypeList='.$count_generateCalllogTaskTypeList.', '.
+//            'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -2167,6 +2170,40 @@ class ScanAdminController extends AdminController
         return round($count/10);
 
     }
+
+//    public function generateCrnEntryTagsList() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $elements = array(
+////            "Sign out issue",
+////            "Educational",
+////            "Red Book"
+//        );
+//
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $count = 10;
+//        foreach( $elements as $name ) {
+//
+//            $entity = $em->getRepository('AppOrderformBundle:CrnEntryTagsList')->findOneByName($name);
+//            if( $entity ) {
+//                continue;
+//            }
+//
+//            $entity = new CrnEntryTagsList();
+//            $this->setDefaultList($entity,$count,$username,$name);
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//
+//        } //foreach
+//
+//        return round($count/10);
+//
+//    }
 
     public function generateCalllogAttachmentTypeList() {
 

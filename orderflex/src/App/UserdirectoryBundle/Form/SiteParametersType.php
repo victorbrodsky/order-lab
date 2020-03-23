@@ -497,6 +497,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'crnuploadpath' )
+            $builder->add('crnuploadpath',null,array(
+                'label'=>'Crn Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //vacrequploadpath
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacrequploadpath' )
             $builder->add('vacrequploadpath',null,array(

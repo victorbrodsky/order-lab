@@ -418,6 +418,11 @@ class SiteParameters {
      */
     private $callloguploadpath;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $crnuploadpath;
+
     //site titles and messages
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -3144,6 +3149,21 @@ class SiteParameters {
         $this->callloguploadpath = $callloguploadpath;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCrnuploadpath()
+    {
+        return $this->crnuploadpath;
+    }
+
+    /**
+     * @param mixed $crnuploadpath
+     */
+    public function setCrnuploadpath($crnuploadpath)
+    {
+        $this->crnuploadpath = $crnuploadpath;
+    }
 
     /**
      * @return mixed

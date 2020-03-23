@@ -89,12 +89,19 @@ class PatientListHierarchy extends BaseCompositeNode {
      **/
     private $calllogEntryMessages;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="patientLists", cascade={"persist"})
+//     **/
+//    private $crnEntryMessages;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Patient", cascade={"persist"})
      */
     private $patient;
 
 
+
+    
 
     public function __construct() {
         parent::__construct();
@@ -153,6 +160,23 @@ class PatientListHierarchy extends BaseCompositeNode {
     {
         return $this->calllogEntryMessages;
     }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getCrnEntryMessages()
+//    {
+//        return $this->crnEntryMessages;
+//    }
+//
+//    /**
+//     * @param mixed $crnEntryMessages
+//     */
+//    public function setCrnEntryMessages($crnEntryMessages)
+//    {
+//        $this->crnEntryMessages = $crnEntryMessages;
+//    }
+
 
 
 

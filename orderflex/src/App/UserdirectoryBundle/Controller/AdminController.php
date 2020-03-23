@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+use App\CrnBundle\Entity\CrnEntryTagsList;
 use App\FellAppBundle\Entity\FellAppRank;
 use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
@@ -957,6 +958,7 @@ class AdminController extends OrderAbstractController
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
         $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
+        $count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $logger->notice("Finished generateBusinessPurposes");
 
@@ -1067,6 +1069,7 @@ class AdminController extends OrderAbstractController
             'TissueProcessingServiceList='.$count_generateTissueProcessingServiceList.', '.
             'RestrictedServiceList='.$count_generateRestrictedServiceList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
+            'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
             'businessPurposesList='.$count_BusinessPurposesList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
@@ -6848,6 +6851,8 @@ class AdminController extends OrderAbstractController
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
             "additionalcommunications" => array('AdditionalCommunicationList','additionalcommunications-list','Additional Communication List'),
+
+            "crnentrytags" => array('CrnEntryTagsList','crnentrytags-list','Crn Entry Tags List'),
         );
 
         if( $withcustom ) {
@@ -8836,6 +8841,40 @@ class AdminController extends OrderAbstractController
         }
 
         return round($count/10);
+    }
+
+    public function generateCrnEntryTagsList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+//            "Sign out issue",
+//            "Educational",
+//            "Red Book"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('AppOrderformBundle:CrnEntryTagsList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new CrnEntryTagsList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
     }
 
 

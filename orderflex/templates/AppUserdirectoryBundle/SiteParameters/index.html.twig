@@ -39,6 +39,10 @@
     {% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'crn' %}
+    {% set extendStr = "AppCrnBundle/Default/base.html.twig" %}
+{% endif %}
+
 {% if sitename == 'translationalresearch' %}
     {% set extendStr = 'AppTranslationalResearchBundle/Default/base.html.twig' %}
 {% endif %}
@@ -838,6 +842,11 @@
                 <td>{{ entity.callloguploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'callloguploadpath'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Crn Upload Folder (example: crn/documents)</td>
+                <td>{{ entity.crnuploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'crnuploadpath'}) }}">Edit</a></td>
+            </tr>
 
             {#Titles and Messages#}
             <tr>
@@ -994,6 +1003,10 @@
 
     {% if (sitename == "employees" or sitename == "calllog") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'AppUserdirectoryBundle/SiteParameters/calllog-content.html.twig' %}
+    {% endif %}
+
+    {% if (sitename == "employees" or sitename == "crn") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/crn-content.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "translationalresearch") and is_granted('ROLE_TRANSRES_ADMIN') %}

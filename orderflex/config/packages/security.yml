@@ -65,6 +65,14 @@ security:
         ROLE_CALLLOG_DATA_QUALITY: [ROLE_CALLLOG_USER]
         ROLE_CALLLOG_ADMIN: [ROLE_CALLLOG_USER, ROLE_CALLLOG_PATHOLOGY_ATTENDING, ROLE_CALLLOG_PATHOLOGY_RESIDENT, ROLE_CALLLOG_PATHOLOGY_FELLOW, ROLE_CALLLOG_DATA_QUALITY, ROLE_EDITOR]
 
+        #Crn
+        ROLE_CRN_PATHOLOGY_ATTENDING: [ROLE_CRN_USER]
+        ROLE_CRN_PATHOLOGY_RESIDENT: [ROLE_CRN_USER]
+        ROLE_CRN_PATHOLOGY_FELLOW: [ROLE_CRN_USER]
+        ROLE_CRN_DATA_QUALITY: [ROLE_CRN_USER]
+        ROLE_CRN_ADMIN: [ROLE_CRN_USER, ROLE_CRN_PATHOLOGY_ATTENDING, ROLE_CRN_PATHOLOGY_RESIDENT, ROLE_CRN_PATHOLOGY_FELLOW, ROLE_CRN_DATA_QUALITY, ROLE_EDITOR]
+
+
         # Translational Research
         ROLE_TRANSRES_TECHNICIAN_APCP: [ROLE_TRANSRES_USER, ROLE_TRANSRES_TECHNICIAN]
         ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY: [ROLE_TRANSRES_USER, ROLE_TRANSRES_TECHNICIAN]
@@ -113,7 +121,7 @@ security:
         ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_TESTER, ROLE_ALLOWED_TO_SWITCH,
                                     ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN,
                                     ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN,
-                                    ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN,
+                                    ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN, ROLE_CRN_ADMIN,
                                     ROLE_TRANSRES_ADMIN, ROLE_TRANSRES_ADMIN_APCP, ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
@@ -310,6 +318,22 @@ security:
                 lifetime: 28800 # 8 hours in seconds
                 path:     /call-log-book
 #                always_remember_me: true
+
+        ldap_crn_firewall:
+            pattern: ^/critical-result-notifications
+            context: scan_auth
+            switch_user: true
+            guard:
+                authenticator: custom_guard_authenticator
+            logout:
+                path:   /critical-result-notifications/logout
+                target: /critical-result-notifications/login
+            anonymous:  true
+            access_denied_url: /critical-result-notifications/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /critical-result-notifications
 
         ldap_translationalresearch_firewall:
             pattern: ^/translational-research
@@ -511,6 +535,17 @@ security:
        - { path: ^/call-log-book/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/call-log-book/, role: ROLE_CALLLOG_USER }
 #       - { path: ^/call-log-book/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+      ############################## Crn SITE SETTINGS ##############################
+       - { path: ^/critical-result-notifications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/, role: ROLE_CRN_USER }
 
       ############################## TranslationalResearch SITE SETTINGS ##############################
        - { path: ^/translational-research/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }

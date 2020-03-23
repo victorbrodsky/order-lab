@@ -863,6 +863,7 @@ class UserServiceUtil {
             "vacrequploadpath" => "directory/vacreq",
             "transresuploadpath" => "transres/documents",
             "callloguploadpath" => "calllog/documents",
+            "crnuploadpath" => "crn/documents",
 
             "mainHomeTitle" => "Welcome to the O R D E R platform!",
             "listManagerTitle" => "List Manager",
