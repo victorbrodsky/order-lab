@@ -419,6 +419,13 @@ class CallEntryController extends OrderAbstractController
 //        }
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
 
+        $parentPatientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology Call Log Book Lists");
+        if( $parentPatientList ) {
+            $parentPatientListId = $parentPatientList->getId();
+        } else {
+            $parentPatientListId = null;
+        }
+        
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
@@ -433,6 +440,7 @@ class CallEntryController extends OrderAbstractController
             'tasks' => $tasks,
             'attachmentTypesChoice' => $attachmentTypesChoice,
             'defaultCommunication' => $defaultCommunication,
+            'parentPatientListId' => $parentPatientListId,
             //'referringProviderCommunicationChoices' => $referringProviderCommunicationChoices,
             //'defaultAccessionType' => $defaultAccessionType,
             'metaphone' => $metaphone
@@ -563,6 +571,9 @@ class CallEntryController extends OrderAbstractController
         }
 
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
+
+        //filter only CallLog messages
+        $dql->andWhere("calllogEntryMessage IS NOT NULL");
 
         //testing
         //$dql->leftJoin( 'AppOrderformBundle:Message', 'message2', 'WITH', 'message.oid = message2.oid AND message.version > message2.version' );
@@ -1610,7 +1621,11 @@ class CallEntryController extends OrderAbstractController
 //            foreach ($tasks as $task) {
 //                echo "Task: created=".$task->getCreatedBy()."<br>";
 //            }
+//            $crnEntryMessage = $message->getCrnEntryMessage();
+//            echo "crnEntryMessage=".$crnEntryMessage->getId()."<br>";
 //            exit('111');
+
+
 
             $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -3261,6 +3276,7 @@ class CallEntryController extends OrderAbstractController
             $mrntype = null;
             $mrn = null;
             $patientId = null;
+            $titleBody = null;
 
             $title = $messageInfo;
         }

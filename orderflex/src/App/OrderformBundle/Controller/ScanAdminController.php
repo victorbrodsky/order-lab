@@ -210,6 +210,7 @@ class ScanAdminController extends AdminController
         $count_AmendmentReason = $this->generateAmendmentReason();
         $count_PatientListHierarchyGroupType = $this->generatePatientListHierarchyGroupType();
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
+        $count_CrnPatientListHierarchy = $this->generateCrnPatientListHierarchy();
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
         $count_generateMessageStatus = $this->generateMessageStatus();
@@ -250,6 +251,7 @@ class ScanAdminController extends AdminController
             'AmendmentReasons='.$count_AmendmentReason.', '.
             'PatientListHierarchyGroupType='.$count_PatientListHierarchyGroupType.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
+            'CrnPatientListHierarchy='.$count_CrnPatientListHierarchy.', '.
             'EncounterInfoType='.$count_EncounterInfoType.', '.
             'EncounterStatus='.$count_generateEncounterStatus.', '.
             'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
@@ -1201,7 +1203,7 @@ class ScanAdminController extends AdminController
                         'Test' => array(
                         ),
                     ),
-                    'Critical Result Notification' => array(
+                    'Critical Result Notification Entry' => array(
                         //Service level
                         'Dermatopathology' => array(
                             //Issue level
@@ -2392,6 +2394,82 @@ class ScanAdminController extends AdminController
 
         return round($count/10);
     }
+
+    public function generateCrnPatientListHierarchy() {
+
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        //$levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
+
+        $items = array(
+            "Patient Lists",                    //level 0
+            "Weill Cornell",                    //level 1
+            "Pathology CRN Lists",    //level 2
+            "Pathology CRN Complex Patients"   //level 3
+        );
+
+        $count = 10;
+        $level = 0;
+        $parentItem = null;
+        //$item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Weill Cornell");
+
+        //$count = $this->addNestedsetPatientListHierarchy(null,$items,$level,$username,$count);
+
+        foreach( $items as $name ) {
+
+            if( $parentItem ) {
+                $mapper = array(
+                    'prefix' => "App",
+                    'className' => "PatientListHierarchy",
+                    'bundleName' => "OrderformBundle"
+                );
+                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+            } else {
+                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($name);
+            }
+
+            if( $item ) {
+                $level++;
+                $parentItem = $item;
+                continue;
+            }
+
+            //make category
+            $item = new PatientListHierarchy();
+
+            $this->setDefaultList($item,$count,$username,$name);
+            $item->setLevel($level);
+
+            //find org group level
+            $levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+            if( !$levelGroup ) {
+                exit("PatientListHierarchyGroupType not found by level ".$level);
+            }
+
+            $item->setOrganizationalGroupType($levelGroup);
+
+            $level++;
+            $count = $count + 10;
+
+            //add to parent
+            if( $parentItem ) {
+                $em->persist($parentItem);
+                $parentItem->addChild($item);
+            }
+
+            $parentItem = $item;
+
+            //$item->printTree();
+
+            $em->persist($item);
+            $em->flush();
+        }
+        //exit('EOF message category');
+
+        return round($count/10);
+    }
+
 //    public function addNestedsetPatientListHierarchy($parentItem,$items,$level,$username,$count) {
 //
 //        $em = $this->getDoctrine()->getManager();

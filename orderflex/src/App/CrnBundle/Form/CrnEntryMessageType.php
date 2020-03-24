@@ -17,6 +17,7 @@
 
 namespace App\CrnBundle\Form;
 
+use App\CallLogBundle\Form\CalllogTaskType;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
@@ -162,7 +163,7 @@ class CrnEntryMessageType extends AbstractType
         }
 
         //TODO: convert to single task
-        if(0) {
+        if(1) {
             $builder->add('crnTasks', CollectionType::class, array(
                 'entry_type' => CrnTaskType::class,
                 'entry_options' => array(
@@ -183,7 +184,7 @@ class CrnEntryMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\OrderformBundle\Entity\CrnEntryMessage',
+            'data_class' => 'App\CrnBundle\Entity\CrnEntryMessage',
             'form_custom_value' => null,
             'form_custom_value_entity' => null
         ));

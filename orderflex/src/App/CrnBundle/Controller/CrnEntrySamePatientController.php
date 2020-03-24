@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\CrnBundle\Form\CrnFilterType;
 use App\CrnBundle\Form\CrnMessageType;
 use App\CrnBundle\Form\CrnNavbarFilterType;
-use App\OrderformBundle\Entity\CrnEntryMessage;
+use App\CrnBundle\Entity\CrnEntryMessage;
 use App\OrderformBundle\Entity\Encounter;
 use App\OrderformBundle\Entity\EncounterAttendingPhysician;
 use App\OrderformBundle\Entity\EncounterPatfirstname;
@@ -346,10 +346,10 @@ class CrnEntrySamePatientController extends CrnEntryController
         $message = $this->createCrnEntryMessage($user,$permittedInstitutions,$system);
 
         // Create an ArrayCollection of the current Task objects in the database
-//        $originalTasks = new ArrayCollection();
-//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-//            $originalTasks->add($task);
-//        }
+        $originalTasks = new ArrayCollection();
+        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+            $originalTasks->add($task);
+        }
 
         $form = $this->createCrnEntryForm($message,$mrntype,$mrn,$cycle); ///entry/save
 
@@ -402,7 +402,7 @@ class CrnEntrySamePatientController extends CrnEntryController
             }
 
             //process Task sections
-            //$taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks); //Save New Critical Result Notification Entry
+            $taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks); //Save New Critical Result Notification Entry
 
             //process Attached Documents
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCrnEntryMessage()); //Save Critical Result Notification Entry Same Patient

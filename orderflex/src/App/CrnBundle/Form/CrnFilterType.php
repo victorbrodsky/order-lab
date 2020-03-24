@@ -235,10 +235,12 @@ class CrnFilterType extends AbstractType
                 return $er->createQueryBuilder('u')
                     ->where("u.level = 3")
                     ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->andWhere("u.parent = :parentPatientListId")
                     ->orderBy("u.orderinlist","ASC")
                     ->setParameters( array(
                         'typedef' => 'default',
                         'typeadd' => 'user-added',
+                        'parentPatientListId' => $this->params['parentPatientListId'],
                     ));
             },
         ));

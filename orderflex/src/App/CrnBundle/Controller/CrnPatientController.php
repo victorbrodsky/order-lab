@@ -892,7 +892,7 @@ class CrnPatientController extends PatientController {
         $dql->leftJoin("patient.message", "message");
         $dql->leftJoin("message.editorInfos", "editorInfos");
         $dql->leftJoin("message.crnEntryMessage", "crnEntryMessage");
-        $dql->leftJoin("crnEntryMessage.crnTask", "crnTask");
+        $dql->leftJoin("crnEntryMessage.crnTasks", "crnTasks");
 
         $dql->leftJoin("patient.lastname", "lastname");
         $dql->leftJoin("patient.firstname", "firstname");
@@ -903,9 +903,9 @@ class CrnPatientController extends PatientController {
         //$parameters['patientGroup'] = $patientGroup->getId();
 
         $dql->where("crnEntryMessage.id IS NOT NULL");
-        //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTask.statusUpdatedDate >= :hours96Ago");
+        //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago");
 
-        $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTask.statusUpdatedDate >= :hours96Ago";
+        $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago";
         //$andWhere = "message.orderdate >= :hours96Ago";
         $dql->andWhere($andWhere);
 

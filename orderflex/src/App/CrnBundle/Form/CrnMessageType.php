@@ -368,7 +368,7 @@ class CrnMessageType extends AbstractType
 
         ////////////////////////// Specific Orders //////////////////////////
         $builder->add('crnEntryMessage', CrnEntryMessageType::class, array(
-            'data_class' => 'App\OrderformBundle\Entity\CrnEntryMessage',
+            'data_class' => 'App\CrnBundle\Entity\CrnEntryMessage',
             'form_custom_value' => $this->params,
             'form_custom_value_entity' => null,
             'label' => false,

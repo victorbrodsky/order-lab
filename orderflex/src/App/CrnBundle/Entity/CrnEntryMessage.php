@@ -180,17 +180,17 @@ class CrnEntryMessage extends OrderBase {
      **/
     private $entryTags;
 
-//    /**
-//     * Tasks Types. The same as Call Log (Shared List)
-//     *
-//     * @ORM\OneToMany(targetEntity="App\OrderformBundle\Entity\CalllogTask", mappedBy="crnEntryMessage", cascade={"persist"})
-//     **/
-//    private $crnTasks;
     /**
      * Tasks Types. The same as Call Log (Shared List)
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogTask", cascade={"persist"})
+     *
+     * @ORM\OneToMany(targetEntity="App\CrnBundle\Entity\CrnTask", mappedBy="crnEntryMessage", cascade={"persist"})
      **/
-    private $crnTask;
+    private $crnTasks;
+//    /**
+//     * Tasks Types. The same as Call Log (Shared List)
+//     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogTask", cascade={"persist"})
+//     **/
+//    private $crnTask;
 
 
     public function __construct() {
@@ -198,7 +198,7 @@ class CrnEntryMessage extends OrderBase {
         $this->patientLists = new ArrayCollection();
         $this->entryTags = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        //$this->crnTasks = new ArrayCollection();
+        $this->crnTasks = new ArrayCollection();
 
     }
 
@@ -448,38 +448,38 @@ class CrnEntryMessage extends OrderBase {
         $this->crnAttachmentType = $crnAttachmentType;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCrnTask()
-    {
-        return $this->crnTask;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getCrnTask()
+//    {
+//        return $this->crnTask;
+//    }
+//
+//    /**
+//     * @param mixed $crnTask
+//     */
+//    public function setCrnTask($crnTask)
+//    {
+//        $this->crnTask = $crnTask;
+//    }
 
-    /**
-     * @param mixed $crnTask
-     */
-    public function setCrnTask($crnTask)
+    public function addCrnTask($item)
     {
-        $this->crnTask = $crnTask;
+        if( $item && !$this->crnTasks->contains($item) ) {
+            $item->setCrnEntryMessage($this);
+            $this->crnTasks->add($item);
+        }
+        return $this;
     }
-
-//    public function addCrnTask($item)
-//    {
-//        if( $item && !$this->crnTasks->contains($item) ) {
-//            $item->setCrnEntryMessage($this);
-//            $this->crnTasks->add($item);
-//        }
-//        return $this;
-//    }
-//    public function removeCrnTask($item)
-//    {
-//        $this->crnTasks->removeElement($item);
-//    }
-//    public function getCrnTasks()
-//    {
-//        return $this->crnTasks;
-//    }
+    public function removeCrnTask($item)
+    {
+        $this->crnTasks->removeElement($item);
+    }
+    public function getCrnTasks()
+    {
+        return $this->crnTasks;
+    }
 
 
 

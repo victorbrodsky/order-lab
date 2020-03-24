@@ -25,7 +25,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use App\CrnBundle\Form\CrnNavbarFilterType;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\Block;
-use App\OrderformBundle\Entity\CrnEntryMessage;
+use App\CrnBundle\Entity\CrnEntryMessage;
 use App\OrderformBundle\Entity\Encounter;
 use App\OrderformBundle\Entity\EncounterAttendingPhysician;
 use App\OrderformBundle\Entity\EncounterDate;
@@ -1142,17 +1142,17 @@ class CrnUtil
         $event = $event . " [Message Entry ID#" . $message->getMessageOidVersion() . "; Status: " . $message->getMessageStatus()->getName() . "]";
 
         //Tasks Info
-//        $taskInfoArr = array();
-//        foreach( $message->getCrnEntryMessage()->getCrnTasks() as $task ) {
-//            $taskInfoArr[] = $task->getTaskFullInfo();
-//        }
-//        if( count($taskInfoArr) > 0 ) {
-//            $event = $event . "<br><br>" . implode("<br>",$taskInfoArr);
-//        }
-        $crnTask = $message->getCrnEntryMessage()->getCrnTask();
-        if( $crnTask ) {
-            $event = $event . "<br><br>" . implode("<br>",$crnTask->getTaskFullInfo());
+        $taskInfoArr = array();
+        foreach( $message->getCrnEntryMessage()->getCrnTasks() as $task ) {
+            $taskInfoArr[] = $task->getTaskFullInfo();
         }
+        if( count($taskInfoArr) > 0 ) {
+            $event = $event . "<br><br>" . implode("<br>",$taskInfoArr);
+        }
+//        $crnTask = $message->getCrnEntryMessage()->getCrnTask();
+//        if( $crnTask ) {
+//            $event = $event . "<br><br>" . implode("<br>",$crnTask->getTaskFullInfo());
+//        }
 
         //exit('event='.$event);
         return $event;
@@ -1238,12 +1238,13 @@ class CrnUtil
         //patient list currently is level=3
         $level = 3;
 
-        //PatientListHierarchy
-        //AppOrderformBundle
+        $parent = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology CRN Lists");
+
         $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
             array(
                 'type' => array('default','user-added'),
-                'level' => $level
+                'level' => $level,
+                'parent' => $parent->getId()
             )
         );
 
@@ -1599,7 +1600,7 @@ class CrnUtil
 
         if( $message->getId() ) {
             //View the Pathology Critical Result Notification entry 12345 submitted by SubmitterFirstName SubmitterLastName at [submission timestamp] by visiting:
-            $body = $body . $break . $break . "View the Pathology Critical Result Notification entry " . $message->getId() . " submitted on " . $userServiceUtil->getSubmitterInfo($message) . " by visiting:";
+            $body = $body . $break . $break . "View the Critical Result Notification entry " . $message->getId() . " submitted on " . $userServiceUtil->getSubmitterInfo($message) . " by visiting:";
 
             // http://collage.med.cornell.edu/order/crn/entry/view/XXXID
             $messageUrl = $this->container->get('router')->generate(
@@ -1612,7 +1613,7 @@ class CrnUtil
             );
             $body = $body . $break . $messageUrl;
         } else {
-            $body = $body . $break . $break . "The Pathology Critical Result Notification entry submitted on " . $userServiceUtil->getSubmitterInfo($message);
+            $body = $body . $break . $break . "The Critical Result Notification entry submitted on " . $userServiceUtil->getSubmitterInfo($message);
         }
 
         //exit('body='.$body);
@@ -1797,7 +1798,7 @@ class CrnUtil
         //echo "patientList=".$patientList."<br>";
 
         if( !$patientList ) {
-            $patientListName = "Pathology Crn Complex Patients";
+            $patientListName = "Pathology CRN Complex Patients";
 
             //$patientList = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
             $patientList = null;
@@ -1809,7 +1810,7 @@ class CrnUtil
         }
 
         if( !$patientList ) {
-            throw new \Exception( "Location type is not found by name '".$patientListName."'" );
+            throw new \Exception( "Patient list is not found by name '".$patientListName."'" );
         }
         return $patientList;
     }
@@ -2420,7 +2421,7 @@ class CrnUtil
 
 
                 //"During the current week (MM/DD/YYYY to MM/DD/YYYY) you have spent HH:MM on crn activities."
-                $msg = "During the current week ($mondayStr to $sundayDBStr) you have spent $totalTimeSpentMinutesStr on crn activities.";
+                $msg = "During the current week ($mondayStr to $sundayDBStr) you have spent $totalTimeSpentMinutesStr on critical result notification activities.";
             }
         }
 
@@ -2653,7 +2654,7 @@ class CrnUtil
         }
 
         if( !$testing && count($deletedMessageInfos) > 0 ) {
-            $msg = "The following Crn Entry(s) are deleted by ".$cycle." action ".$message->getMessageOidVersion().":<br>".implode("<br>",$deletedMessageInfos);
+            $msg = "The following Critical Result Notification Entry(s) are deleted by ".$cycle." action ".$message->getMessageOidVersion().":<br>".implode("<br>",$deletedMessageInfos);
 
             //Event Log
             $eventType = "Critical Result Notification Entry Deleted";
@@ -2671,7 +2672,7 @@ class CrnUtil
 
         $messageCategory = $userSecUtil->getSiteSettingParameter('messageCategory',$sitename);
         if( !$messageCategory ) {
-            $messageCategory = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
+            $messageCategory = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Critical Result Notification Entry");
         }
 
         return $messageCategory;
@@ -3640,7 +3641,7 @@ class CrnUtil
         $dql->leftJoin("list.objectType", "objectType");
         $dql->leftJoin("list.parent", "parent");
         $dql->leftJoin("parent.parent", "grandParent");
-        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Critical Result Notification Entry'");
+        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Critical Result Notification Entry'");
         $dql->andWhere("list.name = '".$name."'");
         $query = $em->createQuery($dql);
         $sourceTextObjects = $query->getResult();
@@ -3666,7 +3667,7 @@ class CrnUtil
         $dql->leftJoin("list.parent", "parent");
         $dql->leftJoin("parent.parent", "grandParent");
         //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
-        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Critical Result Notification Entry'");
+        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Critical Result Notification Entry'");
         $dql->andWhere("list.name = '".$name."'");
         $query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
@@ -3891,71 +3892,71 @@ class CrnUtil
         return $newDocument;
     }
 
-//    public function processCrnTask($message,$originalTasks) {
-//        // remove the relationship between the CrnEntryMessage and the Task
-//
-////        //testing
-////        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-////            echo "Current task=".$task."<br>";
-////        }
-////        foreach($originalTasks as $task) {
-////            echo "Original task=".$task."<br>";
-////        }
-//
-//        $crnEntryMessage = $message->getCrnEntryMessage();
-//
-//        $taskUpdateArr = array();
+    public function processCrnTask($message,$originalTasks) {
+        // remove the relationship between the CrnEntryMessage and the Task
+
+//        //testing
+//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+//            echo "Current task=".$task."<br>";
+//        }
 //        foreach($originalTasks as $task) {
-//            //if( false === $crnEntryMessage->getCrnTasks()->contains($task) ) {
-//            if( $this->taskExists($task,$crnEntryMessage->getCrnTasks()) === false ) {
-//                //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
-//                $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
-//                // remove the Task from the Tag
-//                $crnEntryMessage->getCrnTasks()->removeElement($task);
-//                // if it was a many-to-one relationship, remove the relationship like this
-//                //$task->setCrnEntryMessage(null);
-//                //$this->em->persist($task);
-//                // if you wanted to delete the Tag entirely, you can also do that
-//                //$this->em->remove($task);
-//            }
+//            echo "Original task=".$task."<br>";
 //        }
-//
-//        //set creator for remaining tasks
-//        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-//        foreach( $crnEntryMessage->getCrnTasks() as $task ) {
-//
-//            //remove empty tasks
-//            if( $task->isEmpty() ) {
-//                $taskUpdateArr[] = "Removed empty (no description) task: ".$task->getTaskFullInfo();
-//                $crnEntryMessage->removeCrnTask($task);
-//                $task->setCrnEntryMessage(NULL);
-//            }
-//
-//            if( !$task->getCreatedBy() ) {
-//                $task->setCreatedBy($user);
-//            }
+
+        $crnEntryMessage = $message->getCrnEntryMessage();
+
+        $taskUpdateArr = array();
+        foreach($originalTasks as $task) {
+            //if( false === $crnEntryMessage->getCrnTasks()->contains($task) ) {
+            if( $this->taskExists($task,$crnEntryMessage->getCrnTasks()) === false ) {
+                //$taskUpdateArr[] = "Removed task ID#".$task->getId().": ".$task->getTaskFullInfo();
+                $taskUpdateArr[] = "Removed task: ".$task->getTaskFullInfo();
+                // remove the Task from the Tag
+                $crnEntryMessage->getCrnTasks()->removeElement($task);
+                // if it was a many-to-one relationship, remove the relationship like this
+                //$task->setCrnEntryMessage(null);
+                //$this->em->persist($task);
+                // if you wanted to delete the Tag entirely, you can also do that
+                //$this->em->remove($task);
+            }
+        }
+
+        //set creator for remaining tasks
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        foreach( $crnEntryMessage->getCrnTasks() as $task ) {
+
+            //remove empty tasks
+            if( $task->isEmpty() ) {
+                $taskUpdateArr[] = "Removed empty (no description) task: ".$task->getTaskFullInfo();
+                $crnEntryMessage->removeCrnTask($task);
+                $task->setCrnEntryMessage(NULL);
+            }
+
+            if( !$task->getCreatedBy() ) {
+                $task->setCreatedBy($user);
+            }
+        }
+
+        $taskUpdateStr = NULL;
+        if( count($taskUpdateArr) > 0 ) {
+            $taskUpdateStr = implode("<br>", $taskUpdateArr);
+        }
+
+//        //testing
+//        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
+//            echo "Final task=".$task."<br>";
 //        }
-//
-//        $taskUpdateStr = NULL;
-//        if( count($taskUpdateArr) > 0 ) {
-//            $taskUpdateStr = implode("<br>", $taskUpdateArr);
-//        }
-//
-////        //testing
-////        foreach($message->getCrnEntryMessage()->getCrnTasks() as $task) {
-////            echo "Final task=".$task."<br>";
-////        }
-//
-//        return $taskUpdateStr;
-//    }
-//    public function taskExists($task,$tasks) {
-//        foreach($tasks as $thisTask) {
-//            if( $thisTask->getId() == $task->getId() ) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+
+        return $taskUpdateStr;
+    }
+    public function taskExists($task,$tasks) {
+        foreach($tasks as $thisTask) {
+            if( $thisTask->getId() == $task->getId() ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public function getTasksInfo( $message ) {
 
@@ -4068,7 +4069,7 @@ class CrnUtil
             $body = $body . '<td colspan='.$colspan1 . ' class="crn-checkbox-checkbox" style="width:2%">' . $status . $updateBtn . $dangerBox . '</td>';
             /////////// EOF Checkbox ///////////
 
-            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:18%">' . '' . $task->getCrnTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:18%">' . '' . $task->getCalllogTaskType() . '</td>';
             $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:80%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';
@@ -4137,7 +4138,7 @@ class CrnUtil
             $status = $status . '>';
             $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass.' style="width:5%">' . $status . '</td>';
 
-            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass.' style="width:20%">' . '' . $task->getCrnTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
             $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass.' style="width:75%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';

@@ -34,7 +34,7 @@ services:
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #security utility
-#    order_security_utility:
+#    order_security_utility: use user_security_utility instead
 #        class: App\OrderformBundle\Util\SecurityUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 

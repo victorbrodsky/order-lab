@@ -98,7 +98,7 @@ class CrnTaskType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\OrderformBundle\Entity\CrnTask',
+            'data_class' => 'App\CrnBundle\Entity\CrnTask',
             'form_custom_value' => null,
         ));
     }

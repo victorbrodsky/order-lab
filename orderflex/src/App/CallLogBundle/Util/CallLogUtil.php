@@ -1234,14 +1234,24 @@ class CallLogUtil
         //patient list currently is level=3
         $level = 3;
 
-        //PatientListHierarchy
-        //AppOrderformBundle
+        $parent = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology Call Log Book Lists");
+        
         $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
             array(
                 'type' => array('default','user-added'),
-                'level' => $level
+                'level' => $level,
+                'parent' => $parent->getId()
             )
         );
+
+        //PatientListHierarchy
+        //AppOrderformBundle
+//        $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
+//            array(
+//                'type' => array('default','user-added'),
+//                'level' => $level
+//            )
+//        );
 
         return $patientLists;
     }
@@ -1805,7 +1815,7 @@ class CallLogUtil
         }
 
         if( !$patientList ) {
-            throw new \Exception( "Location type is not found by name '".$patientListName."'" );
+            throw new \Exception( "Patient list is not found by name '".$patientListName."'" );
         }
         return $patientList;
     }

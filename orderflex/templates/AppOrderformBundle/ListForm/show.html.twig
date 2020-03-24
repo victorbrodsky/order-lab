@@ -28,6 +28,10 @@
 
     <br />
 
+    {% if postPath is not defined %}
+        {% set postPath = null %}
+    {% endif %}
+
     {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'show', postPath, showEditBtn ) }}
 
 {% endblock %}
