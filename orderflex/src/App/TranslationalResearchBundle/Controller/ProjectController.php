@@ -1196,6 +1196,13 @@ class ProjectController extends OrderAbstractController
             $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, "FinalReview");
             //////////// EOF remove the relationship between the review and the project ////////////
 
+//            $currentReviews = $project->getFinalReviews();
+//            foreach( $currentReviews as $currentReview ) {
+//                echo "review=".$currentReview."<br>";
+//                echo "review=".$currentReview->getId()."<br>";
+//            }
+            //exit("After review");
+
             //exit("clickedButton=".$form->getClickedButton()->getName());
 
             //exit('before set state to irb_review');

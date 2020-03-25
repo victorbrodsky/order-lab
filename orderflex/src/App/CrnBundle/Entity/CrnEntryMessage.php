@@ -17,9 +17,9 @@
 
 namespace App\CrnBundle\Entity;
 
+use App\OrderformBundle\Entity\EncounterType;
 use App\OrderformBundle\Entity\MrnType;
 use App\OrderformBundle\Entity\OrderBase;
-use App\OrderformBundle\Form\EncounterType;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;

@@ -759,7 +759,7 @@ class DataQualityController extends CrnEntryController
         //exit("status=".$status);
 
         if( $taskId && $status ) {
-            $task = $this->getDoctrine()->getRepository('AppOrderformBundle:CrnTask')->find($taskId);
+            $task = $this->getDoctrine()->getRepository('AppCrnBundle:CrnTask')->find($taskId);
             //echo "$task=".$task."<br>";
 
             //Convert status to boolean

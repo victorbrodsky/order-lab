@@ -1446,7 +1446,7 @@ class CrnPatientController extends PatientController {
         //////////////// find previous pending tasks ////////////////
 
         $queryParameters = array();
-        $repository = $em->getRepository('AppOrderformBundle:CrnTask');
+        $repository = $em->getRepository('AppCrnBundle:CrnTask');
         $dql = $repository->createQueryBuilder('task');
         $dql->select('task');
 

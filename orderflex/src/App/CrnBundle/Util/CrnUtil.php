@@ -4069,7 +4069,7 @@ class CrnUtil
             $body = $body . '<td colspan='.$colspan1 . ' class="crn-checkbox-checkbox" style="width:2%">' . $status . $updateBtn . $dangerBox . '</td>';
             /////////// EOF Checkbox ///////////
 
-            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:18%">' . '' . $task->getCalllogTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass2.' style="width:18%">' . '' . $task->getCrnTaskType() . '</td>';
             $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass2.' style="width:80%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';
@@ -4138,7 +4138,7 @@ class CrnUtil
             $status = $status . '>';
             $body = $body . '<td colspan='.$colspan1 . ' class='.$tdClass.' style="width:5%">' . $status . '</td>';
 
-            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass.' style="width:20%">' . '' . $task->getCalllogTaskType() . '</td>';
+            $body = $body . '<td colspan='.$colspan2 . ' class='.$tdClass.' style="width:20%">' . '' . $task->getCrnTaskType() . '</td>';
             $body = $body . '<td colspan='.$colspan3 . ' class='.$tdClass.' style="width:75%">' . $task->getDescription() . $taskInfo . '</td>';
 
             $body = $body . '</tr>';

@@ -163,7 +163,9 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% for referringProvider in encounter.referringProviders %}
-                                {{ referringProvider.field.getFullName }}<br>
+                                {% if referringProvider.field %}
+                                    {{ referringProvider.field.getFullName }}<br>
+                                {% endif %}
                             {% endfor %}
                         {% endfor %}
                     </td>
@@ -172,7 +174,9 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% for attendingPhysician in encounter.attendingPhysicians %}
-                                {{ attendingPhysician.field.getFullName }}<br>
+                                {% if attendingPhysician.field %}
+                                    {{ attendingPhysician.field.getFullName }}<br>
+                                {% endif %}
                             {% endfor %}
                         {% endfor %}
                     </td>

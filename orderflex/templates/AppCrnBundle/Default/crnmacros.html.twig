@@ -1051,11 +1051,11 @@
                     <div class="crn-tasks-holder">
                         {#message.messageCategory.crnTasks={{ message.crnEntryMessage.crnTasks|length }}#}
                         {% for crnTask in message.crnEntryMessage.crnTasks %}
-                            {% if crnTask.status is defined %}
-                                {{ formmacros.checkbox(crnTask.status) }}
-                            {% endif %}
-                            {{ formmacros.field(crnTask.crnTaskType) }}
-                            {{ formmacros.field(crnTask.description) }}
+                            {#{% if crnTask.status is defined %}#}
+                                {#{{ formmacros.checkbox(crnTask.status) }}#}
+                            {#{% endif %}#}
+                            {#{{ formmacros.field(crnTask.crnTaskType) }}#}
+                            {#{{ formmacros.field(crnTask.description) }}#}
 
                             {{ crnmacros.taskForm(crnTask, cycle, 'crn-tasks', 'noprototype', sitename, 1) }}
                         {% endfor %}
