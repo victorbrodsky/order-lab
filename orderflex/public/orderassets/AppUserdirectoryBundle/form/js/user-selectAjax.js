@@ -291,12 +291,16 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         }
         //console.log('treeParams='+treeParams);
 
+        //orderformtype (sitename) "calllog, crn, single, multi, transres ..."
+        var orderformtype = $('#orderformtype').val();
+
         //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
         treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid +
             '&bundlename=' + bundleName + '&classname=' + entityName +
             '&opt=' + opt + '&userid=' + userid + '&type='+types +
+            '&orderformtype=' + orderformtype +
             treeParams;
         //console.log('user-selectAjax.js: final treeUrl='+treeUrl);
 

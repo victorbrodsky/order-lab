@@ -19,6 +19,7 @@ namespace App\CrnBundle\Controller;
 
 
 use App\CrnBundle\Entity\CrnSiteParameter;
+use App\CrnBundle\Form\CrnSiteParameterResourceType;
 use App\CrnBundle\Form\CrnSiteParameterType;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,20 +85,22 @@ class CrnSiteParametersController extends SiteParametersController
 
 
     /**
-     * Resources page
+     * Resource page
      *
-     * @Route("/edit-resources/show", name="crn_siteparameters_resources_edit", methods={"GET"})
-     * @Template("AppCrnBundle/SiteParameters/edit.html.twig")
+     * @Route("/edit-resources/show", name="crn_siteparameters_resources_edit", methods={"GET","POST"})
+     * @Template("AppCrnBundle/SiteParameter/resource-edit.html.twig")
      */
     public function editResourcesAction( Request $request )
     {
+        //exit('editResourcesAction');
+
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppCrnBundle:CrnSiteParameter')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -105,7 +108,30 @@ class CrnSiteParametersController extends SiteParametersController
 
         $entity = $entities[0];
 
-        return $this->redirect($this->generateUrl('crn_siteparameters_edit', array('id'=>$entity->getId(),'param'=>'crnResources')));
+        $params = array();
+        $form = $this->createForm(CrnSiteParameterResourceType::class, $entity, array(
+            'form_custom_value' => $params,
+            //'disabled' => $disabled
+        ));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $em->flush();
+
+            return $this->redirectToRoute('crn_resources');
+        }
+
+        //exit('return editResourcesAction');
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'cycle' => "edit",
+            'title' => "Update Critical Result Notification Resources",
+        );
+
+        //return $this->redirect($this->generateUrl('crn_siteparameters_edit', array('id'=>$entity->getId(),'param'=>'crnResources')));
     }
 
 

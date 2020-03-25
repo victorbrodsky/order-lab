@@ -84,7 +84,7 @@ class DefaultController extends OrderAbstractController
 //            );
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository('AppCrnBundle:CrnSiteParameter')->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -92,7 +92,7 @@ class DefaultController extends OrderAbstractController
 
         $entity = $entities[0];
 
-        $resourcesText = $entity->getCrnResources();
+        $resourcesText = $entity->getCrnResource();
 
         return array(
             //'entity' => $entity,

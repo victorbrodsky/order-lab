@@ -55,6 +55,7 @@ class TreeController extends OrderAbstractController {
         $bundleName = trim( $request->get('bundlename') );
         $type = trim( $request->get('type') ); //user-added or default or undefined
         $entityIds = trim( $request->get('entityIds') );
+        $orderformtype = trim( $request->get('orderformtype') ); //similar to sitename (calllog, crn, single, multi, transres ...)
         //$level = trim( $request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
@@ -223,6 +224,17 @@ class TreeController extends OrderAbstractController {
             $dql->andWhere('list.id IN (:entityIds)');
             $entityIdsArr = explode(",",$entityIds);
             $params['entityIds'] = $entityIdsArr;
+        }
+
+        if( $orderformtype ) {
+            if( $orderformtype == 'calllog' ) {
+                $dql->andWhere('list.name != :exceptName');
+                $params['exceptName'] = "Critical Result Notification Entry";
+            }
+            if( $orderformtype == 'crn' ) {
+                $dql->andWhere('list.name != :exceptName');
+                $params['exceptName'] = "Pathology Call Log Entry";
+            }
         }
 
         $query = $em->createQuery($dql);

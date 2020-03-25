@@ -79,6 +79,9 @@ class SecurityController extends OrderAbstractController
         $routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
 
+        //default
+        $sitename = $this->getParameter('employees.sitename');
+
         if( $routename == "employees_login" ) {
             $sitename = $this->getParameter('employees.sitename');
         }
@@ -96,6 +99,9 @@ class SecurityController extends OrderAbstractController
         }
         if( $routename == "calllog_login" ) {
             $sitename = $this->getParameter('calllog.sitename');
+        }
+        if( $routename == "crn_login" ) {
+            $sitename = $this->getParameter('crn.sitename');
         }
         if( $routename == "translationalresearch_login" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
@@ -257,6 +263,10 @@ class SecurityController extends OrderAbstractController
     public function idlelogoutAction( Request $request, $flag = null )
     {
         $routename = $request->get('_route');
+
+        //default
+        $sitename = $this->getParameter('employees.sitename');
+
         if( $routename == "employees_idlelogout" ) {
             $sitename = $this->getParameter('employees.sitename');
         }
@@ -274,6 +284,9 @@ class SecurityController extends OrderAbstractController
         }
         if( $routename == "calllog_idlelogout" ) {
             $sitename = $this->getParameter('calllog.sitename');
+        }
+        if( $routename == "crn_idlelogout" ) {
+            $sitename = $this->getParameter('crn.sitename');
         }
         if( $routename == "translationalresearch_idlelogout" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
