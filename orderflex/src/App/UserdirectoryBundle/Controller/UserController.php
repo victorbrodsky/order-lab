@@ -144,6 +144,10 @@ class UserController extends OrderAbstractController
         //$encoded = $encoder->encodePassword($user, $plainPassword);
         //exit("encoded=[$encoded]");
 
+//        $authUtil = $this->get('authenticator_utility');
+//        $userTest = $authUtil->findUserByUsername('user1_@_local-user');
+//        echo "testUser=".$userTest."<br>";
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

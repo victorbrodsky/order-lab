@@ -562,6 +562,10 @@ class CrnPatientController extends PatientController {
 
             $dql->where("patient.id = ".$patient->getId());
 
+            //filter only CRN messages
+            $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
+            $dql->andWhere("crnEntryMessage IS NOT NULL");
+            
             $query = $em->createQuery($dql);
 
             $messages = $query->getResult();
@@ -1180,6 +1184,7 @@ class CrnPatientController extends PatientController {
         //$dql->addGroupBy('message.version');
 
         $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
         $dql->leftJoin("message.messageCategory","messageCategory");
         $dql->leftJoin("message.provider","provider");
         $dql->leftJoin("message.patient","patient");
@@ -1202,6 +1207,9 @@ class CrnPatientController extends PatientController {
 
         $dql->where('patient.id IN (:patientIds)');
         $queryParameters['patientIds'] = $patientIds;
+
+        //Select only CRN messages
+        $dql->andWhere("crnEntryMessage IS NOT NULL");
 
         //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM AppOrderformBundle:Message WHERE messages.id=message.id)");
 

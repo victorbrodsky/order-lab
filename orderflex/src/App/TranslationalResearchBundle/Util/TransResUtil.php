@@ -953,6 +953,14 @@ class TransResUtil
                 $this->em->remove($originalReview);
             }
         }
+
+//        foreach( $currentReviews as $currentReview ) {
+//            $reviewId = $currentReview->getId();
+//            if( !$reviewId ) {
+//                //$this->em->persist($currentReview);
+//            }
+//        }
+
         return $project;
     }
 //    public function removeReviewsFromProject_ORIG($project, $originalReviews, $currentReviews) {

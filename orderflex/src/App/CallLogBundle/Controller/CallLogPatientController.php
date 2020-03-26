@@ -562,6 +562,10 @@ class CallLogPatientController extends PatientController {
 
             $dql->where("patient.id = ".$patient->getId());
 
+            //filter only CRN messages
+            $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+            $dql->andWhere("calllogEntryMessage IS NOT NULL");
+
             $query = $em->createQuery($dql);
 
             $messages = $query->getResult();
@@ -1180,6 +1184,7 @@ class CallLogPatientController extends PatientController {
         //$dql->addGroupBy('message.version');
 
         $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
         $dql->leftJoin("message.messageCategory","messageCategory");
         $dql->leftJoin("message.provider","provider");
         $dql->leftJoin("message.patient","patient");
@@ -1202,6 +1207,9 @@ class CallLogPatientController extends PatientController {
 
         $dql->where('patient.id IN (:patientIds)');
         $queryParameters['patientIds'] = $patientIds;
+
+        //filter only CRN messages
+        $dql->andWhere("calllogEntryMessage IS NOT NULL"); //list-previous-entries
 
         //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM AppOrderformBundle:Message WHERE messages.id=message.id)");
 
