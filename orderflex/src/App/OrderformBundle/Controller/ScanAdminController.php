@@ -1463,7 +1463,7 @@ class ScanAdminController extends AdminController
 
         $types = array(
             'Call to Pathology',
-//            'Call to Critical Result Notification'
+            'Critical Result Notification'
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -2406,8 +2406,10 @@ class ScanAdminController extends AdminController
         $items = array(
             "Patient Lists",                    //level 0
             "Weill Cornell",                    //level 1
-            "Pathology CRN Lists",    //level 2
-            "Pathology CRN Complex Patients"   //level 3
+            //"Pathology CRN Lists",    //level 2
+            //"Pathology CRN Complex Patients",   //level 3
+            "Critical Result Notification Lists",    //level 2
+            "Patients needing follow-up"    //level 3
         );
 
         $count = 10;

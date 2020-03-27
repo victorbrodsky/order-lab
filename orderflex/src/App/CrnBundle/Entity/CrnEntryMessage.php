@@ -556,7 +556,7 @@ class CrnEntryMessage extends OrderBase {
 
 
     public function __toString() {
-        $res = "Crn Entry Message";
+        $res = "Critical Result Notification Entry Message";
         if( $this->getId() ) {
             $res = $res . " with ID=" . $this->getId();
         }

@@ -499,7 +499,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'crnuploadpath' )
             $builder->add('crnuploadpath',null,array(
-                'label'=>'Crn Upload Folder:',
+                'label'=>'Critical Result Notification Upload Folder:',
                 'attr' => array('class'=>'form-control')
             ));
 

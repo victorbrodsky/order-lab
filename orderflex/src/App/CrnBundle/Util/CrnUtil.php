@@ -1238,7 +1238,7 @@ class CrnUtil
         //patient list currently is level=3
         $level = 3;
 
-        $parent = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology CRN Lists");
+        $parent = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Critical Result Notification Lists");
 
         $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
             array(
@@ -1798,7 +1798,8 @@ class CrnUtil
         //echo "patientList=".$patientList."<br>";
 
         if( !$patientList ) {
-            $patientListName = "Pathology CRN Complex Patients";
+            //$patientListName = "Pathology CRN Complex Patients";
+            $patientListName = "Patients needing follow-up";
 
             //$patientList = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
             $patientList = null;

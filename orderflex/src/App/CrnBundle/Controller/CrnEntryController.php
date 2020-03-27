@@ -419,7 +419,7 @@ class CrnEntryController extends OrderAbstractController
 //        }
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
 
-        $parentPatientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology CRN Lists");
+        $parentPatientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Critical Result Notification Lists");
         if( $parentPatientList ) {
             $parentPatientListId = $parentPatientList->getId();
         } else {
@@ -1377,9 +1377,8 @@ class CrnEntryController extends OrderAbstractController
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
-            //TODO: use "Call to Critical Result Notification"?
-            //set encounter info type to "Call to Pathology"
-            $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
+            //set encounter info type to "Critical Result Notification"
+            $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Critical Result Notification");
             if ($encounterInfoType) {
                 if (count($encounter2->getEncounterInfoTypes()) > 0) {
                     $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);

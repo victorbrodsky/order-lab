@@ -1966,7 +1966,7 @@ function crnSubmitForm(btn,messageStatus) {
     var patientId = holder.find(".patienttype-patient-id").val();
     if( !patientId && (mrn || dob || lastname || firstname || phone || email) ) {
         var confMsg = 'You have entered patient information, but patient has not been found.'+
-            ' The patient info will be discarded and crn entry will not be attached to the patient.' +
+            ' The patient info will be discarded and Critical Result Notification entry will not be attached to the patient.' +
             ' Otherwise, press "Cancel" and then press "Find Patient" button.'+
             ' Are you sure you want to proceed without patient?';
         if( confirm(confMsg) == true ) {
