@@ -25,7 +25,6 @@ use App\CrnBundle\Util\CrnUtil;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
-//use App\OrderformBundle\Entity\CalllogTask;
 use App\OrderformBundle\Entity\Procedure;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -286,13 +285,13 @@ class CrnEntryController extends OrderAbstractController
 
         //child nodes of "Pathology Critical Result Notification Entry"
         //$messageCategoryParent = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
-        $messageCategoriePathCall = $crnUtil->getDefaultMessageCategory();
+        $messageCategoriePathCrn = $crnUtil->getDefaultMessageCategory();
 
         $messageCategories = array();
-        if( $messageCategoriePathCall ) {
-            $messageCategorieDefaultIdStr = $messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId();
+        if( $messageCategoriePathCrn ) {
+            $messageCategorieDefaultIdStr = $messageCategoriePathCrn->getName()."_".$messageCategoriePathCrn->getId();
             
-            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
+            $messageCategories = $messageCategoriePathCrn->printTreeSelectListIncludingThis(true,array("default","user-added"));
 
             /////////// sort alphabetically //////////////
             $sort = true;
@@ -314,7 +313,7 @@ class CrnEntryController extends OrderAbstractController
         //testing
         //print_r($messageCategories);
 
-        //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
+        //$messageCategoriePathCrn = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
         //$node1 = array('id'=>1,'text'=>'node1');
         //$node2 = array('id'=>2,'text'=>'node2');
         //$messageCategories = array($node1,$node2);
@@ -430,7 +429,7 @@ class CrnEntryController extends OrderAbstractController
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
-            //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
+            //'messageCategoryDefault' => $messageCategoriePathCrn->getId(),
             //'mrntype' => $defaultMrnTypeId,
             'mrntypeChoices' => $mrntypeChoices,
             'mrntypeDefault' => $defaultMrnTypeId,
@@ -505,7 +504,7 @@ class CrnEntryController extends OrderAbstractController
                 $redirect = $this->redirect($this->generateUrl('crn_home',
                     array(
                         'filter[messageStatus]' => "All except deleted",
-                        'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
+                        'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCrn->getName()."_".$messageCategoriePathCrn->getId()
                         'filter[mrntype]' => $defaultMrnTypeId,
                         //'filter[metaphone]'=>false
                     )
@@ -956,8 +955,8 @@ class CrnEntryController extends OrderAbstractController
 
         //taskType
         if( $taskType ) {
-            $dql->leftJoin("crnTasks.calllogTaskType","calllogTaskType");
-            $dql->andWhere("calllogTaskType.id = :taskTypeId");
+            $dql->leftJoin("crnTasks.crnTaskType","crnTaskType");
+            $dql->andWhere("crnTaskType.id = :taskTypeId");
             $queryParameters['taskTypeId'] = $taskType->getId();
             $advancedFilter++;
         }
@@ -1378,6 +1377,7 @@ class CrnEntryController extends OrderAbstractController
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
+            //TODO: use "Call to Critical Result Notification"?
             //set encounter info type to "Call to Pathology"
             $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
             if ($encounterInfoType) {
@@ -2241,7 +2241,7 @@ class CrnEntryController extends OrderAbstractController
             $crnEntryMessage->addCrnTask($task);
         }
 //        if( !$crnEntryMessage->getCrnTask() ) {
-//            $task = new CalllogTask($user);
+//            $task = new CrnTask($user);
 //            $crnEntryMessage->setCrnTask($task);
 //        }
 

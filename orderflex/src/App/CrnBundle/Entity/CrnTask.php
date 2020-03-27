@@ -22,8 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-//TODO: test edit tasks: remove all tasks and then add one new task => make sure id is auto-generated.
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="crn_crntask")

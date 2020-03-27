@@ -152,7 +152,7 @@ class CrnEntryMessage extends OrderBase {
      * Attachment Types. The same as Call Log (Shared List)
      *
      * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\CalllogAttachmentTypeList")
-     * @ORM\JoinColumn(name="sex_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="crnattachmenttype_id", referencedColumnName="id", nullable=true)
      */
     private $crnAttachmentType;
 
@@ -556,7 +556,7 @@ class CrnEntryMessage extends OrderBase {
 
 
     public function __toString() {
-        $res = "Call Log Entry Message";
+        $res = "Crn Entry Message";
         if( $this->getId() ) {
             $res = $res . " with ID=" . $this->getId();
         }

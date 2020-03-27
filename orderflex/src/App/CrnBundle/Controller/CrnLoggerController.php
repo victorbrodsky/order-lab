@@ -135,7 +135,7 @@ class CrnLoggerController extends LoggerController
 
         $filter = $request->query->get('filter');
 
-        if( count($filter) > 0 ) {
+        if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];
             $users = $filter['user'];
             $objectTypes = $filter['objectType'];

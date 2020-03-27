@@ -1144,13 +1144,13 @@ class CrnPatientController extends PatientController {
         //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Critical Result Notification Entry"
-        //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
-        $messageCategoriePathCall = $crnUtil->getDefaultMessageCategory();
+        //$messageCategoriePathCrn = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
+        $messageCategoriePathCrn = $crnUtil->getDefaultMessageCategory();
         $messageCategories = array();
-        if( $messageCategoriePathCall ) {
-            //$messageCategories = $messageCategoriePathCall->printTreeSelectList();
+        if( $messageCategoriePathCrn ) {
+            //$messageCategories = $messageCategoriePathCrn->printTreeSelectList();
             //#51: Show them in the same way as the "Message Type" dropdown menu on the homepage shows its values.
-            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
+            $messageCategories = $messageCategoriePathCrn->printTreeSelectListIncludingThis(true,array("default","user-added"));
         }
         //print_r($messageCategories);
 
@@ -1439,13 +1439,13 @@ class CrnPatientController extends PatientController {
         //$template = $this->render('AppUserdirectoryBundle/Profile/edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Critical Result Notification Entry"
-        //$messageCategoriePathCall = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
-        $messageCategoriePathCall = $crnUtil->getDefaultMessageCategory();
+        //$messageCategoriePathCrn = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Pathology Critical Result Notification Entry");
+        $messageCategoriePathCrn = $crnUtil->getDefaultMessageCategory();
         $messageCategories = array();
-        if( $messageCategoriePathCall ) {
-            //$messageCategories = $messageCategoriePathCall->printTreeSelectList();
+        if( $messageCategoriePathCrn ) {
+            //$messageCategories = $messageCategoriePathCrn->printTreeSelectList();
             //#51: Show them in the same way as the "Message Type" dropdown menu on the homepage shows its values.
-            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
+            $messageCategories = $messageCategoriePathCrn->printTreeSelectListIncludingThis(true,array("default","user-added"));
         }
         //print_r($messageCategories);
 

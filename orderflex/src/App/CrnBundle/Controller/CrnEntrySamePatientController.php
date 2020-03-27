@@ -205,6 +205,7 @@ class CrnEntrySamePatientController extends CrnEntryController
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
+            //TODO: use "Call to Critical Result Notification"?
             //set encounter info type to "Call to Pathology"
             $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
             if ($encounterInfoType) {

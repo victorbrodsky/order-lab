@@ -1463,6 +1463,7 @@ class ScanAdminController extends AdminController
 
         $types = array(
             'Call to Pathology',
+//            'Call to Critical Result Notification'
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
