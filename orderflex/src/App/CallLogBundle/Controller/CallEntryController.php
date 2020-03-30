@@ -906,10 +906,11 @@ class CallEntryController extends OrderAbstractController
             }
             $advancedFilter++;
         }
-        
+
+        //echo "initialCommunicationFilter=$initialCommunicationFilter <br>";
         if( $initialCommunicationFilter ) {
             $dql->andWhere("referringProviders.referringProviderCommunication = :referringProviderCommunicationId");
-            $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter->getId();
+            $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter; //$initialCommunicationFilter->getId();
             $advancedFilter++;
         }
 

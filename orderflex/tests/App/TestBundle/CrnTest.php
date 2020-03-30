@@ -166,7 +166,7 @@ class CrnTest extends WebTestBase
         }
 
         //Test view data
-
+        //TODO: check DB if CRN entries are existed.
         $entriesCount = 1;
 
         $links = $crawler->filter('.crn_entry_view_link');
