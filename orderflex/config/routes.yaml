@@ -87,13 +87,13 @@ app_testpage:
     path: /directory/testpage
     defaults:
         _controller: FrameworkBundle:Template:template
-        template:    'AppUserdirectoryBundle:Default:testpage.html.twig'
+        template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
 
 fellapp_instructions:
     path: /fellowship-applications/instructions-to-change-import-interval
     defaults:
         _controller: FrameworkBundle:Template:template
-        template:    'AppFellAppBundle:Instructions:taskSchedulerWindows.html.twig'
+        template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
 
 #login and logout routes
 
