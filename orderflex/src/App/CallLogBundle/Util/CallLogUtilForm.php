@@ -365,9 +365,10 @@ class CallLogUtilForm
         $userSecurityUtil = $this->container->get('user_security_utility');
 
         //Submitter
-        if( $message->getProvider() ) {
-            $providerUrl = $router->generate($sitename . '_showuser', array('id' => $message->getProvider()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-            $hreflink = '<a target="_blank" href="'.$providerUrl.'">'.$message->getProvider()->getUsernameOptimal().'</a>';
+        $submitter = $message->getProvider();
+        if( $submitter ) {
+            $providerUrl = $router->generate($sitename . '_showuser', array('id' => $submitter->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+            $hreflink = '<a target="_blank" href="'.$providerUrl.'">'.$submitter->getUsernameOptimal().'</a>';
             $html .= $this->getTrField("Submitter ", $hreflink);
         }
 

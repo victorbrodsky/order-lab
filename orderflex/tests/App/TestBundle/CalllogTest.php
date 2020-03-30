@@ -409,10 +409,14 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Save Draft")')->count()
         );
+        
+        $rolesCount = $crawler->filter('html:contains("Submitter role(s) at submission time:")')->count()
+            + $crawler->filter('html:contains("Signee role(s) at signature time:")')->count();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Submitter role(s) at submission time:")')->count()
+            $rolesCount
         );
+        
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Finalize and Sign")')->count()

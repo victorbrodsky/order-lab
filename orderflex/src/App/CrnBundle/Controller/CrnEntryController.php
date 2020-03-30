@@ -909,7 +909,7 @@ class CrnEntryController extends OrderAbstractController
         
         if( $initialCommunicationFilter ) {
             $dql->andWhere("referringProviders.referringProviderCommunication = :referringProviderCommunicationId");
-            $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter->getId();
+            $queryParameters['referringProviderCommunicationId'] = $initialCommunicationFilter; //$initialCommunicationFilter->getId();
             $advancedFilter++;
         }
 

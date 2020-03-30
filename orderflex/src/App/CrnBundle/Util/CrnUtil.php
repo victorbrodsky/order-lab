@@ -2499,6 +2499,27 @@ class CrnUtil
         return $date;
     }
 
+    public function getUndeletedMessages() {
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder('message');
+        $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
+
+        $dql->leftJoin("message.messageStatus","messageStatus");
+
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+        $dql->andWhere("crnEntryMessage IS NOT NULL");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'deletedMessageStatus' => "Deleted"
+        ));
+
+        $messages = $query->getResult();
+
+        return $messages;
+    }
+
 
     public function getSubmitterInfoSimpleDate($message) {
         $info = $this->getOrderSimpleDateStr($message);

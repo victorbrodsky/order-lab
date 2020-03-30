@@ -167,9 +167,28 @@ class CrnTest extends WebTestBase
 
         //Test view data
         //TODO: check DB if CRN entries are existed.
-        $entriesCount = 1;
+
+        $crnUtil = $this->testContainer->get('crn_util');
+        $messages = $crnUtil->getUndeletedMessages();
+        //echo "[CRNs=".count($messages)."]";
+
+        if( count($messages) == 0 ) {
+            echo "[CRNs=".count($messages)."=>Stop testHomeAction]";
+            return;
+        }
+
+        if( count($messages) >= 10 ) {
+            $entriesCount = 10;
+        } else {
+            $entriesCount = count($messages);
+        }
+
+        //condition for assertGreaterThan 0
+        $entriesCount = $entriesCount - 1;
+        //echo "[entriesCount=".$entriesCount."]";
 
         $links = $crawler->filter('.crn_entry_view_link');
+
         $this->assertGreaterThan(
             $entriesCount, //we have 10 entries per page
             $links->count()
@@ -412,10 +431,14 @@ class CrnTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Save Draft")')->count()
         );
+
+        $rolesCount = $crawler->filter('html:contains("Submitter role(s) at submission time:")')->count()
+            + $crawler->filter('html:contains("Signee role(s) at signature time:")')->count();
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Submitter role(s) at submission time:")')->count()
+            $rolesCount
         );
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Finalize and Sign")')->count()
