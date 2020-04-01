@@ -227,7 +227,7 @@ class FellAppManagement extends OrderAbstractController {
                 //Event Log
                 $event = "New Fellowship Application Type " . $subspecialtyType->getName() . " has been created by " . $user . ". " . $msg;
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Created');
+                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Created');
 
                 //Flash
                 $this->get('session')->getFlashBag()->add(
@@ -293,7 +293,7 @@ class FellAppManagement extends OrderAbstractController {
             $event = "Fellowship Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
                 " and disabling corresponding roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
 
             //Flash
             $this->get('session')->getFlashBag()->add(
