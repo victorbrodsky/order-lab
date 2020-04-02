@@ -18,7 +18,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
-use App\CrnBundle\Entity\CrnEntryTagsList;
+//use App\CrnBundle\Entity\CrnEntryTagsList;
 use App\FellAppBundle\Entity\FellAppRank;
 use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
@@ -958,7 +958,7 @@ class AdminController extends OrderAbstractController
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
         $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
-        $count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
+        //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $logger->notice("Finished generateBusinessPurposes");
 
@@ -1069,7 +1069,7 @@ class AdminController extends OrderAbstractController
             'TissueProcessingServiceList='.$count_generateTissueProcessingServiceList.', '.
             'RestrictedServiceList='.$count_generateRestrictedServiceList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
-            'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
+            //'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
             'businessPurposesList='.$count_BusinessPurposesList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
@@ -6792,7 +6792,7 @@ class AdminController extends OrderAbstractController
             "1060" => array('LifeFormList','lifeforms-list','Life Form'),
             "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             "1080" => array('SuggestedMessageCategoriesList','suggestedmessagecategorys-list','Suggested Message Categories List'),
-            "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
+            //"1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
             "1100" => array('SpecialtyList','transresprojectspecialties-list','Translational Research Project Specialty List'),
             "1110" => array('ProjectTypeList','transresprojecttypes-list','Translational Research Project Type List'),
             "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Products/Services (Fee Schedule) List'),
@@ -6854,7 +6854,9 @@ class AdminController extends OrderAbstractController
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
             "additionalcommunications" => array('AdditionalCommunicationList','additionalcommunications-list','Additional Communication List'),
 
-            "crnentrytags" => array('CrnEntryTagsList','crnentrytags-list','Crn Entry Tags List'),
+            //"crnentrytags" => array('CrnEntryTagsList','crnentrytags-list','Crn Entry Tags List'),
+            "messagetagtypes" => array('MessageTagTypesList','messagetagtypes-list','Message Tag Types List'),
+            "messagetags" => array('MessageTagsList','messagetags-list','Message Tags List'),
         );
 
         if( $withcustom ) {
@@ -8846,45 +8848,45 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    public function generateCrnEntryTagsList() {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $elements = array(
-            "Follow Up Needed",
-            "Addendum Needed",
-            "Amendment Needed",
-            "Specimen Issue",
-            "Requisition Form Issue",
-            "Patient ID Issue",
-            "Melanoma",
-            "Basal Cell Carcinoma",
-            "Squamous Cell Carcinoma"
-        );
-
-        $username = $this->get('security.token_storage')->getToken()->getUser();
-
-        $count = 10;
-        foreach( $elements as $name ) {
-
-            $entity = $em->getRepository('AppCrnBundle:CrnEntryTagsList')->findOneByName($name);
-            if( $entity ) {
-                continue;
-            }
-
-            $entity = new CrnEntryTagsList();
-            $this->setDefaultList($entity,$count,$username,$name);
-
-            $em->persist($entity);
-            $em->flush();
-
-            $count = $count + 10;
-
-        } //foreach
-
-        return round($count/10);
-
-    }
+//    public function generateCrnEntryTagsList() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $elements = array(
+//            "Follow Up Needed",
+//            "Addendum Needed",
+//            "Amendment Needed",
+//            "Specimen Issue",
+//            "Requisition Form Issue",
+//            "Patient ID Issue",
+//            "Melanoma",
+//            "Basal Cell Carcinoma",
+//            "Squamous Cell Carcinoma"
+//        );
+//
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $count = 10;
+//        foreach( $elements as $name ) {
+//
+//            $entity = $em->getRepository('AppCrnBundle:CrnEntryTagsList')->findOneByName($name);
+//            if( $entity ) {
+//                continue;
+//            }
+//
+//            $entity = new CrnEntryTagsList();
+//            $this->setDefaultList($entity,$count,$username,$name);
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//
+//        } //foreach
+//
+//        return round($count/10);
+//
+//    }
 
 
     //TODO

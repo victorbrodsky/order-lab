@@ -57,12 +57,31 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+//        $builder->add('entryTags', EntityType::class, array(
+//            'class' => 'AppOrderformBundle:MessageTagsList',
+//            'label' => false,
+//            'required' => false,
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox', 'placeholder' => "Entry Tag(s)"),
+//        ));
         $builder->add('entryTags', EntityType::class, array(
-            'class' => 'AppOrderformBundle:CalllogEntryTagsList',
+            'class' => 'AppOrderformBundle:MessageTagsList',
             'label' => false,
             'required' => false,
             'multiple' => true,
             'attr' => array('class' => 'combobox', 'placeholder' => "Entry Tag(s)"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.tagTypes", "tagTypes")
+                    ->andWhere("tagTypes.name = :tagType")
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'tagType' => 'Call Log',
+                    ));
+            },
         ));
 
         //echo "def=".$this->params['messageCategoryDefault']."<br>";

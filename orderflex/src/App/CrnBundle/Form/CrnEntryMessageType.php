@@ -105,13 +105,32 @@ class CrnEntryMessageType extends AbstractType
         });
 
 
-        $builder->add('entryTags', null, array(
-            //'class' => 'AppOrderformBundle:CrnEntryTagsList',
+//        $builder->add('entryTags', null, array(
+//            //'class' => 'AppOrderformBundle:CrnEntryTagsList',
+//            'label' => "Critical Result Notification Entry Tag(s):",
+//            'required' => false,
+//            'multiple' => true,
+//            //'data' => $this->params['mrntype'],
+//            'attr' => array('class' => 'combobox', 'placeholder' => "Critical Result Notification Entry Tag(s)"),
+//        ));
+        $builder->add('entryTags', EntityType::class, array(
+            'class' => 'AppOrderformBundle:MessageTagsList',
             'label' => "Critical Result Notification Entry Tag(s):",
             'required' => false,
             'multiple' => true,
-            //'data' => $this->params['mrntype'],
             'attr' => array('class' => 'combobox', 'placeholder' => "Critical Result Notification Entry Tag(s)"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.tagTypes", "tagTypes")
+                    ->andWhere("tagTypes.name = :tagType")
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'tagType' => 'Critical Result Notifications',
+                    ));
+            },
         ));
 
         $builder->add('timeSpentMinutes', TextType::class, array(

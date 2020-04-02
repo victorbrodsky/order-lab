@@ -104,13 +104,32 @@ class CalllogEntryMessageType extends AbstractType
         });
 
 
-        $builder->add('entryTags', null, array(
-            //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
+//        $builder->add('entryTags', null, array(
+//            //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
+//            'label' => "Call Log Entry Tag(s):",
+//            'required' => false,
+//            'multiple' => true,
+//            //'data' => $this->params['mrntype'],
+//            'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
+//        ));
+        $builder->add('entryTags', EntityType::class, array(
+            'class' => 'AppOrderformBundle:MessageTagsList',
             'label' => "Call Log Entry Tag(s):",
             'required' => false,
             'multiple' => true,
-            //'data' => $this->params['mrntype'],
             'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.tagTypes", "tagTypes")
+                    ->andWhere("tagTypes.name = :tagType")
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'tagType' => 'Call Log',
+                    ));
+            },
         ));
 
         $builder->add('timeSpentMinutes', TextType::class, array(

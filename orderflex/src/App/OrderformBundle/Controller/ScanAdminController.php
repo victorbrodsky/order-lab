@@ -25,7 +25,7 @@ namespace App\OrderformBundle\Controller;
 //use App\CrnBundle\Entity\CrnEntryTagsList;
 use App\OrderformBundle\Entity\AmendmentReasonList;
 use App\OrderformBundle\Entity\CalllogAttachmentTypeList;
-use App\OrderformBundle\Entity\CalllogEntryTagsList;
+//use App\OrderformBundle\Entity\CalllogEntryTagsList;
 use App\OrderformBundle\Entity\CalllogTaskTypeList;
 use App\OrderformBundle\Entity\CourseGroupType;
 use App\OrderformBundle\Entity\DiseaseOriginList;
@@ -37,6 +37,8 @@ use App\OrderformBundle\Entity\EncounterStatusList;
 use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList;
 use App\OrderformBundle\Entity\Magnification;
 use App\OrderformBundle\Entity\MessageStatusList;
+use App\OrderformBundle\Entity\MessageTagsList;
+use App\OrderformBundle\Entity\MessageTagTypesList;
 use App\OrderformBundle\Entity\MessageTypeClassifiers;
 use App\OrderformBundle\Entity\PatientListHierarchy;
 use App\OrderformBundle\Entity\PatientListHierarchyGroupType;
@@ -214,10 +216,14 @@ class ScanAdminController extends AdminController
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
         $count_generateMessageStatus = $this->generateMessageStatus();
-        $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
+        //$count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
         $count_generateCalllogAttachmentTypeList = $this->generateCalllogAttachmentTypeList();
         $count_generateCalllogTaskTypeList = $this->generateCalllogTaskTypeList();
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
+
+        $count_generateMessageTagTypesList = $this->generateMessageTagTypesList();
+        $count_generateMessageTagsList = $this->generateMessageTagsList();
+
 
         $msg =
             'Generated Tables: '.
@@ -256,10 +262,13 @@ class ScanAdminController extends AdminController
             'EncounterStatus='.$count_generateEncounterStatus.', '.
             'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
             'MessageStatus='.$count_generateMessageStatus.', '.
-            'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
+            //'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
             'CalllogAttachmentTypeList='.$count_generateCalllogAttachmentTypeList.', '.
             'CalllogTaskTypeList='.$count_generateCalllogTaskTypeList.', '.
 //            'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
+            'MessageTagTypesList='.$count_generateMessageTagTypesList.', '.
+            'MessageTagsList='.$count_generateMessageTagsList.', '.
+
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -2140,14 +2149,46 @@ class ScanAdminController extends AdminController
 
     }
 
-    public function generateCalllogEntryTagsList() {
+//    public function generateCalllogEntryTagsList() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $elements = array(
+//            "Sign out issue",
+//            "Educational",
+//            "Red Book"
+//        );
+//
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $count = 10;
+//        foreach( $elements as $name ) {
+//
+//            $entity = $em->getRepository('AppOrderformBundle:CalllogEntryTagsList')->findOneByName($name);
+//            if( $entity ) {
+//                continue;
+//            }
+//
+//            $entity = new CalllogEntryTagsList();
+//            $this->setDefaultList($entity,$count,$username,$name);
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//
+//        } //foreach
+//
+//        return round($count/10);
+//
+//    }
+    public function generateMessageTagTypesList() {
 
         $em = $this->getDoctrine()->getManager();
 
         $elements = array(
-            "Sign out issue",
-            "Educational",
-            "Red Book"
+            "Call Log",
+            "Critical Result Notifications"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -2155,13 +2196,64 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:CalllogEntryTagsList')->findOneByName($name);
+            $entity = $em->getRepository('AppOrderformBundle:MessageTagTypesList')->findOneByName($name);
             if( $entity ) {
                 continue;
             }
 
-            $entity = new CalllogEntryTagsList();
+            $entity = new MessageTagTypesList();
             $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+    public function generateMessageTagsList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            //Calllog
+            "Sign out issue"=>"Call Log",
+            "Educational"=>"Call Log",
+            "Red Book"=>"Call Log",
+            //Crn
+            "Follow Up Needed"=>"Critical Result Notifications",
+            "Addendum Needed"=>"Critical Result Notifications",
+            "Amendment Needed"=>"Critical Result Notifications",
+            "Specimen Issue"=>"Critical Result Notifications",
+            "Requisition Form Issue"=>"Critical Result Notifications",
+            "Patient ID Issue"=>"Critical Result Notifications",
+            "Melanoma"=>"Critical Result Notifications",
+            "Basal Cell Carcinoma"=>"Critical Result Notifications",
+            "Squamous Cell Carcinoma"=>"Critical Result Notifications"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $tagName=>$tagType ) {
+
+            $entity = $em->getRepository('AppOrderformBundle:MessageTagsList')->findOneByName($tagName);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new MessageTagsList();
+            $this->setDefaultList($entity,$count,$username,$tagName);
+
+            if( $tagType ) {
+                $type = $em->getRepository('AppOrderformBundle:MessageTagTypesList')->findOneByName($tagType);
+                if ($type) {
+                    $entity->addTagType($type);
+                }
+            }
 
             $em->persist($entity);
             $em->flush();

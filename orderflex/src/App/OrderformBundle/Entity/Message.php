@@ -415,6 +415,17 @@ class Message {
      *      )
      **/
     private $destinations;
+    
+    /**
+     * Message (Entry) Tags. This will replace entryTags in CallogEntryMessage and CrnEntryMessage. This list will have Tag Types
+     *
+     * @ORM\ManyToMany(targetEntity="MessageTagsList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_message_tag",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $entryTags;
 
 
     /**
@@ -550,6 +561,8 @@ class Message {
         $this->backAssociations = new ArrayCollection();
 
         $this->editorInfos = new ArrayCollection();
+        
+        $this->entryTags = new ArrayCollection();
 
         $this->setOrderdate();
 
@@ -1375,6 +1388,22 @@ class Message {
     public function getEditorInfos()
     {
         return $this->editorInfos;
+    }
+
+    public function addEntryTag($item)
+    {
+        if( $item && !$this->entryTags->contains($item) ) {
+            $this->entryTags->add($item);
+        }
+        return $this;
+    }
+    public function removeEntryTag($item)
+    {
+        $this->entryTags->removeElement($item);
+    }
+    public function getEntryTags()
+    {
+        return $this->entryTags;
     }
 
 

@@ -53,6 +53,7 @@ class CalllogEntryMessage extends OrderBase {
     private $patientLists;
 
     /**
+     * TODO: move to the message level, sync DB
      * Call Log Entry Tags
      * @ORM\ManyToMany(targetEntity="CalllogEntryTagsList", inversedBy="calllogEntryMessages" )
      * @ORM\JoinTable(name="scan_calllogEntryMessage_entryTag")

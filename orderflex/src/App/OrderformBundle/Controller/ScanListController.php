@@ -131,6 +131,7 @@ class ScanListController extends ListController
 //* @Route("/principal-investigators/", name="principalinvestigators-list")
 //* @Route("/course-directors/", name="coursedirectors-list")
 //     * @Route("/system-account-request-types/", name="systemaccountrequesttypes-list")
+//@Route("/calllog-entry-tags/", name="calllogentrytags-list", methods={"GET"})
 
 
     /**
@@ -179,10 +180,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/", name="messagestatuses-list", methods={"GET"})
      * @Route("/encounter-info-types/", name="encounterinfotypes-list", methods={"GET"})
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys-list", methods={"GET"})
-     * @Route("/calllog-entry-tags/", name="calllogentrytags-list", methods={"GET"})
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes-list", methods={"GET"})
      * @Route("/calllog-task-types/", name="calllogtasktypes-list", methods={"GET"})
-     * 
+     * @Route("/message-tag-types/", name="messagetagtypes-list", methods={"GET"})
+     * @Route("/message-tags/", name="messagetags-list", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/index.html.twig")
      */
@@ -241,10 +242,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/", name="messagestatuses_create", methods={"POST"})
      * @Route("/encounter-info-types/", name="encounterinfotypes_create", methods={"POST"})
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys_create", methods={"POST"})
-     * @Route("/calllog-entry-tags/", name="calllogentrytags_create", methods={"POST"})
      * @Route("/calllog-attachment-types/", name="calllogattachmenttypes_create", methods={"POST"})
      * @Route("/calllog-task-types/", name="calllogtasktypes_create", methods={"POST"})
-     * 
+     * @Route("/message-tag-types/", name="messagetagtypes_create", methods={"POST"})
+     * @Route("/message-tags/", name="messagetags_create", methods={"POST"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -303,10 +304,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/new", name="messagestatuses_new", methods={"GET"})
      * @Route("/encounter-info-types/new", name="encounterinfotypes_new", methods={"GET"})
      * @Route("/suggested-message-categories/new", name="suggestedmessagecategorys_new", methods={"GET"})
-     * @Route("/calllog-entry-tags/new", name="calllogentrytags_new", methods={"GET"})
      * @Route("/calllog-attachment-types/new", name="calllogattachmenttypes_new", methods={"GET"})
      * @Route("/calllog-task-types/new", name="calllogtasktypes_new", methods={"GET"})
-     * 
+     * @Route("/message-tag-types/new", name="messagetagtypes_new", methods={"GET"})
+     * @Route("/message-tags/new", name="messagetags_new", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -365,10 +366,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_show", methods={"GET"})
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_show", methods={"GET"})
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_show", methods={"GET"})
-     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_show", methods={"GET"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_show", methods={"GET"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show", methods={"GET"})
-     * 
+     * @Route("/message-tag-types/{id}", name="messagetagtypes_show", methods={"GET"})
+     * @Route("/message-tags/{id}", name="messagetags_show", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/show.html.twig")
      */
@@ -427,10 +428,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}/edit", name="messagestatuses_edit", methods={"GET"})
      * @Route("/encounter-info-types/{id}/edit", name="encounterinfotypes_edit", methods={"GET"})
      * @Route("/suggested-message-categories/{id}/edit", name="suggestedmessagecategorys_edit", methods={"GET"})
-     * @Route("/calllog-entry-tags/{id}/edit", name="calllogentrytags_edit", methods={"GET"})
      * @Route("/calllog-attachment-types/{id}/edit", name="calllogattachmenttypes_edit", methods={"GET"})
      * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit", methods={"GET"})
-     * 
+     * @Route("/message-tag-types/{id}/edit", name="messagetagtypes_edit", methods={"GET"})
+     * @Route("/message-tags/{id}/edit", name="messagetags_edit", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -489,10 +490,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_update", methods={"PUT"})
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_update", methods={"PUT"})
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_update", methods={"PUT"})
-     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_update", methods={"PUT"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_update", methods={"PUT"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update", methods={"PUT"})
-     * 
+     * @Route("/message-tag-types/{id}", name="messagetagtypes_update", methods={"PUT"})
+     * @Route("/message-tags/{id}", name="messagetags_update", methods={"PUT"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -693,10 +694,10 @@ class ScanListController extends ListController
             $className = "SuggestedMessageCategoriesList";
             $displayName = "Suggested Message Categories List";
             break;
-        case "calllogentrytags":
-            $className = "CalllogEntryTagsList";
-            $displayName = "Call Log Entry Tags List";
-            break;
+//        case "calllogentrytags":
+//            $className = "CalllogEntryTagsList";
+//            $displayName = "Call Log Entry Tags List";
+//            break;
         case "calllogattachmenttypes":
             $className = "CalllogAttachmentTypeList";
             $displayName = "Call Log Attachment Type List";
@@ -704,6 +705,15 @@ class ScanListController extends ListController
         case "calllogtasktypes":
             $className = "CalllogTaskTypeList";
             $displayName = "Call Log Task Type List";
+            break;
+
+        case "messagetagtypes":
+            $className = "MessageTagTypesList";
+            $displayName = "Message Tag Types List";
+            break;
+        case "messagetags":
+            $className = "MessageTagsList";
+            $displayName = "Message Tags List";
             break;
 
         default:
@@ -770,10 +780,10 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_delete", methods={"DELETE"})
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_delete", methods={"DELETE"})
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_delete", methods={"DELETE"})
-     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_delete", methods={"DELETE"})
      * @Route("/calllog-attachment-types/{id}", name="calllogattachmenttypes_delete", methods={"DELETE"})
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_delete", methods={"DELETE"})
-     * 
+     * @Route("/message-tag-types/{id}", name="messagetagtypes_delete", methods={"DELETE"})
+     * @Route("/message-tags/{id}", name="messagetags_delete", methods={"DELETE"})
      *
      *
      */

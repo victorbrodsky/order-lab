@@ -174,6 +174,7 @@ class CrnEntryMessage extends OrderBase {
     private $patientLists;
 
     /**
+     * TODO: move to the message level, sync DB
      * Crn Entry Tags
      * @ORM\ManyToMany(targetEntity="CrnEntryTagsList", inversedBy="crnEntryMessages" )
      * @ORM\JoinTable(name="crn_crnentrymessage_entrytag")
