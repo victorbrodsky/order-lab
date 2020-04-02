@@ -6841,7 +6841,7 @@ class AdminController extends OrderAbstractController
             "messagestatuses" => array('','-list'),
             "encounterinfotypes" => array('','-list'),
             "suggestedmessagecategorys" => array('','-list'),
-            "calllogentrytags" => array('','-list'),
+            //"calllogentrytags" => array('','-list'),
             "calllogattachmenttypes" => array('','-list'),
             "calllogtasktypes" => array('','-list'),
 
