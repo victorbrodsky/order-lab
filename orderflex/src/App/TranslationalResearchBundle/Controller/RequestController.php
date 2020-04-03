@@ -1460,7 +1460,7 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
-            if ($filterTypeLowerCase == strtolower("All COVID19 Requests") ) {
+            if ($filterTypeLowerCase == strtolower("All COVID-19 Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("covid19");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',

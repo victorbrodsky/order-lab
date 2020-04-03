@@ -1689,8 +1689,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_ADMIN_COVID19" => array(
-                "Translational Research COVID19 Admin",
-                "Full Access for Translational Research COVID19 site",
+                "Translational Research COVID-19 Admin",
+                "Full Access for Translational Research COVID-19 site",
                 90,
                 "translational-research"
             ),
@@ -1708,8 +1708,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19" => array(
-                "Translational Research COVID19 Final Reviewer",
-                "Review for all states for COVID19",
+                "Translational Research COVID-19 Final Reviewer",
+                "Review for all states for COVID-19",
                 80,
                 "translational-research"
             ),
@@ -1727,8 +1727,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_EXECUTIVE_COVID19" => array(
-                "Translational Research COVID19 Executive Committee",
-                "Full View Access for COVID19 Translational Research site",
+                "Translational Research COVID-19 Executive Committee",
+                "Full View Access for COVID-19 Translational Research site",
                 70,
                 "translational-research"
             ),
@@ -1746,8 +1746,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_IRB_REVIEWER_COVID19" => array(
-                "Translational Research COVID19 IRB Reviewer",
-                "COVID19 IRB Review",
+                "Translational Research COVID-19 IRB Reviewer",
+                "COVID-19 IRB Review",
                 50,
                 "translational-research"
             ),
@@ -1765,8 +1765,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_COMMITTEE_REVIEWER_COVID19" => array(
-                "Translational Research COVID19 Committee Reviewer",
-                "COVID19 Committee Review",
+                "Translational Research COVID-19 Committee Reviewer",
+                "COVID-19 Committee Review",
                 50,
                 "translational-research"
             ),
@@ -1784,8 +1784,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_COVID19" => array(
-                "Translational Research COVID19 Primary Committee Reviewer",
-                "COVID19 Committee Review",
+                "Translational Research COVID-19 Primary Committee Reviewer",
+                "COVID-19 Committee Review",
                 50,
                 "translational-research"
             ),
@@ -1803,8 +1803,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_BILLING_ADMIN_COVID19" => array(
-                "Translational Research COVID19 Billing Administrator",
-                "Create, View, Edit and Send an Invoice for Translational Research COVID19 Project",
+                "Translational Research COVID-19 Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research COVID-19 Project",
                 50,
                 "translational-research"
             ),
@@ -1822,8 +1822,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_TECHNICIAN_COVID19" => array(
-                "Translational Research COVID19 Technician",
-                "View and Edit a Translational Research COVID19 Request",
+                "Translational Research COVID-19 Technician",
+                "View and Edit a Translational Research COVID-19 Request",
                 50,
                 "translational-research"
             ),
@@ -1841,8 +1841,8 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
             "ROLE_TRANSRES_REQUESTER_COVID19" => array(
-                "Translational Research COVID19 Project Requester",
-                "Submit, View and Edit a Translational Research COVID19 Project",
+                "Translational Research COVID-19 Project Requester",
+                "Submit, View and Edit a Translational Research COVID-19 Project",
                 30,
                 "translational-research"
             ),
@@ -8748,7 +8748,7 @@ class AdminController extends OrderAbstractController
         $types = array(
             "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp",
-            "COVID19" => "covid19"
+            "COVID" => "covid19"
         );
 
         $count = 10;
