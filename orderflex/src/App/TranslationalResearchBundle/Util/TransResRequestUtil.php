@@ -2593,7 +2593,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid-19 Requests';
+            $filterTypes[] = 'All COVID-19 Requests';
         }
         $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
@@ -2606,7 +2606,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Pending Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid-19 Pending Requests';
+            $filterTypes[] = 'All COVID-19 Pending Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2618,7 +2618,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Active Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid-19 Active Requests';
+            $filterTypes[] = 'All COVID-19 Active Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2630,7 +2630,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Completed Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid-19 Completed Requests';
+            $filterTypes[] = 'All COVID-19 Completed Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2643,7 +2643,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Completed and Notified Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid-19 Completed and Notified Requests';
+            $filterTypes[] = 'All COVID-19 Completed and Notified Requests';
         }
         //$filterTypes[] = '[[hr]]';
 
