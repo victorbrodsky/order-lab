@@ -519,7 +519,7 @@ class TrpTest extends WebTestBase
         //exit("content=$content");
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("COVID19 Project Request")')->count()
+            $crawler->filter('html:contains("COVID-19 Project Request")')->count()
         );
         $this->assertGreaterThan(
             0,
