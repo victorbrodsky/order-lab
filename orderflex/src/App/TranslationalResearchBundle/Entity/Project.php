@@ -1847,7 +1847,7 @@ class Project {
 
 
     /**
-     * "HPID" or "APCPID"
+     * "HPID" or "APCPID" or "COVID"
      * @param string $oid
      */
     public function generateOid()
@@ -1858,6 +1858,11 @@ class Project {
             if( $projectSpecialtyAbbreviation == "hematopathology" ) {
                 //$projectSpecialtyAbbreviation = "HEMEPATH";
                 $projectSpecialtyAbbreviation = "HP";
+            }
+            if( $projectSpecialtyAbbreviation == "covid19" ) {
+                //$projectSpecialtyAbbreviation = "HEMEPATH";
+                //use ShortName for this
+                $projectSpecialtyAbbreviation = "COVID";
             }
             $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
             $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);

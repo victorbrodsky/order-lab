@@ -51,7 +51,7 @@ class SpecialtyList extends ListAbstract
             return "APCP";
         }
         if( $this->getAbbreviation() == "covid19" ) {
-            return "COVID";
+            return "COVID-19";
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
     }
@@ -64,7 +64,7 @@ class SpecialtyList extends ListAbstract
             return "APCP";
         }
         if( $this->getAbbreviation() == "covid19" ) {
-            return "COVID";
+            return "COVID-19";
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
     }

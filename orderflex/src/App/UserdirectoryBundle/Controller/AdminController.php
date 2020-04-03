@@ -8748,7 +8748,7 @@ class AdminController extends OrderAbstractController
         $types = array(
             "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp",
-            "COVID" => "covid19"
+            "COVID-19" => "covid19"
         );
 
         $count = 10;
