@@ -92,9 +92,27 @@ class TranslationalResearchUserController extends UserController
             //$user->addRole("ROLE_TRANSRES_APCP");
             $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
         }
+        if( $otherUserParam == "covid19" ) {
+            //$user->addRole("ROLE_TRANSRES_APCP");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+        }
         if( $otherUserParam == "hematopathology_ap-cp" ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
             $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+        }
+
+        if( $otherUserParam == "hematopathology_ap-cp_covid19" ) {
+            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+        }
+        if( $otherUserParam == "hematopathology_covid19" ) {
+            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+        }
+        if( $otherUserParam == "ap-cp_covid19" ) {
+            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
         }
 
         //$user->addRole("ROLE_TRANSRES_REQUESTER");

@@ -80,7 +80,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
             $specialtyObject = null;
             $specialtyStr = basename($url);
             //echo "specialtyStr=".$specialtyStr."<br>";
-            if( $specialtyStr == "hematopathology" || $specialtyStr == "ap-cp" ) {
+            if( $specialtyStr == "hematopathology" || $specialtyStr == "ap-cp" || $specialtyStr == "covid19" ) {
                 $specialtyObject = $transresUtil->getSpecialtyObject($specialtyStr);
                 $redirectPath = "translationalresearch_project_new";
             } else {

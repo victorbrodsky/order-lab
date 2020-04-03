@@ -487,10 +487,13 @@ class TransResUtil
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19')
         ) {
             return true;
         }
@@ -4998,6 +5001,13 @@ class TransResUtil
             $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
         } else {
             $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
+        }
+
+        $specialtyCovid19Object = $this->getSpecialtyObject("covid19");
+        if( $this->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
+            $projectSpecialtyAllowedArr->add($specialtyCovid19Object);
+        } else {
+            $projectSpecialtyDeniedArr->add($specialtyCovid19Object);
         }
 
         $res = array(

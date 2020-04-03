@@ -2482,7 +2482,8 @@ class TransResRequestUtil
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19')
         ) {
             //Show all invoices filter
             $filterTypes = array(
@@ -2549,6 +2550,7 @@ class TransResRequestUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $allowHema = false;
         $allowAPCP = false;
+        $allowCovid19 = false;
 
         $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
         if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
@@ -2558,6 +2560,11 @@ class TransResRequestUtil
         $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
         if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
             $allowAPCP = true;
+        }
+
+        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
+        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
+            $allowCovid19 = true;
         }
 
         $filterTypes = array(
@@ -2586,6 +2593,9 @@ class TransResRequestUtil
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Requests';
         }
+        if( $allowCovid19 ) {
+            $filterTypes[] = 'All Covid19 Requests';
+        }
         $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
 
@@ -2596,6 +2606,9 @@ class TransResRequestUtil
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Pending Requests';
         }
+        if( $allowCovid19 ) {
+            $filterTypes[] = 'All Covid19 Pending Requests';
+        }
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Active Requests';
@@ -2604,6 +2617,9 @@ class TransResRequestUtil
         }
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Active Requests';
+        }
+        if( $allowCovid19 ) {
+            $filterTypes[] = 'All Covid19 Active Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2614,6 +2630,9 @@ class TransResRequestUtil
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Completed Requests';
         }
+        if( $allowCovid19 ) {
+            $filterTypes[] = 'All Covid19 Completed Requests';
+        }
         $filterTypes[] = '[[hr]]';
 
 
@@ -2623,6 +2642,9 @@ class TransResRequestUtil
         }
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Completed and Notified Requests';
+        }
+        if( $allowCovid19 ) {
+            $filterTypes[] = 'All Covid19 Completed and Notified Requests';
         }
         //$filterTypes[] = '[[hr]]';
 

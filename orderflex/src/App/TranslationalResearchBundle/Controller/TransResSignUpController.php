@@ -22,8 +22,8 @@ class TransResSignUpController extends SignUpController
         $this->siteNameShowuser = 'translationalresearch';
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';
-        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER_APCP', 'ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY');
-        $this->roleAdmins = array('ROLE_TRANSRES_ADMIN_APCP','ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY');
+        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER_APCP', 'ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY', 'ROLE_TRANSRES_REQUESTER_COVID19');
+        $this->roleAdmins = array('ROLE_TRANSRES_ADMIN_APCP','ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY','ROLE_TRANSRES_ADMIN_COVID19');
     }
 
     /**

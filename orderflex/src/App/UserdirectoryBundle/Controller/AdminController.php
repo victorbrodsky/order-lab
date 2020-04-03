@@ -1688,6 +1688,12 @@ class AdminController extends OrderAbstractController
                 90,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_ADMIN_COVID19" => array(
+                "Translational Research COVID19 Admin",
+                "Full Access for Translational Research COVID19 site",
+                90,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
                 "Translational Research AP/CP Final Reviewer",
@@ -1698,6 +1704,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY" => array(
                 "Translational Research Hematopathology Final Reviewer",
                 "Review for all states for Hematopathology",
+                80,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19" => array(
+                "Translational Research COVID19 Final Reviewer",
+                "Review for all states for COVID19",
                 80,
                 "translational-research"
             ),
@@ -1714,6 +1726,12 @@ class AdminController extends OrderAbstractController
                 70,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_EXECUTIVE_COVID19" => array(
+                "Translational Research COVID19 Executive Committee",
+                "Full View Access for COVID19 Translational Research site",
+                70,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_IRB_REVIEWER_APCP" => array(
                 "Translational Research AP/CP IRB Reviewer",
@@ -1724,6 +1742,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_IRB_REVIEWER_HEMATOPATHOLOGY" => array(
                 "Translational Research Hematopathology IRB Reviewer",
                 "Hematopathology IRB Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_IRB_REVIEWER_COVID19" => array(
+                "Translational Research COVID19 IRB Reviewer",
+                "COVID19 IRB Review",
                 50,
                 "translational-research"
             ),
@@ -1740,6 +1764,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER_COVID19" => array(
+                "Translational Research COVID19 Committee Reviewer",
+                "COVID19 Committee Review",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP" => array(
                 "Translational Research AP/CP Primary Committee Reviewer",
@@ -1750,6 +1780,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_HEMATOPATHOLOGY" => array(
                 "Translational Research Hematopathology Primary Committee Reviewer",
                 "Hematopathology Committee Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_COVID19" => array(
+                "Translational Research COVID19 Primary Committee Reviewer",
+                "COVID19 Committee Review",
                 50,
                 "translational-research"
             ),
@@ -1766,6 +1802,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_BILLING_ADMIN_COVID19" => array(
+                "Translational Research COVID19 Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research COVID19 Project",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_TECHNICIAN_APCP" => array(
                 "Translational Research AP/CP Technician",
@@ -1779,6 +1821,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_TECHNICIAN_COVID19" => array(
+                "Translational Research COVID19 Technician",
+                "View and Edit a Translational Research COVID19 Request",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_REQUESTER_APCP" => array(
                 "Translational Research AP/CP Project Requester",
@@ -1789,6 +1837,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY" => array(
                 "Translational Research Hematopathology Project Requester",
                 "Submit, View and Edit a Translational Research Hematopathology Project",
+                30,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_REQUESTER_COVID19" => array(
+                "Translational Research COVID19 Project Requester",
+                "Submit, View and Edit a Translational Research COVID19 Project",
                 30,
                 "translational-research"
             ),
@@ -8693,7 +8747,8 @@ class AdminController extends OrderAbstractController
 
         $types = array(
             "Hematopathology" => "hematopathology",
-            "AP/CP" => "ap-cp"
+            "AP/CP" => "ap-cp",
+            "COVID19" => "covid19"
         );
 
         $count = 10;
@@ -9291,7 +9346,8 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_PRIMARY_REVIEWER",
             "ROLE_TRANSRES_BILLING_ADMIN",
             "ROLE_TRANSRES_HEMATOPATHOLOGY",
-            "ROLE_TRANSRES_APCP"
+            "ROLE_TRANSRES_APCP",
+            "ROLE_TRANSRES_COVID19"
             //"ROLE_TRANSRES_EXECUTIVE_APCP",
             //"ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY"
         );
@@ -9305,6 +9361,7 @@ class AdminController extends OrderAbstractController
             $msg = $msg . "User $user: ";
             $hema = false;
             $apcp = false;
+            $covid19 = false;
             if( $user->hasRole("ROLE_TRANSRES_HEMATOPATHOLOGY") ) {
                 $user->removeRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
                 $msg = $msg . "Remove ROLE_TRANSRES_HEMATOPATHOLOGY role; ";
@@ -9315,8 +9372,13 @@ class AdminController extends OrderAbstractController
                 $msg = $msg . "Remove ROLE_TRANSRES_APCP role; ";
                 $apcp = true;
             }
+            if( $user->hasRole("ROLE_TRANSRES_COVID19") ) {
+                $user->removeRole("ROLE_TRANSRES_COVID19");
+                $msg = $msg . "Remove ROLE_TRANSRES_COVID19 role; ";
+                $covid19 = true;
+            }
 
-            if( $apcp == false && $hema == false ) {
+            if( $apcp == false && $hema == false && $covid19 == false ) {
                 $apcp = true;
             }
 
@@ -9338,7 +9400,11 @@ class AdminController extends OrderAbstractController
                         $user->addRole($role . "_HEMATOPATHOLOGY");
                         $msg = $msg . "Update $role by _HEMATOPATHOLOGY; ";
                     }
-                    if( $apcp || $hema ) {
+                    if( $covid19 ) {
+                        $user->addRole($role . "_COVID19");
+                        $msg = $msg . "Update $role by _COVID19; ";
+                    }
+                    if( $apcp || $hema || $covid19 ) {
                         $user->removeRole($role);
                         $msg = $msg . "###Remove $role###; ";
                     }

@@ -1460,6 +1460,17 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
+            if ($filterTypeLowerCase == strtolower("All COVID19 Requests") ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("covid19");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
+                        'title' => $filterType,
+                    )
+                );
+            }
 
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
             if ($filterTypeLowerCase == strtolower("All Pending Requests") ) {

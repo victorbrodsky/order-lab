@@ -452,6 +452,8 @@ class TrpTest extends WebTestBase
             $transRequest = end($requests);
             $requestId = $transRequest->getId();
 
+            //TODO: check if request has a packing slip PDF
+
             $crawler = $this->client->request('GET', '/translational-research/work-request/download-packing-slip-pdf/'.$requestId);
 
             $this->assertGreaterThan(
