@@ -2238,9 +2238,8 @@ class TransResRequestUtil
             //$from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
         }
 
+        $sellerStr = "";
         if( $invoice->getSalesperson() ) {
-            $sellerStr = "";
-
             $phone = $invoice->getSalesperson()->getSinglePhoneAndPager();
             if( isset($phone['phone']) ) {
                 $from = $from . $newline . "Tel: " .$phone['phone'];
@@ -2594,7 +2593,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid19 Requests';
+            $filterTypes[] = 'All Covid-19 Requests';
         }
         $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
@@ -2607,7 +2606,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Pending Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid19 Pending Requests';
+            $filterTypes[] = 'All Covid-19 Pending Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2619,7 +2618,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Active Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid19 Active Requests';
+            $filterTypes[] = 'All Covid-19 Active Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2631,7 +2630,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Completed Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid19 Completed Requests';
+            $filterTypes[] = 'All Covid-19 Completed Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2644,7 +2643,7 @@ class TransResRequestUtil
             $filterTypes[] = 'All AP/CP Completed and Notified Requests';
         }
         if( $allowCovid19 ) {
-            $filterTypes[] = 'All Covid19 Completed and Notified Requests';
+            $filterTypes[] = 'All Covid-19 Completed and Notified Requests';
         }
         //$filterTypes[] = '[[hr]]';
 
