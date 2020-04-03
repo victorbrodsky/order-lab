@@ -1020,14 +1020,16 @@
             {{ wellLabel|raw }}
         {% endif %}
 
-        {% if person.id %}
+        {% if person and person.id %}
             {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
             {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
             {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}
         {% endif %}
 
-        {{ usermacros.emailPhoneField(person.getSinglePhone,cycle,'phone',"Preferred Phone Number:") }}
-        {{ usermacros.emailPhoneField(person.getSingleEmail,cycle,'email',"Preferred Email:") }}
+        {% if person %}
+            {{ usermacros.emailPhoneField(person.getSinglePhone,cycle,'phone',"Preferred Phone Number:") }}
+            {{ usermacros.emailPhoneField(person.getSingleEmail,cycle,'email',"Preferred Email:") }}
+        {% endif %}
     </div>
     </p>
 {% endmacro %}
