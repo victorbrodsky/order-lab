@@ -48,7 +48,9 @@ class ReminderController extends OrderAbstractController
             $invoiceCounter = 0;
 
             foreach($results as $result) {
-                $invoiceCounter = $invoiceCounter + count($result);
+                if( is_array($result) ) {
+                    $invoiceCounter = $invoiceCounter + count($result);
+                }
             }
 
             //send reminder emails after 6 months overdue every 3 months for 5 times
