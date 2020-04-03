@@ -251,6 +251,23 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        //Disable/Enable new project
+        $builder->add('enableNewProjectOnSelector', null, array(
+            'label' => 'Enable the display the button (project specialty) on the "New Project Request" page (translational-research/project/new):',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('enableNewProjectOnNavbar', null, array(
+            'label' => 'Enable the display the "New Project Request" link in the top Navbar:',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('enableNewProjectAccessPage', null, array(
+            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('emailNoteConcern', null, array(
             'label' => "Translational Research Email Notification Asking To Contact With Concerns:",
             'required' => false,

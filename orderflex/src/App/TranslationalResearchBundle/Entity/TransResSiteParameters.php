@@ -296,6 +296,23 @@ class TransResSiteParameters {
      */
     private $messageToUsers;
 
+    //Disable/Enable new project
+    /**
+     * a) Enable/Disable the display of each button (project category) on the “New Project Request page: https://view.med.cornell.edu/translational-research/project/new
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableNewProjectOnSelector;
+    /**
+     * b) [Separately] Enable/Disable the display of each “New Project Request” link in the top Navbar
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableNewProjectOnNavbar;
+    /**
+     * c) [Separately] Enable/Disable access to each “New Project Request” page URL (this is for users who might bookmark this page and try to return to it)
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableNewProjectAccessPage;
+
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:
      * Please review the deliverables and comments (if any), and if you have any concerns,
@@ -425,6 +442,10 @@ class TransResSiteParameters {
 
         $this->transresLogos = new ArrayCollection();
         $this->transresPackingSlipLogos = new ArrayCollection();
+
+        $this->setEnableNewProjectAccessPage(true);
+        $this->setEnableNewProjectOnNavbar(true);
+        $this->setEnableNewProjectOnSelector(true);
     }
 
 
@@ -1349,6 +1370,56 @@ class TransResSiteParameters {
     {
         $this->messageToUsers = $messageToUsers;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableNewProjectOnSelector()
+    {
+        return $this->enableNewProjectOnSelector;
+    }
+
+    /**
+     * @param mixed $enableNewProjectOnSelector
+     */
+    public function setEnableNewProjectOnSelector($enableNewProjectOnSelector)
+    {
+        $this->enableNewProjectOnSelector = $enableNewProjectOnSelector;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableNewProjectOnNavbar()
+    {
+        return $this->enableNewProjectOnNavbar;
+    }
+
+    /**
+     * @param mixed $enableNewProjectOnNavbar
+     */
+    public function setEnableNewProjectOnNavbar($enableNewProjectOnNavbar)
+    {
+        $this->enableNewProjectOnNavbar = $enableNewProjectOnNavbar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableNewProjectAccessPage()
+    {
+        return $this->enableNewProjectAccessPage;
+    }
+
+    /**
+     * @param mixed $enableNewProjectAccessPage
+     */
+    public function setEnableNewProjectAccessPage($enableNewProjectAccessPage)
+    {
+        $this->enableNewProjectAccessPage = $enableNewProjectAccessPage;
+    }
+
+    
 
 
 

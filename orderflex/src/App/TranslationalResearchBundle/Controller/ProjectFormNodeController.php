@@ -45,7 +45,7 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new", name="translationalresearch_project_new_selector", methods={"GET","POST"})
+     * @Route("/project/formnode/new", name="translationalresearch_project_formnode_new_selector", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      */
     public function newProjectSelectorAction(Request $request)

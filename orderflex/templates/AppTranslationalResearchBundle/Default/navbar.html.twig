@@ -94,10 +94,12 @@
                                 {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                                     {% if specialties|length > 0 %}
                                         {% for specialty in specialties %}
-                                            <li>
-                                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                                >New {{ specialty.getName() }} Project</a>
-                                            </li>
+                                            {% if transres_util.getTransresSiteProjectParameter('enableNewProjectOnNavbar',null,specialty) == true %}
+                                                <li>
+                                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                                    >New {{ specialty.getName() }} Project</a>
+                                                </li>
+                                            {% endif %}
                                         {% endfor %}
                                         {#<hr>#}
                                         <hr style="margin-top: 10px; margin-bottom: 10px;">

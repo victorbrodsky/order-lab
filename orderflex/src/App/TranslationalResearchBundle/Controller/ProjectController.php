@@ -883,12 +883,21 @@ class ProjectController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
+        
+        //Remove specialties with enableNewProjectOnSelector is false
+        $specialtiesFiltered = array();
+        foreach($specialties as $specialty) {
+            //$fieldName, $project=null, $projectSpecialty=null
+            if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
+                $specialtiesFiltered[] = $specialty;
+            }
+        }
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
-            'specialties' => $specialties,
+            'specialties' => $specialtiesFiltered,
             'title' => "Please select the specialty for your project request"
         );
     }
@@ -911,6 +920,11 @@ class ProjectController extends OrderAbstractController
 
         if( false === $transresPermissionUtil->hasProjectPermission('create',null,$specialty) ) {
             //exit('NOT GRANTED: new project '.$specialtyStr);
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //check enableNewProjectAccessPage
+        if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectAccessPage',null,$specialty) !== true ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
