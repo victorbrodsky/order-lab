@@ -44,6 +44,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     private $container;
     private $indexArr = array();
     private $foreignkeyArr = array();
+    private $sequenceArr = array();
     private $counter = 0;
 
     public function setContainer(ContainerInterface $container = null)
@@ -71,9 +72,15 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
                 //echo $foreignkey->getName() . ': ' . ($foreignkey->isUnique() ? 'unique' : 'not unique') . "\n";
                 $this->foreignkeyArr[$foreignkey->getName()] = $table->getName();
             }
+            $sequences = $sm->listSequences($table->getName());
+            foreach ($sequences as $sequence) {
+                //echo $foreignkey->getName() . ': ' . ($foreignkey->isUnique() ? 'unique' : 'not unique') . "\n";
+                $this->sequenceArr[$sequence->getName()] = $table->getName();
+            }
         }
         echo "Found " . count($this->indexArr) . " indexes in " . count($tables) . " tables" . $newline;
         echo "Found " . count($this->foreignkeyArr) . " foreign keys in " . count($tables) . " tables" . $newline;
+        echo "Found " . count($this->sequenceArr) . " sequences in " . count($tables) . " tables" . $newline;
     }
 
 
@@ -95,10 +102,18 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //CREATE SEQUENCE transres_committeereview_id_seq
-//        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
-//            echo $this->counter.":###Ignore2 ".$sql.$newline;
-//            return FALSE;
-//        }
+        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
+            //echo $this->counter.":###Ignore2 ".$sql.$newline;
+            //return FALSE;
+            $sqlArr = explode(" ",$sql);
+            if( count($sqlArr) == 3 ) {
+                //We need the index 3
+                $sqlIndex = $sqlArr[2];
+                if( !$this->indexExistsSimple($sqlIndex) ) {
+                    return FALSE;
+                }
+            }
+        }
 
         //Case: DROP INDEX idx_d267b39c33f7837
         if( strpos($sql, 'DROP INDEX ') !== false ) {
@@ -164,6 +179,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         if( strpos($sqlIndex, 'FK_') !== false || strpos($sqlIndex, 'fk_') !== false ) {
             $processArr = $this->foreignkeyArr;
             $name = "foreign key";
+        }
+        if( strpos($sqlIndex, '_id_seq') !== false ) {
+            $processArr = $this->sequenceArr;
+            $name = "sequence";
         }
 
         //echo "processArr count=".count($processArr).$newline;

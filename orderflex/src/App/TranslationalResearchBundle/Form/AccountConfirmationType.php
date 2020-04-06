@@ -59,7 +59,7 @@ class AccountConfirmationType extends AbstractType
             'label'=>'Administrative',
             'fullClassName'=>'App\UserdirectoryBundle\Entity\AdministrativeTitle',
             'formname'=>'administrativetitletype',
-            'cycle'=>$this->cycle
+            'cycle'=>$this->params['cycle'] //$this->cycle
         );
         $params = array_merge($this->params, $params);
         $builder->add('administrativeTitles', CollectionType::class, array(
