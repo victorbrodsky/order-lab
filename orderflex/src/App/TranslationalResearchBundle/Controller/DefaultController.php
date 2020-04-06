@@ -79,7 +79,8 @@ class DefaultController extends OrderAbstractController
         $originalname = "human_tissue_request_form.pdf";
         $abspath = "";
 
-        $abspath = "bundles\\olegtranslationalresearch\\downloads\\".$originalname;
+        //orderassets\AppTranslationalResearchBundle\downloads
+        $abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;
 
         $size = null;//$document->getSize();
 
