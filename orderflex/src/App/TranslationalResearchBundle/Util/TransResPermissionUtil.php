@@ -364,14 +364,17 @@ class TransResPermissionUtil
             $specialtyStr = $projectSpecialtyObject->getUppercaseName(true);
             $specialtyStr = "_" . $specialtyStr;
         }
-        //echo "specialtyStr=$specialtyStr; action=$action<br>";
+        echo "specialtyStr=$specialtyStr; action=$action<br>";
 
-//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
-//            echo "2covid role is OK <br>";
-//        }
-//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
-//            echo "2apcp role is OK <br>";
-//        }
+        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+            echo "[ROLE_TRANSRES_REQUESTER".$specialtyStr . "] role is OK <br>";
+        }
+        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+            echo "2covid role is OK <br>";
+        }
+        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+            echo "2apcp role is OK <br>";
+        }
 
         if( $action == "create" ) {
             $done = true;
