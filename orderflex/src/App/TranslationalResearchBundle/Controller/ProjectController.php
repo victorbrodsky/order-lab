@@ -915,6 +915,18 @@ class ProjectController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        //testing
+//        $roles = $user->getRoles();
+//        foreach( $roles as $role ) {
+//            echo "role=$role <br>";
+//        }
+//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+//            echo "covid role is OK <br>";
+//        }
+//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+//            echo "apcp role is OK <br>";
+//        }
+
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 

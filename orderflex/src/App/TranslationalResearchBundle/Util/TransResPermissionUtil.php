@@ -356,14 +356,22 @@ class TransResPermissionUtil
 
         $specialtyStr = null;
         if( $project ) {
-            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName(true);
             $specialtyStr = "_" . $specialtyStr;
         }
 
         if( !$project && $projectSpecialtyObject ) {
-            $specialtyStr = $projectSpecialtyObject->getUppercaseName();
+            $specialtyStr = $projectSpecialtyObject->getUppercaseName(true);
             $specialtyStr = "_" . $specialtyStr;
         }
+        //echo "specialtyStr=$specialtyStr; action=$action<br>";
+
+//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+//            echo "2covid role is OK <br>";
+//        }
+//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+//            echo "2apcp role is OK <br>";
+//        }
 
         if( $action == "create" ) {
             $done = true;
@@ -374,6 +382,8 @@ class TransResPermissionUtil
                 $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
             ) {
                 return true;
+            } else {
+                //echo "No creator role <br>";
             }
         }
 
