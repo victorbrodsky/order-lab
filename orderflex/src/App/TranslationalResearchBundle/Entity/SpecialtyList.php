@@ -43,7 +43,7 @@ class SpecialtyList extends ListAbstract
     protected $original;
 
 
-    public function getUppercaseName($clean=false) {
+    public function getUppercaseName() {
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "HEMATOPATHOLOGY";
         }
@@ -51,10 +51,11 @@ class SpecialtyList extends ListAbstract
             return "APCP";
         }
         if( $this->getAbbreviation() == "covid19" ) {
-            $name = "COVID-19";
-            if( $clean ) {
-                $name = "COVID19"; //$clean is used for roles "_COVID19"
-            }
+//            $name = "COVID-19";
+//            if( $clean ) {
+//                $name = "COVID19"; //$clean is used for roles "_COVID19"
+//            }
+            $name = "COVID19"; //$clean is used for roles "_COVID19"
             return $name;
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());

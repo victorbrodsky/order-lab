@@ -356,12 +356,12 @@ class TransResPermissionUtil
 
         $specialtyStr = null;
         if( $project ) {
-            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName(true);
+            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
             $specialtyStr = "_" . $specialtyStr;
         }
 
         if( !$project && $projectSpecialtyObject ) {
-            $specialtyStr = $projectSpecialtyObject->getUppercaseName(true);
+            $specialtyStr = $projectSpecialtyObject->getUppercaseName();
             $specialtyStr = "_" . $specialtyStr;
         }
 //        echo "specialtyStr=$specialtyStr; action=$action<br>";
