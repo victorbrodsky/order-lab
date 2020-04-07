@@ -1471,7 +1471,8 @@ class CallLogPatientController extends PatientController {
 
         //echo "patientIds=$patientIds <br>";
         $dql->where('patient.id IN (:patientIds)');
-        $queryParameters['patientIds'] = $patientIds;
+        //$queryParameters['patientIds'] = $patientIds;
+        $queryParameters['patientIds'] = $patientIdArr; //use array for IN()
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("task.status IS NULL OR task.status = false");

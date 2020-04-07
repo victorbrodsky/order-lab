@@ -55,7 +55,7 @@ class SpecialtyList extends ListAbstract
 //            if( $clean ) {
 //                $name = "COVID19"; //$clean is used for roles "_COVID19"
 //            }
-            $name = "COVID19"; //$clean is used for roles "_COVID19"
+            $name = "COVID19"; //clean name is used for roles "_COVID19"
             return $name;
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());

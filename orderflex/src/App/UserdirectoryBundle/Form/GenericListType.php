@@ -902,6 +902,16 @@ class GenericListType extends AbstractType
 
         }
 
+        if( method_exists($this->params['entity'],'getTagTypes') ) {
+            $builder->add('tagTypes', EntityType::class, array(
+                'class' => 'AppOrderformBundle:MessageTagTypesList',
+                'label'=>'Tag Type(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+
 
 
     }

@@ -1740,6 +1740,32 @@ class TransResUtil
         return null;
     }
 
+    //Testing (Not Used): Trying to overwrite the workflow for COVID19: committee_review => irb_review => admin_review => final_review
+    //Second approach: create a separate transitions workflow for covid19
+    public function getProjectEnabledTransitions($project) {
+        $workflow = $this->container->get('state_machine.transres_project');
+        $transresUtil = $this->container->get('transres_util');
+        if( $project->getProjectSpecialty()->getAbbreviation() == "covid19" ) {
+            $transitions = $workflow->getEnabledTransitions($project);
+            if( count($transitions) == 1 ) {
+                $transition = $transitions[0];
+                $transitionName = $transition->getName();
+                if( $transitionName == "irb_review" ) {
+                    $transitionName = "admin_review_approved";
+                    $transition = $transresUtil->getTransitionByName($project, $transitionName);
+                    return array($transition);
+                }
+                if( $transitionName == "committee_review" ) {
+                    $transitionName = "to_review";
+                    $transition = $transresUtil->getTransitionByName($project, $transitionName);
+                    return array($transition);
+                }
+            }
+        } else {
+            return $workflow->getEnabledTransitions($project);
+        }
+    }
+
     //NOT USED
 //    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
 //

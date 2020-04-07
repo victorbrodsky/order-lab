@@ -948,6 +948,11 @@
         {{ formmacros.field(form.fromEmail) }}
     {% endif %}
 
+    {#Tag Types#}
+    {% if form.tagTypes is defined %}
+        {{ formmacros.field(form.tagTypes) }}
+    {% endif %}
+
     {#AntibodyList#}
     {% if form.igconcentration is defined %}
         <div id="form-prototype-data"

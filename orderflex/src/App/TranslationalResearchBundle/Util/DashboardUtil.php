@@ -1642,6 +1642,16 @@ class DashboardUtil
 //            $this->quantityLimit = $quantityLimit;
 //        }
 
+        if( !$startDate ) {
+            //set to 1900
+            $startDate = "01/01/1900"; //10/31/2017 to DateTime
+        }
+        if( !$endDate ) {
+            //set to today
+            $now = new \DateTime('now');
+            $endDate = $now->format('m/d/Y');
+        }
+
         //echo "start=".$startDate."<br>";
         //echo "end=".$endDate."<br>";
 
