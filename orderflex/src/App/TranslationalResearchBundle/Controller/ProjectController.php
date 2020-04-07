@@ -104,6 +104,18 @@ class ProjectController extends OrderAbstractController
         $routeName = $request->get('_route');
         $title = "Project Requests";
 
+        //testing
+        $roles = $user->getRoles();
+        foreach( $roles as $role ) {
+            echo "role=$role <br>";
+        }
+        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+            echo "covid role is OK <br>";
+        }
+        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+            echo "apcp role is OK <br>";
+        }
+
         if( $routeName == "translationalresearch_project_index" ) {
             if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
                 if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
