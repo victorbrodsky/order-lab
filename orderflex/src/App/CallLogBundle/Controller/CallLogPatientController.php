@@ -1117,11 +1117,11 @@ class CallLogPatientController extends PatientController {
         foreach( $mergedPatients as $mergedPatient ) {
             $patientIdArr[] = $mergedPatient->getId();
         }
-        if( count($patientIdArr) > 0 ) {
-            $patientIds = implode(",", $patientIdArr);
-        } else {
-            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
-        }
+//        if( count($patientIdArr) > 0 ) {
+//            $patientIds = implode(",", $patientIdArr);
+//        } else {
+//            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+//        }
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
@@ -1206,7 +1206,8 @@ class CallLogPatientController extends PatientController {
         //$queryParameters['patientId'] = $patientid;
 
         $dql->where('patient.id IN (:patientIds)');
-        $queryParameters['patientIds'] = $patientIds;
+        //$queryParameters['patientIds'] = $patientIds;
+        $queryParameters['patientIds'] = $patientIdArr;
 
         //filter only CRN messages
         $dql->andWhere("calllogEntryMessage IS NOT NULL"); //list-previous-entries
@@ -1412,11 +1413,11 @@ class CallLogPatientController extends PatientController {
         foreach( $mergedPatients as $mergedPatient ) {
             $patientIdArr[] = $mergedPatient->getId();
         }
-        if( count($patientIdArr) > 0 ) {
-            $patientIds = implode(",", $patientIdArr);
-        } else {
-            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
-        }
+//        if( count($patientIdArr) > 0 ) {
+//            $patientIds = implode(",", $patientIdArr);
+//        } else {
+//            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+//        }
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
