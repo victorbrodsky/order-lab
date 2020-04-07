@@ -53,7 +53,7 @@ class SpecialtyList extends ListAbstract
         if( $this->getAbbreviation() == "covid19" ) {
             $name = "COVID-19";
             if( $clean ) {
-                $name = "COVID19";
+                $name = "COVID19"; //$clean is used for roles "_COVID19"
             }
             return $name;
         }
