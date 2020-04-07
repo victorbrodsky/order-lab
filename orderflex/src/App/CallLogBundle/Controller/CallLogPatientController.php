@@ -1207,7 +1207,7 @@ class CallLogPatientController extends PatientController {
 
         $dql->where('patient.id IN (:patientIds)');
         //$queryParameters['patientIds'] = $patientIds;
-        $queryParameters['patientIds'] = $patientIdArr;
+        $queryParameters['patientIds'] = $patientIdArr; //use array for IN()
 
         //filter only CRN messages
         $dql->andWhere("calllogEntryMessage IS NOT NULL"); //list-previous-entries

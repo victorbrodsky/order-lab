@@ -3306,6 +3306,7 @@ class VacReqUtil
 
         $idsStr = implode(",", $idArr);
         if( $idsStr ) {
+            //exit("idsStr=".$idsStr);
             $dql->andWhere("institution.id IN (" . $idsStr . ") ");
         }
 

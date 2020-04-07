@@ -1117,11 +1117,11 @@ class CrnPatientController extends PatientController {
         foreach( $mergedPatients as $mergedPatient ) {
             $patientIdArr[] = $mergedPatient->getId();
         }
-        if( count($patientIdArr) > 0 ) {
-            $patientIds = implode(",", $patientIdArr);
-        } else {
-            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
-        }
+//        if( count($patientIdArr) > 0 ) {
+//            $patientIds = implode(",", $patientIdArr);
+//        } else {
+//            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+//        }
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
@@ -1206,7 +1206,7 @@ class CrnPatientController extends PatientController {
         //$queryParameters['patientId'] = $patientid;
 
         $dql->where('patient.id IN (:patientIds)');
-        $queryParameters['patientIds'] = $patientIds;
+        $queryParameters['patientIds'] = $patientIdArr; //$patientIds;
 
         //Select only CRN messages
         $dql->andWhere("crnEntryMessage IS NOT NULL");
@@ -1412,11 +1412,11 @@ class CrnPatientController extends PatientController {
         foreach( $mergedPatients as $mergedPatient ) {
             $patientIdArr[] = $mergedPatient->getId();
         }
-        if( count($patientIdArr) > 0 ) {
-            $patientIds = implode(",", $patientIdArr);
-        } else {
-            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
-        }
+//        if( count($patientIdArr) > 0 ) {
+//            $patientIds = implode(",", $patientIdArr);
+//        } else {
+//            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+//        }
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
@@ -1471,7 +1471,7 @@ class CrnPatientController extends PatientController {
 
         //echo "patientIds=$patientIds <br>";
         $dql->where('patient.id IN (:patientIds)');
-        $queryParameters['patientIds'] = $patientIds;
+        $queryParameters['patientIds'] = $patientIdArr; //$patientIds;
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("task.status IS NULL OR task.status = false");
