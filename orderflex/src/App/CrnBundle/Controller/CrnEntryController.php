@@ -2149,6 +2149,12 @@ class CrnEntryController extends OrderAbstractController
         $defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
         $showAccession = $userSecUtil->getSiteSettingParameter('showAccession',$sitename);
 
+        $defaultTagTypeId = NULL;
+        $defaultTagType = $userSecUtil->getSiteSettingParameter('defaultTagType',$sitename);
+        if( $defaultTagType ) {
+            $defaultTagTypeId = $defaultTagType->getId();
+        }
+
         $params = array(
             'cycle' => $cycle,  //'new',
             'user' => $user,
@@ -2170,7 +2176,8 @@ class CrnEntryController extends OrderAbstractController
             'readonlyLocationType' => true, //lock the "Location Type" field (with the default "Encounter Location" value in it)
             'enableDocumentUpload' => $enableDocumentUpload,
             'defaultAccessionType' => $defaultAccessionType,
-            'showAccession' => $showAccession
+            'showAccession' => $showAccession,
+            'defaultTagType' => $defaultTagTypeId
             //'user_security_utility' => $this->get('user_security_utility')
             //'accessiontypes' => $accessiontypes
         );

@@ -924,7 +924,13 @@
         <div id="crn-EntryTags" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {{ formmacros.field(message.crnEntryMessage.entryTags) }}
+                {% if message.entryTags is defined %}
+                    {{ formmacros.field(message.entryTags) }}
+                {% endif %}
+                {% if message.crnEntryMessage.entryTags is defined %}
+                    {{ formmacros.field(message.crnEntryMessage.entryTags) }}
+                {% endif %}
+
                 {{ formmacros.field(message.crnEntryMessage.timeSpentMinutes) }}
 
             </div> <!-- panel-body -->

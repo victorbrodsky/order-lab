@@ -157,6 +157,11 @@ class CalllogSiteParameter
      */
     private $showAccessionHome;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageTagTypesList", cascade={"persist"})
+     */
+    private $defaultTagType;
+
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -466,6 +471,22 @@ class CalllogSiteParameter
     public function setShowAccessionHome($showAccessionHome)
     {
         $this->showAccessionHome = $showAccessionHome;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultTagType()
+    {
+        return $this->defaultTagType;
+    }
+
+    /**
+     * @param mixed $defaultTagType
+     */
+    public function setDefaultTagType($defaultTagType)
+    {
+        $this->defaultTagType = $defaultTagType;
     }
 
     

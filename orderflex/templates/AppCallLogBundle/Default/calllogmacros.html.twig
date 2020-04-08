@@ -924,7 +924,12 @@
         <div id="calllog-EntryTags" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                {{ formmacros.field(message.calllogEntryMessage.entryTags) }}
+                {% if message.entryTags is defined %}
+                    {{ formmacros.field(message.entryTags) }}
+                {% endif %}
+                {% if message.calllogEntryMessage.entryTags is defined %}
+                    {{ formmacros.field(message.calllogEntryMessage.entryTags) }}
+                {% endif %}
                 {{ formmacros.field(message.calllogEntryMessage.timeSpentMinutes) }}
 
             </div> <!-- panel-body -->

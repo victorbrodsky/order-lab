@@ -80,6 +80,8 @@
 
                 {{ formmacros.field(form.crnResource) }}
 
+                {{ formmacros.field(form.defaultTagType) }}
+
                 {% if cycle == "show" %}
                     <p>
                         <a class="btn btn-primary" href="{{ path('crn_siteparameters_edit_specific_site_parameters') }}">Edit</a>

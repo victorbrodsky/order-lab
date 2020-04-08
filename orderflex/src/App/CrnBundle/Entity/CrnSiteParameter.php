@@ -162,7 +162,11 @@ class CrnSiteParameter
      */
     private $crnResource;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageTagTypesList", cascade={"persist"})
+     */
+    private $defaultTagType;
+    
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -488,6 +492,22 @@ class CrnSiteParameter
     public function setCrnResource($crnResource)
     {
         $this->crnResource = $crnResource;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultTagType()
+    {
+        return $this->defaultTagType;
+    }
+
+    /**
+     * @param mixed $defaultTagType
+     */
+    public function setDefaultTagType($defaultTagType)
+    {
+        $this->defaultTagType = $defaultTagType;
     }
 
     

@@ -148,6 +148,21 @@ class CrnSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('defaultTagType', null, array(
+            'label' => 'Default Tag Type:',
+            'required' => false,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
         //state
 //        $stateArray = array(
 //            'class' => 'AppUserdirectoryBundle:States',

@@ -714,4 +714,39 @@ class DefaultController extends OrderAbstractController
 //        return NULL;
 //    }
 
+
+    /**
+     * 127.0.0.1/order/call-log-book/update-entry-tags
+     *
+     * @Route("/update-entry-tags", name="calllog_update_entry_tags")
+     */
+    public function updateEntryTagAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $calllogUtil = $this->get('calllog_util');
+        $res = null;
+
+        //Copy entry tags from CalllogEntryMessage->entryTags => Message->entryTags
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppOrderformBundle:CalllogEntryMessage');
+        $dql =  $repository->createQueryBuilder("calllogMessage");
+        $dql->select('calllogMessage');
+        $dql->leftJoin("calllogMessage.entryTags", "entryTag");
+        $dql->where("entryTags IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+
+        $calllogMessages = $query->getResult();
+        echo "calllogMessages=".count($calllogMessages)."<br>";
+
+
+        exit("EOF updateEntryTagAction. Res=" . $res);
+
+
+    }
+
 }
