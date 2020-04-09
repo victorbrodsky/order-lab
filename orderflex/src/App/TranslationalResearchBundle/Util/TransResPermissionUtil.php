@@ -58,7 +58,7 @@ class TransResPermissionUtil
 
         //check if the user is
         // technologists (ROLE_TRANSRES_TECHNICIAN)/sys admin/platform admin/deputy platform admin/executive committee member/default reviewers
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive($project) ) {
             return true;
         }
 
@@ -393,10 +393,18 @@ class TransResPermissionUtil
         if( $action == "update" || $action == "edit" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+                //|| $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
             ) {
                 return true;
+            }
+
+            //check if the user is a ROLE_TRANSRES_PRIMARY_REVIEWER of this project
+            if( $project ) {
+                $user = $this->secTokenStorage->getToken()->getUser();
+                if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
+                    return true;
+                }
             }
 
             //if( $transresUtil->isProjectEditableByRequester($project,false) ) {
@@ -428,10 +436,18 @@ class TransResPermissionUtil
             }
 
             if(
-                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+                //|| $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
             ) {
                 return true;
+            }
+
+            //check if the user is a ROLE_TRANSRES_PRIMARY_REVIEWER of this project
+            if( $project ) {
+                $user = $this->secTokenStorage->getToken()->getUser();
+                if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
+                    return true;
+                }
             }
 
             if(
@@ -654,7 +670,7 @@ class TransResPermissionUtil
             if(
                 $transresRequestUtil->isRequestProgressReviewable($request) &&
                 (
-                    $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+                    $transresUtil->isAdminOrPrimaryReviewer($project) ||
                     $transresRequestUtil->isRequestProgressReviewer($request)
                 )
             ) {
@@ -666,7 +682,7 @@ class TransResPermissionUtil
             if(
                 $transresRequestUtil->isRequestBillingReviewable($request) &&
                 (
-                    $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+                    $transresUtil->isAdminOrPrimaryReviewer($project) ||
                     $transresRequestUtil->isRequestBillingReviewer($request)
                 )
             ) {

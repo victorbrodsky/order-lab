@@ -736,12 +736,21 @@ class DefaultController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("calllogMessage");
         $dql->select('calllogMessage');
         $dql->leftJoin("calllogMessage.entryTags", "entryTag");
-        $dql->where("entryTags IS NOT NULL");
+        $dql->where("entryTag IS NOT NULL");
 
         $query = $em->createQuery($dql);
 
         $calllogMessages = $query->getResult();
         echo "calllogMessages=".count($calllogMessages)."<br>";
+
+        foreach($calllogMessages as $calllogMessage) {
+            $message = $calllogMessage->getMessage();
+            $tags = $calllogMessage->getEntryTags();
+            echo "######## Messag=".$message->getId()."########<br>";
+            foreach($tags as $tag) {
+                echo $message->getId().": tags=" . $tag . "<br>";
+            }
+        }
 
 
         exit("EOF updateEntryTagAction. Res=" . $res);

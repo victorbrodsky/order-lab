@@ -293,6 +293,9 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function getAuthorType( $entity ) {
 
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
         if( !$this->secTokenStorage->getToken() ) {
             //not authenticated
             return null;
@@ -302,6 +305,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         if( $entity->getEntityName() == "Project" ) {
             $specialtyStr = null;
+            $project = $entity;
             $projectSpecialty = $entity->getProjectSpecialty();
             if( $projectSpecialty ) {
                 $specialtyStr = $projectSpecialty->getUppercaseName();
@@ -325,7 +329,9 @@ class FosCommentListener implements EventSubscriberInterface {
             $authorTypeArr['description'] = "Administrator";
             return $authorTypeArr;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+
+        //if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+        if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
             //$authorType = "Primary Reviewer";
             $authorTypeArr['type'] = "Administrator";
             $authorTypeArr['description'] = "Primary Reviewer";
@@ -333,9 +339,7 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         //if not found
-        $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
 
         //1) check if the user is entity requester
         //$entity = $this->getEntityFromComment($comment);

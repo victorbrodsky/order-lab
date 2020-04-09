@@ -366,45 +366,47 @@ class CalllogMessageType extends AbstractType
             ));
         }
 
-        if( $this->params['defaultTagType'] ) {
-            $builder->add('entryTags', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageTagsList',
-                'label' => 'Call Log Entry Tag(s):',
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Call Log Entry Tag(s)"),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.tagTypes", "tagTypes")
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->andWhere("tagTypes.id = :defaultTagType")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'defaultTagType' => $this->params['defaultTagType']
-                        ));
-                },
-            ));
-        } else {
-            $builder->add('entryTags', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageTagsList',
-                'label' => 'Call Log Entry Tag(s):',
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Call Log Entry Tag(s)"),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added'
-                        ));
-                },
-            ));
+        if( 0 ) {
+            if ($this->params['defaultTagType']) {
+                $builder->add('entryTags', EntityType::class, array(
+                    'class' => 'AppOrderformBundle:MessageTagsList',
+                    'label' => 'Call Log Entry Tag(s):',
+                    'required' => false,
+                    'multiple' => true,
+                    'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Call Log Entry Tag(s)"),
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.tagTypes", "tagTypes")
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->andWhere("tagTypes.id = :defaultTagType")
+                            ->orderBy("list.orderinlist", "ASC")
+                            ->setParameters(array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                                'defaultTagType' => $this->params['defaultTagType']
+                            ));
+                    },
+                ));
+            } else {
+                $builder->add('entryTags', EntityType::class, array(
+                    'class' => 'AppOrderformBundle:MessageTagsList',
+                    'label' => 'Call Log Entry Tag(s):',
+                    'required' => false,
+                    'multiple' => true,
+                    'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Call Log Entry Tag(s)"),
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist", "ASC")
+                            ->setParameters(array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added'
+                            ));
+                    },
+                ));
+            }
         }
-
+        
         ////////////////////////// Specific Orders //////////////////////////
         $builder->add('calllogEntryMessage', CalllogEntryMessageType::class, array(
             'data_class' => 'App\OrderformBundle\Entity\CalllogEntryMessage',

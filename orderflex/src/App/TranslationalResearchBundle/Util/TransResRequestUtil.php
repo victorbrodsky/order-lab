@@ -816,7 +816,7 @@ class TransResRequestUtil
         }
 
         //For now it is only isAdminOrPrimaryReviewer
-        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
             return true; //admin or primary reviewer or delegate
         }
 
@@ -853,7 +853,7 @@ class TransResRequestUtil
         }
 
         //For now it is only isAdminOrPrimaryReviewer
-        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
             return true; //admin or primary reviewer or delegate
         }
 
@@ -934,7 +934,7 @@ class TransResRequestUtil
         if(
             $transresUtil->isProjectRequester($project) === false &&
             $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER'.$specialtyPostfix) === false &&
-            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false
+            $transresUtil->isAdminOrPrimaryReviewer($project) === false
         ) {
             return -1;
         }
@@ -988,7 +988,7 @@ class TransResRequestUtil
         //Request's review can be done only by isAdminOrPrimaryReviewer
         $verified = false;
         if( $statMachineType == 'progress' ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false && $this->isRequestProgressReviewer($transresRequest) === false ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer($project) === false && $this->isRequestProgressReviewer($transresRequest) === false ) {
                 //exit("return: progress not allowed");
                 return $links;
             }
@@ -997,7 +997,7 @@ class TransResRequestUtil
             $verified = true;
         }
         if( $statMachineType == 'billing' ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false && $this->isRequestBillingReviewer($transresRequest) === false ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer($project) === false && $this->isRequestBillingReviewer($transresRequest) === false ) {
                 //exit("return: billing not allowed");
                 return $links;
             }

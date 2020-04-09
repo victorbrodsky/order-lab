@@ -348,7 +348,7 @@ class WorkflowController extends OrderAbstractController
         $project = $transresRequest->getProject();
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false &&
+            $transresUtil->isAdminOrPrimaryReviewer($project) === false &&
             $transresRequestUtil->isRequestStateReviewer($transresRequest,$statMachineType) === false
         ) {
             //exit("no permission");

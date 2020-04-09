@@ -1154,7 +1154,7 @@ class RequestController extends OrderAbstractController
 //            $stopwatch->start('FilterRequestType');
 //        }
 
-        //shown only to users with Site Administrator, Technologist, Platform Administrator, and Deputy Platform Administrator" roles
+        //shown list only to users with Site Administrator, Technologist, Platform Administrator, and Deputy Platform Administrator" roles
         $showCompletedByUser = false;
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
             $showCompletedByUser = true;
@@ -2476,7 +2476,7 @@ class RequestController extends OrderAbstractController
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
-        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) || $transresUtil->isProjectEditableByRequester($project) ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -2493,7 +2493,7 @@ class RequestController extends OrderAbstractController
         $res = "NotOK";
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+            $transresUtil->isAdminOrPrimaryReviewer($project) ||
             $this->isReviewsReviewer($user,$project->getIrbReviews())
         ) {
             //ok

@@ -81,7 +81,7 @@ class TransResUtil
         }
 
         //if not admin - check if the logged in user is a reviewer for this review object (show committee review links according to the assigned reviewer)
-        if( $this->isAdminOrPrimaryReviewer() === false ) {
+        if( $this->isAdminOrPrimaryReviewer($project) === false ) {
             if( $this->isReviewsReviewer($user, array($review)) === false && $this->isProjectRequester($project) === false ) {
                 //exit("return: is not reviewer or requester");
                 return $links;
@@ -426,24 +426,39 @@ class TransResUtil
         if( $this->isProjectRequester($project) === true ) {
             return true;
         }
-        if( $this->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === true ) {
+        if( $this->isAdminOrPrimaryReviewer($project) === true ) {
             return true;
         }
 
         return false;
     }
-    public function isAdminOrPrimaryReviewer( $projectSpecialty=null ) {
+    public function isAdminOrPrimaryReviewer( $project=null ) { //$projectSpecialty=null
+        //TODO: implement check only if user is admin, executive for the project specialty
+        //TODO: or user is a primary (final) reviewer of this particular project
+        $projectSpecialty = null;
         $specialtyStr = null;
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
         if( $projectSpecialty ) {
             $specialtyStr = $projectSpecialty->getUppercaseName();
             $specialtyStr = "_" . $specialtyStr;
         }
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+            //$this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
         ) {
             return true;
         }
+
+        //check if user is a primary reviewer of this particular project
+        if( $project ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+            if( $this->isReviewsReviewer($user, $project->getFinalReviews()) ) {
+                return true;
+            }
+        }
+
         return false;
     }
     public function hasReviewerRoles() {
@@ -462,10 +477,18 @@ class TransResUtil
         return false;
     }
     public function isProjectReviewer( $project, $checkProjectSpecialty=true ) {
+
+        if( !$project ) {
+            return false;
+        }
+
         if( $checkProjectSpecialty ) {
-            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+            if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
                 return false;
             }
+//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//                return false;
+//            }
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -483,7 +506,9 @@ class TransResUtil
         }
         return false;
     }
-    public function isAdminOrPrimaryReviewerOrExecutive() {
+    public function isAdminOrPrimaryReviewerOrExecutive( $project=null ) {
+        //TODO: implement check only if user is admin, executive for the project specialty
+        //TODO: or user is a primary (final) reviewer of this particular project
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
@@ -869,6 +894,7 @@ class TransResUtil
         return $infos;
     }
 
+    //The most reliable method to verify if this logged in user is a particular reviewer of this particular project
     public function isReviewsReviewer($reviewerUser, $projectReviewers ) {
         if( !$reviewerUser || !$reviewerUser->getId() ) {
             return false;
@@ -2008,7 +2034,7 @@ class TransResUtil
         }
 
         if( strpos($stateStr, "_missinginfo") !== false ) {
-            if ($this->isAdminOrPrimaryReviewer($project->getProjectSpecialty())) {
+            if ($this->isAdminOrPrimaryReviewer($project)) {
                 return true;
             }
             if( $this->isProjectRequester($project,$checkProjectSpecialty) ) {
@@ -2033,6 +2059,8 @@ class TransResUtil
             return false;
         }
 
+        //echo "stateStr=$stateStr<br>";
+
         $reviews = array();
 
         if( $stateStr == "irb_review" ) {
@@ -2051,7 +2079,7 @@ class TransResUtil
         //echo $stateStr.": reviews count=".count($reviews)."<br>";
         if( count($reviews) > 0 ) {
             if( $onlyReviewer == false ) {
-                if( $this->isAdminOrPrimaryReviewer() ) {
+                if( $this->isAdminOrPrimaryReviewer($project) ) {
                     return true;
                 }
             }
@@ -3344,10 +3372,11 @@ class TransResUtil
         return $specialty;
     }
 
+    //NOT USED?
     //show it only to admin, reviewers and reviewedBy users
     public function showReviewedBy( $reviewObject ) {
 
-        if( $this->isAdminOrPrimaryReviewer() ) {
+        if( $this->isAdminOrPrimaryReviewer() ) { //get project from $reviewObject and use it for strict check ?
             return true;
         }
 
@@ -5454,7 +5483,7 @@ class TransResUtil
 
         if( $project->getState() == "committee_review" ) {
             $show = false;
-            if( $this->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+            if( $this->isAdminOrPrimaryReviewer($project) ) {
                 $show = true;
             }
             $reviews = $project->getCommitteeReviews();

@@ -590,7 +590,7 @@ class ProjectController extends OrderAbstractController
         // All other users can view only their projects
         // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
         if( 
-            $transresUtil->isAdminOrPrimaryReviewerOrExecutive()
+            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
             || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
             || $transresUtil->hasReviewerRoles()
         ) {
@@ -1620,7 +1620,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+            $transresUtil->isAdminOrPrimaryReviewer($project) ||
             $transresUtil->isProjectStateRequesterResubmit($project)
         ) {
             //ok
@@ -2254,14 +2254,14 @@ class ProjectController extends OrderAbstractController
             }
 
             //allow edit if admin at any time
-            if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer($project) || $transresUtil->isProjectEditableByRequester($project) ) {
                 $params['updateProject'] = true;
             }
 
             if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
                 $params['reSubmitReview'] = true;
                 //in the missing info stage, allow update project only by admin
-                if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+                if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
                     $params['updateProject'] = true;
                 } else {
                     $params['updateProject'] = false;
