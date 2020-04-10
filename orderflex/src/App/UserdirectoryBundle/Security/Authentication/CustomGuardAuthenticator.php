@@ -144,6 +144,8 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //echo 'sitename='.$this->sitename."<br>";
         //exit('111');
 
+        set_time_limit(3); //testing
+
         $url = NULL;
 
         if(

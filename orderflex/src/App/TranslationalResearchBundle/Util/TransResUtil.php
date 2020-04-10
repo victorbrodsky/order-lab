@@ -1025,6 +1025,7 @@ class TransResUtil
             }
         }
 
+        //TODO: add an appropriate reviewer role
 //        foreach( $currentReviews as $currentReview ) {
 //            $reviewId = $currentReview->getId();
 //            if( !$reviewId ) {
