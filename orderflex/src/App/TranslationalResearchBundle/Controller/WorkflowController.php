@@ -309,7 +309,7 @@ class WorkflowController extends OrderAbstractController
         if(
             $transresUtil->isUserAllowedReview($review) === false &&
             $transresUtil->isReviewCorrespondsToState($review) === false &&
-            $transresUtil->isUserAllowedFromThisStateByProjectOrReview($project) === false
+            $transresUtil->isUserAllowedFromThisStateByProjectAndReview($project,$review) === false
         ) {
             //exit("no permission");
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );

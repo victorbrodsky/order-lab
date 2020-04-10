@@ -1519,7 +1519,9 @@ class ProjectController extends OrderAbstractController
 
         if( $transresPermissionUtil->hasProjectPermission("review",$project) ) {
             //ok
+            //echo "ok review permission <br>";
         } else {
+            //echo "no review permission <br>";
             //show no access page with view link for allowed users
             if( $transresPermissionUtil->hasProjectPermission("view",$project) ) {
                 $projectUrl = $this->container->get('router')->generate(
@@ -1536,43 +1538,6 @@ class ProjectController extends OrderAbstractController
 
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
-
-//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
-//        if(
-//            $transresUtil->isAdminOrPrimaryReviewer() ||
-//            $transresUtil->isProjectReviewer($project)
-//        ) {
-//            //ok
-//        } else {
-//            //show no access page with view link for allowed users
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//                //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-//                $projectUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_project_show',
-//                    array(
-//                        'id' => $project->getId(),
-//                    ),
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//                $projectLink = "<a href=" . $projectUrl . ">" . "View Project Request Details with ID " . $project->getOid() . "</a>";
-//
-//                return $this->redirect($this->generateUrl('translationalresearch-nopermission',array('additionalMessage'=>$projectLink)));
-//            }
-//
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
-        //$transresUtil = $this->container->get('transres_util');
-        //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$cycle = "show";
         $cycle = "review";
@@ -2241,11 +2206,6 @@ class ProjectController extends OrderAbstractController
 
         if( $cycle == "edit" ) {
             $disabled = false;
-//            if( $project->getState() && $project->getState() == "draft" ) {
-//                if( $transresUtil->isRequesterOrAdmin($project) === true ) {
-//                    $params['saveAsComplete'] = true;
-//                }
-//            }
             if( $project->getState() && $project->getState() == "draft" ) {
                 if( $transresUtil->isRequesterOrAdmin($project) === true ) {
                     $params['submitIrbReview'] = true;
@@ -2299,6 +2259,8 @@ class ProjectController extends OrderAbstractController
 
 
     /**
+     * NOT USED
+     * 
      * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/set-state.html.twig")
      */

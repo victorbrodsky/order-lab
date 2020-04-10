@@ -100,16 +100,23 @@ class TransResUtil
                 }
 
                 //don't show "Recommend..." buttons to primary reviewer for committee_review stage
-                $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
-                if( $review->getPrimaryReview() === false && $finalReviewer ) {
-                    continue;
-                }
+//                $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
+//                if( $review->getPrimaryReview() === false && $finalReviewer ) {
+//                    //echo "Skip 1<br>";
+//                    continue;
+//                }
+                //don't show "Recommend..." buttons to primary reviewer for committee_review stage
+                //$finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
+//                if( $review->getPrimaryReview() === false ) {
+//                    continue;
+//                }
 
                 //show "Provide Final Approval" only if user is primary committee reviewer and final reviewer for this project
                 if( $transitionName == "committee_finalreview_approved" ) {
                     //There should be only one Orange "Provide Final Approval" button for primary reviewer
                     if( method_exists($review, 'getPrimaryReview') ) {
                         if( $review->getPrimaryReview() === false ) {
+                            //echo "Skip getPrimaryReview<br>";
                             continue;
                         }
                     }
@@ -125,10 +132,21 @@ class TransResUtil
                             continue;
                         }
                     }
+//                    $committeReviewer = $this->isProjectStateReviewer($project,$user,"committee_review",true);
+//                    if( $committeReviewer ) {
+//                        //show link to committee_finalreview_approved
+//                    } else {
+//                        //echo "not primary or committee reviewer <br>";
+//                        if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                            continue;
+//                        }
+//                    }
+
                 }
             }
 
-            if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
+            if( false === $this->isUserAllowedFromThisStateByProjectAndReview($project,$review) ) {
+                //echo "Skip isUserAllowedFromThisStateByProjectAndReview<br>";
                 continue;
             }
 
@@ -365,11 +383,11 @@ class TransResUtil
     }
 
     public function isProjectEditableByRequester( $project, $checkProjectSpecialty=true ) {
-        if( $checkProjectSpecialty ) {
-            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
-                return false;
-            }
-        }
+//        if( $checkProjectSpecialty ) {
+//            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+//                return false;
+//            }
+//        }
 
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' ) { //|| strpos($state, "_missinginfo") !== false
@@ -383,11 +401,11 @@ class TransResUtil
         return false;
     }
     public function isProjectRequester( $project, $checkProjectSpecialty=true ) {
-        if( $checkProjectSpecialty ) {
-            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
-                return false;
-            }
-        }
+//        if( $checkProjectSpecialty ) {
+//            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+//                return false;
+//            }
+//        }
 
         $user = $this->secTokenStorage->getToken()->getUser();
 
@@ -420,9 +438,9 @@ class TransResUtil
         return false;
     }
     public function isRequesterOrAdmin( $project ) {
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
-        }
+//        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            return false;
+//        }
         if( $this->isProjectRequester($project) === true ) {
             return true;
         }
@@ -432,9 +450,36 @@ class TransResUtil
 
         return false;
     }
+    public function isAdminReviewer( $project=null, $strictReviewer=false ) { //$projectSpecialty=null
+        if( $strictReviewer ) {
+            //$strictReviewer - check if user is an admin reviewer of this particular project
+            if( $project ) {
+                $user = $this->secTokenStorage->getToken()->getUser();
+                if( $this->isReviewsReviewer($user, $project->getAdminReviews()) ) {
+                    return true;
+                }
+            }
+        } else {
+            $projectSpecialty = null;
+            $specialtyStr = null;
+
+            if( $project ) {
+                $projectSpecialty = $project->getProjectSpecialty();
+            }
+
+            if( $projectSpecialty ) {
+                $specialtyStr = $projectSpecialty->getUppercaseName();
+                $specialtyStr = "_" . $specialtyStr;
+            }
+
+            if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public function isAdminOrPrimaryReviewer( $project=null ) { //$projectSpecialty=null
-        //TODO: implement check only if user is admin, executive for the project specialty
-        //TODO: or user is a primary (final) reviewer of this particular project
         $projectSpecialty = null;
         $specialtyStr = null;
         if( $project ) {
@@ -482,14 +527,11 @@ class TransResUtil
             return false;
         }
 
-        if( $checkProjectSpecialty ) {
-            if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-                return false;
-            }
-//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//        if( $checkProjectSpecialty ) {
+//            if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
 //                return false;
 //            }
-        }
+//        }
 
         $user = $this->secTokenStorage->getToken()->getUser();
         if( $this->isReviewsReviewer($user,$project->getIrbReviews()) ) {
@@ -1319,8 +1361,10 @@ class TransResUtil
             case "committee_review_approved":
                 $label = "Approve Project Request as a Result of Committee Review";
                 $labeled = "Approved Project Request as a Result of Committee Review";
+                //echo "Reviewer=".$review->getReviewer()."<br>";
                 if( $review && method_exists($review, 'getPrimaryReview') ) {
-                    if ($review->getPrimaryReview() === true) {
+                    //echo "committee_review_approved PrimaryReview =".$review->getPrimaryReview()."<br>";
+                    if( $review->getPrimaryReview() === true ) {
                         //$label = $label . " as Primary Reviewer";
                         //$labeled = $labeled . " as Primary Reviewer";
                     } else {
@@ -1967,66 +2011,121 @@ class TransResUtil
 
         return false;
     }
-    //check if the current logged in user has permission to make changes from the current project state
-    public function isUserAllowedFromThisStateByProjectOrReview($project, $review=null) {
+//    //Used to show correct approve/reject buttons in transer.html.twig->projectReviewsEnabledLinkActions and to show resubmit buttons
+//    //check if the current logged in user has permission to make changes from the current project state
+//    //True should be returned for only actual reviewer or reviewer's delegate
+//    public function isUserAllowedFromThisStateByProjectOrReview_ORIG($project, $review) {
+//
+//        if( !$project ) {
+//            $project = $review->getProject();
+//        }
+//
+//        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            return false;
+//        }
+//
+////        $workflow = $this->container->get('state_machine.transres_project');
+////        $transitions = $workflow->getEnabledTransitions($project);
+////
+////        if( count($transitions) != 1 ) {
+////            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
+////        }
+////
+////        foreach($transitions as $transition) {
+////            $this->printTransition($transition);
+////        }
+////        //exit('1');
+//
+//        $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+//        if( !$stateStr ) {
+//            return false;
+//        }
+//
+//        if( $this->isAdminOrPrimaryReviewer($project) ) {
+//            return true;
+//        }
+//
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//
+//        //check if reviewer
+//        //$project, $user, $stateStr=null, $onlyReviewer=false
+//        if( $this->isProjectStateReviewer($project,$user) ) {
+//            return true;
+//        }
+//
+//        //check if submitter and project state has _missinginfo
+////        if( strpos($stateStr, "_missinginfo") !== false ) {
+////            if( $this->isProjectRequester($project) ) {
+////                return true;
+////            }
+////        }
+//        if( $this->isProjectStateRequesterResubmit($project) ) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
+    //Used to show correct approve/reject buttons in transer.html.twig->projectReviewsEnabledLinkActions and to show resubmit buttons
+    //Check if the current logged in user is a reviewer of this review or reviewer's delegate
+    //True should be returned for only actual reviewer or reviewer's delegate
+    public function isUserAllowedFromThisStateByProjectAndReview($project, $review) {
+        //echo "isUserAllowedFromThisStateByProjectAndReview: reviewer=".$review->getReviewer()." <br>";
+        $user = $this->secTokenStorage->getToken()->getUser();
 
         if( !$project ) {
             $project = $review->getProject();
         }
 
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
-        }
-
-//        $workflow = $this->container->get('state_machine.transres_project');
-//        $transitions = $workflow->getEnabledTransitions($project);
-//
-//        if( count($transitions) != 1 ) {
-//            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
+//        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            echo "False isUserAllowedSpecialtyObject<br>";
+//            return false;
 //        }
-//
-//        foreach($transitions as $transition) {
-//            $this->printTransition($transition);
-//        }
-//        //exit('1');
 
-        $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+        $stateStr = $this->getAllowedFromState($project);
         if( !$stateStr ) {
+            //echo "False: no stateStr <br>";
             return false;
         }
 
-        if( $this->isAdminOrPrimaryReviewer() ) {
+//        if( $this->isAdminOrPrimaryReviewer($project) ) {
+//            return true;
+//        }
+        //$strictReviewer = true;
+        if( $this->isAdminReviewer($project) ) {
             return true;
         }
-
-        $user = $this->secTokenStorage->getToken()->getUser();
 
         //check if reviewer
-        if( $this->isProjectStateReviewer($project,$user) ) {
-            return true;
-        }
-
-        //check if submitter and project state has _missinginfo
-//        if( strpos($stateStr, "_missinginfo") !== false ) {
-//            if( $this->isProjectRequester($project) ) {
-//                return true;
-//            }
+        //$project, $user, $stateStr=null, $onlyReviewer=false
+//        $onlyReviewer = false;
+//        if( $this->isProjectStateReviewer($project,$user,$stateStr,$onlyReviewer) ) {
+//            echo "True isProjectStateReviewer<br>";
+//            return true;
 //        }
-        if( $this->isProjectStateRequesterResubmit($project) ) {
+
+        //check if a user is a reviewer
+        if( $this->isReviewsReviewer($user, array($review)) ) {
+            //echo "True isReviewsReviewer<br>";
             return true;
         }
 
+        if( $this->isProjectStateRequesterResubmit($project) ) {
+            //echo "True isProjectStateRequesterResubmit<br>";
+            return true;
+        }
+
+        //echo "### Exit isUserAllowedFromThisStateByProjectAndReview ###<br>";
         return false;
     }
 
     //return true if the project is in missinginfo state and logged in user is a requester or admin
     public function isProjectStateRequesterResubmit($project, $checkProjectSpecialty=true) {
 
-        if( $checkProjectSpecialty ) {
-            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
-                return false;
-            }
-        }
+//        if( $checkProjectSpecialty ) {
+//            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+//                return false;
+//            }
+//        }
 
         $stateStr = $this->getAllowedFromState($project);
         if( !$stateStr ) {
@@ -2034,7 +2133,7 @@ class TransResUtil
         }
 
         if( strpos($stateStr, "_missinginfo") !== false ) {
-            if ($this->isAdminOrPrimaryReviewer($project)) {
+            if ($this->isAdminReviewer($project)) {
                 return true;
             }
             if( $this->isProjectRequester($project,$checkProjectSpecialty) ) {
@@ -2047,9 +2146,9 @@ class TransResUtil
     //return true if the project is in review state and logged in user is a reviewer or admin
     public function isProjectStateReviewer($project, $user, $stateStr=null, $onlyReviewer=false) {
 
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
-        }
+//        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            return false;
+//        }
 
         if( !$stateStr ) {
             $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
@@ -2195,37 +2294,6 @@ class TransResUtil
         }
 
         return false;
-
-//        if( strpos($projectState, '_missinginfo') !== false ) {
-//            $projectStateReviewable = true;
-//            if( strpos($projectState, '_missinginfo') !== false ) {
-//
-//            }
-//        }
-//
-//        if( $projectState == "irb_review" ) {
-//            $projectStateReviewable = true;
-//        }
-//        if( $projectState == "admin_review" ) {
-//            $projectStateReviewable = true;
-//        }
-//        if( $projectState == "committee_review" ) {
-//            $projectStateReviewable = true;
-//        }
-//        if( $projectState == "final_review" ) {
-//            $projectStateReviewable = true;
-//        }
-//
-//        if( $projectStateReviewable === false ) {
-//            return false;
-//        }
-//
-//        //2) condition to allow edit only if project state is allow to edit this type of review (committee_review)
-//        if( $projectState == $review->getStateStr() ) {
-//            return true;
-//        }
-//
-//        return false;
     }
 
     //NOT USED
@@ -3940,6 +4008,7 @@ class TransResUtil
     //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
     public function createProjectExcelSpout($projectIdsArr,$fileName,$limit=null) {
         $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresPermissionUtil  = $this->container->get('transres_permission_util');
 
         //$writer = WriterFactory::create(Type::CSV);
         //$writer = WriterFactory::create(Type::XLSX);
@@ -4043,7 +4112,10 @@ class TransResUtil
                 continue;
             }
 
-            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//                continue;
+//            }
+            if( $transresPermissionUtil->hasProjectPermission("view",$project) === false ) {
                 continue;
             }
 
@@ -4271,6 +4343,7 @@ class TransResUtil
     public function createProjectSheet($ews,$projectIdsArr,$limit=null) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresPermissionUtil  = $this->container->get('transres_permission_util');
 
         //align all cells to left
         $style = array(
@@ -4345,7 +4418,10 @@ class TransResUtil
                 continue;
             }
 
-            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//                continue;
+//            }
+            if( $transresPermissionUtil->hasProjectPermission("view",$project) === false ) {
                 continue;
             }
 
@@ -4514,6 +4590,7 @@ class TransResUtil
     public function createProjectListExcel($projectIdsArr,$limit=null) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -4654,9 +4731,13 @@ class TransResUtil
                 continue;
             }
 
-            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//                continue;
+//            }
+            if( $transresPermissionUtil->hasProjectPermission("view",$project) === false ) {
                 continue;
             }
+
 
             //$ews = $this->fillOutProjectCells($ews,$rowCount,$project); //A,B,C,D,E,F,G,H
 
