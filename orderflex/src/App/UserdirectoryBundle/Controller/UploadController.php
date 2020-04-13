@@ -229,12 +229,11 @@ class UploadController extends OrderAbstractController {
             $originalname = $document->getOriginalnameClean();
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
-            exit ("File is not available");
             if( $abspath || $originalname || $size ) {
                 $downloader = new LargeFileDownloader();
                 $downloader->downloadLargeFile($abspath, $originalname, $size);
             } else {
-                exit ("File is not available");
+                exit ("File $originalname is not available");
             }
         } else {
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -381,7 +380,6 @@ class UploadController extends OrderAbstractController {
             //exit(111);
             //$logger = $this->container->get('logger');
             //$logger->notice("abspath=$abspath");
-            exit ("File is not available");
             if( $abspath || $originalname || $size ) {
                 //echo "abspath=".$abspath."<br>";
                 //echo "originalname=".$originalname."<br>";
@@ -392,7 +390,7 @@ class UploadController extends OrderAbstractController {
                 //$viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
                 $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
             } else {
-                exit ("File is not available");
+                exit ("File $originalname is not available");
             }
 
             exit;

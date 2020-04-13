@@ -47,7 +47,8 @@ class LargeFileDownloader {
         $filenameClean = str_replace("\\", "/", $filepath);
 
         if( empty($filenameClean) ) {
-            exit;
+            exit ("File $filenameClean is not available");
+            //exit;
         }
 
         if( !$filename ) {
