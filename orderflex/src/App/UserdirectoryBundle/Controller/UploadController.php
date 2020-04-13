@@ -229,7 +229,7 @@ class UploadController extends OrderAbstractController {
             $originalname = $document->getOriginalnameClean();
             $abspath = $document->getAbsoluteUploadFullPath();
             $size = $document->getSize();
-
+            exit ("File is not available");
             if( $abspath || $originalname || $size ) {
                 $downloader = new LargeFileDownloader();
                 $downloader->downloadLargeFile($abspath, $originalname, $size);
