@@ -2251,7 +2251,14 @@ class FormNodeUtil
         $em = $this->em;
         $messageCategory = null;
 
-        $messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+        //$messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
+        $messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findBy(
+            array(
+                'type' => array('default','user-added'),
+                'name' => $messageCategoryName
+            ),
+            array('orderinlist' => 'ASC')
+        );
         if( count($messageCategories) == 0 ) {
             exit("Message categories not found by name=".$messageCategoryName);
         }

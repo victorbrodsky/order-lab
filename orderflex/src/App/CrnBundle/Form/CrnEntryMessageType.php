@@ -105,14 +105,16 @@ class CrnEntryMessageType extends AbstractType
         });
 
 
-        $builder->add('entryTags', null, array(
-            //'class' => 'AppOrderformBundle:CrnEntryTagsList',
-            'label' => "Critical Result Notification Entry Tag(s):",
-            'required' => false,
-            'multiple' => true,
-            //'data' => $this->params['mrntype'],
-            'attr' => array('class' => 'combobox', 'placeholder' => "Critical Result Notification Entry Tag(s)"),
-        ));
+        if(0) {
+            $builder->add('entryTags', null, array(
+                //'class' => 'AppOrderformBundle:CrnEntryTagsList',
+                'label' => "Critical Result Notification Entry Tag(s) (Deprecated):",
+                'required' => false,
+                'multiple' => true,
+                //'data' => $this->params['mrntype'],
+                'attr' => array('class' => 'combobox', 'placeholder' => "Critical Result Notification Entry Tag(s)"),
+            ));
+        }
 //        $builder->add('entryTags', EntityType::class, array(
 //            'class' => 'AppOrderformBundle:MessageTagsList',
 //            'label' => "Critical Result Notification Entry Tag(s):",

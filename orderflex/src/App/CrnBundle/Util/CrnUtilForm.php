@@ -324,7 +324,18 @@ class CrnUtilForm
 
         $html .= $this->getTrSection("Search aides and time tracking");
 
-        $entryTags = $crnEntryMessage->getEntryTags();
+        //Deprecated (entry tags attached to calllogEntryMessage)
+        if(0) {
+            $entryTags = $crnEntryMessage->getEntryTags();
+            $entryTagsArr = array();
+            foreach ($entryTags as $entryTag) {
+                $entryTagsArr[] = $entryTag->getName();
+            }
+            $html .= $this->getTrField("Critical Result Notification Entry Tag(s) (Deprecated) ", implode("; ", $entryTagsArr));
+        }
+
+        //New entry tags attached to message
+        $entryTags = $message->getEntryTags();
         $entryTagsArr = array();
         foreach( $entryTags as $entryTag ) {
             $entryTagsArr[] = $entryTag->getName();
