@@ -44,10 +44,10 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
-        if( file_exists($filename) ) {
-            echo "0file exists [$filename]<br>";
+        if( file_exists($filepath) ) {
+            echo "0file exists [$filepath]<br>";
         } else {
-            echo "0file does not exist [$filename]<br>";
+            echo "0file does not exist [$filepath]<br>";
         }
 
         $filenameClean = str_replace("\\", "/", $filepath);
