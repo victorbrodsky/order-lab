@@ -548,6 +548,7 @@ class Document {
 
         $uniquename = $this->getUniquename();
         if( !$uniquename ) {
+            //File is erroneous if uniquename is null
             return null;
         }
 
