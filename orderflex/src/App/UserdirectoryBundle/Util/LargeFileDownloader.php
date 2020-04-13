@@ -62,11 +62,11 @@ class LargeFileDownloader {
 //            echo "file is not readable [$filepath]<br>";
 //        }
 
-//        if( file_exists($filepath) ) {
-//            echo "0file exists [$filepath]<br>";
-//        } else {
-//            echo "0file does not exist [$filepath]<br>";
-//        }
+        if( file_exists($filepath) ) {
+            echo "0file exists [$filepath]<br>";
+        } else {
+            echo "0file does not exist [$filepath]<br>";
+        }
 
         $filenameClean = str_replace("\\", "/", $filepath);
 
@@ -74,11 +74,11 @@ class LargeFileDownloader {
             exit;
         }
 
-//        if( file_exists($filenameClean) ) {
-//            echo "1file exists [$filenameClean]<br>";
-//        } else {
-//            echo "1file does not exist [$filenameClean]<br>";
-//        }
+        if( file_exists($filenameClean) ) {
+            echo "1file exists [$filenameClean]<br>";
+        } else {
+            echo "1file does not exist [$filenameClean]<br>";
+        }
 
         if( !$filename ) {
             $filename = basename($filenameClean);
@@ -124,9 +124,9 @@ class LargeFileDownloader {
                 $filename = $filename . "." . $ext;
             }
         }
-        //echo "filepath=".$filepath."<br>";
-        //echo "filename=".$filename."<br>";
-        //echo "filenameClean=".$filenameClean."<br>";
+        echo "filepath=".$filepath."<br>";
+        echo "filename=".$filename."<br>";
+        echo "filenameClean=".$filenameClean."<br>";
         echo "size=".$size."<br>";
         //var_dump(stream_get_wrappers());
 //        if( is_readable($filepath) ) {
