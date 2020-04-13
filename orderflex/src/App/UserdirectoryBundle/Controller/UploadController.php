@@ -381,6 +381,10 @@ class UploadController extends OrderAbstractController {
             //$logger->notice("abspath=$abspath");
 
             if( $abspath || $originalname || $size ) {
+                echo "abspath=".$abspath."<br>";
+                echo "originalname=".$originalname."<br>";
+                echo "size=".$size."<br>";
+
                 $downloader = new LargeFileDownloader();
                 ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
                 //$viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
