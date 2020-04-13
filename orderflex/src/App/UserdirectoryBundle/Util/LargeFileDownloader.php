@@ -44,51 +44,15 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
-//        if( $this->does_url_exists($filepath) ) {
-//            echo "does_url_exists ok [$filepath]<br>";
-//        } else {
-//            echo "does_url_exists not ok [$filepath]<br>";
-//        }
-
-//        if( $this->urlExists($filepath) ) {
-//            echo "url ok [$filepath]<br>";
-//        } else {
-//            echo "url not ok [$filepath]<br>";
-//        }
-
-//        if( is_readable($filepath) ) {
-//            echo "file readable [$filepath]<br>";
-//        } else {
-//            echo "file is not readable [$filepath]<br>";
-//        }
-
-//        if( file_exists($filepath) ) {
-//            echo "0file exists [$filepath]<br>";
-//        } else {
-//            echo "0file does not exist [$filepath]<br>";
-//        }
-
         $filenameClean = str_replace("\\", "/", $filepath);
 
         if( empty($filenameClean) ) {
             exit;
         }
 
-        //exit if file is not provided i.e. "https://view.med.cornell.edu//"
-//        if( strpos($filenameClean, '//') !== false ) {
-//            exit;
-//        }
-
-//        if( file_exists($filenameClean) ) {
-//            echo "1file exists [$filenameClean]<br>";
-//        } else {
-//            echo "1file does not exist [$filenameClean]<br>";
-//        }
-
-        //exit if file is not provided i.e. "https://view.med.cornell.edu//"
         if( !$filename ) {
-            exit;
-            //$filename = basename($filenameClean);
+            //exit; //exit if file is not provided i.e. "https://view.med.cornell.edu//" (i.e. project ID 3374)
+            $filename = basename($filenameClean);
         }
 
 //        if( file_exists($filenameClean) ) {
