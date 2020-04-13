@@ -129,11 +129,11 @@ class LargeFileDownloader {
         //echo "filenameClean=".$filenameClean."<br>";
         //echo "size=".$size."<br>";
         //var_dump(stream_get_wrappers());
-//        if( is_readable($filepath) ) {
-//            echo "file readable <br>";
-//        } else {
-//            echo "file is not readable <br>";
-//        }
+        if( is_readable($filepath) ) {
+            echo "file readable [$filepath]<br>";
+        } else {
+            echo "file is not readable [$filepath]<br>";
+        }
         //exit('111');
         ///// EOF remove dots except extension /////
 
