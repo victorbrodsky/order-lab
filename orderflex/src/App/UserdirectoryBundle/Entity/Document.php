@@ -547,6 +547,9 @@ class Document {
         }
 
         $uniquename = $this->getUniquename();
+        if( !$uniquename ) {
+            return null;
+        }
 
         if ($size) {
             $uniquename = $size . "-" . $uniquename;
