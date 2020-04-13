@@ -104,14 +104,16 @@ class CalllogEntryMessageType extends AbstractType
         });
 
 
-        $builder->add('entryTags', null, array(
-            //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
-            'label' => "Call Log Entry Tag(s):",
-            'required' => false,
-            'multiple' => true,
-            //'data' => $this->params['mrntype'],
-            'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
-        ));
+        if(1) {
+            $builder->add('entryTags', null, array(
+                //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
+                'label' => "Call Log Entry Tag(s) (Deprecated):",
+                'required' => false,
+                'multiple' => true,
+                //'data' => $this->params['mrntype'],
+                'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
+            ));
+        }
 //        $builder->add('entryTags', EntityType::class, array(
 //            'class' => 'AppOrderformBundle:MessageTagsList',
 //            'label' => "Call Log Entry Tag(s):",

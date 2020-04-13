@@ -366,7 +366,7 @@ class CalllogMessageType extends AbstractType
             ));
         }
 
-        if( 0 ) {
+        if( 1 ) {
             if ($this->params['defaultTagType']) {
                 $builder->add('entryTags', EntityType::class, array(
                     'class' => 'AppOrderformBundle:MessageTagsList',

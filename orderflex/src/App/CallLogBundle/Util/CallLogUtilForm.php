@@ -324,7 +324,16 @@ class CallLogUtilForm
 
         $html .= $this->getTrSection("Search aides and time tracking");
 
+        //Deprecated (entry tags attached to calllogEntryMessage)
         $entryTags = $calllogEntryMessage->getEntryTags();
+        $entryTagsArr = array();
+        foreach( $entryTags as $entryTag ) {
+            $entryTagsArr[] = $entryTag->getName();
+        }
+        $html .= $this->getTrField("Call Log Entry Tag(s) (Deprecated) ", implode("; ",$entryTagsArr));
+
+        //New entry tags attached to message
+        $entryTags = $message->getEntryTags();
         $entryTagsArr = array();
         foreach( $entryTags as $entryTag ) {
             $entryTagsArr[] = $entryTag->getName();

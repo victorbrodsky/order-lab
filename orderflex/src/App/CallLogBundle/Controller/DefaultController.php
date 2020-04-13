@@ -19,6 +19,7 @@ namespace App\CallLogBundle\Controller;
 
 use App\CallLogBundle\Form\CalllogMessageCacheType;
 use App\OrderformBundle\Entity\Message;
+use App\OrderformBundle\Entity\MessageTagsList;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -749,6 +750,13 @@ class DefaultController extends OrderAbstractController
             echo "######## Messag=".$message->getId()."########<br>";
             foreach($tags as $tag) {
                 echo $message->getId().": tags=" . $tag . "<br>";
+
+                $messageEntryTag = $em->getRepository("AppOrderformBundle:MessageTagsList")->findOneByName($tag->getName());
+                echo $message->getId().": messageEntryTag=" . $messageEntryTag . "<br>";
+
+                $message->addEntryTag($messageEntryTag);
+
+                //$em->flush();
             }
         }
 
