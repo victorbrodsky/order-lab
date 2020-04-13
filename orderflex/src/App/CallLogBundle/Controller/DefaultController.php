@@ -723,6 +723,8 @@ class DefaultController extends OrderAbstractController
      */
     public function updateEntryTagAction(Request $request)
     {
+        exit("Permitted only once");
+
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
