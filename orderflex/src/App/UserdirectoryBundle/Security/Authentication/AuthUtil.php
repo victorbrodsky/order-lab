@@ -970,7 +970,7 @@ class AuthUtil {
         //$this->logger->notice("Simple Ldap");
 
         //exit("simpleLdap");
-        set_time_limit(3); //testing
+        //set_time_limit(3); //testing
 
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
