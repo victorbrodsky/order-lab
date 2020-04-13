@@ -44,6 +44,12 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
+        if( $this->urlExists($filepath) ) {
+            echo "url ok [$filepath]<br>";
+        } else {
+            echo "url not ok [$filepath]<br>";
+        }
+
         if( is_readable($filepath) ) {
             echo "file readable [$filepath]<br>";
         } else {
@@ -205,6 +211,11 @@ class LargeFileDownloader {
 
         exit;
         return;
+    }
+
+    function urlExists($url){
+        $headers=get_headers($url);
+        return stripos($headers[0],"200 OK")?true:false;
     }
 
     public function getFileContent($filenameClean) {
