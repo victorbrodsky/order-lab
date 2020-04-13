@@ -44,6 +44,12 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
+        if( $this->does_url_exists($filepath) ) {
+            echo "does_url_exists ok [$filepath]<br>";
+        } else {
+            echo "does_url_exists not ok [$filepath]<br>";
+        }
+
         if( $this->urlExists($filepath) ) {
             echo "url ok [$filepath]<br>";
         } else {
@@ -216,6 +222,20 @@ class LargeFileDownloader {
     function urlExists($url){
         $headers=get_headers($url);
         return stripos($headers[0],"200 OK")?true:false;
+    }
+    function does_url_exists($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($code == 200) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        curl_close($ch);
+        return $status;
     }
 
     public function getFileContent($filenameClean) {
