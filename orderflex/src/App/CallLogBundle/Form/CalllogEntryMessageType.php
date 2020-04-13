@@ -104,7 +104,7 @@ class CalllogEntryMessageType extends AbstractType
         });
 
 
-        if(1) {
+        if(0) {
             $builder->add('entryTags', null, array(
                 //'class' => 'AppOrderformBundle:CalllogEntryTagsList',
                 'label' => "Call Log Entry Tag(s) (Deprecated):",
