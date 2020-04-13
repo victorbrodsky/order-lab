@@ -50,16 +50,22 @@ class LargeFileDownloader {
             exit;
         }
 
+        if( file_exists($filenameClean) ) {
+            echo "1file exists [$filenameClean]<br>";
+        } else {
+            echo "2file does not exist [$filenameClean]<br>";
+        }
+
         if( !$filename ) {
             $filename = basename($filenameClean);
         }
 
         if( file_exists($filenameClean) ) {
-            echo "file exists <br>";
+            echo "2file exists [$filenameClean]<br>";
         } else {
-            echo "file does not exist <br>";
+            echo "2file does not exist [$filenameClean]<br>";
         }
-        
+
         if( !$size ) {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
