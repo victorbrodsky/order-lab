@@ -131,10 +131,10 @@ class LargeFileDownloader {
                 $filename = $filename . "." . $ext;
             }
         }
-        echo "filepath=".$filepath."<br>";
-        echo "filename=".$filename."<br>";
-        echo "filenameClean=".$filenameClean."<br>";
-        echo "size=".$size."<br>";
+        //echo "filepath=".$filepath."<br>";
+        //echo "filename=".$filename."<br>";
+        //echo "filenameClean=".$filenameClean."<br>";
+        //echo "size=".$size."<br>";
         //var_dump(stream_get_wrappers());
 //        if( is_readable($filepath) ) {
 //            echo "file readable [$filepath]<br>";
