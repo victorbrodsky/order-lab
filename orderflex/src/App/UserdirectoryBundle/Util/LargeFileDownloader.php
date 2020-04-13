@@ -62,11 +62,11 @@ class LargeFileDownloader {
 //            echo "file is not readable [$filepath]<br>";
 //        }
 
-        if( file_exists($filepath) ) {
-            echo "0file exists [$filepath]<br>";
-        } else {
-            echo "0file does not exist [$filepath]<br>";
-        }
+//        if( file_exists($filepath) ) {
+//            echo "0file exists [$filepath]<br>";
+//        } else {
+//            echo "0file does not exist [$filepath]<br>";
+//        }
 
         $filenameClean = str_replace("\\", "/", $filepath);
 
@@ -74,14 +74,21 @@ class LargeFileDownloader {
             exit;
         }
 
-        if( file_exists($filenameClean) ) {
-            echo "1file exists [$filenameClean]<br>";
-        } else {
-            echo "1file does not exist [$filenameClean]<br>";
-        }
+        //exit if file is not provided i.e. "https://view.med.cornell.edu//"
+//        if( strpos($filenameClean, '//') !== false ) {
+//            exit;
+//        }
 
+//        if( file_exists($filenameClean) ) {
+//            echo "1file exists [$filenameClean]<br>";
+//        } else {
+//            echo "1file does not exist [$filenameClean]<br>";
+//        }
+
+        //exit if file is not provided i.e. "https://view.med.cornell.edu//"
         if( !$filename ) {
-            $filename = basename($filenameClean);
+            exit;
+            //$filename = basename($filenameClean);
         }
 
 //        if( file_exists($filenameClean) ) {
@@ -90,11 +97,11 @@ class LargeFileDownloader {
 //            echo "2file does not exist [$filenameClean]<br>";
 //        }
 
-//        if( !$size ) {
-//            $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
-//        }
+        if( !$size ) {
+            $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
+        }
 
-        echo "filename=".$filename."<br>";
+        //echo "filename=".$filename."<br>";
         //exit('111');
         //remove commas
         $filename = str_replace(",", "_", $filename);
@@ -138,7 +145,7 @@ class LargeFileDownloader {
         ///// EOF remove dots except extension /////
 
         $mimeType = $this->getMimeType($filename);
-        echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
+        //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
         //exit("111");
 
         if( $mimeType ) {

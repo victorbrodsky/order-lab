@@ -177,7 +177,7 @@ class ScanUploadController extends UploadController {
                 //$compressedFileLocation = "C:/Images/GIID-153-001.svs"; //testing file on dev
 
                 $downloader = new LargeFileDownloader();
-                $downloader->downloadLargeFile($compressedFileLocation);
+                $downloader->downloadLargeFile($compressedFileLocation,$originalname);
 
                 exit;
             }

@@ -287,6 +287,7 @@ class UploadController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
 
+        $originalname = null;
         $response = new Response();
 
         if( $document ) {
