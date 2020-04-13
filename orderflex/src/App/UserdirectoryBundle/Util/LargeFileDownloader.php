@@ -44,6 +44,12 @@ class LargeFileDownloader {
     //tested on 8GB file http://c.med.cornell.edu/order/scan/image-viewer/pacsvendor%20eSlide%20Manager%20on%20C.MED.CORNELL.EDU/Download/Slide/53748
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
+        if( is_readable($filepath) ) {
+            echo "file readable [$filepath]<br>";
+        } else {
+            echo "file is not readable [$filepath]<br>";
+        }
+
         if( file_exists($filepath) ) {
             echo "0file exists [$filepath]<br>";
         } else {
