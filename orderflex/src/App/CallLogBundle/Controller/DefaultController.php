@@ -756,7 +756,7 @@ class DefaultController extends OrderAbstractController
 
                 $message->addEntryTag($messageEntryTag);
 
-                //$em->flush();
+                $em->flush();
             }
         }
 
