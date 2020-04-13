@@ -122,10 +122,6 @@ class LargeFileDownloader {
                 $filename = str_replace(" ", "_", $filename);
 
                 $filename = $filename . "." . $ext;
-
-                if( !$size ) {
-                    $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
-                }
             }
         }
         //echo "filepath=".$filepath."<br>";
@@ -144,6 +140,12 @@ class LargeFileDownloader {
         $mimeType = $this->getMimeType($filename);
         echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
         //exit("111");
+
+        if( $mimeType ) {
+            if( !$size ) {
+                $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
+            }
+        }
 
         if(1) {
             //header('Content-Description: File Transfer');
