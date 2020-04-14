@@ -986,7 +986,8 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             $this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
-            $res = @ldap_bind($cnx,$ldapBindDN,$password);
+            //$res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
+            $res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
                 break;
@@ -1081,7 +1082,7 @@ class AuthUtil {
         //$LDAPUserPasswordAdmin = "zflexpass";
         //$ldapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
 
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
+        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . "[".$LDAPUserAdmin."]"."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
@@ -1421,7 +1422,7 @@ class AuthUtil {
             $filter = "(sn=*" . $searchvalue . "*)";
         }
 
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
+        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchMultipleUserBranchLdap
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);

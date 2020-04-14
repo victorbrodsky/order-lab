@@ -888,7 +888,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#crn-PatientList">
-                    Patient List
+                    List
                 </a>
             </h4>
         </div>
@@ -903,6 +903,10 @@
                     {#{{ treemacros.compositeTreeNode(message.crnEntryMessage.patientLists,cycle,"noprototype") }}#}
                     {{ formmacros.field(message.crnEntryMessage.patientLists) }}
                 {#{% endif %}#}
+
+
+                {{ formmacros.checkbox(message.crnEntryMessage.addAccessionToList) }}
+                {{ formmacros.field(message.crnEntryMessage.patientLists) }}
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->

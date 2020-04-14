@@ -427,6 +427,16 @@ class Message {
      **/
     private $entryTags;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\OrderformBundle\Entity\AccessionListHierarchy", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="crn_message_accessionlist",
+     *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="accessionlist_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $accessionLists;
+
 
     /**
      * Attachment can have many DocumentContainers; each DocumentContainers can have many Documents; each DocumentContainers has document type (DocumentTypeList)
@@ -563,6 +573,7 @@ class Message {
         $this->editorInfos = new ArrayCollection();
         
         $this->entryTags = new ArrayCollection();
+        $this->accessionLists = new ArrayCollection();
 
         $this->setOrderdate();
 
@@ -1404,6 +1415,22 @@ class Message {
     public function getEntryTags()
     {
         return $this->entryTags;
+    }
+
+    public function addAccessionList($item)
+    {
+        if( $item && !$this->accessionLists->contains($item) ) {
+            $this->accessionLists->add($item);
+        }
+        return $this;
+    }
+    public function removeAccessionList($item)
+    {
+        $this->accessionLists->removeElement($item);
+    }
+    public function getAccessionLists()
+    {
+        return $this->accessionLists;
     }
 
 
