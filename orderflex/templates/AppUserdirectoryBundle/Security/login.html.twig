@@ -128,10 +128,10 @@
 
 
         <script type="text/javascript">
-            var _ajaxTimeout = 60000;  //15000 => 15 sec
-            //var urlBase = $("#baseurl").val();
-            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
-            //console.log("url="+url);
+//            var _ajaxTimeout = 60000;  //15000 => 15 sec
+//            //var urlBase = $("#baseurl").val();
+//            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
+//            //console.log("url="+url);
 
             $(document).ready(function() {
 
@@ -153,6 +153,32 @@
                     $('#display-username').focus();
                 }
 
+//                $.ajax({
+//                    url: url,
+//                    type: 'GET',
+//                    async: true,
+//                    timeout: _ajaxTimeout,
+//                    data: { display_height: screen.height, display_width: screen.width },
+//                    success: function (data) {
+//                        //console.debug('send browser data ok');
+//                    },
+//                    error: function (x , t, m) {
+//                        if( t === "timeout" ) {
+//                            getAjaxTimeoutMsg();
+//                        }
+//                        //console.debug('send browser data error');
+//                    }
+//                });
+                //userLoginVisit();
+
+            });
+
+            function userLoginVisit() {
+                var _ajaxTimeout = 60000;  //15000 => 15 sec
+                //var urlBase = $("#baseurl").val();
+                var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
+                //console.log("url="+url);
+
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -169,8 +195,7 @@
                         //console.debug('send browser data error');
                     }
                 });
-
-            });
+            }
 
             //append usernametype to username
             function setFullUsername() {
