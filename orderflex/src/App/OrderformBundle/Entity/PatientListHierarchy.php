@@ -80,14 +80,14 @@ class PatientListHierarchy extends BaseCompositeNode {
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      * Default types have a positive level numbers, all other types have negative level numbers.
      *
-     * @ORM\ManyToOne(targetEntity="AccessionListHierarchyGroupType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="PatientListHierarchyGroupType", cascade={"persist"})
      */
     private $organizationalGroupType;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="patientLists", cascade={"persist"})
      **/
-    private $messages;
+    private $calllogEntryMessages;
 
 //    /**
 //     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="patientLists", cascade={"persist"})
@@ -106,7 +106,7 @@ class PatientListHierarchy extends BaseCompositeNode {
     public function __construct() {
         parent::__construct();
 
-        $this->messages = new ArrayCollection();
+        $this->calllogEntryMessages = new ArrayCollection();
     }
 
 
@@ -145,20 +145,20 @@ class PatientListHierarchy extends BaseCompositeNode {
     }
 
 
-    public function addMessage($item)
+    public function addCalllogEntryMessage($item)
     {
-        if( $item && !$this->messages->contains($item) ) {
-            $this->messages->add($item);
+        if( $item && !$this->calllogEntryMessages->contains($item) ) {
+            $this->calllogEntryMessages->add($item);
         }
         return $this;
     }
-    public function removeMessage($item)
+    public function removeCalllogEntryMessage($item)
     {
-        $this->messages->removeElement($item);
+        $this->calllogEntryMessages->removeElement($item);
     }
-    public function getMessages()
+    public function getCalllogEntryMessages()
     {
-        return $this->messages;
+        return $this->calllogEntryMessages;
     }
 
 //    /**
