@@ -1360,7 +1360,7 @@ class OrderUtil {
         //Accession list currently is level=3
         $level = 3;
 
-        $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Pathology Call Log Book Lists");
+        $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Accession Lists");
 
         $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
             array(
