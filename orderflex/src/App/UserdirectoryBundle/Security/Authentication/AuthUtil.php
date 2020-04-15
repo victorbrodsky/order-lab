@@ -971,6 +971,7 @@ class AuthUtil {
 
         //exit("simpleLdap");
         //set_time_limit(3); //testing
+        //putenv('LDAPTLS_REQCERT=never'); // /etc/openldap/ldap.conf
 
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);

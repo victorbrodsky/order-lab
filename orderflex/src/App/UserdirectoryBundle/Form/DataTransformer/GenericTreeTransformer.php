@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 
 
+use App\OrderformBundle\Entity\AccessionListHierarchy;
 use App\OrderformBundle\Entity\MessageCategory;
 use App\OrderformBundle\Entity\PatientListHierarchy;
 use App\UserdirectoryBundle\Entity\BaseCompositeNode;
@@ -301,6 +302,14 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "PatientListHierarchyGroupType",
+                    'bundleName' => "OrderformBundle"
+                );
+            }
+
+            if( $entity instanceof AccessionListHierarchy ) {
+                $mapper = array(
+                    'prefix' => "App",
+                    'organizationalGroupType' => "AccessionListHierarchyGroupType",
                     'bundleName' => "OrderformBundle"
                 );
             }

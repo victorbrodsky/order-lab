@@ -904,9 +904,8 @@
                     {{ formmacros.field(message.crnEntryMessage.patientLists) }}
                 {#{% endif %}#}
 
-
-                {{ formmacros.checkbox(message.crnEntryMessage.addAccessionToList) }}
-                {{ formmacros.field(message.crnEntryMessage.patientLists) }}
+                {{ formmacros.checkbox(message.addAccessionToList) }}
+                {{ formmacros.field(message.accessionLists) }}
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->

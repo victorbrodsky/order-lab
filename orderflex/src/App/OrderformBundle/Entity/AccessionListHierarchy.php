@@ -26,12 +26,7 @@ use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-//This list has a link to the patient list (i.e. PathologyCallComplexPatients) via entityNamespace, entityName, entityId
-
-//      name="scan_patientListHierarchy",
-//*     indexes={
-//*         @ORM\Index( name="patientListHierarchy_name_idx", columns={"name"} ),
-// *    }
+//This list has a link to the accession list (i.e. Accessions for Follow-Up Lists) via entityNamespace, entityName, entityId
 
 /**
  * Use Composite pattern:
@@ -80,33 +75,26 @@ class AccessionListHierarchy extends BaseCompositeNode {
      * For example, OrganizationalGroupType with level=1, set this level to 1.
      * Default types have a positive level numbers, all other types have negative level numbers.
      *
-     * @ORM\ManyToOne(targetEntity="PatientListHierarchyGroupType", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AccessionListHierarchyGroupType", cascade={"persist"})
      */
     private $organizationalGroupType;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="patientLists", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="accessionLists", cascade={"persist"})
      **/
-    private $calllogEntryMessages;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="CrnEntryMessage", mappedBy="patientLists", cascade={"persist"})
-//     **/
-//    private $crnEntryMessages;
+    private $messages;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Patient", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Accession", cascade={"persist"})
      */
-    private $patient;
-
-
+    private $accession;
 
     
 
     public function __construct() {
         parent::__construct();
 
-        $this->calllogEntryMessages = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
 
@@ -128,54 +116,40 @@ class AccessionListHierarchy extends BaseCompositeNode {
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getPatient()
-    {
-        return $this->patient;
-    }
-
-    /**
-     * @param mixed $patient
-     */
-    public function setPatient($patient)
-    {
-        $this->patient = $patient;
-    }
 
 
-    public function addCalllogEntryMessage($item)
+    public function addMessage($item)
     {
-        if( $item && !$this->calllogEntryMessages->contains($item) ) {
-            $this->calllogEntryMessages->add($item);
+        if( $item && !$this->messages->contains($item) ) {
+            $this->messages->add($item);
         }
         return $this;
     }
-    public function removeCalllogEntryMessage($item)
+    public function removeMessage($item)
     {
-        $this->calllogEntryMessages->removeElement($item);
+        $this->messages->removeElement($item);
     }
-    public function getCalllogEntryMessages()
+    public function getMessages()
     {
-        return $this->calllogEntryMessages;
+        return $this->messages;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getCrnEntryMessages()
-//    {
-//        return $this->crnEntryMessages;
-//    }
-//
-//    /**
-//     * @param mixed $crnEntryMessages
-//     */
-//    public function setCrnEntryMessages($crnEntryMessages)
-//    {
-//        $this->crnEntryMessages = $crnEntryMessages;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getAccession()
+    {
+        return $this->accession;
+    }
+
+    /**
+     * @param mixed $accession
+     */
+    public function setAccession($accession)
+    {
+        $this->accession = $accession;
+    }
+
 
 
 
@@ -192,11 +166,11 @@ class AccessionListHierarchy extends BaseCompositeNode {
         if( $this->getParent() ) {
             $parentName = ", parent=".$this->getParent()->getName();
         }
-        $patientName = "";
-        if( $this->getPatient() ) {
-            $patientName = ", patient=".$this->getPatient()->obtainPatientInfoTitle();
+        $accessionName = "";
+        if( $this->getAccession() ) {
+            $accessionName = ", accession=".$this->getAccession()->obtainFullValidKeyName();
         }
-        return "Patient List: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName.$patientName;
+        return "Accession List: ".$this->getName().", level=".$this->getLevel().", orderinlist=".$this->getOrderinlist().$parentName.$accessionName;
     }
 
 

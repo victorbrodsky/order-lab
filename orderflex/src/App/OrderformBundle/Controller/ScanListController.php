@@ -184,6 +184,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/", name="calllogtasktypes-list", methods={"GET"})
      * @Route("/message-tag-types/", name="messagetagtypes-list", methods={"GET"})
      * @Route("/message-tags/", name="messagetags-list", methods={"GET"})
+     * @Route("/accession-list-hierarchys/", name="accessionlisthierarchys-list", methods={"GET"})
+     * @Route("/accession-list-hierarchy-group-type/", name="accessionlisthierarchygrouptype-list", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/index.html.twig")
      */
@@ -246,6 +248,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/", name="calllogtasktypes_create", methods={"POST"})
      * @Route("/message-tag-types/", name="messagetagtypes_create", methods={"POST"})
      * @Route("/message-tags/", name="messagetags_create", methods={"POST"})
+     * @Route("/accession-list-hierarchys/", name="accessionlisthierarchys_create", methods={"POST"})
+     * @Route("/accession-list-hierarchy-group-type/", name="accessionlisthierarchygrouptype_create", methods={"POST"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -308,6 +312,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/new", name="calllogtasktypes_new", methods={"GET"})
      * @Route("/message-tag-types/new", name="messagetagtypes_new", methods={"GET"})
      * @Route("/message-tags/new", name="messagetags_new", methods={"GET"})
+     * @Route("/accession-list-hierarchys/new", name="accessionlisthierarchys_new", methods={"GET"})
+     * @Route("/accession-list-hierarchy-group-type/new", name="accessionlisthierarchygrouptype_new", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -370,6 +376,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show", methods={"GET"})
      * @Route("/message-tag-types/{id}", name="messagetagtypes_show", methods={"GET"})
      * @Route("/message-tags/{id}", name="messagetags_show", methods={"GET"})
+     * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_show", methods={"GET"})
+     * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_show", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/show.html.twig")
      */
@@ -432,6 +440,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}/edit", name="calllogtasktypes_edit", methods={"GET"})
      * @Route("/message-tag-types/{id}/edit", name="messagetagtypes_edit", methods={"GET"})
      * @Route("/message-tags/{id}/edit", name="messagetags_edit", methods={"GET"})
+     * @Route("/accession-list-hierarchys/{id}/edit", name="accessionlisthierarchys_edit", methods={"GET"})
+     * @Route("/accession-list-hierarchy-group-type/{id}/edit", name="accessionlisthierarchygrouptype_edit", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -494,6 +504,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_update", methods={"PUT"})
      * @Route("/message-tag-types/{id}", name="messagetagtypes_update", methods={"PUT"})
      * @Route("/message-tags/{id}", name="messagetags_update", methods={"PUT"})
+     * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_update", methods={"PUT"})
+     * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_update", methods={"PUT"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -716,6 +728,15 @@ class ScanListController extends ListController
             $displayName = "Message Tags List";
             break;
 
+        case "accessionlisthierarchys":
+            $className = "AccessionListHierarchy";
+            $displayName = "Accession List Hierarchy";
+            break;
+        case "accessionlisthierarchygrouptype":
+            $className = "AccessionListHierarchyGroupType";
+            $displayName = "Accession List Hierarchy Group Type";
+            break;
+
         default:
             $className = null;
             $displayName = null;
@@ -784,6 +805,8 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_delete", methods={"DELETE"})
      * @Route("/message-tag-types/{id}", name="messagetagtypes_delete", methods={"DELETE"})
      * @Route("/message-tags/{id}", name="messagetags_delete", methods={"DELETE"})
+     * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_delete", methods={"DELETE"})
+     * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_delete", methods={"DELETE"})
      *
      *
      */

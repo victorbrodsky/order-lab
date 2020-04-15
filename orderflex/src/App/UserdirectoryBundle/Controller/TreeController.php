@@ -709,6 +709,9 @@ class TreeController extends OrderAbstractController {
             case "PatientListHierarchy":
                 $organizationalGroupType = "PatientListHierarchyGroupType";
                 break;
+            case "AccessionListHierarchy":
+                $organizationalGroupType = "AccessionListHierarchyGroupType";
+                break;
             case "FormNode":
                 $organizationalGroupType = NULL;
                 break;

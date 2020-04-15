@@ -126,6 +126,7 @@ $(document).ready(function() {
     getJstree('OrderformBundle','CourseTitleTree');
     getJstree('OrderformBundle','MessageCategory');
     getJstree('OrderformBundle','PatientListHierarchy');
+    getJstree('OrderformBundle','AccessionListHierarchy');
 
     initDatetimepicker();
 

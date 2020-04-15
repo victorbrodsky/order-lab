@@ -23,6 +23,8 @@ namespace App\OrderformBundle\Controller;
 
 
 //use App\CrnBundle\Entity\CrnEntryTagsList;
+use App\OrderformBundle\Entity\AccessionListHierarchy;
+use App\OrderformBundle\Entity\AccessionListHierarchyGroupType;
 use App\OrderformBundle\Entity\AmendmentReasonList;
 use App\OrderformBundle\Entity\CalllogAttachmentTypeList;
 //use App\OrderformBundle\Entity\CalllogEntryTagsList;
@@ -213,6 +215,10 @@ class ScanAdminController extends AdminController
         $count_PatientListHierarchyGroupType = $this->generatePatientListHierarchyGroupType();
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
         $count_CrnPatientListHierarchy = $this->generateCrnPatientListHierarchy();
+
+        $count_AccessionListHierarchyGroupType = $this->generateAccessionListHierarchyGroupType();
+        $count_AccessionListHierarchy = $this->generateAccessionListHierarchy();
+
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
         $count_generateMessageStatus = $this->generateMessageStatus();
@@ -257,6 +263,8 @@ class ScanAdminController extends AdminController
             'AmendmentReasons='.$count_AmendmentReason.', '.
             'PatientListHierarchyGroupType='.$count_PatientListHierarchyGroupType.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
+            'AccessionListHierarchyGroupType='.$count_AccessionListHierarchyGroupType.', '.
+            'AccessionListHierarchy='.$count_AccessionListHierarchy.', '.
             'CrnPatientListHierarchy='.$count_CrnPatientListHierarchy.', '.
             'EncounterInfoType='.$count_EncounterInfoType.', '.
             'EncounterStatus='.$count_generateEncounterStatus.', '.
@@ -2488,6 +2496,115 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
+
+    public function generateAccessionListHierarchyGroupType() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findAll();
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            0 => "Accession List",
+            1 => "Accession",
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $level=>$name ) {
+
+//            $entity = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName($name);
+//            if( $entity ) {
+//                continue;
+//            }
+
+            $entity = new AccessionListHierarchyGroupType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $entity->setLevel($level);
+
+            //echo "creating AccessionListHierarchyGroupType: name=".$entity->getName()."; level=".$entity->getLevel()."<br>";
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+    public function generateAccessionListHierarchy() {
+
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        //add all Accession Lists as links (similar to patient lists) except at this point there should only be one: “Accessions for Follow-Up” link
+        $items = array(
+            "Accession Lists",                      //level 0
+            "Accessions for Follow-Up",             //level 1
+        );
+
+        $count = 10;
+        $level = 0;
+        $parentItem = null;
+
+        foreach( $items as $name ) {
+
+            if( $parentItem ) {
+                $mapper = array(
+                    'prefix' => "App",
+                    'className' => "AccessionListHierarchy",
+                    'bundleName' => "OrderformBundle"
+                );
+                $item = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+            } else {
+                $item = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName($name);
+            }
+
+            if( $item ) {
+                continue;
+            }
+
+            //make category
+            $item = new AccessionListHierarchy();
+
+            $this->setDefaultList($item,$count,$username,$name);
+            $item->setLevel($level);
+
+            //find org group level
+            $levelGroup = $em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findOneByLevel($level);
+            if( !$levelGroup ) {
+                exit("AccessionListHierarchyGroupType not found by level ".$level);
+            }
+
+            $item->setOrganizationalGroupType($levelGroup);
+
+            $level++;
+            $count = $count + 10;
+
+            //add to parent
+            if( $parentItem ) {
+                $em->persist($parentItem);
+                $parentItem->addChild($item);
+            }
+
+            $parentItem = $item;
+
+            //$item->printTree();
+
+            $em->persist($item);
+            $em->flush();
+        }
+        //exit('EOF message category');
+
+        return round($count/10);
+    }
+
+
     public function generateCrnPatientListHierarchy() {
 
         $em = $this->getDoctrine()->getManager();
@@ -2641,6 +2758,7 @@ class ScanAdminController extends AdminController
      * @Route("/list/educational-course-titles-tree/", name="scan_tree_educationalcoursetitles_list", methods={"GET"})
      * @Route("/list/message-categories-tree/", name="scan_tree_messagecategories_list", methods={"GET"})
      * @Route("/list/patient-lists-tree/", name="scan_tree_patientlisthierarchy_list", methods={"GET"})
+     * @Route("/list/accession-lists-tree/", name="scan_tree_accessionlisthierarchy_list", methods={"GET"})
      */
     public function institutionTreeAction(Request $request)
     {
@@ -2687,11 +2805,11 @@ class ScanAdminController extends AdminController
             $nodeshowpath = "patientlisthierarchys_show";
         }
 
-        if( $routeName == "scan_tree_patientlisthierarchy_list" ) {
+        if( $routeName == "scan_tree_accessionlisthierarchy_list" ) {
             $bundleName = "OrderformBundle";
-            $className = "PatientListHierarchy";
-            $title = "Patient Lists Hierarchy Management";
-            $nodeshowpath = "patientlisthierarchys_show";
+            $className = "AccessionListHierarchy";
+            $title = "Accession Lists Hierarchy Management";
+            $nodeshowpath = "accessionlisthierarchys_show";
         }
 
         $mapper = array(

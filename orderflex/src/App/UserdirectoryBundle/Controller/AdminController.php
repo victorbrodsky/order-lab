@@ -6911,6 +6911,9 @@ class AdminController extends OrderAbstractController
             //"crnentrytags" => array('CrnEntryTagsList','crnentrytags-list','Crn Entry Tags List'),
             "messagetagtypes" => array('MessageTagTypesList','messagetagtypes-list','Message Tag Types List'),
             "messagetags" => array('MessageTagsList','messagetags-list','Message Tags List'),
+
+            "accessionlisthierarchys" => array('AccessionListHierarchy','accessionlisthierarchys-list','Accession List Hierarchy'),
+            "accessionlisthierarchygrouptype" => array('AccessionListHierarchyGroupType','accessionlisthierarchygrouptype-list','Accession List Hierarchy Group Type'),
         );
 
         if( $withcustom ) {
