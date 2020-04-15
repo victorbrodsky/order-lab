@@ -80,7 +80,7 @@ class AccessionListHierarchy extends BaseCompositeNode {
     private $organizationalGroupType;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="accessionLists", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
      **/
     private $messages;
 

@@ -429,7 +429,7 @@ class Message {
 
     /**
      * @ORM\ManyToMany(targetEntity="App\OrderformBundle\Entity\AccessionListHierarchy", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="crn_message_accessionlist",
+     * @ORM\JoinTable(name="scan_message_accessionlist",
      *      joinColumns={@ORM\JoinColumn(name="message_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="accessionlist_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
