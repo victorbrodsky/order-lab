@@ -1354,4 +1354,23 @@ class OrderUtil {
         }
     }
 
+
+    //get default Accession list objects
+    public function getDefaultAccessionLists() {
+        //Accession list currently is level=3
+        $level = 3;
+
+        $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Pathology Call Log Book Lists");
+
+        $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+            array(
+                'type' => array('default','user-added'),
+                'level' => $level,
+                'parent' => $parent->getId()
+            )
+        );
+
+        return $accessionLists;
+    }
+
 }

@@ -308,6 +308,27 @@ class UtilController extends OrderAbstractController {
         return $response;
     }
 
+    /**
+     * @Route("/common/accessionlists", name="employees_get_accessionlists", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getAccessionListsAction(Request $request) {
+        $scanorderUtil = $this->get('scanorder_utility');
+        $accessionLists = $scanorderUtil->getDefaultAccessionLists();
+
+        $output = array();
+        foreach ($accessionLists as $accessionList) {
+            $output[] = array(
+                'id' => $accessionList->getId(),
+                'text' => $accessionList->getName()
+            );
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
 //    /**
 //     * @Route("/common/commenttype", name="employees_get_commenttype", methods={"GET"})

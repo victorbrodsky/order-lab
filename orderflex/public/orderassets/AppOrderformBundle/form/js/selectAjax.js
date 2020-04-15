@@ -73,6 +73,7 @@ var _rooms = [];
 var _suites = [];
 
 var _patientLists = [];
+var _accessionLists = [];
 
 
 //function regularCombobox() {
@@ -158,6 +159,7 @@ function customCombobox() {
 
 
     getComboboxGeneric(null,'patientlists',_patientLists,true,'');
+    getComboboxGeneric(null,'accessionlists',_accessionLists,true,'');
 }
 
 //function initDefaultServiceManually() {
