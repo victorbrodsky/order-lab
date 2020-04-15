@@ -376,7 +376,7 @@ class ScanListController extends ListController
      * @Route("/calllog-task-types/{id}", name="calllogtasktypes_show", methods={"GET"})
      * @Route("/message-tag-types/{id}", name="messagetagtypes_show", methods={"GET"})
      * @Route("/message-tags/{id}", name="messagetags_show", methods={"GET"})
-     * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_show", methods={"GET"})
+     * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_show", methods={"GET"}, options={"expose"=true})
      * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_show", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/show.html.twig")

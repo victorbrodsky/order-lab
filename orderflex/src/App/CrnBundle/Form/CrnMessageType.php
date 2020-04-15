@@ -25,6 +25,7 @@ use App\UserdirectoryBundle\Form\InstitutionType;
 use App\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -415,6 +416,42 @@ class CrnMessageType extends AbstractType
         ////////////////////////// EOF Specific Orders //////////////////////////
 
 
+        $builder->add('addAccessionToList', CheckboxType::class, array(
+            'label' => 'Add accession to the list:',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $message = $event->getData();
+            $form = $event->getForm();
+
+            $label = 'List Title:';
+
+            $form->add('accessionLists', CustomSelectorType::class, array(
+                'label' => $label,
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-accessionlists', 'type' => 'hidden'),
+                //'multiple' => true,
+                'classtype' => 'accessionLists'
+            ));
+
+        });
+
+        //POST_SUBMIT hierarchy tree processing for newly added element
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData(); //CrnEntryMessage
+
+            //$event->setData($data);
+
+            $accessionLists = $data->getAccessionLists();
+            $this->processAccessionList($accessionLists);
+
+            //exit();
+        });
+
+
 //        $builder->add('addPatientToList', 'checkbox', array(
 //            'label' => 'Add patient to the list:',
 //            'mapped' => false,
@@ -505,6 +542,49 @@ class CrnMessageType extends AbstractType
         return 'oleg_crnformbundle_messagetype';
     }
 
+
+    public function processAccessionList( $accessionLists ) {
+
+        $crnUtil = $this->params['container']->get('crn_util');
+        $defaultAccessionLists = $crnUtil->getDefaultAccessionLists();
+
+        //get level, org group, parent from the first element
+        $level = null;
+        $orgGroupType = null;
+        $parent = null;
+        foreach( $defaultAccessionLists as $accessionList ) {
+            if( $accessionList && $accessionList->getLevel() && $accessionList->getParent() ) {
+                $level = $accessionList->getLevel();
+                $parent = $accessionList->getParent();
+                $orgGroupType = $accessionList->getOrganizationalGroupType();
+                break;
+            }
+        }
+
+        //echo "level=$level; orgGroupType=$orgGroupType; parent=$parent<br>";
+        //if( $level || $orgGroupType || $parent ) { //if these parameters are not set, then still create a new node in the AccessionList hierarchy. Then manually set the tree.
+
+        foreach( $accessionLists as $accessionList ) {
+            if ($accessionList) {
+                if ($level) {
+                    $accessionList->setLevel($level);
+                }
+                if ($orgGroupType) {
+                    $accessionList->setOrganizationalGroupType($orgGroupType);
+                }
+                if ($parent) {
+                    $parent->addChild($accessionList);
+                }
+
+                $this->params['em']->persist($accessionList);
+                //$this->params['em']->flush($accessionList);
+            }
+        }//foreach
+
+        //}//if
+
+        return $accessionLists;
+    }
 
 
 
