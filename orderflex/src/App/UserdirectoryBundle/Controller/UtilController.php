@@ -313,7 +313,9 @@ class UtilController extends OrderAbstractController {
      */
     public function getAccessionListsAction(Request $request) {
         $scanorderUtil = $this->get('scanorder_utility');
-        $accessionLists = $scanorderUtil->getDefaultAccessionLists();
+        //Accession list currently is level=1
+        $level = 1;
+        $accessionLists = $scanorderUtil->getDefaultAccessionLists($level);
 
         $output = array();
         foreach ($accessionLists as $accessionList) {

@@ -1790,6 +1790,13 @@ class CrnUtil
         return null;
     }
 
+    //create a new AccessionListHierarchy node and add as a child to the $accessionList
+    public function addToAccessionLists( $patient, $message, $testing ) {
+        exit('addToAccessionLists');
+        $scanorderUtil = $this->get('scanorder_utility');
+        return $scanorderUtil->addToAccessionLists( $patient, $message, $testing );
+    }
+
     public function getDefaultPatientList() {
 
         $userSecUtil = $this->container->get('user_security_utility');

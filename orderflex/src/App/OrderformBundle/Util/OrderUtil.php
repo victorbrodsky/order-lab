@@ -25,6 +25,7 @@
 
 namespace App\OrderformBundle\Util;
 
+use App\OrderformBundle\Entity\AccessionListHierarchy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -1356,9 +1357,9 @@ class OrderUtil {
 
 
     //get default Accession list objects
-    public function getDefaultAccessionLists() {
-        //Accession list currently is level=3
-        $level = 3;
+    public function getDefaultAccessionLists( $level=1 ) {
+        //Accession list currently is level=1
+        //$level = 1;
 
         $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Accession Lists");
 
@@ -1372,5 +1373,198 @@ class OrderUtil {
 
         return $accessionLists;
     }
+    public function getDefaultAccessionList() {
+
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$sitename = $this->container->getParameter('crn.sitename');
+        //$accessionList = $userSecUtil->getSiteSettingParameter('accessionList',$sitename);
+
+        $accessionList = null;
+        //echo "accessionList=".$accessionList."<br>";
+
+        if( !$accessionList ) {
+            $accessionListName = "Accessions for Follow-Up";
+
+            $accessionList = null;
+
+            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+                array(
+                    'name'=>$accessionListName,
+                    'type'=>array('default','user-added')
+                )
+            );
+            if( count($accessionLists) > 0 ) {
+                $accessionList = $accessionLists[0];
+            }
+        }
+
+        if( !$accessionList ) {
+            throw new \Exception( "Accession list is not found by name '".$accessionListName."'" );
+        }
+        return $accessionList;
+    }
+
+    //create a new AccessionListHierarchy node and add as a child to the $accessionList
+    public function addToAccessionLists( $patient, $message, $testing ) {
+
+        //echo "accessionList count=".count($crnMessage = $message->getCrnEntryMessage()->getAccessionLists())."<br>";
+
+        //check if addAccessionToList is checked
+        if( $message ) {
+            if( !$message->getAddAccessionToList() ) {
+                //echo "AddAccessionToList is NULL <br>";
+                return null;
+            }
+        } else {
+            return null;
+        }
+        //echo "continue addToAccessionLists<br>";
+        //exit('1');
+
+        $accession = null;
+        $accessions = $message->getAccession();
+        if( count($accessions) > 0 ) {
+            $accession = $accessions->first();
+            //echo "accession id=".$accession->getId()."<br>";
+        }
+
+        $accession = $message->getAccession();
+
+        if( !$accession ) {
+            return null;
+        }
+
+        $accessionLists = $message->getAccessionLists();
+        if( count($accessionLists) == 0 ) {
+            return null;
+        }
+
+        $newListElements = $this->addAccessionToAccessionLists($accession,$accessionLists,$message,$testing);
+
+        return $newListElements;
+    }
+    public function addAccessionToAccessionLists( $accession, $accessionLists, $message=null, $testing=false ) {
+        if( !$accession ) {
+            return null;
+        }
+        if( count($accessionLists) == 0 ) {
+            return null;
+        }
+
+        $newListElementArr = array();
+
+        foreach( $accessionLists as $accessionList ) {
+            //echo "accessionList=".$accessionList."<br>";
+            $newListElement = $this->addAccessionToAccessionList( $accession,$accessionList,$message,$testing);
+            if( $newListElement ) {
+                $newListElementArr[] = $newListElement;
+            }
+        }
+
+        return $newListElementArr;
+    }
+    public function addAccessionToAccessionList( $accession, $accessionList, $message=null, $testing=false ) {
+
+        if( !$accession ) {
+            return null;
+        }
+
+        if( !$accessionList ) {
+            return null;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        //add only if the accession does not exists in the list
+        $similarAccessions = $this->getSameAccessionsInList($accessionList,$accession);
+        if( $similarAccessions && count($similarAccessions) > 0 ) {
+            //check and set type to user-added if type is disabled
+            foreach( $similarAccessions as $similarAccession ) {
+                if( $similarAccession->getType() == 'disabled' ) {
+                    $similarAccession->setType('user-added');
+                    if( !$testing ) {
+                        $this->em->flush();
+                    }
+                    return $similarAccession;
+                }
+            }
+            return null;
+        }
+
+        //create a new node in the list AccessionListHierarchyand attach it as a child to the $accessionList
+        $newListElement = new AccessionListHierarchy();
+
+        $accessionDescription = "Accession ID# " . $accession->getId() . ": " . $accession->obtainAccessionInfoTitle();
+        $accessionName = "Accession ID# " . $accession->getId();
+        $count = null;
+        $userSecUtil->setDefaultList($newListElement, $count, $user, $accessionName);
+        $newListElement->setAccession($accession);
+        $newListElement->setDescription($accessionDescription);
+
+        if( $message ) {
+            $newListElement->setObject($message);
+        }
+
+        //tree variables
+        //set level
+        $level = $accessionList->getLevel();
+        if( !$level ) {
+            $defaultAccessionList = $this->getDefaultAccessionList();
+            if( $defaultAccessionList ) {
+                //set level the same as default accession list
+                $level = $defaultAccessionList->getLevel();
+                $accessionList->setLevel($level);
+                //attach this new accession list to the parent of the default accession list
+                $defaultAccessionListParent = $defaultAccessionList->getParent();
+                if( $defaultAccessionListParent ) {
+                    $defaultAccessionListParent->addChild($accessionList);
+                }
+            }
+        }
+        //echo "level=$level ";
+        $level = $level + 1;
+        //echo " (+1)=> $level <br>";
+        $newListElement->setLevel($level);
+        //set group
+        $group = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findOneByName('Accession');
+        $newListElement->setOrganizationalGroupType($group);
+
+        $accessionList->addChild($newListElement);
+
+        $this->em->persist($newListElement);
+
+        if( !$testing ) {
+            $this->em->flush();
+        }
+
+        return $newListElement;
+    }
+    public function getSameAccessionsInList( $accessionList, $accession ) {
+        if( $accessionList && $accessionList->getId() && $accession && $accession->getId() ) {
+            //ok continue
+        } else {
+            return null;
+        }
+        $repository = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        $dql = $repository->createQueryBuilder("list");
+
+        $dql->where("list.parent = :parentId AND list.accession = :accessionId");
+        $parameters['parentId'] = $accessionList->getId();
+        $parameters['accessionId'] = $accession->getId();
+
+        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        $accessions = $query->getResult();
+        if( count($accessions) > 0 ) {
+            return $accessions;
+        }
+        return null;
+    }
+
 
 }

@@ -416,6 +416,7 @@ class CrnMessageType extends AbstractType
         ////////////////////////// EOF Specific Orders //////////////////////////
 
 
+        ///////////////// Accession List /////////////////
         $builder->add('addAccessionToList', CheckboxType::class, array(
             'label' => 'Add accession to the list:',
             'required' => false,
@@ -450,6 +451,7 @@ class CrnMessageType extends AbstractType
 
             //exit();
         });
+        ///////////////// EOF Accession List /////////////////
 
 
 //        $builder->add('addPatientToList', 'checkbox', array(
@@ -545,8 +547,9 @@ class CrnMessageType extends AbstractType
 
     public function processAccessionList( $accessionLists ) {
 
-        $crnUtil = $this->params['container']->get('crn_util');
-        $defaultAccessionLists = $crnUtil->getDefaultAccessionLists();
+        //$crnUtil = $this->params['container']->get('crn_util');
+        $scanorderUtil = $this->get('scanorder_utility');
+        $defaultAccessionLists = $scanorderUtil->getDefaultAccessionLists();
 
         //get level, org group, parent from the first element
         $level = null;
