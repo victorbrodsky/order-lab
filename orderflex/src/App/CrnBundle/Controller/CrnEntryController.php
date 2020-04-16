@@ -1972,6 +1972,10 @@ class CrnEntryController extends OrderAbstractController
                     //do it after message is in DB and has ID
                     $crnUtil->addToPatientLists($patient,$message,$testing);
 
+                    //add Accession to the Accession list specified by accessionListTitle if the option addAccessionToList is checked.
+                    //do it after message is in DB and has ID
+                    $crnUtil->addToCrnAccessionLists($message,$testing);
+                    
                     if( $previousEncounterId ) {
                         $msg = "Previous Encounter (ID#" . $newEncounter->getId() . ") has been used with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
                     } else {

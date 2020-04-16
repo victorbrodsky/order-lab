@@ -25,6 +25,7 @@ namespace App\OrderformBundle\Controller;
 //use App\CrnBundle\Entity\CrnEntryTagsList;
 use App\OrderformBundle\Entity\AccessionListHierarchy;
 use App\OrderformBundle\Entity\AccessionListHierarchyGroupType;
+use App\OrderformBundle\Entity\AccessionListType;
 use App\OrderformBundle\Entity\AmendmentReasonList;
 use App\OrderformBundle\Entity\CalllogAttachmentTypeList;
 //use App\OrderformBundle\Entity\CalllogEntryTagsList;
@@ -218,6 +219,7 @@ class ScanAdminController extends AdminController
 
         $count_AccessionListHierarchyGroupType = $this->generateAccessionListHierarchyGroupType();
         $count_AccessionListHierarchy = $this->generateAccessionListHierarchy();
+        $count_AccessionListType = $this->generateAccessionListType();
 
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
@@ -265,6 +267,7 @@ class ScanAdminController extends AdminController
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
             'AccessionListHierarchyGroupType='.$count_AccessionListHierarchyGroupType.', '.
             'AccessionListHierarchy='.$count_AccessionListHierarchy.', '.
+            'AccessionListType'.$count_AccessionListType.', '.
             'CrnPatientListHierarchy='.$count_CrnPatientListHierarchy.', '.
             'EncounterInfoType='.$count_EncounterInfoType.', '.
             'EncounterStatus='.$count_generateEncounterStatus.', '.
@@ -2602,6 +2605,38 @@ class ScanAdminController extends AdminController
         //exit('EOF message category');
 
         return round($count/10);
+    }
+    public function generateAccessionListType() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "Call Log",
+            "Critical Result Notifications"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new AccessionListType();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
     }
 
 

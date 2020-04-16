@@ -61,7 +61,7 @@ class CalllogEntryMessageType extends AbstractType
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $message = $event->getData();
+            //$message = $event->getData();
             $form = $event->getForm();
 
             $label = 'List Title:';

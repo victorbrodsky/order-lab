@@ -1791,10 +1791,11 @@ class CrnUtil
     }
 
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
-    public function addToAccessionLists( $patient, $message, $testing ) {
-        exit('addToAccessionLists');
-        $scanorderUtil = $this->get('scanorder_utility');
-        return $scanorderUtil->addToAccessionLists( $patient, $message, $testing );
+    public function addToCrnAccessionLists( $message, $testing ) {
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionListTypeName = "Critical Result Notifications";
+        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
     }
 
     public function getDefaultPatientList() {

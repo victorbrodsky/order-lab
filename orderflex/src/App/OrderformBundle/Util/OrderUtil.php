@@ -1405,7 +1405,7 @@ class OrderUtil {
     }
 
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
-    public function addToAccessionLists( $patient, $message, $testing ) {
+    public function addToAccessionLists( $accessionListType, $message, $testing ) {
 
         //echo "accessionList count=".count($crnMessage = $message->getCrnEntryMessage()->getAccessionLists())."<br>";
 
@@ -1428,8 +1428,6 @@ class OrderUtil {
             //echo "accession id=".$accession->getId()."<br>";
         }
 
-        $accession = $message->getAccession();
-
         if( !$accession ) {
             return null;
         }
@@ -1439,11 +1437,11 @@ class OrderUtil {
             return null;
         }
 
-        $newListElements = $this->addAccessionToAccessionLists($accession,$accessionLists,$message,$testing);
+        $newListElements = $this->addAccessionToAccessionLists($accession,$accessionLists,$accessionListType,$message,$testing);
 
         return $newListElements;
     }
-    public function addAccessionToAccessionLists( $accession, $accessionLists, $message=null, $testing=false ) {
+    public function addAccessionToAccessionLists( $accession, $accessionLists, $accessionListType, $message=null, $testing=false ) {
         if( !$accession ) {
             return null;
         }
@@ -1455,7 +1453,7 @@ class OrderUtil {
 
         foreach( $accessionLists as $accessionList ) {
             //echo "accessionList=".$accessionList."<br>";
-            $newListElement = $this->addAccessionToAccessionList( $accession,$accessionList,$message,$testing);
+            $newListElement = $this->addAccessionToAccessionList($accession,$accessionList,$accessionListType,$message,$testing);
             if( $newListElement ) {
                 $newListElementArr[] = $newListElement;
             }
@@ -1463,7 +1461,7 @@ class OrderUtil {
 
         return $newListElementArr;
     }
-    public function addAccessionToAccessionList( $accession, $accessionList, $message=null, $testing=false ) {
+    public function addAccessionToAccessionList( $accession, $accessionList, $accessionListType, $message=null, $testing=false ) {
 
         if( !$accession ) {
             return null;
@@ -1495,7 +1493,7 @@ class OrderUtil {
         //create a new node in the list AccessionListHierarchyand attach it as a child to the $accessionList
         $newListElement = new AccessionListHierarchy();
 
-        $accessionDescription = "Accession ID# " . $accession->getId() . ": " . $accession->obtainAccessionInfoTitle();
+        $accessionDescription = "Accession ID# " . $accession->getId() . ": " . $accession->obtainFullValidKeyName(); //obtainFullObjectName
         $accessionName = "Accession ID# " . $accession->getId();
         $count = null;
         $userSecUtil->setDefaultList($newListElement, $count, $user, $accessionName);
@@ -1504,6 +1502,13 @@ class OrderUtil {
 
         if( $message ) {
             $newListElement->setObject($message);
+
+            //Add message's entry tags as "Accession List Types"
+            if( $accessionListType ) {
+                if ($accessionListType) {
+                    $newListElement->addAccessionListType($accessionListType);
+                }
+            }
         }
 
         //tree variables

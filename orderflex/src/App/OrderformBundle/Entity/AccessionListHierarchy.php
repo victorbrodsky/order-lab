@@ -89,12 +89,30 @@ class AccessionListHierarchy extends BaseCompositeNode {
      */
     private $accession;
 
+//    /**
+//     * Accession List Types
+//     *
+//     * @ORM\ManyToOne(targetEntity="AccessionListType", cascade={"persist"})
+//     */
+//    private $accessionListType;
+    /**
+     * Accession List Types
+     *
+     * @ORM\ManyToMany(targetEntity="AccessionListType", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="scan_accessionlist_accessiontype",
+     *      joinColumns={@ORM\JoinColumn(name="accessionlist_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="accessiontype_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $accessionListTypes;
+
     
 
     public function __construct() {
         parent::__construct();
 
         $this->messages = new ArrayCollection();
+        $this->accessionListTypes = new ArrayCollection();
     }
 
 
@@ -151,7 +169,21 @@ class AccessionListHierarchy extends BaseCompositeNode {
     }
 
 
-
+    public function addAccessionListType($item)
+    {
+        if( $item && !$this->accessionListTypes->contains($item) ) {
+            $this->accessionListTypes->add($item);
+        }
+        return $this;
+    }
+    public function removeAccessionListType($item)
+    {
+        $this->accessionListTypes->removeElement($item);
+    }
+    public function getAccessionListTypes()
+    {
+        return $this->accessionListTypes;
+    }
 
 
     public function getClassName() {

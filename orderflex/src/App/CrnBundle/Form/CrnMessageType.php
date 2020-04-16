@@ -425,7 +425,7 @@ class CrnMessageType extends AbstractType
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $message = $event->getData();
+            //$message = $event->getData();
             $form = $event->getForm();
 
             $label = 'List Title:';
@@ -548,7 +548,7 @@ class CrnMessageType extends AbstractType
     public function processAccessionList( $accessionLists ) {
 
         //$crnUtil = $this->params['container']->get('crn_util');
-        $scanorderUtil = $this->get('scanorder_utility');
+        $scanorderUtil = $this->params['container']->get('scanorder_utility');
         $defaultAccessionLists = $scanorderUtil->getDefaultAccessionLists();
 
         //get level, org group, parent from the first element

@@ -780,7 +780,7 @@ class CrnEditController extends CrnEntryController
 
                     //add Accession to the Accession list specified by accessionListTitle if the option addAccessionToList is checked.
                     //do it after message is in DB and has ID
-                    $crnUtil->addToAccessionLists($patient,$message,$testing);
+                    $crnUtil->addToCrnAccessionLists($message,$testing);
 
                     //New Encounter (ID#" . $newEncounter->getId() . ")
                     $msg = " is created with Encounter number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();
