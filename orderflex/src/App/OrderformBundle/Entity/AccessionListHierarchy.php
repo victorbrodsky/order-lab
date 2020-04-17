@@ -79,10 +79,10 @@ class AccessionListHierarchy extends BaseCompositeNode {
      */
     private $organizationalGroupType;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
-     **/
-    private $messages;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Message", mappedBy="accessionLists", cascade={"persist"})
+//     **/
+//    private $messages;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Accession", cascade={"persist"})
@@ -105,7 +105,7 @@ class AccessionListHierarchy extends BaseCompositeNode {
     public function __construct() {
         parent::__construct();
 
-        $this->messages = new ArrayCollection();
+        //$this->messages = new ArrayCollection();
         $this->accessionListTypes = new ArrayCollection();
     }
 
@@ -130,21 +130,21 @@ class AccessionListHierarchy extends BaseCompositeNode {
 
 
 
-    public function addMessage($item)
-    {
-        if( $item && !$this->messages->contains($item) ) {
-            $this->messages->add($item);
-        }
-        return $this;
-    }
-    public function removeMessage($item)
-    {
-        $this->messages->removeElement($item);
-    }
-    public function getMessages()
-    {
-        return $this->messages;
-    }
+//    public function addMessage($item)
+//    {
+//        if( $item && !$this->messages->contains($item) ) {
+//            $this->messages->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeMessage($item)
+//    {
+//        $this->messages->removeElement($item);
+//    }
+//    public function getMessages()
+//    {
+//        return $this->messages;
+//    }
 
     /**
      * @return mixed
