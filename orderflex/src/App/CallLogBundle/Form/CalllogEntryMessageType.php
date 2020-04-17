@@ -84,7 +84,7 @@ class CalllogEntryMessageType extends AbstractType
             $form->add('patientLists', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
-                'attr' => array('class' => 'ajax-combobox-patientlists', 'type' => 'hidden'),
+                'attr' => array('class' => 'ajax-combobox-calllogpatientlists', 'type' => 'hidden'),
                 //'multiple' => true,
                 'classtype' => 'patientLists'
             ));

@@ -72,7 +72,8 @@ var _cities = [];
 var _rooms = [];
 var _suites = [];
 
-var _patientLists = [];
+var _calllogPatientLists = [];
+var _crnPatientLists = [];
 var _accessionLists = [];
 
 
@@ -158,7 +159,8 @@ function customCombobox() {
     getComboboxGeneric(null,'city',_cities,false);
 
 
-    getComboboxGeneric(null,'patientlists',_patientLists,true,'');
+    getComboboxGeneric(null,'calllogpatientlists',_calllogPatientLists,true,'');
+    getComboboxGeneric(null,'crnpatientlists',_crnPatientLists,true,'');
     getComboboxGeneric(null,'accessionlists',_accessionLists,true,'');
 }
 

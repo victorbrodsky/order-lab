@@ -186,6 +186,8 @@ class ScanListController extends ListController
      * @Route("/message-tags/", name="messagetags-list", methods={"GET"})
      * @Route("/accession-list-hierarchys/", name="accessionlisthierarchys-list", methods={"GET"})
      * @Route("/accession-list-hierarchy-group-type/", name="accessionlisthierarchygrouptype-list", methods={"GET"})
+     * @Route("/accession-list-types/", name="accessionlisttype-list", methods={"GET"})
+     *
      *
      * @Template("AppOrderformBundle/ListForm/index.html.twig")
      */
@@ -250,6 +252,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/", name="messagetags_create", methods={"POST"})
      * @Route("/accession-list-hierarchys/", name="accessionlisthierarchys_create", methods={"POST"})
      * @Route("/accession-list-hierarchy-group-type/", name="accessionlisthierarchygrouptype_create", methods={"POST"})
+     * @Route("/accession-list-types/", name="accessionlisttype_create", methods={"POST"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -314,6 +317,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/new", name="messagetags_new", methods={"GET"})
      * @Route("/accession-list-hierarchys/new", name="accessionlisthierarchys_new", methods={"GET"})
      * @Route("/accession-list-hierarchy-group-type/new", name="accessionlisthierarchygrouptype_new", methods={"GET"})
+     * @Route("/accession-list-types/new", name="accessionlisttype_new", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/new.html.twig")
      */
@@ -378,6 +382,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/{id}", name="messagetags_show", methods={"GET"})
      * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_show", methods={"GET"}, options={"expose"=true})
      * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_show", methods={"GET"})
+     * @Route("/accession-list-types/{id}", name="accessionlisttype_show", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/show.html.twig")
      */
@@ -442,6 +447,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/{id}/edit", name="messagetags_edit", methods={"GET"})
      * @Route("/accession-list-hierarchys/{id}/edit", name="accessionlisthierarchys_edit", methods={"GET"})
      * @Route("/accession-list-hierarchy-group-type/{id}/edit", name="accessionlisthierarchygrouptype_edit", methods={"GET"})
+     * @Route("/accession-list-types/{id}/edit", name="accessionlisttype_edit", methods={"GET"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -506,6 +512,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/{id}", name="messagetags_update", methods={"PUT"})
      * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_update", methods={"PUT"})
      * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_update", methods={"PUT"})
+     * @Route("/accession-list-types/{id}", name="accessionlisttype_update", methods={"PUT"})
      *
      * @Template("AppOrderformBundle/ListForm/edit.html.twig")
      */
@@ -736,6 +743,10 @@ class ScanListController extends ListController
             $className = "AccessionListHierarchyGroupType";
             $displayName = "Accession List Hierarchy Group Type";
             break;
+        case "accessionlisttype":
+            $className = "AccessionListType";
+            $displayName = "Accession List Type";
+            break;
 
         default:
             $className = null;
@@ -807,7 +818,7 @@ class ScanListController extends ListController
      * @Route("/message-tags/{id}", name="messagetags_delete", methods={"DELETE"})
      * @Route("/accession-list-hierarchys/{id}", name="accessionlisthierarchys_delete", methods={"DELETE"})
      * @Route("/accession-list-hierarchy-group-type/{id}", name="accessionlisthierarchygrouptype_delete", methods={"DELETE"})
-     *
+     * @Route("/accession-list-types/{id}", name="accessionlisttype_delete", methods={"DELETE"})
      *
      */
     public function deleteAction(Request $request, $id)

@@ -288,11 +288,31 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/patientlists", name="employees_get_patientlists", methods={"GET","POST"}, options={"expose"=true})
+     * @Route("/common/calllogpatientlists", name="employees_get_calllogpatientlists", methods={"GET","POST"}, options={"expose"=true})
      */
-    public function getPatientListsAction(Request $request) {
+    public function getCalllogPatientListsAction(Request $request) {
         $calllogUtil = $this->get('calllog_util');
         $patientLists = $calllogUtil->getDefaultPatientLists();
+
+        $output = array();
+        foreach ($patientLists as $patientList) {
+            $output[] = array(
+                'id' => $patientList->getId(),
+                'text' => $patientList->getName()
+            );
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+    /**
+     * @Route("/common/crnpatientlists", name="employees_get_crnpatientlists", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getCrnPatientListsAction(Request $request) {
+        $crnUtil = $this->get('crn_util');
+        $patientLists = $crnUtil->getDefaultPatientLists();
 
         $output = array();
         foreach ($patientLists as $patientList) {

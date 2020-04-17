@@ -1795,6 +1795,14 @@ class CallLogUtil
         return null;
     }
 
+    //create a new AccessionListHierarchy node and add as a child to the $accessionList
+    public function addToCalllogAccessionLists( $message, $testing ) {
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionListTypeName = "Call Log";
+        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
+    }
+
     public function getDefaultPatientList() {
 
         $userSecUtil = $this->container->get('user_security_utility');

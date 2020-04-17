@@ -6914,6 +6914,7 @@ class AdminController extends OrderAbstractController
 
             "accessionlisthierarchys" => array('AccessionListHierarchy','accessionlisthierarchys-list','Accession List Hierarchy'),
             "accessionlisthierarchygrouptype" => array('AccessionListHierarchyGroupType','accessionlisthierarchygrouptype-list','Accession List Hierarchy Group Type'),
+            "accessionlisttype" => array('AccessionListType','accessionlisttype-list','Accession List Type'),
         );
 
         if( $withcustom ) {

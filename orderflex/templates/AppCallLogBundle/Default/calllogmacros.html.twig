@@ -904,6 +904,9 @@
                     {{ formmacros.field(message.calllogEntryMessage.patientLists) }}
                 {#{% endif %}#}
 
+                {{ formmacros.checkbox(message.addAccessionToList) }}
+                {{ formmacros.field(message.accessionLists) }}
+
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-default -->

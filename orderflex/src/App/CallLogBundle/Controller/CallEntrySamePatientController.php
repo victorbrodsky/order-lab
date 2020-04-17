@@ -568,6 +568,10 @@ class CallEntrySamePatientController extends CallEntryController
                     //do it after message is in DB and has ID
                     $calllogUtil->addToPatientLists($patient,$message,$testing);
 
+                    //add Accession to the Accession list specified by accessionListTitle if the option addAccessionToList is checked.
+                    //do it after message is in DB and has ID
+                    $calllogUtil->addToCalllogAccessionLists($message,$testing);
+                    
                     if( $existingEncounterDB ) {
                         //CASE 1A
                         $msg = "Call Log Entry has been created: Same Encounter (ID#" . $newEncounter->getId() . ") with number " . $newEncounter->obtainEncounterNumber() . " for the Patient with ID #" . $patient->getId();

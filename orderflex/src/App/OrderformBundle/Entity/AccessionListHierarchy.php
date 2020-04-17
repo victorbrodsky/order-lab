@@ -88,13 +88,7 @@ class AccessionListHierarchy extends BaseCompositeNode {
      * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\Accession", cascade={"persist"})
      */
     private $accession;
-
-//    /**
-//     * Accession List Types
-//     *
-//     * @ORM\ManyToOne(targetEntity="AccessionListType", cascade={"persist"})
-//     */
-//    private $accessionListType;
+    
     /**
      * Accession List Types
      *
