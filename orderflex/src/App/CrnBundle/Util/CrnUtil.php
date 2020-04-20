@@ -1798,6 +1798,52 @@ class CrnUtil
         return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
     }
 
+    //get Accession lists by CRN's accession type (similar to getPatientList)
+    public function getAccessionList() {
+
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionListTypeName = "Critical Result Notifications";
+        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        
+        $accessionLists = $this->getDefaultAccessionLists(1,$accessionListType);
+
+        //list.name = "Pathology Crn Complex Patients"
+        //list.url = "http://collage.med.cornell.edu/order/crn-book/patient-list/crn-complex-patients"
+        $resList = array();
+
+        $listId = "recent-accession-96-hours";
+        $listName = "Recent Accessions (96 hours)";
+        $url = $this->container->get('router')->generate('crn_recent_patients');
+        $resList[] = array(
+            'listid' => $listId,
+            'name' => $listName,
+            'url' => $url   //"order/crn/patient-list/crn-complex-patients"
+        );
+
+        foreach( $accessionLists as $list ) {
+
+            //$listUrl = "patient-list/crn-complex-patients";
+            //$listUrl = "complex-patient-list";
+            //$baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
+            //$url = $baseUrl . '/' . $siteName . '/' . $listUrl;
+
+            $listName = $list->getName()."";
+            $listNameUrl = str_replace(" ","-",$listName);
+            $listNameUrl = strtolower($listNameUrl);
+
+            //path(crn_sitename~'_complex_patient_list')
+            $url = $this->container->get('router')->generate('crn_accession_list',array('listname'=>$listNameUrl,'listid'=>$list->getId()));
+
+            $resList[] = array(
+                'listid' => $list->getId(),
+                'name' => $list->getName()."",
+                'url' => $url   //"order/crn/patient-list/crn-complex-patients"
+            );
+        }
+
+        return $resList;
+    }
+
     public function getDefaultPatientList() {
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4964,6 +5010,8 @@ class CrnUtil
 
         return $accessions;
     }
+
+    
 
     public function obtainPhoneCanonical($phone) {
         //echo "original phone=".$phoneCanonical."<br>";

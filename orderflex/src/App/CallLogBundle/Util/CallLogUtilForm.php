@@ -296,6 +296,15 @@ class CallLogUtilForm
             }
         }
 
+        //Accession List
+        $accessionLists = $message->getAccessionLists();
+        if( count($accessionLists) > 0 ) {
+            $html .= $this->getTrSection("Accession List");
+            foreach( $accessionLists as $accessionList ) {
+                $html .= $this->getTrField("List Title ", $accessionList->getName());
+            }
+        }
+
 
 //        $html =
 //            '<br><p>'.

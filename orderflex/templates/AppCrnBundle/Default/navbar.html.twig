@@ -95,13 +95,18 @@
                     <li id="nav-bar-mycrnentrees"><a href="{{ path(crn_sitename~'_my_generation_log') }}">My Entrees</a></li>
 
                     {#<li id="nav-bar-patientlist"><a href="{{ path(crn_sitename~'_complex_patient_list') }}">Lists</a></li>#}
-                    {% set crnLists = crn_util.getPatientList() %}
+                    {% set crnPatientLists = crn_util.getPatientList() %}
+                    {% set crnAccessionLists = crn_util.getAccessionList() %}
                     <li id="nav-bar-patientlist" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lists<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {% for list in crnLists %}
+                            {% for patientList in crnPatientLists %}
                                 {#http://localhost/order/scan/admin/list/critical-result-notification-complex-patients/#}
-                                <li><a href="{{ list.url }}">{{list.name}}</a></li>
+                                <li><a href="{{ patientList.url }}">{{patientList.name}}</a></li>
+                            {% endfor %}
+                            {% for accessionList in crnAccessionLists %}
+                                {#http://localhost/order/scan/admin/list/critical-result-notification-complex-patients/#}
+                                <li><a href="{{ accessionList.url }}">{{accessionList.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>

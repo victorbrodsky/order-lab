@@ -547,11 +547,13 @@ class FellAppImportPopulateUtil {
 //        }
 
         //call tryRun() asynchronous
-        $cmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
-        //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        //$fellappRepGen->cmdRunAsync($cmd);
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $userServiceUtil->execInBackground($cmd);
+        if( $populatedFellowshipApplications && count($populatedFellowshipApplications) > 0 ) {
+            $cmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
+            //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            //$fellappRepGen->cmdRunAsync($cmd);
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $userServiceUtil->execInBackground($cmd);
+        }
 
         return $populatedFellowshipApplications;
     }
@@ -827,7 +829,7 @@ class FellAppImportPopulateUtil {
 
                 $fellowshipApplicationDb = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $fellowshipApplicationDb ) {
-                    //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                    $logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
 

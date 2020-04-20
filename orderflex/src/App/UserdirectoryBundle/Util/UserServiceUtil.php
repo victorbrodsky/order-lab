@@ -1578,11 +1578,21 @@ class UserServiceUtil {
         /* find the "desired height" of this thumbnail, relative to the desired width  */
         $desired_height = floor($height * ($desired_width / $width));
 
+        $desired_width = floor($desired_width);
+
         /* create a new, "virtual" image */
         $virtual_image = imagecreatetruecolor($desired_width, $desired_height);
 
+        if( !$virtual_image ) {
+            return null;
+        }
+
         /* copy source image at a resized size */
         imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
+
+        if( !$virtual_image ) {
+            return null;
+        }
 
         /* create the physical thumbnail image to its destination */
         imagejpeg($virtual_image, $dest);
@@ -1670,7 +1680,8 @@ class UserServiceUtil {
     }
 
     //Can use package: https://packagist.org/packages/hellogerard/jobby
-    //verify: crontab -u www-data -l
+    //Show for specific user: crontab -u apache -l
+    //Remove for specific user: crontab -u apache -r
     //Create cron jobs:
     //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
     //2) importFellowshipApplications (every hour)
@@ -1694,7 +1705,7 @@ class UserServiceUtil {
         $phpPath = $this->getPhpPath();
         $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $fellappCronJob = "0 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
+        $fellappCronJob = "00 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 

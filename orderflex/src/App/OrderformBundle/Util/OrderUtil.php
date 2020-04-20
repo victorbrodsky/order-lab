@@ -1357,19 +1357,30 @@ class OrderUtil {
 
 
     //get default Accession list objects
-    public function getDefaultAccessionLists( $level=1 ) {
+    public function getDefaultAccessionLists( $level=1, $accessionType=null ) {
         //Accession list currently is level=1
         //$level = 1;
 
         $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Accession Lists");
 
-        $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
-            array(
-                'type' => array('default','user-added'),
-                'level' => $level,
-                'parent' => $parent->getId()
-            )
-        );
+        if( $accessionType ) {
+            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+                array(
+                    'type' => array('default','user-added'),
+                    'level' => $level,
+                    'parent' => $parent->getId(),
+                    'accessionListTypes' => $accessionType->getId()
+                )
+            );
+        } else {
+            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+                array(
+                    'type' => array('default','user-added'),
+                    'level' => $level,
+                    'parent' => $parent->getId()
+                )
+            );
+        }
 
         return $accessionLists;
     }
