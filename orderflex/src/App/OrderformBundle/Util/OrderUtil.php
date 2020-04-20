@@ -1369,7 +1369,7 @@ class OrderUtil {
                     'type' => array('default','user-added'),
                     'level' => $level,
                     'parent' => $parent->getId(),
-                    'accessionListTypes' => $accessionType->getId()
+                    'accessionListTypes' => $accessionType->getId() //$idsArray
                 )
             );
         } else {

@@ -442,7 +442,7 @@ stof/doctrine-extensions-bundle (tree hierarchies in DB)
 
 Calling Doctrine\ORM\EntityManager::flush() with any arguments to flush specific entities is deprecated and will not be supported in Doctrine ORM 3.0.
 
-Cron:
+Cron (/var/spool/cron/ and /etc/crontab):
 Show for specific user:     crontab -u apache -l
 Remove for specific user:   crontab -u apache -r
 

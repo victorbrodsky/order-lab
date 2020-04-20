@@ -317,7 +317,6 @@ class Accession extends ObjectAbstract {
     ///////////////////////// EOF Extra fields /////////////////////////
 
 
-
     //parent, children, key field methods
     public function setParent($parent) {
         $this->setProcedure($parent);
@@ -386,6 +385,17 @@ class Accession extends ObjectAbstract {
         }
 
         return $keyStr;
+    }
+
+    public function obtainPatient() {
+        $procedure = $this->getProcedure();
+        if( $procedure ) {
+            $encounter = $procedure->getEncounter();
+            if( $encounter ) {
+                return $encounter->getPatient();
+            }
+        }
+        return null;
     }
 
     public function obtainFullValidKeyNameArr() {
