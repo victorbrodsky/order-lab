@@ -78,6 +78,9 @@
 
             {% set trclassname = "" %}
 
+            <input type="hidden" id="accession-id" value="{{ accession.id }}" />
+            <input type="hidden" id="patient-id" value="{{ patient.id }}" />
+
             <tr class="{{ trclassname }}">
 
                 <td style="display: none;">
@@ -155,8 +158,6 @@
     <div class="navigation">
         {{ knp_pagination_render(accessionNodes) }}
     </div>
-
-
 
 
     {{ crnmacros.accessionInfoSection(accessionForm,cycle,holderId,'Add accession',formtype) }}

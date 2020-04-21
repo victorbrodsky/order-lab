@@ -368,7 +368,8 @@
 
     <div id="{{holderId}}" class="crn-accession-holder">
 
-        <input type="hidden" id="crn-accession-id-{{holderId}}" class="crn-accession-id" value="" />
+        {#<input type="hidden" id="accession-id-{{holderId}}" class="accession-id" value="" />#}
+        <input type="hidden" id="accession-id" class="accession-id" value="" />
 
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -397,6 +398,10 @@
                             {{ formmacros.field(form.accessionNumber) }}
                         {% endif %}
                     {% endif %}
+
+                    <p>
+                        <div id="crn-patient-info" style="display: none;"></div>
+                    </p>
 
                     <div class="row">
                         <div class="col-xs-5"></div>
@@ -1416,21 +1421,21 @@
                         <a href="{{ path('crn_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a>
                     </li>
 
-                    <li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
-                           target="_blank">Merge Patient Record</a>
-                    </li>
+                    {#<li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
+                           {#target="_blank">Merge Patient Record</a>#}
+                    {#</li>#}
 
-                    {% if patient.obtainMergeMrnArr('valid')|length > 0 %}
-                        <li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
-                               target="_blank">Un-merge Patient Record</a>
-                        </li>
-                    {% endif %}
+                    {#{% if patient.obtainMergeMrnArr('valid')|length > 0 %}#}
+                        {#<li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
+                               {#target="_blank">Un-merge Patient Record</a>#}
+                        {#</li>#}
+                    {#{% endif %}#}
                 {% endif %}
 
-                {% if patientListId is defined and patientListId %}
-                    <li><a data-confirm="Are you sure you want to remove this patient from this list?"
-                           href="{{ path('crn_remove_patient_from_list', { 'patientId': patient.id, 'patientListId': patientListId }) }}"
-                           target="_blank">Remove patient from this list</a>
+                {% if accessionListId is defined and accessionListId %}
+                    <li><a data-confirm="Are you sure you want to remove this accession from this list?"
+                           href="{{ path('crn_remove_accession_from_list', { 'accessionId': accession.id, 'accessionListId': accessionListId }) }}"
+                           target="_blank">Remove accession from this list</a>
                     </li>
                 {% endif %}
 

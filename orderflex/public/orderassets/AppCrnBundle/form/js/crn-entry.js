@@ -2934,8 +2934,8 @@ function findCrnAccession(holderId,formtype) {
     holder.find('#crn-danger-box').html("");
 
     //clear matching patient section
-    holder.find('#crn-matching-patients').hide(_transTime);
-    holder.find('#crn-matching-patients').html('');
+    holder.find('#crn-patient-info').hide(_transTime);
+    holder.find('#crn-patient-info').html('');
 
     //addnew accession button
     holder.find('#addnew_accession_button').hide(_transTime);
@@ -3055,8 +3055,8 @@ function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
     console.log('patLen='+patLen);
 
     //clear matching patient section
-    holder.find('#crn-matching-patients').hide(_transTime);
-    holder.find('#crn-matching-patients').html('');
+    holder.find('#crn-patient-info').hide(_transTime);
+    holder.find('#crn-patient-info').html('');
 
     //clear no matching box
     holder.find('#crn-danger-box').hide(_transTime);
@@ -3094,10 +3094,12 @@ function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
             //populatePatientInfo(patient, false, true, holderId); //single patient found
             //disableAllFields(true, holderId);
 
+            holder.find('#accession-id').val(patient.accessionId);
+
             var matchingPatientsHtml = "Associated Patient: "+patient.fullName + " " + patient.mrn + " (" + patient.mrntypestr + ")";
 
-            holder.find('#crn-matching-patients').html(matchingPatientsHtml);
-            holder.find('#crn-matching-patients').show(_transTime);
+            holder.find('#crn-patient-info').html(matchingPatientsHtml);
+            holder.find('#crn-patient-info').show(_transTime);
 
             holder.find('#add_accession_to_list_button').show(_transTime);
 
@@ -3165,6 +3167,10 @@ function clearCrnAccession(holderId) {
 
     holder.find(".accession-mask").val(null);
     holder.find(".accessiontype-combobox").select2('val',null);
+
+    //clear matching patient section
+    holder.find('#crn-patient-info').hide(_transTime);
+    holder.find('#crn-patient-info').html('');
 }
 
 //TODO
@@ -3173,19 +3179,23 @@ function addCrnAccessionToList(holderId) {
 
     var addBtn = holder.find("#add_accession_to_list_button").get(0);
     var lbtn = Ladda.create( addBtn );
-    //crnStartBtn(lbtn);
+    crnStartBtn(lbtn);
 
-    var patientListId = $('#patientListId').val();
+    var accessionListId = $('#accessionListId').val();
 
-    var patientId = holder.find('.patienttype-patient-id').val();
-    patientId = trimWithCheck(patientId);
+    var accessionId = holder.find('.accession-id').val();
+    accessionId = trimWithCheck(accessionId);
 
-    //console.log("patientListId="+patientListId+"; patientId="+patientId);
+    //TODO: provide accession Number and Type and find accession to add in controller.
+    //accessionNumber
+    //accessionType
+
+    console.log("accessionListId="+accessionListId+"; accessionId="+accessionId);
 
     //ajax
-    var url = Routing.generate('crn_add_patient_to_list_ajax');
+    var url = Routing.generate('crn_add_accession_to_list_ajax');
 
-    url = url + "/" + patientListId + "/" + patientId;
+    url = url + "/" + accessionListId + "/" + accessionId;
     //console.log("url="+url);
     //return;
 

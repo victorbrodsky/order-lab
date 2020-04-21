@@ -245,5 +245,122 @@ class CrnAccessionController extends OrderAbstractController {
 
         return $form;
     }
+
+
+    /**
+     * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="crn_remove_accession_from_list")
+     */
+    public function removeAccessionFromListAction(Request $request, $accessionId, $accessionListId) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+            return $this->redirect($this->generateUrl('crn-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
+        if( !$accessionList ) {
+            throw new \Exception( "AccessionListHierarchy not found by id $accessionListId" );
+        }
+
+        //remove accession from the list
+        $repository = $em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        $dql = $repository->createQueryBuilder("list");
+
+        $dql->leftJoin("list.accession", "accession");
+
+        $dql->where("accession = :accessionId");
+        $parameters['accessionId'] = $accessionId;
+
+        $query = $em->createQuery($dql);
+        $query->setParameters($parameters);
+        $accessions = $query->getResult();
+
+        $msgArr = array();
+        foreach( $accessions as $accessionNode ) {
+            $accessionNode->setType('disabled');
+            //TODO: remove this accession from all CrnEntryMessage (addAccessionToList, accessionList): find all message with this accession where addAccessionToList is true and set to false?
+            $msgArr[] = $accessionNode->getAccession()->obtainFullValidKeyName();
+        }
+        $em->flush();
+
+        $msg = implode('<br>',$msgArr);
+        if( $msg ) {
+            $msg = "Removed accession:<br>" . $msg;
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify',
+            $msg
+        );
+
+        $listName = $accessionList->getName()."";
+        $listNameLowerCase = str_replace(" ","-",$listName);
+        $listNameLowerCase = strtolower($listNameLowerCase);
+
+        return $this->redirect($this->generateUrl('crn_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
+    }
+
+
+
+    /**
+     * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="crn_add_accession_to_list")
+     * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="crn_add_accession_to_list_ajax", options={"expose"=true})
+     *
+     * @Template("AppCrnBundle/AccessionList/accession-list.html.twig")
+     */
+    public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
+            return $this->redirect( $this->generateUrl('crn-nopermission') );
+        }
+
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $crnUtil = $this->get('crn_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
+        if( !$accessionList ) {
+            throw new \Exception( "AccessionListHierarchy not found by id $accessionListId" );
+        }
+
+        //add accession from the list
+        $accession = $em->getRepository('AppOrderformBundle:Accession')->find($accessionId);
+        if( !$accession ) {
+            throw new \Exception( "Accession not found by id $accessionId" );
+        }
+
+        //exit("before adding accession");
+        $accessionListTypeName = "Critical Result Notifications";
+        $accessionListType = $em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $newListElement = $scanorderUtil->addAccessionToAccessionList($accession,$accessionList,$accessionListType);
+
+        if( $newListElement ) {
+            //Accession added to the Pathology Crn Accession list
+            $msg = "Accession " . $newListElement->getAccession()->obtainFullValidKeyName() . " has been added to the " . $accessionList->getName() . " list";
+            $pnotify = 'pnotify';
+        } else {
+            $msg = "Accession " . $accession->obtainFullValidKeyName() . " HAS NOT BEEN ADDED to the " . $accessionList->getName() . " list. Probably, this accession already exists in this list.";
+            $pnotify = 'pnotify-error';
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            $pnotify,
+            $msg
+        );
+
+        //return OK
+        if( $request->get('_route') == "crn_add_accession_to_list_ajax" ) {
+            $res = "OK";
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        $listName = $accessionList->getName()."";
+        $listNameLowerCase = str_replace(" ","-",$listName);
+        $listNameLowerCase = strtolower($listNameLowerCase);
+
+        return $this->redirect($this->generateUrl('crn_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
+    }
     
 }
