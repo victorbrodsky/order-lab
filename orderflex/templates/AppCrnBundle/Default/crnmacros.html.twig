@@ -401,26 +401,26 @@
                     <div class="row">
                         <div class="col-xs-5"></div>
                         <div class="col-xs-2">
-                            <button id="search_patient_button" type="button"
+                            <button id="search_accession_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="findCrnPatient('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
+                                    onclick="findCrnAccession('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
                             >Find Accession</button>
                             <button
-                                    id="reenter_patient_button" type="button"
+                                    id="reenter_accession_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="clearCrnPatient('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                    onclick="clearCrnAccession('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                             >Re-enter Accession</button>
                         </div>
 
-                        {% if formtype == 'add-patient-to-list' %}
+                        {#{% if formtype == 'add-accession-to-list' %}#}
                             <div class="col-xs-2">
                                 <button
-                                        id="add_patient_to_list_button" type="button"
+                                        id="add_accession_to_list_button" type="button"
                                         class="btn btn-lg btn-success span4" align="center"
-                                        onclick="addCrnPatientToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                        onclick="addCrnAccessionToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                                 >Add Accession to List</button>
                             </div>
-                        {% endif %}
+                        {#{% endif %}#}
 
                         <div class="col-xs-5"></div>
                     </div>

@@ -2921,3 +2921,298 @@ function crnAccessionExists() {
     return false;
 }
 
+function findCrnAccession(holderId,formtype) {
+
+    var holder = getHolder(holderId);
+
+    var searchBtn = holder.find("#search_accession_button").get(0);
+    var lbtn = Ladda.create( searchBtn );
+    crnStartBtn(lbtn);
+
+    //clear no matching box
+    holder.find('#crn-danger-box').hide(_transTime);
+    holder.find('#crn-danger-box').html("");
+
+    //clear matching patient section
+    holder.find('#crn-matching-patients').hide(_transTime);
+    holder.find('#crn-matching-patients').html('');
+
+    //addnew accession button
+    holder.find('#addnew_accession_button').hide(_transTime);
+    //holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    //$("#add_accession_to_this_patient_button_holder").html(null);
+
+    var searchedStr = "";
+
+    var accessionnumber = holder.find(".accession-mask").val();
+    accessionnumber = trimWithCheck(accessionnumber);
+
+    var accessiontype = holder.find(".accessiontype-combobox").select2('val');
+    accessiontype = trimWithCheck(accessiontype);
+    console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
+
+
+    if( accessionnumber && accessiontype ) {
+        var andSearchStr = "";
+
+        if( !searchedStr && accessionnumber && accessiontype ) {
+            //searchedStr = " (searched for Accession Type: "+holder.find(".accessiontype-combobox").select2('val').text+"; Accession Number: "+accessionnumber;
+            searchedStr = " (searched for Accession Number: "+accessionnumber+" ("+holder.find(".accessiontype-combobox").select2('val').text+")";
+        }
+
+        if( searchedStr ) {
+            if( andSearchStr ) {
+                searchedStr = searchedStr + ";" + andSearchStr;
+            } else {
+                //no additional search
+            }
+            searchedStr = searchedStr + ")";
+        } else {
+            if( andSearchStr ) {
+                searchedStr = " (searched for" + andSearchStr + ")";
+            } else {
+                //no search params
+            }
+        }
+
+
+    } else {
+        //holder.find('#crn-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+        //holder.find('#crn-danger-box').html("Please enter at least an MRN or Last Name.");
+        holder.find('#crn-danger-box').html("Please enter Accession Type and Number.");
+        holder.find('#crn-danger-box').show(_transTime);
+        crnStopBtn(lbtn);
+        return false;
+    }
+
+    var singleMatch = false;
+    if( (mrn && mrntype) || (dob && lastname) ) {
+        singleMatch = true;
+    }
+
+    if( accessionnumber && accessiontype ) {
+        singleMatch = true;
+    }
+
+    //var metaphone = crnGetMetaphoneValue(holderId);
+    //console.log('metaphone='+metaphone);
+
+    //var currentUrl = window.location.href;
+
+    //ajax
+    var url = Routing.generate('crn_search_patient');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        data: {accessionnumber: accessionnumber, accessiontype: accessiontype },
+    }).success(function(resData) {
+        var dataOk = false;
+        var data = resData.patients;
+        var searchedStr = resData.searchStr;
+        var allowCreateNewPatient = resData.allowCreateNewPatient;
+        var accessionFound = resData.accessionFound;
+
+        if( data ) {
+            var firstKey = Object.keys(data)[0];
+            if( firstKey ) {
+                var firstElement = data[firstKey];
+                if( firstElement && firstElement.hasOwnProperty("id") ) {
+                    //console.log("patient found: searchedStr="+searchedStr);
+                    populateAccessionInfo(data, searchedStr, holderId, singleMatch);
+                    dataOk = true;
+                }
+            }
+            if( data.length == 0 ) {
+                //console.log("no patient found: searchedStr="+searchedStr);
+                populateAccessionInfo(data, searchedStr, holderId, singleMatch);
+                dataOk = true;
+            }
+        }
+        if( !dataOk ) {
+            //console.log("Search is not performed");
+            holder.find('#crn-danger-box').html("Search is not performed. Please try to reload the page.");
+            holder.find('#crn-danger-box').show(_transTime);
+        }
+    }).done(function() {
+        //console.log("search done");
+        crnStopBtn(lbtn);
+        //close datepicker box
+        //var datepickerDropdown = $(".datepicker-dropdown");
+        //printF(datepickerDropdown,"datepicker-dropdown:");
+        //datepickerDropdown.remove();
+    });
+
+}
+
+function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
+    //show patient info
+
+    var holder = getHolder(holderId);
+
+    //var patLen = patients.length;
+    var patLen = getPatientsLength(patients);
+    console.log('patLen='+patLen);
+
+    //clear matching patient section
+    holder.find('#crn-matching-patients').hide(_transTime);
+    holder.find('#crn-matching-patients').html('');
+
+    //clear no matching box
+    holder.find('#crn-danger-box').hide(_transTime);
+    holder.find('#crn-danger-box').html("");
+
+    //hide edit patient info button
+    //holder.find('#edit_patient_button').hide(_transTime);
+
+    holder.find('#add_accession_to_list_button').hide(_transTime);
+
+    //holder.find('#add_accession_to_this_patient_button').hide(_transTime);
+    //$("#add_accession_to_this_patient_button_holder").html(null);
+
+    //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+    showCrnEntryForm(false);
+
+    _patients = patients;
+    //console.log("_patients:");
+    //console.log(_patients);
+
+    var processed = false;
+
+    if( patLen == 1 && singleMatch ) {
+
+        //var patient = patients[0];
+        var patient = getFirstPatient(patients);
+        if (patient == null) {
+            alert("No first patient found in the patient array");
+        }
+        //console.log('single found patient id=' + patient.id);
+
+
+        if( processed == false ) {
+            console.log('single patient populate');
+            //populatePatientInfo(patient, false, true, holderId); //single patient found
+            //disableAllFields(true, holderId);
+
+            var matchingPatientsHtml = "Associated Patient: "+patient.fullName + " " + patient.mrn + " (" + patient.mrntypestr + ")";
+
+            holder.find('#crn-matching-patients').html(matchingPatientsHtml);
+            holder.find('#crn-matching-patients').show(_transTime);
+
+            holder.find('#add_accession_to_list_button').show(_transTime);
+
+            //hide "No single patient is referenced by this entry or I'll add the patient info later" link
+
+            //change the "Find or Add accession" button title to "Re-enter accession"
+            holder.find('#reenter_accession_button').show(_transTime);
+            holder.find('#search_accession_button').hide(_transTime);
+            holder.find('#addnew_accession_button').hide(_transTime);
+
+            // //warning that no merge patients for set master record and un-merge
+            // var formtype = $('#formtype').val();
+            // //console.log('single patient populate: formtype='+formtype);
+            //
+            // if( formtype == "unmerge" || formtype == "set-master-record" ) {
+            //     holder.find('#crn-danger-box').html("This patient does not have any merged patient records");
+            //     holder.find('#crn-danger-box').show(_transTime);
+            // }
+            // //console.log("single patient populate: 1");
+
+            processed = true;
+            //console.log("single patient populate: finished");
+        }
+    }
+
+    if( patLen == 0 && processed == false ) {
+
+        console.log("No matching patient records found.");
+        //"No matching patient records found." and unlock fields
+        holder.find('#crn-danger-box').html("No matching records found. "+searchedStr+".");
+        holder.find('#crn-danger-box').show(_transTime);
+        //populatePatientInfo(null,true,false,holderId); //not found
+        //disableAllFields(false,holderId);
+
+        processed = true;
+    }
+
+    if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
+
+        console.log("show table with found patients");
+        //show table with found patients
+        //populateAccessionInfo(null,false,false,holderId); //multiple patients found
+        //disableAllFields(false,holderId);
+
+        //createPatientsTableCrn(patients,holderId);
+        processed = true;
+    }
+
+    if( processed == false ){
+        console.log("Logical error. Search patients not processed. patLen="+patLen);
+    }
+    console.log("populate Patients Info: finished");
+
+    //show add accession to list button
+}
+
+function clearCrnAccession(holderId) {
+    var holder = getHolder(holderId);
+
+    //change the "Re-enter accession" to "Find accession"
+    holder.find('#reenter_accession_button').hide(_transTime);
+    holder.find('#search_accession_button').show(_transTime);
+
+    holder.find('#add_accession_to_list_button').hide(_transTime);
+
+    holder.find(".accession-mask").val(null);
+    holder.find(".accessiontype-combobox").select2('val',null);
+}
+
+//TODO
+function addCrnAccessionToList(holderId) {
+    var holder = getHolder(holderId);
+
+    var addBtn = holder.find("#add_accession_to_list_button").get(0);
+    var lbtn = Ladda.create( addBtn );
+    //crnStartBtn(lbtn);
+
+    var patientListId = $('#patientListId').val();
+
+    var patientId = holder.find('.patienttype-patient-id').val();
+    patientId = trimWithCheck(patientId);
+
+    //console.log("patientListId="+patientListId+"; patientId="+patientId);
+
+    //ajax
+    var url = Routing.generate('crn_add_patient_to_list_ajax');
+
+    url = url + "/" + patientListId + "/" + patientId;
+    //console.log("url="+url);
+    //return;
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        //data: {patientListId: patientListId, patientId: patientId},
+    }).success(function(data) {
+        //console.log("data="+data);
+
+        if( data == "OK" ) {
+            //Cancel onbeforeunload event handler
+            window.onbeforeunload = null;
+
+            //reload this page
+            location.reload();
+        } else {
+            //console.log("Patient has not been created not OK: data="+data);
+            holder.find('#crn-danger-box').html(data);
+            holder.find('#crn-danger-box').show(_transTime);
+        }
+    }).done(function() {
+        //console.log("add new CrnPatient done");
+        crnStopBtn(lbtn);
+
+    });
+}
+
+
