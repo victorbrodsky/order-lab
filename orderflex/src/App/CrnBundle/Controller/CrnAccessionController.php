@@ -246,6 +246,44 @@ class CrnAccessionController extends OrderAbstractController {
         return $form;
     }
 
+    /**
+     * Search Accession
+     * @Route("/accession/search", name="crn_search_accession", methods={"GET"}, options={"expose"=true})
+     * @Template()
+     */
+    public function patientSearchAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+            return $this->redirect($this->generateUrl('crn-nopermission'));
+        }
+
+        $accessionNumber = trim($request->get('accessionnumber'));
+        $accessionType = trim($request->get('accessiontype'));
+
+        $crnUtil = $this->get('crn_util');
+        $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);
+
+        if( $accession ) {
+            $patient = $accession->obtainPatient();
+            $patientInfo = $patient->obtainPatientInfoSimple();
+            $accessionId = $accession->getId();
+        } else {
+
+            $patientInfo = null;
+            $accessionId = null;
+
+        }
+
+        $resData = array();
+        $resData['patientInfo'] = $patientInfo;
+        $resData['accessionId'] = $accessionId;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($resData));
+        return $response;
+    }
+
 
     /**
      * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="crn_remove_accession_from_list")

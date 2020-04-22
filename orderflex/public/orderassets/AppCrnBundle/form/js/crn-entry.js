@@ -2985,22 +2985,13 @@ function findCrnAccession(holderId,formtype) {
         return false;
     }
 
-    var singleMatch = false;
-    if( (mrn && mrntype) || (dob && lastname) ) {
-        singleMatch = true;
-    }
-
-    if( accessionnumber && accessiontype ) {
-        singleMatch = true;
-    }
-
     //var metaphone = crnGetMetaphoneValue(holderId);
     //console.log('metaphone='+metaphone);
 
     //var currentUrl = window.location.href;
 
     //ajax
-    var url = Routing.generate('crn_search_patient');
+    var url = Routing.generate('crn_search_accession');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
@@ -3008,26 +2999,9 @@ function findCrnAccession(holderId,formtype) {
         data: {accessionnumber: accessionnumber, accessiontype: accessiontype },
     }).success(function(resData) {
         var dataOk = false;
-        var data = resData.patients;
-        var searchedStr = resData.searchStr;
-        var allowCreateNewPatient = resData.allowCreateNewPatient;
-        var accessionFound = resData.accessionFound;
-
-        if( data ) {
-            var firstKey = Object.keys(data)[0];
-            if( firstKey ) {
-                var firstElement = data[firstKey];
-                if( firstElement && firstElement.hasOwnProperty("id") ) {
-                    //console.log("patient found: searchedStr="+searchedStr);
-                    populateAccessionInfo(data, searchedStr, holderId, singleMatch);
-                    dataOk = true;
-                }
-            }
-            if( data.length == 0 ) {
-                //console.log("no patient found: searchedStr="+searchedStr);
-                populateAccessionInfo(data, searchedStr, holderId, singleMatch);
-                dataOk = true;
-            }
+        if( resData ) {
+            populateAccessionInfo(resData, holderId);
+            dataOk = true;
         }
         if( !dataOk ) {
             //console.log("Search is not performed");
@@ -3045,14 +3019,10 @@ function findCrnAccession(holderId,formtype) {
 
 }
 
-function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
+function populateAccessionInfo(resData, holderId) {
     //show patient info
 
     var holder = getHolder(holderId);
-
-    //var patLen = patients.length;
-    var patLen = getPatientsLength(patients);
-    console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#crn-patient-info').hide(_transTime);
@@ -3073,30 +3043,24 @@ function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
     showCrnEntryForm(false);
 
-    _patients = patients;
     //console.log("_patients:");
     //console.log(_patients);
 
     var processed = false;
 
-    if( patLen == 1 && singleMatch ) {
+    var patientInfo = resData.patientInfo;
+    var accessionId = resData.accessionId;
 
-        //var patient = patients[0];
-        var patient = getFirstPatient(patients);
-        if (patient == null) {
-            alert("No first patient found in the patient array");
-        }
-        //console.log('single found patient id=' + patient.id);
-
+    if( accessionId ) {
 
         if( processed == false ) {
             console.log('single patient populate');
             //populatePatientInfo(patient, false, true, holderId); //single patient found
             //disableAllFields(true, holderId);
 
-            holder.find('#accession-id').val(patient.accessionId);
+            holder.find('#accession-id').val(accessionId);
 
-            var matchingPatientsHtml = "Associated Patient: "+patient.fullName + " " + patient.mrn + " (" + patient.mrntypestr + ")";
+            var matchingPatientsHtml = "Associated Patient: "+patientInfo;
 
             holder.find('#crn-patient-info').html(matchingPatientsHtml);
             holder.find('#crn-patient-info').show(_transTime);
@@ -3110,41 +3074,17 @@ function populateAccessionInfo(patients, searchedStr, holderId, singleMatch) {
             holder.find('#search_accession_button').hide(_transTime);
             holder.find('#addnew_accession_button').hide(_transTime);
 
-            // //warning that no merge patients for set master record and un-merge
-            // var formtype = $('#formtype').val();
-            // //console.log('single patient populate: formtype='+formtype);
-            //
-            // if( formtype == "unmerge" || formtype == "set-master-record" ) {
-            //     holder.find('#crn-danger-box').html("This patient does not have any merged patient records");
-            //     holder.find('#crn-danger-box').show(_transTime);
-            // }
-            // //console.log("single patient populate: 1");
-
             processed = true;
             //console.log("single patient populate: finished");
         }
     }
 
-    if( patLen == 0 && processed == false ) {
+    if( accessionId == null && processed == false ) {
 
-        console.log("No matching patient records found.");
-        //"No matching patient records found." and unlock fields
+        console.log("No matching records found.");
         holder.find('#crn-danger-box').html("No matching records found. "+searchedStr+".");
         holder.find('#crn-danger-box').show(_transTime);
-        //populatePatientInfo(null,true,false,holderId); //not found
-        //disableAllFields(false,holderId);
 
-        processed = true;
-    }
-
-    if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
-
-        console.log("show table with found patients");
-        //show table with found patients
-        //populateAccessionInfo(null,false,false,holderId); //multiple patients found
-        //disableAllFields(false,holderId);
-
-        //createPatientsTableCrn(patients,holderId);
         processed = true;
     }
 
@@ -3171,6 +3111,8 @@ function clearCrnAccession(holderId) {
     //clear matching patient section
     holder.find('#crn-patient-info').hide(_transTime);
     holder.find('#crn-patient-info').html('');
+
+    holder.find("#accession-id").val(null);
 }
 
 //TODO
