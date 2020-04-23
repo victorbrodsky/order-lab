@@ -22,10 +22,10 @@
  * Time: 12:19 PM
  */
 
-namespace App\CrnBundle\Controller;
+namespace App\CalllogBundle\Controller;
 
 
-use App\CrnBundle\Form\CrnAccessionDummyType;
+use App\CalllogBundle\Form\CalllogAccessionDummyType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,22 +36,22 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 ///**
-// * Crn Accession controller.
+// * Calllog Accession controller.
 // *
 // * @Route("/accession")
 // */
 
-class CrnAccessionController extends OrderAbstractController {
+class CalllogAccessionController extends OrderAbstractController {
 
     /**
      * Accession List
-     * @Route("/accession-list/{listid}/{listname}", name="crn_accession_list")
-     * @Template("AppCrnBundle/AccessionList/accession-list.html.twig")
+     * @Route("/accession-list/{listid}/{listname}", name="calllog_accession_list")
+     * @Template("AppCalllogBundle/AccessionList/accession-list.html.twig")
      */
     public function complexAccessionListAction(Request $request, $listid, $listname)
     {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
-            return $this->redirect( $this->generateUrl('crn-nopermission') );
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -117,11 +117,11 @@ class CrnAccessionController extends OrderAbstractController {
 
         //create accession form for "Add Accession" section
 //        $status = 'invalid';
-//        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('crn.sitename'));
+//        $system = $securityUtil->getDefaultSourceSystem($this->getParameter('calllog.sitename'));
 //        $newAccession = new Accession(true,$status,$user,$system);
         $accessionForm = $this->createAccessionForm();
 
-        //src/App/CrnBundle/Resources/views/AccessionList/accession-list.html.twig
+        //src/App/CalllogBundle/Resources/views/AccessionList/accession-list.html.twig
         return array(
             'accessionListId' => $listid,
             'accessionNodes' => $accessions,
@@ -139,13 +139,13 @@ class CrnAccessionController extends OrderAbstractController {
     /**
      * Listing accessions whose notes have been updated in the last 96 hours (4 days)
      *
-     * @Route("/recent-accessions", name="crn_recent_accessions")
-     * @Template("AppCrnBundle/AccessionList/recent-accessions.html.twig")
+     * @Route("/recent-accessions", name="calllog_recent_accessions")
+     * @Template("AppCalllogBundle/AccessionList/recent-accessions.html.twig")
      */
     public function recentAccessionsAction(Request $request)
     {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
-            return $this->redirect( $this->generateUrl('crn-nopermission') );
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -161,8 +161,8 @@ class CrnAccessionController extends OrderAbstractController {
 
         $dql->leftJoin("accession.message", "message");
         $dql->leftJoin("message.editorInfos", "editorInfos");
-        $dql->leftJoin("message.crnEntryMessage", "crnEntryMessage");
-        $dql->leftJoin("crnEntryMessage.crnTasks", "crnTasks");
+        $dql->leftJoin("message.calllogEntryMessage", "calllogEntryMessage");
+        $dql->leftJoin("calllogEntryMessage.calllogTasks", "calllogTasks");
 
         $dql->leftJoin("accession.procedure", "procedure");
         $dql->leftJoin("procedure.encounter", "encounter");
@@ -174,11 +174,11 @@ class CrnAccessionController extends OrderAbstractController {
 
         $dql->leftJoin("accession.accession", "accessionaccession");
 
-        $dql->where("crnEntryMessage.id IS NOT NULL");
-        //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago");
+        $dql->where("calllogEntryMessage.id IS NOT NULL");
+        //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR calllogTasks.statusUpdatedDate >= :hours96Ago");
 
         if(1) {
-            $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago";
+            $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR calllogTasks.statusUpdatedDate >= :hours96Ago";
             $dql->andWhere($andWhere);
 
             $hours96Ago = new \DateTime();
@@ -220,9 +220,9 @@ class CrnAccessionController extends OrderAbstractController {
     public function createAccessionForm() {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$crnUtil = $this->get('crn_util');
+        //$calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->container->get('user_security_utility');
-        $sitename = $this->getParameter('crn.sitename');
+        $sitename = $this->getParameter('calllog.sitename');
 
         $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
 
@@ -232,13 +232,13 @@ class CrnAccessionController extends OrderAbstractController {
             'em' => $em,
             'container' => $this->container,
             'type' => null,
-            'formtype' => 'crn-entry',
+            'formtype' => 'calllog-entry',
             'complexLocation' => false,
             'alias' => false,
             'timezoneDefault' => $userTimeZone,
         );
 
-        $form = $this->createForm(CrnAccessionDummyType::class, null, array(
+        $form = $this->createForm(CalllogAccessionDummyType::class, null, array(
             'form_custom_value' => $params,
             //'form_custom_value_entity' => $patient
         ));
@@ -248,20 +248,20 @@ class CrnAccessionController extends OrderAbstractController {
 
     /**
      * Search Accession
-     * @Route("/accession/search", name="crn_search_accession", methods={"GET"}, options={"expose"=true})
+     * @Route("/accession/search", name="calllog_search_accession", methods={"GET"}, options={"expose"=true})
      * @Template()
      */
     public function patientSearchAction(Request $request)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
-            return $this->redirect($this->generateUrl('crn-nopermission'));
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
         $accessionNumber = trim($request->get('accessionnumber'));
         $accessionType = trim($request->get('accessiontype'));
 
-        $crnUtil = $this->get('crn_util');
-        $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);
+        $calllogUtil = $this->get('calllog_util');
+        $accession = $calllogUtil->findExistingAccession($accessionNumber,$accessionType);
 
         $patientInfo = null;
         $accessionId = null;
@@ -286,11 +286,11 @@ class CrnAccessionController extends OrderAbstractController {
 
 
     /**
-     * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="crn_remove_accession_from_list")
+     * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="calllog_remove_accession_from_list")
      */
     public function removeAccessionFromListAction(Request $request, $accessionId, $accessionListId) {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
-            return $this->redirect($this->generateUrl('crn-nopermission'));
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -317,7 +317,7 @@ class CrnAccessionController extends OrderAbstractController {
         foreach( $accessions as $accessionNode ) {
             $accessionNode->setType('disabled');
             $accession = $accessionNode->getAccession();
-            //TODO: remove this accession from all CrnEntryMessage (addAccessionToList, accessionList): find all message with this accession where addAccessionToList is true and set to false?
+            //TODO: remove this accession from all CalllogEntryMessage (addAccessionToList, accessionList): find all message with this accession where addAccessionToList is true and set to false?
             $msgArr[$accession->getId()] = $accession->obtainFullValidKeyName();
         }
         $em->flush();
@@ -336,24 +336,24 @@ class CrnAccessionController extends OrderAbstractController {
         $listNameLowerCase = str_replace(" ","-",$listName);
         $listNameLowerCase = strtolower($listNameLowerCase);
 
-        return $this->redirect($this->generateUrl('crn_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
+        return $this->redirect($this->generateUrl('calllog_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
     }
 
 
 
     /**
-     * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="crn_add_accession_to_list")
-     * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="crn_add_accession_to_list_ajax", options={"expose"=true})
+     * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list")
+     * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list_ajax", options={"expose"=true})
      *
-     * @Template("AppCrnBundle/AccessionList/accession-list.html.twig")
+     * @Template("AppCalllogBundle/AccessionList/accession-list.html.twig")
      */
     public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
-            return $this->redirect( $this->generateUrl('crn-nopermission') );
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        //$crnUtil = $this->get('crn_util');
+        //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
@@ -373,7 +373,7 @@ class CrnAccessionController extends OrderAbstractController {
         $newListElement = $scanorderUtil->addAccessionToAccessionList($accession,$accessionList,$accessionListType);
 
         if( $newListElement ) {
-            //Accession added to the Pathology Crn Accession list
+            //Accession added to the Pathology Calllog Accession list
             $msg = "Accession " . $newListElement->getAccession()->obtainFullValidKeyName() . " has been added to the " . $accessionList->getName() . " list";
             $pnotify = 'pnotify';
         } else {
@@ -387,7 +387,7 @@ class CrnAccessionController extends OrderAbstractController {
         );
 
         //return OK
-        if( $request->get('_route') == "crn_add_accession_to_list_ajax" ) {
+        if( $request->get('_route') == "calllog_add_accession_to_list_ajax" ) {
             $res = "OK";
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -399,7 +399,7 @@ class CrnAccessionController extends OrderAbstractController {
         $listNameLowerCase = str_replace(" ","-",$listName);
         $listNameLowerCase = strtolower($listNameLowerCase);
 
-        return $this->redirect($this->generateUrl('crn_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
+        return $this->redirect($this->generateUrl('calllog_accession_list',array('listname'=>$listNameLowerCase,'listid'=>$accessionListId)));
     }
     
 }

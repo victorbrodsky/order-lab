@@ -1704,9 +1704,9 @@ class CrnUtil
         if( $similarPatients && count($similarPatients) > 0 ) {
             //check and set type to user-added if type is disabled
             foreach( $similarPatients as $similarPatient ) {
-                //if( $similarPatient->getType() == 'disabled' ) {
-                $similarType = $similarPatient->getType();
-                if( $similarType != 'default' && $similarType != 'user-added' ) {
+                if( $similarPatient->getType() == 'disabled' ) {
+//                $similarType = $similarPatient->getType();
+//                if( $similarType != 'default' && $similarType != 'user-added' ) {
                     $similarPatient->setType('user-added');
                     if( !$testing ) {
                         $this->em->flush();
@@ -1779,9 +1779,9 @@ class CrnUtil
         $parameters['parentId'] = $patientList->getId();
         $parameters['patientId'] = $patient->getId();
 
-//        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
-//        $parameters['typedef'] = 'default';
-//        $parameters['typeadd'] = 'user-added';
+        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
 
         $query = $this->em->createQuery($dql);
         $query->setParameters($parameters);
@@ -1795,8 +1795,7 @@ class CrnUtil
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
     public function addToCrnAccessionLists( $message, $testing ) {
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $accessionListTypeName = "Critical Result Notifications";
-        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $this->getCrnAccessionListType();
         return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
     }
 
@@ -1804,8 +1803,7 @@ class CrnUtil
     public function getAccessionList() {
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $accessionListTypeName = "Critical Result Notifications";
-        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $this->getCrnAccessionListType();
         
         $accessionLists = $scanorderUtil->getDefaultAccessionLists(1,$accessionListType);
 
@@ -2525,6 +2523,9 @@ class CrnUtil
         $dql->where("patient.id = :patientId");
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
 
+        $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
+        $dql->andWhere("crnEntryMessage IS NOT NULL");
+
         $dql->orderBy("message.orderdate","DESC");
 
         $query = $this->em->createQuery($dql);
@@ -2558,6 +2559,9 @@ class CrnUtil
 
         $dql->where("accession.id = :accessionId");
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+
+        $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
+        $dql->andWhere("crnEntryMessage IS NOT NULL");
 
         $dql->orderBy("message.orderdate","DESC");
 
@@ -5040,7 +5044,10 @@ class CrnUtil
         return $accessions;
     }
 
-    
+    public function getCrnAccessionListType() {
+        $accessionListTypeName = "Critical Result Notifications";
+        return $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+    }
 
     public function obtainPhoneCanonical($phone) {
         //echo "original phone=".$phoneCanonical."<br>";

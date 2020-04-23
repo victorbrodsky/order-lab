@@ -3120,7 +3120,6 @@ function clearCrnAccession(holderId) {
     holder.find("#accession-id").val(null);
 }
 
-//TODO
 function addCrnAccessionToList(holderId) {
     var holder = getHolder(holderId);
 
@@ -3150,7 +3149,6 @@ function addCrnAccessionToList(holderId) {
         url: url,
         timeout: _ajaxTimeout,
         async: true,
-        //data: {patientListId: patientListId, patientId: patientId},
     }).success(function(data) {
         //console.log("data="+data);
 
@@ -3166,7 +3164,7 @@ function addCrnAccessionToList(holderId) {
             holder.find('#crn-danger-box').show(_transTime);
         }
     }).done(function() {
-        //console.log("add new CrnPatient done");
+        //console.log("add new CrnAccession done");
         crnStopBtn(lbtn);
 
     });

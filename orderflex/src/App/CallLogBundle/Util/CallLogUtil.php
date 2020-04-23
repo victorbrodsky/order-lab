@@ -1798,9 +1798,46 @@ class CallLogUtil
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
     public function addToCalllogAccessionLists( $message, $testing ) {
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $accessionListTypeName = "Call Log";
-        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $this->getCrnAccessionListType();
         return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
+    }
+
+    //get Accession lists by CallLog's accession type (similar to getPatientList())
+    public function getAccessionList() {
+
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionListType = $this->getCrnAccessionListType();
+
+        $accessionLists = $scanorderUtil->getDefaultAccessionLists(1,$accessionListType);
+
+        //list.url = "http://collage.med.cornell.edu/order/calllog-book/accession-list/calllog-accessions"
+        $resList = array();
+
+        $listId = "recent-accession-96-hours";
+        $listName = "Recent Accessions (96 hours)";
+        $url = $this->container->get('router')->generate('calllog_recent_accessions');
+        $resList[] = array(
+            'listid' => $listId,
+            'name' => $listName,
+            'url' => $url   //"order/calllog/accession-list/calllog-accessions"
+        );
+
+        foreach( $accessionLists as $list ) {
+
+            $listName = $list->getName()."";
+            $listNameUrl = str_replace(" ","-",$listName);
+            $listNameUrl = strtolower($listNameUrl);
+
+            $url = $this->container->get('router')->generate('calllog_accession_list',array('listname'=>$listNameUrl,'listid'=>$list->getId()));
+
+            $resList[] = array(
+                'listid' => $list->getId(),
+                'name' => $list->getName()."",
+                'url' => $url   //"order/calllog/accession-list/calllog-accessions"
+            );
+        }
+
+        return $resList;
     }
 
     public function getDefaultPatientList() {
@@ -2488,6 +2525,9 @@ class CallLogUtil
         $dql->where("patient.id = :patientId");
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
 
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->andWhere("calllogEntryMessage IS NOT NULL");
+
         $dql->orderBy("message.orderdate","DESC");
 
         $query = $this->em->createQuery($dql);
@@ -2511,6 +2551,42 @@ class CallLogUtil
         return $date;
     }
 
+    public function getLastEntryDateByAccession( $accession ) {
+        //get the sum of timeSpentMinutes from CrnEntryMessage for Message's provider for this week by orderdate
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.accession","accession");
+
+        $dql->where("accession.id = :accessionId");
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->andWhere("calllogEntryMessage IS NOT NULL");
+
+        $dql->orderBy("message.orderdate","DESC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'accessionId' => $accession->getId(),
+            'deletedMessageStatus' => "Deleted"
+        ));
+
+        $messages = $query->getResult();
+
+        if( count($messages) > 0 ) {
+            $message = $messages[0];
+            if( $message && $message->getOrderdate() ) {
+                $date = $message->getOrderdate()->format("m/d/Y");
+            }
+        } else {
+            $date = null;
+        }
+
+        return $date;
+    }
 
     public function getSubmitterInfoSimpleDate($message) {
         $info = $this->getOrderSimpleDateStr($message);
@@ -4946,6 +5022,11 @@ class CallLogUtil
         }
 
         return $accessions;
+    }
+
+    public function getCalllogAccessionListType() {
+        $accessionListTypeName = "Call Log";
+        return $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
     }
 
     public function obtainPhoneCanonical($phone) {
