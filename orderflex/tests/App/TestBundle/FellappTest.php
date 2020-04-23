@@ -15,7 +15,7 @@ class FellappTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        echo "[Fellapp,PHP=".$phpVersion."]";
         
         //$this->getTestClient();
 

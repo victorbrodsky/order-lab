@@ -15,7 +15,7 @@ class CrnTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        echo "[Crn,PHP=".$phpVersion."]";
         
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/critical-result-notifications/login');
@@ -417,7 +417,15 @@ class CrnTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Patient List")')->count()
+            $crawler->filter('html:contains("List")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add patient to the list")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add accession to the list")')->count()
         );
         $this->assertGreaterThan(
             0,

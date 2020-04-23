@@ -400,7 +400,7 @@
                     {% endif %}
 
                     <p>
-                        <div id="crn-patient-info" style="display: none;"></div>
+                        <div id="crn-patient-info" class="well" style="display: none;"></div>
                     </p>
 
                     <div class="row">
@@ -1402,46 +1402,48 @@
                 </li>
             {% endif %}
 
-            {% set mrn = patient.obtainValidField('mrn') %}
-            {% if mrn and mrn.field and mrn.keytype %}
-                {% set mrnNumber = mrn.field %}
-                {% set mrnTypeId = mrn.keytype.id %}
-                {% if mrnNumber and mrnTypeId %}
-                    <li><a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}"
-                           target="_blank">Show all entries for this patient</a>
-                    </li>
-
-                    <li><a href="{{ path('crn_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
-                           target="_blank">View Patient Record</a>
-                    </li>
-
-                    <li>
-                        {#<a href="{{ path('crn_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"#}
-                        {#target="_blank">Edit Patient Record</a>#}
-                        <a href="{{ path('crn_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a>
-                    </li>
-
-                    {#<li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
-                           {#target="_blank">Merge Patient Record</a>#}
-                    {#</li>#}
-
-                    {#{% if patient.obtainMergeMrnArr('valid')|length > 0 %}#}
-                        {#<li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
-                               {#target="_blank">Un-merge Patient Record</a>#}
-                        {#</li>#}
-                    {#{% endif %}#}
-                {% endif %}
-
-                {% if accessionListId is defined and accessionListId %}
-                    <li><a data-confirm="Are you sure you want to remove this accession from this list?"
-                           href="{{ path('crn_remove_accession_from_list', { 'accessionId': accession.id, 'accessionListId': accessionListId }) }}"
-                           target="_blank">Remove accession from this list</a>
-                    </li>
-                {% endif %}
-
-
+            {% if accessionListId is defined and accessionListId %}
+                <li><a data-confirm="Are you sure you want to remove this accession from this list?"
+                       href="{{ path('crn_remove_accession_from_list', { 'accessionId': accession.id, 'accessionListId': accessionListId }) }}"
+                       target="_blank">Remove accession from this list</a>
+                </li>
             {% endif %}
 
+            {% if patient %}
+                {% set mrn = patient.obtainValidField('mrn') %}
+                {% if mrn and mrn.field and mrn.keytype %}
+                    {% set mrnNumber = mrn.field %}
+                    {% set mrnTypeId = mrn.keytype.id %}
+                    {% if mrnNumber and mrnTypeId %}
+
+                        <li class="divider"></li>
+
+                        <li><a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}"
+                               target="_blank">Show all entries for this patient</a>
+                        </li>
+
+                        <li><a href="{{ path('crn_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
+                               target="_blank">View Patient Record</a>
+                        </li>
+
+                        <li>
+                            {#<a href="{{ path('crn_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"#}
+                            {#target="_blank">Edit Patient Record</a>#}
+                            <a href="{{ path('crn_single_patient_edit', { 'id': patient.id}) }}" target="_blank">Edit Patient Demographics</a>
+                        </li>
+
+                        {#<li><a href="{{ path('crn_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
+                               {#target="_blank">Merge Patient Record</a>#}
+                        {#</li>#}
+
+                        {#{% if patient.obtainMergeMrnArr('valid')|length > 0 %}#}
+                            {#<li><a href="{{ path('crn_unmerge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"#}
+                                   {#target="_blank">Un-merge Patient Record</a>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
         </ul>
 
     </div>

@@ -1704,7 +1704,9 @@ class CrnUtil
         if( $similarPatients && count($similarPatients) > 0 ) {
             //check and set type to user-added if type is disabled
             foreach( $similarPatients as $similarPatient ) {
-                if( $similarPatient->getType() == 'disabled' ) {
+                //if( $similarPatient->getType() == 'disabled' ) {
+                $similarType = $similarPatient->getType();
+                if( $similarType != 'default' && $similarType != 'user-added' ) {
                     $similarPatient->setType('user-added');
                     if( !$testing ) {
                         $this->em->flush();
@@ -1777,9 +1779,9 @@ class CrnUtil
         $parameters['parentId'] = $patientList->getId();
         $parameters['patientId'] = $patient->getId();
 
-        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
-        $parameters['typedef'] = 'default';
-        $parameters['typeadd'] = 'user-added';
+//        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+//        $parameters['typedef'] = 'default';
+//        $parameters['typeadd'] = 'user-added';
 
         $query = $this->em->createQuery($dql);
         $query->setParameters($parameters);
@@ -2529,6 +2531,40 @@ class CrnUtil
 
         $query->setParameters( array(
             'patientId' => $patient->getId(),
+            'deletedMessageStatus' => "Deleted"
+        ));
+
+        $messages = $query->getResult();
+
+        if( count($messages) > 0 ) {
+            $message = $messages[0];
+            if( $message && $message->getOrderdate() ) {
+                $date = $message->getOrderdate()->format("m/d/Y");
+            }
+        } else {
+            $date = null;
+        }
+
+        return $date;
+    }
+
+    public function getLastEntryDateByAccession( $accession ) {
+        //get the sum of timeSpentMinutes from CrnEntryMessage for Message's provider for this week by orderdate
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.accession","accession");
+
+        $dql->where("accession.id = :accessionId");
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+
+        $dql->orderBy("message.orderdate","DESC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'accessionId' => $accession->getId(),
             'deletedMessageStatus' => "Deleted"
         ));
 

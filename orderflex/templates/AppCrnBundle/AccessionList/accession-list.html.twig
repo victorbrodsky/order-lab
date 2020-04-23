@@ -64,22 +64,22 @@
 
         {% for accessionNode in accessionNodes if accessionNode.accession %}
 
+            {% set mrnNumber = null %}
+            {% set mrnTypeId = null %}
+
             {% set accession = accessionNode.accession %}
-            {#{% set accessionaccession = accession.accession %}#}
             {% set patient = accession.obtainPatient() %}
-            {% set mrn = patient.obtainValidField('mrn') %}
-            {% if mrn and mrn.field and mrn.keytype %}
-                {% set mrnNumber = mrn.field %}
-                {% set mrnTypeId = mrn.keytype.id %}
-            {% else %}
-                {% set mrnNumber = null %}
-                {% set mrnTypeId = null %}
+            {% if patient %}
+                {% set mrn = patient.obtainValidField('mrn') %}
+                {% if mrn and mrn.field and mrn.keytype %}
+                    {% set mrnNumber = mrn.field %}
+                    {% set mrnTypeId = mrn.keytype.id %}
+                {% endif %}
             {% endif %}
 
             {% set trclassname = "" %}
 
             <input type="hidden" id="accession-id" value="{{ accession.id }}" />
-            <input type="hidden" id="patient-id" value="{{ patient.id }}" />
 
             <tr class="{{ trclassname }}">
 
@@ -89,42 +89,46 @@
 
                 {#Last Name#}
                 <td>
-
-                    {#should we use obtainStatusFieldArray('lastname','valid') to show all valid fields?#}
-                    {% set displayLastnameStatus = false %}
-                    {% set patientLastnames = patient.obtainStatusFieldArrayOrAll('lastname','valid') %}
-                    {% if patientLastnames|length > 1 %}
+                    {% if patient %}
+                        {#should we use obtainStatusFieldArray('lastname','valid') to show all valid fields?#}
                         {% set displayLastnameStatus = false %}
+                        {% set patientLastnames = patient.obtainStatusFieldArrayOrAll('lastname','valid') %}
+                        {% if patientLastnames|length > 1 %}
+                            {% set displayLastnameStatus = false %}
+                        {% endif %}
+                        {% for lastname in patientLastnames %}
+                            {#{% if lastname.status != 'valid' %}#}
+                                {#{{  lastname }} ({{ lastname.status }})#}
+                            {#{% else %}#}
+                                {#{{  lastname }}#}
+                            {#{% endif %}#}
+                            {{  lastname }} {% if displayLastnameStatus %}({{ lastname.status }}){% endif %}
+                            <br>
+                        {% endfor %}
                     {% endif %}
-                    {% for lastname in patientLastnames %}
-                        {#{% if lastname.status != 'valid' %}#}
-                            {#{{  lastname }} ({{ lastname.status }})#}
-                        {#{% else %}#}
-                            {#{{  lastname }}#}
-                        {#{% endif %}#}
-                        {{  lastname }} {% if displayLastnameStatus %}({{ lastname.status }}){% endif %}
-                        <br>
-                    {% endfor %}
                 </td>
 
                 {#First Name#}
                 <td>
-
-                    {#should we use obtainStatusFieldArray('firstname','valid') to show all valid fields?#}
-                    {% set displayFirstnameStatus = false %}
-                    {% set patientFirstnames = patient.obtainStatusFieldArrayOrAll('firstname','valid') %}
-                    {% if patientFirstnames|length > 1 %}
+                   {% if patient %}
+                        {#should we use obtainStatusFieldArray('firstname','valid') to show all valid fields?#}
                         {% set displayFirstnameStatus = false %}
+                        {% set patientFirstnames = patient.obtainStatusFieldArrayOrAll('firstname','valid') %}
+                        {% if patientFirstnames|length > 1 %}
+                            {% set displayFirstnameStatus = false %}
+                        {% endif %}
+                        {% for firstname in patientFirstnames %}
+                            {{  firstname }} {% if displayFirstnameStatus %}({{ firstname.status }}){% endif %}
+                            <br>
+                        {% endfor %}
                     {% endif %}
-                    {% for firstname in patientFirstnames %}
-                        {{  firstname }} {% if displayFirstnameStatus %}({{ firstname.status }}){% endif %}
-                        <br>
-                    {% endfor %}
                 </td>
 
                 {#MRN#}
                 <td>
-                    {{ patient.obtainFullValidKeyName }}
+                    {% if patient %}
+                        {{ patient.obtainFullValidKeyName }}
+                    {% endif %}
                 </td>
 
                 {#Accession Type and Accession Number#}
@@ -140,7 +144,7 @@
 
                 {#Date of Last Entry#}
                 <td>
-                    {{ crn_util.getLastEntryDate(patient) }}
+                    {{ crn_util.getLastEntryDateByAccession(accession) }}
                 </td>
 
                 <td class="rowlink-skip">

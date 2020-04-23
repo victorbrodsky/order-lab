@@ -177,7 +177,7 @@ class CrnAccessionController extends OrderAbstractController {
         $dql->where("crnEntryMessage.id IS NOT NULL");
         //$dql->andWhere("message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago");
 
-        if(0) {
+        if(1) {
             $andWhere = "message.orderdate >= :hours96Ago OR editorInfos.modifiedOn >= :hours96Ago OR crnTasks.statusUpdatedDate >= :hours96Ago";
             $dql->andWhere($andWhere);
 
@@ -263,15 +263,15 @@ class CrnAccessionController extends OrderAbstractController {
         $crnUtil = $this->get('crn_util');
         $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);
 
+        $patientInfo = null;
+        $accessionId = null;
+
         if( $accession ) {
             $patient = $accession->obtainPatient();
-            $patientInfo = $patient->obtainPatientInfoSimple();
+            if( $patient ) {
+                $patientInfo = $patient->obtainPatientInfoSimple();
+            }
             $accessionId = $accession->getId();
-        } else {
-
-            $patientInfo = null;
-            $accessionId = null;
-
         }
 
         $resData = array();
@@ -316,8 +316,9 @@ class CrnAccessionController extends OrderAbstractController {
         $msgArr = array();
         foreach( $accessions as $accessionNode ) {
             $accessionNode->setType('disabled');
+            $accession = $accessionNode->getAccession();
             //TODO: remove this accession from all CrnEntryMessage (addAccessionToList, accessionList): find all message with this accession where addAccessionToList is true and set to false?
-            $msgArr[] = $accessionNode->getAccession()->obtainFullValidKeyName();
+            $msgArr[$accession->getId()] = $accession->obtainFullValidKeyName();
         }
         $em->flush();
 
@@ -352,7 +353,7 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $crnUtil = $this->get('crn_util');
+        //$crnUtil = $this->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);

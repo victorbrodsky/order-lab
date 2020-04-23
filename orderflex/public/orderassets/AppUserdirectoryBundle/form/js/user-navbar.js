@@ -356,6 +356,12 @@ function setCallLogNavBar() {
     if( full.indexOf("/recent-patients") !== -1 ) {
         id = 'patientlist';
     }
+    if( full.indexOf("/accession-list/") !== -1 ) {
+        id = 'patientlist';
+    }
+    if( full.indexOf("/recent-accessions") !== -1 ) {
+        id = 'patientlist';
+    }
 
     if( full.indexOf("/call-log-book/resources/") !== -1 ) {
         id = 'resources';
@@ -412,6 +418,12 @@ function setCrnNavBar() {
         id = 'patientlist';
     }
     if( full.indexOf("/recent-patients") !== -1 ) {
+        id = 'patientlist';
+    }
+    if( full.indexOf("/accession-list/") !== -1 ) {
+        id = 'patientlist';
+    }
+    if( full.indexOf("/recent-accessions") !== -1 ) {
         id = 'patientlist';
     }
 

@@ -987,8 +987,9 @@ class CrnPatientController extends PatientController {
         $msgArr = array();
         foreach( $patients as $patientNode ) {
             $patientNode->setType('disabled');
+            $patient = $patientNode->getPatient();
             //TODO: remove this patient from all CrnEntryMessage (addPatientToList, patientList): find all message with this patient where addPatientToList is true and set to false?
-            $msgArr[] = $patientNode->getPatient()->obtainPatientInfoTitle();
+            $msgArr[$patient->getId()] = $patient->obtainPatientInfoTitle();
         }
         $em->flush();
 

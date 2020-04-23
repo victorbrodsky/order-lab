@@ -41,7 +41,7 @@ function initCrnPage() {
 
     var formtype = $('#formtype').val();
     //console.log("init formtype="+formtype);
-    if( formtype != "add-patient-to-list" ) {
+    if( formtype != "add-patient-to-list" && formtype != "add-accession-to-list" ) {
         //console.log("init crn Window CloseAlert for formtype="+formtype);
         crnWindowCloseAlert();
     }
@@ -3060,7 +3060,12 @@ function populateAccessionInfo(resData, holderId) {
 
             holder.find('#accession-id').val(accessionId);
 
-            var matchingPatientsHtml = "Associated Patient: "+patientInfo;
+            if( patientInfo ) {
+                var matchingPatientsHtml = "Associated Patient: "+patientInfo;
+            } else {
+                var matchingPatientsHtml = "No Associated Patient";
+            }
+
 
             holder.find('#crn-patient-info').html(matchingPatientsHtml);
             holder.find('#crn-patient-info').show(_transTime);
@@ -3070,9 +3075,9 @@ function populateAccessionInfo(resData, holderId) {
             //hide "No single patient is referenced by this entry or I'll add the patient info later" link
 
             //change the "Find or Add accession" button title to "Re-enter accession"
-            holder.find('#reenter_accession_button').show(_transTime);
-            holder.find('#search_accession_button').hide(_transTime);
-            holder.find('#addnew_accession_button').hide(_transTime);
+            //holder.find('#reenter_accession_button').show(_transTime);
+            //holder.find('#search_accession_button').hide(_transTime);
+            //holder.find('#addnew_accession_button').hide(_transTime);
 
             processed = true;
             //console.log("single patient populate: finished");
@@ -3082,7 +3087,7 @@ function populateAccessionInfo(resData, holderId) {
     if( accessionId == null && processed == false ) {
 
         console.log("No matching records found.");
-        holder.find('#crn-danger-box').html("No matching records found. "+searchedStr+".");
+        holder.find('#crn-danger-box').html("No matching records found.");
         holder.find('#crn-danger-box').show(_transTime);
 
         processed = true;
@@ -3100,8 +3105,8 @@ function clearCrnAccession(holderId) {
     var holder = getHolder(holderId);
 
     //change the "Re-enter accession" to "Find accession"
-    holder.find('#reenter_accession_button').hide(_transTime);
-    holder.find('#search_accession_button').show(_transTime);
+    //holder.find('#reenter_accession_button').hide(_transTime);
+    //holder.find('#search_accession_button').show(_transTime);
 
     holder.find('#add_accession_to_list_button').hide(_transTime);
 

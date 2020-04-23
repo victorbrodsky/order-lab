@@ -17,7 +17,7 @@ class CalllogShortTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        echo "[CalllogShort,PHP=".$phpVersion."]";
 
         //$calllogUtil = self::$container->get('calllog_util');
 

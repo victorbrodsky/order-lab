@@ -1490,7 +1490,9 @@ class OrderUtil {
         if( $similarAccessions && count($similarAccessions) > 0 ) {
             //check and set type to user-added if type is disabled
             foreach( $similarAccessions as $similarAccession ) {
-                if( $similarAccession->getType() == 'disabled' ) {
+                //if( $similarAccession->getType() == 'disabled' ) {
+                $similarType = $similarAccession->getType();
+                if( $similarType != 'default' && $similarType != 'user-added' ) {
                     $similarAccession->setType('user-added');
                     if( !$testing ) {
                         $this->em->flush();
@@ -1569,9 +1571,9 @@ class OrderUtil {
         $parameters['parentId'] = $accessionList->getId();
         $parameters['accessionId'] = $accession->getId();
 
-        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
-        $parameters['typedef'] = 'default';
-        $parameters['typeadd'] = 'user-added';
+//        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+//        $parameters['typedef'] = 'default';
+//        $parameters['typeadd'] = 'user-added';
 
         $query = $this->em->createQuery($dql);
         $query->setParameters($parameters);

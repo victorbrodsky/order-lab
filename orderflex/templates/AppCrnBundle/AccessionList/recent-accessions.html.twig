@@ -53,13 +53,15 @@
             {#{% set accessionaccession = accession.accession %}#}
 
             {% set patient = accession.obtainPatient() %}
-            {% set mrn = patient.obtainValidField('mrn') %}
-            {% if mrn and mrn.field and mrn.keytype %}
-                {% set mrnNumber = mrn.field %}
-                {% set mrnTypeId = mrn.keytype.id %}
-            {% else %}
-                {% set mrnNumber = null %}
-                {% set mrnTypeId = null %}
+            {% if patient %}
+                {% set mrn = patient.obtainValidField('mrn') %}
+                {% if mrn and mrn.field and mrn.keytype %}
+                    {% set mrnNumber = mrn.field %}
+                    {% set mrnTypeId = mrn.keytype.id %}
+                {% else %}
+                    {% set mrnNumber = null %}
+                    {% set mrnTypeId = null %}
+                {% endif %}
             {% endif %}
 
             {% set trclassname = "" %}

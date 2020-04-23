@@ -15,7 +15,7 @@ class CalllogTest extends WebTestBase
     public function testLoginPageAction() {
 
         $phpVersion = phpversion();
-        echo "[PHP=".$phpVersion."]";
+        echo "[Calllog,PHP=".$phpVersion."]";
         
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/call-log-book/login');
@@ -393,10 +393,24 @@ class CalllogTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Update Patient Info")')->count()
         );
+
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Patient List")')->count()
+//        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Patient List")')->count()
+            $crawler->filter('html:contains("List")')->count()
         );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add patient to the list")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add accession to the list")')->count()
+        );
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Tasks")')->count()
