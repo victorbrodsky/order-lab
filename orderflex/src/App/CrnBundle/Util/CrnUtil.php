@@ -5046,7 +5046,11 @@ class CrnUtil
 
     public function getCrnAccessionListType() {
         $accessionListTypeName = "Critical Result Notifications";
-        return $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        if( !$accessionListType ) {
+            throw new \Exception( "CRN AccessionListType not found by name ".$accessionListTypeName );
+        }
+        return $accessionListType;
     }
 
     public function obtainPhoneCanonical($phone) {

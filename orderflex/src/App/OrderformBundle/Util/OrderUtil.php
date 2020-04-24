@@ -1357,21 +1357,33 @@ class OrderUtil {
 
 
     //get default Accession list objects
-    public function getDefaultAccessionLists( $level=1, $accessionType=null ) {
+    public function getDefaultAccessionLists( $level=1, $accessionListType=null ) {
         //Accession list currently is level=1
         //$level = 1;
 
         $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Accession Lists");
 
-        if( $accessionType ) {
-            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
-                array(
-                    'type' => array('default','user-added'),
-                    'level' => $level,
-                    'parent' => $parent->getId(),
-                    'accessionListTypes' => $accessionType->getId() //$idsArray
-                )
-            );
+        if( $accessionListType ) {
+            $repository = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+            $dql = $repository->createQueryBuilder("list");
+
+            $dql->where("list.parent = :parentId AND list.level = :level");
+            $parameters['parentId'] = $parent->getId();
+            $parameters['level'] = $level;
+
+            $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+            $parameters['typedef'] = 'default';
+            $parameters['typeadd'] = 'user-added';
+
+            $dql->leftJoin('list.accessionListTypes', 'accessionListTypes');
+            $dql->andWhere("accessionListTypes.id = :accessionListTypeId ");
+            $parameters['accessionListTypeId'] = $accessionListType->getId();
+
+            $query = $this->em->createQuery($dql);
+            $query->setParameters($parameters);
+            $accessionLists = $query->getResult();
+
+
         } else {
             $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
                 array(
@@ -1443,7 +1455,6 @@ class OrderUtil {
             return null;
         }
 
-        //TODO: filter by accessionListType?
         $accessionLists = $message->getAccessionLists();
         if( count($accessionLists) == 0 ) {
             return null;

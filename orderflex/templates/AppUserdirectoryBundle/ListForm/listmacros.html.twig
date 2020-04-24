@@ -855,6 +855,14 @@
         {{ formmacros.field(form.rgt) }}
     {% endif %}
 
+    {% if form.parent is defined %}
+        {{ formmacros.field(form.parent) }}
+    {% endif %}
+
+    {% if form.accessionListTypes is defined %}
+        {{ formmacros.field(form.accessionListTypes) }}
+    {% endif %}
+
     <hr>
     {% if form.collaborationType is defined %}
         {{ formmacros.field(form.collaborationType) }}

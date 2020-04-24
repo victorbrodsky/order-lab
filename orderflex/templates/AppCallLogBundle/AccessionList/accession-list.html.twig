@@ -14,10 +14,10 @@
     limitations under the License.
 #}
 
-{% extends "AppCrnBundle/Default/base.html.twig" %}
+{% extends "AppCallLogBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+{% import "AppCallLogBundle/Default/calllogmacros.html.twig" as calllogmacros %}
 
 
 {% block title %}
@@ -34,7 +34,7 @@
     {% set holderId = "accession-holder-1" %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <input type="hidden" id="orderformtype" value="crn" />
+    <input type="hidden" id="orderformtype" value="calllog" />
     <input type="hidden" id="formtype" value="{{ formtype }}" />
     <input type="hidden" id="mrn" value="{{ mrn }}" />
     <input type="hidden" id="mrntype" value="{{ mrntype }}" />
@@ -84,7 +84,7 @@
             <tr class="{{ trclassname }}">
 
                 <td style="display: none;">
-                    <a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
                 </td>
 
                 {#Last Name#}
@@ -144,11 +144,11 @@
 
                 {#Date of Last Entry#}
                 <td>
-                    {{ crn_util.getLastEntryDateByAccession(accession) }}
+                    {{ calllog_util.getLastEntryDateByAccession(accession) }}
                 </td>
 
                 <td class="rowlink-skip">
-                    {{ crnmacros.accessionListAction(patient,accession,accessionListId) }}
+                    {{ calllogmacros.accessionListAction(patient,accession,accessionListId) }}
                 </td>
 
             </tr>
@@ -164,10 +164,10 @@
     </div>
 
 
-    {{ crnmacros.accessionInfoSection(accessionForm,cycle,holderId,'Add accession',formtype) }}
+    {{ calllogmacros.accessionInfoSection(accessionForm,cycle,holderId,'Add accession',formtype) }}
 
     {#Manage Accession Lists#}
-    {% if is_granted('ROLE_CRN_DATA_QUALITY') %}
+    {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
         <br>
         <p>
             <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}"
@@ -188,14 +188,14 @@
 
         $(document).ready(function() {
             //hide all alias
-            //crnHideAllAlias(true,true);
-            //crnHideAllAlias(true,true,'crn-encounterInfo-holder');
+            //calllogHideAllAlias(true,true);
+            //calllogHideAllAlias(true,true,'calllog-encounterInfo-holder');
 
             //init
-            initCrnPage();
+            initCallLogPage();
 
             //preset mrn and mrn-type
-            crnPresetMrnMrntype('accession-holder-1');
+            calllogPresetMrnMrntype('accession-holder-1');
 
         });
 

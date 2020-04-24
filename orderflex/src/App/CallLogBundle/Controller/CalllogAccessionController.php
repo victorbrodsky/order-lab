@@ -51,7 +51,7 @@ class CalllogAccessionController extends OrderAbstractController {
      */
     public function complexAccessionListAction(Request $request, $listid, $listname)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -145,7 +145,7 @@ class CalllogAccessionController extends OrderAbstractController {
      */
     public function recentAccessionsAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -254,7 +254,7 @@ class CalllogAccessionController extends OrderAbstractController {
      */
     public function patientSearchAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -290,7 +290,7 @@ class CalllogAccessionController extends OrderAbstractController {
      * @Route("/accession/remove-accession-from-list/{accessionId}/{accessionListId}", name="calllog_remove_accession_from_list")
      */
     public function removeAccessionFromListAction(Request $request, $accessionId, $accessionListId) {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -349,7 +349,7 @@ class CalllogAccessionController extends OrderAbstractController {
      * @Template("AppCalllogBundle/AccessionList/accession-list.html.twig")
      */
     public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

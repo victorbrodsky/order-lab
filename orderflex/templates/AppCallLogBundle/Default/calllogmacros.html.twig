@@ -408,12 +408,12 @@
                         <div class="col-xs-2">
                             <button id="search_accession_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="findCrnAccession('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
+                                    onclick="findCalllogAccession('{{ holderId }}','{{ formtype }}')" style="float:left; min-width:100%"
                             >Find Accession</button>
                             <button
                                     id="reenter_accession_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="clearCrnAccession('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                    onclick="clearCalllogAccession('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                             >Re-enter Accession</button>
                         </div>
 
@@ -422,7 +422,7 @@
                             <button
                                     id="add_accession_to_list_button" type="button"
                                     class="btn btn-lg btn-success span4" align="center"
-                                    onclick="addCrnAccessionToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
+                                    onclick="addCalllogAccessionToList('{{ holderId }}')" style="float:left; min-width:100%; display:none;"
                             >Add Accession to List</button>
                         </div>
                         {#{% endif %}#}

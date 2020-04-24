@@ -185,6 +185,13 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( method_exists($this->params['entity'],'getAccessionListTypes') ) {
+            $builder->add( 'accessionListTypes', null, array(
+                'label'=>'Accession List Types:',
+                'attr' => array('class'=>'combobox combobox-width'),
+            ));
+        }
+
 
         if( method_exists($this->params['entity'],'getInstitutions') ) {
             //echo "add institutions <br>";

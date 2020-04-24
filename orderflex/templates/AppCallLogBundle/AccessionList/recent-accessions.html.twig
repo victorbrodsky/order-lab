@@ -14,10 +14,10 @@
     limitations under the License.
 #}
 
-{% extends "AppCrnBundle/Default/base.html.twig" %}
+{% extends "AppCallLogBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-{% import "AppCrnBundle/Default/crnmacros.html.twig" as crnmacros %}
+{% import "AppCallLogBundle/Default/calllogmacros.html.twig" as calllogmacros %}
 
 
 {% block title %}
@@ -69,8 +69,8 @@
             <tr class="{{ trclassname }}">
 
                 <td style="display: none;">
-                    {#<a href="{{ path(crn_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
-                    <a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    {#<a href="{{ path(calllog_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
+                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
                 </td>
 
                 {#Last Name#}
@@ -112,12 +112,12 @@
 
                 {#Date of Last Entry#}
                 <td>
-                    {{ crn_util.getLastEntryDate(patient) }}
+                    {{ calllog_util.getLastEntryDate(patient) }}
                 </td>
 
                 <td class="rowlink-skip">
-                    {#{{ crnmacros.patientListAction(patient) }}#}
-                    {{ crnmacros.accessionListAction(patient,accession) }}
+                    {#{{ calllogmacros.patientListAction(patient) }}#}
+                    {{ calllogmacros.accessionListAction(patient,accession) }}
                 </td>
 
             </tr>
@@ -146,10 +146,10 @@
         {#$(document).ready(function() {#}
 
             {#//init#}
-            {#initCrnPage();#}
+            {#initCallLogPage();#}
 
             {#//preset mrn and mrn-type#}
-            {#crnPresetMrnMrntype('patient-holder-1');#}
+            {#calllogPresetMrnMrntype('patient-holder-1');#}
 
         {#});#}
 

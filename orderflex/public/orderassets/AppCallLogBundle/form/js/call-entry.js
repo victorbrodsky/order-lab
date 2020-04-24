@@ -2930,8 +2930,8 @@ function findCalllogAccession(holderId,formtype) {
     calllogStartBtn(lbtn);
 
     //clear no matching box
-    holder.find('#crn-danger-box').hide(_transTime);
-    holder.find('#crn-danger-box').html("");
+    holder.find('#calllog-danger-box').hide(_transTime);
+    holder.find('#calllog-danger-box').html("");
 
     //clear matching patient section
     holder.find('#accession-patient-info').hide(_transTime);
@@ -2977,21 +2977,21 @@ function findCalllogAccession(holderId,formtype) {
 
 
     } else {
-        //holder.find('#crn-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
-        //holder.find('#crn-danger-box').html("Please enter at least an MRN or Last Name.");
-        holder.find('#crn-danger-box').html("Please enter Accession Type and Number.");
-        holder.find('#crn-danger-box').show(_transTime);
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
+        //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
+        holder.find('#calllog-danger-box').html("Please enter Accession Type and Number.");
+        holder.find('#calllog-danger-box').show(_transTime);
         calllogStopBtn(lbtn);
         return false;
     }
 
-    //var metaphone = crnGetMetaphoneValue(holderId);
+    //var metaphone = calllogGetMetaphoneValue(holderId);
     //console.log('metaphone='+metaphone);
 
     //var currentUrl = window.location.href;
 
     //ajax
-    var url = Routing.generate('crn_search_accession');
+    var url = Routing.generate('calllog_search_accession');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
@@ -3005,8 +3005,8 @@ function findCalllogAccession(holderId,formtype) {
         }
         if( !dataOk ) {
             //console.log("Search is not performed");
-            holder.find('#crn-danger-box').html("Search is not performed. Please try to reload the page.");
-            holder.find('#crn-danger-box').show(_transTime);
+            holder.find('#calllog-danger-box').html("Search is not performed. Please try to reload the page.");
+            holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
         //console.log("search done");
@@ -3029,8 +3029,8 @@ function populateAccessionInfo(resData, holderId) {
     holder.find('#accession-patient-info').html('');
 
     //clear no matching box
-    holder.find('#crn-danger-box').hide(_transTime);
-    holder.find('#crn-danger-box').html("");
+    holder.find('#calllog-danger-box').hide(_transTime);
+    holder.find('#calllog-danger-box').html("");
 
     //hide edit patient info button
     //holder.find('#edit_patient_button').hide(_transTime);
@@ -3087,8 +3087,8 @@ function populateAccessionInfo(resData, holderId) {
     if( accessionId == null && processed == false ) {
 
         console.log("No matching records found.");
-        holder.find('#crn-danger-box').html("No matching records found.");
-        holder.find('#crn-danger-box').show(_transTime);
+        holder.find('#calllog-danger-box').html("No matching records found.");
+        holder.find('#calllog-danger-box').show(_transTime);
 
         processed = true;
     }
@@ -3139,7 +3139,7 @@ function addCalllogAccessionToList(holderId) {
     console.log("accessionListId="+accessionListId+"; accessionId="+accessionId);
 
     //ajax
-    var url = Routing.generate('crn_add_accession_to_list_ajax');
+    var url = Routing.generate('calllog_add_accession_to_list_ajax');
 
     url = url + "/" + accessionListId + "/" + accessionId;
     //console.log("url="+url);
@@ -3160,8 +3160,8 @@ function addCalllogAccessionToList(holderId) {
             location.reload();
         } else {
             //console.log("Patient has not been created not OK: data="+data);
-            holder.find('#crn-danger-box').html(data);
-            holder.find('#crn-danger-box').show(_transTime);
+            holder.find('#calllog-danger-box').html(data);
+            holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
         //console.log("add new CalllogAccession done");

@@ -5026,7 +5026,11 @@ class CallLogUtil
 
     public function getCalllogAccessionListType() {
         $accessionListTypeName = "Call Log";
-        return $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        if( !$accessionListType ) {
+            throw new \Exception( "CallLog AccessionListType not found by name ".$accessionListTypeName );
+        }
+        return $accessionListType;
     }
 
     public function obtainPhoneCanonical($phone) {
