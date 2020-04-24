@@ -22,10 +22,11 @@
  * Time: 12:19 PM
  */
 
-namespace App\CalllogBundle\Controller;
+namespace App\CallLogBundle\Controller;
 
 
-use App\CalllogBundle\Form\CalllogAccessionDummyType;
+
+use App\CallLogBundle\Form\CalllogAccessionDummyType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -353,7 +354,7 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
@@ -368,8 +369,7 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         //exit("before adding accession");
-        $accessionListTypeName = "Critical Result Notifications";
-        $accessionListType = $em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $calllogUtil->getCalllogAccessionListType();
         $newListElement = $scanorderUtil->addAccessionToAccessionList($accession,$accessionList,$accessionListType);
 
         if( $newListElement ) {

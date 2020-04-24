@@ -1443,6 +1443,7 @@ class OrderUtil {
             return null;
         }
 
+        //TODO: filter by accessionListType?
         $accessionLists = $message->getAccessionLists();
         if( count($accessionLists) == 0 ) {
             return null;

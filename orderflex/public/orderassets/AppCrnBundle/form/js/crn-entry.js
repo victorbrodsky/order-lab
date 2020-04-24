@@ -2934,8 +2934,8 @@ function findCrnAccession(holderId,formtype) {
     holder.find('#crn-danger-box').html("");
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     //addnew accession button
     holder.find('#addnew_accession_button').hide(_transTime);
@@ -3025,8 +3025,8 @@ function populateAccessionInfo(resData, holderId) {
     var holder = getHolder(holderId);
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     //clear no matching box
     holder.find('#crn-danger-box').hide(_transTime);
@@ -3067,8 +3067,8 @@ function populateAccessionInfo(resData, holderId) {
             }
 
 
-            holder.find('#crn-patient-info').html(matchingPatientsHtml);
-            holder.find('#crn-patient-info').show(_transTime);
+            holder.find('#accession-patient-info').html(matchingPatientsHtml);
+            holder.find('#accession-patient-info').show(_transTime);
 
             holder.find('#add_accession_to_list_button').show(_transTime);
 
@@ -3114,8 +3114,8 @@ function clearCrnAccession(holderId) {
     holder.find(".accessiontype-combobox").select2('val',null);
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     holder.find("#accession-id").val(null);
 }

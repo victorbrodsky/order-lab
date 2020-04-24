@@ -353,7 +353,7 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        //$crnUtil = $this->get('crn_util');
+        $crnUtil = $this->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
@@ -368,8 +368,7 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         //exit("before adding accession");
-        $accessionListTypeName = "Critical Result Notifications";
-        $accessionListType = $em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        $accessionListType = $crnUtil->getCrnAccessionListType();
         $newListElement = $scanorderUtil->addAccessionToAccessionList($accession,$accessionList,$accessionListType);
 
         if( $newListElement ) {

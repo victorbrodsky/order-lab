@@ -1798,7 +1798,7 @@ class CallLogUtil
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
     public function addToCalllogAccessionLists( $message, $testing ) {
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $accessionListType = $this->getCrnAccessionListType();
+        $accessionListType = $this->getCalllogAccessionListType();
         return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
     }
 
@@ -1806,7 +1806,7 @@ class CallLogUtil
     public function getAccessionList() {
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $accessionListType = $this->getCrnAccessionListType();
+        $accessionListType = $this->getCalllogAccessionListType();
 
         $accessionLists = $scanorderUtil->getDefaultAccessionLists(1,$accessionListType);
 

@@ -2927,15 +2927,15 @@ function findCalllogAccession(holderId,formtype) {
 
     var searchBtn = holder.find("#search_accession_button").get(0);
     var lbtn = Ladda.create( searchBtn );
-    crnStartBtn(lbtn);
+    calllogStartBtn(lbtn);
 
     //clear no matching box
     holder.find('#crn-danger-box').hide(_transTime);
     holder.find('#crn-danger-box').html("");
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     //addnew accession button
     holder.find('#addnew_accession_button').hide(_transTime);
@@ -2981,7 +2981,7 @@ function findCalllogAccession(holderId,formtype) {
         //holder.find('#crn-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#crn-danger-box').html("Please enter Accession Type and Number.");
         holder.find('#crn-danger-box').show(_transTime);
-        crnStopBtn(lbtn);
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -3010,7 +3010,7 @@ function findCalllogAccession(holderId,formtype) {
         }
     }).done(function() {
         //console.log("search done");
-        crnStopBtn(lbtn);
+        calllogStopBtn(lbtn);
         //close datepicker box
         //var datepickerDropdown = $(".datepicker-dropdown");
         //printF(datepickerDropdown,"datepicker-dropdown:");
@@ -3025,8 +3025,8 @@ function populateAccessionInfo(resData, holderId) {
     var holder = getHolder(holderId);
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     //clear no matching box
     holder.find('#crn-danger-box').hide(_transTime);
@@ -3067,8 +3067,8 @@ function populateAccessionInfo(resData, holderId) {
             }
 
 
-            holder.find('#crn-patient-info').html(matchingPatientsHtml);
-            holder.find('#crn-patient-info').show(_transTime);
+            holder.find('#accession-patient-info').html(matchingPatientsHtml);
+            holder.find('#accession-patient-info').show(_transTime);
 
             holder.find('#add_accession_to_list_button').show(_transTime);
 
@@ -3114,8 +3114,8 @@ function clearCalllogAccession(holderId) {
     holder.find(".accessiontype-combobox").select2('val',null);
 
     //clear matching patient section
-    holder.find('#crn-patient-info').hide(_transTime);
-    holder.find('#crn-patient-info').html('');
+    holder.find('#accession-patient-info').hide(_transTime);
+    holder.find('#accession-patient-info').html('');
 
     holder.find("#accession-id").val(null);
 }
@@ -3125,7 +3125,7 @@ function addCalllogAccessionToList(holderId) {
 
     var addBtn = holder.find("#add_accession_to_list_button").get(0);
     var lbtn = Ladda.create( addBtn );
-    crnStartBtn(lbtn);
+    calllogStartBtn(lbtn);
 
     var accessionListId = $('#accessionListId').val();
 
@@ -3165,7 +3165,7 @@ function addCalllogAccessionToList(holderId) {
         }
     }).done(function() {
         //console.log("add new CalllogAccession done");
-        crnStopBtn(lbtn);
+        calllogStopBtn(lbtn);
 
     });
 }

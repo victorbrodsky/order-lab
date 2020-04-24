@@ -95,13 +95,18 @@
                     <li id="nav-bar-mycalllogentrees"><a href="{{ path(calllog_sitename~'_my_generation_log') }}">My Entrees</a></li>
 
                     {#<li id="nav-bar-patientlist"><a href="{{ path(calllog_sitename~'_complex_patient_list') }}">Lists</a></li>#}
-                    {% set calllogLists = calllog_util.getPatientList() %}
+                    {% set calllogPatientLists = calllog_util.getPatientList() %}
+                    {% set calllogAccessionLists = calllog_util.getAccessionList() %}
                     <li id="nav-bar-patientlist" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lists<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {% for list in calllogLists %}
+                            {% for patientList in calllogPatientLists %}
                                 {#http://localhost/order/scan/admin/list/pathology-call-complex-patients/#}
-                                <li><a href="{{ list.url }}">{{list.name}}</a></li>
+                                <li><a href="{{ patientList.url }}">{{patientList.name}}</a></li>
+                            {% endfor %}
+                            <li class="divider"></li>
+                            {% for accessionList in calllogAccessionLists %}
+                                <li><a href="{{ accessionList.url }}">{{accessionList.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
