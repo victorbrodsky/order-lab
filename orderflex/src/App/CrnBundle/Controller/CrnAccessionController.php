@@ -55,8 +55,9 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $crnUtil = $this->get('crn_util');
+        //$securityUtil = $this->get('user_security_utility');
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -89,6 +90,13 @@ class CrnAccessionController extends OrderAbstractController {
         $dql->where("list.parent = :parentId AND list.organizationalGroupType = :accessionGroup");
         $parameters['parentId'] = $listid;
         $parameters['accessionGroup'] = $accessionGroup->getId();
+
+        $accessionListType = $crnUtil->getCrnAccessionListType();
+        if( $accessionListType ) {
+            $dql->leftJoin("list.accessionListTypes", "accessionListTypes");
+            $dql->andWhere("accessionListTypes.id = :accessionListTypeId");
+            $parameters['accessionListTypeId'] = $accessionListType->getId();
+        }
 
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 

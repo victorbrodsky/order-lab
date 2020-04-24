@@ -2586,6 +2586,14 @@ class ScanAdminController extends AdminController
 
             $item->setOrganizationalGroupType($levelGroup);
 
+            //assign AccessionTypeList all to "Accessions for Follow-Up" list to be shown in all systems
+            if( $name == "Accessions for Follow-Up" ) {
+                $accessionListTypes = $em->getRepository('AppOrderformBundle:AccessionListType')->findAll();
+                foreach ($accessionListTypes as $accessionListType) {
+                    $item->addAccessionListType($accessionListType);
+                }
+            }
+
             $level++;
             $count = $count + 10;
 

@@ -56,8 +56,9 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $calllogUtil = $this->get('calllog_util');
+        //$securityUtil = $this->get('user_security_utility');
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -90,6 +91,13 @@ class CalllogAccessionController extends OrderAbstractController {
         $dql->where("list.parent = :parentId AND list.organizationalGroupType = :accessionGroup");
         $parameters['parentId'] = $listid;
         $parameters['accessionGroup'] = $accessionGroup->getId();
+
+        $accessionListType = $calllogUtil->getCalllogAccessionListType();
+        if( $accessionListType ) {
+            $dql->leftJoin("list.accessionListTypes", "accessionListTypes");
+            $dql->andWhere("accessionListTypes.id = :accessionListTypeId");
+            $parameters['accessionListTypeId'] = $accessionListType->getId();
+        }
 
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
