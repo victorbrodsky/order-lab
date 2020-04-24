@@ -141,7 +141,7 @@ class CalllogAccessionController extends OrderAbstractController {
      * Listing accessions whose notes have been updated in the last 96 hours (4 days)
      *
      * @Route("/recent-accessions", name="calllog_recent_accessions")
-     * @Template("AppCalllogBundle/AccessionList/recent-accessions.html.twig")
+     * @Template("AppCallLogBundle/AccessionList/recent-accessions.html.twig")
      */
     public function recentAccessionsAction(Request $request)
     {
@@ -346,7 +346,7 @@ class CalllogAccessionController extends OrderAbstractController {
      * @Route("/accession/add-accession-to-list/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list")
      * @Route("/accession/add-accession-to-list-ajax/{accessionListId}/{accessionId}", name="calllog_add_accession_to_list_ajax", options={"expose"=true})
      *
-     * @Template("AppCalllogBundle/AccessionList/accession-list.html.twig")
+     * @Template("AppCallLogBundle/AccessionList/accession-list.html.twig")
      */
     public function addAccessionToListAction(Request $request, $accessionListId, $accessionId) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
