@@ -3041,7 +3041,7 @@ function populateAccessionInfo(resData, holderId) {
     //$("#add_accession_to_this_patient_button_holder").html(null);
 
     //hide "No single patient is referenced by this entry or I'll add the patient info later" link
-    showCalllogEntryForm(false);
+    showCalllogCallentryForm(false);
 
     //console.log("_patients:");
     //console.log(_patients);
