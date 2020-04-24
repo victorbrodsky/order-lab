@@ -47,7 +47,7 @@ class CalllogAccessionController extends OrderAbstractController {
     /**
      * Accession List
      * @Route("/accession-list/{listid}/{listname}", name="calllog_accession_list")
-     * @Template("AppCalllogBundle/AccessionList/accession-list.html.twig")
+     * @Template("AppCallLogBundle/AccessionList/accession-list.html.twig")
      */
     public function complexAccessionListAction(Request $request, $listid, $listname)
     {
