@@ -461,3 +461,26 @@ KeepAliveTimeout 8
     MaxRequestsPerChild   8000
 </IfModule>
 Check apache log: /var/log/httpd
+
+
+Fellapp:
+[2020-04-27 19:00:14] snappy.ERROR: An error happened while generating "/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf".
+{"command":"/usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510'
+'/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'",
+"status":127,"stdout":"/usr/bin/xvfb-run: line 181: wkhtmltopdf: command not found\n","stderr":""} []
+
+/usr/bin/xvfb-run /usr/local/bin/wkhtmltopdf
+
+[2020-04-27 19:00:14] console.ERROR: Error thrown while running command "cron:importfellapp --env=prod".
+Message: "The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'
+was not created (command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf')."
+{"exception":"[object] (RuntimeException(code: 0): The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'
+was not created (command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf').
+at /srv/order-lab/orderflex/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php:351)","command":"cron:importfellapp --env=prod","message":
+"The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf' was not created
+(command: /usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore'
+'https://localhost/fellowship-applications/download/1510' '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf')."} []
+
