@@ -818,6 +818,11 @@ class CrnPatientController extends PatientController {
         $dql->leftJoin("patient.firstname", "firstname");
         $dql->leftJoin("patient.mrn", "mrn");
 
+        $dql->leftJoin("patient.encounter", "encounter");
+        $dql->leftJoin("encounter.procedure", "procedure");
+        $dql->leftJoin("procedure.accession", "accession");
+        $dql->leftJoin("accession.accession", "accessionaccession");
+
         $dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
         $parameters['parentId'] = $listid;
         $parameters['patientGroup'] = $patientGroup->getId();
@@ -901,6 +906,11 @@ class CrnPatientController extends PatientController {
         $dql->leftJoin("patient.lastname", "lastname");
         $dql->leftJoin("patient.firstname", "firstname");
         $dql->leftJoin("patient.mrn", "mrn");
+
+        $dql->leftJoin("patient.encounter", "encounter");
+        $dql->leftJoin("encounter.procedure", "procedure");
+        $dql->leftJoin("procedure.accession", "accession");
+        $dql->leftJoin("accession.accession", "accessionaccession");
 
         //$dql->where("list.parent = :parentId AND list.organizationalGroupType = :patientGroup");
         //$parameters['parentId'] = $listid;

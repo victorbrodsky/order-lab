@@ -183,6 +183,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         if( strpos($route,'calllog') !== false ) {
             return "calllog";
         }
+        if( strpos($route,'crn') !== false ) {
+            return "crn";
+        }
         if( strpos($route,'fellapp') !== false ) {
             return "fellapp";
         }
@@ -195,6 +198,14 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         }
         if( strpos($route,'scan') !== false ) {
             return "scan";
+        }
+
+        //get first element before '_'
+        if( strpos($route,'_') !== false ) {
+            $routeArr = explode('_',$route);
+            if( count($routeArr) > 0 ) {
+                return $routeArr[0];
+            }
         }
 
         return "employees";

@@ -53,16 +53,26 @@
             {#{% set accessionaccession = accession.accession %}#}
 
             {% set patient = accession.obtainPatient() %}
-            {% if patient %}
-                {% set mrn = patient.obtainValidField('mrn') %}
-                {% if mrn and mrn.field and mrn.keytype %}
-                    {% set mrnNumber = mrn.field %}
-                    {% set mrnTypeId = mrn.keytype.id %}
-                {% else %}
-                    {% set mrnNumber = null %}
-                    {% set mrnTypeId = null %}
-                {% endif %}
+
+            {% set accessionAccession = accession.obtainValidField('accession') %}
+
+            {% set accessionType = null %}
+            {% set accessionNumber = null %}
+            {% if accessionAccession %}
+                {% set accessionType = accessionAccession.keytype %}
+                {% set accessionNumber = accessionAccession.accessionNumber %}
             {% endif %}
+
+            {#{% if patient %}#}
+                {#{% set mrn = patient.obtainValidField('mrn') %}#}
+                {#{% if mrn and mrn.field and mrn.keytype %}#}
+                    {#{% set mrnNumber = mrn.field %}#}
+                    {#{% set mrnTypeId = mrn.keytype.id %}#}
+                {#{% else %}#}
+                    {#{% set mrnNumber = null %}#}
+                    {#{% set mrnTypeId = null %}#}
+                {#{% endif %}#}
+            {#{% endif %}#}
 
             {% set trclassname = "" %}
 
@@ -70,7 +80,10 @@
 
                 <td style="display: none;">
                     {#<a href="{{ path(crn_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
-                    <a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    {#<a href="{{ path('crn_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>#}
+                    {% if accessionType and accessionNumber %}
+                        <a href="{{ path('crn_home', { 'filter[accessionType]': accessionType, 'filter[accessionNumber]': accessionNumber, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    {% endif %}
                 </td>
 
                 {#Last Name#}

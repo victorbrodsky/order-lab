@@ -64,18 +64,26 @@
 
         {% for accessionNode in accessionNodes if accessionNode.accession %}
 
-            {% set mrnNumber = null %}
-            {% set mrnTypeId = null %}
+            {#{% set mrnNumber = null %}#}
+            {#{% set mrnTypeId = null %}#}
 
             {% set accession = accessionNode.accession %}
             {% set patient = accession.obtainPatient() %}
-            {% if patient %}
-                {% set mrn = patient.obtainValidField('mrn') %}
-                {% if mrn and mrn.field and mrn.keytype %}
-                    {% set mrnNumber = mrn.field %}
-                    {% set mrnTypeId = mrn.keytype.id %}
-                {% endif %}
+
+            {% set accessionType = null %}
+            {% set accessionNumber = null %}
+            {% if accessionAccession %}
+                {% set accessionType = accessionAccession.keytype %}
+                {% set accessionNumber = accessionAccession.accessionNumber %}
             {% endif %}
+
+            {#{% if patient %}#}
+                {#{% set mrn = patient.obtainValidField('mrn') %}#}
+                {#{% if mrn and mrn.field and mrn.keytype %}#}
+                    {#{% set mrnNumber = mrn.field %}#}
+                    {#{% set mrnTypeId = mrn.keytype.id %}#}
+                {#{% endif %}#}
+            {#{% endif %}#}
 
             {% set trclassname = "" %}
 
@@ -84,7 +92,10 @@
             <tr class="{{ trclassname }}">
 
                 <td style="display: none;">
-                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    {#<a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>#}
+                    {% if accessionType and accessionNumber %}
+                        <a href="{{ path('crn_home', { 'filter[accessionType]': accessionType, 'filter[accessionNumber]': accessionNumber, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
+                    {% endif %}
                 </td>
 
                 {#Last Name#}

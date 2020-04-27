@@ -104,6 +104,7 @@
             <th>{{ knp_pagination_sortable(patientNodes, 'Last Name', 'lastname.field') }}</th>
             <th>{{ knp_pagination_sortable(patientNodes, 'First Name', 'firstname.field') }}</th>
             <th>{{ knp_pagination_sortable(patientNodes, 'MRN', 'mrn.field') }}</th>
+            <th>{{ knp_pagination_sortable(patientNodes, 'Accession', 'accessionaccession.field') }}</th>
             {#<th>{{ knp_pagination_sortable(patientNodes, 'Date of Last Entry', 'mrn.field') }}</th>#}
             <th>Date of Last Entry</th>
             <th>Actions</th>
@@ -193,6 +194,13 @@
                     {#{% endfor %}#}
                     {{ patient.obtainFullValidKeyName }}
                 </td>
+
+                <td>
+                    {% for accession in patient.obtainAccessions %}
+                        {{ accession.obtainFullValidKeyName }}<br>
+                    {% endfor %}
+                </td>
+
 
                 {#Date of Last Entry#}
                 <td>

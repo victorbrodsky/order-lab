@@ -1840,8 +1840,16 @@ class Patient extends ObjectAbstract
 //        return implode(", ",$locationArr);
     }
 
-//    public function obtainAccessions() {
-//
-//    }
+    public function obtainAccessions() {
+        $accessions = array();
+        foreach($this->getEncounter() as $encounter) {
+            foreach($encounter->getProcedure() as $procedure) {
+                foreach($procedure->getAccession() as $accession) {
+                    $accessions[] = $accession;
+                }
+            }
+        }
+        return $accessions;
+    }
 
 }
