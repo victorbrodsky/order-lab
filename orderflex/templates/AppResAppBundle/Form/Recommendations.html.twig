@@ -1,0 +1,180 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+<div class="panel panel-info">
+
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#recommendations">
+            Letters of Recommendation and/or References
+        </a>
+    </h4>
+</div>
+
+<div id="recommendations" class="panel-collapse collapse {{ collapsein }}">
+<div class="panel-body">
+
+<p>
+    Please list the individuals who will write your letters of recommendation. At least three are required.
+</p>
+
+
+{% set refcount = 1 %}
+
+{% for reference in form.references %}
+
+<a name="reference{{refcount}}"></a>
+<div class="well" id="reference{{refcount}}">
+  
+    <label class="control-label">Reference #{{ refcount }}</label>
+
+    {% if cycle != "download" %}
+        {% if is_granted('ROLE_RESAPP_ADMIN') or is_granted('ROLE_RESAPP_COORDINATOR') %}
+            <p>Hash ID (visible to admin): {{ reference.vars.value.recLetterHashId }}</p>
+        {% endif %}
+    {% endif %}
+
+    {% set refcount = refcount + 1 %}
+    
+    <div class="row withpaddingtop">
+        <div class="col-xs-4">
+            {{ form_row(reference.firstName) }}
+        </div>
+        <div class="col-xs-4">
+            {{ form_row(reference.name) }}
+        </div>
+        <div class="col-xs-4">
+            {{ form_row(reference.degree) }}
+        </div>
+    </div>
+
+    <div class="row withpaddingtop">
+        <div class="col-xs-6">
+            {{ form_row(reference.title) }}
+        </div>
+        <div class="col-xs-6">
+            {{ form_row(reference.institution) }}
+        </div>
+    </div>
+
+    <div class="row withpaddingtop">
+        <div class="col-xs-6">
+            {{ form_row(reference.phone) }}
+        </div>
+        <div class="col-xs-6">
+            {% if cycle == 'show' or cycle == 'download' %}
+                <label>{{ reference.email.vars.label }}</label>
+                {#<a href="mailto:{{ reference.email.vars.value }}" target="_top">{{ reference.email.vars.value }}</a>#}
+                <div class="form-control" disabled>
+                    <a href="mailto:{{ reference.email.vars.value }}" target="_top">{{ reference.email.vars.value }}</a>
+                </div>
+
+            {% else %}
+                {{ form_row(reference.email) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row withpaddingtop">
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressStreet1" class="control-label">Street (Line 1)</label>#}
+            {#<input type="text" class="form-control" id="recommendation1AddressStreet1" name="recommendation1AddressStreet1" placeholder="Street (Line 1)">#}
+            {{ form_row(reference.geoLocation.street1) }}
+        </div>
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressStreet2" class="control-label">Street (Line 2)</label>#}
+            {#<input type="text" class="form-control" id="recommendation1AddressStreet2" name="recommendation1AddressStreet2" placeholder="Street (Line 2)">#}
+            {{ form_row(reference.geoLocation.street2) }}
+        </div>
+    </div>
+
+    <div class="row withpaddingtop">
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressCity" class="control-label">City</label>#}
+            {#<input type="text" class="form-control" id="recommendation1AddressCity" name="recommendation1AddressCity" placeholder="City">#}
+            {{ form_row(reference.geoLocation.city) }}
+        </div>
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressState" class="control-label">State</label>#}
+            {#<input type="hidden" class="combobox usstates" id="recommendation1AddressState" name="recommendation1AddressState" placeholder="State">#}
+            {{ form_row(reference.geoLocation.state) }}
+        </div>
+    </div>
+
+    <div class="row withpaddingtop">
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressZip" class="control-label">ZIP / Postal code</label>#}
+            {#<input type="text" class="form-control" id="recommendation1AddressZip" name="recommendation1AddressZip" placeholder="ZIP / Postal code">#}
+            {{ form_row(reference.geoLocation.zip) }}
+        </div>
+        <div class="col-xs-6">
+            {#<label for="recommendation1AddressCountry" class="control-label">Country</label>#}
+            {#<input type="text" class="form-control" id="recommendation1AddressCountry" name="recommendation1AddressCountry" placeholder="Country">#}
+            {{ form_row(reference.geoLocation.country) }}
+        </div>
+    </div>
+
+    {#<p>#}
+    {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
+    {#</p>#}
+
+    {% if cycle != "download" %}
+
+        <div class="row withpaddingtop">
+            <div class="col-xs-6">
+                {#{{ form_row(reference.recLetterReceived) }}#}
+                {{ formmacros.checkbox(reference.recLetterReceived) }}
+            </div>
+            <div class="col-xs-6">
+                {{ formmacros.simplefield( "Number of sent invitation email(s):", reference.vars.value.invitationSentEmailCounter, "", "disabled" ) }}
+            </div>
+        </div>
+
+        <p>
+        <div class="well form-element-holder user-Reference">
+            <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {% if reference is defined %}
+                        {{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default','Residency Recommendation') }}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        </p>
+    {% endif %}
+
+
+</div> <!-- well -->
+
+{% endfor %}
+
+
+
+
+</div> <!-- panel-body -->
+</div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->

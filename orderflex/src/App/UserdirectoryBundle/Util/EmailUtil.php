@@ -95,6 +95,9 @@ class EmailUtil {
             if (strpos($url, "/fellowship-applications/") !== false) {
                 $sitenameAbbreviation = "fellapp";
             }
+            if (strpos($url, "/residency-applications/") !== false) {
+                $sitenameAbbreviation = "resapp";
+            }
             if (strpos($url, "/call-log-book/") !== false) {
                 $sitenameAbbreviation = "calllog";
             }

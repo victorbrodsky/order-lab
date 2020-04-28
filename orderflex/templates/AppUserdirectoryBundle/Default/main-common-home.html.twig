@@ -106,6 +106,10 @@
             <p><a href="{{ path('fellapp_home') }}">Fellowship Applications</a></p>
         {% endif %}
 
+        {% if user_security_utility.isSiteShowLinkNavbar(resapp_sitename) %}
+            <p><a href="{{ path('resapp_home') }}">Residency Applications</a></p>
+        {% endif %}
+
         {% if user_security_utility.isSiteShowLinkNavbar(deidentifier_sitename) %}
             <p><a href="{{ path('deidentifier_home') }}">Deidentifier</a></p>
         {% endif %}

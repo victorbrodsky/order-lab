@@ -1,0 +1,93 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Default/resappmacros.html.twig" as resappmacros %}
+
+
+{% block title %}
+    Residency Settings
+{% endblock %}
+
+
+{% block content %}
+
+
+    <br>
+    <div class="well">
+        Please use this page to add or remove Directors, Coordinators and Interviewers for specific residency type.<br>
+        It is not recommended to manually add or remove residency roles directly in the user profile page.
+        {#because changes (user's roles and ResidencySubspecialty's directors,coordinators,interviewers) are synchronised when Residency Setting or Specific Residency type setting pages are open#}
+    </div>
+    <br>
+    <hr>
+
+    {% for entity in entities %}
+
+        <h4>
+            <a
+                href="{{ path('resapp_residencytype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
+            </a>
+        </h4>
+
+        <p>
+            <h4>Default Interviewers:</h4>
+            {% for user in entity.interviewers %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+
+        </p>
+        <p>
+            <h4>Coordinators:</h4>
+            {% for user in entity.coordinators %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+        </p>
+        <p>
+            <h4>Directors:</h4>
+            {% for user in entity.directors %}
+                {{ user.getUsernameOptimal() }}<br>
+            {% endfor %}
+        </p>
+
+        <hr>
+
+    {% endfor %}
+
+
+    {% if manual is defined and manual %}
+        <br><br>
+        <div class="well">
+            {{ manual|raw }}
+        </div>
+    {% endif %}
+
+    <br><br>
+    <p>
+        <a class="btn-sm btn-primary" href="{{ path('resapp_residency_application_type_add') }}">Add a New Residency Application Type</a>
+    </p>
+
+
+{% endblock %}
+
+
+
+
+
+

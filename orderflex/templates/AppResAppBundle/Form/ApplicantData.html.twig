@@ -1,0 +1,325 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+<!-- Residency Type -->
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#residencyApplicantData">
+                Applicant Data
+            </a>
+        </h4>
+    </div>
+    <div id="residencyApplicantData" class="panel-collapse collapse {{ collapsein }}">
+        <div class="panel-body">
+
+            <div class="well">
+                <label class="col-xs-12 control-label">Applicant:</label>
+                {#{{ form_row(form.residencySubspecialty) }}#}
+                <div class="row">
+                    <div class="col-xs-6">
+                        <br>
+                        {{ form_row(form.residencySubspecialty) }}
+                    </div>
+                    <div class="col-xs-3">
+                        {{ formmacros.fieldDateLabel_vertical(form.startDate,'allow-future-date') }}
+                    </div>
+                    <div class="col-xs-3">
+                        {{ formmacros.fieldDateLabel_vertical(form.endDate,'allow-future-date') }}
+                    </div>
+                </div> <!-- row -->
+
+                {% if form.user.infos is defined %}
+                    {% for info in form.user.infos %}
+
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                                    Demo
+                                {% else %}
+                                    {{ form_row(info.firstName) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-4">
+                                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                                    Applicant
+                                {% else %}
+                                    {{ form_row(info.lastName) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-4">
+                                {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                                    The
+                                {% else %}
+                                    {{ form_row(info.middleName) }}
+                                {% endif %}
+                            </div>
+                        </div> <!-- row -->
+                        </p>
+
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            applicantemail
+                        {% else %}
+                            <p>
+                                {{ form_errors(info.email) }}
+                                {{ form_label(info.email) }}
+                                {{ form_widget(info.email) }}
+                            </p>
+                        {% endif %}
+
+                    {% endfor %}
+                {% endif %}
+
+            </div> {#well#}
+
+
+            {% if form.locations is defined %}
+
+            {% for location in form.locations %}
+
+                {#location.name.vars.value=({{ location.vars.value.name }})<br>#}
+                {#location.id.vars.value=({{ location.vars.value.id }})<br>#}
+                {#location.locationTypes|length=({{ location.locationTypes|length }})<br>#}
+
+                {% set presentLocation = false %}
+                {% set permanentLocation = false %}
+                {% set workLocation = false %}
+
+                {% for locationType in location.vars.value.locationTypes %}
+                    {#locationType.name:{{ locationType.name }}<br>#}
+                    {% if locationType.name == 'Present Address' %}
+                        {% set presentLocation = true %}
+                    {% endif %}
+                    {% if locationType.name == 'Permanent Address' %}
+                        {% set permanentLocation = true %}
+                    {% endif %}
+                    {% if locationType.name == 'Work Address' %}
+                        {% set workLocation = true %}
+                    {% endif %}
+                {% endfor %}
+
+
+                {% if presentLocation %}
+                    {#present!!!<br>#}
+
+                    {#location.geoLocation.vars.value.state={{ location.vars.value.geoLocation.state }}<br>#}
+
+                    <div class="well">
+                        <label class="col-xs-12 control-label">Present Address:</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressStreet1" class="control-label">Street</label>#}
+                                {#<input type="text" class="form-control" id="presentAddressStreet1" name="presentAddressStreet1" placeholder="Street">#}
+                                {#location.geoLocation.vars.value.street1={{ location.vars.value.geoLocation.street1 }}#}
+                                {{ form_row(location.geoLocation.street1) }}
+                            </div>
+                            {#<br>#}
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressStreet2" class="control-label">Street</label>#}
+                                {#<input type="text" class="form-control" id="presentAddressStreet2" name="presentAddressStreet2" placeholder="Street">#}
+                                {{ form_row(location.geoLocation.street2) }}
+                            </div>
+                        </div>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressCity" class="control-label">City</label>#}
+                                {#<input type="text" class="form-control" id="presentAddressCity" name="presentAddressCity" placeholder="City">#}
+                                {{ form_row(location.geoLocation.city) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressState" class="control-label">State</label>#}
+                                {#<input type="hidden" class="combobox usstates" id="presentAddressState" name="presentAddressState" placeholder="State">#}
+                                {{ form_row(location.geoLocation.state) }}
+                            </div>
+                        </div>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressZip" class="control-label">ZIP / Postal code</label>#}
+                                {#<input type="text" class="form-control" id="presentAddressZip" name="presentAddressZip" placeholder="ZIP / Postal code">#}
+                                {{ form_row(location.geoLocation.zip) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="presentAddressCountry" class="control-label">Country</label>#}
+                                {#<input type="text" class="form-control" id="presentAddressCountry" name="presentAddressCountry" placeholder="Country">#}
+                                {{ form_row(location.geoLocation.country) }}
+                            </div>
+                        </div>
+
+                        {#<br>#}
+                        {#<label for="samePAddress" class="control-label">If permanent address is the same click here:&nbsp;</label>#}
+                        {#<input id="samePAddress" type="checkbox" name="samePAddress" value="samePAddress" style="text-align: left;">#}
+
+                    </div>
+                {% endif %}
+
+                {% if permanentLocation %}
+                    <div class="well">
+
+                        <label class="col-xs-12 control-label">Permanent Address:</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressStreet1" class="control-label">Street</label>#}
+                                {#<input type="text" class="form-control" id="permanentAddressStreet1" name="permanentAddressStreet1" placeholder="Street">#}
+                                {{ form_row(location.geoLocation.street1) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressStreet2" class="control-label">Street</label>#}
+                                {#<input type="text" class="form-control" id="permanentAddressStreet2" name="permanentAddressStreet2" placeholder="Street">#}
+                                {{ form_row(location.geoLocation.street2) }}
+                            </div>
+                        </div>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressCity" class="control-label">City</label>#}
+                                {#<input type="text" class="form-control" id="permanentAddressCity" name="permanentAddressCity" placeholder="City">#}
+                                {{ form_row(location.geoLocation.city) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressState" class="control-label">State</label>#}
+                                {#<input type="hidden" class="combobox usstates" id="permanentAddressState" name="permanentAddressState" placeholder="State">#}
+                                {{ form_row(location.geoLocation.state) }}
+                            </div>
+                        </div>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressZip" class="control-label">ZIP / Postal code</label>#}
+                                {#<input type="text" class="form-control" id="permanentAddressZip" name="permanentAddressZip" placeholder="ZIP / Postal code">#}
+                                {{ form_row(location.geoLocation.zip) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {#<label for="permanentAddressCountry" class="control-label">Country</label>#}
+                                {#<input type="text" class="form-control" id="permanentAddressCountry" name="permanentAddressCountry" placeholder="Country">#}
+                                {{ form_row(location.geoLocation.country) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="well">
+                <label class="col-xs-12 control-label">Telephone:</label>
+                <div class="row">
+                    <div class="col-xs-6">
+                        {#<label for="telephoneHome" class="control-label">Home</label>#}
+                        {#<input type="text" class="form-control" id="telephoneHome" name="telephoneHome" placeholder="Home">#}
+                        {% for location in form.locations %}
+                            {% for locationType in location.vars.value.locationTypes %}
+                                {% if locationType.name == 'Present Address' %}
+                                    {% if cycle != "show" %}
+                                        {{ form_row(location.phone) }}
+                                    {% else %}
+                                        <strong>Home</strong> {{ form_label(location.phone) }}<br>
+                                        <div class="form-control form-control-modif" disabled>
+                                            {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-xs-6">
+                        {#<label for="telephoneWork" class="control-label">Work</label>#}
+                        {#<input type="text" class="form-control" id="telephoneWork" name="telephoneWork" placeholder="Work">#}
+                        {% for location in form.locations %}
+                            {% for locationType in location.vars.value.locationTypes %}
+                                {% if locationType.name == 'Work Address' %}
+                                    {% if cycle != "show" %}
+                                        {{ form_row(location.phone,{'label': 'Work:'}) }}
+                                    {% else %}
+                                        <strong>Work</strong> {{ form_label(location.phone) }}<br>
+                                        <div class="form-control form-control-modif" disabled>
+                                            {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-6 withpaddingtop">
+                        {#<label for="telephoneMobile" class="control-label">Mobile</label>#}
+                        {#<input type="text" class="form-control" id="telephoneMobile" name="telephoneMobile" placeholder="Mobile">#}
+                        {% for location in form.locations %}
+                            {% for locationType in location.vars.value.locationTypes %}
+                                {% if locationType.name == 'Present Address' %}
+                                    {% if cycle != "show" %}
+                                        {{ form_row(location.mobile) }}
+                                    {% else %}
+                                        {{ form_label(location.mobile) }}<br>
+                                        <div class="form-control form-control-modif" disabled>
+                                            {{ usermacros.phoneHref(location.mobile.vars.value) }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-xs-6 withpaddingtop">
+                        {#<label for="telephoneFax" class="control-label">Fax</label>#}
+                        {#<input type="text" class="form-control" id="telephoneFax" name="telephoneFax" placeholder="Fax">#}
+                        {% for location in form.locations %}
+                            {% for locationType in location.vars.value.locationTypes %}
+                                {% if locationType.name == 'Present Address' %}
+                                    {{ form_row(location.fax) }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+
+            {% if form.citizenships is defined %}
+            {% for citizenship in form.citizenships %}
+                <div class="well">
+                    <label class="col-xs-12 control-label">Citizenship:</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {#<label for="citizenshipCountry" class="control-label">Country of citizenship</label>#}
+                            {#<input type="text" class="form-control" id="citizenshipCountry" name="citizenshipCountry" placeholder="Country of citizenship">#}
+                            {{ form_row(citizenship.country) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {#<label for="visaStatus" class="control-label">Visa status</label>#}
+                            {#<input type="text" class="form-control" id="visaStatus" name="visaStatus" placeholder="Visa status">#}
+                            {{ form_row(citizenship.visa) }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-info -->
+
+
+
+
+
+

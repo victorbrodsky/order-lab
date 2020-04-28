@@ -264,6 +264,9 @@ class ExceptionListener {
         if( strpos($controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
+        if( strpos($controller,'App\ResAppBundle') !== false ) {
+            return "resapp";
+        }
         if( strpos($controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
@@ -272,6 +275,9 @@ class ExceptionListener {
         }
         if( strpos($controller,'App\CallLogBundle') !== false ) {
             return "calllog";
+        }
+        if( strpos($controller,'App\CrnBundle') !== false ) {
+            return "crn";
         }
         if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";

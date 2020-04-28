@@ -22,6 +22,10 @@
         {% include 'AppFellAppBundle/Default/navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'resapp' %}
+        {% include 'AppResAppBundle/Default/navbar.html.twig' %}
+    {% endif %}
+
     {% if sitename == 'scan' %}
         {% include 'AppOrderformBundle/Default/navbar.html.twig' %}
     {% endif %}
@@ -50,6 +54,10 @@
 
     {% if sitename == 'calllog' %}
         {% include 'AppCallLogBundle/Default/navbar.html.twig' %}
+    {% endif %}
+
+    {% if sitename == 'crn' %}
+        {% include 'AppCrnBundle/Default/navbar.html.twig' %}
     {% endif %}
 
     {% if sitename == 'translationalresearch' %}

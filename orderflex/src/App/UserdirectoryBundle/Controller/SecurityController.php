@@ -88,6 +88,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "fellapp_login" ) {
             $sitename = $this->getParameter('fellapp.sitename');
         }
+        if( $routename == "resapp_login" ) {
+            $sitename = $this->getParameter('resapp.sitename');
+        }
         if( $routename == "deidentifier_login" ) {
             $sitename = $this->getParameter('deidentifier.sitename');
         }
@@ -273,6 +276,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "fellapp_idlelogout" ) {
             $sitename = $this->getParameter('fellapp.sitename');
         }
+        if( $routename == "resapp_idlelogout" ) {
+            $sitename = $this->getParameter('resapp.sitename');
+        }
         if( $routename == "deidentifier_idlelogout" ) {
             $sitename = $this->getParameter('deidentifier.sitename');
         }
@@ -315,6 +321,10 @@ class SecurityController extends OrderAbstractController
             $options['sitename'] = $this->getParameter('fellapp.sitename');
             $options['event'] = "Fellowship Applications login page visit";
         }
+        if( $routename == "resapp_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('resapp.sitename');
+            $options['event'] = "Residency Applications login page visit";
+        }
         if( $routename == "deidentifier_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('deidentifier.sitename');
             $options['event'] = "Deidentifier System login page visit";
@@ -331,6 +341,10 @@ class SecurityController extends OrderAbstractController
         if( $routename == "calllog_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('calllog.sitename');
             $options['event'] = "Call Log Book login page visit";
+        }
+        if( $routename == "crn_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('crn.sitename');
+            $options['event'] = "Critical Result Notification login page visit";
         }
         if( $routename == "translationalresearch_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('translationalresearch.sitename');

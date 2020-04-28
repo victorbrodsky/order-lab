@@ -55,6 +55,11 @@
             {% set favicon = 'glyphicons-37-file.png' %}
         {% endif %}
 
+        {% if sitename == resapp_sitename %}
+            {% set title = "Residency Applications" %}
+            {% set favicon = 'glyphicons-37-file.png' %}
+        {% endif %}
+
         {% if sitename == deidentifier_sitename %}
             {% set title = "Deidentifier" %}
             {% set favicon = 'glyphicons-81-retweet.png' %}

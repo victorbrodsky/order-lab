@@ -234,6 +234,9 @@ class SiteList extends ListAbstract
         if( $abbreviation == "fellapp" ) {
             return "Fellowship Applications";
         }
+        if( $abbreviation == "resapp" ) {
+            return "Residency Applications";
+        }
         if( $abbreviation == "deidentifier" ) {
             return "Deidentifier";
         }
@@ -242,6 +245,9 @@ class SiteList extends ListAbstract
         }
         if( $abbreviation == "calllog" ) {
             return "Call Log Book";
+        }
+        if( $abbreviation == "crn" ) {
+            return "Critical Result Notification";
         }
         return ucfirst($this->getName());
     }

@@ -214,6 +214,7 @@ class HomeController extends OrderAbstractController {
             'directory' => 'employees',
             'scan' => 'scan',
             'fellowship-applications' => 'fellapp',
+            'residency-applications' => 'resapp',
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
             'call-log-book' => 'calllog',

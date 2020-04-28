@@ -22,6 +22,10 @@
         {% include 'AppFellAppBundle/Default/navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'resapp' %}
+        {% include 'AppResAppBundle/Default/navbar.html.twig' %}
+    {% endif %}
+
     {% if sitename == 'scan' %}
         {% include 'AppOrderformBundle/Default/navbar.html.twig' %}
     {% endif %}
@@ -85,6 +89,9 @@
     {% endif %}
     {% if sitename == 'fellapp' %}
         {% set postPath = '_fellapp' %}
+    {% endif %}
+    {% if sitename == 'resapp' %}
+        {% set postPath = '_resapp' %}
     {% endif %}
 
     {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'edit', postPath ) }}

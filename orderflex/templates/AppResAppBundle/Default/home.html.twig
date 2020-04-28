@@ -1,0 +1,1436 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% set urltype = "home" %}
+
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Default/resappmacros.html.twig" as resappmacros %}
+
+
+{% block title %}
+    Residency Applications
+{% endblock %}
+
+
+{% block content %}
+
+
+<div id="resapp-rank-modal"></div>
+
+<p>
+
+    {% if is_granted('ROLE_RESAPP_COORDINATOR') %}
+        {% if accessreqs and accessreqs > 0 %}
+            <div class="alert alert-warning">
+                There are <a href="{{ path(resapp_sitename~'_accessrequest_list') }}">{{ accessreqs }} unprocessed access request(s)</a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% if allowPopulateResApp is defined and allowPopulateResApp == false %}
+        <div class="alert alert-danger">
+            Automatic import of residency applications submitted via the Google form is turned off.
+        </div>
+    {% endif %}
+
+    <p>
+        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}</i>
+    </p>
+
+    {% set resappTypeId = -1 %}
+    {% if filter %}
+        {% set resappTypeId = filter %}
+    {% endif %}
+    
+    {% set resStr = "Applications matching search criteria" %}
+
+    {% if lastImportTimestamp and resappids is defined and resappids %}
+        <p>
+            <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
+            <a href="{{ path('resapp_download_applicants_list_excel', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+                   data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">
+                   {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
+                    <i class="fa fa-file-excel-o"></i>
+            </a>
+            <a href="{{ path('resapp_download_interview_applicants_list_doc', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in Word">
+                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                <i class="fa fa-file-word-o"></i>
+            </a>
+            <a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">
+                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                <i class="fa fa-file-pdf-o"></i>
+            </a>
+        </p>
+    {% endif %}
+
+    {% if awaitedInterviews is not null and receivedInterviews is not null %}
+
+        {% if receivedInterviews == 1 %}
+            {% set evaluationStr = "evaluation" %}
+            {% set allStr = "" %}
+        {% elseif receivedInterviews == 2 %}
+            {% set evaluationStr = "evaluations" %}
+            {% set allStr = "" %}
+        {% else %}
+            {% set evaluationStr = "evaluations" %}
+            {% set allStr = "all " %}
+        {% endif %}
+
+        <p><b>
+            {#"Showing applications of your interviewees: 25 evaluations received, 10 awaited"#}
+            {% if awaitedInterviews > 0 and receivedInterviews > 0 %}
+                Showing applications of your interviewees: {{ receivedInterviews }} {{ evaluationStr }} received, {{ awaitedInterviews }} awaited
+            {% endif %}
+
+            {#"Showing applications of your interviewees: all 35 evaluations received, thank you!"#}
+            {% if awaitedInterviews == 0 and receivedInterviews > 0 %}
+                Showing applications of your interviewees: {{ allStr }}{{ receivedInterviews }} {{ evaluationStr }} received, thank you!
+            {% endif %}
+
+            {#You have not been assigned as an interviewer to any applicants for the selected year: no applications to show#}
+            {% if awaitedInterviews == 0 and receivedInterviews == 0 %}
+                You have not been assigned as an interviewer to any applicants for the selected year: no applications to show
+            {% endif %}
+        </b></p>
+    {% endif %}
+
+    {#<p>#}
+        {#<a href="{{ path('resapp_import') }}">Import from Google</a>#}
+    {#</p>#}
+
+    {#<p>#}
+        {#<a href="{{ path('resapp_populate') }}">Populate the Spreadsheet</a>#}
+    {#</p>#}
+
+    {#<div id="#interview-info-modal"></div>#}
+
+
+    <div class="well form-search">
+        {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
+        {{ form_start(resappfilter) }}
+
+            <div class="row">                
+                <div class="col-xs-2">
+                    {#{{ formmacros.fieldDateLabel_vertical(resappfilter.startDate,'allow-future-date') }}#}
+                    {#<div class="input-group input-group-reg date allow-future-date">#}
+                        {#{{ form_row(resappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}#}
+                        {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+                    {#</div>#}
+
+                    {{ form_row(resappfilter.startDates, {'attr': {'placeholder': 'Start Year'}}) }}
+
+                </div>
+                {#<div class="col-xs-2">#}
+                    {#{{ formmacros.fieldDateLabel_vertical(resappfilter.endDate,'allow-future-date') }}#}
+                {#</div>#}
+                <div class="col-xs-4">
+                    {{ form_row(resappfilter.filter,{'attr': {'placeholder': 'Residency Type'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_row(resappfilter.search, {'attr': {'placeholder': 'Search by Name'}}) }}
+                </div>
+                <div class="col-xs-2">
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button type="submit" id="filter-btn" class="btn btn-sm btn-default resapp-filter-btn"><i class="icon-search"></i>Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div class="row text-center">
+                <div class="col-xs-12">
+
+                    {#{% set tooltipBadge = 'data-toggle=tooltip' %}#}
+                    {% set tooltipBadge = '' %}
+
+                    <div style="white-space: nowrap; display: inline;">
+                    {{ form_widget(resappfilter.active) }}   {{ form_label(resappfilter.active) }}
+                    {#{{ resappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {{ active }}
+                    </a>
+                    </span>
+                    {{ resappmacros.addSlush() }}
+                    <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[active]':1,'filter[filter]':filter}) }}">{{ activeTotal }}</a>
+                    </span>
+                    {{ resappmacros.addLegend('active') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.priority) }}   {{ form_label(resappfilter.priority) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[priority]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ priority }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[priority]':1,'filter[filter]':filter}) }}">{{ priorityTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('priority') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                    {{ form_widget(resappfilter.complete) }}   {{ form_label(resappfilter.complete) }}
+                    {#{{ resappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {{ complete }}
+                    </a>
+                    </span>
+                    {{ resappmacros.addSlush() }}
+                    <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[complete]':1,'filter[filter]':filter}) }}">{{ completeTotal }}</a>
+                    </span>
+                    {{ resappmacros.addLegend('complete') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                    {{ form_widget(resappfilter.interviewee) }}   {{ form_label(resappfilter.interviewee) }}
+                    {#{{ resappmacros.addBadge( filter, currentYear, interviewee, intervieweeTotal, 'interviewee' ) }}#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ interviewee }}
+                    </a>
+                    </span>
+                    {{ resappmacros.addSlush() }}
+                    <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[interviewee]':1,'filter[filter]':filter}) }}">{{ intervieweeTotal }}</a>
+                    </span>
+                    {{ resappmacros.addLegend('interviewee') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    {#<div style="white-space: nowrap; display: inline;">#}
+                    {#{{ form_widget(resappfilter.onhold) }}   {{ form_label(resappfilter.onhold) }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
+                    {#<a style="color: white;" href="{{ path('resapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+                        {#{{ onhold }}#}
+                    {#</a>#}
+                    {#</span>#}
+                    {#{{ resappmacros.addSlush() }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="Total">#}
+                    {#<a style="color: white;" href="{{ path('resapp_home',{'filter[onhold]':1,'filter[filter]':filter}) }}">{{ onholdTotal }}</a>#}
+                    {#</span>#}
+                    {#{{ resappmacros.addLegend('onhold') }}#}
+                    {#</div>#}
+                    {#&nbsp;&nbsp;#}
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.accepted) }}   {{ form_label(resappfilter.accepted) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[accepted]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ accepted }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[accepted]':1,'filter[filter]':filter}) }}">{{ acceptedTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('accepted') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.acceptedandnotified) }}   {{ form_label(resappfilter.acceptedandnotified) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ acceptedandnotified }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter}) }}">{{ acceptedandnotifiedTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('acceptedandnotified') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.reject) }}   {{ form_label(resappfilter.reject) }}
+                        {#{{ resappmacros.addBadge( filter, currentYear, reject, rejectTotal, 'reject' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ reject }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[reject]':1,'filter[filter]':filter}) }}">{{ rejectTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('reject') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.rejectedandnotified) }}   {{ form_label(resappfilter.rejectedandnotified) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ rejectedandnotified }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter}) }}">{{ rejectedandnotifiedTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('rejectedandnotified') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.hidden) }}   {{ form_label(resappfilter.hidden) }}
+                        {#{{ resappmacros.addBadge( filter, currentYear, hidden, hiddenTotal, 'hidden' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ hidden }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[hidden]':1,'filter[filter]':filter}) }}">{{ hiddenTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('hidden') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.archived) }}   {{ form_label(resappfilter.archived) }}
+                        {#{{ resappmacros.addBadge( filter, currentYear, archived, archivedTotal, 'archived' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ archived }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[archived]':1,'filter[filter]':filter}) }}">{{ archivedTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('archived') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                </div>
+            </div>
+
+            {{ form_rest(resappfilter) }}
+        {#</form>#}
+        {{ form_end(resappfilter) }}
+    </div>
+
+    {% set trclassname = "" %}
+
+    <div style="margin-top:25px;">
+
+        <table class="records_list table table-hover table-condensed text-left">
+            <thead>
+            <tr>
+
+                {#<th {% if entities.isSorted('resapp.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Status', 'resapp.appStatus.name') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'Created', 'resapp.timestamp') }}</th>#}
+
+                {% if route_path == "resapp_send_rejection_emails" %}
+                    <th>Send Email</th>
+                    <th>Rejection Emailed?</th>
+                {% endif %}
+
+                <th>{{ knp_pagination_sortable(entities, 'Residency Type', 'residencySubspecialty.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Start Date', 'resapp.startDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>
+                <th>Photo</th>
+                <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
+
+                <th>{{ knp_pagination_sortable(entities, 'U1 [C1]', 'examinations.USMLEStep1Score') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U2 CK [C2]', 'examinations.USMLEStep2CKScore')}}</th>
+                <th>{{ knp_pagination_sortable(entities, 'U3 [C3]', 'examinations.USMLEStep3Score') }}</th>
+
+                {#<th>{{ knp_pagination_sortable(entities, 'C1', 'examinations.COMLEXLevel1Score') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
+
+                <th>Medical School</th>
+                <th>Residency</th>
+                <th>Residency</th>
+
+                <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'resapp.interviewDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'resapp.interviewScore') }}</th>
+
+                {% if resappTypeId > 0 %}
+                    <th>{{ knp_pagination_sortable(entities, 'Rank', 'rank.rank') }}</th>
+                {% endif %}
+
+                <th>
+                    <div data-toggle="tooltip" title="View Complete Application PDF">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    </div>
+                </th>
+
+                {% if route_path == "resapp_home" or route_path == "resapp_myinterviewees" or route_path == "resapp_accepted_residents" %}
+                    <th>
+                        Actions
+                    </th>
+                {% endif %}
+
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+
+            {% for entity in entities %}
+
+                {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$resapp);#}
+                {% set acceptedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
+                {% set acceptedEmailBodyModified = resapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
+                {% set rejectedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(rejectedEmailSubject,entity) %}
+                {% set rejectedEmailBodyModified = resapp_util.siteSettingsConstantReplace(rejectedEmailBody,entity) %}
+
+                {#Set row color#}
+                {% set trclassname = "" %}
+
+                {% if entity.appStatus.name == 'archive' %}
+                    {#No attention required - plain complete order#}
+                    {#{% set trclassname = "action-cancel-status" %}#}
+                    {#{% set trclassname = "info" %}#}
+                    {% set trclassname = "res-app-status-legend-archived" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'hide' %}
+                    {#urgent attention required#}
+                    {#{% set trclassname = "order-urgent-status" %}#}
+                    {#{% set trclassname = "danger" %}#}
+                    {% set trclassname = "res-app-status-legend-hidden" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'complete' %}
+                    {#urgent attention required#}
+                    {#{% set trclassname = "order-neutral-status" %}#}
+                    {#{% set trclassname = "order-complete-status" %}#}
+                    {% set trclassname = "res-app-status-legend-complete" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'interviewee' %}
+                    {#urgent attention required#}
+                    {#{% set trclassname = "order-interviewee-status" %}#}
+                    {% set trclassname = "res-app-status-legend-interviewee" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'reject' %}
+                    {#{% set trclassname = "order-reject-status" %}#}
+                    {% set trclassname = "res-app-status-legend-reject" %}
+                {% endif %}
+
+                {#{% if entity.appStatus.name == 'onhold' %}#}
+                    {#{% set trclassname = "order-onhold-status" %}#}
+                {#{% endif %}#}
+
+                {% if entity.appStatus.name == 'priority' %}
+                    {#{% set trclassname = "order-onhold-status" %}#}
+                    {% set trclassname = "res-app-status-legend-priority" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'accepted' %}
+                    {% set trclassname = "res-app-status-legend-accepted" %}
+                {% endif %}
+                {% if entity.appStatus.name == 'acceptedandnotified' %}
+                    {% set trclassname = "res-app-status-legend-acceptedandnotified" %}
+                {% endif %}
+                {% if entity.appStatus.name == 'rejectedandnotified' %}
+                    {% set trclassname = "res-app-status-legend-rejectedandnotified" %}
+                {% endif %}
+                {#EOF Set row color#}
+
+                {#Set examination score#}
+                {% set u1 = "" %}
+                {% set u2 = "" %}
+                {% set u3 = "" %}
+                {% set c1 = "" %}
+                {% set c2 = "" %}
+                {% set c3 = "" %}
+                {% for examination in entity.examinations %}
+                    {% set u1 = examination.USMLEStep1Score %}
+                    {% set u2 = examination.USMLEStep2CKScore %}
+                    {% set u3 = examination.USMLEStep3Score %}
+                    {% set c1 = examination.COMLEXLevel1Score %}
+                    {% set c2 = examination.COMLEXLevel2Score %}
+                    {% set c3 = examination.COMLEXLevel3Score %}
+                {% endfor %}
+                {#EOF Set examination score#}
+
+                
+                {#Calculating evaluation received, score css and evaluation modal#}
+                {% set interviewDescrStr = "" %}
+                {% set interviewsArr = [] %}
+                {#{% set interviewsAwaitingArr = [] %}#}
+{#                {% if entity.interviewScore %}#}
+                    {% set scoreCount = 0 %}
+                    {% set tooltip = "" %}                      
+                    {% set scoreStyle = 'style=font-weight:bold;' %}
+                    {% for interview in entity.interviews if interview.interviewer %}
+                        {% if not interview.totalRank %}
+                            {% set scoreStyle = "" %}                             
+                            {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}#}
+                        {% else %}
+                            {% set scoreCount = scoreCount + 1 %} 
+                            {#{% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} #}
+                            {#{% set interviewDescrStr =                                    #}
+                                    {#interviewerUrl~":<br>"~       #}
+                                    {#"Academic Rank - "~interview.academicRank~#}
+                                    {#"<br>Personality Rank - "~interview.personalityRank~#}
+                                    {#"<br>Potential Rank - "~interview.potentialRank~#}
+                                    {#"<br>Language Proficiency - "~interview.languageProficiency~#}
+                                    {#"<br>Total Rank - "~interview.totalRank~#}
+                                    {#"<br>Comment: "~interview.comment %}#}
+                            {#{% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              #}
+                        {% endif %}                                                                 
+                    {% endfor %}                                   
+
+                    {% if entity.interviewScore %}
+                        {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' %}
+                    {% endif %}
+{#                {% endif %}#}
+                {#EOF Calculating evaluation received and evaluation modal#}
+
+                <tr class="{{ trclassname }}">
+
+
+                    {############ X of Y reference letters received ###########}
+                    {#count all reference letters and upload documents#}
+                    {% set notEmptyRef = 0 %}
+                    {% set letterCount = 0 %}
+                    {% set totalDocCount = 0 %}
+                    {% for refLetter in entity.references %}
+                        {% set totalDocCount = totalDocCount + refLetter.documents|length %}
+                        {% if refLetter.name %}
+                            {% set notEmptyRef = notEmptyRef + 1 %}
+                            {#{% if refLetter.documents|length > 0 %}#}
+                            {% if refLetter.hasReferenceLetter() %}
+                                {% set letterCount = letterCount + 1 %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% set styleStr = "color:#707070;" %}
+                    {#X of Y reference letters received#}
+                    {% set docNumberStr = "docs" %}
+                    {% if totalDocCount == 1 %}
+                        {% set docNumberStr = "doc" %}
+                    {% endif %}
+                    {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
+                    {############ EOF X of Y reference letters received ###########}
+
+
+                    {% if route_path == "resapp_send_rejection_emails" %}
+                        <td class="rowlink-skip">
+                            <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
+                        </td>
+                        <td>
+                            {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
+                            {% set sentRejectionEmail = resapp_util.getRejectionEmailSent(entity) %}
+                            {% if sentRejectionEmail %}
+                                {#{{ sentRejectionEmail|date('m/d/Y') }}#}
+                                {{ sentRejectionEmail|raw }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    <td>
+                        {% if entity.residencySubspecialty %}
+                            {{  entity.residencySubspecialty.name }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ entity.appStatus.getAction() }}: {{ letterCountStr }}
+                    </td>
+
+                    <td>
+                        {{ entity.startDate|date('m/d/Y','UTC') }}
+                    </td>
+
+                    <td>
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank">{{ entity.id }}</a>
+                    </td>
+
+                    <td class="rowlink-skip">
+                        <div style="height: 60px; width: 60px;">
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                        {% else %}
+                            {% if entity.avatars|length > 0 %}
+                                {#{{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar','') }}#}
+                                {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar',null,null,null,'snapshot-small') }}
+                            {% else %}
+                                {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                                <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                    </td>
+
+                    {#<td>#}
+                        {#{{  entity.appStatus }}#}
+                    {#</td>#}
+
+                    {#<td>#}
+                        {#{{ entity.timestamp|date('m/d/Y H:i') }}#}
+                    {#</td>                                       #}
+
+                    {#<td>#}
+                        {#{{ entity.endDate|date('m/d/Y') }}#}
+                    {#</td>#}
+
+                    <td>
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            Demo
+                        {% else %}
+                            {{ entity.user.getFirstNameUppercase() }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            Applicant
+                        {% else %}
+                            {{ entity.user.getLastNameUppercase() }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ u1 }}{% if c1 %} [{{ c1 }}]{% endif %}
+                    </td>
+
+                    <td>
+                        {{ u2 }}{% if c2 %} [{{ c2 }}]{% endif %}
+                    </td>
+
+                    <td>
+                        {{ u3 }}{% if c3 %} [{{ c3 }}]{% endif %}
+                    </td>
+
+                    {#<td>#}
+                        {#{{ c1 }}#}
+                    {#</td>#}
+
+                    {#<td>#}
+                        {#{{ c2 }}#}
+                    {#</td>#}
+
+                    {#<td>#}
+                        {#{{ c3 }}#}
+                    {#</td>#}
+                    <td>
+                        {{ entity.getMedicalSchoolDescription()|raw }}
+                    </td>
+                    <td>
+                        {{ entity.getResidencyDescription()|raw }}
+                    </td>
+                    <td>
+                        {{ entity.getPostResidencyResidencyDescription()|raw }}
+                    </td>
+
+                    {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}
+                    <td class="rowlink-skip">
+                        {% if entity.interviewDate is not empty %}
+                            {% if entity.itinerarys|length > 0 %}
+                                <a  
+                                   href="{{ path('resapp_file_download', {'id': entity.itinerarys|last.id}) }}"
+                                   target="_blank" 
+                                   style="color:black;"
+                                   data-toggle="tooltip" title="Download Itinerary"
+                                >
+                                    {#{{ entity.interviewDate|date('m/d/Y','UTC') }}#}
+                                    {{ entity.interviewDate|date('m/d/Y',false) }}
+                                </a>
+                            {% else %}
+                                {#{{ entity.interviewDate|date('m/d/Y','UTC') }}#}
+                                {{ entity.interviewDate|date('m/d/Y',false) }}
+                            {% endif %}
+
+                        {% endif %}
+                    </td>
+                   
+                    <td class="rowlink-skip">
+                        <div>
+                            <div style="float:left; margin-right:5px;">
+                        {% if entity.interviewScore %}                         
+                            <a data-toggle="tooltip" title="{{ tooltip }}" href="{{ path('resapp_show', { 'id': entity.id}) }}#interviews" target="_blank" style="color:black;">
+                                <div {{ scoreStyle }}>{{ entity.interviewScore }}</div>
+                            </a>                           
+                        {% endif %} 
+                                </div>
+                                <div style="float:left;">
+                        {#{% if interviewsArr|length > 0 or interviewsAwaitingArr|length > 0 %}#}
+                        {% if scoreCount > 0 %}
+
+                            {#<a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">#}
+                                {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
+                            {#</a>#}
+
+                            {#{{ resappmacros.addInterviewsModal(entity,interviewsArr,interviewsAwaitingArr) }}#}
+
+                            {#<div#}
+                                {#class="btn btn-sm"#}
+                                {#onclick="interviewModalAction( {{entity.id}} );"#}
+                                {#<span data-toggle="tooltip" title="View Interview Evaluations" class="glyphicon glyphicon-list"></span>#}
+                            {#</div>#}
+
+                            {#<a href="#" onclick="interviewModalAction( {{entity.id}} );" data-toggle="modal" data-target="#interview-info-modal">#}
+                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
+                            {#</a>#}
+                            {#<div class="btn btn-sm" type="button" style="padding:0px;" onclick="interviewModalCreation(this,{{ entity.id }});">#}
+                                {#<span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>#}
+                            {#</div>#}
+                            <div class="btn btn-sm btn-interview-info-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">
+                                <span class="glyphicon glyphicon-list" data-toggle="tooltip" title="View Interview Evaluations"></span>
+                            </div>
+
+                            {#Remote modal: This option is deprecated since v3.3.0 and will be removed in v4.#}
+                            {#<a data-toggle="modal" href="{{ path('resapp_interview_modal',{'id':entity.id}) }}" data-target="#interview-info-{{entity.id}}">#}
+                                {#<span class="glyphicon glyphicon-list"></span>#}
+                            {#</a>#}
+                            {#<div id="#interview-info-{{entity.id}}"></div>#}
+
+                        {% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    {#rank#}
+                    {% if resappTypeId > 0 %}
+                        <td class="rowlink-skip">
+                            {% if entity.rank and entity.rank != 0 and entity.rank != "" %}
+                                {% if entity.rank.updateuser %}
+                                    {% set rankUser = entity.rank.updateuser %}
+                                    {% set rankDate = entity.rank.updatedate %}
+                                {% else %}
+                                    {% set rankUser = entity.rank.user %}
+                                    {% set rankDate = entity.rank.creationdate %}
+                                {% endif %}
+                                {% set tooltipStr = "Set by "~rankUser.getUserNameStr()~" on "~rankDate|date('m/d/Y','UTC') %}
+                                {% set rankValue = entity.rank.rank %}
+                            {% else %}
+                                {% set tooltipStr = "" %}
+                                {% set rankValue = "?" %}
+                            {% endif %}
+
+                            <div
+                                class="btn btn-resapp-rank-modal"
+                                type="button"
+                                style="padding:0px;"
+                                data-id="{{ entity.id }}"
+                                data-toggle="tooltip" title="{{ tooltipStr }}"
+                            >
+                                {{ rankValue }}
+                            </div>
+                        </td>
+                    {% endif %}
+
+                    <td class="rowlink-skip">
+
+                        {#X of Y reference letters received (removed by now as asked by Jessica)#}
+                        {#count all reference letters and upload documents#}
+                        {#{% set notEmptyRef = 0 %}#}
+                        {#{% set letterCount = 0 %}#}
+                        {#{% set totalDocCount = 0 %}#}
+                        {#{% for refLetter in entity.references %}#}
+                            {#{% set totalDocCount = totalDocCount + refLetter.documents|length %}#}
+                            {#{% if refLetter.name %}#}
+                                {#{% set notEmptyRef = notEmptyRef + 1 %}#}
+                                {#{% if refLetter.documents|length > 0 %}#}
+                                    {#{% set letterCount = letterCount + 1 %}#}
+                                {#{% endif %}#}
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                        {#{% set letterCountStr = "" %}#}
+                        {#{% set styleStr = "color:#707070;" %}#}
+
+                        {#{% if letterCount > 0 %}#}
+                            {#{% set letterCountStr = letterCount ~  " reference letters received" %}#}
+                            {#{% set styleStr = "" %}#}
+                        {#{% endif %}#}
+
+                        {#X of Y reference letters received#}
+                        {#{% set docNumberStr = "docs" %}#}
+                        {#{% if totalDocCount == 1 %}#}
+                            {#{% set docNumberStr = "doc" %}#}
+                        {#{% endif %}#}
+                        {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                        {#{% set styleStr = "" %}#}
+
+                        {% if entity.appStatus.name == 'complete' %}
+                            {% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}
+                        {% elseif entity.appStatus.name == 'interviewee' %}
+                            {% set letterCountStr = "Interviewee" ~ " (" ~ letterCountStr ~ ")" %}
+                        {% else %}
+                            {#X of Y reference letters received#}
+                            {#{% set docNumberStr = "docs" %}#}
+                            {#{% if totalDocCount == 1 %}#}
+                                {#{% set docNumberStr = "doc" %}#}
+                            {#{% endif %}#}
+                            {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                            {% set styleStr = "" %}
+                        {% endif %}
+
+                        {#<a#}
+                            {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
+                            {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
+                        {#</a>#}
+                        {% if entity.getRecentReport() %}
+                            {#<a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">#}
+                                {#<span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>#}
+                            {#</a>#}
+                            <a href="{{ path('resapp_view_pdf', { 'id': entity.id}) }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
+                                <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
+                            </a>
+                        {% endif %}                                                                       
+
+                    </td>
+
+                    <td class="rowlink-skip">
+
+                        {% if route_path == "resapp_home" or route_path == "resapp_accepted_residents" %}
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    Action <span class="caret"></span>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-right">
+
+
+                                    <li>
+                                        <a
+                                            href="{{ path('resapp_show', { 'id': entity.id}) }}" target="_blank">View Application and Documents
+                                        </a>
+                                    </li>
+
+                                    {% if entity.itinerarys|length > 0 %}
+                                        <li>
+                                            <a
+                                                href="{{ path('resapp_file_download', { 'id': entity.itinerarys|last.id, "eventtype":"Residency Interview Itinerary Downloaded"}) }}">Download Itinerary
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if entity.interviews|length > 0 %}
+                                        <li>
+    {#                                        <a href="{{ path('resapp_show', { 'id': entity.id}) }}#interviews" target="_blank">View Interview Evaluations</a>#}
+                                            {% if scoreCount > 0 %}
+                                                <a href="#" data-toggle="modal" data-target="#interview-info-{{entity.id}}">
+                                                    View Interview Evaluations <span class="glyphicon glyphicon-list"></span>
+                                                </a>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+
+                                    {% if is_granted('ROLE_RESAPP_COORDINATOR') or is_granted('ROLE_RESAPP_DIRECTOR') %}
+
+                                        <li>
+                                            <a
+                                                {#href="{{ path('resapp_application_log', { 'id': entity.id}) }}">View Activity Log#}
+                                                href="{{ path('resapp_event-log-per-object_log', { 'filter[objectId]': entity.id}) }}">View Activity Log
+                                            </a>
+                                        </li>
+
+                                        <hr>
+
+                                        {% if entity.appStatus.name != 'active' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('resapp_status', { 'id': entity.id, 'status': 'active' }, true) }}">Mark as Active
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'priority' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as Priority?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('resapp_status', { 'id': entity.id, 'status': 'priority' }, true) }}">Mark as Priority
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'complete' %}
+                                            {% set filter = app.request.get('filter') %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_status', { 'id': entity.id, 'status': 'complete' }, true) }}">Mark as Complete
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'interviewee' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {#{% if entity.appStatus.name != 'onhold' %}#}
+                                            {#<li>#}
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'On Hold'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'onhold' }, true) }}">Put On Hold#}
+                                                {#</a>#}
+                                            {#</li>#}
+                                        {#{% endif %}#}
+
+
+                                        {% if entity.appStatus.name != 'hide' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to hide this Application?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_status', { 'id': entity.id, 'status': 'hide' }, true) }}">Hide
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'archive' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_status', { 'id': entity.id, 'status': 'archive' }, true) }}">Archive
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'accepted' %}
+                                            <li>
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Mark as Accepted
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if entity.appStatus.name != 'acceptedandnotified' %}
+                                            <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify#}
+                                                {#</a>#}
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
+                                                    resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Mark as Accepted and Notify
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'reject' %}
+                                            <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected#}
+                                                {#</a>#}
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Mark as Rejected
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if entity.appStatus.name != 'rejectedandnotified' %}
+                                            <li>
+                                                {#<a#}
+                                                        {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected and Notified'?"#}
+                                                        {#general-data-callback="refreshpage"#}
+                                                        {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify#}
+                                                {#</a>#}
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
+                                                    resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Mark as Rejected and Notify
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+
+                                        {#Set recommendation status by RecLetterAuthorFirstName RecLetterAuthorLastName to ‘uploaded’#}
+                                        {% if entity.hasAllCheckmarks() == false %}
+                                            <hr>
+                                            {% for reference in entity.getReferences() %}
+                                                {% if reference.getRecLetterReceived() == false %}
+                                                    {% set referenceFullName = reference.getFullName() %}
+                                                    <li>
+                                                        <a
+                                                            general-data-confirm="Are you sure you want to set recommendation status by {{ referenceFullName }} to 'uploaded'?"
+                                                            href="{{ path('resapp_reference_letter_received', {'id': reference.id}) }}">
+                                                            Set recommendation status by {{ referenceFullName }} to 'uploaded'
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        <hr>
+
+                                        {#Send e-mail notification#}
+                                        <li>
+                                            <a
+                                                resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                resapp-data-callback="refreshpage"
+                                                href="#">Send e-mail notification of acceptance
+                                            </a>
+                                        <li>
+                                            <a
+                                                resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                resapp-data-callback="refreshpage"
+                                                href="#">Send e-mail notification of rejection
+                                            </a>
+                                        </li>
+
+                                        {#invite references#}
+                                        {% if entity.hasAllCheckmarksOrReferenceLetters() == false %}
+                                            <hr>
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">
+                                                    Invite all remaining references to submit letters
+                                                </a>
+                                                {% for reference in entity.getReferences() %}
+                                                    {#{% if reference.getDocuments()|length == 0 %}#}
+                                                    {% if reference.hasReferenceLetter() == false %}
+                                                        {% set referenceName = reference.getFullName() %}
+                                                        <a target="_blank"
+                                                            general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
+                                                            href="{{ path('resapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
+                                                            Invite {{ referenceName }} to submit a reference letter
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.getRecentReport() %}
+                                            {#Invite Interviewers to Rate#}
+                                            {% if entity.interviews|length > 0 and entity.itinerarys|length > 0 %}
+                                                <li>
+                                                    <a target="_blank"
+                                                        general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores."
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('resapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">
+                                                        Invite interviewers to rate
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {#Invite observers to view#}
+                                            {% if entity.observers|length > 0 %}
+                                                <li>
+                                                    <a
+                                                        general-data-confirm="Are you sure you want to Invite Observers to view this Applicant? Email will be sent to all observers."
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('resapp_inviteobservers', { 'id': entity.id}, true) }}">
+                                                        Invite Observers to view
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <hr>
+
+                                        <li>
+                                            <a
+                                                href="{{ path('resapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a
+                                                href="{{ path('resapp_edit_default_interviewers',{'id':entity.id}) }}#interviews" target="_blank">Add Default Interviewers
+                                            </a>
+                                        </li>
+
+                                    {% endif %}
+
+                                    {#{% if is_granted('ROLE_PLATFORM_ADMIN') %}#}
+                                    {#<li>#}
+                                        {#<a#}
+                                            {#general-data-confirm="Are you sure you want to completely remove this Applicant and all related documents?"#}
+                                            {#href="{{ path('resapp_remove', { 'id': entity.id}) }}">Remove Applicant and all related documents#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                    {#{% endif %}#}
+
+                                    {#This link should only appear if the logged in user is one of the interviewers.#}
+                                    {% if is_granted('ROLE_RESAPP_INTERVIEWER') %}
+
+                                        {% set userInterviewId = entity.getInterviewIdByUser( app.user ) %}
+
+                                        {% if userInterviewId %}
+                                            <li>
+                                                <a
+                                                    href="{{ path('resapp_interview_edit', { 'id': userInterviewId}) }}" target="_blank">Submit My Evaluation
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    <li>
+                                        <a
+                                            href="{{ path('resapp_download_pdf', { 'id': entity.id}) }}">Download Application
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if route_path == "resapp_myinterviewees" %}
+
+                            {% set thisUserInterview = entity.getInterviewByUser(app.user) %}
+                            {% set totalRank = thisUserInterview.totalRank %}
+
+                            {% if totalRank and totalRank > 0 %}
+                                <a
+                                    href="{{ path('resapp_interview_show', { 'id': thisUserInterview.getId()}) }}" target="_blank">View My Evaluation
+                                </a>
+                            {% else %}
+                                <a
+                                    href="{{ path('resapp_interview_edit', { 'id': thisUserInterview.getId()}) }}" target="_blank">Evaluate
+                                </a>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </td>
+
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {# display navigation #}
+        <div class="navigation">
+            {{ knp_pagination_render(entities) }}
+        </div>
+
+
+        {% if route_path == "resapp_send_rejection_emails" %}
+            {#send email button#}
+            <p>
+                <button
+                    id="send-rejection-emails"
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    onClick="resappSendRejectionEmails()"
+                >Send Rejection Emails to Selected Applicants</button>
+                {#&nbsp;&nbsp;&nbsp;#}
+                {#<a></a>#}
+            </p>
+
+            <br>
+
+            <div class="well well-sm" align='center'>
+                <h5>
+                    Email's Subject and Body ([[value]] will be replaced by the corresponding value from the residency application)
+                </h5>
+
+                {{ formmacros.simplefield("From:", user_security_utility.getSiteFromEmail("resapp"), "input", "disabled") }}
+
+                {#<p>#}
+                    {#<b>Subject:</b>#}
+                    {#{{ rejectedEmailSubject|raw }}#}
+                    {#<textarea disabled="disabled" class="textarea form-control">{{ rejectedEmailSubject|raw }}</textarea>#}
+                {#</p>#}
+                {{ formmacros.simplefield("Subject:", rejectedEmailSubject, "textarea", "disabled") }}
+
+                {#<p>#}
+                    {#<b>Body:</b>#}
+                    {#{{ rejectedEmailBody|raw }}#}
+                    {#<textarea disabled="disabled" class="textarea form-control">{{ rejectedEmailBody|raw }}</textarea>#}
+                {#</p>#}
+                {{ formmacros.simplefield("Body:", rejectedEmailBody, "textarea", "disabled") }}
+
+                <p>
+                    <a class="btn btn-default"
+                       href="{{ path('resapp_siteparameters_edit_specific_site_parameters') }}" target="_blank">Edit email template
+                    </a>
+                </p>
+
+            </div>
+
+        {% endif %}
+
+{% endblock %}
+
+
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+        {#'@AppResAppBundle/Resources/public/form/js/interview-modal.js'#}
+        {#'@AppResAppBundle/Resources/public/form/js/rank-modal.js'#}
+        {#'@AppResAppBundle/Resources/public/form/js/status-notification-modal.js'#}
+        {#'@AppResAppBundle/Resources/public/form/js/send-notification-emails.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppResAppBundle/form/js/interview-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppResAppBundle/form/js/rank-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppResAppBundle/form/js/status-notification-modal.js') }}"></script>
+    <script src="{{ asset('orderassets/AppResAppBundle/form/js/send-notification-emails.js') }}"></script>
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip({html: true});           
+
+            var target = ".datepicker-only-year";
+            var datefilter = $(target).datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto', //'auto top'
+                multidate: true,
+                clearBtn: true
+            });
+
+            attachTitleToScores();
+
+            initInterviewModal();
+
+            initRankModal();
+
+            changeFilterColorButton();
+
+            callLogStatusNotificationConfirmAction();
+
+            //onInterviewModalShow();
+
+            /////////// set default year by JS ///////////
+            //var year = parseInt(new Date().getFullYear()) + 2;
+            //var datas = [
+            //    new Date(year,1,1) //remember months in javascript starts with 0 for january
+            //];
+            //console.log('datepicker val='+datefilter.val());
+            //if( !datefilter.val() ) {
+            //    datefilter.datepicker('setDate', datas);
+            //}
+
+            //var url = window.location.href;
+            //console.log('url='+url);
+            //var year = getParameterByName('filter%5BstartDate%5D');
+            //console.log('year='+year);
+
+        });
+
+        //I think the "Filter" button needs to turn green if any of the fields
+        // in the filter well are modified. When the "Filter" button is pressed
+        // it should become grey again.
+        function changeFilterColorButton() {
+            var filterBtn = $('#filter-btn');
+            var filterForm = filterBtn.closest('.form-search');
+
+            //datepicker
+            filterForm.find('.datepicker-only-year').on('change',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //combobox
+            filterForm.find('.combobox').on('change',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //text
+            filterForm.find('text').on('input',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            //input
+            filterForm.find('input').on('input',function() {
+                changeBtnColorGreen(filterBtn);
+            });
+
+            function changeBtnColorGreen(filterBtn) {
+                filterBtn.removeClass('btn-default');
+                filterBtn.addClass('btn-success');
+            }
+
+        }
+
+//        function getParameterByName(name) {
+//            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+//            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+//                    results = regex.exec(location.search);
+//            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+//        }
+
+
+        function refreshpage(href,btnEl) {
+            console.log('refreshpage href='+href);
+
+            if( !href ) {
+                return;
+            }
+            
+            //add listnere to ok button to "Please wait ..." and disable button on click
+            var footer = $(btnEl).closest('.modal-footer');
+            footer.html('Please wait ...');
+
+            var url = getCommonBaseUrl(href,"residency-applications");
+            console.log('url='+url);
+            
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                async: false,
+                success: function(data) {
+                    //console.log('result='+data);
+                }
+            });
+
+            location.reload();
+        }
+
+
+        function attachTitleToScores() {
+            $('.sortable').each( function() {
+                //var title = this.title;
+                console.log("this.title="+this.title);
+                var tooltipStr = null;
+                switch( this.title ) {
+                    case 'U1 [C1]':
+                        tooltipStr = 'USMLE Step 1 and/or COMLEX 1 Score';
+                        break;
+                    case 'U2 CK [C2]':
+                        tooltipStr = 'USMLE Step 2 CK and/or COMLEX 2 Score';
+                        break;
+                    case 'U3 [C3]':
+                        tooltipStr = 'USMLE Step 3 and/or COMLEX 3 Score';
+                        break;
+                    case 'C1':
+                        tooltipStr = 'COMLEX 1 Score';
+                        break;
+                    case 'C2':
+                        tooltipStr = 'COMLEX 2 Score';
+                        break;
+                    case 'C3':
+                        tooltipStr = 'COMLEX 3 Score';
+                        break;
+                }
+
+                if( tooltipStr ) {
+                    this.title = tooltipStr;
+                    $(this).tooltip();
+                }
+            });
+        }
+        
+//        function onInterviewModalShow() {
+//
+//            $('.interview-info-modal').on('shown.bs.modal', function () {
+//
+//                //Combined Interview Score: X (Nth highest of M available in [Residency specialty] for [Year])
+//                //Combined Interview Score: 3.3 (2nd highest of 6 available in Cytopathology for 2017)
+//
+//                var resappId = $(this).find('.data-resapp-id').data("resapp-id");
+//                console.log('modal show resappId='+resappId);
+//
+//                var url = getCommonBaseUrl("interview-score-rank/"+resappId,"residency-applications");
+//                //console.log('url='+url);
+//
+//                $('.interview-score-rank').html('Calculating score rank ...');
+//
+//                $.ajax({
+//                    type: "GET",
+//                    url: url,
+//                    success: function(resHtml) {
+//                        $('.interview-score-rank').html(resHtml);
+//                    }
+//                });
+//
+//            })
+//
+//        }
+
+
+
+
+    </script>
+
+{% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+{% endblock %}
+

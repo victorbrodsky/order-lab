@@ -273,6 +273,9 @@
         {% if '/fellowship-applications/' in currentPath %}
             {% set sitename = fellapp_sitename %}
         {% endif %}
+        {% if '/residency-applications/' in currentPath %}
+            {% set sitename = resapp_sitename %}
+        {% endif %}
         {% if '/deidentifier/' in currentPath %}
             {% set sitename = deidentifier_sitename %}
         {% endif %}
@@ -2285,6 +2288,9 @@
             {% endif %}
             {% if '/fellowship-applications/' in currentPath %}
                 {% set sitename = fellapp_sitename %}
+            {% endif %}
+            {% if '/residency-applications/' in currentPath %}
+                {% set sitename = resapp_sitename %}
             {% endif %}
             {% if '/deidentifier/' in currentPath %}
                 {% set sitename = deidentifier_sitename %}

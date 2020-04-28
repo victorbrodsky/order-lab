@@ -1,0 +1,81 @@
+parameters:
+
+  resapp.sitename: resapp
+  resapp.uploadpath:
+
+
+twig:
+    globals:
+        resapp_sitename: '%resapp.sitename%'
+        resapp_util: "@resapp_util"
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
+
+    resapp_authentication_handler:
+        class: App\ResAppBundle\Security\Authentication\ResAppLoginSuccessHandler
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    #residency application utilities
+    resapp_util:
+            class: App\ResAppBundle\Util\ResAppUtil
+            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+    resapp_importpopulate_util:
+        class: App\ResAppBundle\Util\ResAppImportPopulateUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    resapp_reportgenerator:
+        autowire: true
+        autoconfigure: true
+        public: true
+        class: App\ResAppBundle\Util\ReportGenerator
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@session"]
+
+    resapp_googlesheetmanagement:
+        autowire: true
+        autoconfigure: true
+        public: true
+        class: App\ResAppBundle\Util\GoogleSheetManagement
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    resapp_rec_letter_util:
+        class: App\ResAppBundle\Util\RecLetterUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+
+    resapp_role_voter:
+        class: App\ResAppBundle\Security\Voter\ResAppRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    resapp_permission_voter:
+        class: App\ResAppBundle\Security\Voter\ResAppPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+#    string $accessToken, string $tokenType = "OAuth"
+#    resapp_customd_defaultservicerequest:
+#        autowire: true
+#        autoconfigure: true
+#        public: true
+#        class: App\ResAppBundle\Util\CustomDefaultServiceRequest
+##        arguments: ['@app.controller', "OAuth"]
+#        arguments:
+#            $accessToken: "accessToken"
+#            $tokenType: "OAuth"
+    App\ResAppBundle\Util\CustomDefaultServiceRequest:
+        autowire: true
+        autoconfigure: true
+#        arguments:
+#            $accessToken: '@accessToken'
+#            $tokenType: 'OAuth'

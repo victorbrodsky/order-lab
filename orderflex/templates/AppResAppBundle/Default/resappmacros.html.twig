@@ -1,0 +1,467 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% macro interviewForm( interview, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppResAppBundle/Default/resappmacros.html.twig" as resappmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminterview = interview.vars.prototype %}
+    {% else %}
+        {% set forminterview = interview %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+        {% if cycle != "show" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+        {% else %}
+            {% if forminterview.vars.value and forminterview.vars.value.id and forminterview.vars.value.interviewer %}
+                {#add link to invite this interviewer to rate#}
+                <a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">
+                    Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
+                </a>
+            {% endif %}
+        {% endif %}
+
+        {{ formmacros.field(forminterview.interviewer) }}
+
+        {{ formmacros.field(forminterview.location) }}
+
+        {{ formmacros.fieldDateLabel(forminterview.interviewDate,'allow-future-date') }}
+        {{ formmacros.field(forminterview.startTime) }}
+        {{ formmacros.field(forminterview.endTime) }}
+
+        {#{{ formmacros.field(forminterview.academicRank) }}#}
+
+        {#{{ formmacros.field(forminterview.personalityRank) }}#}
+
+        {#{{ formmacros.field(forminterview.potentialRank) }}#}
+
+        {#{{ formmacros.field(forminterview.totalRank) }}#}
+
+        {#{{ formmacros.field(forminterview.comment) }}#}
+
+        {#{{ formmacros.field(forminterview.languageProficiency) }}#}
+        {{ resappmacros.interviewMainForm( forminterview ) }}
+
+    </div>
+
+{% endmacro %}
+
+{% macro interviewMainForm( forminterview ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {{ formmacros.field(forminterview.academicRank) }}
+
+    {{ formmacros.field(forminterview.personalityRank) }}
+
+    {{ formmacros.field(forminterview.potentialRank) }}
+
+    {{ formmacros.field(forminterview.totalRank) }}
+
+    {{ formmacros.field(forminterview.comment) }}
+
+    {{ formmacros.field(forminterview.languageProficiency) }}
+
+{% endmacro %}
+
+
+{% macro snapshot( resapp, sitename, cycle ) %}
+
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    <div style="text-align:center;">
+
+    <h1>
+        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+            Demo Applicant
+        {% else %}
+            {% set applicantNameOptimal = resapp.user.getUsernameOptimal %}
+            {{ resapp.capitalizeMultiIfNotAllCapital(applicantNameOptimal) }}
+        {% endif %}
+    </h1>
+
+    {#avatar#}
+    <div class="row">
+        <div class="text-center col-md-2 col-md-offset-5">
+            {#avatar form modal#}
+            {% if resapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
+                {% if cycle == "download" %}
+                    {% set avatarPath = resapp.avatars|last.getAbsoluteUploadFullPath("medium") %}
+                    <img src="{{ avatarPath }}"
+                         alt="{{ "Avatar "~resapp.avatars|last.getOriginalnameClean }}"
+                         style="max-width: 250px;"
+                    >
+                {% else %}
+                    {#{{ usermacros.showDocumentAsImage(resapp.avatars|last,'Avatar','') }}#}
+                    {{ usermacros.showDocumentAsImage(resapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
+                {% endif %}
+            {% else %}
+                {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+                <a href="#panel-uploads">
+                    <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    </div>
+
+{% endmacro %}
+
+
+
+{#It is not used and it does not work: fix it#}
+{% macro addBadge( filter, currentYear, currentYearCount, totalCount, statusName ) %}
+
+    {% set filterStatus = "'filter["~statusName~"]'" %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[filter]':"~filter~",'filter[startDate]':"~currentYear %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[startDate]':"~currentYear %}
+
+    {% set paramsCurrentYear = [] %}
+    {% set paramsCurrentYear = paramsCurrentYear|merge(["'filter["~statusName~"]':1"])  %}
+
+    paramsCurrentYear={{ paramsCurrentYear }}<br>
+    {% set paramsTotal = "'filter["~statusName~"]':1, 'filter[filter]':filter,'filter[startDate]':"~currentYear %}
+
+    {#href="{{ path('resapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}"#}
+
+    <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
+        <a style="color: white;" href="{{ path('resapp_home',{filterStatus:1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+            {{ currentYearCount }}
+        </a>
+    </span>
+
+    {#&nbsp;/&nbsp;#}
+    /
+
+    <span class="badge" data-toggle="tooltip" title="Total">
+        <a style="color: white;" href="{{ path('resapp_home',{ filterStatus:1,'filter[filter]':filter}) }}">
+            {{ totalCount }}
+        </a>
+    </span>
+
+{% endmacro %}
+
+
+{% macro addSlush() %}
+    {#&nbsp;/&nbsp;#}
+    /
+{% endmacro %}
+
+{% macro addLegend(status) %}
+    {#&nbsp;/&nbsp;#}
+    {#/#}
+    <div class="res-app-status-legend res-app-status-legend-{{ status }}">&nbsp&nbsp</div>
+{% endmacro %}
+    
+
+
+{#used for interview's modal#}
+{% macro addInterviewsModal(resapp) %}
+    
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppResAppBundle/Default/resappmacros.html.twig" as resappmacros %}
+
+
+    <!-- Modal -->
+    <div class="modal fade interview-info-modal" id="interview-info-{{resapp.id}}" tabindex="-1" role="dialog" aria-labelledby="myInterviewModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="data-resapp-id" style="display:none;" data-resapp-id="{{resapp.id}}"></div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <h4 class="modal-title" id="myInterviewModalLabel">
+
+                {{ resappmacros.applicantInterviewsInfo(resapp) }}
+                
+            </h4>
+          </div>
+          <div class="modal-body">
+
+                {{ resappmacros.interviewsDetails(resapp,false) }}
+              
+          </div>
+{#          <div class="modal-footer">            #}
+{#          </div>#}
+        </div>
+      </div>
+    </div>
+    
+{% endmacro %}
+
+{#used for interview's modal and download in excel/word. noGlyphicon is used when it is called for generation a download pdf/doc#}
+{% macro applicantInterviewsInfo(resapp,noGlyphicon) %}
+
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    {% if noGlyphicon is not defined %}
+        {% set noGlyphicon = false %}
+    {% endif %}
+
+    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+        {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
+        <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
+    {% else %}
+        {% if resapp.avatars|length > 0 %}
+            {% if noGlyphicon %}
+                <p>
+                {% if '.pdf' in resapp.avatars|last.getAbsoluteUploadFullPath %}
+                    {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                {% elseif '.doc' in resapp.avatars|last.getAbsoluteUploadFullPath %}
+                    {#{% set avatarImage = asset('orderassets/appuserdirectory/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                    {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">#}
+                {% else %}
+                    {#<a href="{{ resapp.avatars|last.getAbsoluteUploadFullPath }}" target="_blank">#}
+                    <img
+                        alt="{{ resapp.avatars|last.getOriginalnameClean }}"
+                        src="{{ resapp.avatars|last.getAbsoluteUploadFullPath }}"
+                        height="120"
+                        width="{{ resapp.avatars|last.getWidthByHeight(120) }}"
+                    />
+                    {#</a>#}
+                {% endif %}
+                </p>
+            {% else %}
+                <div style="height: 120px; width: 120px;">
+                    {{ usermacros.showDocumentAsImage(resapp.avatars|last,'Avatar','') }}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    Interview Evaluations: {% if resapp.residencySubspecialty %} {{resapp.residencySubspecialty.name}}{% endif %} {{resapp.startDate|date('Y','UTC')}}<br>
+    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+        Applicant Demo
+    {% else %}
+
+        {% if noGlyphicon %}
+            {% set downloadTitleStr = "(Download Complete Application in PDF)" %}
+        {% else %}
+            {% set downloadTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>' %}
+        {% endif %}
+
+        {% set degree = resapp.getDegreeByTrainingTypeName('Medical') %}
+        <a href="{{ url('resapp_show', { 'id': resapp.id }) }}" target="_blank">ID {{resapp.id}}: {{resapp.user.getFirstNameUppercase()}} {{resapp.user.getLastNameUppercase()}}</a>{% if degree %}, {{ degree }}{% endif %}
+        <a data-toggle="tooltip" title="Download Complete Application in PDF"
+           href="{{ url('resapp_download_pdf', { 'id': resapp.id}) }}"
+                >{{ downloadTitleStr|raw }}</a>
+
+        {% set medschool = resapp.getSchoolByTrainingTypeName('Medical') %}
+        {% if medschool %}
+            <br>Medical School: {{ medschool }}
+        {% endif %}
+
+        {% set resschool = resapp.getSchoolByTrainingTypeName('Residency') %}
+        {% if resschool %}
+            <br>Residency: {{ resschool }}
+        {% endif %}
+
+        {% set usmleArr = resapp.getUsmleArr() %}
+        {% if usmleArr|length > 0 %}
+            <br>USMLE: {{ usmleArr|join(' / ') }}
+        {% endif %}
+
+        {% set comlexArr = resapp.getComlexArr() %}
+        {% if comlexArr|length > 0 %}
+            <br>COMLEX: {{ comlexArr|join(' / ') }}
+        {% endif %}
+
+
+        {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}
+        {% set refcount = 1 %}
+        {% set refArr = [] %}
+        {% for ref in resapp.references if ref.name is not null or ref.documents|length > 0 %}
+
+            {% set refereeNameStr = ref.name %}
+            {% if ref.name is null %}
+                {% set refereeNameStr = "Unnamed" %}
+            {% endif %}
+
+            {% set refStr = null %}
+
+            {#Case 1: single doc: href with referee name#}
+            {% if ref.documents|length == 1 %}
+                {% set refStr = '<a href="'~url('resapp_show', { 'id': resapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+                {% if noGlyphicon %}
+                    {% set hrefTitleStr = '(Letter)'  %}
+                {% else %}
+                    {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
+                {% endif %}
+                {% set refStr = refStr~' <a href="'~url('resapp_file_download', { 'id': ref.documents|first.id})~'">'~hrefTitleStr~'</a>' %}
+                {#                            {% set refStr = '<a href="'~path('resapp_file_download', { 'id': ref.documents|first.id})~'">'~refereeNameStr~'</a>' %}#}
+            {% endif %}
+
+            {#Case 2: many docs: referee name with href1, href2 ...#}
+            {% if ref.documents|length > 1 %}
+                {#                            {% set refStr = refereeNameStr~"(" %}#}
+                {% set docCount = 1 %}
+                {% set manyDocArr = [] %}
+                {% for document in ref.documents %}
+                    {#letters of recommendation#}
+                    {% set docHref = '<a href="'~url('resapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}
+                    {% set manyDocArr = manyDocArr|merge([docHref]) %}
+                    {% set docCount = docCount + 1 %}
+                {% endfor %}
+                {% set refStr = '<a href="'~url('resapp_show', { 'id': resapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+                {% set refStr = refStr~" ("~manyDocArr|join(', ')~")" %}
+            {% endif %}
+
+            {#Case 2: no docs: referee name with href #anchor to ref div#}
+            {#If the letter itself has not been uploaded, link to the anchor (add the anchors first) in the application page for that specific letter author:#}
+            {% if ref.documents|length == 0 %}
+                {% set refStr = '<a href="'~url('resapp_show', { 'id': resapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+            {% endif %}
+
+            {% set refArr = refArr|merge([refStr]) %}
+
+            {% set refcount = refcount + 1 %}
+
+        {% endfor %}
+
+        {%if refArr|length > 0 %}
+            <br>
+            <p>
+                Letters from: {{refArr|join(', ')|raw}}
+            </p>
+        {% endif %}
+
+        {# Other Documents #}
+        {% set otherDocStr = null %}
+        {% if resapp.documents|length == 1 %}
+            {% set otherDocStr = "Other Documents:" %}
+            {% if noGlyphicon %}
+                {% set hrefDocTitleStr = 'Document'  %}
+            {% else %}
+                {% set hrefDocTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
+            {% endif %}
+            {% set otherDocStr = otherDocStr~' <a href="'~url('resapp_file_download', { 'id': resapp.documents|first.id})~'">'~hrefDocTitleStr~'</a>' %}
+            <p>
+                {{ otherDocStr|raw }}
+            </p>
+        {% endif %}
+        {% if resapp.documents|length > 1 %}
+            {% set docCount = 1 %}
+            {% set manyDocArr = [] %}
+            {% for document in resapp.documents %}
+                {% set docHref = '<a href="'~url('resapp_file_download', { 'id': document.id})~'">Document '~docCount~'</a>' %}
+                {% set manyDocArr = manyDocArr|merge([docHref]) %}
+                {% set docCount = docCount + 1 %}
+            {% endfor %}
+            <p>
+                Other Documents: {{ manyDocArr|join(', ')|raw }}
+            </p>
+        {% endif %}
+
+
+        <p>
+            {#<div class="interview-score-rank">Calculating score rank...</div>#}
+            {{ render(controller('App\\ResAppBundle\\Controller\\ResAppApplicantController::intervieweScoreRankAction', { 'id': resapp.id })) }}
+        </p>
+
+    {% endif %}
+
+{% endmacro %}
+
+{#used for interview's modal and download in excel/word. reallinks is used when it is called for generation a download doc when css is not used#}
+{% macro interviewsDetails(resapp, reallinks) %}
+
+    {#Calculating evaluation received, score css and evaluation modal#}
+    {% set interviewDescrStr = "" %}
+    {% set interviewsArr = [] %}
+    {% set interviewsAwaitingArr = [] %}
+
+    {% for interview in resapp.interviews if interview.interviewer %}
+        {% if not interview.totalRank %}
+            {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
+        {% else %}
+            {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
+            {% set interviewDescrStr =
+            interviewerUrl~":<br>"~
+            "Academic Rank - "~interview.academicRank~
+            "<br>Personality Rank - "~interview.personalityRank~
+            "<br>Potential Rank - "~interview.potentialRank~
+            "<br>Language Proficiency - "~interview.languageProficiency~
+            "<br>Total Rank - "~interview.totalRank~
+            "<br>Comment: "~interview.comment|e %}
+            {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
+        {% endif %}
+    {% endfor %}
+    {#EOF Calculating evaluation received and evaluation modal#}
+
+    {% if is_granted('ROLE_PLATFORM_DEMO') %}
+        Interview Evaluation Scores and Comments
+    {% else %}
+        {% for interview in interviewsArr %}
+            <br>{{ interview|raw }}<br>
+        {% endfor %}
+
+        {% if interviewsArr|length > 0 and interviewsAwaitingArr|length > 0 %}
+            <hr>
+        {% endif %}
+
+        {% if interviewsAwaitingArr|length > 0 %}
+            {% set interviewerCounter = 1 %}
+            <p>
+                Awaiting evaluations from
+                {% for interview in interviewsAwaitingArr %}
+                    {% if reallinks %}
+                        {% set sendEmail = ' (<a href="'~url('resapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">Resend Invitation Email</a>)' %}
+                    {% else %}
+                        {% set inviteTooltip = 'data-toggle="tooltip" title="Resend Evaluation Invitation to '~interview.interviewer.displayName~'"' %}
+                        {% set emailSpan = '<span class="glyphicon glyphicon-envelope" '~inviteTooltip~'></span>' %}
+                        {#{% set sendEmail = ' <a '~inviteTooltip~' href="'~path('resapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">'~emailSpan~'</a>' %}#}
+                        {% set sendEmail = ' <a '~inviteTooltip~' onclick="sendInviteInterviewersToRate(\''~url('resapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id})~'\',\'Are you sure you want to Invite Interviewer '~interview.interviewer.displayName~' to Rate this Applicant?\');" href="#">'~emailSpan~'</a>' %}
+                    {% endif %}
+                    <a href="{{ url('employees_showuser', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if resapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                    {% set interviewerCounter = interviewerCounter + 1 %}
+                {% endfor %}
+            </p>
+
+            <p>
+            {% if resapp.itinerarys|length > 0 and resapp.getRecentReport() %}
+                {% if reallinks %}
+                    <a href="{{ url('resapp_inviteinterviewerstorate', { 'id': resapp.id}) }}">Invite these interviewers to submit evaluations</a>
+                {% else %}
+                    <a
+                        onclick="sendInviteInterviewersToRate('{{ url('resapp_inviteinterviewerstorate', { 'id': resapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
+                        href="#">Invite these interviewers to submit evaluations</a>
+                 {% endif %}
+            {% else %}
+                <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
+            {% endif %}
+            {% if resapp.daysAfterInterviewDate() and resapp.daysAfterInterviewDate() > 0 %}
+                <b>(Interview date was {{ resapp.interviewDate|date('m/d/Y','UTC') }}, {{ resapp.daysAfterInterviewDate()|abs }} days ago).</b>
+            {% endif %}
+            </p>
+        {% endif %}
+
+    {% endif %}
+
+{% endmacro %}

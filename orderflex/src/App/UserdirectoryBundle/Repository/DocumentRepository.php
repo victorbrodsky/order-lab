@@ -220,6 +220,9 @@ class DocumentRepository extends EntityRepository {
             case 'Examination':
                 $doctypeStr = 'Fellowship Application Document';
                 break;
+            case 'ResidencyApplication':
+                $doctypeStr = 'Residency Application Document';
+                break;
 //            case 'Credentials':
 //                $doctypeStr = 'Medical License Document';
 //                break;

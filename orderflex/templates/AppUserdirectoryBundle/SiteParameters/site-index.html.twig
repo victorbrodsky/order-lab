@@ -23,6 +23,10 @@
     {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'resapp' %}
+    {% set extendStr = "AppResAppBundle/Default/navbar.html.twig" %}
+{% endif %}
+
 {% if sitename == 'scan' %}
     {% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}
 {% endif %}
@@ -59,6 +63,10 @@
     {% if sitename == 'fellapp' %}
         {% include 'AppUserdirectoryBundle/SiteParameters/fellapp-content.html.twig' %}
     {% endif %}
+
+    {#{% if sitename == 'resapp' %}#}
+        {#{% include 'AppUserdirectoryBundle/SiteParameters/resapp-content.html.twig' %}#}
+    {#{% endif %}#}
 
 {% endblock %}
 

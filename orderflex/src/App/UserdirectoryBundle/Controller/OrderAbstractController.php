@@ -20,6 +20,7 @@ use App\FellAppBundle\Util\RecLetterUtil;
 use App\FellAppBundle\Util\ReportGenerator;
 use App\OrderformBundle\Util\SearchUtil;
 use App\OrderformBundle\Util\OrderUtil;
+use App\ResAppBundle\Util\ResAppUtil;
 use App\TranslationalResearchBundle\Util\DashboardUtil;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
@@ -93,6 +94,8 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fellapp_reportgenerator'] = '?'.ReportGenerator::class;
         $subscribedServices['fellapp_googlesheetmanagement'] = '?'.GoogleSheetManagement::class;
         $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
+
+        $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;
 
         $subscribedServices['transres_util'] = '?'.TransResUtil::class;
         $subscribedServices['transres_request_util'] = '?'.TransResRequestUtil::class;

@@ -112,9 +112,11 @@ class MaintenanceListener {
                 strpos($controller,'App\UserdirectoryBundle') !== false || 
                 strpos($controller,'App\OrderformBundle') !== false ||
                 strpos($controller,'App\FellAppBundle') !== false ||
+                strpos($controller,'App\ResAppBundle') !== false ||
                 strpos($controller,'App\DeidentifierBundle') !== false ||
                 strpos($controller,'App\VacReqBundle') !== false ||
                 strpos($controller,'App\CallLogBundle') !== false ||
+                strpos($controller,'App\CrnBundle') !== false ||
                 strpos($controller,'App\TranslationalResearchBundle') !== false
         ) {
             // fire custom event e.g. My.db.lookup
@@ -230,6 +232,9 @@ class MaintenanceListener {
         if( strpos($controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
+        if( strpos($controller,'App\ResAppBundle') !== false ) {
+            return "resapp";
+        }
         if( strpos($controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
@@ -238,6 +243,9 @@ class MaintenanceListener {
         }
         if( strpos($controller,'App\CallLogBundle') !== false ) {
             return "calllog";
+        }
+        if( strpos($controller,'App\CrnBundle') !== false ) {
+            return "crn";
         }
         if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
