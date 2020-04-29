@@ -265,9 +265,9 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->find($resaptypeid);
+        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resaptypeid);
         if( !$subspecialtyType ) {
-            throw $this->createNotFoundException('Unable to find ResidencySubspecialty by id='.$resaptypeid);
+            throw $this->createNotFoundException('Unable to find ResidencySpecialty by id='.$resaptypeid);
         }
 
         //exit('not implemented');
@@ -320,10 +320,10 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "show";
 
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->find($id);
+        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
 
         if( !$restype ) {
-            throw $this->createNotFoundException('Unable to find Residency Subspecialty Type by id='.$id);
+            throw $this->createNotFoundException('Unable to find Residency Specialty Type by id='.$id);
         }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencySubspecialty object is not updated.

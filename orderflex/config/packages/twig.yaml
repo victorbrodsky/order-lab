@@ -41,6 +41,7 @@ twig:
         employees_uploadpath: 'Uploaded/%employees.uploadpath%'
         scan_uploadpath: 'Uploaded/%scan.uploadpath%'
         fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
+        resapp_uploadpath: 'Uploaded/%resapp.uploadpath%'
         vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
         transres_uploadpath: 'Uploaded/%transres.uploadpath%'
         calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'

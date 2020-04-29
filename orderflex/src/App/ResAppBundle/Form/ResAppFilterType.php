@@ -63,7 +63,7 @@ class ResAppFilterType extends AbstractType
         ));
 
 //        $builder->add('filter', 'entity', array(
-//            'class' => 'AppUserdirectoryBundle:ResidencySubspecialty',
+//            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
 //            //'placeholder' => 'Residency Type',
 //            'choice_label' => 'name',
 //            'label' => false,

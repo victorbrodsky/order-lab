@@ -42,8 +42,8 @@ imports:
 #    - { resource: "@AppUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/ResAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/OrderformBundle/Resources/config/services.yml" }
-    - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/VacReqBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DeidentifierBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
@@ -116,6 +116,8 @@ services:
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
 #        tags: ['controller.service_arguments']
+    App\ResAppBundle\Controller\:
+        resource: '../src/App/ResAppBundle/Controller/'
     App\TranslationalResearchBundle\Controller\:
         resource: '../src/App/TranslationalResearchBundle/Controller/'
 #        tags: ['controller.service_arguments']
@@ -191,6 +193,10 @@ services:
         tags:
             - { name: 'console.command', command: 'fellapp:generatereport' }
 
+    App\ResAppBundle\Command\GenerateReportRunCommand:
+        tags:
+            - { name: 'console.command', command: 'resapp:generatereportrun' }
+
     App\TranslationalResearchBundle\Command\CronCommand:
         tags:
             - { name: 'console.command', command: 'cron:invoice-reminder-emails' }
@@ -224,6 +230,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%fellapp.uploadpath%'
+        resapp_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%resapp.uploadpath%'
         vacreq_gallery:
             frontend: dropzone
             storage:

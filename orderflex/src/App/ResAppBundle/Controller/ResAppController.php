@@ -2663,7 +2663,7 @@ class ResAppController extends OrderAbstractController {
         $institutionNameResappName = "";
         
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->find($resappTypeId);
+            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resappTypeId);
         }
         
         if( $residencySubspecialty ) {

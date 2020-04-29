@@ -264,7 +264,7 @@
         {% if noGlyphicon %}
             {% set downloadTitleStr = "(Download Complete Application in PDF)" %}
         {% else %}
-            {% set downloadTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>' %}
+            {% set downloadTitleStr = '<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>' %}
         {% endif %}
 
         {% set degree = resapp.getDegreeByTrainingTypeName('Medical') %}
@@ -312,7 +312,7 @@
                 {% if noGlyphicon %}
                     {% set hrefTitleStr = '(Letter)'  %}
                 {% else %}
-                    {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
+                    {% set hrefTitleStr = '<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>'  %}
                 {% endif %}
                 {% set refStr = refStr~' <a href="'~url('resapp_file_download', { 'id': ref.documents|first.id})~'">'~hrefTitleStr~'</a>' %}
                 {#                            {% set refStr = '<a href="'~path('resapp_file_download', { 'id': ref.documents|first.id})~'">'~refereeNameStr~'</a>' %}#}
@@ -359,7 +359,7 @@
             {% if noGlyphicon %}
                 {% set hrefDocTitleStr = 'Document'  %}
             {% else %}
-                {% set hrefDocTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
+                {% set hrefDocTitleStr = '<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>'  %}
             {% endif %}
             {% set otherDocStr = otherDocStr~' <a href="'~url('resapp_file_download', { 'id': resapp.documents|first.id})~'">'~hrefDocTitleStr~'</a>' %}
             <p>

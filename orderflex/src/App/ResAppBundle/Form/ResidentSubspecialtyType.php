@@ -87,7 +87,7 @@ class ResidencySubspecialtyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\UserdirectoryBundle\Entity\ResidencySubspecialty',
+            'data_class' => 'App\UserdirectoryBundle\Entity\ResidencySpecialty',
             //'csrf_protection' => false,
         ));
     }

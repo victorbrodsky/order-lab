@@ -406,6 +406,16 @@ class SiteParameters {
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    private $resappuploadpath;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResappSiteParameter", cascade={"persist","remove"})
+     */
+    private $resappSiteParameter;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     private $vacrequploadpath;
 
     /**
@@ -4166,7 +4176,38 @@ class SiteParameters {
         $this->emailCriticalErrorExceptionUsers->removeElement($item);
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getResappuploadpath()
+    {
+        return $this->resappuploadpath;
+    }
+
+    /**
+     * @param mixed $resappuploadpath
+     */
+    public function setResappuploadpath($resappuploadpath)
+    {
+        $this->resappuploadpath = $resappuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResappSiteParameter()
+    {
+        return $this->resappSiteParameter;
+    }
+
+    /**
+     * @param mixed $resappSiteParameter
+     */
+    public function setResappSiteParameter($resappSiteParameter)
+    {
+        $this->resappSiteParameter = $resappSiteParameter;
+    }
+
     
 
 }

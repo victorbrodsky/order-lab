@@ -485,6 +485,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'resappuploadpath' )
+            $builder->add('resappuploadpath',null,array(
+                'label'=>'Residency Application Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresuploadpath' )
             $builder->add('transresuploadpath',null,array(
                 'label'=>'Translational Research Upload Folder:',

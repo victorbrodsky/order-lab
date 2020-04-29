@@ -164,6 +164,12 @@ class User extends UserBase {
     private $fellowshipApplications;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\ResAppBundle\Entity\ResidencyApplication", mappedBy="user", cascade={"persist","remove"})
+     * @ORM\OrderBy({"orderinlist" = "ASC"})
+     */
+    private $residencyApplications;
+
+    /**
      * @ORM\OneToMany(targetEntity="Location", mappedBy="user", cascade={"persist","remove"})
      */
     private $locations;
@@ -316,6 +322,7 @@ class User extends UserBase {
         $this->grants = new ArrayCollection();
         $this->trainings = new ArrayCollection();
         $this->fellowshipApplications = new ArrayCollection();
+        $this->residencyApplications = new ArrayCollection();
         $this->publications = new ArrayCollection();
         $this->books = new ArrayCollection();
         $this->lectures = new ArrayCollection();
@@ -641,22 +648,40 @@ class User extends UserBase {
         return $this->trainings;
     }
 
-    public function addFellowshipApplication($training)
+    public function addFellowshipApplication($application)
     {
-        if( $training && !$this->fellowshipApplications->contains($training) ) {
-            $this->fellowshipApplications->add($training);
-            $training->setUser($this);
+        if( $application && !$this->fellowshipApplications->contains($application) ) {
+            $this->fellowshipApplications->add($application);
+            $application->setUser($this);
         }
 
         return $this;
     }
-    public function removeFellowshipApplication($training)
+    public function removeFellowshipApplication($application)
     {
-        $this->fellowshipApplications->removeElement($training);
+        $this->fellowshipApplications->removeElement($application);
     }
     public function getFellowshipApplications()
     {
         return $this->fellowshipApplications;
+    }
+
+    public function addResidencyApplication($application)
+    {
+        if( $application && !$this->residencyApplications->contains($application) ) {
+            $this->residencyApplications->add($application);
+            $application->setUser($this);
+        }
+
+        return $this;
+    }
+    public function removeResidencyApplication($application)
+    {
+        $this->residencyApplications->removeElement($application);
+    }
+    public function getResidencyApplications()
+    {
+        return $this->residencyApplications;
     }
 
 

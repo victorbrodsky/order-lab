@@ -70,7 +70,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('residencySubspecialties', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencySubspecialty',
+            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
             'label' => "Residency Application Types".$this->params['resappTypesListLink'].":",
             'required' => false,
             'multiple' => true,

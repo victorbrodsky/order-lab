@@ -65,7 +65,7 @@ class ResidencyApplicationType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
 //        ));
 //        $builder->add('residencySubspecialty', 'entity', array(
-//            'class' => 'AppUserdirectoryBundle:ResidencySubspecialty',
+//            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
 //            'label'=> "* Residency Application Type:",
 //            'required'=> false,
 //            //'multiple' => true,

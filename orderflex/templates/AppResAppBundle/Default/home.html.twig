@@ -800,14 +800,14 @@
 
                         {#<a#}
                             {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
-                            {#<span class="glyphicon glyphicon-file" aria-hidden="true"></span>#}
+                            {#<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>#}
                         {#</a>#}
                         {% if entity.getRecentReport() %}
                             {#<a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">#}
-                                {#<span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>#}
+                                {#<span class="glyphicon glyphicon-certificate" aria-hidden="true" style="{{ styleStr }}"></span>#}
                             {#</a>#}
                             <a href="{{ path('resapp_view_pdf', { 'id': entity.id}) }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
-                                <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
+                                <span class="glyphicon glyphicon-certificate" aria-hidden="true" style="{{ styleStr }}"></span>
                             </a>
                         {% endif %}                                                                       
 

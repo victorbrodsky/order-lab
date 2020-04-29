@@ -35,6 +35,12 @@ app_fellapp:
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
+app_resapp:
+    resource: "App/ResAppBundle/Controller/"
+    type:     annotation
+    prefix:   /residency-applications
+    schemes:  ['%connection_channel%']
+
 app_vacreq:
     resource: "App/VacReqBundle/Controller/"
     type:     annotation
@@ -130,6 +136,11 @@ fellapp_login_check:
     path:   /fellowship-applications/login_check
 fellapp_logout:
     path:   /fellowship-applications/logout
+
+resapp_login_check:
+    path:   /residency-applications/login_check
+resapp_logout:
+    path:   /residency-applications/logout
 
 deidentifier_login_check:
     path:   /deidentifier/login_check

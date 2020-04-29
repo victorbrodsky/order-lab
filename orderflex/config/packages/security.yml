@@ -58,6 +58,10 @@ security:
 #        ROLE_SCANORDER_PROCESSOR: [ROLE_EDITOR]
 #        ROLE_USERDIRECTORY_EDITOR: [ROLE_EDITOR]
 
+        # ResApp roles
+        ROLE_RESAPP_ADMIN: [ROLE_USER, ROLE_RESAPP_OBSERVER, ROLE_USERDIRECTORY_EDITOR]
+        ROLE_RESAPP_OBSERVER: [ROLE_RESAPP_USER]
+
         #Calllog
         ROLE_CALLLOG_PATHOLOGY_ATTENDING: [ROLE_CALLLOG_USER]
         ROLE_CALLLOG_PATHOLOGY_RESIDENT: [ROLE_CALLLOG_USER]
@@ -138,7 +142,7 @@ security:
         #impersonate user: ?_switch_user=thomas
         ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_TESTER, ROLE_ALLOWED_TO_SWITCH,
                                     ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN,
-                                    ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN,
+                                    ROLE_FELLAPP_ADMIN, ROLE_RESAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN,
                                     ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN, ROLE_CRN_ADMIN,
                                     ROLE_TRANSRES_ADMIN, ROLE_TRANSRES_ADMIN_APCP, ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY, ROLE_TRANSRES_ADMIN_COVID19]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
@@ -262,6 +266,22 @@ security:
                 lifetime: 28800 # 8 hours in seconds
                 path:     /fellowship-applications
 #                always_remember_me: true
+
+        ldap_resapp_firewall:
+            pattern: ^/residency-applications
+            context: scan_auth
+            switch_user: true
+            guard:
+                authenticator: custom_guard_authenticator
+            logout:
+                path:   /residency-applications/logout
+                target: /residency-applications/login
+            anonymous:  true
+            access_denied_url: /residency-applications/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /residency-applications
 
         ldap_deidentifier_firewall:
             pattern: ^/deidentifier
@@ -515,6 +535,19 @@ security:
        - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
 
        - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
+
+       ############################## Residency Applications SITE SETTINGS ##############################
+       - { path: ^/residency-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/residency-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/residency-applications/download/, roles: ROLE_RESAPP_USER }
+       - { path: ^/residency-applications/, role: ROLE_RESAPP_USER }
 
 
        ############################## Deidentifier SITE SETTINGS ##############################

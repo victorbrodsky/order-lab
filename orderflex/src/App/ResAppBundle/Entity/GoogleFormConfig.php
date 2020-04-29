@@ -53,10 +53,10 @@ class GoogleFormConfig {
     private $acceptingSubmission;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\ResidencySubspecialty", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="resapp_googleformconfig_residencysubspecialty",
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\ResidencySpecialty", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="resapp_googleformconfig_residencyspecialty",
      *      joinColumns={@ORM\JoinColumn(name="googleformconfig_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="residencysubspecialty_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="residencyspecialty_id", referencedColumnName="id")}
      * )
      **/
     private $residencySubspecialties;

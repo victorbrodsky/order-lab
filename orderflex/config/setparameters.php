@@ -119,6 +119,9 @@ $container->setParameter('scan.uploadpath',$scanuploadpath);
 //fellapp
 $fellappuploadpath = "fellapp";
 $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
+//resapp
+$resappuploadpath = "resapp";
+$container->setParameter('resapp.uploadpath',$resappuploadpath);
 //vacreq
 $vacrequploadpath = "vacreq";
 $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
@@ -367,6 +370,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //            }
             $fellappuploadpath = getDBParameter($row,$fellappuploadpath,'fellappuploadpath');
 
+            //resapp
+            $resappuploadpath = getDBParameter($row,$resappuploadpath,'resappuploadpath');
+
             //vacreq
 //            if (array_key_exists('vacrequploadpath', $row)) {
 //                $vacrequploadpath = $row['vacrequploadpath'];
@@ -486,6 +492,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('scan.uploadpath',$scanuploadpath);
         if( $fellappuploadpath )
             $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
+        if( $resappuploadpath )
+            $container->setParameter('resapp.uploadpath',$resappuploadpath);
         if( $vacrequploadpath )
             $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
         if( $transresuploadpath )

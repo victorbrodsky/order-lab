@@ -22,13 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //Show versions: php bin/console doctrine:migrations:status --show-versions
 //Delete Unavailable Migrations: php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --delete
 
-//Pre-Generating: php bin/console cache:clear
-//Pre-Generating: php bin/console doctrine:cache:clear-metadata
+//1) Pre-Generating: php bin/console cache:clear
+//2) Pre-Generating: php bin/console doctrine:cache:clear-metadata
+//3) Pre-Generating: php bin/console doctrine:schema:validate
 
-//Status: php bin/console doctrine:migrations:status
-//Generate: php bin/console doctrine:migrations:diff
+//4) Status: php bin/console doctrine:migrations:status
+//5) Generate: php bin/console doctrine:migrations:diff
 
-//Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
+//6) Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
 
 //Skip:     php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --add
 

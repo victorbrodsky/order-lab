@@ -77,6 +77,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/FellAppBundle/Entity'
                         prefix: 'App\FellAppBundle\Entity'
                         alias: 'AppFellAppBundle'
+                    App\ResAppBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/ResAppBundle/Entity'
+                        prefix: 'App\ResAppBundle\Entity'
+                        alias: 'AppResAppBundle'
                     App\DeidentifierBundle:
                         is_bundle: false
                         type: annotation

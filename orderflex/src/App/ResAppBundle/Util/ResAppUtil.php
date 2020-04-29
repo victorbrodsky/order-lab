@@ -313,7 +313,7 @@ class ResAppUtil {
 //        $em = $this->em;
 //
 //        //get list of residency type with extra "ALL"
-//        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty');
+//        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
 //        $dql = $repository->createQueryBuilder('list');
 //        //$dql->select("list.id as id, list.name as text")
 //        $dql->leftJoin("list.parent","parent");

@@ -58,7 +58,9 @@ class ResidencyApplication extends BaseUserAttributes {
     private $endDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ResidencySubspecialty", cascade={"persist"})
+     * Residency Specialties (ResidencySpecialty)
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ResidencySpecialty", cascade={"persist"})
      */
     private $residencySubspecialty;
 

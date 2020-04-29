@@ -822,6 +822,11 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'fellappuploadpath'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Residency Application Upload Folder (example: resapp/documents)</td>
+                <td>{{ entity.resappuploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'resappuploadpath'}) }}">Edit</a></td>
+            </tr>
+            <tr>
                 <td>Employee Directory Upload Folder (example: directory/documents)</td>
                 <td>{{ entity.employeesuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'employeesuploadpath'}) }}">Edit</a></td>
