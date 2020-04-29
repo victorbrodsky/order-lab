@@ -18,10 +18,10 @@
 namespace App\ResAppBundle\Controller;
 
 use App\ResAppBundle\Entity\ResidencyApplication;
-use App\ResAppBundle\Entity\GoogleFormConfig;
+//use App\ResAppBundle\Entity\GoogleFormConfig;
 use App\ResAppBundle\Entity\Reference;
-use App\ResAppBundle\Form\GoogleFormConfigType;
-use App\UserdirectoryBundle\Entity\GeoLocation;
+//use App\ResAppBundle\Form\GoogleFormConfigType;
+//use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

@@ -412,7 +412,7 @@ class GoogleSheetManagement {
         do {
             try {
 
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='residency-config.json'");
                 $files = $service->files->listFiles($parameters);
 
                 foreach ($files->getItems() as $file) {
@@ -425,7 +425,7 @@ class GoogleSheetManagement {
 
                 //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
                 $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and title='".$folderName."'");
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='residency-config.json'");
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
@@ -462,7 +462,7 @@ class GoogleSheetManagement {
                 }
 
                 //$parameters = array();
-                //$parameters = array('q' => "trashed=false and title='config.json'");
+                //$parameters = array('q' => "trashed=false and title='residency-config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
                 $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and '".$folderId."' in parents and title='".$fileName."'");
                 //$parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
@@ -1085,7 +1085,7 @@ class GoogleSheetManagement {
         //echo "service ok <br>";
 
         //https://drive.google.com/file/d/1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ/view?usp=sharing
-//        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //config.json
+//        $fileId = "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ"; //residency-config.json
 //        //$fileId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M"; //ResidencyApplication
 //        $file = null;
 //        try {
@@ -1104,7 +1104,7 @@ class GoogleSheetManagement {
         //echo "folder ID=".$configFileFolderIdResApp."<br>";
 
         if( 1 ) {
-            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdResApp, "config.json");
+            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdResApp, "residency-config.json");
             $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
 
             //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
@@ -1127,9 +1127,9 @@ class GoogleSheetManagement {
         } else {
             //get all files in google folder
             //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
-            //$parameters = array('q' => "'".$configFileFolderIdResApp."' in parents and trashed=false and name contains 'config.json'");
+            //$parameters = array('q' => "'".$configFileFolderIdResApp."' in parents and trashed=false and name contains 'residency-config.json'");
             //$parameters = array('q' => "'".$configFileFolderIdResApp."' in parents and trashed=false");
-            $parameters = array('q' => "'" . $configFileFolderIdResApp . "' in parents and trashed=false and title='config.json'");
+            $parameters = array('q' => "'" . $configFileFolderIdResApp . "' in parents and trashed=false and title='residency-config.json'");
             $files = $service->files->listFiles($parameters);
 
             foreach ($files->getItems() as $file) {
@@ -1160,7 +1160,7 @@ class GoogleSheetManagement {
                 }
 
                 //$parameters = array();
-                //$parameters = array('q' => "trashed=false and title='config.json'");
+                //$parameters = array('q' => "trashed=false and title='residency-config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
                 $parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
                 $files = $service->files->listFiles($parameters);

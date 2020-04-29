@@ -64,6 +64,13 @@ class Roles extends ListAbstract {
     private $fellowshipSubspecialty;
 
     /**
+     * Keep "Subspecialty" to be compatible with fellapp source code
+     *
+     * @ORM\ManyToOne(targetEntity="ResidencySpecialty")
+     */
+    private $residencySubspecialty;
+
+    /**
      * Each single role page should show the whole associated list of the answered
      * permissions list items ("Submit Orders", "Add a New Slide", etc) and
      * the answers themselves for each (WCMC, NYP) in a Select2 box for each permission.
@@ -160,6 +167,23 @@ class Roles extends ListAbstract {
     {
         return $this->fellowshipSubspecialty;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getResidencySubspecialty()
+    {
+        return $this->residencySubspecialty;
+    }
+
+    /**
+     * @param mixed $residencySubspecialty
+     */
+    public function setResidencySubspecialty($residencySubspecialty)
+    {
+        $this->residencySubspecialty = $residencySubspecialty;
+    }
+
 
     /**
      * @param mixed $institution

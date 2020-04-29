@@ -24,6 +24,8 @@ use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
 use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
+use App\ResAppBundle\Entity\ResAppRank;
+use App\ResAppBundle\Entity\ResAppStatus;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
@@ -907,6 +909,12 @@ class AdminController extends OrderAbstractController
         $count_FellAppRank = $this->generateFellAppRank();
         $count_FellAppVisaStatus = $this->generateFellAppVisaStatus();
         $count_LanguageProficiency = $this->generateLanguageProficiency();
+
+        $count_ResAppStatus = $this->generateResAppStatus();
+        $count_ResAppRank = $this->generateResAppRank();
+        $count_ResAppVisaStatus = $this->generateResAppVisaStatus();
+        $count_ResAppLanguageProficiency = $this->generateResAppLanguageProficiency();
+
         $logger->notice("Finished generateLanguageProficiency");
 
         $collaborationtypes = $this->generateCollaborationtypes();
@@ -1026,8 +1034,14 @@ class AdminController extends OrderAbstractController
             'Training Types='.$count_TrainingTypeList.', '.
             'FellApp Statuses='.$count_FellAppStatus.', '.
             'FellApp Ranks='.$count_FellAppRank.', '.
-            'FellAppVisaStatus='.$count_FellAppVisaStatus.
-            'Language Proficiency='.$count_LanguageProficiency.', '.
+            'FellAppVisaStatus='.$count_FellAppVisaStatus.', '.
+            'FellApp Language Proficiency='.$count_LanguageProficiency.', '.
+
+            'ResApp Statuses='.$count_ResAppStatus.', '.
+            'ResApp Ranks='.$count_ResAppRank.', '.
+            'ResAppVisaStatus='.$count_ResAppVisaStatus.', '.
+            'ResAppVisaStatus='.$count_ResAppLanguageProficiency.', '.
+
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
             'PermissionActions ='.$count_PermissionActions.', '.
@@ -1479,6 +1493,85 @@ class AdminController extends OrderAbstractController
                 "Does not allow to visit Fellowship Applications site",
                 0
             ),
+
+
+
+            //////////// Residency roles ////////////
+            "ROLE_RESAPP_ADMIN" => array(
+                "Residency Applications Administrator",
+                "Full access for Residency Applications site",
+                90
+            ),
+            //Directors (3 types)
+            "ROLE_RESAPP_DIRECTOR_WCM_AP" => array(
+                "Residency Program Director WCM AP",
+                "Access to specific Residency Application type as Director",
+                50
+            ),
+            "ROLE_RESAPP_DIRECTOR_WCM_CP" => array(
+                "Residency Program Director WCM CP",
+                "Access to specific Residency Application type as Director",
+                50
+            ),
+            "ROLE_RESAPP_DIRECTOR_WCM_APCP" => array(
+                "Residency Program Director WCM AP/CP",
+                "Access to specific Residency Application type as Director",
+                50
+            ),
+            //Program-Coordinator (3 types)
+            "ROLE_RESAPP_COORDINATOR_WCM_AP" => array(
+                "Residency Program Coordinator WCM AP",
+                "Access to specific Residency Application type as Coordinator",
+                40
+            ),
+            "ROLE_RESAPP_COORDINATOR_WCM_CP" => array(
+                "Residency Program Coordinator WCM CP",
+                "Access to specific Residency Application type as Coordinator",
+                40
+            ),
+            "ROLE_RESAPP_COORDINATOR_WCM_APCP" => array(
+                "Residency Program Coordinator WCM AP/CP",
+                "Access to specific Residency Application type as Coordinator",
+                40
+            ),
+            
+            //Residency Interviewer
+            "ROLE_RESAPP_INTERVIEWER_WCM_AP" => array(
+                "Residency Program Interviewer WCM AP",
+                "Access to specific Residency Application type as Interviewer",
+                30
+            ),
+            "ROLE_RESAPP_INTERVIEWER_WCM_CP" => array(
+                "Residency Program Interviewer WCM CP",
+                "Access to specific Residency Application type as Interviewer",
+                30
+            ),
+            "ROLE_RESAPP_INTERVIEWER_WCM_APCP" => array(
+                "Residency Program Interviewer WCM AP/CP",
+                "Access to specific Residency Application type as Interviewer",
+                30
+            ),
+
+            //Residency Observer
+            "ROLE_RESAPP_OBSERVER" => array(
+                "Residency Program Observer",
+                "Access to Residency Application as Observer (able to view a particular (assigned) application)",
+                10
+            ),
+
+            "ROLE_RESAPP_BANNED" => array(
+                "Residency Applications Banned User",
+                "Does not allow to visit Residency Applications site",
+                -1
+            ),
+            "ROLE_RESAPP_UNAPPROVED" => array(
+                "Residency Applications Unapproved User",
+                "Does not allow to visit Residency Applications site",
+                0
+            ),
+            ///////////// EOF Residency roles ///////////////////
+
+
 
             //////////// Deidentifier roles ////////////
             "ROLE_DEIDENTIFICATOR_ADMIN" => array(
@@ -1942,6 +2035,9 @@ class AdminController extends OrderAbstractController
             //set institution and Fellowship Subspecialty types to role
             $this->setInstitutionFellowship($entity,$role);
 
+            //set institution and Residency Specialty types to role
+            $this->setInstitutionResidency($entity,$role);
+
             $em->persist($entity);
             $em->flush();
 
@@ -2000,6 +2096,35 @@ class AdminController extends OrderAbstractController
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
         }
 
+    }
+
+    //entity - role object
+    //role - role string
+    public function setInstitutionResidency($entity,$role) {
+
+        if( strpos($role,'_WCM_') === false ) {
+            return;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $entity->setInstitution($wcmc);
+
+        if( strpos($role,'AP') !== false ) {
+            $AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
+            $entity->setResidencySubspecialty($AP);
+        }
+
+        if( strpos($role,'CP') !== false ) {
+            $CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
+            $entity->setResidencySubspecialty($CP);
+        }
+
+        if( strpos($role,'APCP') !== false ) {
+            $APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
+            $entity->setResidencySubspecialty($APCP);
+        }
     }
 
     //entity - role object
@@ -2110,384 +2235,6 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->get('user_service_utility');
         return $userServiceUtil->generateSiteParameters();
     }
-
-//    public function generateSiteParameters_ORIG() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-//
-//        if( count($entities) > 0 ) {
-//            return -1;
-//        }
-//
-//        $types = array(
-//            "maxIdleTime" => "30",
-//            "environment" => "dev",
-//            "siteEmail" => "email@email.com",
-//            "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
-//
-//            "smtpServerAddress" => "smtp.gmail.com",
-//            "mailerPort" => "587",
-//            "mailerTransport" => "smtp",
-//            "mailerAuthMode" => "login",
-//            "mailerUseSecureConnection" => "tls",
-//            "mailerUser" => null,
-//            "mailerPassword" => null,
-//            "mailerSpool" => false,
-//            "mailerFlushQueueFrequency" => 15, //minuts
-//            "mailerDeliveryAddresses" => null,
-//
-//            "aDLDAPServerAddress" => "ldap.forumsys.com",
-//            "aDLDAPServerPort" => "389",
-//            "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
-//            "aDLDAPServerAccountUserName" => "null",
-//            "aDLDAPServerAccountPassword" => "null",
-//            "ldapExePath" => "../src/App/UserdirectoryBundle/Util/",
-//            "ldapExeFilename" => "LdapSaslCustom.exe",
-//
-//            "dbServerAddress" => "127.0.0.1",
-//            "dbServerPort" => "null",
-//            "dbServerAccountUserName" => "null",
-//            "dbServerAccountPassword" => "null",
-//            "dbDatabaseName" => "null",
-//
-//            "pacsvendorSlideManagerDBServerAddress" => "127.0.0.1",
-//            "pacsvendorSlideManagerDBServerPort" => "null",
-//            "pacsvendorSlideManagerDBUserName" => "null",
-//            "pacsvendorSlideManagerDBPassword" => "null",
-//            "pacsvendorSlideManagerDBName" => "null",
-//
-//            "institutionurl" => "http://www.cornell.edu/",
-//            "institutionname" => "Cornell University",
-//            "subinstitutionurl" => "http://weill.cornell.edu",
-//            "subinstitutionname" => "Weill Cornell Medicine",
-//            "departmenturl" => "http://www.cornellpathology.com",
-//            "departmentname" => "Pathology and Laboratory Medicine Department",
-//            "showCopyrightOnFooter" => true,
-//
-//            ///////////////////// FELLAPP /////////////////////
-//            "codeGoogleFormFellApp" => "",
-//            "confirmationEmailFellApp" => "",
-//            "confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been succesfully received",
-//            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
-//                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
-//                                         "If You have any questions, please do not hesitate to contact me by phone or via email. ".
-//                                         "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
-//            "clientEmailFellApp" => '',
-//            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util',
-//            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
-//            "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
-//            "templateIdFellApp" => "",
-//            "backupFileIdFellApp" => "",
-//            "folderIdFellApp" => "",
-//            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
-//            "deleteImportedAplicationsFellApp" => false,
-//            "deleteOldAplicationsFellApp" => false,
-//            "yearsOldAplicationsFellApp" => 2,
-//            "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
-//            "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
-//            "reportsUploadPathFellApp" => "fellapp/Reports",
-//            "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
-//            "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
-//            "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
-//            "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
-//            "pdftkPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
-//            "pdftkFilenameFellApp" => "pdftk",
-//            "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
-//            "gsPathFellApp" => "C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",
-//            "gsFilenameFellApp"=>"gswin64c.exe",
-//            "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
-//            ///////////////////// EOF FELLAPP /////////////////////
-//
-//            //VacReq
-//            "vacationAccruedDaysPerMonth" => '2',
-//            "academicYearStart" => new \DateTime('2017-07-01'),
-//            "academicYearEnd" => new \DateTime('2017-06-30'),
-//            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
-//
-//            "initialConfigurationCompleted" => false,
-//
-//            "maintenance" => false,
-//            //"maintenanceenddate" => null,
-//            "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
-//                                        ' The administrators are planning to return this site to a fully functional state on or before [[datetime]].'.
-//                                        'If you were in the middle of entering order information, it was saved as an "Unsubmitted" order '.
-//                                        'and you should be able to submit that order after the maintenance is complete.',
-//            "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
-//                                        'functional state on or before [[datetime]]. If you were in the middle of entering order information, '.
-//                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
-//
-//            //uploads
-//            "avataruploadpath" => "directory/avatars",
-//            "employeesuploadpath" => "directory/documents",
-//            "scanuploadpath" => "scan-order/documents",
-//            "fellappuploadpath" => "fellapp/documents",
-//            "vacrequploadpath" => "directory/vacreq",
-//            "transresuploadpath" => "transres/documents",
-//
-//            "mainHomeTitle" => "Welcome to the O R D E R platform!",
-//            "listManagerTitle" => "List Manager",
-//            "eventLogTitle" => "Event Log",
-//            "siteSettingsTitle" => "Site Settings",
-//
-//            ////////////////////////// LDAP notice messages /////////////////////////
-//            "noticeAttemptingPasswordResetLDAP" => "The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
-//            //"noticeUseCwidLogin" => "Please use your CWID to log in",
-//            "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
-//            "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
-//            "noticeLdapName" => "WCM CWID",
-//            ////////////////////////// EOF LDAP notice messages /////////////////////////
-//
-//            "contentAboutPage" => '
-//                <p>
-//                    This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
-//                </p>
-//
-//                <p>
-//                    Designers: Victor Brodsky, App Ivanov
-//                </p>
-//
-//                <p>
-//                    Developer: App Ivanov
-//                </p>
-//
-//                <p>
-//                    Quality Assurance Testers: App Ivanov, Steven Bowe, Emilio Madrigal
-//                </p>
-//
-//                <p>
-//                    We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
-//                <a href="mailto:slidescan@med.cornell.edu" target="_top">slidescan@med.cornell.edu</a> and attach relevant screenshots.
-//                </p>
-//
-//                <br>
-//
-//                <p>
-//                O R D E R is made possible by:
-//                </p>
-//
-//                <br>
-//
-//                <p>
-//
-//                        <ul>
-//
-//
-//                    <li>
-//                        <a href="http://php.net">PHP</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://symfony.com">Symfony</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://doctrine-project.org">Doctrine</a>
-//                    </li>
-//
-//                    <br>
-//
-//					<li>
-//                        <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//
-//                        <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://www.dropzonejs.com/">Dropzone JS</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://www.jstree.com/">jsTree</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://twig.sensiolabs.org/doc/advanced.html">Twig</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://getbootstrap.com/">Bootstrap</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/kriskowal/q">JS promises Q</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://jquery.com">jQuery</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://jqueryui.com/">jQuery UI</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://ivaynberg.github.io/select2/">Select2</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://handsontable.com/">Handsontable</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/bermi/password-generator">Password Generator</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
-//                    </li>
-//
-//                    <br>
-//
-//                    <li>
-//                        <a href="http://casperjs.org/">CasperJS</a>
-//                    </li>
-//
-//                </ul>
-//                </p>
-//            '
-//            //"underLoginMsgUser" => "",
-//            //"underLoginMsgScan => ""
-//
-//        );
-//
-//        $params = new SiteParameters();
-//
-//        $count = 0;
-//        foreach( $types as $key => $value ) {
-//            $method = "set".$key;
-//            $params->$method( $value );
-//            $count = $count + 10;
-//        }
-//
-//        //assign Institution
-//        $institutionName = 'Weill Cornell Medical College';
-//        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionName);
-//        if( !$institution ) {
-//            throw new \Exception( 'Institution was not found for name='.$institutionName );
-//        }
-//        $params->setAutoAssignInstitution($institution);
-//
-//        //set AllowPopulateFellApp to false
-//        $params->setAllowPopulateFellApp(false);
-//
-//        $em->persist($params);
-//        $em->flush();
-//
-//        $emailUtil = $this->get('user_mailer_utility');
-//        $emailUtil->createEmailCronJob();
-//
-//        return round($count/10);
-//    }
 
     public function generateDefaultOrgGroupSiteParameters() {
         $userSecUtil = $this->get('user_security_utility');
@@ -2728,6 +2475,7 @@ class AdminController extends OrderAbstractController
             'directory' => 'employees',
             'scan' => 'scan',
             'fellowship-applications' => 'fellapp',
+            'residency-applications' => 'resapp',
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
             'call-log-book' => 'calllog',
@@ -5127,6 +4875,152 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateResidencySpecialties() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $residencies = array(
+            "AP",
+            "CP",
+            "AP/CP"
+        );
+
+        $count = 10;
+        foreach( $residencies as $residency ) {
+
+            if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residency) ) {
+                continue;
+            }
+
+            $listEntity = new ResidencySpecialty();
+            $this->setDefaultList($listEntity,$count,$username,$residency);
+
+            //$listEntity->setBoardCertificateAvailable(true);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+
+//        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
+//        if( $entities ) {
+        //return -1;
+//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
+//            $query->execute();
+//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
+//            $query->execute();
+//        }
+
+        $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $lastResidencySpecialtyEntity = null;
+
+        $count = 10;
+        $subcount = 1;
+
+        //for each row in excel
+        for ($row = 2; $row <= $highestRow; $row++){
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
+            $residencySpecialty = $rowData[0][0];
+            $fellowshipSubspecialty = $rowData[0][1];
+            $boardCertificationAvailable = $rowData[0][2];
+            //echo "residencySpecialty=".$residencySpecialty."<br>";
+            //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+            //echo "boardCertificationAvailable=".$boardCertificationAvailable."<br>";
+
+            $residencySpecialtyEntity = null;
+
+            if( $residencySpecialty ) {
+
+                $residencySpecialty = trim($residencySpecialty);
+                //echo "residencySpecialty=".$residencySpecialty."<br>";
+
+                $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+
+                //if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
+                //    continue;
+                //}
+
+                if( !$residencySpecialtyEntity ) {
+                    $residencySpecialtyEntity = new ResidencySpecialty();
+                    $this->setDefaultList($residencySpecialtyEntity,$count,$username,$residencySpecialty);
+                }
+
+                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
+                    $residencySpecialtyEntity->setBoardCertificateAvailable(true);
+                }
+
+                $em->persist($residencySpecialtyEntity);
+                $em->flush();
+
+                $lastResidencySpecialtyEntity = $residencySpecialtyEntity;
+
+                $count = $count + 10;
+            }
+
+            if( $fellowshipSubspecialty ) {
+
+                $fellowshipSubspecialty = trim($fellowshipSubspecialty);
+                //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+                $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
+
+                //if( $fellowshipSubspecialtyEntity ) {
+                //    continue;
+                //}
+
+                if( !$fellowshipSubspecialtyEntity ) {
+                    $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
+                    $this->setDefaultList($fellowshipSubspecialtyEntity,$subcount,$username,$fellowshipSubspecialty);
+                }
+
+
+                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
+                    $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
+                }
+
+                if( $lastResidencySpecialtyEntity ) {
+                    $lastResidencySpecialtyEntity->addChild($fellowshipSubspecialtyEntity);
+                }
+
+                $em->persist($lastResidencySpecialtyEntity);
+                $em->persist($fellowshipSubspecialtyEntity);
+                $em->flush();
+
+                $subcount = $subcount + 10;
+            }
+
+        }
+
+        $em->clear();
+
+        return round($count/10);
+    }
+    //NOT USED
+    public function generateSpreadsheetResidencySpecialties() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -5951,6 +5845,163 @@ class AdminController extends OrderAbstractController
         return round($count/10);
 
     }
+
+    ///////////////////// ResApp ///////////////////////////////
+    public function generateResAppStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            'active'=>'Active',
+            'complete'=>'Complete',
+            'interviewee'=>'Interviewee',
+            'onhold'=>'On Hold',
+            'reject'=>'Rejected',
+            //'hide'=>'Hidden',
+            'priority'=>'Priority',
+            'archive'=>'Archived',
+            'accepted'=>'Accepted',
+            'acceptedandnotified'=>'Accepted and Notified',
+            'rejectedandnotified'=>'Rejected and Notified'
+
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$action ) {
+
+            $listEntity = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $entity = new ResAppStatus();
+            $this->setDefaultList($entity,$count,$username,$name);
+            $entity->setAction($action);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateResAppRank() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppResAppBundle:ResAppRank')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            '1 (Excellent)'=>1,
+            '1.5'=>1.5,
+            '2 (Average)'=>2,
+            '2.5'=>2.5,
+            '3 (Below Average)'=>3
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name=>$value ) {
+
+            $entity = new ResAppRank();
+            $this->setDefaultList($entity,$count,$username,$name);
+            $entity->setValue($value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateResAppVisaStatus() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppResAppBundle:VisaStatus')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "N/A (US Citizenship)",
+            "J-1 visa",
+            "H-1B visa",
+            "Green card/Permanent Residency",
+            "EAD",
+            "Other-please contact the program coordinator"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new \App\ResAppBundle\Entity\VisaStatus();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateResAppLanguageProficiency() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppResAppBundle:LanguageProficiency')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "Excellent",
+            "Adequate",
+            "Inadequate",
+            "N/A"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new \App\ResAppBundle\Entity\LanguageProficiency();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+    ////////////////////// EOF ResApp //////////////////////////////////////
+
+
 
     public function generateVacReqRequestTypeList() {
 
@@ -7439,6 +7490,8 @@ class AdminController extends OrderAbstractController
             $resCount = $resCount + $this->addSites( $role, '_VACREQ_', 'vacation-request' );
 
             $resCount = $resCount + $this->addSites( $role, '_FELLAPP_', 'fellowship-applications' );
+
+            $resCount = $resCount + $this->addSites( $role, '_RESAPP_', 'residency-applications' );
 
             $resCount = $resCount + $this->addSites( $role, '_SCANORDER_', 'scan' );
 
