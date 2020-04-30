@@ -503,9 +503,17 @@
         {{ formmacros.field(form.types) }}
     {% endif %}
 
-    {{ formmacros.field(form.list.name) }}
-    {{ formmacros.field(form.list.shortname) }}
-    {{ formmacros.field(form.list.abbreviation) }}
+    {% if form.list is defined %}
+        {% if form.list.name is defined %}
+            {{ formmacros.field(form.list.name) }}
+        {% endif %}
+        {% if form.list.shortname is defined %}
+            {{ formmacros.field(form.list.shortname) }}
+        {% endif %}
+        {% if form.list.abbreviation is defined %}
+            {{ formmacros.field(form.list.abbreviation) }}
+        {% endif %}
+    {% endif %}
 
     {#{% if form.institution is defined %}#}
         {#{{ formmacros.field(form.institution) }}#}
@@ -572,14 +580,26 @@
         {{ formmacros.field(form.list.version) }}
     {% endif %}
 
-    {{ formmacros.field(form.list.orderinlist) }}
-
-    {{ formmacros.field(form.list.objectType) }}
-    {{ formmacros.field(form.list.entityNamespace) }}
-    {{ formmacros.field(form.list.entityName) }}
-    {{ formmacros.field(form.list.entityId) }}
-
-    {{ formmacros.field(form.list.linkToListId) }}
+    {% if form.list is defined %}
+        {% if form.list.orderinlist is defined %}
+            {{ formmacros.field(form.list.orderinlist) }}
+        {% endif %}
+        {% if form.list.objectType is defined %}
+            {{ formmacros.field(form.list.objectType) }}
+        {% endif %}
+            {% if form.list.entityNamespace is defined %}
+            {{ formmacros.field(form.list.entityNamespace) }}
+        {% endif %}
+            {% if form.list.entityName is defined %}
+            {{ formmacros.field(form.list.entityName) }}
+        {% endif %}
+            {% if form.list.entityId is defined %}
+            {{ formmacros.field(form.list.entityId) }}
+        {% endif %}
+            {% if form.list.linkToListId is defined %}
+            {{ formmacros.field(form.list.linkToListId) }}
+        {% endif %}
+    {% endif %}
 
     {#{% if form.list.updatedby is defined %}#}
         {#{{ formmacros.field(form.list.updatedby) }}#}
@@ -855,9 +875,9 @@
         {{ formmacros.field(form.rgt) }}
     {% endif %}
 
-    {% if form.parent is defined %}
-        {{ formmacros.field(form.parent) }}
-    {% endif %}
+    {#{% if form.parent and form.parent is defined %}#}
+        {#{{ formmacros.field(form.parent) }}#}
+    {#{% endif %}#}
 
     {% if form.accessionListTypes is defined %}
         {{ formmacros.field(form.accessionListTypes) }}
@@ -989,20 +1009,6 @@
         {{ formmacros.field(form.comment2) }}
         {{ formmacros.field(form.datasheet) }}
 
-        {#{{ formmacros.field(form.pdf) }}#}
-        {#{{ formmacros.field(form.documents) }}#}
-        {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','Document(s)','asForm',false) }}#}
-        {#<p>#}
-        {#<div class="well form-element-holder user-documents">#}
-            {#<label class="col-xs-12 control-label">Document(s)</label>#}
-            {#<div class="row withpaddingtop">#}
-                {#<div class="col-xs-12">#}
-                    {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','AntiBody Document','asForm',false) }}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-        {#</p>#}
-
     {% endif %}
 
     {% if form.documents is defined %}
@@ -1034,7 +1040,6 @@
         </p>
 
     {% endif %}
-
 
 
 {% endmacro %}

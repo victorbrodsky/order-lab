@@ -261,6 +261,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list", methods={"GET"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list", methods={"GET"})
      * @Route("/list/visa-status/", name="visastatus-list", methods={"GET"})
+     * @Route("/list/resappstatuses/", name="resappstatuses-list", methods={"GET"})
+     * @Route("/list/resappranks/", name="resappranks-list", methods={"GET"})
+     * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency-list", methods={"GET"})
+     * @Route("/list/resappvisastatus/", name="resappvisastatus-list", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
@@ -739,6 +743,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create", methods={"POST"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create", methods={"POST"})
      * @Route("/list/visastatus/", name="visastatus_create", methods={"POST"})
+     * @Route("/list/resappstatuses/", name="resappstatuses_create", methods={"POST"})
+     * @Route("/list/resappranks/", name="resappranks_create", methods={"POST"})
+     * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency_create", methods={"POST"})
+     * @Route("/list/resappvisastatus/", name="resappvisastatus_create", methods={"POST"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -820,7 +828,7 @@ class ListController extends OrderAbstractController
         $options['em'] = $this->getDoctrine()->getManager();
 
         //exit("this->postPath=".$this->postPath);
-        $path = $pathbase.'_create'.$this->postPath;
+        //$path = $pathbase.'_create'.$this->postPath;
         $actionUrl = $this->generateUrl($pathbase.'_create'.$this->postPath);
         //exit("path=".$path."; actionUrl=".$actionUrl);
 
@@ -1051,6 +1059,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new", methods={"GET"})
      * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new", methods={"GET"})
      * @Route("/list/visastatus/new", name="visastatus_new", methods={"GET"})
+     * @Route("/list/resappstatuses/new", name="resappstatuses_new", methods={"GET"})
+     * @Route("/list/resappranks/new", name="resappranks_new", methods={"GET"})
+     * @Route("/list/resapplanguageproficiency/new", name="resapplanguageproficiency_new", methods={"GET"})
+     * @Route("/list/resappvisastatus/new", name="resappvisastatus_new", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1095,7 +1107,7 @@ class ListController extends OrderAbstractController
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 
-        $form   = $this->createCreateForm($entity,$mapper,$pathbase,'new');
+        $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
 
         return array(
             'entity' => $entity,
@@ -1321,6 +1333,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show", methods={"GET"})
      * @Route("/list/visastatus/{id}", name="visastatus_show", methods={"GET"})
+     * @Route("/list/resappstatuses/{id}", name="resappstatuses_show", methods={"GET"})
+     * @Route("/list/resappranks/{id}", name="resappranks_show", methods={"GET"})
+     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_show", methods={"GET"})
+     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_show", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
@@ -1586,6 +1602,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit", methods={"GET"})
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit", methods={"GET"})
+     * @Route("/list/resappstatuses/{id}/edit", name="resappstatuses_edit", methods={"GET"})
+     * @Route("/list/resappranks/{id}/edit", name="resappranks_edit", methods={"GET"})
+     * @Route("/list/resapplanguageproficiency/{id}/edit", name="resapplanguageproficiency_edit", methods={"GET"})
+     * @Route("/list/resappvisastatus/{id}/edit", name="resappvisastatus_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -1889,7 +1909,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update", methods={"PUT"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update", methods={"PUT"})
      * @Route("/list/visastatus/{id}", name="visastatus_update", methods={"PUT"})
-     *
+     * @Route("/list/resappstatuses/{id}", name="resappstatuses_update", methods={"PUT"})
+     * @Route("/list/resappranks/{id}", name="resappranks_update", methods={"PUT"})
+     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_update", methods={"PUT"})
+     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2485,6 +2508,28 @@ class ListController extends OrderAbstractController
                 $displayName = "Fellowship Application Language Proficiencies";
                 $bundleName = "FellAppBundle";
                 break;
+
+            case "resappstatuses":
+                $className = "ResAppStatus";
+                $displayName = "Residency Application Statuses";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resappranks":
+                $className = "ResAppRank";
+                $displayName = "Residency Application Ranks";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resapplanguageproficiency":
+                $className = "LanguageProficiency";
+                $displayName = "Residency Application Language Proficiencies";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resappvisastatus":
+                $className = "VisaStatus";
+                $displayName = "Residency Visa Status";
+                $bundleName = "ResAppBundle";
+                break;
+
 //            case "collaborations":
 //                $className = "Collaboration";
 //                $displayName = "Collaborations";
@@ -3384,6 +3429,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete", methods={"DELETE"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete", methods={"DELETE"})
      * @Route("/list/visastatus/{id}", name="visastatus_delete", methods={"DELETE"})
+     * @Route("/list/resappstatuses/{id}", name="resappstatuses_delete", methods={"DELETE"})
+     * @Route("/list/resappranks/{id}", name="resappranks_delete", methods={"DELETE"})
+     * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_delete", methods={"DELETE"})
+     * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_delete", methods={"DELETE"})
      *
      *
      */
@@ -3545,6 +3594,11 @@ class ListController extends OrderAbstractController
             $additionalSitename = $this->getParameter('fellapp.sitename');
             if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
                 return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+            }
+        } elseif( $pathbase == "resappvisastatus" ) {
+            $additionalSitename = $this->getParameter('resapp.sitename');
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+                return $this->redirect($this->generateUrl($this->getParameter('resapp.sitename') . '-nopermission'));
             }
         } else {
             if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {

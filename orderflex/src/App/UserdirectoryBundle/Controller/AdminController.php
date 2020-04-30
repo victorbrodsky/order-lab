@@ -6966,6 +6966,11 @@ class AdminController extends OrderAbstractController
             "accessionlisthierarchys" => array('AccessionListHierarchy','accessionlisthierarchys-list','Accession List Hierarchy'),
             "accessionlisthierarchygrouptype" => array('AccessionListHierarchyGroupType','accessionlisthierarchygrouptype-list','Accession List Hierarchy Group Type'),
             "accessionlisttype" => array('AccessionListType','accessionlisttype-list','Accession List Type'),
+
+            "resappstatuses" => array('ResAppStatus','resappstatuses-list','Residency Application Status'),
+            "resappranks" => array('ResAppRank','resappranks-list','Residency Application Rank'),
+            "resapplanguageproficiency" => array('LanguageProficiency','resapplanguageproficiency-list','Residency Language Proficiency'),
+            "resappvisastatus" => array('VisaStatus','visastatus-list','Residency Visa Status'),
         );
 
         if( $withcustom ) {
@@ -7502,6 +7507,7 @@ class AdminController extends OrderAbstractController
             $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
+            $resCount = $resCount + $this->addResAppPermission( $role );
 
             $resCount = $resCount + $this->addVacReqPermission( $role );
             $resCount = $resCount + $this->setInstitutionVacReqRole($role); //set institution and Fellowship Subspecialty types to role
@@ -7584,6 +7590,32 @@ class AdminController extends OrderAbstractController
         //ROLE_FELLAPP_OBSERVER: permission="View a Fellowship Application", object="FellowshipApplication", action="read"
         if( strpos($role, "ROLE_FELLAPP_OBSERVER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"View a Fellowship Application","FellowshipApplication","read");
+        }
+
+        return $count;
+    }
+    public function addResAppPermission( $role ) {
+        $count = 0;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //ROLE_RESAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
+        if( strpos($role, "ROLE_RESAPP_INTERVIEWER") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
+        }
+
+        //ROLE_RESAPP_DIRECTOR:
+        //ROLE_RESAPP_COORDINATOR:
+        // permission="Create a New Residency Application", object="ResidencyApplication", action="create"
+        // permission="Modify a Residency Application", object="ResidencyApplication", action="update"
+        if( strpos($role, "ROLE_RESAPP_COORDINATOR") !== false || strpos($role, "ROLE_RESAPP_DIRECTOR") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Residency Application","ResidencyApplication","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Residency Application","ResidencyApplication","update");
+        }
+
+        //ROLE_FELLAPP_OBSERVER: permission="View a Residency Application", object="ResidencyApplication", action="read"
+        if( strpos($role, "ROLE_RESAPP_OBSERVER") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"View a Residency Application","ResidencyApplication","read");
         }
 
         return $count;
