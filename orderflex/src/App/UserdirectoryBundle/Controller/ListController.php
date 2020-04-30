@@ -3176,6 +3176,7 @@ class ListController extends OrderAbstractController
         $res = array();
         $res['className'] = $className;
         $res['fullClassName'] = "App\\".$bundleName."\\Entity\\".$className;
+        $res['entityNamespace'] = "App\\".$bundleName."\\Entity";
         $res['bundleName'] = "App".$bundleName;
         $res['displayName'] = $displayName;
         //$res['labels'] = $labels;

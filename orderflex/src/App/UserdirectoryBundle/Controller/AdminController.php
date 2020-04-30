@@ -6970,7 +6970,7 @@ class AdminController extends OrderAbstractController
             "resappstatuses" => array('ResAppStatus','resappstatuses-list','Residency Application Status'),
             "resappranks" => array('ResAppRank','resappranks-list','Residency Application Rank'),
             "resapplanguageproficiency" => array('LanguageProficiency','resapplanguageproficiency-list','Residency Language Proficiency'),
-            "resappvisastatus" => array('VisaStatus','visastatus-list','Residency Visa Status'),
+            "resappvisastatus" => array('VisaStatus','resappvisastatus-list','Residency Visa Status'),
         );
 
         if( $withcustom ) {
@@ -7101,6 +7101,7 @@ class AdminController extends OrderAbstractController
                 $listName = $mapper['className'];
                 $listRootName = $listId.'-list';
                 $nameClean = $mapper['displayName'];
+                $entityNamespace = $mapper['entityNamespace'];
                 //exit('Get from ScanListController: listName='.$listName."; listRootName=".$listRootName."; nameClean=".$nameClean);
             }
 
@@ -7116,10 +7117,14 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
+            //We can have two identical class names (i.e. VisaStatus in FellApp and ResApp bundles)
             $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
             if( $listEntity ) {
                 //exit('exists listName='.$listName);
-                continue;
+                $listEntityNamespace = $listEntity->getEntityNamespace();
+                if( $listEntityNamespace && $entityNamespace && $listEntityNamespace == $entityNamespace ) {
+                    continue;
+                }
             }
 
             echo "nameClean=$nameClean || listName=$listName, listRootName=$listRootName <br>";
@@ -7168,6 +7173,8 @@ class AdminController extends OrderAbstractController
             //$listEntity->setLinkToListId($listId);
             $listEntity->setListName($listName);
             $listEntity->setListRootName($listRootName);
+            $listEntity->setEntityNamespace($entityNamespace);
+            $listEntity->setEntityName($listName);
 
             $em->persist($listEntity);
             //$em->flush($listEntity);
