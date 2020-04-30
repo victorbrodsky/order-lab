@@ -6212,6 +6212,11 @@ class AdminController extends OrderAbstractController
             "Modify a Fellowship Application",
             "View a Fellowship Application",
 
+            //"Submit an residency interview evaluation",
+            "Create a New Residency Application",
+            "Modify a Residency Application",
+            "View a Residency Application",
+
             "Submit a Vacation Request",
             "Approve a Vacation Request",
             "Approve a Carry Over Request",
@@ -6279,8 +6284,11 @@ class AdminController extends OrderAbstractController
             "Message" => array("",array("scan","calllog")),
             "Report" => array("",array("scan")),
 
-            "Interview" => array("",array("fellapp")),
+            "Interview" => array("",array("fellapp","resapp")),
             "FellowshipApplication" => array("",array("fellapp")),
+
+            //"Interview" => array("",array("resapp")),
+            "ResidencyApplication" => array("",array("resapp")),
 
             "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
 
@@ -7605,6 +7613,9 @@ class AdminController extends OrderAbstractController
         $count = 0;
 
         $userSecUtil = $this->container->get('user_security_utility');
+
+        //                            $role, $permissionListStr,                $permissionObjectListStr,   $permissionActionListStr
+        //checkAndAddPermissionToRole($role, "Submit an interview evaluation",  "Interview",                "create")
 
         //ROLE_RESAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
         if( strpos($role, "ROLE_RESAPP_INTERVIEWER") !== false ) {

@@ -50,6 +50,9 @@
             {% if entities|first.fellowshipSubspecialty is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Subspecialty', 'fellowshipSubspecialty.name') }}</th>
             {% endif %}
+            {% if entities|first.residencySubspecialty is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Residency Specialty', 'residencySubspecialty.name') }}</th>
+            {% endif %}
 
             {% if entities|first.organizationalGroupType is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Organizational Group Type', 'organizationalGroupType.name') }}</th>
@@ -203,6 +206,11 @@
                 {% if entity.fellowshipSubspecialty is defined %}
                     <td>
                         {{ entity.fellowshipSubspecialty }}
+                    </td>
+                {% endif %}
+                {% if entity.residencySubspecialty is defined %}
+                    <td>
+                        {{ entity.residencySubspecialty }}
                     </td>
                 {% endif %}
 
@@ -893,6 +901,10 @@
 
     {% if form.fellowshipSubspecialty is defined %}
         {{ formmacros.field(form.fellowshipSubspecialty) }}
+    {% endif %}
+
+    {% if form.residencySubspecialty is defined %}
+        {{ formmacros.field(form.residencySubspecialty) }}
     {% endif %}
 
     {% if form.formNodes is defined %}

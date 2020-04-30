@@ -759,6 +759,7 @@ class ScanListController extends ListController
         $res['className'] = $className;
         $res['fullClassName'] = $classPath.$className;
         $res['bundleName'] = $bundleName;
+        $res['entityNamespace'] = "App\\".$bundleName."\\Entity";
         $res['displayName'] = $displayName;
         $res['linkToListId'] = null;
 

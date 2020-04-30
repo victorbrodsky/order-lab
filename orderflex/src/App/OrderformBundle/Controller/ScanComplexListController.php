@@ -165,6 +165,7 @@ class ScanComplexListController extends ComplexListController
         $res['className'] = $className;
         $res['fullFormType'] = $bundlePrefix."\\".$bundleName."\\Form\\".$formType;
         $res['fullClassName'] = $bundlePrefix."\\".$bundleName."\\Entity\\".$className;
+        $res['entityNamespace'] = $bundlePrefix."\\".$bundleName."\\Entity";
         $res['bundleName'] = $bundlePrefix.$bundleName;
         $res['displayName'] = $displayName;
         $res['singleName'] = $singleName;

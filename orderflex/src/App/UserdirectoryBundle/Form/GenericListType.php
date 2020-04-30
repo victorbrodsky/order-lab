@@ -415,7 +415,15 @@ class GenericListType extends AbstractType
 
             $builder->add('fellowshipSubspecialty',EntityType::class,array(
                 'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
-                'label' => "FellowshipSubspecialty:",
+                'label' => "Fellowship Subspecialty:",
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox combobox-width')
+            ));
+
+            $builder->add('residencySubspecialty',EntityType::class,array(
+                'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+                'label' => "Residency Specialty:",
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox combobox-width')
