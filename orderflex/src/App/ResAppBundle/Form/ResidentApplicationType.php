@@ -95,7 +95,7 @@ class ResidencyApplicationType extends AbstractType
         }
 
         $builder->add('residencySubspecialty', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencySubspecialty',
+            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
             'label' => "Residency Application Type:",
             //'required' => true,
             'required' => false,

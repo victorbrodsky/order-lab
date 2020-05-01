@@ -357,7 +357,7 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "edit";
 
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->find($id);
+        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
 
         if( !$restype ) {
             throw $this->createNotFoundException('Unable to find Residency Subspecialty Type by id='.$id);
@@ -504,10 +504,14 @@ class ResAppManagement extends OrderAbstractController {
 
 
     /**
+     * NOT USED
+     *
      * @Route("/populate-default", name="resapp_populate_default", methods={"GET"})
      * @Template("AppResAppBundle/Management/management.html.twig")
      */
     public function populateDefaultAction(Request $request) {
+
+        exit("populateDefaultAction NOT USED");
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
@@ -521,7 +525,7 @@ class ResAppManagement extends OrderAbstractController {
         //populate default directors, coordinators, interviewers
 
         //BREASTPATHOLOGY
-        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Breast Pathology");
+        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Breast Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -537,7 +541,7 @@ class ResAppManagement extends OrderAbstractController {
 
 
         //CYTOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Cytopathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Cytopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -555,7 +559,7 @@ class ResAppManagement extends OrderAbstractController {
         $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
 
         //GASTROINTESTINALPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Gastrointestinal Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gastrointestinal Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -572,7 +576,7 @@ class ResAppManagement extends OrderAbstractController {
 
 
         //GENITOURINARYPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Genitourinary Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Genitourinary Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -590,7 +594,7 @@ class ResAppManagement extends OrderAbstractController {
         $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
 
         //GYNECOLOGICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Gynecologic Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gynecologic Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -605,7 +609,7 @@ class ResAppManagement extends OrderAbstractController {
         $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
 
         //HEMATOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Hematopathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Hematopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -626,7 +630,7 @@ class ResAppManagement extends OrderAbstractController {
 
 
         //MOLECULARGENETICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty')->findOneByName("Molecular Genetic Pathology");
+        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Molecular Genetic Pathology");
         $users = array(
             'cwid',
             'cwid',

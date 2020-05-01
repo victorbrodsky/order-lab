@@ -852,13 +852,18 @@
         {% endif %}
 
         <div class="well transres-review-holder text-center col-xs-12">
+            {#get human tissue forms view url#}
+            <p>
+                {{ transres_util.showHumanTissueFormViewUrl(project)|raw }}
+            </p>
+
             {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
             {% if project.state == "irb_review" %}
                 {#"IRB with PI FirstName LastName expires on MM/DD/YYYY."#}
                 {{ project.getIrbInfo(transres_util.getHumanName())|raw }}
 
                 {#get human tissue forms view url#}
-                {{ transres_util.showHumanTissueFormViewUrl(project)|raw }}
+                {#{{ transres_util.showHumanTissueFormViewUrl(project)|raw }}#}
 
                 {#{% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}#}
                 {% set irbExpDate = project.getIrbExpirationDate() %}

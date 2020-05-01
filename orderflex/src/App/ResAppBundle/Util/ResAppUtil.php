@@ -251,7 +251,7 @@ class ResAppUtil {
         );
 
         //get list of residency type with extra "ALL"
-        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencySubspecialty');
+        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
         $dql->where("institution.id = ".$pathology->getId());
