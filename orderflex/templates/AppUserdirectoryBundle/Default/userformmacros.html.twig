@@ -1105,13 +1105,15 @@
         {#<div id="form-prototype-data"#}
              {#data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"#}
         {#></div>#}
+        {#<div id="form-prototype-data2"#}
+             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+             {#data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"#}
+             {#data-userid = "{{ app.user.id }}"#}
+             {#data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"#}
+        {#></div>#}
         <div id="form-prototype-data2"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
-             data-userid = "{{ app.user.id }}"
              data-prototype-user-permissions = "{{ userform.permissions(permissions,cycle,'user-permissions','prototype', sitename)|e }}"
         ></div>
-
     {% endif %}
 
     <div class="panel panel-primary">

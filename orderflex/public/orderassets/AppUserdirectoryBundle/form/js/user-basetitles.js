@@ -116,7 +116,7 @@ function getBaseTitleForm( elclass ) {
     var prototype = collectionHolder.data('prototype-'+identLowerCase);
     //console.log("prototype="+prototype);
 
-    //try id="form-prototype-data2"
+    //if prototype is undefined, try id="form-prototype-data2"
     if( typeof prototype === 'undefined' ) {
         var dataholder = "#form-prototype-data2"; //fixed data holder
 
