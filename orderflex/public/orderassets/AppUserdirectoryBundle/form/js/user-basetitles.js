@@ -110,13 +110,38 @@ function getBaseTitleForm( elclass ) {
     var identLowerCase = elclass.toLowerCase();
 
     //console.log("identLowerCase="+identLowerCase);
+    //console.log("prototypeIdentifier=["+'prototype-'+identLowerCase+"]");
 
     var collectionHolder = $(dataholder);
     var prototype = collectionHolder.data('prototype-'+identLowerCase);
     //console.log("prototype="+prototype);
 
+    //try id="form-prototype-data2"
+    if( typeof prototype === 'undefined' ) {
+        var dataholder = "#form-prototype-data2"; //fixed data holder
+
+        var holderClass = elclass+'-holder';
+        //console.log('holderClass='+holderClass);
+
+        var elementsHolder = $('.'+holderClass);
+
+        //var elements = elementsHolder.find('.'+elclass);
+        //console.log('elements='+elements.length);
+
+        var identLowerCase = elclass.toLowerCase();
+
+        //console.log("identLowerCase="+identLowerCase);
+        //console.log("prototypeIdentifier=["+'prototype-'+identLowerCase+"]");
+
+        var collectionHolder = $(dataholder);
+        var prototype = collectionHolder.data('prototype-'+identLowerCase);
+        //console.log("prototype="+prototype);
+    }
+
     //grant __documentContainers__ => 0
-    prototype = prototype.replace("__documentContainers__", "0");
+    // if( prototype && prototype.includes('__documentContainers__') ) {
+        prototype = prototype.replace("__documentContainers__", "0");
+    // }
 
     //var newForm = prototype.replace(/__administrativetitles__/g, elements.length);
 

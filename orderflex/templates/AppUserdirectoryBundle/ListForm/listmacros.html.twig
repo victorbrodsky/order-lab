@@ -762,6 +762,7 @@
     {% if edit_form.permissions is defined %}
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
         {{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",true) }}
+        {#{{ userform.permissionSection(edit_form.permissions, cycle, employees_sitename, "in", "Permission(s)",false) }}#}
     {% endif %}
 
     {% if edit_form.submit is defined %}

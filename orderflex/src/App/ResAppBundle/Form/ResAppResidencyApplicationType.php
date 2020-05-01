@@ -38,7 +38,7 @@ class ResAppResidencyApplicationType extends AbstractType
     {
 
         $builder->add( 'residencysubspecialtytype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:populateDefaultAction',
+            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
             'label'=> "Residency Specialty:",
             'required'=> false,
             //'multiple' => true,
