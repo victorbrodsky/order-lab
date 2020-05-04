@@ -49,9 +49,11 @@
         </div>
     {% endif %}
 
-    <p>
-        <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}</i>
-    </p>
+    {% if acceptingApplication is defined %}
+        <p>
+            <i>Last successful import: {{ lastImportTimestamp|date('m/d/Y h:i A') }} {{ serverTimeZone }} ({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}</i>
+        </p>
+    {% endif %}
 
     {% set resappTypeId = -1 %}
     {% if filter %}

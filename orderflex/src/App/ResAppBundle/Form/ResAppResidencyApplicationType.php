@@ -45,11 +45,12 @@ class ResAppResidencyApplicationType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    //->where("list.type = :typedef OR list.type = :typeadd")
+                    ->where("list.type = :typedef") //show only default
                     ->orderBy("list.orderinlist","ASC")
                     ->setParameters( array(
                         'typedef' => 'default',
-                        'typeadd' => 'user-added',
+                        //'typeadd' => 'user-added',
                 ));
             },
         ));

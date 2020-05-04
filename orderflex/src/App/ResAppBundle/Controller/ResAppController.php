@@ -144,6 +144,7 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         $userServiceUtil = $this->get('user_service_utility');
 
+        $enableGoolge = false;
         $searchFlag = false;
         $currentYear = date("Y")+2;
         $defaultStartDates = $currentYear;
@@ -557,26 +558,30 @@ class ResAppController extends OrderAbstractController {
         //allowPopulateResApp
         //$userUtil = new UserUtil();
         //$allowPopulateResApp = $userUtil->getSiteSetting($em,'AllowPopulateResApp');
-        $allowPopulateResApp = $userSecUtil->getSiteSettingParameter('AllowPopulateResApp');
+        if( $enableGoolge ) {
+            $allowPopulateResApp = $userSecUtil->getSiteSettingParameter('AllowPopulateResApp');
+        }
 
         //At the top of the homepage, show either "Now accepting applications" if the
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."
-        $acceptingApplication = NULL;
-        if( $route == "resapp_home" ) {
-            $acceptingApplication = "Not accepting applications now";
-            $googlesheetmanagement = $this->container->get('resapp_googlesheetmanagement');
-            $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            if ($configFileContent) {
-                $configFileContent = json_decode($configFileContent, true);
-                $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
-                if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
-                    $acceptingApplication = "Now accepting applications";
+        if( $enableGoolge ) {
+            $acceptingApplication = NULL;
+            if ($route == "resapp_home") {
+                $acceptingApplication = "Not accepting applications now";
+                $googlesheetmanagement = $this->container->get('resapp_googlesheetmanagement');
+                $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+                if ($configFileContent) {
+                    $configFileContent = json_decode($configFileContent, true);
+                    $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+                    if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
+                        $acceptingApplication = "Now accepting applications";
+                    }
+                    //echo "<pre>";
+                    //print_r($configFileContent);
+                    //echo "</pre>";
                 }
-                //echo "<pre>";
-                //print_r($configFileContent);
-                //echo "</pre>";
+                $acceptingApplication = "- " . $acceptingApplication;
             }
-            $acceptingApplication = "- ".$acceptingApplication;
         }
 
         //emailAcceptSubject emailAcceptBody
@@ -590,8 +595,8 @@ class ResAppController extends OrderAbstractController {
             'entities' => $resApps,
             'pathbase' => 'resapp',
             'lastImportTimestamp' => $lastImportTimestamp,
-            'allowPopulateResApp' => $allowPopulateResApp,
-            'acceptingApplication' => $acceptingApplication,
+            //'allowPopulateResApp' => $allowPopulateResApp,
+            //'acceptingApplication' => $acceptingApplication,
             'resappfilter' => $filterform->createView(),
             'startDate' => $startDate,
             'filter' => $resSubspecId,

@@ -1971,6 +1971,10 @@ class AdminController extends OrderAbstractController
                     $em->persist($entity);
                     $em->flush();
                 }
+
+                //testing
+                //$this->setInstitutionResidency($entity,$role);
+
                 continue; //temporary disable to override alias, description, level
             }
 
@@ -2137,21 +2141,21 @@ class AdminController extends OrderAbstractController
             $AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
             $entity->setResidencySubspecialty($AP);
             $this->addSingleSiteToEntity($entity,"resapp");
-            $this->addResAppPermission($role);
+            $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'CP') !== false ) {
             $CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
             $entity->setResidencySubspecialty($CP);
             $this->addSingleSiteToEntity($entity,"resapp");
-            $this->addResAppPermission($role);
+            $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'APCP') !== false ) {
             $APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
             $entity->setResidencySubspecialty($APCP);
             $this->addSingleSiteToEntity($entity,"resapp");
-            $this->addResAppPermission($role);
+            $this->addResAppPermission($entity);
         }
     }
 
