@@ -2056,44 +2056,62 @@ class AdminController extends OrderAbstractController
             return;
         }
 
+        if( strpos($role,'_FELLAPP_') === false ) {
+            return;
+        }
+
         $em = $this->getDoctrine()->getManager();
 
+//        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation("fellapp");
+//        if( $siteObject ) {
+//            if( !$entity->getSites()->contains($siteObject) ) {
+//                $entity->addSite($siteObject);
+//            }
+//        }
+        
         $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
         if( strpos($role,'BREASTPATHOLOGY') !== false ) {
             $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
             $entity->setFellowshipSubspecialty($BREASTPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'CYTOPATHOLOGY') !== false ) {
             $CYTOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
             $entity->setFellowshipSubspecialty($CYTOPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'GYNECOLOGICPATHOLOGY') !== false ) {
             $GYNECOLOGICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
             $entity->setFellowshipSubspecialty($GYNECOLOGICPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'GASTROINTESTINALPATHOLOGY') !== false ) {
             $GASTROINTESTINALPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
             $entity->setFellowshipSubspecialty($GASTROINTESTINALPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'GENITOURINARYPATHOLOGY') !== false ) {
             $GENITOURINARYPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
             $entity->setFellowshipSubspecialty($GENITOURINARYPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
             $HEMATOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
             $entity->setFellowshipSubspecialty($HEMATOPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos($role,'MOLECULARGENETICPATHOLOGY') !== false ) {
             $MOLECULARGENETICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
+            $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
     }
@@ -2106,6 +2124,10 @@ class AdminController extends OrderAbstractController
             return;
         }
 
+        if( strpos($role,'_RESAPP_') === false ) {
+            return;
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
@@ -2114,16 +2136,22 @@ class AdminController extends OrderAbstractController
         if( strpos($role,'AP') !== false ) {
             $AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
             $entity->setResidencySubspecialty($AP);
+            $this->addSingleSiteToEntity($entity,"resapp");
+            $this->addResAppPermission($role);
         }
 
         if( strpos($role,'CP') !== false ) {
             $CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
             $entity->setResidencySubspecialty($CP);
+            $this->addSingleSiteToEntity($entity,"resapp");
+            $this->addResAppPermission($role);
         }
 
         if( strpos($role,'APCP') !== false ) {
             $APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
             $entity->setResidencySubspecialty($APCP);
+            $this->addSingleSiteToEntity($entity,"resapp");
+            $this->addResAppPermission($role);
         }
     }
 
@@ -6168,6 +6196,9 @@ class AdminController extends OrderAbstractController
 
     }
 
+    //3) Create Permission objects by name. This Permission Object will be linked to permission's by entity name and action.
+    //This Permission Object will be linked with name "Create a New Residency Application" has permission's object "ResidencyApplication" and action "create"
+    //As the final step, this permission will be attached to the role.
     public function generatePermissions() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -6255,6 +6286,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //2) create permission objects associated with sites (i.e. "ResidencyApplication" has site "resapp")
     public function generatePermissionObjects() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -6353,6 +6385,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //1) create independent actions
     public function generatePermissionActions() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -7582,6 +7615,16 @@ class AdminController extends OrderAbstractController
         }
         return $count;
     }
+    public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
+        $em = $this->getDoctrine()->getManager();
+        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);
+        if( $siteObject ) {
+            if( !$entity->getSites()->contains($siteObject) ) {
+                $entity->addSite($siteObject);
+            }
+        }
+        return $entity;
+    }
 
     public function addFellAppPermission( $role ) {
         $count = 0;
@@ -7609,6 +7652,7 @@ class AdminController extends OrderAbstractController
 
         return $count;
     }
+    //$role - Role Name (string: "ROLE_RESAPP_INTERVIEWER_WCM_AP")
     public function addResAppPermission( $role ) {
         $count = 0;
 
