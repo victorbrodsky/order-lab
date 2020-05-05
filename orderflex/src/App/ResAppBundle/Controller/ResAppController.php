@@ -24,7 +24,7 @@ use App\ResAppBundle\Entity\Interview;
 use App\ResAppBundle\Form\InterviewType;
 use App\UserdirectoryBundle\Entity\User;
 use App\OrderformBundle\Helper\ErrorHelper;
-use App\UserdirectoryBundle\Entity\AccessRequest;
+//use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Entity\Reference;
 use App\ResAppBundle\Form\ResAppFilterType;
 use App\ResAppBundle\Form\ResidencyApplicationType;
@@ -761,7 +761,7 @@ class ResAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/new/", name="resapp_new")
+     * @Route("/new/", name="resapp_new", methods={"GET"})
      *
      * @Template("AppResAppBundle/Form/new.html.twig")
      */
@@ -862,6 +862,7 @@ class ResAppController extends OrderAbstractController {
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('resapp_create_applicant');
+            //exit('resapp_new, action='.$action);
         }
 
         if( $routeName == "resapp_edit" ) {
@@ -907,6 +908,9 @@ class ResAppController extends OrderAbstractController {
             'container' => $this->container,
             'resappTypes' => $resTypes
         );
+
+        //echo "routeName=$routeName;  action=$action; method=$method<br>";
+        //exit('111');
 
 //        $form = $this->createForm(
 //            new ResidencyApplicationType($params),
@@ -1505,7 +1509,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function createApplicantAction( Request $request )
     {
-
+        //exit("create form");
         if( false == $this->get('security.authorization_checker')->isGranted("create","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -1550,7 +1554,7 @@ class ResAppController extends OrderAbstractController {
         $form->handleRequest($request);
 
         if( !$form->isSubmitted() ) {
-            //echo "form is not submitted<br>";
+            echo "form is not submitted<br>";
             $form->submit($request);
         }
 
@@ -1569,7 +1573,16 @@ class ResAppController extends OrderAbstractController {
             $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before uploading'));
         }
 
+//        if( !$form->isValid() ) {
+//            //$errors = $this->getErrorMessages($form);
+//            $errors = $form->getErrorsAsString();
+//            var_dump($errors);
+//            exit('form invalid');
+//            //throw new HttpException(Codes::HTTP_BAD_REQUEST, implode("\n", $message));
+//        }
+
         if( $form->isValid() ) {
+            exit('form valid');
 
             //set user
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1656,6 +1669,28 @@ class ResAppController extends OrderAbstractController {
         );
 
     }
+
+//    private function getErrorMessages(\Symfony\Component\Form\Form $form) {
+//        $errors = array();
+//        foreach ($form->getErrors() as $key => $error) {
+//            $template = $error->getMessageTemplate();
+//            $parameters = $error->getMessageParameters();
+//
+//            foreach($parameters as $var => $value){
+//                $template = str_replace($var, $value, $template);
+//            }
+//
+//            $errors[$key] = $template;
+//        }
+////        if ($form->hasChildren()) {
+////            foreach ($form->getChildren() as $child) {
+////                if (!$child->isValid()) {
+////                    $errors[$child->getName()] = $this->getErrorMessages($child);
+////                }
+////            }
+////        }
+//        return $errors;
+//    }
 
 
     //assign ROLE_RESAPP_INTERVIEWER corresponding to application
