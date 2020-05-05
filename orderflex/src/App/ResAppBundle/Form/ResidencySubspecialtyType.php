@@ -43,7 +43,7 @@ class ResidencySubspecialtyType extends AbstractType
                     ->leftJoin("user.infos", "infos")
                     ->leftJoin("user.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Residency Applicant' OR employmentType.id IS NULL)")
+                    ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                     ->orderBy("user.username", "ASC");
             }
         ));
@@ -60,7 +60,7 @@ class ResidencySubspecialtyType extends AbstractType
                         ->leftJoin("user.infos", "infos")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Residency Applicant' OR employmentType.id IS NULL)")
+                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                         ->orderBy("user.username", "ASC");
                 }
         ));
@@ -76,7 +76,7 @@ class ResidencySubspecialtyType extends AbstractType
                         ->leftJoin("user.infos", "infos")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Residency Applicant' OR employmentType.id IS NULL)")
+                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                         ->orderBy("user.username", "ASC");
                 }
         ));

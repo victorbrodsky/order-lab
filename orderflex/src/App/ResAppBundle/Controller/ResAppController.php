@@ -1510,7 +1510,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
+        //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -1608,7 +1608,7 @@ class ResAppController extends OrderAbstractController {
             $this->assignResAppAccessRoles($residencyApplication);
 
             //create reference hash ID
-            $resappRecLetterUtil->generateResappRecLetterId($residencyApplication);
+            //$resappRecLetterUtil->generateResappRecLetterId($residencyApplication);
 
             $residencyApplication->autoSetRecLetterReceived();
 

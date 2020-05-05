@@ -820,7 +820,7 @@ class ResAppUtil {
         $count = 0;
 
         foreach( $trainings as $training ) {
-            if( $training->getTrainingType()->getName()."" == $typeName ) {
+            if( $training->getTrainingType() && $training->getTrainingType()->getName()."" == $typeName ) {
                 $count++;
             }
         }

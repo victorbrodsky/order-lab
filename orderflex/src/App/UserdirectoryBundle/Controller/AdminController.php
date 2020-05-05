@@ -3625,22 +3625,27 @@ class AdminController extends OrderAbstractController
     public function generateEmploymentTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+        //$entities = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
 
         $elements = array(
             'Full Time',
             'Part Time',
-            'Pathology Fellowship Applicant'
+            'Pathology Fellowship Applicant',
+            'Pathology Residency Applicant' //should we filter users similarly as employmentType.name != 'Pathology Fellowship Applicant'?
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new EmploymentType();
             $this->setDefaultList($entity,$count,$username,$value);

@@ -1148,15 +1148,32 @@ function listenerFellAppRank(holder) {
     rankHolder.on("change", function(e) {
         //console.log("interview-rank on change");
         var holder = $(this).closest('.user-collection-holder');
-        updateFellAppTotalRank(holder);
+        updateInterviewAppTotalRank(holder,"oleg_fellappbundle_");
     });
 }
-function updateFellAppTotalRank(holder) {
+function listenerResAppRank(holder) {
+
+    var rankHolder = $('.interview-rank');
+    if( !rankHolder ) {
+        return;
+    }
+
+    if( holder ) {
+        rankHolder = holder.find('.interview-rank');
+    }
+
+    rankHolder.on("change", function(e) {
+        //console.log("interview-rank on change");
+        var holder = $(this).closest('.user-collection-holder');
+        updateInterviewAppTotalRank(holder,"oleg_resappbundle_");
+    });
+}
+function updateInterviewAppTotalRank(holder,bundlePrefix) {
     var totalRank = 0;
 
-    var academicRank = getValueFromRankString(holder,'.interview-academicRank');
-    var personalityRank = getValueFromRankString(holder,'.interview-personalityRank');
-    var potentialRank = getValueFromRankString(holder,'.interview-potentialRank');
+    var academicRank = getValueFromRankString(holder,'.interview-academicRank',bundlePrefix);
+    var personalityRank = getValueFromRankString(holder,'.interview-personalityRank',bundlePrefix);
+    var potentialRank = getValueFromRankString(holder,'.interview-potentialRank',bundlePrefix);
 
     if( academicRank ) {
         totalRank = totalRank + academicRank;
@@ -1173,7 +1190,7 @@ function updateFellAppTotalRank(holder) {
     holder.find('.interview-totalRank').val(totalRank);
 
 }
-function getValueFromRankString(holder,identifierName) {   
+function getValueFromRankString( holder, identifierName, bundlePrefix) {
     
     
     String.prototype.xSplit = function(_regEx)
@@ -1223,7 +1240,10 @@ function getValueFromRankString(holder,identifierName) {
         //id=oleg_fellappbundle_interview_academicRank
         identifierName = identifierName.replace("-","_");
         identifierName = identifierName.replace(".","");
-        identifierName = "oleg_fellappbundle_" + identifierName.replace("-","_");
+
+        //identifierName = "oleg_fellappbundle_" + identifierName.replace("-","_");
+        identifierName = bundlePrefix + identifierName.replace("-","_");
+
         //console.log("identifierName="+identifierName);
         rankEl = document.getElementById(identifierName);
     }

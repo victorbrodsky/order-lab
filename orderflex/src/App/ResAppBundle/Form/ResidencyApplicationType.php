@@ -365,7 +365,7 @@ class ResidencyApplicationType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Residency Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName", "ASC");
             },
