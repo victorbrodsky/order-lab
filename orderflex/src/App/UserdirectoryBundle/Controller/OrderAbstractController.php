@@ -96,6 +96,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
 
         $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;
+        $subscribedServices['resapp_reportgenerator'] = '?'.\App\ResAppBundle\Util\ReportGenerator::class;
 
         $subscribedServices['transres_util'] = '?'.TransResUtil::class;
         $subscribedServices['transres_request_util'] = '?'.TransResRequestUtil::class;

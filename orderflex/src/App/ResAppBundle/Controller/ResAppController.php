@@ -865,6 +865,14 @@ class ResAppController extends OrderAbstractController {
             //exit('resapp_new, action='.$action);
         }
 
+        if( $routeName == "resapp_create_applicant" ) {
+            $cycle = 'new';
+            $disabled = false;
+            $method = null; //"GET";
+            $action = null; //$this->generateUrl('resapp_show',array('id' => $entity->getId()));
+            //exit('resapp_new, action='.$action);
+        }
+
         if( $routeName == "resapp_edit" ) {
             $cycle = 'edit';
             $disabled = false;
@@ -948,214 +956,214 @@ class ResAppController extends OrderAbstractController {
     }
 
 
-    /**
-     * -NOT-USED
-     * @Route("/update-NOT-USED/{id}", name="resapp_update-NOT-USED", methods={"PUT"})
-     * @Template("AppResAppBundle/Form/new.html.twig")
-     */
-    public function updateNotUsedAction(Request $request, $id) {
-
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+//    /**
+//     * -NOT-USED
+//     * @Route("/update-NOT-USED/{id}", name="resapp_update-NOT-USED", methods={"PUT"})
+//     * @Template("AppResAppBundle/Form/new.html.twig")
+//     */
+//    public function updateNotUsedAction(Request $request, $id) {
+//
+////        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+////        }
+////        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ){
+////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+////        }
+//
+//        //echo "update <br>";
+//        //exit('update');
+//
+//        //ini_set('memory_limit', '3072M'); //3072M
+//
+//        $userSecUtil = $this->get('user_security_utility');
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+//
+//        if( !$entity ) {
+//            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
+//        }
+//
+//        //user who has the same res type can view or edit
+//        $resappUtil = $this->container->get('resapp_util');
+//        if( $resappUtil->hasResappPermission($user,$entity) == false ) {
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-//        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ){
+//
+//        if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-
-        //echo "update <br>";
-        //exit('update');
-
-        //ini_set('memory_limit', '3072M'); //3072M
-
-        $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
-
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
-        }
-
-        //user who has the same res type can view or edit
-        $resappUtil = $this->container->get('resapp_util');
-        if( $resappUtil->hasResappPermission($user,$entity) == false ) {
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-        }
-
-        if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-        }
-
-        // Create an ArrayCollection of the current interviews
-        $originalInterviews = new ArrayCollection();
-        foreach( $entity->getInterviews() as $interview) {
-            $originalInterviews->add($interview);
-        }
-
-        $originalReports = new ArrayCollection();
-        foreach( $entity->getReports() as $report ) {
-            $originalReports->add($report);
-        }
-
-        $cycle = 'edit';
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $params = array(
-            'cycle' => $cycle,
-            'em' => $this->getDoctrine()->getManager(),
-            'user' => $entity->getUser(),
-            'cloneuser' => null,
-            'roles' => $user->getRoles(),
-            'container' => $this->container,
-            'cycle_type' => "update"
-        );
-        $form = $this->createForm( ResidencyApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
-        //$routeName = $request->get('_route');
-        //$args = $this->getShowParameters($routeName,null,$entity);
-        //$form = $args['form_pure'];
-
-        $form->handleRequest($request);
-
-        if( !$form->isSubmitted() ) {
-            echo "form is not submitted<br>";
-            $form->submit($request);
-        }
-
-
-//        if ($form->isDisabled()) {
-//            echo "form is disabled<br>";
-//            exit();
+//
+//        // Create an ArrayCollection of the current interviews
+//        $originalInterviews = new ArrayCollection();
+//        foreach( $entity->getInterviews() as $interview) {
+//            $originalInterviews->add($interview);
 //        }
-//        if (count($form->getErrors(true)) > 0) {
-//            echo "form has errors<br>";
+//
+//        $originalReports = new ArrayCollection();
+//        foreach( $entity->getReports() as $report ) {
+//            $originalReports->add($report);
 //        }
-//        echo "errors:<br>";
-//        $string = (string) $form->getErrors(true);
-//        echo "string errors=".$string."<br>";
-//        echo "getErrors count=".count($form->getErrors())."<br>";
-        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-//        print_r($form->getErrors());
-//        echo "<br>string errors:<br>";
-//        print_r($form->getErrorsAsString());
-//        echo "<br>";
-//        exit();
-
-        if(0) {
-            $errorHelper = new ErrorHelper();
-            $errors = $errorHelper->getErrorMessages($form);
-            echo "<br>form errors:<br>";
-            print_r($errors);
-
-            //echo "<br><br>getErrors:<br>";
-            //var_dump($form->getErrors());die;
-        }
-
-
-
-        $force = false;
-        //$force = true;
-        if( $form->isValid() || $force ) {
-
-            //exit('form valid');
-
-            /////////////// Process Removed Collections ///////////////
-            $removedCollections = array();
-
-            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
-            if( $removedInfo ) {
-                $removedCollections[] = $removedInfo;
-            }
-            /////////////// EOF Process Removed Collections ///////////////
-
-            $this->calculateScore($entity);
-
-            $this->processDocuments($entity);
-
-            $this->assignResAppAccessRoles($entity);
-
-            //set update author application
-            $em = $this->getDoctrine()->getManager();
-            $userUtil = new UserUtil();
-            $secTokenStorage = $this->get('security.token_storage');
-            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
-
-
-            /////////////// Add event log on edit (edit or add collection) ///////////////
-            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-            $changedInfoArr = $this->setEventLogChanges($entity);
-
-            //report (Complete Application PDF) diff
-            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
-            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-            //exit('report');
-
-            //set Edit event log for removed collection and changed fields or added collection
-            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
-                $event = "Residency Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
-                $event = $event . implode("<br>", $changedInfoArr);
-                $event = $event . "<br>" . implode("<br>", $removedCollections);
-                $event = $event . $reportsDiffInfoStr;
-                //echo "Diff event=".$event."<br>";
-                //$userSecUtil = $this->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
-            }
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            //don't regenerate report if it was added.
-            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
-            //echo "report count=".count($entity->getReports())."<br>";
-            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
-                $resappRepGen = $this->container->get('resapp_reportgenerator');
-                $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    'A new Complete Residency Application PDF will be generated.'
-                );
-                //echo "Regenerate!!!! <br>";
-            } else {
-                //echo "NO Regenerate!!!! <br>";
-            }
-            //exit('report regen');
-
-            //set logger for update
-            //$logger = $this->container->get('logger');
-            //$logger->notice("update: timezone=".date_default_timezone_get());
-            //$userSecUtil = $this->container->get('user_security_utility');
-            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-            $event = "Residency Application with ID " . $id . " has been updated by " . $user;
-            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
-            //exit('event='.$event);
-
-            return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
-        } else {
-            echo "getErrors count=".count($form->getErrors(true))."<br>";
-            $string = (string) $form->getErrors(true);
-            //echo "Error:<br>$string<br><br><pre>";
-            //print_r($form->getErrors());
-            //echo "</pre>";
-
-            $msg = 'Residency Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
-            //$userSecUtil = $this->container->get('user_security_utility');
-            //$userSecUtil->sendEmailToSystemEmail("Residency Form has an error (ID# ".$entity->getId().")", $msg);
-            exit($msg."<br>Notification email has been sent to the system administrator.");
-            //throw new \Exception($msg);
-        }
-
-        //echo 'form invalid <br>';
-        //exit('form invalid');
-
-        return array(
-            'form' => $form->createView(),
-            'entity' => $entity,
-            'pathbase' => 'resapp',
-            'cycle' => $cycle,
-            'sitename' => $this->getParameter('resapp.sitename')
-        );
-    }
+//
+//        $cycle = 'edit';
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $params = array(
+//            'cycle' => $cycle,
+//            'em' => $this->getDoctrine()->getManager(),
+//            'user' => $entity->getUser(),
+//            'cloneuser' => null,
+//            'roles' => $user->getRoles(),
+//            'container' => $this->container,
+//            'cycle_type' => "update"
+//        );
+//        $form = $this->createForm( ResidencyApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
+//        //$routeName = $request->get('_route');
+//        //$args = $this->getShowParameters($routeName,null,$entity);
+//        //$form = $args['form_pure'];
+//
+//        $form->handleRequest($request);
+//
+//        if( !$form->isSubmitted() ) {
+//            echo "form is not submitted<br>";
+//            $form->submit($request);
+//        }
+//
+//
+////        if ($form->isDisabled()) {
+////            echo "form is disabled<br>";
+////            exit();
+////        }
+////        if (count($form->getErrors(true)) > 0) {
+////            echo "form has errors<br>";
+////        }
+////        echo "errors:<br>";
+////        $string = (string) $form->getErrors(true);
+////        echo "string errors=".$string."<br>";
+////        echo "getErrors count=".count($form->getErrors())."<br>";
+//        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+////        print_r($form->getErrors());
+////        echo "<br>string errors:<br>";
+////        print_r($form->getErrorsAsString());
+////        echo "<br>";
+////        exit();
+//
+//        if(0) {
+//            $errorHelper = new ErrorHelper();
+//            $errors = $errorHelper->getErrorMessages($form);
+//            echo "<br>form errors:<br>";
+//            print_r($errors);
+//
+//            //echo "<br><br>getErrors:<br>";
+//            //var_dump($form->getErrors());die;
+//        }
+//
+//
+//
+//        $force = false;
+//        //$force = true;
+//        if( $form->isValid() || $force ) {
+//
+//            //exit('form valid');
+//
+//            /////////////// Process Removed Collections ///////////////
+//            $removedCollections = array();
+//
+//            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+//            if( $removedInfo ) {
+//                $removedCollections[] = $removedInfo;
+//            }
+//            /////////////// EOF Process Removed Collections ///////////////
+//
+//            $this->calculateScore($entity);
+//
+//            $this->processDocuments($entity);
+//
+//            $this->assignResAppAccessRoles($entity);
+//
+//            //set update author application
+//            $em = $this->getDoctrine()->getManager();
+//            $userUtil = new UserUtil();
+//            $secTokenStorage = $this->get('security.token_storage');
+//            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+//
+//
+//            /////////////// Add event log on edit (edit or add collection) ///////////////
+//            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+//            $changedInfoArr = $this->setEventLogChanges($entity);
+//
+//            //report (Complete Application PDF) diff
+//            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
+//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+//            //exit('report');
+//
+//            //set Edit event log for removed collection and changed fields or added collection
+//            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
+//                $event = "Residency Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+//                $event = $event . implode("<br>", $changedInfoArr);
+//                $event = $event . "<br>" . implode("<br>", $removedCollections);
+//                $event = $event . $reportsDiffInfoStr;
+//                //echo "Diff event=".$event."<br>";
+//                //$userSecUtil = $this->get('user_security_utility');
+//                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
+//            }
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            //don't regenerate report if it was added.
+//            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
+//            //echo "report count=".count($entity->getReports())."<br>";
+//            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+//            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
+//                $resappRepGen = $this->container->get('resapp_reportgenerator');
+//                $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    'A new Complete Residency Application PDF will be generated.'
+//                );
+//                //echo "Regenerate!!!! <br>";
+//            } else {
+//                //echo "NO Regenerate!!!! <br>";
+//            }
+//            //exit('report regen');
+//
+//            //set logger for update
+//            //$logger = $this->container->get('logger');
+//            //$logger->notice("update: timezone=".date_default_timezone_get());
+//            //$userSecUtil = $this->container->get('user_security_utility');
+//            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+//            $event = "Residency Application with ID " . $id . " has been updated by " . $user;
+//            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
+//            //exit('event='.$event);
+//
+//            return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
+//        } else {
+//            echo "getErrors count=".count($form->getErrors(true))."<br>";
+//            $string = (string) $form->getErrors(true);
+//            //echo "Error:<br>$string<br><br><pre>";
+//            //print_r($form->getErrors());
+//            //echo "</pre>";
+//
+//            $msg = 'Residency Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
+//            //$userSecUtil = $this->container->get('user_security_utility');
+//            //$userSecUtil->sendEmailToSystemEmail("Residency Form has an error (ID# ".$entity->getId().")", $msg);
+//            exit($msg."<br>Notification email has been sent to the system administrator.");
+//            //throw new \Exception($msg);
+//        }
+//
+//        //echo 'form invalid <br>';
+//        //exit('form invalid');
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'entity' => $entity,
+//            'pathbase' => 'resapp',
+//            'cycle' => $cycle,
+//            'sitename' => $this->getParameter('resapp.sitename')
+//        );
+//    }
     //EOF -NOT-USED
 
     /**
@@ -1540,28 +1548,39 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         $resappUtil->addEmptyResAppFields($residencyApplication);
 
+        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        if( count($resTypes) == 0 ) {
+            return array();
+        }
+
         $params = array(
             'cycle' => 'new',
             'em' => $this->getDoctrine()->getManager(),
             'user' => $residencyApplication->getUser(),
             'cloneuser' => null,
             'roles' => $user->getRoles(),
-            'container' => $this->container
+            'container' => $this->container,
+            'resappTypes' => $resTypes
+
         );
         //$form = $this->createForm( new ResidencyApplicationType($params), $residencyApplication );
         $form = $this->createForm( ResidencyApplicationType::class, $residencyApplication, array('form_custom_value' => $params) ); //create new
 
+//        $routeName = $request->get('_route');
+//        $args = $this->getShowParameters($routeName,$residencyApplication); //create new
+//        $form = $args['form_pure'];
+
         $form->handleRequest($request);
 
         if( !$form->isSubmitted() ) {
-            echo "form is not submitted<br>";
+            //echo "form is not submitted<br>";
             $form->submit($request);
         }
 
         $applicant = $residencyApplication->getUser();
 
         if( !$residencyApplication->getResidencySubspecialty() ) {
-            exit("ResidencySpecialty is null");
+            //exit("ResidencySpecialty is null");
             $form['residencySubspecialty']->addError(new FormError('Please select in the Residency Type before uploading'));
         }
         if( !$applicant->getEmail() ) {
@@ -1574,16 +1593,16 @@ class ResAppController extends OrderAbstractController {
             $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before uploading'));
         }
 
-        if( !$form->isValid() ) {
-            //$errors = $this->getErrorMessages($form);
-            $errors = $form->getErrorsAsString();
-            var_dump($errors);
-            exit('form invalid');
-            //throw new HttpException(Codes::HTTP_BAD_REQUEST, implode("\n", $message));
-        }
+//        if( !$form->isValid() ) {
+//            //$errors = $this->getErrorMessages($form);
+//            $errors = $form->getErrorsAsString();
+//            var_dump($errors);
+//            exit('form invalid');
+//            //throw new HttpException(Codes::HTTP_BAD_REQUEST, implode("\n", $message));
+//        }
 
         if( $form->isValid() ) {
-            exit('form valid');
+            //exit('form valid');
 
             //set user
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1659,7 +1678,7 @@ class ResAppController extends OrderAbstractController {
         }
 
         //echo 'form invalid <br>';
-        exit('form invalid');
+        //exit('form invalid');
 
         return array(
             'form' => $form->createView(),
