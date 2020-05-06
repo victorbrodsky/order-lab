@@ -496,6 +496,8 @@ class ReportGenerator {
         $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
+        //TODO: this variable does not exists in SiteParameters?
+        //Create additional parameters in ResappSiteParameter.php
         $reportsUploadPathResApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathResApp');
         if( !$reportsUploadPathResApp ) {
             $reportsUploadPathResApp = "Reports";

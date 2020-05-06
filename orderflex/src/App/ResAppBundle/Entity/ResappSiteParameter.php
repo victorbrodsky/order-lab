@@ -63,6 +63,9 @@ class ResappSiteParameter {
     private $rejectedEmailBody;
 
 
+    //TODO: add parameters Report path, 
+
+
     
     public function __construct() {
 
