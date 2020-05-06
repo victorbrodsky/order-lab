@@ -94,13 +94,23 @@ class ResidencyApplicationType extends AbstractType
             $resappChoices = array();
         }
 
+//        $builder->add('residencySubspecialty', EntityType::class, array(
+//            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+//            'label' => "Residency Application Type:",
+//            //'required' => true,
+//            'required' => false,
+//            'choices' => $resappChoices,   //$this->params['resappTypes'], //$resTypes,
+//            'invalid_message' => 'residencySubspecialty invalid value',
+//            //'choices_as_values' => true,
+//            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
+//        ));
         $builder->add('residencySubspecialty', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
             'label' => "Residency Application Type:",
             //'required' => true,
             'required' => false,
             'choices' => $resappChoices,   //$this->params['resappTypes'], //$resTypes,
-            'invalid_message' => 'residencySubspecialty invalid value',
+            //'invalid_message' => 'residencySubspecialty invalid value',
             //'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
         ));

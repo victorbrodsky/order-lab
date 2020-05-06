@@ -1549,7 +1549,7 @@ class ResAppController extends OrderAbstractController {
             'container' => $this->container
         );
         //$form = $this->createForm( new ResidencyApplicationType($params), $residencyApplication );
-        $form = $this->createForm( ResidencyApplicationType::class, $residencyApplication, array('form_custom_value' => $params) ); //new
+        $form = $this->createForm( ResidencyApplicationType::class, $residencyApplication, array('form_custom_value' => $params) ); //create new
 
         $form->handleRequest($request);
 
@@ -1561,6 +1561,7 @@ class ResAppController extends OrderAbstractController {
         $applicant = $residencyApplication->getUser();
 
         if( !$residencyApplication->getResidencySubspecialty() ) {
+            exit("ResidencySpecialty is null");
             $form['residencySubspecialty']->addError(new FormError('Please select in the Residency Type before uploading'));
         }
         if( !$applicant->getEmail() ) {
@@ -1573,13 +1574,13 @@ class ResAppController extends OrderAbstractController {
             $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before uploading'));
         }
 
-//        if( !$form->isValid() ) {
-//            //$errors = $this->getErrorMessages($form);
-//            $errors = $form->getErrorsAsString();
-//            var_dump($errors);
-//            exit('form invalid');
-//            //throw new HttpException(Codes::HTTP_BAD_REQUEST, implode("\n", $message));
-//        }
+        if( !$form->isValid() ) {
+            //$errors = $this->getErrorMessages($form);
+            $errors = $form->getErrorsAsString();
+            var_dump($errors);
+            exit('form invalid');
+            //throw new HttpException(Codes::HTTP_BAD_REQUEST, implode("\n", $message));
+        }
 
         if( $form->isValid() ) {
             exit('form valid');
@@ -1658,7 +1659,7 @@ class ResAppController extends OrderAbstractController {
         }
 
         //echo 'form invalid <br>';
-        //exit('form invalid');
+        exit('form invalid');
 
         return array(
             'form' => $form->createView(),
