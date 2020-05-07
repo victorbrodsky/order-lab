@@ -1266,6 +1266,12 @@ Pathology and Laboratory Medicine",
             "reportsUploadPathResApp" => "resapp/Reports"
         );
 
+        //testing
+//        $params = $siteParameters->getResappSiteParameter();
+//        if( !$params ) {
+//            $params = new ResappSiteParameter();
+//        }
+
         $params = new ResappSiteParameter();
 
         $count = 0;
@@ -1278,7 +1284,7 @@ Pathology and Laboratory Medicine",
 
 
         if( $count > 0 ) {
-            $siteParameters->setResappSiteParameter();
+            $siteParameters->setResappSiteParameter($params);
 
             $em->persist($params);
             $em->flush();
