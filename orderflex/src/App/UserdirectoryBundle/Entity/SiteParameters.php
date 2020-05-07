@@ -409,11 +409,6 @@ class SiteParameters {
     private $resappuploadpath;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResappSiteParameter", cascade={"persist","remove"})
-     */
-    private $resappSiteParameter;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $vacrequploadpath;
@@ -483,6 +478,11 @@ class SiteParameters {
      * @ORM\OneToOne(targetEntity="App\FellAppBundle\Entity\FellappSiteParameter", cascade={"persist","remove"})
      */
     private $fellappSiteParameter;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResappSiteParameter", cascade={"persist","remove"})
+     */
+    private $resappSiteParameter;
 
     /**
      * Path to the local copy of the fellowship application form
