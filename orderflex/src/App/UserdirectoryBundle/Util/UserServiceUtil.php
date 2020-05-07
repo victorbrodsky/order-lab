@@ -1207,7 +1207,7 @@ class UserServiceUtil {
 
     public function generateResAppSiteParameters() {
         $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
         $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
