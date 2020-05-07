@@ -1010,9 +1010,9 @@
         {% include 'AppUserdirectoryBundle/SiteParameters/fellapp-content.html.twig' %}
     {% endif %}
 
-    {#{% if (sitename == "employees" or sitename == "resapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
-        {#{% include 'AppUserdirectoryBundle/SiteParameters/resapp-content.html.twig' %}#}
-    {#{% endif %}#}
+    {% if (sitename == "employees" or sitename == "resapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/resapp-content.html.twig' %}
+    {% endif %}
 
     {% if (sitename == "employees" or sitename == "calllog") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'AppUserdirectoryBundle/SiteParameters/calllog-content.html.twig' %}

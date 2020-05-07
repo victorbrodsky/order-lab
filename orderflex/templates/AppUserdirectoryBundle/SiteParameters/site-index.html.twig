@@ -64,9 +64,9 @@
         {% include 'AppUserdirectoryBundle/SiteParameters/fellapp-content.html.twig' %}
     {% endif %}
 
-    {#{% if sitename == 'resapp' %}#}
-        {#{% include 'AppUserdirectoryBundle/SiteParameters/resapp-content.html.twig' %}#}
-    {#{% endif %}#}
+    {% if sitename == 'resapp' %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/resapp-content.html.twig' %}
+    {% endif %}
 
 {% endblock %}
 

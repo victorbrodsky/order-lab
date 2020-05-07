@@ -70,84 +70,84 @@ class ResappSiteParameter {
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $codeGoogleFormFellApp;
+//    private $codeGoogleFormResApp;
 
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
-//    private $allowPopulateFellApp;
+//    private $allowPopulateResApp;
 
 //    /**
 //     * Automatically send invitation emails to upload recommendation letters
 //     *
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
-//    private $sendEmailUploadLetterFellApp;
+//    private $sendEmailUploadLetterResApp;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $confirmationSubjectFellApp;
+    private $confirmationSubjectResApp;
 
 //    /**
 //     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $recLetterSaltFellApp;
+//    private $recLetterSaltResApp;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $confirmationBodyFellApp;
+    private $confirmationBodyResApp;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $confirmationEmailFellApp;
+    private $confirmationEmailResApp;
 
 //    /**
 //     * Client Email to get GoogleSrevice: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $clientEmailFellApp;
+//    private $clientEmailResApp;
 
 //    /**
-//     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-//     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
+//     * Path to p12 key file: i.e. /../Util/ResowshipApplication-f1d9f98353e5.p12
+//     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\ResAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $p12KeyPathFellApp;
+//    private $p12KeyPathResApp;
 
 //    /**
 //     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $googleDriveApiUrlFellApp;
+//    private $googleDriveApiUrlResApp;
 
 //    /**
 //     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $userImpersonateEmailFellApp;
+//    private $userImpersonateEmailResApp;
 
 //    /**
 //     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $templateIdFellApp;
+//    private $templateIdResApp;
 
 //    /**
 //     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $backupFileIdFellApp;
+//    private $backupFileIdResApp;
 
 //    /**
 //     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
@@ -155,25 +155,25 @@ class ResappSiteParameter {
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $folderIdFellApp;
+//    private $folderIdResApp;
 
 //    /**
 //     * Config.json file folder ID
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $configFileFolderIdFellApp;
+//    private $configFileFolderIdResApp;
 
 //    /**
 //     * Backup Sheet Last Modified Date
 //     *
 //     * @ORM\Column(type="datetime", nullable=true)
 //     */
-//    private $backupUpdateDatetimeFellApp;
+//    private $backupUpdateDatetimeResApp;
 
     /**
      * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
-     * Used on populating applicant's spreadsheet in FellAppImportPopulateUtil->populateSpreadsheet() to get institution and set $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
+     * Used on populating applicant's spreadsheet in ResAppImportPopulateUtil->populateSpreadsheet() to get institution and set $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -186,14 +186,14 @@ class ResappSiteParameter {
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $identificationUploadLetterFellApp;
+//    private $identificationUploadLetterResApp;
 
 //    /**
 //     * [ checkbox ] Delete successfully imported applications from Google Drive
 //     *
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
-//    private $deleteImportedAplicationsFellApp;
+//    private $deleteImportedAplicationsResApp;
 
 //    /**
 //     * checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
@@ -203,14 +203,14 @@ class ResappSiteParameter {
 //     *
 //     * @ORM\Column(type="boolean", nullable=true)
 //     */
-//    private $deleteOldAplicationsFellApp;
+//    private $deleteOldAplicationsResApp;
 
 //    /**
 //     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
 //     *
 //     * @ORM\Column(type="integer", nullable=true)
 //     */
-//    private $yearsOldAplicationsFellApp;
+//    private $yearsOldAplicationsResApp;
 
     /**
      * Path to spreadsheets: i.e. Spreadsheets
@@ -239,7 +239,7 @@ class ResappSiteParameter {
 //     *
 //     * @ORM\Column(type="text", nullable=true)
 //     */
-//    private $applicationPageLinkFellApp;
+//    private $applicationPageLinkResApp;
 
     
     
@@ -332,53 +332,7 @@ class ResappSiteParameter {
         $this->rejectedEmailBody = $rejectedEmailBody;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getConfirmationSubjectFellApp()
-    {
-        return $this->confirmationSubjectFellApp;
-    }
 
-    /**
-     * @param mixed $confirmationSubjectFellApp
-     */
-    public function setConfirmationSubjectFellApp($confirmationSubjectFellApp)
-    {
-        $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConfirmationBodyFellApp()
-    {
-        return $this->confirmationBodyFellApp;
-    }
-
-    /**
-     * @param mixed $confirmationBodyFellApp
-     */
-    public function setConfirmationBodyFellApp($confirmationBodyFellApp)
-    {
-        $this->confirmationBodyFellApp = $confirmationBodyFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConfirmationEmailFellApp()
-    {
-        return $this->confirmationEmailFellApp;
-    }
-
-    /**
-     * @param mixed $confirmationEmailFellApp
-     */
-    public function setConfirmationEmailFellApp($confirmationEmailFellApp)
-    {
-        $this->confirmationEmailFellApp = $confirmationEmailFellApp;
-    }
 
     /**
      * @return mixed
@@ -444,8 +398,53 @@ class ResappSiteParameter {
         $this->spreadsheetsPathResApp = $spreadsheetsPathResApp;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getConfirmationSubjectResApp()
+    {
+        return $this->confirmationSubjectResApp;
+    }
 
+    /**
+     * @param mixed $confirmationSubjectResApp
+     */
+    public function setConfirmationSubjectResApp($confirmationSubjectResApp)
+    {
+        $this->confirmationSubjectResApp = $confirmationSubjectResApp;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getConfirmationBodyResApp()
+    {
+        return $this->confirmationBodyResApp;
+    }
+
+    /**
+     * @param mixed $confirmationBodyResApp
+     */
+    public function setConfirmationBodyResApp($confirmationBodyResApp)
+    {
+        $this->confirmationBodyResApp = $confirmationBodyResApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationEmailResApp()
+    {
+        return $this->confirmationEmailResApp;
+    }
+
+    /**
+     * @param mixed $confirmationEmailResApp
+     */
+    public function setConfirmationEmailResApp($confirmationEmailResApp)
+    {
+        $this->confirmationEmailResApp = $confirmationEmailResApp;
+    }
 
 
 }

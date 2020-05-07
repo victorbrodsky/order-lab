@@ -65,6 +65,55 @@ class ResappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control geo-field-county')
         ));
 
+
+
+        $builder->add('confirmationSubjectResApp', null, array(
+            'label' => 'Email subject for confirmation of application submission:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('confirmationBodyResApp', null, array(
+            'label'=>'Email body for confirmation of application submission:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('confirmationEmailResApp',null,array(
+            'label'=>'Email address for confirmation of application submission:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('localInstitutionResApp',null,array(
+            'label'=>'Local Organizational Group for imported residency applications (Pathology Residency Programs (WCM)):',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('spreadsheetsPathResApp',null,array(
+            'label'=>'Path to the downloaded spreadsheets with residency applications (resapp/Spreadsheets):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
+        $builder->add('applicantsUploadPathResApp',null,array(
+            'label'=>'Path to the downloaded attached documents (resapp/ResidencyApplicantUploads):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
+        $builder->add('reportsUploadPathResApp',null,array(
+            'label'=>'Path to the generated residency applications in PDF format (resapp/Reports):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
+
+
+
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Save',

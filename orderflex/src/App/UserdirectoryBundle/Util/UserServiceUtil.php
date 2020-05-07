@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -744,6 +745,10 @@ class UserServiceUtil {
 
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateSiteParameters: SiteParameters has been already generated.");
+            $resappCount = $this->generateResAppSiteParameters();
+            if( $resappCount ) {
+                return $resappCount;
+            }
             return -1;
         }
 
@@ -1192,7 +1197,94 @@ class UserServiceUtil {
 //        }
         $this->createCrons();
 
+        $resappCount = $this->generateResAppSiteParameters();
+        $count = $count + $resappCount;
+
         $logger->notice("Finished generateSiteParameters: count=".$count/10);
+
+        return round($count/10);
+    }
+
+    public function generateResAppSiteParameters() {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->em;
+
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+
+        $siteParameters = null;
+        if( count($entities) > 0 ) {
+            $siteParameters = $entities[0];
+        }
+
+        if( !$siteParameters ) {
+            $logger->notice("generateResAppSiteParameters failed: SiteParameters does not exist.");
+        }
+
+        if( $siteParameters->getResappSiteParameter() ) {
+            $logger->notice("ResappSiteParameters already exists.");
+            return 0;
+        }
+
+        $logger->notice("Start generating SiteParameters");
+
+
+        $types = array(
+            "acceptedEmailSubject" => "Congratulations on your acceptance to the [[RESIDENCY TYPE]] [[START YEAR]] residency at Weill Cornell Medicine",
+            "acceptedEmailBody" => "Dear [[APPLICANT NAME]],
+
+We are looking forward to having you join us as a [[RESIDENCY TYPE]] fellow in [[START YEAR]]!
+
+Weill Cornell Medicine",
+
+            "rejectedEmailSubject" => "Thank you for applying to the [[RESIDENCY TYPE]] [[START YEAR]] residency at Weill Cornell Medicine",
+
+            "rejectedEmailBody" => "Dear [[APPLICANT NAME]],
+
+We have reviewed your application to the [[RESIDENCY TYPE]] residency for [[START YEAR]], and we regret to inform you that we are unable to offer you a position at this time. Please contact us if you have any questions.
+
+Weill Cornell Medicine",
+
+            "confirmationSubjectResApp" => "Your WCM/NYP residency application has been successfully received",
+
+            "confirmationBodyResApp" => "Thank You for submitting the residency application to Weill Cornell Medicine/NewYork Presbyterian Hospital.
+
+Once we receive the associated recommendation letters, your application will be reviewed and considered.
+
+If You have any questions, please do not hesitate to contact me by phone or via email.
+
+
+Sincerely,
+
+Residency Program Coordinator
+Weill Cornell Medicine
+Pathology and Laboratory Medicine",
+
+            "localInstitutionResApp" => "Pathology Residency Programs (WCM)",
+            "spreadsheetsPathResApp" => "resapp/Spreadsheets",
+            "applicantsUploadPathResApp" => "resapp/ResidencyApplicantUploads",
+            "reportsUploadPathResApp" => "resapp/Reports"
+        );
+
+        $params = new ResappSiteParameter();
+
+        $count = 0;
+        foreach( $types as $key => $value ) {
+            $method = "set".$key;
+            $params->$method( $value );
+            $count = $count + 10;
+            $logger->notice("setter: $method");
+        }
+
+
+        if( $count > 0 ) {
+            $siteParameters->setResappSiteParameter();
+
+            $em->persist($params);
+            $em->flush();
+        }
+
+        $logger->notice("Finished generateResAppSiteParameters: count=".$count/10);
 
         return round($count/10);
     }
