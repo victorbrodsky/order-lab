@@ -32,6 +32,7 @@ use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use App\VacReqBundle\Entity\VacReqSiteParameter;
 use Doctrine\ORM\EntityManagerInterface;
 //use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -745,7 +746,7 @@ class UserServiceUtil {
 
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateSiteParameters: SiteParameters has been already generated.");
-            $resappCount = $this->generateResAppSiteParameters();
+            $resappCount = $this->generateSubSiteParameters();
             if( $resappCount ) {
                 return $resappCount;
             }
@@ -1197,10 +1198,76 @@ class UserServiceUtil {
 //        }
         $this->createCrons();
 
-        $resappCount = $this->generateResAppSiteParameters();
+        $resappCount = $this->generateSubSiteParameters();
         $count = $count + $resappCount;
 
         $logger->notice("Finished generateSiteParameters: count=".$count/10);
+
+        return round($count/10);
+    }
+
+    public function generateSubSiteParameters() {
+        $count = 0;
+        $count = $count + $this->generateVacReqSiteParameters();
+        $count = $count + $this->generateResAppSiteParameters();
+        return $count;
+    }
+
+    public function generateVacReqSiteParameters() {
+        $logger = $this->container->get('logger');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->em;
+
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+
+        $siteParameters = null;
+        if( count($entities) > 0 ) {
+            $siteParameters = $entities[0];
+        }
+
+        if( !$siteParameters ) {
+            $logger->notice("generateVacReqSiteParameters failed: SiteParameters does not exist.");
+            return 0;
+        }
+
+        if( $siteParameters->getVacreqSiteParameter() ) {
+            $logger->notice("VacReqSiteParameter already exists.");
+            return 0;
+        }
+
+        $logger->notice("Start generating VacReqSiteParameter");
+
+
+        $types = array(
+            "academicYearStart" => null,
+            "academicYearEnd" => null,
+            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
+            "vacationAccruedDaysPerMonth" => 2,
+            "maxVacationDays" => 24,
+            "maxCarryOverVacationDays" => 15,
+            "noteForVacationDays" => null,
+            "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 15",
+        );
+
+        $params = new VacReqSiteParameter();
+
+        $count = 0;
+        foreach( $types as $key => $value ) {
+            $method = "set".$key;
+            $params->$method( $value );
+            $count = $count + 10;
+            $logger->notice("setter: $method");
+        }
+
+
+        if( $count > 0 ) {
+            $siteParameters->setVacreqSiteParameter($params);
+
+            $em->persist($params);
+            $em->flush();
+        }
+
+        $logger->notice("Finished generateVacReqSiteParameters: count=".$count/10);
 
         return round($count/10);
     }
@@ -1219,6 +1286,7 @@ class UserServiceUtil {
 
         if( !$siteParameters ) {
             $logger->notice("generateResAppSiteParameters failed: SiteParameters does not exist.");
+            return 0;
         }
 
         if( $siteParameters->getResappSiteParameter() ) {

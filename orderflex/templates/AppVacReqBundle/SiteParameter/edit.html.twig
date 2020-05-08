@@ -1,0 +1,91 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info vacreq-title" align="center">
+        {{ title|raw }}
+    </h4>
+
+    <br>
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#vacreq-Defaults">
+                        Defaults
+                    </a>
+                </h4>
+            </div>
+            <div id="vacreq-Defaults" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {% if form.academicYearStart is defined %}
+                        {#{{ entity.academicYearStart|date('M d','UTC') }}#}
+                        {{ formmacros.field(form.academicYearStart) }}
+                    {% endif %}
+                    {% if form.academicYearEnd is defined %}
+                        {{ formmacros.field(form.academicYearEnd) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.holidaysUrl) }}
+
+                    {{ formmacros.field(form.vacationAccruedDaysPerMonth) }}
+
+                    {% if form.maxVacationDays is defined %}
+                        {{ formmacros.field(form.maxVacationDays) }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.maxCarryOverVacationDays) }}
+
+                    {{ formmacros.field(form.noteForVacationDays) }}
+
+                    {{ formmacros.field(form.noteForCarryOverDays) }}
+
+            </div> <!-- panel-body -->
+          </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-primary -->
+        {# EOF Entry #}
+
+
+    {{ form_end(form) }}
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn-primary" href="{{ path('vacreq_siteparameters_edit_specific_site_parameters') }}">Edit</a>
+        </p>
+    {% endif %}
+
+
+{% endblock %}
+

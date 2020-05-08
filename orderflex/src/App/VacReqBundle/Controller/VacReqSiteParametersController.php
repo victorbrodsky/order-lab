@@ -18,6 +18,8 @@
 namespace App\VacReqBundle\Controller;
 
 
+use App\VacReqBundle\Entity\VacReqSiteParameter;
+use App\VacReqBundle\Form\VacReqSiteParameterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -59,7 +61,7 @@ class VacReqSiteParametersController extends SiteParametersController
      */
     public function editAction(Request $request,$id)
     {
-        return $this->editParameters($request,$id);
+        return $this->editParameters($request,$id,'ROLE_VACREQ_ADMIN');
     }
 
     /**
@@ -70,9 +72,125 @@ class VacReqSiteParametersController extends SiteParametersController
      */
     public function updateAction(Request $request, $id)
     {
-        return $this->updateParameters($request, $id);
+        return $this->updateParameters($request,$id,'ROLE_VACREQ_ADMIN');
     }
 
+
+
+
+
+    /**
+     * VacreqSiteParameter
+     *
+     * @Route("/specific-site-parameters/edit-page/", name="vacreq_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/SiteParameter/edit.html.twig")
+     */
+    public function vacreqSiteParameterEditAction( Request $request ) {
+
+        //exit('vacreqSiteParameterEditAction');
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $cycle = "edit";
+
+        $vacreqSiteParameter = $this->getOrCreateNewVacReqParameters();
+        //echo "vacreqSiteParameter=".$vacreqSiteParameter->getId()."<br>";
+
+        $form = $this->createVacreqSiteParameterForm($vacreqSiteParameter,$cycle);
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+            $em = $this->getDoctrine()->getManager();
+
+            //exit('submit');
+            $em->persist($vacreqSiteParameter);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('vacreq_siteparameters'));
+        }
+
+        return array(
+            'entity' => $vacreqSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Update Vacation Request Specific Site Parameters"
+        );
+    }
+
+    /**
+     * VacreqSiteParameter Show
+     *
+     * @Route("/specific-site-parameters/show/", name="vacreq_siteparameters_show_specific_site_parameters", methods={"GET"})
+     * @Template("AppVacReqBundle/SiteParameter/edit-content.html.twig")
+     */
+    public function vacreqSiteParameterShowAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $vacreqSiteParameter = $this->getOrCreateNewVacReqParameters();
+        //echo "vacreqSiteParameter=".$vacreqSiteParameter->getId()."<br>";
+
+        $form = $this->createVacreqSiteParameterForm($vacreqSiteParameter,$cycle);
+
+        return array(
+            'entity' => $vacreqSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Vacation Request Specific Site Parameters"
+        );
+    }
+
+    public function createVacreqSiteParameterForm($entity, $cycle) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(VacReqSiteParameterType::class, $entity, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled
+        ));
+
+        return $form;
+    }
+
+    //Get or Create a new VacreqSiteParameter
+    public function getOrCreateNewVacReqParameters() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+
+        $vacreqSiteParameter = $siteParameters->getVacreqSiteParameter();
+
+        //create one VacreqSiteParameter
+        if( !$vacreqSiteParameter ) {
+            //echo "VacreqSiteParameter null <br>";
+            $vacreqSiteParameter = new VacReqSiteParameter();
+            $siteParameters->setVacreqSiteParameter($vacreqSiteParameter);
+            $em->flush();
+        }
+
+        return $vacreqSiteParameter;
+    }
 
 
 }

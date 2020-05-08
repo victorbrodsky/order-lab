@@ -1209,7 +1209,11 @@ class SiteParameters {
      * @ORM\Column(type="integer", nullable=true)
      */
     private $restartServerErrorCounter;
-    
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\VacReqBundle\Entity\VacReqSiteParameter", cascade={"persist","remove"})
+     */
+    private $vacreqSiteParameter;
 
 
     function __construct( $addobjects=true )
@@ -4206,6 +4210,22 @@ class SiteParameters {
     public function setResappSiteParameter($resappSiteParameter)
     {
         $this->resappSiteParameter = $resappSiteParameter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVacreqSiteParameter()
+    {
+        return $this->vacreqSiteParameter;
+    }
+
+    /**
+     * @param mixed $vacreqSiteParameter
+     */
+    public function setVacreqSiteParameter($vacreqSiteParameter)
+    {
+        $this->vacreqSiteParameter = $vacreqSiteParameter;
     }
 
     
