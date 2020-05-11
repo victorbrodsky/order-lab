@@ -527,7 +527,7 @@ class SiteParameters {
     private $confirmationEmailFellApp;
 
     /**
-     * Client Email to get GoogleSrevice: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
+     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
      *
      * @ORM\Column(type="text", nullable=true)
      */

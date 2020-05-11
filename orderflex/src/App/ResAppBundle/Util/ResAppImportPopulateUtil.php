@@ -158,7 +158,7 @@ class ResAppImportPopulateUtil {
 
         //echo "service ok <br>";
 
-        $folderIdResApp = $userSecUtil->getSiteSettingParameter('folderIdResApp');
+        $folderIdResApp = $userSecUtil->getSiteSettingParameter('folderIdResApp',$this->container->getParameter('resapp.sitename'));
         if( !$folderIdResApp ) {
             $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdResApp='.$folderIdResApp);
         }
@@ -426,7 +426,7 @@ class ResAppImportPopulateUtil {
         $systemUser = $userSecUtil->findSystemUser();
 
         //$path = $this->uploadDir.'/Spreadsheets';
-        $spreadsheetsPathResApp = $userSecUtil->getSiteSettingParameter('spreadsheetsPathResApp');
+        $spreadsheetsPathResApp = $userSecUtil->getSiteSettingParameter('spreadsheetsPathResApp',$this->container->getParameter('resapp.sitename'));
         if( !$spreadsheetsPathResApp ) {
             $spreadsheetsPathResApp = 'Spreadsheets';
             $logger->warning('spreadsheetsPathResApp is not defined in Site Parameters; spreadsheetsPathResApp='.$spreadsheetsPathResApp);
@@ -490,7 +490,7 @@ class ResAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $allowPopulateResApp = $userSecUtil->getSiteSettingParameter('AllowPopulateResApp');
+        $allowPopulateResApp = $userSecUtil->getSiteSettingParameter('AllowPopulateResApp',$this->container->getParameter('resapp.sitename'));
         if( !$allowPopulateResApp ) {
             $logger->warning($action." is not proceed because the AllowPopulateResApp parameter is set to false.");
             return false;
@@ -612,7 +612,7 @@ class ResAppImportPopulateUtil {
         //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/ResidencyApplicantUploads';
-        $applicantsUploadPathResApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathResApp');
+        $applicantsUploadPathResApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathResApp',$this->container->getParameter('resapp.sitename'));
         if( !$applicantsUploadPathResApp ) {
             $applicantsUploadPathResApp = "ResidencyApplicantUploads";
             $logger->warning('applicantsUploadPathResApp is not defined in Site Parameters. Use default "'.$applicantsUploadPathResApp.'" folder.');
@@ -933,7 +933,7 @@ class ResAppImportPopulateUtil {
 
                 //////////////////////// assign local institution from SiteParameters ////////////////////////
                 $instPathologyResidencyProgram = null;
-                $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp');
+                $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp',$this->container->getParameter('resapp.sitename'));
 
                 if( strpos($localInstitutionResApp, " (") !== false ) {
                     //Case 1: get string from SiteParameters - "Pathology Residency Programs (WCMC)"
@@ -1311,9 +1311,9 @@ class ResAppImportPopulateUtil {
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
                     //send confirmation email to this applicant
-                    $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp');
-                    $confirmationSubjectResApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectResApp');
-                    $confirmationBodyResApp = $userSecUtil->getSiteSettingParameter('confirmationBodyResApp');
+                    $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp',$this->container->getParameter('resapp.sitename'));
+                    $confirmationSubjectResApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectResApp',$this->container->getParameter('resapp.sitename'));
+                    $confirmationBodyResApp = $userSecUtil->getSiteSettingParameter('confirmationBodyResApp',$this->container->getParameter('resapp.sitename'));
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailResApp);
                     if ($email && $confirmationEmailResApp && $confirmationSubjectResApp && $confirmationBodyResApp) {
                         $logger->notice("Send confirmation email (residency application " . $residencyApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailResApp);
@@ -1342,10 +1342,10 @@ class ResAppImportPopulateUtil {
                 if( $deleteSourceRow ) {
 
                     $userSecUtil = $this->container->get('user_security_utility');
-                    $deleteImportedAplicationsResApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsResApp');
+                    $deleteImportedAplicationsResApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsResApp',$this->container->getParameter('resapp.sitename'));
                     if( $deleteImportedAplicationsResApp ) {
 
-                        $backupFileIdResApp = $userSecUtil->getSiteSettingParameter('backupFileIdResApp');
+                        $backupFileIdResApp = $userSecUtil->getSiteSettingParameter('backupFileIdResApp',$this->container->getParameter('resapp.sitename'));
                         if( $backupFileIdResApp ) {
                             $googleSheetManagement = $this->container->get('resapp_googlesheetmanagement');
                             $rowId = $residencyApplication->getGoogleFormId();
@@ -1940,13 +1940,13 @@ class ResAppImportPopulateUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //deleteOldAplicationsResApp
-        $deleteOldAplicationsResApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsResApp');
+        $deleteOldAplicationsResApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsResApp',$this->container->getParameter('resapp.sitename'));
         if( !$deleteOldAplicationsResApp ) {
             $logger->notice('deleteOldAplicationsResApp is FALSE or not defined in Site Parameters. deleteOldAplicationsResApp='.$deleteOldAplicationsResApp);
             return false;
         }
 
-        $yearsOldAplicationsResApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsResApp');
+        $yearsOldAplicationsResApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsResApp',$this->container->getParameter('resapp.sitename'));
         if( !$yearsOldAplicationsResApp ) {
             $logger->warning('yearsOldAplicationsResApp is not defined in Site Parameters. yearsOldAplicationsResApp='.$yearsOldAplicationsResApp);
             return false;

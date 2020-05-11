@@ -498,7 +498,7 @@ class ReportGenerator {
         //check and create Report and temp folders
         //TODO: this variable does not exists in SiteParameters?
         //Create additional parameters in ResappSiteParameter.php
-        $reportsUploadPathResApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathResApp');
+        $reportsUploadPathResApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathResApp',$this->container->getParameter('resapp.sitename'));
         if( !$reportsUploadPathResApp ) {
             $reportsUploadPathResApp = "Reports";
             $logger->warning('reportsUploadPathResApp is not defined in Site Parameters. Use default "'.$reportsUploadPathResApp.'" folder.');
@@ -634,7 +634,7 @@ class ReportGenerator {
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
             //resapp admin
-            $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp');
+            $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp',$this->container->getParameter('resapp.sitename'));
             $toEmailsArr = array($confirmationEmailResApp);
 
             ////////// Potential error subject //////////////
@@ -893,7 +893,7 @@ class ReportGenerator {
         ////////// EOF Potential error subject //////////////
 
         //resapp admin
-        $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp');
+        $confirmationEmailResApp = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp',$this->container->getParameter('resapp.sitename'));
         $toEmailsArr = array($confirmationEmailResApp);
 
         $fileNamesArr = array();
@@ -903,35 +903,35 @@ class ReportGenerator {
             //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
             //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
             //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
-            $libreOfficeConvertToPDFPathResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathResApp');
+            $libreOfficeConvertToPDFPathResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellApp');
             if (!$libreOfficeConvertToPDFPathResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellApp is not defined in Site Parameters.');
             }
 
-            $libreOfficeConvertToPDFFilenameResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameResApp');
+            $libreOfficeConvertToPDFFilenameResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellApp');
             if (!$libreOfficeConvertToPDFFilenameResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellApp is not defined in Site Parameters.');
             }
 
-            $libreOfficeConvertToPDFArgumentsdResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdResApp');
+            $libreOfficeConvertToPDFArgumentsdResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellApp');
             if (!$libreOfficeConvertToPDFArgumentsdResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
             }
         } else {
             //$logger->notice('libreOffice not Windows');
-            $libreOfficeConvertToPDFPathResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathResAppLinux');
+            $libreOfficeConvertToPDFPathResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellAppLinux');
             if (!$libreOfficeConvertToPDFPathResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellAppLinux is not defined in Site Parameters.');
             }
 
-            $libreOfficeConvertToPDFFilenameResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameResAppLinux');
+            $libreOfficeConvertToPDFFilenameResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellAppLinux');
             if (!$libreOfficeConvertToPDFFilenameResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellAppLinux is not defined in Site Parameters.');
             }
 
-            $libreOfficeConvertToPDFArgumentsdResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdResAppLinux');
+            $libreOfficeConvertToPDFArgumentsdResApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellAppLinux');
             if (!$libreOfficeConvertToPDFArgumentsdResApp) {
-                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellAppLinux is not defined in Site Parameters.');
             }
         }
 
@@ -1194,36 +1194,36 @@ class ReportGenerator {
             //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
             //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
             $userUtil = new UserUtil();
-            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathResApp');
+            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
             if (!$pdftkPathResApp) {
-                throw new \InvalidArgumentException('pdftkPathResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
             }
 
-            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameResApp');
+            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellApp');
             if (!$pdftkFilenameResApp) {
-                throw new \InvalidArgumentException('pdftkFilenameResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
             }
 
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsResApp');
+            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellApp');
             if (!$pdftkArgumentsResApp) {
-                throw new \InvalidArgumentException('pdftkArgumentsResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
             //$logger->notice('pdftk not Windows');
             $userUtil = new UserUtil();
-            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathResAppLinux');
+            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
             if (!$pdftkPathResApp) {
-                throw new \InvalidArgumentException('pdftkPathResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkPathFellAppLinux is not defined in Site Parameters.');
             }
 
-            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameResAppLinux');
+            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellAppLinux');
             if (!$pdftkFilenameResApp) {
-                throw new \InvalidArgumentException('pdftkFilenameResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkFilenameFellAppLinux is not defined in Site Parameters.');
             }
 
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsResAppLinux');
+            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellAppLinux');
             if (!$pdftkArgumentsResApp) {
-                throw new \InvalidArgumentException('pdftkArgumentsResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkArgumentsFellAppLinux is not defined in Site Parameters.');
             }
         }
 
@@ -1301,9 +1301,9 @@ class ReportGenerator {
             //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
 
             //replace ###parameter### by appropriate variable
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsResApp');
+            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
             if( !$pdftkArgumentsResApp ) {
-                throw new \InvalidArgumentException('pdftkArgumentsResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
             }
 
             //###inputFiles### cat output ###outputFile### dont_ask
@@ -1393,36 +1393,36 @@ class ReportGenerator {
             //$logger->notice('gs Windows');
             //$gsLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
             $userUtil = new UserUtil();
-            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathResApp');
+            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
             if (!$gsPathResApp) {
-                throw new \InvalidArgumentException('gsPathResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
             }
 
-            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameResApp');
+            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellApp');
             if (!$gsFilenameResApp) {
-                throw new \InvalidArgumentException('gsFilenameResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
             }
 
-            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsResApp');
+            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
             if( !$gsArgumentsResAppOrig ) {
-                throw new \InvalidArgumentException('gsArgumentsResApp is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
             //$logger->notice('gs not Windows');
             $userUtil = new UserUtil();
-            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathResAppLinux');
+            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
             if (!$gsPathResApp) {
-                throw new \InvalidArgumentException('gsPathResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsPathFellAppLinux is not defined in Site Parameters.');
             }
 
-            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameResAppLinux');
+            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellAppLinux');
             if (!$gsFilenameResApp) {
-                throw new \InvalidArgumentException('gsFilenameResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsFilenameFellAppLinux is not defined in Site Parameters.');
             }
 
-            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsResAppLinux');
+            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellAppLinux');
             if( !$gsArgumentsResAppOrig ) {
-                throw new \InvalidArgumentException('gsArgumentsResAppLinux is not defined in Site Parameters.');
+                throw new \InvalidArgumentException('gsArgumentsFellAppLinux is not defined in Site Parameters.');
             }
         }
 

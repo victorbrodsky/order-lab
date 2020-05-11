@@ -247,12 +247,12 @@ class RecLetterUtil {
 
         $applicant = $resapp->getUser();
 
-        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp');
+        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailResApp',$this->getParameter('resapp.sitename'));
 
         //$localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp'); //Pathology Residency Programs (WCMC)
         $localInstitutionResApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
 
-        $identificationUploadLetterResApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterResApp'); //55555
+        $identificationUploadLetterResApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterResApp',$this->container->getParameter('resapp.sitename')); //55555
         if( !$identificationUploadLetterResApp ) {
             $identificationUploadLetterResApp = "55555";
         }
@@ -502,7 +502,7 @@ class RecLetterUtil {
 
         //echo "service ok <br>";
 
-        $folderIdResAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdResApp');
+        $folderIdResAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdResApp',$this->container->getParameter('resapp.sitename'));
         if( !$folderIdResAppId ) {
             $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdResApp='.$folderIdResAppId);
         }
