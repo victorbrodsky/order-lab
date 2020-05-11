@@ -565,6 +565,9 @@ function siteNameMapper(full) {
     if( url.indexOf("fellowship-applications") !== -1 ) {
         sitename = 'fellowship-applications';
     }
+    if( url.indexOf("residency-applications") !== -1 ) {
+        sitename = 'residency-applications';
+    }
     if( url.indexOf("vacation-request") !== -1 ) {
         sitename = 'vacation-request';
     }

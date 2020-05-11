@@ -374,9 +374,9 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
 
             adjustHolderHeight(holderTop);
 
-            //alert("You must press the 'Update' button to save your changes.");
+            alert("You must press the 'Update' or 'Save' button to save your changes.");
             //update form
-            $('#fellapp-applicant-form').submit();
+            //$('#fellapp-applicant-form').submit();
 
             //}
         }).fail(function(data) {

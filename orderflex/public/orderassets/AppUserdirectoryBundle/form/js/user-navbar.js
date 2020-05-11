@@ -208,7 +208,7 @@ function userAddActiveClass( id ) {
 
 //sitename is the portion of the url i.e. call-log-book
 function setNavBar(sitename) {
-    //console.log('1sitename='+sitename);
+    //console.log('setNavBar: 1sitename='+sitename);
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }
@@ -217,13 +217,16 @@ function setNavBar(sitename) {
         sitename = "directory";
     }
 
-    //console.log('2sitename='+sitename);
+    //console.log('setNavBar: 2sitename='+sitename);
 
     if( sitename == "scan" ) {
         setScanNavBar();
     }
     else if( sitename == "fellowship-applications" ){
         setFellappNavBar();
+    }
+    else if( sitename == "residency-applications" ){
+        setResappNavBar();
     }
     else if( sitename == "deidentifier" ){
         setDeidentificatorNavBar();
@@ -516,6 +519,7 @@ function setDeidentificatorNavBar() {
 }
 
 function setFellappNavBar() {
+    console.log("setFellappNavBar");
 
     var id = 'fellapphome';
 
@@ -551,6 +555,51 @@ function setFellappNavBar() {
 
     if( full.indexOf("/fellowship-applications/accepted-fellows") !== -1 ) {
         id = 'fellappaccepted';
+    }
+
+    id = commonNavBar(full,id);
+
+
+    $('#nav-bar-'+id).addClass('active');
+    //userAddActiveClass(id);
+}
+
+function setResappNavBar() {
+
+    var id = 'resapphome';
+
+    var full = window.location.pathname;
+
+    if( full.indexOf("/residency-applications/new") !== -1 ) {
+        id = 'resappnew';
+    }
+    if( full.indexOf("/residency-applications/show") !== -1 ) {
+        id = null;
+    }
+    if( full.indexOf("/residency-applications/edit") !== -1 ) {
+        id = null;
+    }
+
+    if( full.indexOf("/residency-applications/residency-types-settings") !== -1 ) {
+        id = 'resappsettings';
+    }
+    if( full.indexOf("/residency-applications/residency-type") !== -1 ) {
+        id = 'resappsettings';
+    }
+    if( full.indexOf("/add-residency-application-type") !== -1 ) {
+        id = 'resappsettings';
+    }
+
+    if( full.indexOf("/residency-applications/my-interviewees/") !== -1 ) {
+        id = 'myinterviewees';
+    }
+
+    if( full.indexOf("/residency-applications/send-rejection-emails") !== -1 ) {
+        id = 'resapprejectionemails';
+    }
+
+    if( full.indexOf("/residency-applications/accepted-residents") !== -1 ) {
+        id = 'resappaccepted';
     }
 
     id = commonNavBar(full,id);

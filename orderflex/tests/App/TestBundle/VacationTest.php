@@ -261,28 +261,43 @@ class VacationTest extends WebTestBase
 
             $request = end($requests);
             $requestId = $request->getId();
+            //echo "[$requestId=".$requestId."]";
 
             $crawler = $this->client->request('GET', '/vacation-request/show/'.$requestId);
 
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
 
+            $countVacationTitle = $crawler->filter('html:contains("Vacation/Business Travel Request")')->count();
+            $countCarryoverTitle = $crawler->filter('html:contains("Request carry over of vacation days")')->count();
+
             $this->assertGreaterThan(
                 0,
-                $crawler->filter('html:contains("Vacation/Business Travel Request")')->count()
+                $countVacationTitle+$countCarryoverTitle
             );
-//            $this->assertGreaterThan(
-//                0,
-//                $crawler->filter('html:contains("Vacation Travel")')->count()
-//            );
-            $this->assertGreaterThan(
-                0,
-                $crawler->filter('html:contains("First Day Back In Office")')->count()
-            );
-            $this->assertGreaterThan(
-                0,
-                $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
-            );
+
+            if( $countVacationTitle > 0 ) {
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("First Day Back In Office")')->count()
+                );
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
+                );
+            }
+
+            if( $countCarryoverTitle > 0 ) {
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Source Academic Year:")')->count()
+                );
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Number of days to carry over")')->count()
+                );
+            }
+            
             $this->assertGreaterThan(
                 0,
                 $crawler->filter('html:contains("Edit")')->count()
@@ -293,22 +308,36 @@ class VacationTest extends WebTestBase
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
 
+            $countVacationTitle = $crawler->filter('html:contains("Vacation/Business Travel Request")')->count();
+            $countCarryoverTitle = $crawler->filter('html:contains("Request carry over of vacation days")')->count();
+
             $this->assertGreaterThan(
                 0,
-                $crawler->filter('html:contains("Vacation/Business Travel Request")')->count()
+                $countVacationTitle+$countCarryoverTitle
             );
-//            $this->assertGreaterThan(
-//                0,
-//                $crawler->filter('html:contains("Vacation Travel")')->count()
-//            );
-            $this->assertGreaterThan(
-                0,
-                $crawler->filter('html:contains("First Day Back In Office")')->count()
-            );
-            $this->assertGreaterThan(
-                0,
-                $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
-            );
+
+            if( $countVacationTitle > 0 ) {
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("First Day Back In Office")')->count()
+                );
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Emergency Contact Info (optional)")')->count()
+                );
+            }
+
+            if( $countCarryoverTitle > 0 ) {
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Source Academic Year")')->count()
+                );
+                $this->assertGreaterThan(
+                    0,
+                    $crawler->filter('html:contains("Number of days to carry over")')->count()
+                );
+            }
+
             $this->assertGreaterThan(
                 0,
                 $crawler->filter('html:contains("Update")')->count()
