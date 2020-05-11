@@ -828,6 +828,11 @@ class AdminController extends OrderAbstractController
 
         $count_siteParameters = $this->generateSiteParameters();    //can be run only after institution generation
 
+        $count_Permissions = $this->generatePermissions();
+        $count_PermissionObjects = $this->generatePermissionObjects();
+        $count_PermissionActions = $this->generatePermissionActions();
+        $logger->notice("Finished generatePermissionActions");
+
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
@@ -918,10 +923,10 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateLanguageProficiency");
 
         $collaborationtypes = $this->generateCollaborationtypes();
-        $count_Permissions = $this->generatePermissions();
-        $count_PermissionObjects = $this->generatePermissionObjects();
-        $count_PermissionActions = $this->generatePermissionActions();
-        $logger->notice("Finished generatePermissionActions");
+//        $count_Permissions = $this->generatePermissions();
+//        $count_PermissionObjects = $this->generatePermissionObjects();
+//        $count_PermissionActions = $this->generatePermissionActions();
+//        $logger->notice("Finished generatePermissionActions");
 
         $count_ObjectTypeActions = $this->generateObjectTypeActions();
 
