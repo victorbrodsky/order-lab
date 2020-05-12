@@ -74,11 +74,16 @@ class UploadListener {
         $size = $file->getSize();
 
         //creator: subjectUser
-        echo "userid=".$userid."<br>";
+        //echo "userid=".$userid."<br>";
+        $user = null;
         if( $userid ) {
             $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         } else {
-            $user = $this->container->get('security.context')->getToken()->getUser();
+            if( $this->container->get('security.token_storage') ) {
+                if( $this->container->get('security.token_storage')->getToken() ) {
+                    $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                }
+            }
         }
 
         $authUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($authUserId);
