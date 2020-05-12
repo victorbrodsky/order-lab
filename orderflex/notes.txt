@@ -496,3 +496,5 @@ dont_ask
 
 "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"  "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\application_ID2.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb97515ddb2b.pdf" "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\temp_2\5eb975294317c.pdf" cat output "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\resapp\Reports\AP-Residency-Application-2022-ID2-Doe-John-generated-on-05-11-2020-at-04-34-14-pm_UTC.pdf" dont_ask
 
+/etc/opt/remi/php74/php.ini
+systemctl restart httpd.service

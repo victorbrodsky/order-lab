@@ -134,7 +134,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             previewTemplate: previewHtml,
             dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
             sending: function(file, xhr, formData){
-                //console.log('userid='+userid);
+                console.log('userid='+userid);
                 formData.append('userid', userid);
 
                 var filename = file.name;
