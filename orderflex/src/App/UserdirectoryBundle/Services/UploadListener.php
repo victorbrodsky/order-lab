@@ -79,6 +79,7 @@ class UploadListener {
         if( $userid ) {
             $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         } else {
+            //for new object (i.e. application) userid might not be set. Therefore, use the logged in user.
             if( $this->container->get('security.token_storage') ) {
                 if( $this->container->get('security.token_storage')->getToken() ) {
                     $user = $this->container->get('security.token_storage')->getToken()->getUser();
