@@ -77,7 +77,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
-    //console.log('userid='+userid);
+    console.log('userid='+userid);
 
     var clickable = true;
     if( showFlag ) {
