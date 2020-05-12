@@ -95,7 +95,8 @@ class RequestController extends OrderAbstractController
             //set Destination year (2016)
             //$entity->setDestinationYear( date("Y") );
 
-            $newCarryOverRequest = null;
+            //$newCarryOverRequest = null;
+            $newCarryOverRequest = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
 
             //check if 'days' parameter is set in http request
             $carryOverRequestDays = $request->query->get('days');
@@ -1353,7 +1354,7 @@ class RequestController extends OrderAbstractController
 
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');
-        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( !$holidaysUrl ) {
             throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
         }
@@ -1372,7 +1373,11 @@ class RequestController extends OrderAbstractController
             'roleCarryOverApprover' => $roleCarryOverApprover,
             'organizationalInstitutions' => $userServiceUtil->flipArrayLabelValue($organizationalInstitutions),
             'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
-            'holidaysUrl' => $holidaysUrl
+            'holidaysUrl' => $holidaysUrl,
+            'maxCarryOverVacationDays' => $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq'),
+            'noteForCarryOverDays' => $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq'),
+            //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
+            //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );
 
         $disabled = false;

@@ -282,9 +282,24 @@ class VacReqRequestType extends AbstractType
             //'choices_as_values' => true,
         ));
 
+        //add limit from 'maxCarryOverVacationDays'
+        //$useCarryOverNoteAndMaxdaysTogether = true;
+        $useCarryOverNoteAndMaxdaysTogether = false;
+        $carryOverNote = null;
+        if( $useCarryOverNoteAndMaxdaysTogether ) {
+            if( $this->params['maxCarryOverVacationDays'] ) {
+                $carryOverNote = " (As per policy, the number of days that can be carried over to the following year is limited to the maximum of ".
+                $this->params['maxCarryOverVacationDays'].")";
+            }
+        } else {
+            if( $this->params['noteForCarryOverDays'] ) {
+                $carryOverNote = " (" . $this->params['noteForCarryOverDays'] . ")";
+            }
+        }
+
         $builder->add('carryOverDays', null, array(
-            'label' => "Number of days to carry over:",
-            'attr' => array('class' => 'form-control vacreq-carryOverDays'),
+            'label' => "Number of days to carry over". $carryOverNote. ":",
+            'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['maxCarryOverVacationDays']),
         ));
 
     }

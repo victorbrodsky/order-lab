@@ -645,7 +645,7 @@ class VacReqUtil
         if( $numberOfDays > 0 ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl');
+            $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
             if (!$holidaysUrl) {
                 throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
             }
@@ -970,12 +970,12 @@ class VacReqUtil
         //echo "yearRange=".$yearRange."<br>";
 
         //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         //academicYearEnd
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
         if( !$academicYearEnd ) {
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
@@ -1134,7 +1134,7 @@ class VacReqUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
@@ -1994,7 +1994,7 @@ class VacReqUtil
         $endDateMD = $finalEndDate->format('m-d');
 
         //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
@@ -2002,7 +2002,7 @@ class VacReqUtil
         $academicYearStartMD = $academicYearStart->format('m-d');
 
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
         if( !$academicYearEnd ) {
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
@@ -2035,7 +2035,7 @@ class VacReqUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         //academicYearEdge
-        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge);
+        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
         if( !$academicYearEdge ) {
             throw new \InvalidArgumentException('academicYear'.$edge.' is not defined in Site Parameters.');
         }
@@ -2062,7 +2062,7 @@ class VacReqUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         //academicYearEdge
-        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge);
+        $academicYearEdge = $userSecUtil->getSiteSettingParameter('academicYear'.$edge,'vacreq');
         if( !$academicYearEdge ) {
             throw new \InvalidArgumentException('academicYear'.$edge.' is not defined in Site Parameters.');
         }
@@ -2100,12 +2100,12 @@ class VacReqUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
         if( !$academicYearEnd ) {
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
@@ -2176,12 +2176,12 @@ class VacReqUtil
     public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false, $yearOffset=null) {
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
         if( !$academicYearEnd ) {
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
@@ -3221,7 +3221,7 @@ class VacReqUtil
     public function getAccruedDaysUpToThisMonth() {
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $userSecUtil = $this->container->get('user_security_utility');
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
@@ -3269,7 +3269,7 @@ class VacReqUtil
     public function getTotalAccruedDays() {
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $userSecUtil = $this->container->get('user_security_utility');
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
@@ -3363,13 +3363,13 @@ class VacReqUtil
 //        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
 //                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
 
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         $academicYearStartString = $academicYearStart->format("F jS");
 
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth');
+        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
@@ -3488,6 +3488,7 @@ class VacReqUtil
     }
 
     public function getCurrentYearUnusedDays( $user, $asString=true ) {
+        $userSecUtil = $this->container->get('user_security_utility');
         $totalAccruedDays = $this->getTotalAccruedDays();
         $requestTypeStr = 'vacation';
 
@@ -3520,7 +3521,28 @@ class VacReqUtil
             //UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days</a>';
+            //check maxCarryOverVacationDays
+            $carryOverNote = null;
+            //$useCarryOverNoteAndMaxdaysTogether = true;
+            $useCarryOverNoteAndMaxdaysTogether = false;
+            if( $useCarryOverNoteAndMaxdaysTogether ) {
+                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                if ($maxCarryOverVacationDays && $unusedDays > $maxCarryOverVacationDays) {
+                    $noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays', 'vacreq');
+                    if (!$noteForCarryOverDays) {
+                        $noteForCarryOverDays = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                            . $maxCarryOverVacationDays;
+                    }
+                    $carryOverNote = " (" . $noteForCarryOverDays . ")";
+                }
+            } else {
+                $noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+                if( $noteForCarryOverDays ) {
+                    $carryOverNote = " (" . $noteForCarryOverDays . ")";
+                }
+            }
+
+            $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
             return $link;
         }
 

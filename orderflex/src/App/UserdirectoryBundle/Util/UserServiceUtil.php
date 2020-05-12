@@ -843,10 +843,10 @@ class UserServiceUtil {
             ///////////////////// EOF FELLAPP /////////////////////
 
             //VacReq
-            "vacationAccruedDaysPerMonth" => '2',
-            "academicYearStart" => new \DateTime('2017-07-01'),
-            "academicYearEnd" => new \DateTime('2017-06-30'),
-            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
+//            "vacationAccruedDaysPerMonth" => '2',
+//            "academicYearStart" => new \DateTime('2017-07-01'),
+//            "academicYearEnd" => new \DateTime('2017-06-30'),
+//            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
 
             "initialConfigurationCompleted" => false,
 
@@ -1239,8 +1239,10 @@ class UserServiceUtil {
 
 
         $types = array(
-            "academicYearStart" => null,
-            "academicYearEnd" => null,
+            //"academicYearStart" => null,
+            //"academicYearEnd" => null,
+            "academicYearStart" => new \DateTime('2017-07-01'),
+            "academicYearEnd" => new \DateTime('2017-06-30'),
             "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
             "vacationAccruedDaysPerMonth" => 2,
             "maxVacationDays" => 24,
