@@ -161,6 +161,20 @@ class RequestController extends OrderAbstractController
                 //exit('no overlaps found');
             }
         }
+
+        //check carry over days limit
+        if( $routeName == "vacreq_carryoverrequest" ) {
+            //check carry over days limit
+            $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+            $carryOverDays = $entity->getCarryOverDays();
+            if( $carryOverDays && $maxCarryOverVacationDays ) {
+                if( $carryOverDays > $maxCarryOverVacationDays ) {
+                    $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                        . $maxCarryOverVacationDays;
+                    $form['carryOverDays']->addError(new FormError($errorMsg));
+                }
+            }
+        }
         //exit('testing');
 
         if( $form->isSubmitted() && $form->isValid() ) {
@@ -485,6 +499,22 @@ class RequestController extends OrderAbstractController
                     //exit('no overlaps found');
                 }
 //            }
+        }
+
+        //check carry over days limit
+        if( $entity->getRequestType()->getAbbreviation() == "carryover"  ) {
+            //check carry over days limit
+            $userSecUtil = $this->container->get('user_security_utility');
+            $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+            $carryOverDays = $entity->getCarryOverDays();
+            if( $carryOverDays && $maxCarryOverVacationDays ) {
+                if( $carryOverDays > $maxCarryOverVacationDays ) {
+                    $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                        . $maxCarryOverVacationDays;
+                    //exit($errorMsg);
+                    $form['carryOverDays']->addError(new FormError($errorMsg));
+                }
+            }
         }
 
         if( $form->isSubmitted() && $form->isValid() ) {

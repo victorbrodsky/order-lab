@@ -44,6 +44,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="requestType" value="{{ entity.getRequestType().getAbbreviation() }}" />
+    <input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />
 
     {% if overlappedMessage is defined and overlappedMessage %}
         <div class="alert alert-danger">
@@ -818,6 +819,14 @@
             if( !error && !carryOverDays ) {
                 error = "Please enter the number of days to carry over";
                 $('.vacreq-carryOverDays').addClass('alert-danger');
+            }
+
+            var maxCarryOverVacationDays = $('#maxcarryovervacationdays').val();
+            if( carryOverDays && maxCarryOverVacationDays ) {
+                if (carryOverDays > maxCarryOverVacationDays) {
+                    error = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of " + maxCarryOverVacationDays;
+                    $('.vacreq-carryOverDays').addClass('alert-danger');
+                }
             }
 
             var sourceYear = $('.vacreq-sourceYear').select2('val');
