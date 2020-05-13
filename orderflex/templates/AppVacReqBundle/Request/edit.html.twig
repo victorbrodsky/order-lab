@@ -821,6 +821,7 @@
                 $('.vacreq-carryOverDays').addClass('alert-danger');
             }
 
+            //Should we have this only for "new" request?
             var maxCarryOverVacationDays = $('#maxcarryovervacationdays').val();
             if( carryOverDays && maxCarryOverVacationDays ) {
                 if (carryOverDays > maxCarryOverVacationDays) {

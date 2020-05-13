@@ -501,7 +501,7 @@ class RequestController extends OrderAbstractController
 //            }
         }
 
-        //check carry over days limit
+        //check carry over days limit (edit). Should we have this only for "new" request?
         if( $entity->getRequestType()->getAbbreviation() == "carryover"  ) {
             //check carry over days limit
             $userSecUtil = $this->container->get('user_security_utility');
