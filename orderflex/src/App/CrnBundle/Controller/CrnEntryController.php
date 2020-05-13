@@ -3137,6 +3137,7 @@ class CrnEntryController extends OrderAbstractController
         $pathPostfix = "";
         $cycle = "show";
         //$title = "Critical Result Notification Entry";
+        $title = $titleBody = "Critical Result Notification Entry";
         $formtype = "crn-entry";
 
         $formbased = false;
