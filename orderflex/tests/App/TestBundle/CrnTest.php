@@ -295,6 +295,7 @@ class CrnTest extends WebTestBase
         //print_r($links);
         //exit('////////////////////');
 
+        echo "crnLink=[$link]";
         $crawler = $this->client->click($link);
 
         //$content = $this->client->getResponse()->getContent();
