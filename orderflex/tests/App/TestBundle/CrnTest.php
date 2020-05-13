@@ -298,8 +298,8 @@ class CrnTest extends WebTestBase
         //echo "crnLink=[$link]";
         $crawler = $this->client->click($link);
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
