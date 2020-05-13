@@ -251,6 +251,12 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('humanTissueFormNote', null, array(
+            'label' => 'Human Tissue Form Note to Users:',
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         //Disable/Enable new project
         $builder->add('enableNewProjectOnSelector', null, array(
             'label' => 'Enable the display the button (project specialty) on the "New Project Request" page (translational-research/project/new):',

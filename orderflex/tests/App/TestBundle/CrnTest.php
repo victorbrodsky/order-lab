@@ -300,13 +300,22 @@ class CrnTest extends WebTestBase
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
 
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Encounter Info")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Entry")')->count()
+//        );
+
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Encounter Info")')->count()
+            $crawler->filter('html:contains("crn-current-message-id")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Entry")')->count()
+            $crawler->filter('html:contains("patient-holder-1")')->count()
         );
 
 //        $this->assertGreaterThan(

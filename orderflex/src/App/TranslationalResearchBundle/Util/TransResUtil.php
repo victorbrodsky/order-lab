@@ -6068,4 +6068,9 @@ class TransResUtil
 
         return $messageToUsers;
     }
+
+    public function getHumanTissueFormNote($project=null) {
+        $messageToUsers = $this->getTransresSiteProjectParameter('humanTissueFormNote',$project);
+        return $messageToUsers;
+    }
 }

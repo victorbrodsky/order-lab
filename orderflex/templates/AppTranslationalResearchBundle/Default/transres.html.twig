@@ -472,6 +472,13 @@
                     <div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
                         <label class="col-xs-12 control-label">Human Tissue Form</label>
                         <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
+
+                        {#<p>Please note this tissue form must be reviewed and signed by the IRB Pathology Compliance Officer prior to uploading. For signature, please submit this completed form along with the associated IRB protocol summary or exemption letter to submit2pathology@med.cornell.edu</p>#}
+                        {% set humanTissueFormNote = transres_util.getTransresSiteProjectParameter('humanTissueFormNote',project) %}
+                        {% if humanTissueFormNote %}
+                            <p>{{ humanTissueFormNote|raw }}</p>
+                        {% endif %}
+
                         <div class="row withpaddingtop">
                             <div class="col-xs-12">
                                 {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
@@ -1485,6 +1492,8 @@
 
                 {{ formmacros.checkbox(form.showMessageToUsers) }}
                 {{ formmacros.field(form.messageToUsers) }}
+
+                {{ formmacros.field(form.humanTissueFormNote) }}
 
                 {{ formmacros.checkbox(form.enableNewProjectOnSelector) }}
                 {{ formmacros.checkbox(form.enableNewProjectOnNavbar) }}

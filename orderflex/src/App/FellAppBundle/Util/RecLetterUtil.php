@@ -959,7 +959,7 @@ class RecLetterUtil {
 
             //You can review the latest letter submitted on MM/DD/YYYY at HH/MM here: https://localhost/fellowship-applications/file-download/XXXXX
             if( $latestLetter ) {
-                $latestLetterCreatedDateStr = "submitted on " . $latestLetterTimeStr;
+                $latestLetterCreatedDateStr = "received on " . $latestLetterTimeStr; //use 'received' instead of 'submitted', since the current google drive api 1.0 can not get create date ($file->getCreatedTime)
 
                 $latestLetterLink = $router->generate(
                     'fellapp_file_download',
@@ -981,7 +981,7 @@ class RecLetterUtil {
                     $letterLink = '<a href="' . $letterLink . '">' . $letterLink . '</a>';
                     $letterCreatedDate = $letter->getExternalOrDbCreatedate();
                     if ($letterCreatedDate) {
-                        $letterCreatedDateStr = "submitted on " . $letterCreatedDate->format('m/d/Y \a\t H:i');
+                        $letterCreatedDateStr = "received on " . $letterCreatedDate->format('m/d/Y \a\t H:i'); //use 'received' instead of 'submitted', since the current google drive api 1.0 can not get create date ($file->getCreatedTime)
                     } else {
                         $letterCreatedDateStr = $counter;
                     }

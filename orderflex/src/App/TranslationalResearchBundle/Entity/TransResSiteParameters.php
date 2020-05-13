@@ -296,6 +296,11 @@ class TransResSiteParameters {
      */
     private $messageToUsers;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $humanTissueFormNote;
+
     //Disable/Enable new project
     /**
      * a) Enable/Disable the display of each button (project category) on the “New Project Request page: https://view.med.cornell.edu/translational-research/project/new
@@ -1417,6 +1422,22 @@ class TransResSiteParameters {
     public function setEnableNewProjectAccessPage($enableNewProjectAccessPage)
     {
         $this->enableNewProjectAccessPage = $enableNewProjectAccessPage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHumanTissueFormNote()
+    {
+        return $this->humanTissueFormNote;
+    }
+
+    /**
+     * @param mixed $humanTissueFormNote
+     */
+    public function setHumanTissueFormNote($humanTissueFormNote)
+    {
+        $this->humanTissueFormNote = $humanTissueFormNote;
     }
 
     
