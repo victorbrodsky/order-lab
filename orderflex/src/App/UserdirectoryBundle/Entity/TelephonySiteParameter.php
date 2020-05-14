@@ -38,9 +38,11 @@ class TelephonySiteParameter
 
 
     /**
+     * TWILIO_AUTHY_API_KEY
+     * 
      * @ORM\Column(type="string", nullable=true)
      */
-    private $apiKey;
+    private $twilioApiKey;
 
     /**
      * Phone number verification = enabled/disabled
@@ -72,18 +74,20 @@ class TelephonySiteParameter
     /**
      * @return mixed
      */
-    public function getApiKey()
+    public function getTwilioApiKey()
     {
-        return $this->apiKey;
+        return $this->twilioApiKey;
     }
 
     /**
-     * @param mixed $apiKey
+     * @param mixed $twilioApiKey
      */
-    public function setApiKey($apiKey)
+    public function setTwilioApiKey($twilioApiKey)
     {
-        $this->apiKey = $apiKey;
+        $this->twilioApiKey = $twilioApiKey;
     }
+
+    
 
     /**
      * @return mixed

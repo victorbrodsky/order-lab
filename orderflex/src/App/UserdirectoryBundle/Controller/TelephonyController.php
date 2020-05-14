@@ -6,7 +6,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class TelephonySiteParameter extends OrderAbstractController {
+class TelephonyController extends OrderAbstractController {
 
     protected $siteName;
 
