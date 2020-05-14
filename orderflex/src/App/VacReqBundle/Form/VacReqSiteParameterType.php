@@ -74,7 +74,7 @@ class VacReqSiteParameterType extends AbstractType
 //        ));
 
         $builder->add('maxCarryOverVacationDays', null, array(
-            'label' => 'Maximum number of carry over vacation days per year (usually 15):',
+            'label' => 'Maximum number of carry over vacation days per year (for example 15):',
             'attr' => array('class' => 'form-control')
         ));
 

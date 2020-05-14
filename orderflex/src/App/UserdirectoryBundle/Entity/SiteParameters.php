@@ -1215,6 +1215,11 @@ class SiteParameters {
      */
     private $vacreqSiteParameter;
 
+    /**
+     * @ORM\OneToOne(targetEntity="TelephonySiteParameter", cascade={"persist","remove"})
+     */
+    private $telephonySiteParameter;
+
 
     function __construct( $addobjects=true )
     {
@@ -4226,6 +4231,22 @@ class SiteParameters {
     public function setVacreqSiteParameter($vacreqSiteParameter)
     {
         $this->vacreqSiteParameter = $vacreqSiteParameter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelephonySiteParameter()
+    {
+        return $this->telephonySiteParameter;
+    }
+
+    /**
+     * @param mixed $telephonySiteParameter
+     */
+    public function setTelephonySiteParameter($telephonySiteParameter)
+    {
+        $this->telephonySiteParameter = $telephonySiteParameter;
     }
 
     

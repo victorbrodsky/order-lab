@@ -76,6 +76,18 @@ class UserInfo extends BaseUserAttributes {
     private $preferredPhone;
 
     /**
+     * @ORM\Column(name="preferredMobilePhone", type="string", nullable=true)
+     */
+    private $preferredMobilePhone;
+
+    /**
+     * Is the mobile phone number verified?
+     *
+     * @ORM\Column(name="preferredMobilePhoneVerified", type="boolean", nullable=true)
+     */
+    private $preferredMobilePhoneVerified;
+
+    /**
      * @ORM\Column(name="email", type="string", nullable=true)
      */
     private $email;
@@ -191,6 +203,38 @@ class UserInfo extends BaseUserAttributes {
     public function getPreferredPhone()
     {
         return $this->preferredPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreferredMobilePhone()
+    {
+        return $this->preferredMobilePhone;
+    }
+
+    /**
+     * @param mixed $preferredMobilePhone
+     */
+    public function setPreferredMobilePhone($preferredMobilePhone)
+    {
+        $this->preferredMobilePhone = $preferredMobilePhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreferredMobilePhoneVerified()
+    {
+        return $this->preferredMobilePhoneVerified;
+    }
+
+    /**
+     * @param mixed $preferredMobilePhoneVerified
+     */
+    public function setPreferredMobilePhoneVerified($preferredMobilePhoneVerified)
+    {
+        $this->preferredMobilePhoneVerified = $preferredMobilePhoneVerified;
     }
 
     /**

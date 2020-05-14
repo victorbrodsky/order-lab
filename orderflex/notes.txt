@@ -502,3 +502,9 @@ systemctl restart httpd.service
 
 Please note this tissue form must be reviewed and signed by the IRB Pathology Compliance Officer prior to uploading. For signature, please submit this completed form along with the associated  IRB protocol summary or exemption letter to submit2pathology@med.cornell.edu
 
+SMS:
+https://symfony.com/doc/current/notifier.html
+https://www.twilio.com/code-exchange/sms-notifications
+
+
+
