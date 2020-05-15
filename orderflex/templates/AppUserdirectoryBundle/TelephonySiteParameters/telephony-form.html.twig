@@ -20,8 +20,6 @@
     {% include 'AppUserdirectoryBundle/Default/navbar.html.twig' %}
 {% endblock %}
 
-{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
-
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -29,42 +27,6 @@
 {% block content %}
 
     {% include 'AppUserdirectoryBundle/TelephonySiteParameters/telephony-form-content.html.twig' %}
-
-{#<div class="panel panel-primary">#}
-    {#<div class="panel-heading">#}
-        {#<h4 class="panel-title text-left">#}
-            {#<a data-toggle="collapse" href="#telephony-content">#}
-                {#Telephony#}
-            {#</a>#}
-        {#</h4>#}
-    {#</div>#}
-    {#<div id="telephony-content" class="panel-collapse collapse">#}
-        {#<div class="panel-body">#}
-
-            {#{{ form_start(form) }}#}
-
-                {#{{ formmacros.field(form.twilioApiKey) }}#}
-                {#{{ formmacros.checkbox(form.phoneNumberVerification) }}#}
-
-
-                {#{% if form.update is defined %}#}
-                    {#<br>#}
-                    {#<p>#}
-                        {#{{ form_widget(form.update) }}#}
-                    {#</p>#}
-                {#{% endif %}#}
-
-            {#{{ form_end(form) }}#}
-
-
-            {#{% if cycle == 'show' %}#}
-                {#<a class="btn btn-primary" href="{{ path('employees_telephonysiteparameters_edit') }}">Edit</a>#}
-            {#{% endif %}#}
-
-
-        {#</div>#}
-    {#</div>#}
-{#</div>#}
 
 {% endblock %}
 

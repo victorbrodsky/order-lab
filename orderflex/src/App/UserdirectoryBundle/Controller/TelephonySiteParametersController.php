@@ -37,7 +37,7 @@ class TelephonySiteParametersController extends SiteParametersController
 {
 
     /**
-     * @Route("/show/", name="employees_telephonysiteparameters_show", methods={"GET"})
+     * @Route("/show-content/", name="employees_telephonysiteparameters_show", methods={"GET"})
      * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form-content.html.twig")
      */
     public function telephonySiteParameterPreviewAction(Request $request)

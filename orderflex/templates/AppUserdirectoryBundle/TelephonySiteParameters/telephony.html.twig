@@ -30,33 +30,6 @@
                 {{ render(controller('App\\UserdirectoryBundle\\Controller\\TelephonySiteParametersController::telephonySiteParameterPreviewAction')) }}
             </p>
 
-            {#<table class="table table-striped table-bordered table-hover table-condensed text-left">#}
-                {#<thead>#}
-                    {#<tr>#}
-                        {#<th>Parameter</th>#}
-                        {#<th>Value</th>#}
-                        {#<th>Action</th>#}
-                    {#</tr>#}
-                {#</thead>#}
-                {#<tbody data-link="row" class="rowlink">#}
-
-
-                    {#<tr>#}
-                        {#<td>Twilio Api Key</td>#}
-                        {#<td>{{ entity.twilioApiKey }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'twilioApiKey'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>Phone number verification</td>#}
-                        {#<td>{{ entity.phoneNumberVerification }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'phoneNumberVerification'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-
-                {#</tbody>#}
-            {#</table>#}
-
         </div>
     </div>
 </div>
