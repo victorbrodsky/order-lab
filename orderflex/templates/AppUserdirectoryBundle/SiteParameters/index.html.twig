@@ -1010,7 +1010,7 @@
     {% endif %}
 
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-        {% include 'AppUserdirectoryBundle/SiteParameters/telephony-content.html.twig' %}
+        {% include 'AppUserdirectoryBundle/TelephonySiteParameters/telephony.html.twig' %}
     {% endif %}
 
     {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}

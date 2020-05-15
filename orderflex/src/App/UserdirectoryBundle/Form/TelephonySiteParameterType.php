@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -46,15 +47,22 @@ class TelephonySiteParameterType extends AbstractType
 
         $builder->add('twilioApiKey', null, array(
             'label' => 'Twilio Api Key:',
+            'required' => false,
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('phoneNumberVerification', CheckboxType::class, array(
             'label' => 'Phone number verification:',
+            'required' => false,
             'attr' => array('class'=>'form-control')
         ));
-        
 
+        if( $this->params['cycle'] == 'edit' ) {
+            $builder->add('update', SubmitType::class, array(
+                'label' => "Update",
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+        }
 
     }
 
