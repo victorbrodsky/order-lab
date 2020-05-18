@@ -64,6 +64,7 @@
             {{ formmacros.field(info.lastName) }}
             {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
             {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+            {{ usermacros.mobilePhoneField(info,cycle,"") }}
 
             {% do info.setRendered %}
         {% endfor %}

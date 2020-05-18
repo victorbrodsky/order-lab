@@ -51,6 +51,18 @@ class TelephonySiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('twilioSid', null, array(
+            'label' => 'Twilio SID:',
+            'required' => false,
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('fromPhoneNumber', null, array(
+            'label' => 'Twilio From Phone Number (E. 164 format, i.e. +11234567890):',
+            'required' => false,
+            'attr' => array('class'=>'form-control')
+        ));
+
         $builder->add('phoneNumberVerification', CheckboxType::class, array(
             'label' => 'Phone number verification:',
             'required' => false,

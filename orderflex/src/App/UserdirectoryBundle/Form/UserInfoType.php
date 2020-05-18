@@ -61,6 +61,10 @@ class UserInfoType extends AbstractType
             'label' => 'Preferred Phone Number:',
             'attr' => array('class'=>'form-control phone-mask')
         ));
+        $builder->add('preferredMobilePhone', null, array(
+            'label' => 'Preferred Mobile Phone Number:',
+            'attr' => array('class'=>'form-control phone-mask')
+        ));
         $builder->add('initials', null, array(
             'label' => 'Abbreviated name/Initials used by lab staff for deliveries:',
             'attr' => array('class'=>'form-control')

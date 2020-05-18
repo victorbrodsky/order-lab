@@ -898,6 +898,16 @@
                                         </td>
                                     </tr>
                                 {% endif %}
+
+                                {% if user.getPreferredMobilePhone %}
+                                    <tr>
+                                        <td class="left-column">mobile:</td>
+                                        <td>
+                                            {#{{ user.getPreferredMobilePhone }}#}
+                                            {{ usermacros.phoneHref(user.getPreferredMobilePhone) }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             </table>
                         </div>
 

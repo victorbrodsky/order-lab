@@ -28,6 +28,7 @@
             <th>{{ knp_pagination_sortable(entities, 'User ID', 'user.primaryPublicUserId') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Email', 'infos.email') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'infos.preferredPhone') }}</th>
+            <th>{{ knp_pagination_sortable(entities, 'Mobile Phone Number', 'infos.preferredMobilePhone') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Status Updated On', 'accreq.updatedate') }}</th>
@@ -67,6 +68,7 @@
             <td>{{ entity.user.primaryPublicUserId }}</td>
             <td>{{ entity.user.email }}</td>
             <td>{{ entity.user.preferredPhone }}</td>
+            <td>{{ entity.user.preferredMobilePhone }}</td>
             <td>
                 {% for role in user_security_utility.getUserRolesBySite(entity.user, sitename, true) %}
                     {% if role.name != "ROLE_USER" %}

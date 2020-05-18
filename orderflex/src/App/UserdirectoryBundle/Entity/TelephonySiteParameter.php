@@ -38,11 +38,25 @@ class TelephonySiteParameter
 
 
     /**
-     * TWILIO_AUTHY_API_KEY
+     * TWILIO_AUTHY_API_KEY (TWILIO Auth Token)
      * 
      * @ORM\Column(type="string", nullable=true)
      */
     private $twilioApiKey;
+
+    /**
+     * TWILIO Account Sid
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $twilioSid;
+
+    /**
+     * From phone number
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fromPhoneNumber;
 
     /**
      * Phone number verification = enabled/disabled
@@ -105,8 +119,38 @@ class TelephonySiteParameter
         $this->phoneNumberVerification = $phoneNumberVerification;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTwilioSid()
+    {
+        return $this->twilioSid;
+    }
 
+    /**
+     * @param mixed $twilioSid
+     */
+    public function setTwilioSid($twilioSid)
+    {
+        $this->twilioSid = $twilioSid;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getFromPhoneNumber()
+    {
+        return $this->fromPhoneNumber;
+    }
+
+    /**
+     * @param mixed $fromPhoneNumber
+     */
+    public function setFromPhoneNumber($fromPhoneNumber)
+    {
+        $this->fromPhoneNumber = $fromPhoneNumber;
+    }
+    
 
 
 

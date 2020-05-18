@@ -46,7 +46,8 @@
         "symfony/workflow": "^4.4",
         "symfony/yaml": "^4.4",
         "tattali/calendar-bundle": "^1.1",
-        "twig/extensions": "^1.5"
+        "twig/extensions": "^1.5",
+        "twilio/sdk": "^6.4"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

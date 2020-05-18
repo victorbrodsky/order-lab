@@ -23,6 +23,8 @@
 {{ form_start(form) }}
 
     {{ formmacros.field(form.twilioApiKey) }}
+    {{ formmacros.field(form.twilioSid) }}
+    {{ formmacros.field(form.fromPhoneNumber) }}
     {{ formmacros.checkbox(form.phoneNumberVerification) }}
 
 

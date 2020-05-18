@@ -1464,7 +1464,6 @@ class User extends UserBase {
             $infos->first()->setPreferredPhone($preferredPhone);
         }
     }
-
     /**
      * @return mixed
      */
@@ -1476,6 +1475,45 @@ class User extends UserBase {
             $value = $infos->first()->getPreferredPhone();
         }
         return $value;
+    }
+
+    /**
+     * @param mixed $preferredMobilePhone
+     */
+    public function setPreferredMobilePhone($preferredMobilePhone)
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $infos->first()->setPreferredMobilePhone($preferredMobilePhone);
+        }
+    }
+    /**
+     * @return mixed
+     */
+    public function getPreferredMobilePhone()
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            $value = $infos->first()->getPreferredMobilePhone();
+        }
+        return $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserInfoByPreferredMobilePhone($preferredMobilePhone)
+    {
+        $value = null;
+        $infos = $this->getInfos();
+        foreach($infos as $info) {
+            $thisPreferredMobilePhone = $info->getPreferredMobilePhone();
+            if( $thisPreferredMobilePhone && $preferredMobilePhone && $thisPreferredMobilePhone == $preferredMobilePhone ) {
+                return $info;
+            }
+        }
+        return null;
     }
 
     /**

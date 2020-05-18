@@ -81,6 +81,7 @@
             <th>{{ knp_pagination_sortable(users, 'User ID', 'user.primaryPublicUserId') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Email', 'infos.email') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Phone Number', 'infos.preferredPhone') }}</th>
+            <th>{{ knp_pagination_sortable(users, 'Mobile Phone Number', 'infos.preferredMobilePhone') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Parameter', 'user.otherUserParam') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Role(s)', 'user.roles') }}</th>
             {#<th>{{ knp_pagination_sortable(users, 'Last Login', 'user.lastLogin') }}</th>#}
@@ -103,6 +104,7 @@
             <td>{{ user.primaryPublicUserId }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.preferredPhone }}</td>
+            <td>{{ user.preferredMobilePhone }}</td>
             <td>{{ user.otherUserParam }}</td>
             <td>
                 {% for role in user_security_utility.getUserRolesBySite(user, sitename, true) %}

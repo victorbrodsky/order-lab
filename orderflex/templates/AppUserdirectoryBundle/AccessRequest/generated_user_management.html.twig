@@ -88,6 +88,7 @@
 
             {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
             {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+            {{ usermacros.mobilePhoneField(info,cycle,"") }}
 
             {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
             {% do info.initials.setRendered %}

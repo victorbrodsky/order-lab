@@ -1015,6 +1015,61 @@
     <a href="tel:{{ valueclean }}" target="_top">{{ phone }}</a>
 {% endmacro %}
 
+{% macro mobilePhoneField(userInfo,cycle,label) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import _self as usermacros %}
+
+    {% set field = userInfo.preferredMobilePhone %}
+
+    {% if label == "" %}
+        {% set value = field.vars.value %}
+    {% else %}
+        {% set value = field %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if showFlag %}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                {% if label == "" %}
+                    {{ form_label(field) }}
+                {% else %}
+                    <strong>{{ label }}</strong>
+                {% endif %}
+            </div>
+            <div class="col-xs-5" align="left">
+                <div class="form-control form-control-modif" disabled>
+
+                    {{ usermacros.phoneHref(value) }}
+
+                </div>
+            </div>
+        <div class="col-xs-1" align="left">
+            <div class="form-control">
+                {% if userInfo.vars.value.preferredMobilePhoneVerified %}
+                    <button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>
+                {% else %}
+                    <p class="text-success">Verified</p>
+                {% endif %}
+
+            </div>
+        </div>
+        </div>
+        </p>
+        {% if label == "" %}
+            {% do field.setRendered %}
+        {% endif %}
+    {% else %}
+        {{ formmacros.field(field) }}
+    {% endif %}
+{% endmacro %}
+
 {% macro personInfo( person, cycle, sitename, wellLabel ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
@@ -1032,6 +1087,7 @@
 
         {% if person %}
             {{ usermacros.emailPhoneField(person.getSinglePhone,cycle,'phone',"Preferred Phone Number:") }}
+            {{ usermacros.emailPhoneField(person.getPreferredMobilePhone,cycle,'phone',"Preferred Mobile Phone Number:") }}
             {{ usermacros.emailPhoneField(person.getSingleEmail,cycle,'email',"Preferred Email:") }}
         {% endif %}
     </div>
