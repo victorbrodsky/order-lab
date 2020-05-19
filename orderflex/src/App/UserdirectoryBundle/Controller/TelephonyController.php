@@ -5,7 +5,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Twilio\Rest\Client;
+//use Twilio\Rest\Client;
 
 class TelephonyController extends OrderAbstractController {
 
@@ -16,46 +16,88 @@ class TelephonyController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/verify-mobile-phone/{userId}/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
+     * Get verification form
+     *
+     * @Route("/verify-mobile-phone/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
      */
-    public function verifyMobileAction(Request $request, $userId, $phoneNumber)
+    public function verifyMobileAction(Request $request, $phoneNumber)
     {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
+
+//        //if not admin, only logged in user can verify its own mobile phone number
+//        //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            if( $userId != $user->getId() ) {
+//                return $this->redirect($this->generateUrl('employees-nopermission'));
+//            }
+//        //}
+
+//        $form = $this->createTelephonyVerifyForm();
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid() ) {
+//
+//        }
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        //$text = "verificationcode";
-        //$text = random_int(1, 6);
+        //It's better to check if current user has a $phoneNumber
+        $preferredMobilePhone = $user->getPreferredMobilePhone();
 
-        //$userid
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-        if( !$subjectUser ) {
-            throw new \Exception( 'User not found by id ' . $userId );
+        if( $preferredMobilePhone != $phoneNumber ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        //if not admin, only logged in user can verify its own mobile phone number
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $userId != $user->getId() ) {
-                return $this->redirect($this->generateUrl('employees-nopermission'));
-            }
-        }
+        //$userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
-        $verifyCode = $this->assignVerificationCode($subjectUser,$phoneNumber);
+//        if( $userInfo ) {
+//            $userInfo->setMobilePhoneVerifyCode($text);
+//            $userInfo->setPreferredMobilePhoneVerified(false);
+//            $em->flush();
+//        }
 
-        $text = "Mobile phone number verification code $verifyCode";
-
-        $message = $this->sendText($phoneNumber,$text);
-
-        dump($message);
-
-        exit('EOF verifyMobileAction');
-
-//        return $this->render('AppUserdirectoryBundle/SignUp/index.html.twig', array(
-//            'signUps' => $signUps,
-//            'title' => "Sign Up for ".$this->siteNameStr,
-//            'sitenamefull' => $this->siteNameStr,
-//            'sitename' => $this->siteName
-//        ));
+        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone.html.twig', array(
+            'sitename' => $this->siteName,
+            'title' => "Mobile Phone Verification",
+            //'form' => $form->createView(),
+            'phoneNumber' => $phoneNumber
+        ));
     }
+
+    /**
+     * @Route("/verify/code", name="employees_verify_code")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function verifyCode(Request $request)
+    {
+        try {
+            // Get data from session
+            $data = $this->get('session')->get('user');
+            $verificationCode = $request->query->get('verify_code');
+            
+            if( $verificationCode ) {
+                
+            }
+
+            return $this->redirectToRoute('home');
+
+
+        } catch (\Exception $exception) {
+            $this->addFlash(
+                'error',
+                'Verification code is incorrect'
+            );
+            return $this->redirectToRoute('employees_verify_mobile_phone');
+        }
+    }
+
+//    public function createTelephonyVerifyForm() {
+//        $params = array();
+//
+//        $form = $this->createForm(TelephonyVerifyMobilePhoneType::class, null, array('form_custom_value'=>$params));
+//
+//        return $form;
+//    }
 
     /**
      * @Route("/verify-mobile-phone-ajax/{userId}/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
@@ -63,6 +105,7 @@ class TelephonyController extends OrderAbstractController {
     public function verifyMobileAjaxAction(Request $request, $userId, $phoneNumber)
     {
         $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->get('user_service_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$text = "verificationcode";
@@ -85,7 +128,7 @@ class TelephonyController extends OrderAbstractController {
 
         $text = "Mobile phone number verification code $verifyCode";
 
-        $message = $this->sendText($phoneNumber,$text);
+        $message = $userServiceUtil->sendText($phoneNumber,$text);
 
         dump($message);
 
@@ -114,71 +157,71 @@ class TelephonyController extends OrderAbstractController {
         return $text;
     }
 
-    public function sendText( $phoneNumber, $textToSend ) {
-        // Find your Account Sid and Auth Token at twilio.com/console
-        // DANGER! This is insecure. See http://twil.io/secure
-        //$sid    = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-        //$token  = "your_auth_token";
-        //$twilio = new Client($sid, $token);
+//    public function sendText( $phoneNumber, $textToSend ) {
+//        // Find your Account Sid and Auth Token at twilio.com/console
+//        // DANGER! This is insecure. See http://twil.io/secure
+//        //$sid    = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+//        //$token  = "your_auth_token";
+//        //$twilio = new Client($sid, $token);
+////        $message = $twilio->messages
+////            ->create("+1xxx", // to
+////                [
+////                    "body" => "This is the ship that made the Kessel Run in fourteen parsecs?",
+////                    "from" => "+1xxx"
+////                ]
+////            );
+//
+//        $userSecUtil = $this->get('user_security_utility');
+//
+//        $twilioSid = $userSecUtil->getSiteSettingParameter('twilioSid','Telephony');
+//        $twilioApiKey = $userSecUtil->getSiteSettingParameter('twilioApiKey','Telephony');
+//        $fromPhoneNumber = $userSecUtil->getSiteSettingParameter('fromPhoneNumber','Telephony');
+//
+//        //$twilioSid = "xxxxx";
+//        //$twilioApiKey = "xxxxx";
+//        //$fromPhoneNumber = "xxxxx";
+//
+//        $twilio = new Client($twilioSid, $twilioApiKey);
+//
 //        $message = $twilio->messages
-//            ->create("+1xxx", // to
+//            ->create($phoneNumber, // to
 //                [
-//                    "body" => "This is the ship that made the Kessel Run in fourteen parsecs?",
-//                    "from" => "+1xxx"
+//                    "body" => $textToSend,      //"This is the test telephony message",
+//                    "from" => $fromPhoneNumber //"+11234567890"
 //                ]
 //            );
+//
+//        print($message->sid);
+//
+//        return $message;
+//    }
 
-        $userSecUtil = $this->get('user_security_utility');
-
-        $twilioSid = $userSecUtil->getSiteSettingParameter('twilioSid','Telephony');
-        $twilioApiKey = $userSecUtil->getSiteSettingParameter('twilioApiKey','Telephony');
-        $fromPhoneNumber = $userSecUtil->getSiteSettingParameter('fromPhoneNumber','Telephony');
-
-        //$twilioSid = "xxxxx";
-        //$twilioApiKey = "xxxxx";
-        //$fromPhoneNumber = "xxxxx";
-
-        $twilio = new Client($twilioSid, $twilioApiKey);
-
-        $message = $twilio->messages
-            ->create($phoneNumber, // to
-                [
-                    "body" => $textToSend,      //"This is the test telephony message",
-                    "from" => $fromPhoneNumber //"+11234567890"
-                ]
-            );
-
-        print($message->sid);
-
-        return $message;
-    }
-
-    //twilioSid, twilioApiKey
-    public function getTelephonyParameters( $parameterName ) {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-        if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one site parameter object. Found '.count($entities).'object(s)' );
-        }
-        $siteParameters = $entities[0];
-
-        $telephonySiteParameter = $siteParameters->getTelephonySiteParameter();
-
-        //create one TelephonySiteParameter
-        if( !$telephonySiteParameter ) {
-            throw new \Exception( 'TelephonySiteParameter does not exists. Found ' );
-        }
-
-        $getMethod = 'get'.$parameterName;
-
-        if( !$telephonySiteParameter->$getMethod() ) {
-            //echo "return: no documents<br>";
-            return null;
-        }
-
-        $parameter = $telephonySiteParameter->$getMethod();
-
-        return $parameter;
-    }
+//    //twilioSid, twilioApiKey
+//    public function getTelephonyParameters( $parameterName ) {
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//        if( count($entities) != 1 ) {
+//            throw new \Exception( 'Must have only one site parameter object. Found '.count($entities).'object(s)' );
+//        }
+//        $siteParameters = $entities[0];
+//
+//        $telephonySiteParameter = $siteParameters->getTelephonySiteParameter();
+//
+//        //create one TelephonySiteParameter
+//        if( !$telephonySiteParameter ) {
+//            throw new \Exception( 'TelephonySiteParameter does not exists. Found ' );
+//        }
+//
+//        $getMethod = 'get'.$parameterName;
+//
+//        if( !$telephonySiteParameter->$getMethod() ) {
+//            //echo "return: no documents<br>";
+//            return null;
+//        }
+//
+//        $parameter = $telephonySiteParameter->$getMethod();
+//
+//        return $parameter;
+//    }
 
 }

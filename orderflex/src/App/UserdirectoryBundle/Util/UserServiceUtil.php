@@ -52,6 +52,7 @@ use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Twilio\Rest\Client;
 
 //use Crontab\Crontab;
 //use Crontab\Job;
@@ -2086,9 +2087,45 @@ Pathology and Laboratory Medicine",
         $encoder = $this->container->get('security.password_encoder');
         return $encoder;
     }
+    
+    public function sendText( $phoneNumber, $textToSend ) {
+        // Find your Account Sid and Auth Token at twilio.com/console
+        // DANGER! This is insecure. See http://twil.io/secure
+        //$sid    = "ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+        //$token  = "your_auth_token";
+        //$twilio = new Client($sid, $token);
+//        $message = $twilio->messages
+//            ->create("+1xxx", // to
+//                [
+//                    "body" => "This is the ship that made the Kessel Run in fourteen parsecs?",
+//                    "from" => "+1xxx"
+//                ]
+//            );
 
+        $userSecUtil = $this->container->get('user_security_utility');
 
+        $twilioSid = $userSecUtil->getSiteSettingParameter('twilioSid','Telephony');
+        $twilioApiKey = $userSecUtil->getSiteSettingParameter('twilioApiKey','Telephony');
+        $fromPhoneNumber = $userSecUtil->getSiteSettingParameter('fromPhoneNumber','Telephony');
 
+        //$twilioSid = "xxxxx";
+        //$twilioApiKey = "xxxxx";
+        //$fromPhoneNumber = "xxxxx";
+
+        $twilio = new Client($twilioSid, $twilioApiKey);
+
+        $message = $twilio->messages
+            ->create($phoneNumber, // to
+                [
+                    "body" => $textToSend,      //"This is the test telephony message",
+                    "from" => $fromPhoneNumber //"+11234567890"
+                ]
+            );
+
+        print($message->sid);
+
+        return $message;
+    }
 
 
 

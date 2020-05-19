@@ -1,0 +1,88 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}#}
+
+{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
+{% elseif sitename == 'resapp' %}
+    {% set extendStr = "AppResAppBundle/Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}
+{% elseif sitename == 'calllog' %}
+    {% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}
+{% elseif sitename == 'crn' %}
+    {% set extendStr = "AppCrnBundle/Default/base.html.twig" %}
+{% elseif sitename == 'translationalresearch' %}
+    {% set extendStr = "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+
+        <div class="col-md-6">
+            <p>
+                <button type="button" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>
+            </p>
+        </div>
+
+        <div class="col-md-3">
+        </div>
+    </div>
+
+    {#{{ form_start(form) }}#}
+    {#{{ form_errors(form) }}#}
+    {#{{ form_end(form) }}#}
+    <div class="row">
+
+        <div class="col-md-4">
+        </div>
+
+        <div class="col-md-4">
+
+            <form action="{{ url('employees_verify_code') }}" method="get">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"> Verify Now</button>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="col-md-4">
+        </div>
+
+    </div>
+
+{% endblock %}
