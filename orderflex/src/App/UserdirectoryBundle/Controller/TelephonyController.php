@@ -16,9 +16,51 @@ class TelephonyController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/verify-mobile/{userId}/{phoneNumber}", name="employees_verify_mobile", methods={"GET"})
+     * @Route("/verify-mobile-phone/{userId}/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
      */
     public function verifyMobileAction(Request $request, $userId, $phoneNumber)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //$text = "verificationcode";
+        //$text = random_int(1, 6);
+
+        //$userid
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        if( !$subjectUser ) {
+            throw new \Exception( 'User not found by id ' . $userId );
+        }
+
+        //if not admin, only logged in user can verify its own mobile phone number
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( $userId != $user->getId() ) {
+                return $this->redirect($this->generateUrl('employees-nopermission'));
+            }
+        }
+
+        $verifyCode = $this->assignVerificationCode($subjectUser,$phoneNumber);
+
+        $text = "Mobile phone number verification code $verifyCode";
+
+        $message = $this->sendText($phoneNumber,$text);
+
+        dump($message);
+
+        exit('EOF verifyMobileAction');
+
+//        return $this->render('AppUserdirectoryBundle/SignUp/index.html.twig', array(
+//            'signUps' => $signUps,
+//            'title' => "Sign Up for ".$this->siteNameStr,
+//            'sitenamefull' => $this->siteNameStr,
+//            'sitename' => $this->siteName
+//        ));
+    }
+
+    /**
+     * @Route("/verify-mobile-phone-ajax/{userId}/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
+     */
+    public function verifyMobileAjaxAction(Request $request, $userId, $phoneNumber)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();

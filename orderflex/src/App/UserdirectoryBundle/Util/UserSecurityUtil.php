@@ -2731,5 +2731,12 @@ class UserSecurityUtil {
         }
         return $tooltip;
     }
+
+//    //Only can verify its own mobile phone number
+//    public function canVerifyMobilePhoneNumber() {
+//        if( $user->getId() == ) {
+//            
+//        }
+//    }
     
 }

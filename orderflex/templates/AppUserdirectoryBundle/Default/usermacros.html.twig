@@ -1043,23 +1043,32 @@
                     <strong>{{ label }}</strong>
                 {% endif %}
             </div>
-            <div class="col-xs-5" align="left">
-                <div class="form-control form-control-modif" disabled>
-
-                    {{ usermacros.phoneHref(value) }}
-
+            {% if userInfo.vars.value.preferredMobilePhone %}
+                <div class="col-xs-5" align="left">
+                    <div class="form-control form-control-modif" disabled>
+                        {{ usermacros.phoneHref(value) }}
+                    </div>
                 </div>
-            </div>
-        <div class="col-xs-1" align="left">
-            <div class="form-control">
-                {% if userInfo.vars.value.preferredMobilePhoneVerified %}
-                    <button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>
-                {% else %}
-                    <p class="text-success">Verified</p>
-                {% endif %}
-
-            </div>
-        </div>
+                <div class="col-xs-1" align="left">
+                    {% if userInfo.vars.value.preferredMobilePhoneVerified  %}
+                        <p class="text-success">Verified</p>
+                    {% else %}
+                        {#Only can verify its own mobile phone number#}
+                        {% if app.user.getId() == userInfo.vars.value.user.id %}
+                            {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
+                            <a href="{{ path('employees_verify_mobile_phone', { 'userId': userInfo.vars.value.user.id, 'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>
+                        {% else %}
+                            <p class="text-warning">Unverified</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="col-xs-6" align="left">
+                    <div class="form-control form-control-modif" disabled>
+                        {{ usermacros.phoneHref(value) }}
+                    </div>
+                </div>
+            {% endif %}
         </div>
         </p>
         {% if label == "" %}

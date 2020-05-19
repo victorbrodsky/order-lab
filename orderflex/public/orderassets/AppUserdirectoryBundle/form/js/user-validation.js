@@ -397,3 +397,20 @@ function validateMrntypeIdentifier() {
 
     return true;
 }
+
+// function verifyMobilePhoneNumber(userId,preferredMobilePhone) {
+//     var valid = true;
+//     var url = getCommonBaseUrl("util/"+"ldap-usertype-userid","employees");
+//     $.ajax({
+//         url: url,
+//         type: 'GET',
+//         data: {userId: userId},
+//         timeout: _ajaxTimeout,
+//         async: false
+//     }).success(function(data) {
+//         if( data == "notok" ) {
+//             valid = false;
+//         }
+//     });
+//     return valid;
+// }

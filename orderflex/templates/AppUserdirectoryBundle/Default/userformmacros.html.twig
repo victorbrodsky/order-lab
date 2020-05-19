@@ -899,15 +899,27 @@
                                     </tr>
                                 {% endif %}
 
-                                {% if user.getPreferredMobilePhone %}
-                                    <tr>
-                                        <td class="left-column">mobile:</td>
-                                        <td>
-                                            {#{{ user.getPreferredMobilePhone }}#}
-                                            {{ usermacros.phoneHref(user.getPreferredMobilePhone) }}
-                                        </td>
-                                    </tr>
-                                {% endif %}
+                                {% for userInfo in user.getInfos() %}
+                                    {% if user.getPreferredMobilePhone %}
+                                        <tr>
+                                            <td class="left-column">mobile:</td>
+                                            <td>
+                                                {#{{ user.getPreferredMobilePhone }}#}
+                                                {{ usermacros.phoneHref(userInfo.getPreferredMobilePhone) }}
+                                                {% if userInfo.getPreferredMobilePhoneVerified %}
+                                                    <div class="left-column text-success">Verified</div>
+                                                {% else %}
+                                                    {#Only can verify its own mobile phone number#}
+                                                    {% if app.user.getId() == user.id %}
+                                                        <a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', { 'userId': user.id, 'phoneNumber': userInfo.getPreferredMobilePhone }) }}" target="_blank">Verify</a>
+                                                    {% else %}
+                                                        <div class="left-column text-warning">Unverified</div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             </table>
                         </div>
 
