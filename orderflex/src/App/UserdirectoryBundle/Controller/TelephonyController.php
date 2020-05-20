@@ -40,6 +40,9 @@ class TelephonyController extends OrderAbstractController {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        //$text = random_int(100000, 999999);
+        //echo "text=$text <br>";
+
         //It's better to check if current user has a $phoneNumber
         $preferredMobilePhone = $user->getPreferredMobilePhone();
 
@@ -47,19 +50,22 @@ class TelephonyController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        //$userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
-//        if( $userInfo ) {
-//            $userInfo->setMobilePhoneVerifyCode($text);
-//            $userInfo->setPreferredMobilePhoneVerified(false);
-//            $em->flush();
-//        }
+        if( $userInfo ) {
+            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+        }
+        
+        if( !$mobilePhoneVerified ) {
+            $mobilePhoneVerified = false;
+        }
 
         return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone.html.twig', array(
             'sitename' => $this->siteName,
             'title' => "Mobile Phone Verification",
             //'form' => $form->createView(),
-            'phoneNumber' => $phoneNumber
+            'phoneNumber' => $phoneNumber,
+            'mobilePhoneVerified' => $mobilePhoneVerified
         ));
     }
 
@@ -71,15 +77,42 @@ class TelephonyController extends OrderAbstractController {
     public function verifyCode(Request $request)
     {
         try {
+            $em = $this->getDoctrine()->getManager();
             // Get data from session
-            $data = $this->get('session')->get('user');
+            //$data = $this->get('session')->get('user');
             $verificationCode = $request->query->get('verify_code');
-            
-            if( $verificationCode ) {
-                
+            $verificationCode = trim($verificationCode);
+
+            $phoneNumber = $request->query->get('phoneNumber');
+            $phoneNumber = trim($phoneNumber);
+
+            if( $verificationCode && $phoneNumber ) {
+                $user = $this->get('security.token_storage')->getToken()->getUser();
+
+                $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+                if( $userInfo ) {
+                    $userVerificationCode = $userInfo->getPreferredMobilePhoneVerified();
+                    if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
+                        $userInfo->setMobilePhoneVerifyCode(null);
+                        $userInfo->setPreferredMobilePhoneVerified(true);
+                        $em->flush();
+
+                        $this->get('session')->getFlashBag()->add(
+                            'notice',
+                            'Mobile phone number is verified!.'
+                        );
+                    }
+                }
             }
 
-            return $this->redirectToRoute('home');
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Mobile phone number not verified!.'
+            );
+
+            //exit("verificationCode=[$verificationCode]");
+            return $this->redirectToRoute('employees_verify_mobile_phone',array('phoneNumber'=>$phoneNumber));
 
 
         } catch (\Exception $exception) {
@@ -87,7 +120,7 @@ class TelephonyController extends OrderAbstractController {
                 'error',
                 'Verification code is incorrect'
             );
-            return $this->redirectToRoute('employees_verify_mobile_phone');
+            return $this->redirectToRoute('employees_verify_mobile_phone',array('phoneNumber'=>$phoneNumber));
         }
     }
 
@@ -100,11 +133,11 @@ class TelephonyController extends OrderAbstractController {
 //    }
 
     /**
-     * @Route("/verify-mobile-phone-ajax/{userId}/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
+     * @Route("/verify-mobile-phone-ajax/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
      */
-    public function verifyMobileAjaxAction(Request $request, $userId, $phoneNumber)
+    public function verifyMobileAjaxAction(Request $request, $phoneNumber)
     {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -112,19 +145,30 @@ class TelephonyController extends OrderAbstractController {
         //$text = random_int(1, 6);
 
         //$userid
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-        if( !$subjectUser ) {
-            throw new \Exception( 'User not found by id ' . $userId );
-        }
+//        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+//        if( !$subjectUser ) {
+//            throw new \Exception( 'User not found by id ' . $userId );
+//        }
 
         //if not admin, only logged in user can verify its own mobile phone number
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $userId != $user->getId() ) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            if( $userId != $user->getId() ) {
+//                return $this->redirect($this->generateUrl('employees-nopermission'));
+//            }
+//        }
+
+        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+        if( $userInfo ) {
+            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
+            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+                //ok
+            } else {
                 return $this->redirect($this->generateUrl('employees-nopermission'));
             }
         }
 
-        $verifyCode = $this->assignVerificationCode($subjectUser,$phoneNumber);
+        $verifyCode = $this->assignVerificationCode($user,$phoneNumber);
 
         $text = "Mobile phone number verification code $verifyCode";
 
@@ -144,7 +188,7 @@ class TelephonyController extends OrderAbstractController {
 
     public function assignVerificationCode($user,$phoneNumber) {
         $em = $this->getDoctrine()->getManager();
-        $text = random_int(1, 6);
+        $text = random_int(100000, 999999);
         
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
         

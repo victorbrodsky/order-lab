@@ -1033,6 +1033,11 @@
         {% set showFlag = false %}
     {% endif %}
 
+    {#{% set showFlag = true %}#}
+
+    {#cycle={{ cycle }}<br>#}
+    {#showFlag={{ showFlag }}<br>#}
+
     {% if showFlag %}
         <p>
         <div class="row">
@@ -1056,7 +1061,7 @@
                         {#Only can verify its own mobile phone number#}
                         {% if app.user.getId() == userInfo.vars.value.user.id %}
                             {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
-                            <a href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>
+                            <a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>
                         {% else %}
                             <p class="text-warning">Unverified</p>
                         {% endif %}

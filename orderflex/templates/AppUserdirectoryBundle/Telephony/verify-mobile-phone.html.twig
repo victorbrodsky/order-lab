@@ -49,14 +49,27 @@
         </div>
 
         <div class="col-md-6">
-            <p>
-                <button type="button" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>
-            </p>
+            {% if mobilePhoneVerified %}
+                <p class="text-success">Mobile phone number verified</p>
+            {% else %}
+                <p class="text-danger">Mobile phone number is not verified</p>
+            {% endif %}
+
+            {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
+            {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
+            <form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">
+                <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                <p>
+                    <button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>
+                </p>
+            </form>
         </div>
 
         <div class="col-md-3">
         </div>
     </div>
+
+    <br><br>
 
     {#{{ form_start(form) }}#}
     {#{{ form_errors(form) }}#}
@@ -69,6 +82,7 @@
         <div class="col-md-4">
 
             <form action="{{ url('employees_verify_code') }}" method="get">
+                <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
                 <div class="form-group">
                     <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
                 </div>

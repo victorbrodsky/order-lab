@@ -911,7 +911,7 @@
                                                 {% else %}
                                                     {#Only can verify its own mobile phone number#}
                                                     {% if app.user.getId() == user.id %}
-                                                        <a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>
+                                                        <a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>
                                                     {% else %}
                                                         <div class="left-column text-warning">Unverified</div>
                                                     {% endif %}
