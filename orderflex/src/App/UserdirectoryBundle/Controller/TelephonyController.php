@@ -3,6 +3,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 //use Twilio\Rest\Client;
@@ -92,7 +93,7 @@ class TelephonyController extends OrderAbstractController {
                 $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
                 if( $userInfo ) {
-                    $userVerificationCode = $userInfo->getPreferredMobilePhoneVerified();
+                    $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
                     if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
                         $userInfo->setMobilePhoneVerifyCode(null);
                         $userInfo->setPreferredMobilePhoneVerified(true);
@@ -102,8 +103,20 @@ class TelephonyController extends OrderAbstractController {
                             'notice',
                             'Mobile phone number is verified!.'
                         );
+                    } else {
+                        //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+                        $this->get('session')->getFlashBag()->add(
+                            'warning',
+                            'Verification code does not match.'
+                        );
                     }
                 }
+            } else {
+                //exit("Invalid input parameters: verificationCode=[$verificationCode], phoneNumber=[$phoneNumber]");
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    'Logical error: invalid input parameters.'
+                );
             }
 
             $this->get('session')->getFlashBag()->add(
@@ -111,11 +124,12 @@ class TelephonyController extends OrderAbstractController {
                 'Mobile phone number not verified!.'
             );
 
-            //exit("verificationCode=[$verificationCode]");
+            //exit("OK verificationCode=[$verificationCode]");
             return $this->redirectToRoute('employees_verify_mobile_phone',array('phoneNumber'=>$phoneNumber));
 
 
         } catch (\Exception $exception) {
+            //exit("Verification code is incorrect");
             $this->addFlash(
                 'error',
                 'Verification code is incorrect'
@@ -132,14 +146,24 @@ class TelephonyController extends OrderAbstractController {
 //        return $form;
 //    }
 
+    //Route("/verify-mobile-phone-ajax/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
     /**
-     * @Route("/verify-mobile-phone-ajax/{phoneNumber}", name="employees_verify_mobile_phone_ajax", methods={"GET"})
+     * https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
+     *
+     * @Route("/verify-mobile-phone-ajax", name="employees_verify_mobile_phone_ajax", methods={"POST"}, options={"expose"=true})
      */
-    public function verifyMobileAjaxAction(Request $request, $phoneNumber)
+    public function verifyMobileAjaxAction(Request $request)
     {
         //$em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //Testing
+        $res = 'OK';
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
 
         //$text = "verificationcode";
         //$text = random_int(1, 6);
@@ -157,6 +181,8 @@ class TelephonyController extends OrderAbstractController {
 //            }
 //        }
 
+        $phoneNumber = $request->get('phoneNumber');
+
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
         if( $userInfo ) {
@@ -168,15 +194,14 @@ class TelephonyController extends OrderAbstractController {
             }
         }
 
-        $verifyCode = $this->assignVerificationCode($user,$phoneNumber);
+        $verifyCode = $userServiceUtil->assignVerificationCode($user,$phoneNumber);
 
         $text = "Mobile phone number verification code $verifyCode";
 
         $message = $userServiceUtil->sendText($phoneNumber,$text);
 
-        dump($message);
-
-        exit('EOF verifyMobileAction');
+        //dump($message);
+        //exit('EOF verifyMobileAction');
 
 //        return $this->render('AppUserdirectoryBundle/SignUp/index.html.twig', array(
 //            'signUps' => $signUps,
@@ -184,23 +209,38 @@ class TelephonyController extends OrderAbstractController {
 //            'sitenamefull' => $this->siteNameStr,
 //            'sitename' => $this->siteName
 //        ));
-    }
 
-    public function assignVerificationCode($user,$phoneNumber) {
-        $em = $this->getDoctrine()->getManager();
-        $text = random_int(100000, 999999);
-        
-        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
-        
-        if( $userInfo ) {
-            $userInfo->setMobilePhoneVerifyCode($text);
-            $userInfo->setPreferredMobilePhoneVerified(false);
-            $em->flush();
+//        $errorMessage = $message['error_message'];
+        //$messageProperties = $message['properties'];
+        //$errorMessage = $messageProperties['errorMessage'];
+        $errorMessage = $message->errorMessage;
+        //$status = $message->status;
+        if( $errorMessage ) {
+            $res = $errorMessage;
+        } else {
+            $res = 'OK';
         }
 
-        return $text;
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
+//    public function assignVerificationCode($user,$phoneNumber) {
+//        $em = $this->getDoctrine()->getManager();
+//        $text = random_int(100000, 999999);
+//
+//        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+//
+//        if( $userInfo ) {
+//            $userInfo->setMobilePhoneVerifyCode($text);
+//            $userInfo->setPreferredMobilePhoneVerified(false);
+//            $em->flush();
+//        }
+//
+//        return $text;
+//    }
 //    public function sendText( $phoneNumber, $textToSend ) {
 //        // Find your Account Sid and Auth Token at twilio.com/console
 //        // DANGER! This is insecure. See http://twil.io/secure

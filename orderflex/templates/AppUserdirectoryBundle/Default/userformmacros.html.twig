@@ -907,13 +907,13 @@
                                                 {#{{ user.getPreferredMobilePhone }}#}
                                                 {{ usermacros.phoneHref(userInfo.getPreferredMobilePhone) }}
                                                 {% if userInfo.getPreferredMobilePhoneVerified %}
-                                                    <div class="left-column text-success">Verified</div>
+                                                    <span class="text-success">Verified</span>
                                                 {% else %}
                                                     {#Only can verify its own mobile phone number#}
                                                     {% if app.user.getId() == user.id %}
                                                         <a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>
                                                     {% else %}
-                                                        <div class="left-column text-warning">Unverified</div>
+                                                        <span class="text-warning">Unverified</span>
                                                     {% endif %}
                                                 {% endif %}
                                             </td>

@@ -57,12 +57,22 @@
 
             {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
             {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
-            <form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">
-                <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-                <p>
-                    <button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>
-                </p>
-            </form>
+            {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
+                {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                {#<p>#}
+                    {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
+                {#</p>#}
+            {#</form>#}
+
+            <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+            <p>
+                <button
+                    id="send-verification-code-button"
+                    type="button" class="btn btn-success send-verification-code"
+                    onclick="sendVerificationCode({{ phoneNumber }});"
+                >Send Verification Code to {{ phoneNumber }}</button>
+            </p>
+
         </div>
 
         <div class="col-md-3">

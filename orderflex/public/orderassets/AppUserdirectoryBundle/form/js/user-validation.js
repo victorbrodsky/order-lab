@@ -414,3 +414,37 @@ function validateMrntypeIdentifier() {
 //     });
 //     return valid;
 // }
+
+function sendVerificationCode(phoneNumber) {
+
+    var btn = document.getElementById("send-verification-code-button");
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
+
+    var url = Routing.generate('employees_verify_mobile_phone_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        type: "POST",
+        data: {phoneNumber: phoneNumber},
+        //dataType: 'json',
+        async: asyncflag
+    }).done(function(response) {
+        console.log(response);
+        if( response == 'OK' ) {
+            //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
+            $("#send-verification-code-button").html('Verification Code sent to +'+phoneNumber);
+            //$('#send-verification-code-button').prop('disabled', true);
+            $('#send-verification-code-button').attr('disabled','disabled');
+        }
+    }).always(function() {
+        lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        lbtn.stop();
+        console.log('Error : ' + errorThrown);
+    });
+
+    return true;
+}

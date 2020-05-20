@@ -2087,7 +2087,21 @@ Pathology and Laboratory Medicine",
         $encoder = $this->container->get('security.password_encoder');
         return $encoder;
     }
-    
+
+    public function assignVerificationCode($user,$phoneNumber) {
+        $text = random_int(100000, 999999);
+
+        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+        if( $userInfo ) {
+            $userInfo->setMobilePhoneVerifyCode($text);
+            $userInfo->setPreferredMobilePhoneVerified(false);
+            $this->em->flush();
+        }
+
+        return $text;
+    }
+    //https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
     public function sendText( $phoneNumber, $textToSend ) {
         // Find your Account Sid and Auth Token at twilio.com/console
         // DANGER! This is insecure. See http://twil.io/secure
@@ -2122,7 +2136,7 @@ Pathology and Laboratory Medicine",
                 ]
             );
 
-        print($message->sid);
+        //print($message->sid);
 
         return $message;
     }
