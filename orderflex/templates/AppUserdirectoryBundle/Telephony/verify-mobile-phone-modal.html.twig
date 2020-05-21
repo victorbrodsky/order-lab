@@ -1,0 +1,149 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#<div class="modal fade" id="createmodel" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">#}
+    {#<div class="modal-dialog" role="document">#}
+
+        {#<div class="modal-content">#}
+
+            {#<div class="modal-header">#}
+                {#<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>#}
+                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                    {#<span aria-hidden="true">&times;</span>#}
+                {#</button>#}
+            {#</div> #}{#modal-header#}
+
+            {#<div class="modal-body">#}
+                {#<div class="row">#}
+                    {#<div class="col-md-3">#}
+                    {#</div>#}
+
+                    {#{% set mobilePhoneVerified = false %}#}
+
+                    {#<div class="col-md-6">#}
+                        {#{% if mobilePhoneVerified %}#}
+                            {#<p class="text-success">Mobile phone number verified</p>#}
+                        {#{% else %}#}
+                            {#<p class="text-danger">Mobile phone number is not verified</p>#}
+                        {#{% endif %}#}
+
+                        {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
+                        {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
+                        {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
+                        {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                        {#<p>#}
+                        {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
+                        {#</p>#}
+                        {#</form>#}
+
+                        {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                        {#<p>#}
+                            {#<button#}
+                                    {#id="send-verification-code-button"#}
+                                    {#type="button" class="btn btn-success send-verification-code"#}
+                                    {#onclick="sendVerificationCode({{ phoneNumber }});"#}
+                            {#>Send Verification Code to {{ phoneNumber }}</button>#}
+                        {#</p>#}
+
+                    {#</div>#}
+
+                    {#<div class="col-md-3">#}
+                    {#</div>#}
+                {#</div>#}
+
+                {#<br><br>#}
+
+                {#{{ form_start(form) }}#}
+                {#{{ form_errors(form) }}#}
+                {#{{ form_end(form) }}#}
+                {#<div class="row">#}
+
+                    {#<div class="col-md-4">#}
+                    {#</div>#}
+
+                    {#<div class="col-md-4">#}
+
+                        {#<form action="{{ url('employees_verify_code') }}" method="get">#}
+                            {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                            {#<div class="form-group">#}
+                                {#<input type="text" class="form-control" name="verify_code" placeholder="Enter code here">#}
+                            {#</div>#}
+
+                            {#<div class="form-group">#}
+                                {#<button type="submit" class="btn btn-success"> Verify Now</button>#}
+                            {#</div>#}
+                        {#</form>#}
+
+                    {#</div>#}
+
+                    {#<div class="col-md-4">#}
+                    {#</div>#}
+
+                {#</div>#}
+
+            {#</div>#}
+        {#</div> #}{#modal-body#}
+
+        {#<div class="modal-footer">#}
+            {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+            {#<button type="button" class="btn btn-primary">Save changes</button>#}
+        {#</div> #}{#modal-footer#}
+
+    {#</div>#}
+{#</div>#}
+
+
+
+<!-- Modal -->
+{#<div class="modal" id="verifyMobilePhoneModal" tabindex="-1" role="dialog" aria-labelledby="verifyMobilePhoneModalLabel" aria-hidden="true">#}
+    {#<div class="modal-dialog" role="document">#}
+        {#<div class="modal-content">#}
+            {#<div class="modal-header">#}
+                {#<h5 class="modal-title" id="verifyMobilePhoneModalLabel">Modal title</h5>#}
+                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                    {#<span aria-hidden="true">&times;</span>#}
+                {#</button>#}
+            {#</div>#}
+            {#<div class="modal-body">#}
+                {#...#}
+            {#</div>#}
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+                {#<button type="button" class="btn btn-primary">Save changes</button>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+{#</div>#}
+
+<div class="modal fade" id="verifyMobilePhoneModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {#<div class="modal-header">#}
+                {#<h5 class="modal-title">Modal title</h5>#}
+                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+                    {#<span aria-hidden="true">&times;</span>#}
+                {#</button>#}
+            {#</div>#}
+            {#<div class="modal-body">#}
+                <p>Modal body text goes here.</p>
+            {#</div>#}
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+                {#<button type="button" class="btn btn-primary">Save changes</button>#}
+            {#</div>#}
+        </div>
+    </div>
+</div>

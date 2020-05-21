@@ -71,6 +71,45 @@ class TelephonyController extends OrderAbstractController {
     }
 
     /**
+     * Get verification form
+     *
+     * @Route("/verify-mobile-phone-modal/{phoneNumber}", name="employees_verify_mobile_phone_modal", methods={"GET"})
+     */
+    public function verifyMobileModalAction(Request $request, $phoneNumber)
+    {
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //$text = random_int(100000, 999999);
+        //echo "text=$text <br>";
+
+        //It's better to check if current user has a $phoneNumber
+        $preferredMobilePhone = $user->getPreferredMobilePhone();
+
+        if( $preferredMobilePhone != $phoneNumber ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+        if( $userInfo ) {
+            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+        }
+
+        if( !$mobilePhoneVerified ) {
+            $mobilePhoneVerified = false;
+        }
+
+        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig', array(
+            'sitename' => $this->siteName,
+            'title' => "Mobile Phone Verification",
+            //'form' => $form->createView(),
+            'phoneNumber' => $phoneNumber,
+            'mobilePhoneVerified' => $mobilePhoneVerified
+        ));
+    }
+
+    /**
      * @Route("/verify/code", name="employees_verify_code")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
