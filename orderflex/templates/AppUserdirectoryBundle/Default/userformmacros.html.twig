@@ -913,11 +913,13 @@
                                                     {% if app.user.getId() == user.id %}
                                                         <a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>
 
-                                                <button type="button"
-                                                        class="btn btn-dark"
-                                                        href="{{ path('employees_verify_mobile_phone_modal', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}"
-                                                        data-toggle="modal" data-target="#verifyMobilePhoneModal" data-whatever="{{ userInfo.getPreferredMobilePhone }}"
-                                                >Verify Modal</button>
+                                                        {#<button type="button"#}
+                                                                {#class="btn btn-dark"#}
+                                                                {#href="{{ path('employees_verify_mobile_phone_modal', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}"#}
+                                                                {#data-toggle="modal" data-target="#verifyMobilePhoneModal" data-whatever="{{ userInfo.getPreferredMobilePhone }}"#}
+                                                        {#>Verify Modal</button>#}
+
+                                                        <button type="button" class="btn btn-dark" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify Modal</button>
 
                                                         {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.getPreferredMobilePhone, mobilePhoneVerified:userInfo.getPreferredMobilePhoneVerified } %}
 

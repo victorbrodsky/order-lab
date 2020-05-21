@@ -279,7 +279,7 @@ function getAjaxTimeoutMsg() {
 }
 
 function keepWorking() {
-    //console.log("keep working");
+    //console.log("keep working: hide modal");
     $('#idle-timeout').modal('hide');
 }
 

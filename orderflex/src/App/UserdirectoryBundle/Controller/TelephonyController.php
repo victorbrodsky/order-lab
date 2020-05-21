@@ -70,44 +70,44 @@ class TelephonyController extends OrderAbstractController {
         ));
     }
 
-    /**
-     * Get verification form
-     *
-     * @Route("/verify-mobile-phone-modal/{phoneNumber}", name="employees_verify_mobile_phone_modal", methods={"GET"})
-     */
-    public function verifyMobileModalAction(Request $request, $phoneNumber)
-    {
-
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        //$text = random_int(100000, 999999);
-        //echo "text=$text <br>";
-
-        //It's better to check if current user has a $phoneNumber
-        $preferredMobilePhone = $user->getPreferredMobilePhone();
-
-        if( $preferredMobilePhone != $phoneNumber ) {
-            return $this->redirect($this->generateUrl('employees-nopermission'));
-        }
-
-        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
-
-        if( $userInfo ) {
-            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
-        }
-
-        if( !$mobilePhoneVerified ) {
-            $mobilePhoneVerified = false;
-        }
-
-        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig', array(
-            'sitename' => $this->siteName,
-            'title' => "Mobile Phone Verification",
-            //'form' => $form->createView(),
-            'phoneNumber' => $phoneNumber,
-            'mobilePhoneVerified' => $mobilePhoneVerified
-        ));
-    }
+//    /**
+//     * Get verification form
+//     *
+//     * @Route("/verify-mobile-phone-modal/{phoneNumber}", name="employees_verify_mobile_phone_modal", methods={"GET"})
+//     */
+//    public function verifyMobileModalAction(Request $request, $phoneNumber)
+//    {
+//
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        //$text = random_int(100000, 999999);
+//        //echo "text=$text <br>";
+//
+//        //It's better to check if current user has a $phoneNumber
+//        $preferredMobilePhone = $user->getPreferredMobilePhone();
+//
+//        if( $preferredMobilePhone != $phoneNumber ) {
+//            return $this->redirect($this->generateUrl('employees-nopermission'));
+//        }
+//
+//        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+//
+//        if( $userInfo ) {
+//            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+//        }
+//
+//        if( !$mobilePhoneVerified ) {
+//            $mobilePhoneVerified = false;
+//        }
+//
+//        return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig', array(
+//            'sitename' => $this->siteName,
+//            'title' => "Mobile Phone Verification",
+//            //'form' => $form->createView(),
+//            'phoneNumber' => $phoneNumber,
+//            'mobilePhoneVerified' => $mobilePhoneVerified
+//        ));
+//    }
 
     /**
      * @Route("/verify/code", name="employees_verify_code")
@@ -198,11 +198,11 @@ class TelephonyController extends OrderAbstractController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //Testing
-        $res = 'OK';
-        $json = json_encode($res);
-        $response = new Response($json);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+//        $res = 'OK';
+//        $json = json_encode($res);
+//        $response = new Response($json);
+//        $response->headers->set('Content-Type', 'application/json');
+//        return $response;
 
         //$text = "verificationcode";
         //$text = random_int(1, 6);
@@ -222,15 +222,18 @@ class TelephonyController extends OrderAbstractController {
 
         $phoneNumber = $request->get('phoneNumber');
 
-        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+//        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+//        if( $userInfo ) {
+//            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
+//            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+//                //ok
+//            } else {
+//                return $this->redirect($this->generateUrl('employees-nopermission'));
+//            }
+//        }
 
-        if( $userInfo ) {
-            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
-            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
-                //ok
-            } else {
-                return $this->redirect($this->generateUrl('employees-nopermission'));
-            }
+        if( $userServiceUtil->userCanVerifyPhoneNumber($phoneNumber) === false ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $verifyCode = $userServiceUtil->assignVerificationCode($user,$phoneNumber);
@@ -265,6 +268,72 @@ class TelephonyController extends OrderAbstractController {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
+    /**
+     * @Route("/verify-code-ajax", name="employees_verify_code_ajax", methods={"POST"}, options={"expose"=true})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function verifyCodeAjaxAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userServiceUtil = $this->get('user_service_utility');
+
+        // Get data
+        $verificationCode = $request->query->get('verify_code');
+        $verificationCode = trim($verificationCode);
+
+        $phoneNumber = $request->query->get('phoneNumber');
+        $phoneNumber = trim($phoneNumber);
+
+        $res = "Phone number is not verified";
+
+        if( $userServiceUtil->userCanVerifyPhoneNumber($phoneNumber) === false ) {
+            $res = "User can not verify this phone number";
+            $json = json_encode($res);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        if ($verificationCode && $phoneNumber) {
+
+            $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+            if ($userInfo) {
+                $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
+                if ($verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode) {
+                    $userInfo->setMobilePhoneVerifyCode(null);
+                    $userInfo->setPreferredMobilePhoneVerified(true);
+                    $em->flush();
+                    $res = "OK";
+                } else {
+                    //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+                    $res = "Verification code does not match";
+                }
+            }
+        }
+
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+//    public function userCanVerifyPhoneNumber($phoneNumber) {
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+//
+//        if( $userInfo ) {
+//            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
+//            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
 //    public function assignVerificationCode($user,$phoneNumber) {
 //        $em = $this->getDoctrine()->getManager();

@@ -2140,6 +2140,23 @@ Pathology and Laboratory Medicine",
 
         return $message;
     }
+    public function userCanVerifyPhoneNumber($phoneNumber) {
+        //$user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
+        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+
+        if( $userInfo ) {
+            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
+            echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
 
 

@@ -14,67 +14,59 @@
     limitations under the License.
 #}
 
-{#<div class="modal fade" id="createmodel" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">#}
-    {#<div class="modal-dialog" role="document">#}
+<div class="modal fade" id="verifyMobilePhoneModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
 
-        {#<div class="modal-content">#}
+        <div class="modal-content">
 
-            {#<div class="modal-header">#}
-                {#<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>#}
-                {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-                    {#<span aria-hidden="true">&times;</span>#}
-                {#</button>#}
-            {#</div> #}{#modal-header#}
+            <div class="modal-header">
+                {#<h5 class="modal-title" id="exampleModalLabel">Verify mobile phone number {{ phoneNumber }}</h5>#}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {#modal-header#}
 
-            {#<div class="modal-body">#}
-                {#<div class="row">#}
-                    {#<div class="col-md-3">#}
-                    {#</div>#}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                    </div>
 
-                    {#{% set mobilePhoneVerified = false %}#}
+                    {% set mobilePhoneVerified = false %}
 
-                    {#<div class="col-md-6">#}
-                        {#{% if mobilePhoneVerified %}#}
-                            {#<p class="text-success">Mobile phone number verified</p>#}
-                        {#{% else %}#}
-                            {#<p class="text-danger">Mobile phone number is not verified</p>#}
-                        {#{% endif %}#}
+                    <div class="col-md-6">
 
-                        {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
-                        {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
-                        {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
-                        {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                        {#<p>#}
-                        {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
-                        {#</p>#}
-                        {#</form>#}
+                        <div id="phone-number-verify-status">
+                            {% if mobilePhoneVerified %}
+                                <p class="text-success">Mobile phone number verified</p>
+                            {% else %}
+                                <p class="text-danger">Mobile phone number is not verified</p>
+                            {% endif %}
+                        </div>
 
-                        {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                        {#<p>#}
-                            {#<button#}
-                                    {#id="send-verification-code-button"#}
-                                    {#type="button" class="btn btn-success send-verification-code"#}
-                                    {#onclick="sendVerificationCode({{ phoneNumber }});"#}
-                            {#>Send Verification Code to {{ phoneNumber }}</button>#}
-                        {#</p>#}
+                        <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                        <p>
+                            <button
+                                    id="send-verification-code-button"
+                                    type="button" class="btn btn-success send-verification-code-button"
+                                    onclick="sendVerificationCode({{ phoneNumber }});"
+                            >Send Verification Code to {{ phoneNumber }}</button>
+                        </p>
 
-                    {#</div>#}
+                    </div>
 
-                    {#<div class="col-md-3">#}
-                    {#</div>#}
-                {#</div>#}
+                    <div class="col-md-3">
+                    </div>
+                </div>
 
-                {#<br><br>#}
+                <br><br>
 
-                {#{{ form_start(form) }}#}
-                {#{{ form_errors(form) }}#}
-                {#{{ form_end(form) }}#}
-                {#<div class="row">#}
+                <div class="row">
 
-                    {#<div class="col-md-4">#}
-                    {#</div>#}
+                    <div class="col-md-4">
+                    </div>
 
-                    {#<div class="col-md-4">#}
+                    <p class="col-md-4">
 
                         {#<form action="{{ url('employees_verify_code') }}" method="get">#}
                             {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
@@ -83,27 +75,41 @@
                             {#</div>#}
 
                             {#<div class="form-group">#}
-                                {#<button type="submit" class="btn btn-success"> Verify Now</button>#}
+                                {#<button type="submit" class="btn btn-success">Verify Now</button>#}
                             {#</div>#}
                         {#</form>#}
 
-                    {#</div>#}
+                        <p>
+                            <input id="phone-number-verification-code" type="text" class="form-control" name="verify_code" placeholder="Enter code here">
 
-                    {#<div class="col-md-4">#}
-                    {#</div>#}
+                            <button
+                                    id="verify-code-button"
+                                    type="button" class="btn btn-success verify-code-button"
+                                    onclick="verifyPhoneNumberCode({{ phoneNumber }},$('#phone-number-verification-code').val());"
+                            >Verify Now</button>
+                        </p>
 
-                {#</div>#}
+                    </div>
 
-            {#</div>#}
-        {#</div> #}{#modal-body#}
+                    <div class="col-md-4">
+                    </div>
 
-        {#<div class="modal-footer">#}
-            {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
-            {#<button type="button" class="btn btn-primary">Save changes</button>#}
-        {#</div> #}{#modal-footer#}
+                </div>
 
-    {#</div>#}
-{#</div>#}
+            </div>
+            {#modal-body#}
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {#<button type="button" class="btn btn-primary">Save changes</button>#}
+            </div>
+            {#modal-footer#}
+
+        </div>
+        {#modal-content#}
+
+    </div>
+</div>
 
 
 
@@ -128,9 +134,9 @@
     {#</div>#}
 {#</div>#}
 
-<div class="modal fade" id="verifyMobilePhoneModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+{#<div class="modal fade" id="verifyMobilePhoneModal">#}
+    {#<div class="modal-dialog">#}
+        {#<div class="modal-content">#}
             {#<div class="modal-header">#}
                 {#<h5 class="modal-title">Modal title</h5>#}
                 {#<button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
@@ -138,12 +144,12 @@
                 {#</button>#}
             {#</div>#}
             {#<div class="modal-body">#}
-                <p>Modal body text goes here.</p>
+                {#<p>Modal body text goes here.</p>#}
             {#</div>#}
             {#<div class="modal-footer">#}
                 {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
                 {#<button type="button" class="btn btn-primary">Save changes</button>#}
             {#</div>#}
-        </div>
-    </div>
-</div>
+        {#</div>#}
+    {#</div>#}
+{#</div>#}

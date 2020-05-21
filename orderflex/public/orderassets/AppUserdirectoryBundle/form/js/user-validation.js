@@ -434,13 +434,50 @@ function sendVerificationCode(phoneNumber) {
     }).done(function(response) {
         console.log(response);
         if( response == 'OK' ) {
+            lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
             $("#send-verification-code-button").html('Verification Code sent to +'+phoneNumber);
-            //$('#send-verification-code-button').prop('disabled', true);
-            $('#send-verification-code-button').attr('disabled','disabled');
+            $("#send-verification-code-button").prop('disabled', true);
+            //$("#send-verification-code-button").attr('disabled','disabled');
         }
     }).always(function() {
+        //lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
         lbtn.stop();
+        console.log('Error : ' + errorThrown);
+    });
+
+    return true;
+}
+function verifyPhoneNumberCode(phoneNumber,verificationCode) {
+    var btn = document.getElementById("verify-code-button");
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
+
+    var url = Routing.generate('employees_verify_code_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        type: "POST",
+        data: {phoneNumber: phoneNumber, verificationCode: verificationCode},
+        //dataType: 'json',
+        async: asyncflag
+    }).done(function(response) {
+        console.log(response);
+        if( response == 'OK' ) {
+            lbtn.stop();
+            //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
+            $("#phone-number-verify-status").html('<p class="text-success">Mobile phone number verified</p>');
+            $("#send-verification-code-button").html('Re-send Verification Code to +'+phoneNumber);
+            $("#send-verification-code-button").prop('disabled', false);
+        } else {
+            lbtn.stop();
+            alert(response);
+        }
+    }).always(function() {
+        //lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
         lbtn.stop();
         console.log('Error : ' + errorThrown);
