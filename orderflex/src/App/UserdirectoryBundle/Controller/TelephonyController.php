@@ -317,6 +317,10 @@ class TelephonyController extends OrderAbstractController {
                     $userInfo->setPreferredMobilePhoneVerified(true);
                     $em->flush();
                     $res = "OK";
+
+                    //EventLog
+
+
                 } else {
                     //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                     $res = "Verification code does not match";

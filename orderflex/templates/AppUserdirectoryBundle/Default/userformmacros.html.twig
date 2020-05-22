@@ -907,7 +907,7 @@
                                                 {#{{ user.getPreferredMobilePhone }}#}
                                                 {{ usermacros.phoneHref(userInfo.getPreferredMobilePhone) }}
                                                 {% if userInfo.getPreferredMobilePhoneVerified %}
-                                                    <span id="phone-number-verify-status">
+                                                    <span id="phone-number-verify-status" class="phone-number-verify-status">
                                                         <span class="text-success">Verified</span>
                                                     </span>
                                                 {% else %}
@@ -921,13 +921,12 @@
                                                                 {#data-toggle="modal" data-target="#verifyMobilePhoneModal" data-whatever="{{ userInfo.getPreferredMobilePhone }}"#}
                                                         {#>Verify Modal</button>#}
 
-                                                        <button type="button" id="verify-phone-number-button" class="btn btn-primary" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
-                                                        <span id="phone-number-verify-status"></span>
-
+                                                        <button type="button" id="verify-phone-number-button" class="btn btn-primary verify-phone-number-button" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
+                                                        <span id="phone-number-verify-status" class="phone-number-verify-status"></span>
                                                         {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.getPreferredMobilePhone, mobilePhoneVerified:userInfo.getPreferredMobilePhoneVerified } %}
 
                                                     {% else %}
-                                                        <span id="phone-number-verify-status">
+                                                        <span id="phone-number-verify-status" class="phone-number-verify-status">
                                                             <span class="text-warning">Unverified</span>
                                                         </span>
                                                     {% endif %}

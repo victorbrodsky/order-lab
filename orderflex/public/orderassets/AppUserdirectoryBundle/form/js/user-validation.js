@@ -484,8 +484,8 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
             $("#send-verification-code-button-modal").html('Re-send Verification Code to +'+phoneNumber);
             $("#send-verification-code-button-modal").prop('disabled', false);
 
-            $('#verify-phone-number-button').remove();
-            $('#phone-number-verify-status').html('<span class="text-success">Verified</span>');
+            $('.verify-phone-number-button').remove();
+            $('.phone-number-verify-status').html('<span class="text-success">Verified</span>');
         } else {
             lbtn.stop();
             alert(response);
