@@ -1505,10 +1505,12 @@ class User extends UserBase {
      */
     public function getUserInfoByPreferredMobilePhone($preferredMobilePhone)
     {
+        $preferredMobilePhone = str_replace("+","",$preferredMobilePhone);
         $value = null;
         $infos = $this->getInfos();
         foreach($infos as $info) {
             $thisPreferredMobilePhone = $info->getPreferredMobilePhone();
+            $thisPreferredMobilePhone = str_replace("+","",$thisPreferredMobilePhone);
             if( $thisPreferredMobilePhone && $preferredMobilePhone && $thisPreferredMobilePhone == $preferredMobilePhone ) {
                 return $info;
             }

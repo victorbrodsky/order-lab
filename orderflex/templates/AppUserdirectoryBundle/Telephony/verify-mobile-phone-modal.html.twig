@@ -20,7 +20,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                {#<h5 class="modal-title" id="exampleModalLabel">Verify mobile phone number {{ phoneNumber }}</h5>#}
+                <h5 style="text-align:center" class="modal-title" id="exampleModalLabel">Verify mobile phone number {{ phoneNumber }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -36,7 +36,7 @@
 
                     <div class="col-md-6">
 
-                        <div id="phone-number-verify-status">
+                        <div id="phone-number-verify-status-modal">
                             {% if mobilePhoneVerified %}
                                 <p class="text-success">Mobile phone number verified</p>
                             {% else %}
@@ -47,8 +47,8 @@
                         <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
                         <p>
                             <button
-                                    id="send-verification-code-button"
-                                    type="button" class="btn btn-success send-verification-code-button"
+                                    id="send-verification-code-button-modal"
+                                    type="button" class="btn btn-success send-verification-code-button-modal"
                                     onclick="sendVerificationCode({{ phoneNumber }});"
                             >Send Verification Code to {{ phoneNumber }}</button>
                         </p>
@@ -62,11 +62,8 @@
                 <br><br>
 
                 <div class="row">
-
-                    <div class="col-md-4">
-                    </div>
-
-                    <p class="col-md-4">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
 
                         {#<form action="{{ url('employees_verify_code') }}" method="get">#}
                             {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
@@ -79,21 +76,29 @@
                             {#</div>#}
                         {#</form>#}
 
-                        <p>
+                        {#<p>#}
+                            {#<input style="width: 80%" id="phone-number-verification-code" type="text" class="form-control" name="verify_code" placeholder="Enter code here">#}
+
+                            {#<button#}
+                                    {#id="verify-code-button"#}
+                                    {#type="button" class="btn btn-success verify-code-button"#}
+                                    {#onclick="verifyPhoneNumberCode({{ phoneNumber }},$('#phone-number-verification-code').val());"#}
+                            {#>Verify Now</button>#}
+                        {#</p>#}
+
+                        <div class="input-group mb-3">
                             <input id="phone-number-verification-code" type="text" class="form-control" name="verify_code" placeholder="Enter code here">
-
-                            <button
-                                    id="verify-code-button"
-                                    type="button" class="btn btn-success verify-code-button"
-                                    onclick="verifyPhoneNumberCode({{ phoneNumber }},$('#phone-number-verification-code').val());"
-                            >Verify Now</button>
-                        </p>
+                            <div class="input-group-btn">
+                                <button
+                                        id="verify-code-button"
+                                        type="button" class="btn btn-success verify-code-button"
+                                        onclick="verifyPhoneNumberCode({{ phoneNumber }},$('#phone-number-verification-code').val());"
+                                >Verify Now</button>
+                            </div>
+                        </div>
 
                     </div>
-
-                    <div class="col-md-4">
-                    </div>
-
+                    <div class="col-md-3"></div>
                 </div>
 
             </div>

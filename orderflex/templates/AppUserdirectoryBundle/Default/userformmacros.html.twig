@@ -907,11 +907,13 @@
                                                 {#{{ user.getPreferredMobilePhone }}#}
                                                 {{ usermacros.phoneHref(userInfo.getPreferredMobilePhone) }}
                                                 {% if userInfo.getPreferredMobilePhoneVerified %}
-                                                    <span class="text-success">Verified</span>
+                                                    <span id="phone-number-verify-status">
+                                                        <span class="text-success">Verified</span>
+                                                    </span>
                                                 {% else %}
                                                     {#Only can verify its own mobile phone number#}
                                                     {% if app.user.getId() == user.id %}
-                                                        <a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>
+                                                        {#<a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>#}
 
                                                         {#<button type="button"#}
                                                                 {#class="btn btn-dark"#}
@@ -919,12 +921,15 @@
                                                                 {#data-toggle="modal" data-target="#verifyMobilePhoneModal" data-whatever="{{ userInfo.getPreferredMobilePhone }}"#}
                                                         {#>Verify Modal</button>#}
 
-                                                        <button type="button" class="btn btn-dark" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify Modal</button>
+                                                        <button type="button" id="verify-phone-number-button" class="btn btn-primary" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
+                                                        <span id="phone-number-verify-status"></span>
 
                                                         {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.getPreferredMobilePhone, mobilePhoneVerified:userInfo.getPreferredMobilePhoneVerified } %}
 
                                                     {% else %}
-                                                        <span class="text-warning">Unverified</span>
+                                                        <span id="phone-number-verify-status">
+                                                            <span class="text-warning">Unverified</span>
+                                                        </span>
                                                     {% endif %}
                                                 {% endif %}
                                             </td>

@@ -281,11 +281,20 @@ class TelephonyController extends OrderAbstractController {
         $userServiceUtil = $this->get('user_service_utility');
 
         // Get data
-        $verificationCode = $request->query->get('verify_code');
+        //$verificationCode = $request->query->get('verificationCode');
+        $verificationCode = $request->request->get('verificationCode');
         $verificationCode = trim($verificationCode);
 
-        $phoneNumber = $request->query->get('phoneNumber');
+        //$phoneNumber = $request->query->get('phoneNumber');
+        $phoneNumber = $request->request->get('phoneNumber');
         $phoneNumber = trim($phoneNumber);
+
+        //testing
+//        $res = "phoneNumber=$phoneNumber, verificationCode=$verificationCode";
+//        $json = json_encode($res);
+//        $response = new Response($json);
+//        $response->headers->set('Content-Type', 'application/json');
+//        return $response;
 
         $res = "Phone number is not verified";
 
@@ -297,13 +306,13 @@ class TelephonyController extends OrderAbstractController {
             return $response;
         }
 
-        if ($verificationCode && $phoneNumber) {
+        if( $verificationCode && $phoneNumber ) {
 
             $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
             if ($userInfo) {
                 $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
-                if ($verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode) {
+                if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
                     $userInfo->setMobilePhoneVerifyCode(null);
                     $userInfo->setPreferredMobilePhoneVerified(true);
                     $em->flush();
@@ -312,7 +321,13 @@ class TelephonyController extends OrderAbstractController {
                     //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                     $res = "Verification code does not match";
                 }
+            } else {
+                //exit("userInfo not found");
+                $res = "User Info is not found";
             }
+        } else {
+            $res = "Invalid parameters";
+            //exit("Invalid parameters");
         }
 
         $json = json_encode($res);

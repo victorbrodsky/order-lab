@@ -2141,16 +2141,34 @@ Pathology and Laboratory Medicine",
         return $message;
     }
     public function userCanVerifyPhoneNumber($phoneNumber) {
+//        $user = $this->security->getUser();
+//        $userInfos = $user->getInfos();
+//        //exit('$userInfos count='.count($userInfos));
+//        foreach($userInfos as $userInfo) {
+//            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
+//            exit("phoneNumber=[$phoneNumber] ?= userPreferredMobilePhone=[$userPreferredMobilePhone]");
+//            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+//                return true;
+//            }
+//        }
+//        exit('111');
+//        return false;
+
         //$user = $this->container->get('security.token_storage')->getToken()->getUser();
+        //exit("phoneNumber=[$phoneNumber]");
         $user = $this->security->getUser();
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
         if( $userInfo ) {
             $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
-            echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            //echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            //exit();
+            //exit("phoneNumber=[$phoneNumber] ?= userPreferredMobilePhone=[$userPreferredMobilePhone]");
             if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
                 return true;
             }
+        } else {
+            //exit("userInfo not found by phoneNumber=".$phoneNumber);
         }
 
         return false;

@@ -417,7 +417,7 @@ function validateMrntypeIdentifier() {
 
 function sendVerificationCode(phoneNumber) {
 
-    var btn = document.getElementById("send-verification-code-button");
+    var btn = document.getElementById("send-verification-code-button-modal");
     var lbtn = Ladda.create( btn );
     lbtn.start();
 
@@ -436,8 +436,8 @@ function sendVerificationCode(phoneNumber) {
         if( response == 'OK' ) {
             lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
-            $("#send-verification-code-button").html('Verification Code sent to +'+phoneNumber);
-            $("#send-verification-code-button").prop('disabled', true);
+            $("#send-verification-code-button-modal").html('Verification Code sent to +'+phoneNumber);
+            $("#send-verification-code-button-modal").prop('disabled', true);
             //$("#send-verification-code-button").attr('disabled','disabled');
         }
     }).always(function() {
@@ -450,6 +450,17 @@ function sendVerificationCode(phoneNumber) {
     return true;
 }
 function verifyPhoneNumberCode(phoneNumber,verificationCode) {
+    //testing
+    //$("#phone-number-verify-status-modal").html('<p class="text-success">Mobile phone number verified</p>');
+    //$("#send-verification-code-button-modal").html('Re-send Verification Code to +'+phoneNumber);
+    //$("#send-verification-code-button-modal").prop('disabled', false);
+    //$('#verify-phone-number-button').remove();
+    //$('#phone-number-verify-status').html('<span class="text-success">Verified</span>');
+    //$('#phone-number-verify-status').text('Verified');
+    //$('#phone-number-verify-status').html('Verified');
+    //return;
+
+    //console.log('phoneNumber=' + phoneNumber+"; verificationCode="+verificationCode);
     var btn = document.getElementById("verify-code-button");
     var lbtn = Ladda.create( btn );
     lbtn.start();
@@ -469,9 +480,12 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
         if( response == 'OK' ) {
             lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
-            $("#phone-number-verify-status").html('<p class="text-success">Mobile phone number verified</p>');
-            $("#send-verification-code-button").html('Re-send Verification Code to +'+phoneNumber);
-            $("#send-verification-code-button").prop('disabled', false);
+            $("#phone-number-verify-status-modal").html('<p class="text-success">Mobile phone number verified</p>');
+            $("#send-verification-code-button-modal").html('Re-send Verification Code to +'+phoneNumber);
+            $("#send-verification-code-button-modal").prop('disabled', false);
+
+            $('#verify-phone-number-button').remove();
+            $('#phone-number-verify-status').html('<span class="text-success">Verified</span>');
         } else {
             lbtn.stop();
             alert(response);
