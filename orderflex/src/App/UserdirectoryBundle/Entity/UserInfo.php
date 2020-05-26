@@ -223,6 +223,11 @@ class UserInfo extends BaseUserAttributes {
      */
     public function setPreferredMobilePhone($preferredMobilePhone)
     {
+        if( $this->preferredMobilePhone != $preferredMobilePhone ) {
+            $this->setPreferredMobilePhoneVerified(false);
+            $this->setMobilePhoneVerifyCode(NULL);
+        }
+
         $this->preferredMobilePhone = $preferredMobilePhone;
     }
 

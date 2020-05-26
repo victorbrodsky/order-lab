@@ -1064,7 +1064,11 @@
                         {% if app.user.getId() == userInfo.vars.value.user.id %}
                             {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
                             {#<a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>#}
-                            <button type="button" id="verify-phone-number-button" class="btn btn-primary verify-phone-number-button" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
+                            <button type="button"
+                                    id="verify-phone-number-button"
+                                    class="btn btn-sm btn-primary verify-phone-number-button"
+                                    href="" data-toggle="modal"
+                                    data-target="#verifyMobilePhoneModal">Verify</button>
                             <span id="phone-number-verify-status" class="phone-number-verify-status"></span>
                             {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.vars.value.preferredMobilePhone, mobilePhoneVerified:userInfo.vars.value.getPreferredMobilePhoneVerified } %}
                         {% else %}
@@ -1087,8 +1091,8 @@
             {% do field.setRendered %}
         {% endif %}
     {% else %}
-        {#{{ formmacros.phonefield(field) }}#}
-        {{ usermacros.phoneFieldWithVerified(userInfo,field) }}
+        {{ formmacros.field(field) }}
+        {#{{ usermacros.phoneFieldWithVerified(userInfo,field) }}#}
     {% endif %}
 {% endmacro %}
 {% macro phoneFieldWithVerified( userInfo, field, label, attr ) %}
@@ -1122,7 +1126,11 @@
                     {% if app.user.getId() == userInfo.vars.value.user.id %}
                         {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
                         {#<a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>#}
-                        <button type="button" id="verify-phone-number-button" class="btn btn-primary verify-phone-number-button" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
+                        <button type="button"
+                                id="verify-phone-number-button"
+                                class="btn btn-sm btn-primary verify-phone-number-button"
+                                href="" data-toggle="modal"
+                                data-target="#verifyMobilePhoneModal">Verify</button>
                         <span id="phone-number-verify-status" class="phone-number-verify-status"></span>
                         {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.vars.value.preferredMobilePhone, mobilePhoneVerified:userInfo.vars.value.getPreferredMobilePhoneVerified } %}
                     {% else %}

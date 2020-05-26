@@ -921,7 +921,11 @@
                                                                 {#data-toggle="modal" data-target="#verifyMobilePhoneModal" data-whatever="{{ userInfo.getPreferredMobilePhone }}"#}
                                                         {#>Verify Modal</button>#}
 
-                                                        <button type="button" id="verify-phone-number-button" class="btn btn-primary verify-phone-number-button" href="" data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
+                                                        {#snapshot_steve#}
+                                                        <button type="button"
+                                                                id="verify-phone-number-button"
+                                                                class="btn btn-sm btn-primary verify-phone-number-button" href=""
+                                                                data-toggle="modal" data-target="#verifyMobilePhoneModal">Verify</button>
                                                         <span id="phone-number-verify-status" class="phone-number-verify-status"></span>
                                                         {% include "AppUserdirectoryBundle/Telephony/verify-mobile-phone-modal.html.twig" with {phoneNumber:userInfo.getPreferredMobilePhone, mobilePhoneVerified:userInfo.getPreferredMobilePhoneVerified } %}
 

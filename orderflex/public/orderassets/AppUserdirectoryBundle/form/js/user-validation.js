@@ -436,8 +436,10 @@ function sendVerificationCode(phoneNumber) {
         if( response == 'OK' ) {
             lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
-            $("#send-verification-code-button-modal").html('Verification Code sent to +'+phoneNumber);
-            $("#send-verification-code-button-modal").prop('disabled', true);
+            $("#phone-number-verify-status-modal").html('<p class="text-success">A text message with a code was just sent to '+phoneNumber+' </p>');
+            $("#send-verification-code-button-modal").html('Resend the text message with the verification code');
+            //$("#send-verification-code-button-modal").html('Verification Code sent to +'+phoneNumber);
+            //$("#send-verification-code-button-modal").prop('disabled', true);
             //$("#send-verification-code-button").attr('disabled','disabled');
         }
     }).always(function() {
@@ -481,7 +483,7 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
             lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
             $("#phone-number-verify-status-modal").html('<p class="text-success">Mobile phone number verified</p>');
-            $("#send-verification-code-button-modal").html('Re-send Verification Code to +'+phoneNumber);
+            $("#send-verification-code-button-modal").html('Resend the text message with the verification code');
             $("#send-verification-code-button-modal").prop('disabled', false);
 
             $('.verify-phone-number-button').remove();

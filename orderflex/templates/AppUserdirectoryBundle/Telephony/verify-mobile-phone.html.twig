@@ -50,9 +50,19 @@
 
         <div class="col-md-6">
             {% if mobilePhoneVerified %}
-                <p class="text-success">Mobile phone number verified</p>
+                <br><br>
+                <p class="text-success">Mobile phone number is already verified</p>
             {% else %}
                 <p class="text-danger">Mobile phone number is not verified</p>
+
+                <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                <p>
+                    <button
+                            id="send-verification-code-button"
+                            type="button" class="btn btn-success send-verification-code"
+                            onclick="sendVerificationCode({{ phoneNumber }});"
+                    >Send Verification Code to {{ phoneNumber }}</button>
+                </p>
             {% endif %}
 
             {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
@@ -64,15 +74,6 @@
                 {#</p>#}
             {#</form>#}
 
-            <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-            <p>
-                <button
-                    id="send-verification-code-button"
-                    type="button" class="btn btn-success send-verification-code"
-                    onclick="sendVerificationCode({{ phoneNumber }});"
-                >Send Verification Code to {{ phoneNumber }}</button>
-            </p>
-
         </div>
 
         <div class="col-md-3">
@@ -81,32 +82,31 @@
 
     <br><br>
 
-    {#{{ form_start(form) }}#}
-    {#{{ form_errors(form) }}#}
-    {#{{ form_end(form) }}#}
-    <div class="row">
+    {% if not mobilePhoneVerified %}
+        <div class="row">
 
-        <div class="col-md-4">
+            <div class="col-md-4">
+            </div>
+
+            <div class="col-md-4">
+
+                <form action="{{ url('employees_verify_code') }}" method="get">
+                    <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Verify Now</button>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-md-4">
+            </div>
+
         </div>
-
-        <div class="col-md-4">
-
-            <form action="{{ url('employees_verify_code') }}" method="get">
-                <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success"> Verify Now</button>
-                </div>
-            </form>
-
-        </div>
-
-        <div class="col-md-4">
-        </div>
-
-    </div>
+    {% endif %}
 
 {% endblock %}
