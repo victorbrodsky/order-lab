@@ -2095,7 +2095,7 @@ Pathology and Laboratory Medicine",
 
         if( $userInfo ) {
             $userInfo->setMobilePhoneVerifyCode($text);
-            $userInfo->setPreferredMobilePhoneVerified(false);
+            $userInfo->setPreferredMobilePhoneVerified(false); //should it be unchanged?
             $this->em->flush();
         }
 
@@ -2140,7 +2140,7 @@ Pathology and Laboratory Medicine",
 
         return $message;
     }
-    public function userCanVerifyPhoneNumber($phoneNumber) {
+    public function userHasPhoneNumber($phoneNumber) {
 //        $user = $this->security->getUser();
 //        $userInfos = $user->getInfos();
 //        //exit('$userInfos count='.count($userInfos));
@@ -2172,6 +2172,21 @@ Pathology and Laboratory Medicine",
         }
 
         return false;
+    }
+    public function getVerificationUrl( $verificationCode, $phoneNumber ) {
+        //$user = $this->security->getUser();
+        //employees_verify_mobile_code
+        $url = $this->container->get('router')->generate(
+            'employees_verify_mobile_code',
+            array(
+                'verificationCode' => $verificationCode,
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        //$urlFull = " <a data-toggle='tooltip' title='Verification Link' href=".$url.">Verify Mobile Phone Number</a>";
+
+        return $url;
     }
 
 

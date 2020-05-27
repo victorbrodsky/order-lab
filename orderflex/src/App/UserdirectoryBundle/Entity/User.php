@@ -1517,6 +1517,14 @@ class User extends UserBase {
         }
         return null;
     }
+    public function getUserInfo()
+    {
+        $infos = $this->getInfos();
+        if( count($infos) > 0 ) {
+            return $infos->first();
+        }
+        return false;
+    }
 
     /**
      * @param mixed $initials

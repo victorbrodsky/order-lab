@@ -29,12 +29,12 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-1">
                     </div>
 
                     {% set mobilePhoneVerified = false %}
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
 
                         <div id="phone-number-verify-status-modal">
                             {% if mobilePhoneVerified %}
@@ -44,18 +44,44 @@
                             {% endif %}
                         </div>
 
-                        <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-                        <p>
-                            <button
-                                    id="send-verification-code-button-modal"
-                                    type="button" class="btn btn-success send-verification-code-button-modal"
-                                    onclick="sendVerificationCode({{ phoneNumber }});"
-                            >Send Verification Code to {{ phoneNumber }}</button>
-                        </p>
+                        {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                        {#<p>#}
+                            {#<button#}
+                                    {#id="send-verification-code-button-modal"#}
+                                    {#type="button" class="btn btn-success send-verification-code-button-modal"#}
+                                    {#onclick="sendVerificationCode({{ phoneNumber }});"#}
+                            {#>Send Verification Code to {{ phoneNumber }}</button>#}
+                        {#</p>#}
+
+                        {#<p>#}
+                            {#<button#}
+                                    {#id="send-verification-code-button-modal"#}
+                                    {#type="button" class="btn btn-success send-verification-code-button-modal"#}
+                                    {#onclick="sendVerificationCode($('phoneNumberToVerify').val());"#}
+                            {#>Send Verification Code to</button>#}
+                            {#<input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                        {#</p>#}
+
+                        {#<div class="input-group mb-3">#}
+                            {#<div class="input-group-prepend">#}
+                                {#<span class="input-group-text" id="basic-addon1">@</span>#}
+                            {#</div>#}
+                            {#<input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">#}
+                        {#</div>#}
+                        <div class="input-group mb-3">
+                            <div class="input-group-btn">
+                                <button
+                                        id="send-verification-code-button-modal"
+                                        type="button" class="btn btn-success send-verification-code-button-modal"
+                                        onclick="sendVerificationCode($('#phoneNumberToVerify').val());"
+                                >Send Verification Code to</button>
+                            </div>
+                            <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                        </div>
 
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-1">
                     </div>
                 </div>
 

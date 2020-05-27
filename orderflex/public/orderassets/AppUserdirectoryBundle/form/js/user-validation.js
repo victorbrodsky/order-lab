@@ -417,6 +417,7 @@ function validateMrntypeIdentifier() {
 
 function sendVerificationCode(phoneNumber) {
 
+    console.log('phoneNumber=' + phoneNumber);
     var btn = document.getElementById("send-verification-code-button-modal");
     var lbtn = Ladda.create( btn );
     lbtn.start();
@@ -436,7 +437,11 @@ function sendVerificationCode(phoneNumber) {
         if( response == 'OK' ) {
             lbtn.stop();
             //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
-            $("#phone-number-verify-status-modal").html('<p class="text-success">A text message with a code was just sent to '+phoneNumber+' </p>');
+            var confStatusHtml =
+                '<p class="text-success">A text message with a code was just sent to '
+                +phoneNumber+
+                '. Please enter the code below and click "Verify" button.</p>';
+            $("#phone-number-verify-status-modal").html(confStatusHtml);
             $("#send-verification-code-button-modal").html('Resend the text message with the verification code');
             //$("#send-verification-code-button-modal").html('Verification Code sent to +'+phoneNumber);
             //$("#send-verification-code-button-modal").prop('disabled', true);
@@ -447,6 +452,7 @@ function sendVerificationCode(phoneNumber) {
     }).error(function(jqXHR, textStatus, errorThrown) {
         lbtn.stop();
         console.log('Error : ' + errorThrown);
+        alert('Error : ' + errorThrown);
     });
 
     return true;
