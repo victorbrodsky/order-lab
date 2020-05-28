@@ -1,0 +1,118 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}#}
+
+{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+
+{% if sitename == 'employees' %}
+    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
+{% elseif sitename == 'resapp' %}
+    {% set extendStr = "AppResAppBundle/Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}
+{% elseif sitename == 'calllog' %}
+    {% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}
+{% elseif sitename == 'crn' %}
+    {% set extendStr = "AppCrnBundle/Default/base.html.twig" %}
+{% elseif sitename == 'translationalresearch' %}
+    {% set extendStr = "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{% endif %}
+
+{% extends extendStr%}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    {#<div class="row">#}
+        {#<div class="col-md-3">#}
+        {#</div>#}
+
+        {#<div class="col-md-6">#}
+            {#{% if mobilePhoneVerified %}#}
+                {#<br><br>#}
+                {#<p class="text-success">Mobile phone number is already verified</p>#}
+            {#{% else %}#}
+                {#<p class="text-danger">Mobile phone number is not verified</p>#}
+                {#<p>{{ message }}</p>#}
+
+                {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                {#<p>#}
+                    {#<button#}
+                            {#id="send-verification-code-button"#}
+                            {#type="button" class="btn btn-success send-verification-code"#}
+                            {#onclick="sendVerificationCode({{ phoneNumber }});"#}
+                    {#>Send Verification Code to {{ phoneNumber }}</button>#}
+                {#</p>#}
+            {#{% endif %}#}
+
+            {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
+            {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
+            {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
+                {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                {#<p>#}
+                    {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
+                {#</p>#}
+            {#</form>#}
+
+        {#</div>#}
+
+        {#<div class="col-md-3">#}
+        {#</div>#}
+    {#</div>#}
+
+    {#<br><br>#}
+
+    {% if mobilePhoneVerified %}
+        <p class="text-success">Mobile phone number is already verified</p>
+    {% else %}
+
+        <div class="row">
+
+            <div class="col-md-4">
+            </div>
+
+            <div class="col-md-4">
+
+                <p class="text-danger">{{ message }}</p>
+
+                <form action="{{ path('employees_verify_mobile_code') }}" method="get">
+                    {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                    <div class="form-group">
+                        <input type="text" id="verify-code" class="form-control" name="verify-code" placeholder="Verification Code">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Verify</button>
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-md-4">
+            </div>
+
+        </div>
+    {% endif %}
+
+{% endblock %}

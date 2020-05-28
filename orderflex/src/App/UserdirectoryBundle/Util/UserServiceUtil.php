@@ -2173,7 +2173,7 @@ Pathology and Laboratory Medicine",
 
         return false;
     }
-    public function getVerificationUrl( $verificationCode, $phoneNumber ) {
+    public function getVerificationUrl( $verificationCode ) {
         //$user = $this->security->getUser();
         //employees_verify_mobile_code
         $url = $this->container->get('router')->generate(
@@ -2188,7 +2188,31 @@ Pathology and Laboratory Medicine",
 
         return $url;
     }
+    public function getUserByVerificationCode( $verificationCode ) {
+        if( !$verificationCode ) {
+            return null;
+        }
 
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin('user.infos','infos');
+
+        $dql->where("infos.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
+        $queryParameters = array('mobilePhoneVerifyCode'=>$verificationCode);
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters( $queryParameters );
+
+        $users = $query->getResult();
+        echo "users count=".count($users)."<br>";
+
+        if( count($users) > 0 ) {
+            return $users[0];
+        }
+
+        return null;
+    }
 
 
 

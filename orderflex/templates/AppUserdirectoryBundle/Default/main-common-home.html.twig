@@ -80,10 +80,33 @@
 
         <br>
 
+        {#{% for flashMessage in app.flashes('warning') %}#}
+            {#<div style="height: 1%;">&nbsp;</div>#}
+            {#<p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>#}
+        {#{% endfor %}#}
+
+        {% for flashMessage in app.flashes('notice') %}
+            <div style="height: 1%;">&nbsp;</div>
+            <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+        {% endfor %}
+        {% for flashMessage in app.flashes('status-changed') %}
+            <div style="height: 1%;">&nbsp;</div>
+            <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+        {% endfor %}
         {% for flashMessage in app.flashes('warning') %}
             <div style="height: 1%;">&nbsp;</div>
             <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
         {% endfor %}
+        {% for flashMessage in app.flashes('pnotify') %}
+            <input type="hidden" id="pnotify-notice" value="{{ flashMessage|raw }}" />
+        {% endfor %}
+        {% for flashMessage in app.flashes('pnotify-error') %}
+            <input type="hidden" id="pnotify-notice" class="pnotify-notice-error" value="{{ flashMessage|raw }}" />
+        {% endfor %}
+        {% for flashMessage in app.flashes('pnotify-success') %}
+            <input type="hidden" id="pnotify-notice" class="pnotify-notice-success" value="{{ flashMessage|raw }}" />
+        {% endfor %}
+
 
         <br>
 

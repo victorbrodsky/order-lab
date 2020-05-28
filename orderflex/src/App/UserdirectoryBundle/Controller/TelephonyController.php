@@ -6,6 +6,8 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 //use Twilio\Rest\Client;
 
 class TelephonyController extends OrderAbstractController {
@@ -75,38 +77,95 @@ class TelephonyController extends OrderAbstractController {
      *
      * @Route("/verify-mobile-code/{verificationCode}", name="employees_verify_mobile_code", methods={"GET"})
      */
-    public function verifyMobileCodeAction(Request $request, $verificationCode) {
+    public function verifyMobileCodeAction(Request $request, $verificationCode=null) {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser(); //user here is undefined
+        $userServiceUtil = $this->get('user_service_utility');
+        //$user = $this->get('security.token_storage')->getToken()->getUser(); //user here is undefined
+
+        if( !$verificationCode ) {
+            $verificationCode = $request->query->get('verify-code');
+        }
+        //exit("verificationCode=".$verificationCode);
 
         //0) find user by the $verificationCode
+        $user = $userServiceUtil->getUserByVerificationCode($verificationCode);
 
-        //1) get userInfo
-        $userInfo = $user->getUserInfo();
+        if( $user ) {
+            //1) get userInfo
+            $userInfo = $user->getUserInfo();
 
-        //2) use $verificationCode to verify the verification code in userInfo, if equal then change => verified
-        $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
+            //2) use $verificationCode to verify the verification code in userInfo, if equal then change => verified
+            $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
 
-        if( $userVerificationCode == $verificationCode ) {
-            //OK
-            $userInfo->setMobilePhoneVerifyCode(NULL);
-            $userInfo->setPreferredMobilePhoneVerified(true);
+            if ($userVerificationCode == $verificationCode) {
+                //OK
+                $userInfo->setMobilePhoneVerifyCode(NULL);
+                $userInfo->setPreferredMobilePhoneVerified(true);
 
-            $em->flush();
+                //$em->flush();
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Mobile phone number is verified!.'
-            );
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'Your mobile phone number has been successfully verified.'
+                );
+
+                return $this->redirect($this->generateUrl('main_common_home'));
+            } else {
+//                $this->get('session')->getFlashBag()->add(
+//                    'warning',
+//                    'Invalid verification code.'
+//                );
+            }
+        } else {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                'Invalid verification code.'
+//            );
         }
+
+        //$phoneNumber = null;
+        $mobilePhoneVerified = false;
+
+        if( $user ) {
+            //“visit your profile page to restart the verification process” is a link to user's profile page
+            //visit your profile page to restart the verification process
+            $profileLink = $this->container->get('router')->generate(
+                'employees_showuser',
+                array(
+                    'id' => $user->getId(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $profileLink = "<a data-toggle='tooltip' title='Verification Link' href=" . $profileLink . ">visit your profile page to restart the verification process</a>";
+
+            $userInfo = $user->getUserInfo();
+            if( $userInfo ) {
+                $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+                //$phoneNumber = $userInfo->getPreferredMobilePhone();
+            }
+
+            if( !$mobilePhoneVerified ) {
+                $mobilePhoneVerified = false;
+            }
+
+        } else {
+            $profileLink = "visit your profile page to restart the verification process";
+        }
+
+
+        $message = "The supplied verification code appears to be invalid."
+        ." Please type the code in manually or $profileLink."
+        ." If you have requested an account, you will be able to verify your mobile phone number once the account is created.";
 
         return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-code.html.twig', array(
             'sitename' => $this->siteName,
             'title' => "Mobile Phone Verification",
+            'mobilePhoneVerified' => $mobilePhoneVerified,
+            'verificationCode' => $verificationCode,
+            'message' => $message
             //'form' => $form->createView(),
-            //'phoneNumber' => $phoneNumber,
-            //'mobilePhoneVerified' => $mobilePhoneVerified
+
         ));
     }
 
@@ -154,16 +213,23 @@ class TelephonyController extends OrderAbstractController {
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function verifyCode(Request $request)
-    {
+    public function verifyCode(Request $request) {
+
         try {
             $em = $this->getDoctrine()->getManager();
+            //$userServiceUtil = $this->get('user_service_utility');
+
             // Get data from session
             //$data = $this->get('session')->get('user');
             $verificationCode = $request->query->get('verify_code');
             $verificationCode = trim($verificationCode);
 
             $phoneNumber = $request->query->get('phoneNumber');
+
+//            if( !$phoneNumber ) {
+//                $user = $userServiceUtil->getUserByVerificationCode($verificationCode);
+//            }
+
             $phoneNumber = trim($phoneNumber);
 
             if( $verificationCode && $phoneNumber ) {
@@ -288,9 +354,11 @@ class TelephonyController extends OrderAbstractController {
         $text = "Mobile phone number verification code $verifyCode.";
 
         //https://view.med.cornell.edu/verify-mobile/XXXXXX
-        $verificationUrl = $userServiceUtil->getVerificationUrl($phoneNumber);
-        $text = $text . " Please connect to VPN or the network and visit" .
-         $verificationUrl . " to complete the verification process.";
+        $verificationUrl = $userServiceUtil->getVerificationUrl($verifyCode);
+        $text = $text . " Please connect to VPN or the network and visit " .
+                $verificationUrl . " to complete the verification process.";
+
+        //exit($text); //testing
 
         $message = $userServiceUtil->sendText($phoneNumber,$text);
 
