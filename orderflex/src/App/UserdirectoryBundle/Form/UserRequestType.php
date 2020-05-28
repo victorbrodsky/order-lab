@@ -193,31 +193,34 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add('systemAccountRequest', EntityType::class, array(
-            'label' => 'System for which the account is being requested:',
-            'required'=> true,
-            //'multiple' => true,
-            //'empty_value' => false,
-            'class' => 'AppUserdirectoryBundle:SourceSystemList',
-            'attr' => array('class' => 'combobox combobox-width')
-        ));
-        $builder->add( 'systemAccountRequest', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:SourceSystemList',
-            //'choice_label' => 'name',
-            'label' => 'System for which the account is being requested:',
-            'required'=> false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%External Authentication%'")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        if(0) {
+            $builder->add('systemAccountRequest', EntityType::class, array(
+                'label' => 'System for which the account is being requested:',
+                'required' => true,
+                //'multiple' => true,
+                //'empty_value' => false,
+                'class' => 'AppUserdirectoryBundle:SourceSystemList',
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        } else {
+            $builder->add('systemAccountRequest', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:SourceSystemList',
+                //'choice_label' => 'name',
+                'label' => 'System for which the account is being requested:',
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%External Authentication%'")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
     }
 

@@ -83,6 +83,10 @@ class TelephonyController extends OrderAbstractController {
         $userServiceUtil = $this->get('user_service_utility');
         //$user = $this->get('security.token_storage')->getToken()->getUser(); //user here is undefined
 
+        //testing
+        //$code = $userServiceUtil->generateVerificationCode();
+        //exit("code=".$code);
+
         if( !$verificationCode ) {
             $verificationCode = $request->query->get('verify-code');
         }
@@ -103,7 +107,7 @@ class TelephonyController extends OrderAbstractController {
                 $userInfo->setMobilePhoneVerifyCode(NULL);
                 $userInfo->setPreferredMobilePhoneVerified(true);
 
-                //$em->flush();
+                $em->flush();
 
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -126,6 +130,9 @@ class TelephonyController extends OrderAbstractController {
 
         //$phoneNumber = null;
         $mobilePhoneVerified = false;
+
+        //testing
+        //$user = $em->getRepository('AppUserdirectoryBundle:User')->find(4689);
 
         if( $user ) {
             //“visit your profile page to restart the verification process” is a link to user's profile page
@@ -153,6 +160,8 @@ class TelephonyController extends OrderAbstractController {
             $profileLink = "visit your profile page to restart the verification process";
         }
 
+        //testing
+        //$mobilePhoneVerified = false;
 
         $message = "The supplied verification code appears to be invalid."
         ." Please type the code in manually or $profileLink."

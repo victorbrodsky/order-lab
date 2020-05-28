@@ -2088,18 +2088,47 @@ Pathology and Laboratory Medicine",
         return $encoder;
     }
 
+    
+    ///////////////////////////// TELEPHONY ////////////////////////////////////
     public function assignVerificationCode($user,$phoneNumber) {
-        $text = random_int(100000, 999999);
+        //$text = random_int(100000, 999999);
+        $code = $this->generateVerificationCode();
 
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
         if( $userInfo ) {
-            $userInfo->setMobilePhoneVerifyCode($text);
+            $userInfo->setMobilePhoneVerifyCode($code);
             $userInfo->setPreferredMobilePhoneVerified(false); //should it be unchanged?
             $this->em->flush();
         }
 
-        return $text;
+        return $code;
+    }
+    public function generateVerificationCode($counter=0) {
+        $code = random_int(100000, 999999);
+
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:UserInfo');
+        $dql =  $repository->createQueryBuilder("userinfo");
+        $dql->select('userinfo');
+
+        $dql->where("userinfo.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
+        $queryParameters = array('mobilePhoneVerifyCode'=>$code);
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters( $queryParameters );
+
+        $userinfos = $query->getResult();
+
+        if( count($userinfos) > 0 ) {
+            if( $counter > 100 ) {
+                throw new \Exception( 'Possible error in generateVerificationCode: counter='.$counter );
+            }
+
+            $counter++;
+            $code = $this->generateVerificationCode($counter);
+        }
+
+        return $code;
     }
     //https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
     public function sendText( $phoneNumber, $textToSend ) {
@@ -2205,7 +2234,8 @@ Pathology and Laboratory Medicine",
         $query->setParameters( $queryParameters );
 
         $users = $query->getResult();
-        echo "users count=".count($users)."<br>";
+        //echo "users count=".count($users)."<br>";
+        //exit('111');
 
         if( count($users) > 0 ) {
             return $users[0];
@@ -2217,7 +2247,7 @@ Pathology and Laboratory Medicine",
 
 
 
-
+    ///////////////////////////// EOF TELEPHONY ////////////////////////////////////
 
 
 

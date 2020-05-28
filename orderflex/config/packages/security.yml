@@ -453,6 +453,9 @@ security:
        ################################# common fos comment ####################################
        - { path: ^/api/threads/, role: ROLE_USER }
 
+       ################################# telephony verification ####################################
+       - { path: ^/directory/verify-mobile-code, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }

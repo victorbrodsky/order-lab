@@ -75,7 +75,7 @@
 <body>
 
 
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as myform %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 
     <div class="container text-center">
@@ -93,10 +93,10 @@
 
             {{ form_errors(form) }}
 
-            {{ myform.field(form.siteName) }}
+            {{ formmacros.field(form.siteName) }}
 
             TODO: fix this field (select is not enabled?)
-            {{ myform.field(form.systemAccountRequest) }}
+            {{ formmacros.field(form.systemAccountRequest) }}
 
             <p>
                 <div class="row">
@@ -134,7 +134,7 @@
                 </div>
             </div>
 
-            {#{{ myform.field(form.cwid) }}#}
+            {#{{ formmacros.field(form.cwid) }}#}
             <p>
             <div class="row">
                 <div class="col-xs-6" align="right">
@@ -150,33 +150,33 @@
 
             <div id="password_field" class="collapse">
                 <div class="well" align='center'>
-                    {{ myform.field(form.password) }}
+                    {{ formmacros.field(form.password) }}
                 </div>
             </div>
 
-            {{ myform.field(form.firstName) }}
-            {{ myform.field(form.name) }}
+            {{ formmacros.field(form.firstName) }}
+            {{ formmacros.field(form.name) }}
 
-            {{ myform.field(form.email) }}
+            {{ formmacros.field(form.email) }}
 
-            {{ myform.field(form.phone) }}
-            {{ myform.field(form.job) }}
+            {{ formmacros.field(form.phone) }}
+            {{ formmacros.field(form.job) }}
 
             {% if form.requestedInstitutionalPHIScope is defined %}
-                {{ myform.field(form.requestedInstitutionalPHIScope) }}
+                {{ formmacros.field(form.requestedInstitutionalPHIScope) }}
             {% endif %}
 
             {% if form.requestedScanOrderInstitutionScope is defined %}
                 {#{{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}#}
-                {{ myform.field(form.requestedScanOrderInstitutionScope) }}
+                {{ formmacros.field(form.requestedScanOrderInstitutionScope) }}
             {% endif %}
 
-            {#{{ myform.field(form.institution) }}#}
-            {#{{ myform.field(form.department) }}#}
-            {#{{ myform.field(form.services) }}#}
+            {#{{ formmacros.field(form.institution) }}#}
+            {#{{ formmacros.field(form.department) }}#}
+            {#{{ formmacros.field(form.services) }}#}
 
-            {{ myform.field(form.request) }}
-            {{ myform.field(form.similaruser) }}
+            {{ formmacros.field(form.request) }}
+            {{ formmacros.field(form.similaruser) }}
 
             <p style="padding-top:3px;">
             <div class="row">
@@ -197,10 +197,10 @@
                 </div>
             </div>
             </p>
-            {#{{ myform.field(form.referencename) }}#}
+            {#{{ formmacros.field(form.referencename) }}#}
 
-            {{ myform.field(form.referenceemail) }}
-            {{ myform.field(form.referencephone) }}
+            {{ formmacros.field(form.referenceemail) }}
+            {{ formmacros.field(form.referencephone) }}
 
             {% if form.creationdate is defined %}
                 {% do form.creationdate.setRendered %}
@@ -276,7 +276,6 @@
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/form.js') }}"></script>
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/commonCheckForm.js') }}"></script>
-
 
     {#FOSJsRoutingBundle#}
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
