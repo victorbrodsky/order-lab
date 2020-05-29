@@ -27,6 +27,7 @@
     {#%}#}
         {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
@@ -95,7 +96,14 @@
 
             {{ formmacros.field(form.siteName) }}
 
-            TODO: fix this field (select is not enabled?)
+            {#TODO: fix this field (select is not enabled?)#}
+            {#<label for="cars">Choose a car:</label>#}
+            {#<select name="cars" id="cars" class="combobox">#}
+                {#<option value="volvo">Volvo</option>#}
+                {#<option value="saab">Saab</option>#}
+                {#<option value="mercedes">Mercedes</option>#}
+                {#<option value="audi">Audi</option>#}
+            {#</select>#}
             {{ formmacros.field(form.systemAccountRequest) }}
 
             <p>
@@ -160,6 +168,9 @@
             {{ formmacros.field(form.email) }}
 
             {{ formmacros.field(form.phone) }}
+            {{ formmacros.field(form.mobilePhone) }}
+
+
             {{ formmacros.field(form.job) }}
 
             {% if form.requestedInstitutionalPHIScope is defined %}
@@ -269,8 +280,11 @@
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    {#<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>#}
+
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}"></script>
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}"></script>
@@ -289,20 +303,22 @@
             _ajaxTimeout = 60000;
 
             regularCombobox();
-            customCombobox();			
+            //$('select.combobox').select2();
+
+            customCombobox();
             fieldInputMask();
             expandTextarea();
             initConvertEnterToTab();
-           
-			getComboboxCompositetree();
+
+            getComboboxCompositetree();
 
             $('.cwid').val('');
 
-            $(".hascwid").find('input:radio').on('change', function(){
+            $(".hascwid").find('input:radio').on('change', function () {
                 var checkedValue = $(this).val();
                 //console.log("checkedValue="+checkedValue);
 
-                if( checkedValue == "Yes" ) {
+                if (checkedValue == "Yes") {
                     $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
                     //disable all fields, except some
                     var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show');
@@ -318,6 +334,7 @@
                 }
 
             });
+
 
         });
 

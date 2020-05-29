@@ -79,7 +79,13 @@ class UserRequest
      * @ORM\Column(type="string", nullable=true)
      */
     private $phone;
-    
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mobilePhone;
+
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */

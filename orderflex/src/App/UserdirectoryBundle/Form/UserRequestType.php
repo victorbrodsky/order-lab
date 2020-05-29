@@ -101,6 +101,12 @@ class UserRequestType extends AbstractType
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));
+
+        $builder->add( 'mobilePhone', TextType::class, array(
+            'label'=>'Primary Mobile Phone Number (E. 164 format: +11234567890):',
+            'required'=> false,
+            'attr' => array('class'=>'form-control form-control-modif phone-mask'),
+        ));
         
         $builder->add( 'job', TextType::class, array(
                 'label'=>'Job title:',

@@ -114,7 +114,8 @@ function attachTooltipToSelectCombobox( comboboxSelector, comboboxEl ) {
 function regularCombobox(holder) {
     
     //console.log('IE='+isIE());
-    
+    //console.log('regularCombobox');
+
     if( isIE() && isIE() <= 7 ) {
         // is IE version equal or less than 7
         checkBrowserComptability();
