@@ -138,7 +138,6 @@
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
                 {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"pending") %}
                 {% set pendingDaysV = pendingDaysResV['numberOfDays'] %}
-                {#pendingDaysV={{ pendingDaysV }}<br>#}
 
                 {% set carryOverDaysPrevYear = vacreq_util.getUserCarryOverDays(submitter,yearRange) %}
 
