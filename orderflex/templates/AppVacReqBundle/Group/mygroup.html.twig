@@ -50,6 +50,7 @@
     {#<br>#}
 
     {% for group in groups %}
+        group.id={{ group.id }}, userids={{ userids }}<br>
         {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::mySingleGroupAction', { 'groupId': group.id, 'userids': userids })) }}
     {% endfor %}
 

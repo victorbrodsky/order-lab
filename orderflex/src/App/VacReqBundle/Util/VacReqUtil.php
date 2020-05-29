@@ -999,24 +999,31 @@ class VacReqUtil
 
         //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
         $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status,$bruteForce);
-        //echo "numberOfDaysInside=".$numberOfDaysInside."<br>";
+        //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+
+//        //testing
+//        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
+//        echo $status.": numberOfDaysInsideRequests count=".count($numberOfDaysInsideRequests)."<br>";
+//        if( $status=='pending' && $academicYearStartStr=='2019-07-01' && count($numberOfDaysInsideRequests)>0 ) {
+//            exit('111');
+//        }
 
         //step2: get requests with start date earlier than academic Year Start
         $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
-        //echo "numberOfDaysBefore=".$numberOfDaysBefore."<br>";
+        //echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
         $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
-        //echo "numberOfDaysAfter=".$numberOfDaysAfter."<br>";
+        //echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
 
         $numberOfDays = $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
-        //echo "sum numberOfDays=".$numberOfDays."<br>";
+        //echo $status.": sum numberOfDays=".$numberOfDays."<br>";
 
         $res['numberOfDays'] = $numberOfDays;
         $res['accurate'] = true;
@@ -1486,7 +1493,7 @@ class VacReqUtil
         // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
         if( $type == "inside" && $startStr && $endStr ) {
             //echo "range=".$startStr." > ".$endStr."<br>";
-            $dql->andWhere("requestType.startDate >= '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
+            $dql->andWhere("requestType.startDate >= '" . $startStr . "'" . " AND requestType.endDate <= " . "'" . $endStr . "'");
         }
 
         // |-----start-----|year|-----end-----|year+1|----|
@@ -1545,11 +1552,12 @@ class VacReqUtil
             if(0) {
                 $numberOfDaysRes = $query->getSingleResult();
                 $numberOfDays = $numberOfDaysRes['numberOfDays'];
+                //echo $status.": numberOfDays=".$numberOfDays."<br>";
             } else {
                 //$numberOfDaysRes = $query->getOneOrNullResult();
                 $numberOfDaysItems = $query->getResult();
                 if( $numberOfDaysItems ) {
-                    //echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+                    //echo $status.": numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
                     //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
                     if( count($numberOfDaysItems) > 1 ) {
                         //$logger = $this->container->get('logger');
@@ -1557,7 +1565,7 @@ class VacReqUtil
                     }
                     foreach( $numberOfDaysItems as $numberOfDaysItem ) {
                         //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
-                        //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
+                        //echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
                         $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
                     }
                     //echo "### get numberOfDays = ".$numberOfDays."<br><br>";

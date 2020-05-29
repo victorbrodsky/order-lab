@@ -1194,7 +1194,7 @@ class ApproverController extends OrderAbstractController
 
         return array(
             'groupId' => $groupId,
-            'submitters' => $submitters,
+            'submitters' => $submitters, //person away
             'groupName' => $group."",
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
