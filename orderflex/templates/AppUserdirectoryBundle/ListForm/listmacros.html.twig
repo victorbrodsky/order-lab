@@ -116,6 +116,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'From Email', 'ent.fromEmail') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Require Mobile', 'ent.requireVerifyMobilePhone') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Require Mobile to Login', 'ent.requireMobilePhoneToLogin') }}</th>
             {% endif %}
 
             {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
@@ -333,6 +335,22 @@
                     </td>
                     <td>
                         {{ entity.fromEmail }}
+                    </td>
+                    <td>
+                        {% if entity.requireVerifyMobilePhone == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                        {#{{ entity.requireVerifyMobilePhone }}#}
+                    </td>
+                    <td>
+                        {% if entity.requireMobilePhoneToLogin == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                        {#{{ entity.requireMobilePhoneToLogin }}#}
                     </td>
                 {% endif %}
 
@@ -987,6 +1005,12 @@
     {% endif %}
     {% if form.fromEmail is defined %}
         {{ formmacros.field(form.fromEmail) }}
+    {% endif %}
+    {% if form.requireVerifyMobilePhone is defined %}
+        {{ formmacros.checkbox(form.requireVerifyMobilePhone) }}
+    {% endif %}
+    {% if form.requireMobilePhoneToLogin is defined %}
+        {{ formmacros.checkbox(form.requireMobilePhoneToLogin) }}
     {% endif %}
 
     {#Tag Types#}

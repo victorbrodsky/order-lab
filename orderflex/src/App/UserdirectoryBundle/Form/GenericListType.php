@@ -661,6 +661,17 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
 
+            $builder->add('requireVerifyMobilePhone',null,array(
+                'label' => "Require and Verify Mobile Number during Access Requests and Account Requests:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('requireMobilePhoneToLogin',null,array(
+                'label' => "Only allow log in if the primary mobile number is verified and ask to verify:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
             $builder->add('documents', CollectionType::class, array(
                 'entry_type' => DocumentType::class,
                 'allow_add' => true,

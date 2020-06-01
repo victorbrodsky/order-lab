@@ -823,10 +823,19 @@
 
             //Should we have this only for "new" request?
             var maxCarryOverVacationDays = $('#maxcarryovervacationdays').val();
+            //console.log('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
             if( carryOverDays && maxCarryOverVacationDays ) {
-                if (carryOverDays > maxCarryOverVacationDays) {
+                carryOverDays = parseInt(carryOverDays);
+                maxCarryOverVacationDays = parseInt(maxCarryOverVacationDays);
+                //console.log('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
+                //alert('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
+                if ( carryOverDays > maxCarryOverVacationDays ) {
                     error = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of " + maxCarryOverVacationDays;
                     $('.vacreq-carryOverDays').addClass('alert-danger');
+                    //console.log('NOTOK='+error);
+                } else {
+                    //console.log('OK');
+                    //return;
                 }
             }
 

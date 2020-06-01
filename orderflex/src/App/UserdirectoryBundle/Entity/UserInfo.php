@@ -86,6 +86,13 @@ class UserInfo extends BaseUserAttributes {
     private $mobilePhoneVerifyCode;
 
     /**
+     * mobilePhoneVerifyCode generation Date. Used for expiration date.
+     *
+     * @ORM\Column(name="mobilePhoneVerifyCodeDate", type="datetime", nullable=true)
+     */
+    private $mobilePhoneVerifyCodeDate;
+
+    /**
      * Is the mobile phone number verified?
      *
      * @ORM\Column(name="preferredMobilePhoneVerified", type="boolean", nullable=true)
@@ -226,6 +233,7 @@ class UserInfo extends BaseUserAttributes {
         if( $this->preferredMobilePhone != $preferredMobilePhone ) {
             $this->setPreferredMobilePhoneVerified(false);
             $this->setMobilePhoneVerifyCode(NULL);
+            $this->setMobilePhoneVerifyCodeDate(NULL);
         }
 
         $this->preferredMobilePhone = $preferredMobilePhone;
@@ -262,6 +270,24 @@ class UserInfo extends BaseUserAttributes {
     {
         $this->mobilePhoneVerifyCode = $mobilePhoneVerifyCode;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMobilePhoneVerifyCodeDate()
+    {
+        return $this->mobilePhoneVerifyCodeDate;
+    }
+
+    /**
+     * @param mixed $mobilePhoneVerifyCodeDate
+     */
+    public function setMobilePhoneVerifyCodeDate($mobilePhoneVerifyCodeDate)
+    {
+        $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
+    }
+
+
 
     /**
      * @param mixed $suffix

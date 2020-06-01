@@ -89,6 +89,22 @@ class SiteList extends ListAbstract
      */
     private $fromEmail;
 
+    /**
+     * Require and Verify Mobile Number during Access Requests and Account Requests
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $requireVerifyMobilePhone;
+
+    /**
+     * Only allow log in if the primary mobile number is verified and ask to verify
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $requireMobilePhoneToLogin;
+
+
+
 
     public function __construct( $creator = null ) {
         parent::__construct($creator);
@@ -197,6 +213,39 @@ class SiteList extends ListAbstract
         $this->fromEmail = $fromEmail;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRequireVerifyMobilePhone()
+    {
+        return $this->requireVerifyMobilePhone;
+    }
+
+    /**
+     * @param mixed $requireVerifyMobilePhone
+     */
+    public function setRequireVerifyMobilePhone($requireVerifyMobilePhone)
+    {
+        $this->requireVerifyMobilePhone = $requireVerifyMobilePhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequireMobilePhoneToLogin()
+    {
+        return $this->requireMobilePhoneToLogin;
+    }
+
+    /**
+     * @param mixed $requireMobilePhoneToLogin
+     */
+    public function setRequireMobilePhoneToLogin($requireMobilePhoneToLogin)
+    {
+        $this->requireMobilePhoneToLogin = $requireMobilePhoneToLogin;
+    }
+
+    
 
 
     /**
