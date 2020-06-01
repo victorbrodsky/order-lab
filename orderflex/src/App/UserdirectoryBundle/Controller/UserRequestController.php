@@ -129,8 +129,19 @@ class UserRequestController extends OrderAbstractController
     public function createAction(Request $request)
     {
         //exit("createAction");
+        $securityUtil = $this->get('user_security_utility');
 
         $entity  = new UserRequest();
+        $entity->setSiteName($this->siteName);
+
+        $em = $this->getDoctrine()->getManager();
+        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+            array(
+                'type' => array('default', 'user-added'),
+                'abbreviation' => array('ldap-user','local-user')
+            ),
+            array('orderinlist' => 'ASC')
+        );
 
         $params = $this->getParams($this->siteName);
 
@@ -153,6 +164,12 @@ class UserRequestController extends OrderAbstractController
             $form->get('firstName')->addError($error);
         }
 
+        $requireVerifyMobilePhone = $securityUtil->isRequireVerifyMobilePhone($this->siteName);
+        if( !$entity->getMobilePhone() && $requireVerifyMobilePhone ) {
+            $error = new FormError("Primary Mobile Phone Number is empty");
+            $form->get('mobilePhone')->addError($error);
+        }
+
         if ($form->isValid()) {
             //echo "form valid!";
             $em = $this->getDoctrine()->getManager();
@@ -173,6 +190,7 @@ class UserRequestController extends OrderAbstractController
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'usernametypes' => $usernametypes,
             'sitename' => $this->siteName,
             'title' => "Account Request for ".$this->siteNameStr
         );
@@ -197,7 +215,7 @@ class UserRequestController extends OrderAbstractController
             ),
             array('orderinlist' => 'ASC')
         );
-
+        
         $params = $this->getParams($this->siteName);
 
         $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
@@ -407,6 +425,7 @@ class UserRequestController extends OrderAbstractController
 
     public function getParams( $sitename ) {
 
+        $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->get('security.context')->getToken()->getUser();
         
@@ -441,9 +460,12 @@ class UserRequestController extends OrderAbstractController
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
         //Roles
-        $securityUtil = $this->get('user_security_utility');
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
         $params['roles'] = $rolesArr;
+
+        //make mobile phone number required field
+        $requireVerifyMobilePhone = $securityUtil->isRequireVerifyMobilePhone($this->siteName);
+        $params['requireVerifyMobilePhone'] = $requireVerifyMobilePhone;
 
         return $params;
     }

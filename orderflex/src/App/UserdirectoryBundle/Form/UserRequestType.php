@@ -102,9 +102,13 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));
 
+        $requireMobilePhone = false;
+        if( $this->params['requireVerifyMobilePhone'] ) {
+            $requireMobilePhone = true;
+        }
         $builder->add( 'mobilePhone', TextType::class, array(
             'label'=>'Primary Mobile Phone Number (E. 164 format: +11234567890):',
-            'required'=> false,
+            'required'=> $requireMobilePhone,
             'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));
         

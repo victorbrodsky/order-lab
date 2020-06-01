@@ -237,7 +237,9 @@
         {#dummy login form with style="display:none"#}
         {#<form id="loginform" action="{{ path(employees_sitename~'_login_check') }}" method="post" style="display:none">#}
         {#<form id="login-form" class="form-signin" method="post">#}
-        <form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">
+        {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
+        {#<form id="loginform" action="{{ path(employees_sitename~'_login_check') }}" method="post" style="display:none">#}
+        <form id="loginform" action="{{ path(employees_sitename~'_login') }}" method="post">
             <input type="hidden" name="display_height" id="display_height" value="" />
             <input type="hidden" name="display_width" id="display_width" value="" />
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

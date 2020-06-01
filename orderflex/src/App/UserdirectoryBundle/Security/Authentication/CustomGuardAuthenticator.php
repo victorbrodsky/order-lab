@@ -111,6 +111,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //No need auth on login page with GET
         if( strpos($route, 'login') !== false ) {
             if( $request->isMethod('POST') ) {
+                //exit('true');
                 return true;
             }
 //            if( $request->isMethod('GET') ) {
@@ -228,6 +229,10 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $this->sitename = $credentials['sitename'];
+
+        //dump($credentials);
+        //exit('111');
+
         return $credentials;
     }
 

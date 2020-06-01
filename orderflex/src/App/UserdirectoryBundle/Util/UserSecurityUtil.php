@@ -2232,6 +2232,21 @@ class UserSecurityUtil {
         return false;
     }
 
+    public function isRequireVerifyMobilePhone( $sitename ) {
+        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject && $siteObject->getRequireVerifyMobilePhone() === true ) {
+            return true;
+        }
+        return false;
+    }
+    public function isRequireMobilePhoneToLogin( $sitename ) {
+        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject && $siteObject->getRequireMobilePhoneToLogin() === true ) {
+            return true;
+        }
+        return false;
+    }
+
     public function isSiteAccessible( $sitename ) {
         if( $sitename == "employees" ) {
             //always enabled for employees site
