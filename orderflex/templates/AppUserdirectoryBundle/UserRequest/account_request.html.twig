@@ -127,7 +127,7 @@
                             <label>Account Type:</label>
                         </div>
                         <div class="col-xs-6" align="left">
-                            <select id="usernametypeid_show" class="combobox limit-font-size">
+                            <select id="usernametypeid_show" class="combobox limit-font-size" name="_usernametype">
                                 {% for  usernametype in usernametypes %}
                                     {% if user_type is defined and usernametype.name == user_type %}
                                         {% set selected = 'selected="selected"' %}
@@ -239,14 +239,16 @@
         {#<form id="login-form" class="form-signin" method="post">#}
         {#<form id="login-form" class="form-signin" action="{{ path(sitename~'_login') }}" method="post">#}
         {#<form id="loginform" action="{{ path(employees_sitename~'_login_check') }}" method="post" style="display:none">#}
-        <form id="loginform" action="{{ path(employees_sitename~'_login') }}" method="post">
+        <form id="loginform" action="{{ path(sitename~'_login') }}" method="post" style="display:none">
             <input type="hidden" name="display_height" id="display_height" value="" />
             <input type="hidden" name="display_width" id="display_width" value="" />
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <input type="hidden" name="_sitename" id="sitename" value="{{ sitename }}" />
+
+            <input type="text" name="_csrf_token" id="csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="text" name="_sitename" id="sitename" value="{{ sitename }}" />
+            <input type="text" name="_usernametype" id="usernametype" value="{{ sitename }}" />
 
             <input type="text" id="username" name="_username" value="" class="form-control" placeholder="Username" autofocus>
-            <input type="password" id="password" name="_password" class="form-control" placeholder="Password">
+            <input type="text" id="password" name="_password" class="form-control" placeholder="Password">
         </form>
 
         {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
@@ -323,7 +325,7 @@
                 if (checkedValue == "Yes") {
                     $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
                     //disable all fields, except some
-                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show');
+                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show, #usernametype, #sitename, #csrf_token');
                     allInputs.prop('disabled', true);
                     $('#password_field').show();
                     $('#usernametypeid_show_holder').show();
@@ -343,10 +345,10 @@
         function submitRequestForm() {
 
             var checkedValue = $("#accountrequestform input[type='radio']:checked").val();
-            console.log('checkedValue='+checkedValue);
+            //console.log('checkedValue='+checkedValue);
 
             if( checkedValue == "Yes" ) {
-                console.log('checkedValue Yes');
+                //console.log('checkedValue Yes');
                 //copy fields
                 var cwid = $('.cwid').val();
                 //add usertype
@@ -362,13 +364,24 @@
                 var pwd = $('.cwid-password').val();
                 $('#password').val(pwd);
 
+                //usernametype
+                $('#usernametype').val(usertypeAbbreviation);
+
+                //sitename
+                //$('#sitename').val('crn');
+
+                //csrf_token
+                //$('#csrf_token').val('12345678');
+
                 $("#display_height").value = screen.height;
                 $("#display_width").value = screen.width;
+
+                //alert(usertypeAbbreviation);
 
                 $('#loginform').submit();
 
             } else {
-                console.log('checkedValue No');
+                //console.log('checkedValue No');
                 $('#accountrequestform').submit();
 
             }

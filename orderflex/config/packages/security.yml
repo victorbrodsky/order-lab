@@ -455,6 +455,10 @@ security:
 
        ################################# telephony verification ####################################
        - { path: ^/directory/verify-mobile-code, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/verify-mobile-phone/account-request/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/verify-mobile-phone-account-request-ajax, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/verify-code-account-request-ajax, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }

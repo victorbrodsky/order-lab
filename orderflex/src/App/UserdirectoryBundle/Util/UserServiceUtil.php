@@ -2099,6 +2099,7 @@ Pathology and Laboratory Medicine",
         if( $userInfo ) {
             $userInfo->setMobilePhoneVerifyCode($code);
             $userInfo->setPreferredMobilePhoneVerified(false); //should it be unchanged?
+            $userInfo->setMobilePhoneVerifyCodeDate(new \DateTime());
             $this->em->flush();
         }
 
@@ -2245,6 +2246,47 @@ Pathology and Laboratory Medicine",
     }
 
 
+    public function assignAccountRequestVerificationCode($userRequest,$phoneNumber) {
+        //$text = random_int(100000, 999999);
+        $code = $this->generateAccountRequestVerificationCode();
+
+        //$userInfo = $userRequest->getMobilePhone($phoneNumber);
+
+        if( $userRequest ) {
+            $userRequest->setMobilePhoneVerifyCode($code);
+            $userRequest->setMobilePhoneVerifyCodeDate(new \DateTime());
+            $userRequest->setMobilePhoneVerified(false); //should it be unchanged?
+            $this->em->flush();
+        }
+
+        return $code;
+    }
+    public function generateAccountRequestVerificationCode($counter=0) {
+        $code = random_int(100000, 999999);
+
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:UserRequest');
+        $dql =  $repository->createQueryBuilder("userrequest");
+        $dql->select('userrequest');
+
+        $dql->where("userrequest.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
+        $queryParameters = array('mobilePhoneVerifyCode'=>$code);
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters( $queryParameters );
+
+        $userrequests = $query->getResult();
+
+        if( count($userrequests) > 0 ) {
+            if( $counter > 100 ) {
+                throw new \Exception( 'Possible error in generateVerificationCode: counter='.$counter );
+            }
+
+            $counter++;
+            $code = $this->generateAccountRequestVerificationCode($counter);
+        }
+
+        return $code;
+    }
 
 
     ///////////////////////////// EOF TELEPHONY ////////////////////////////////////

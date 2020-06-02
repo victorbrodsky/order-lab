@@ -507,3 +507,85 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
 
     return true;
 }
+
+
+function sendVerificationAccountRequestCode(phoneNumber,userRequestId) {
+
+    console.log('phoneNumber=' + phoneNumber);
+    var btn = document.getElementById("send-verification-code-button");
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
+
+    var url = Routing.generate('employees_verify_mobile_phone_account_request_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        type: "POST",
+        data: {phoneNumber: phoneNumber, userRequestId: userRequestId},
+        //dataType: 'json',
+        async: asyncflag
+    }).done(function(response) {
+        console.log(response);
+        if( response == 'OK' ) {
+            lbtn.stop();
+            //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
+            var confStatusHtml =
+                '<p class="text-success">A text message with a code was just sent to '
+                +phoneNumber+
+                '. Please enter the code below and click "Verify" button.</p>';
+            $("#phone-number-verify-status").html(confStatusHtml);
+            $("#send-verification-code-button").html('Resend the text message with the verification code');
+        }
+    }).always(function() {
+        //lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        lbtn.stop();
+        console.log('Error : ' + errorThrown);
+        alert('Error : ' + errorThrown);
+    });
+
+    return true;
+}
+function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId) {
+
+    //console.log('phoneNumber=' + phoneNumber+"; verificationCode="+verificationCode);
+    var btn = document.getElementById("verify-code-button");
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
+
+    var url = Routing.generate('employees_verify_code_account_request_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        type: "POST",
+        data: {verificationCode: verificationCode, userRequestId: userRequestId},
+        //dataType: 'json',
+        async: asyncflag
+    }).done(function(response) {
+        console.log(response);
+        if( response == 'OK' ) {
+            lbtn.stop();
+            //document.getElementById('send-verification-code-button').title = 'Verification Code sent to '+phoneNumber;
+            $("#phone-number-verify-status").html('<p class="text-success">Mobile phone number verified</p>');
+            $("#send-verification-code-button").html('Resend the text message with the verification code');
+            $("#send-verification-code-button").prop('disabled', false);
+
+            $('.verify-phone-number-button').remove();
+            $('.phone-number-verify-status').html('<span class="text-success">Verified</span>');
+        } else {
+            lbtn.stop();
+            alert(response);
+        }
+    }).always(function() {
+        //lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        lbtn.stop();
+        console.log('Error : ' + errorThrown);
+    });
+
+    return true;
+}

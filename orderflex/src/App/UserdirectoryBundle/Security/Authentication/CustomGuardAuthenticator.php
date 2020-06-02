@@ -221,6 +221,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
      * be passed to getUser() as $credentials.
      */
     public function getCredentials(Request $request) {
+
+        //dump($request->request);
+
         $credentials = [
             'username' => $request->request->get('_username'),
             'password' => $request->request->get('_password'),

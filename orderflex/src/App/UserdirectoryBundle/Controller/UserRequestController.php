@@ -177,7 +177,12 @@ class UserRequestController extends OrderAbstractController
             $entity->setStatus('active');
 
             $em->persist($entity);
-            $em->flush();
+            $em->flush(); //comment out for testing
+
+            //redirect to verify mobile phone number if isRequireVerifyMobilePhone
+            if( $securityUtil->isRequireVerifyMobilePhone($this->siteName) ) {
+                return $this->redirect( $this->generateUrl('employees_verify_mobile_phone_account_request', array('id'=>$entity->getId())) );
+            }
 
             $this->get('session')->getFlashBag()->add(
                 'notice',

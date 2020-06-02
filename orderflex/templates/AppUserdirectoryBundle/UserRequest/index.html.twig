@@ -148,6 +148,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Last Name', 'accreq.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Mobile Phone Number', 'accreq.mobilePhone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
                 <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Organizational Group', 'accreq.requestedScanOrderInstitutionScope') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>#}
@@ -196,6 +197,7 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
+                <td>{{ entity.mobilePhone }}</td>
                 <td>{{ entity.job }}</td>
 
                 <td>

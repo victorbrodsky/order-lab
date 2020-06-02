@@ -3,6 +3,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\UserRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -469,4 +470,145 @@ class TelephonyController extends OrderAbstractController {
         return $response;
     }
 
+
+
+    /**
+     * Get verification form for Account Request
+     *
+     * @Route("/verify-mobile-phone/account-request/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
+     */
+    public function verifyAccountRequestMobilePhoneAction(Request $request, UserRequest $userRequest) {
+        //exit('verifyAccountRequestMobilePhoneAction');
+        //It's better to check if current user has a $phoneNumber
+        $phoneNumber = $userRequest->getMobilePhone();
+
+        $mobilePhoneVerified = $userRequest->getMobilePhoneVerified();
+        if( !$mobilePhoneVerified ) {
+            $mobilePhoneVerified = false;
+        }
+
+        return $this->render('AppUserdirectoryBundle/Telephony/verify-account-request-mobile-phone.html.twig', array(
+            'sitename' => $this->siteName,
+            'title' => "Mobile Phone Verification",
+            'userRequest' => $userRequest,
+            'phoneNumber' => $phoneNumber,
+            'mobilePhoneVerified' => $mobilePhoneVerified
+        ));
+    }
+    /**
+     * https://www.twilio.com/docs/sms/tutorials/how-to-send-sms-messages-php
+     *
+     * @Route("/verify-mobile-phone-account-request-ajax", name="employees_verify_mobile_phone_account_request_ajax", methods={"POST"}, options={"expose"=true})
+     */
+    public function verifyAccountRequestMobileAjaxAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->get('user_service_utility');
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $userRequest = NULL;
+        
+        $phoneNumber = $request->get('phoneNumber');
+        $userRequestId = $request->get('userRequestId');
+
+        if( $userRequestId ) {
+            $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+        } else {
+            $json = json_encode("Account Request is not found");
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        //if new phone number entered, the old verification is invalid => reassign the phone number and reset its properties (verification code and status)
+        if( $userRequest ) {
+            $userRequestMobilePhone = $userRequest->getMobilePhone();
+            if( $userRequestMobilePhone && $userRequestMobilePhone != $phoneNumber ) {
+                $userRequest->setMobilePhone($phoneNumber);
+                $em->flush();
+            }
+        }
+
+        $verifyCode = $userServiceUtil->assignAccountRequestVerificationCode($userRequest,$phoneNumber);
+
+        $text = "Mobile phone number verification code $verifyCode.";
+
+        //https://view.med.cornell.edu/verify-mobile/XXXXXX
+        $verificationUrl = $userServiceUtil->getVerificationUrl($verifyCode);
+        $text = $text . " Please connect to VPN or the network and visit " .
+            $verificationUrl . " to complete the verification process.";
+        
+        $message = $userServiceUtil->sendText($phoneNumber,$text);
+        
+        $errorMessage = $message->errorMessage;
+        //$status = $message->status;
+        if( $errorMessage ) {
+            $res = $errorMessage;
+        } else {
+            $res = 'OK';
+        }
+
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    /**
+     * @Route("/verify-code-account-request-ajax", name="employees_verify_code_account_request_ajax", methods={"POST"}, options={"expose"=true})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function verifyAccountRequestCodeAjaxAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userRequest = NULL;
+
+        // Get data
+        //$verificationCode = $request->query->get('verificationCode');
+        $userRequestId = $request->request->get('userRequestId');
+        $userRequestId = trim($userRequestId);
+
+        if( $userRequestId ) {
+            $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+        } else {
+            $json = json_encode("Account Request is not found");
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        //$phoneNumber = $request->query->get('phoneNumber');
+        $verificationCode = $request->request->get('verificationCode');
+        $verificationCode = trim($verificationCode);
+
+        $res = "Phone number is not verified";
+
+        if( $userRequest && $verificationCode ) {
+            
+            $userVerificationCode = $userRequest->getMobilePhoneVerifyCode();
+            if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
+                $userRequest->setMobilePhoneVerifyCode(null);
+                $userRequest->setMobilePhoneVerifyCodeDate(null);
+                $userRequest->setMobilePhoneVerified(true);
+                $em->flush();
+                $res = "OK";
+
+                //EventLog
+
+            } else {
+                //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+                $res = "Verification code does not match";
+            }
+            
+        } else {
+            $res = "Invalid parameters";
+            //exit("Invalid parameters");
+        }
+
+        $json = json_encode($res);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 }

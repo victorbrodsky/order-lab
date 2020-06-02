@@ -79,19 +79,19 @@ class UserRequestType extends AbstractType
         ));
 
         $builder->add( 'firstName', TextType::class, array(
-            'label'=>'* First Name:',
-            'required'=> false,
+            'label'=>'First Name:',
+            'required'=> true,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
         $builder->add( 'name', TextType::class, array(
-                'label'=>'* Last Name:',
-                'required'=> false,
+                'label'=>'Last Name:',
+                'required'=> true,
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
         $builder->add( 'email', EmailType::class, array(
-                'label'=>'* Email:',
+                'label'=>'Email:',
                 'required'=> true, //does not work here
                 'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'), //'required'=>'required' does not work here
         ));
@@ -128,8 +128,8 @@ class UserRequestType extends AbstractType
         }
         //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
         $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
-            'label' => '* Organizational Group:',
-            'required' => false,
+            'label' => 'Organizational Group:',
+            'required' => true, //false,
             'multiple' => false,
             //'empty_value' => false,
             'choice_label' => 'getNodeNameWithRoot',
