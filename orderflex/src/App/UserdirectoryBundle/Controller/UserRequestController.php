@@ -179,15 +179,15 @@ class UserRequestController extends OrderAbstractController
             $em->persist($entity);
             $em->flush(); //comment out for testing
 
-            //redirect to verify mobile phone number if isRequireVerifyMobilePhone
-            if( $securityUtil->isRequireVerifyMobilePhone($this->siteName) ) {
-                return $this->redirect( $this->generateUrl('employees_verify_mobile_phone_account_request', array('id'=>$entity->getId())) );
-            }
-
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
+
+            //redirect to verify mobile phone number if isRequireVerifyMobilePhone
+            if( $securityUtil->isRequireVerifyMobilePhone($this->siteName) ) {
+                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request', array('sitename'=>$this->siteName,'id'=>$entity->getId())));
+            }
 
             return $this->redirect( $this->generateUrl($this->siteName.'_login') );
         }
@@ -307,7 +307,7 @@ class UserRequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity  = new UserRequest();
+        $entity = new UserRequest();
 
         $params = $this->getParams($this->siteName);
 

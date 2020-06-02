@@ -70,6 +70,9 @@ class UserRequestApproveType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
+        //dump($this->params['roles']);
+        //exit('111');
+
         $builder->add('roles', ChoiceType::class, array(    //flipped
             'choices' => $this->params['roles'],
             //'choices_as_values' => true,

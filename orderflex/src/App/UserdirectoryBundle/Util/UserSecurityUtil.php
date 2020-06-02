@@ -1146,6 +1146,9 @@ class UserSecurityUtil {
 
         $roles = $query->getResult();
 
+        //dump($roles);
+        //exit('111');
+
         return $roles;
     }
     //NOT working. Not used.

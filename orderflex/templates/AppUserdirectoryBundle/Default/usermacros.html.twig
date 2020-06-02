@@ -1092,6 +1092,9 @@
         {% endif %}
     {% else %}
         {{ formmacros.field(field) }}
+        {% if userInfo.preferredMobilePhoneVerified is defined %}
+            {{ formmacros.checkbox(userInfo.preferredMobilePhoneVerified) }}
+        {% endif %}
         {#{{ usermacros.phoneFieldWithVerified(userInfo,field) }}#}
     {% endif %}
 {% endmacro %}

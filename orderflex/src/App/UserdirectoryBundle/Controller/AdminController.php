@@ -1742,36 +1742,110 @@ class AdminController extends OrderAbstractController
             "ROLE_CALLLOG_ADMIN" => array(
                 "Call Log Book Administrator",
                 "Full access for Call Logbook site",
-                90
+                90,
+                "call-log-book"
             ),
 
             "ROLE_CALLLOG_DATA_QUALITY" => array(
                 "Data Quality Manager for WCM-NYP",
                 "Merge or un-merge patient records",
-                60
+                60,
+                "call-log-book"
             ),
 
             "ROLE_CALLLOG_PATHOLOGY_RESIDENT" => array(
                 "Pathology Resident",
                 "",
-                50
+                50,
+                "call-log-book"
             ),
             "ROLE_CALLLOG_PATHOLOGY_FELLOW" => array(
                 "Pathology Fellow",
                 "",
-                50
+                50,
+                "call-log-book"
             ),
             "ROLE_CALLLOG_PATHOLOGY_ATTENDING" => array(
                 "Pathology Attending",
                 "",
-                50
+                50,
+                "call-log-book"
             ),
 
             "ROLE_CALLLOG_USER" => array(
                 "Call Log Book User",
                 "Can create, edit and read call book entries",
-                30
+                30,
+                "call-log-book"
             ),
+
+
+            //////////// CRN roles ////////////
+            "ROLE_CRN_ADMIN" => array(
+                "CRN Administrator",
+                "Full access for Call Logbook site",
+                90,
+                "critical-result-notifications"
+            ),
+
+            "ROLE_CRN_DATA_QUALITY" => array(
+                "CRN Data Quality Manager for WCM-NYP",
+                "Merge or un-merge patient records",
+                60,
+                "critical-result-notifications"
+            ),
+
+            "ROLE_CRN_PATHOLOGY_RESIDENT" => array(
+                "CRN Pathology Resident",
+                "",
+                50,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_PATHOLOGY_FELLOW" => array(
+                "CRN Pathology Fellow",
+                "",
+                50,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_PATHOLOGY_ATTENDING" => array(
+                "CRN Pathology Attending",
+                "",
+                50,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_USER" => array(
+                "CRN User",
+                "Can create, edit and read call book entries",
+                30,
+                "critical-result-notifications"
+            ),
+
+            "ROLE_CRN_PATHOLOGY_DERMATOPATHOLOGY_PRACTICE_SUPERVISOR" => array(
+                "CRN Dermatopathology practice supervisor",
+                "Full access for Call Logbook site",
+                70,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_PATHOLOGY_DERMATOPAHOLOGY_ADMINISTRATIVE_ASSISTANT" => array(
+                "CRN Dermatopathology administrative assistant",
+                "Full access for Call Logbook site",
+                70,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_PATHOLOGY_PRACTICE_SUPERVISOR" => array(
+                "CRN Pathology supervisor",
+                "Full access for Call Logbook site",
+                70,
+                "critical-result-notifications"
+            ),
+            "ROLE_CRN_PATHOLOGY_ADMINISTRATIVE_ASSISTANT" => array(
+                "CRN Pathology administrative assistant",
+                "Full access for Call Logbook site",
+                70,
+                "critical-result-notifications"
+            ),
+
+            //////////// EOF CRN roles ////////////
 
             //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY - _WCM_HEMEPATH and _WCM_APCP
             "ROLE_TRANSRES_ADMIN_APCP" => array(

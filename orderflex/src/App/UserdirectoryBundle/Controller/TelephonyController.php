@@ -475,9 +475,9 @@ class TelephonyController extends OrderAbstractController {
     /**
      * Get verification form for Account Request
      *
-     * @Route("/verify-mobile-phone/account-request/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
+     * @Route("/verify-mobile-phone/account-request/{sitename}/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
      */
-    public function verifyAccountRequestMobilePhoneAction(Request $request, UserRequest $userRequest) {
+    public function verifyAccountRequestMobilePhoneAction(Request $request, $sitename, UserRequest $userRequest) {
         //exit('verifyAccountRequestMobilePhoneAction');
         //It's better to check if current user has a $phoneNumber
         $phoneNumber = $userRequest->getMobilePhone();
@@ -488,7 +488,7 @@ class TelephonyController extends OrderAbstractController {
         }
 
         return $this->render('AppUserdirectoryBundle/Telephony/verify-account-request-mobile-phone.html.twig', array(
-            'sitename' => $this->siteName,
+            'sitename' => $sitename,
             'title' => "Mobile Phone Verification",
             'userRequest' => $userRequest,
             'phoneNumber' => $phoneNumber,

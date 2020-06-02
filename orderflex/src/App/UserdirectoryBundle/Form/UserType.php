@@ -281,6 +281,9 @@ class UserType extends AbstractType
 
         $builder->add('infos', CollectionType::class, array(
             'entry_type' => UserInfoType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             //'required' => false,
             'allow_add' => true,

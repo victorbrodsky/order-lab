@@ -197,7 +197,15 @@
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.email }}</td>
                 <td>{{ entity.phone }}</td>
-                <td>{{ entity.mobilePhone }}</td>
+                <td>
+                    {{ entity.mobilePhone }}
+                    <br>
+                    {% if entity.mobilePhoneVerified %}
+                        <span class="text-success">Verified</span>
+                    {% else %}
+                        <span class="text-warning">Unverified</span>
+                    {% endif %}
+                </td>
                 <td>{{ entity.job }}</td>
 
                 <td>

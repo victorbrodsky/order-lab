@@ -576,6 +576,10 @@ function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId) {
 
             $('.verify-phone-number-button').remove();
             $('.phone-number-verify-status').html('<span class="text-success">Verified</span>');
+            
+            //add link to login page
+            $('#loginhref').show();
+            
         } else {
             lbtn.stop();
             alert(response);

@@ -50,72 +50,6 @@
 
     <br>
 
-    {#<div class="row">#}
-        {#<div class="col-md-3">#}
-        {#</div>#}
-
-        {#<div class="col-md-6">#}
-            {#{% if mobilePhoneVerified %}#}
-                {#<br><br>#}
-                {#<p class="text-success">Mobile phone number is already verified</p>#}
-            {#{% else %}#}
-                {#<p class="text-danger">Mobile phone number is not verified</p>#}
-
-                {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                {#<p>#}
-                    {#<button#}
-                            {#id="send-verification-code-button"#}
-                            {#type="button" class="btn btn-success send-verification-code"#}
-                            {#onclick="sendVerificationAccountRequestCode({{ phoneNumber }},{{ userRequest.id }});"#}
-                    {#>Send Verification Code to {{ phoneNumber }}</button>#}
-                {#</p>#}
-            {#{% endif %}#}
-
-            {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
-            {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
-            {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
-                {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                {#<p>#}
-                    {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
-                {#</p>#}
-            {#</form>#}
-
-        {#</div>#}
-
-        {#<div class="col-md-3">#}
-        {#</div>#}
-    {#</div>#}
-
-    {#<br><br>#}
-
-    {#{% if not mobilePhoneVerified %}#}
-        {#<div class="row">#}
-
-            {#<div class="col-md-3">#}
-            {#</div>#}
-
-            {#<div class="col-md-6">#}
-
-                {#<div class="input-group mb-3">#}
-                    {#<input id="phone-number-verification-code" type="text" class="form-control" name="verify_code" placeholder="Verification Code">#}
-                    {#<div class="input-group-btn">#}
-                        {#<button#}
-                                {#id="verify-code-button"#}
-                                {#type="button" class="btn btn-success verify-code-button"#}
-                                {#onclick="verifyPhoneNumberAccountRequestCode($('#phone-number-verification-code').val(),{{ userRequest.id }});"#}
-                        {#>Verify</button>#}
-                    {#</div>#}
-                {#</div>#}
-
-            {#</div>#}
-
-            {#<div class="col-md-3">#}
-            {#</div>#}
-
-        {#</div>#}
-    {#{% endif %}#}
-
-
     <div class="row">
         <div class="col-md-3">
         </div>
@@ -169,6 +103,11 @@
         </div>
         <div class="col-md-3"></div>
     </div>
+
+
+    <br><br>
+    <a id="loginhref" class="btn btn-info" href="{{ path(sitename~'_login') }}" style="display: none;">Back to login page</a>
+
 
     {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
 

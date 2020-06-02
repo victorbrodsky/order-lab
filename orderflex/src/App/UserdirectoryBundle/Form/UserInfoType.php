@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,8 +28,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UserInfoType extends AbstractType
 {
 
+    protected $params;
+
+    public function formConstructor( $params )
+    {
+        $this->params = $params;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('suffix', null, array(
             'label' => 'Suffix:',
@@ -74,12 +84,22 @@ class UserInfoType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        //Admin can set mobile phone to verified
+        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $builder->add('preferredMobilePhoneVerified', CheckboxType::class, array(
+                'label' => 'Mobile Phone Verified:',
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'style' => 'margin:0')
+            ));
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\UserInfo',
+            'form_custom_value' => null,
         ));
     }
 
