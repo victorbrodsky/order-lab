@@ -18,23 +18,23 @@
 
 {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
 
-{% if sitename == 'employees' %}
-    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
-{% elseif sitename == 'fellapp' %}
-    {% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}
-{% elseif sitename == 'resapp' %}
-    {% set extendStr = "AppResAppBundle/Default/base.html.twig" %}
-{% elseif sitename == 'deidentifier' %}
-    {% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}
-{% elseif sitename == 'vacreq' %}
-    {% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}
-{% elseif sitename == 'calllog' %}
-    {% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}
-{% elseif sitename == 'crn' %}
-    {% set extendStr = "AppCrnBundle/Default/base.html.twig" %}
-{% elseif sitename == 'translationalresearch' %}
-    {% set extendStr = "AppTranslationalResearchBundle/Default/base.html.twig" %}
-{% endif %}
+{#{% if sitename == 'employees' %}#}
+    {#{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'fellapp' %}#}
+    {#{% set extendStr = "AppFellAppBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'resapp' %}#}
+    {#{% set extendStr = "AppResAppBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'deidentifier' %}#}
+    {#{% set extendStr = "AppDeidentifierBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'vacreq' %}#}
+    {#{% set extendStr = "AppVacReqBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'calllog' %}#}
+    {#{% set extendStr = "AppCallLogBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'crn' %}#}
+    {#{% set extendStr = "AppCrnBundle/Default/base.html.twig" %}#}
+{#{% elseif sitename == 'translationalresearch' %}#}
+    {#{% set extendStr = "AppTranslationalResearchBundle/Default/base.html.twig" %}#}
+{#{% endif %}#}
 
 {% extends extendStr%}
 
@@ -44,26 +44,26 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-md-3">
-        </div>
+    {#<div class="row">#}
+        {#<div class="col-md-3">#}
+        {#</div>#}
 
-        <div class="col-md-6">
-            {% if mobilePhoneVerified %}
-                <br><br>
-                <p class="text-success">Mobile phone number is already verified</p>
-            {% else %}
-                <p class="text-danger">Mobile phone number is not verified</p>
+        {#<div class="col-md-6">#}
+            {#{% if mobilePhoneVerified %}#}
+                {#<br><br>#}
+                {#<p class="text-success">Mobile phone number is already verified</p>#}
+            {#{% else %}#}
+                {#<p class="text-danger">Mobile phone number is not verified</p>#}
 
-                <input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-                <p>
-                    <button
-                            id="send-verification-code-button"
-                            type="button" class="btn btn-success send-verification-code"
-                            onclick="sendVerificationCode({{ phoneNumber }});"
-                    >Send Verification Code to {{ phoneNumber }}</button>
-                </p>
-            {% endif %}
+                {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                {#<p>#}
+                    {#<button#}
+                            {#id="send-verification-code-button"#}
+                            {#type="button" class="btn btn-success send-verification-code"#}
+                            {#onclick="sendVerificationCode({{ phoneNumber }});"#}
+                    {#>Send Verification Code to {{ phoneNumber }}</button>#}
+                {#</p>#}
+            {#{% endif %}#}
 
             {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
             {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
@@ -74,9 +74,42 @@
                 {#</p>#}
             {#</form>#}
 
+        {#</div>#}
+
+        {#<div class="col-md-3">#}
+        {#</div>#}
+    {#</div>#}
+
+    <div class="row">
+        <div class="col-md-4">
         </div>
 
-        <div class="col-md-3">
+        {% set mobilePhoneVerified = false %}
+
+        <div class="col-md-4">
+
+            <div id="phone-number-verify-status-modal">
+                {% if mobilePhoneVerified %}
+                    <p class="text-success">Mobile phone number verified</p>
+                {% else %}
+                    <p class="text-danger">Mobile phone number is not verified</p>
+                {% endif %}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-btn">
+                    <button
+                            id="send-verification-code-button-modal"
+                            type="button" class="btn btn-success send-verification-code-button"
+                            onclick="sendVerificationCode($('#phoneNumberToVerify').val());"
+                    >Send Verification Code to</button>
+                </div>
+                <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
         </div>
     </div>
 
@@ -92,6 +125,7 @@
 
                 <form action="{{ url('employees_verify_code') }}" method="get">
                     <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                    <input type="hidden" class="form-control" name="siteName" value="{{ sitename }}">
                     <div class="form-group">
                         <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
                     </div>

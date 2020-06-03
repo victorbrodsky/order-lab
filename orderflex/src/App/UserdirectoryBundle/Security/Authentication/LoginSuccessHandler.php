@@ -199,6 +199,23 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo("referer_url=".$referer_url);
         //exit();
 
+        //TODO: add redirect o verify page if "Only allow log in if the primary mobile number is verified and ask to verify" is yes
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( $userSecUtil->isRequireMobilePhoneToLogin($this->siteName) ) {
+            $userInfo = $user->getUserInfo();
+            $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
+            $phoneNumber = $userInfo->getPreferredMobilePhone();
+            //exit('check 1');
+            if( $phoneNumber && !$mobilePhoneVerified ) {
+                //exit('check 2');
+                //return $this->redirect($this->generateUrl('employees_verify_mobile_phone', array('phoneNumber'=>$phoneNumber)));
+                $referer_url = $this->router->generate('employees_verify_mobile_phone', array('siteName'=>$this->siteName,'phoneNumber'=>$phoneNumber));
+                $response = new RedirectResponse($referer_url);
+                return $response;
+            }
+        }
+        //exit('111');
+        
         $response = new RedirectResponse($referer_url);
 
         ///////////// set cookies /////////////

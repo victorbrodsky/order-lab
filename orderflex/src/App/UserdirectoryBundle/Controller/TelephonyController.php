@@ -22,9 +22,9 @@ class TelephonyController extends OrderAbstractController {
     /**
      * Get verification form
      *
-     * @Route("/verify-mobile-phone/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
+     * @Route("/verify-mobile-phone/{siteName}/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
      */
-    public function verifyMobilePhoneAction(Request $request, $phoneNumber)
+    public function verifyMobilePhoneAction(Request $request, $siteName, $phoneNumber )
     {
         //$em = $this->getDoctrine()->getManager();
 
@@ -65,7 +65,7 @@ class TelephonyController extends OrderAbstractController {
         }
 
         return $this->render('AppUserdirectoryBundle/Telephony/verify-mobile-phone.html.twig', array(
-            'sitename' => $this->siteName,
+            'sitename' => $siteName,
             'title' => "Mobile Phone Verification",
             //'form' => $form->createView(),
             'phoneNumber' => $phoneNumber,
@@ -106,6 +106,7 @@ class TelephonyController extends OrderAbstractController {
             if ($userVerificationCode == $verificationCode) {
                 //OK
                 $userInfo->setMobilePhoneVerifyCode(NULL);
+                $userInfo->setMobilePhoneVerifyCodeDate(NULL);
                 $userInfo->setPreferredMobilePhoneVerified(true);
 
                 $em->flush();
@@ -235,12 +236,20 @@ class TelephonyController extends OrderAbstractController {
             $verificationCode = trim($verificationCode);
 
             $phoneNumber = $request->query->get('phoneNumber');
+            $phoneNumber = trim($phoneNumber);
+
+            $siteName = $request->query->get('siteName');
+            $siteName = trim($siteName);
+
+            if( !$siteName ) {
+                $siteName = $this->siteName;
+            }
+
+            echo 'verificationCode='.$verificationCode.", phoneNumber=".$phoneNumber.", siteName=".$siteName."<br>";
 
 //            if( !$phoneNumber ) {
 //                $user = $userServiceUtil->getUserByVerificationCode($verificationCode);
 //            }
-
-            $phoneNumber = trim($phoneNumber);
 
             if( $verificationCode && $phoneNumber ) {
                 $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -250,7 +259,8 @@ class TelephonyController extends OrderAbstractController {
                 if( $userInfo ) {
                     $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
                     if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-                        $userInfo->setMobilePhoneVerifyCode(null);
+                        $userInfo->setMobilePhoneVerifyCode(NULL);
+                        $userInfo->setMobilePhoneVerifyCodeDate(NULL);
                         $userInfo->setPreferredMobilePhoneVerified(true);
                         $em->flush();
 
@@ -258,6 +268,12 @@ class TelephonyController extends OrderAbstractController {
                             'notice',
                             'Mobile phone number is verified!.'
                         );
+
+                        //exit('Mobile phone number is verified!.');
+
+                        //TODO: redirect to the home page
+                        return $this->redirectToRoute($siteName.'_home');
+
                     } else {
                         //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                         $this->get('session')->getFlashBag()->add(
@@ -274,13 +290,15 @@ class TelephonyController extends OrderAbstractController {
                 );
             }
 
+            //exit('Mobile phone number not verified.');
+
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                'Mobile phone number not verified!.'
+                'Mobile phone number not verified.'
             );
 
             //exit("OK verificationCode=[$verificationCode]");
-            return $this->redirectToRoute('employees_verify_mobile_phone',array('phoneNumber'=>$phoneNumber));
+            return $this->redirectToRoute('employees_verify_mobile_phone',array('siteName'=>$siteName, 'phoneNumber'=>$phoneNumber));
 
 
         } catch (\Exception $exception) {
@@ -289,7 +307,7 @@ class TelephonyController extends OrderAbstractController {
                 'error',
                 'Verification code is incorrect'
             );
-            return $this->redirectToRoute('employees_verify_mobile_phone',array('phoneNumber'=>$phoneNumber));
+            return $this->redirectToRoute('employees_verify_mobile_phone',array('siteName'=>$siteName, 'phoneNumber'=>$phoneNumber));
         }
     }
 
@@ -443,7 +461,8 @@ class TelephonyController extends OrderAbstractController {
             if ($userInfo) {
                 $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
                 if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-                    $userInfo->setMobilePhoneVerifyCode(null);
+                    $userInfo->setMobilePhoneVerifyCode(NULL);
+                    $userInfo->setMobilePhoneVerifyCodeDate(NULL);
                     $userInfo->setPreferredMobilePhoneVerified(true);
                     $em->flush();
                     $res = "OK";
