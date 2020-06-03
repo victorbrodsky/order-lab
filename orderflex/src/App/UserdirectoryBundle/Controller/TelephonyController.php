@@ -226,6 +226,11 @@ class TelephonyController extends OrderAbstractController {
      */
     public function verifyCode(Request $request) {
 
+        //testing
+        //$lastRoute = $request->getSession()->get('originalRouteOnLogin');
+        //return $this->redirect($lastRoute);
+        //exit('$lastRoute='.$lastRoute);
+
         try {
             $em = $this->getDoctrine()->getManager();
             //$userServiceUtil = $this->get('user_service_utility');
@@ -245,7 +250,7 @@ class TelephonyController extends OrderAbstractController {
                 $siteName = $this->siteName;
             }
 
-            echo 'verificationCode='.$verificationCode.", phoneNumber=".$phoneNumber.", siteName=".$siteName."<br>";
+            //echo 'verificationCode='.$verificationCode.", phoneNumber=".$phoneNumber.", siteName=".$siteName."<br>";
 
 //            if( !$phoneNumber ) {
 //                $user = $userServiceUtil->getUserByVerificationCode($verificationCode);
@@ -269,10 +274,16 @@ class TelephonyController extends OrderAbstractController {
                             'Mobile phone number is verified!.'
                         );
 
-                        //exit('Mobile phone number is verified!.');
-
-                        //TODO: redirect to the home page
-                        return $this->redirectToRoute($siteName.'_home');
+                        //redirect to the last root or home page
+                        $lastRoute = $request->getSession()->get('originalRouteOnLogin');
+                        //exit('$lastRoute='.$lastRoute);
+                        if( $lastRoute ) {
+                            //I should be redirected to the URL I was trying to visit after login.
+                            $request->getSession()->set('originalRouteOnLogin',NULL);
+                            return $this->redirect($lastRoute);
+                        } else {
+                            return $this->redirectToRoute($siteName.'_home');
+                        }
 
                     } else {
                         //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
@@ -553,9 +564,9 @@ class TelephonyController extends OrderAbstractController {
         $text = "Mobile phone number verification code $verifyCode.";
 
         //https://view.med.cornell.edu/verify-mobile/XXXXXX
-        $verificationUrl = $userServiceUtil->getVerificationUrl($verifyCode);
-        $text = $text . " Please connect to VPN or the network and visit " .
-            $verificationUrl . " to complete the verification process.";
+//        $verificationUrl = $userServiceUtil->getVerificationUrl($verifyCode);
+//        $text = $text . " Please connect to VPN or the network and visit " .
+//            $verificationUrl . " to complete the verification process.";
         
         $message = $userServiceUtil->sendText($phoneNumber,$text);
         

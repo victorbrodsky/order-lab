@@ -1795,6 +1795,13 @@ class AdminController extends OrderAbstractController
                 "critical-result-notifications"
             ),
 
+            "ROLE_CRN_RECIPIENT" => array(
+                "Critical Result Notification Recipient",
+                "Receive text notifications on mobile phone",
+                40,
+                "critical-result-notifications"
+            ),
+
             "ROLE_CRN_PATHOLOGY_RESIDENT" => array(
                 "CRN Pathology Resident",
                 "",

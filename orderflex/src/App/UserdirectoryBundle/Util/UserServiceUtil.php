@@ -2113,7 +2113,16 @@ Pathology and Laboratory Medicine",
         $dql->select('userinfo');
 
         $dql->where("userinfo.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
-        $queryParameters = array('mobilePhoneVerifyCode'=>$code);
+        //$queryParameters = array('mobilePhoneVerifyCode'=>$code);
+
+        $dql->andWhere("userinfo.mobilePhoneVerifyCodeDate => :expireDate");
+        $expireDate = new \DateTime();
+        $expireDate->modify("-2 day");
+
+        $queryParameters = array(
+            'mobilePhoneVerifyCode'=>$code,
+            'expireDate'=>$expireDate->format('Y-m-d')
+        );
 
         $query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
@@ -2269,7 +2278,16 @@ Pathology and Laboratory Medicine",
         $dql->select('userrequest');
 
         $dql->where("userrequest.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
-        $queryParameters = array('mobilePhoneVerifyCode'=>$code);
+        //$queryParameters = array('mobilePhoneVerifyCode'=>$code);
+
+        $dql->andWhere("userrequest.mobilePhoneVerifyCodeDate => :expireDate");
+        $expireDate = new \DateTime();
+        $expireDate->modify("-2 day");
+
+        $queryParameters = array(
+            'mobilePhoneVerifyCode'=>$code,
+            'expireDate'=>$expireDate->format('Y-m-d')
+        );
 
         $query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );

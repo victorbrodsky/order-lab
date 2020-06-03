@@ -293,6 +293,15 @@ class InvoiceItem {
      */
     public function setUnitPrice($unitPrice)
     {
+        //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
+        //if value is "" convert it to NULL
+        if( $unitPrice ) {
+            $unitPrice = trim($unitPrice);
+            if( !$unitPrice ) {
+                $unitPrice = NULL;
+            }
+        }
+
         $this->unitPrice = $unitPrice;
     }
 
@@ -309,6 +318,15 @@ class InvoiceItem {
      */
     public function setTotal($total)
     {
+        //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
+        //if value is "" convert it to NULL
+        if( $total ) {
+            $total = trim($total);
+            if( !$total ) {
+                $total = NULL;
+            }
+        }
+
         $this->total = $total;
     }
 
