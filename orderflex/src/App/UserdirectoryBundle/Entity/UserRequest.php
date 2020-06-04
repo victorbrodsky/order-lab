@@ -648,9 +648,10 @@ class UserRequest
     public function setMobilePhone($mobilePhone)
     {
         if( $this->mobilePhone != $mobilePhone ) {
-            $this->setMobilePhoneVerified(false);
-            $this->setMobilePhoneVerifyCode(NULL);
-            $this->setMobilePhoneVerifyCodeDate(NULL);
+//            $this->setMobilePhoneVerified(false);
+//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+            $this->setUnVerified();
         }
         
         $this->mobilePhone = $mobilePhone;
@@ -686,6 +687,47 @@ class UserRequest
     public function setMobilePhoneVerifyCodeDate($mobilePhoneVerifyCodeDate)
     {
         $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
+    }
+
+    public function verifyCode($verificationCode) {
+        $userVerificationCode = $this->getMobilePhoneVerifyCode();
+        $phoneNumber = $this->getMobilePhone();
+        $notExpired = $this->verificationCodeIsNotExpired();
+        if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
+            //OK
+//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+//            $this->setMobilePhoneVerifyCode(true);
+            $this->setVerified();
+
+            return true;
+        }
+
+        return false;
+    }
+    public function setVerified() {
+        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setMobilePhoneVerifyCode(true);
+    }
+    public function setUnVerified() {
+        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setMobilePhoneVerifyCode(false);
+    }
+    public function verificationCodeIsNotExpired() {
+        $expireDate = new \DateTime();
+        $expireDate->modify("-2 day");
+        $verificationCodeCreationDate = $this->getMobilePhoneVerifyCodeDate();
+        if( !$verificationCodeCreationDate ) {
+            return true;
+        }
+
+        if( $verificationCodeCreationDate >= $expireDate ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

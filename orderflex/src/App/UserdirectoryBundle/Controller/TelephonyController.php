@@ -101,21 +101,19 @@ class TelephonyController extends OrderAbstractController {
             $userInfo = $user->getUserInfo();
 
             //2) use $verificationCode to verify the verification code in userInfo, if equal then change => verified
-            $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
-
-            if ($userVerificationCode == $verificationCode) {
-                //OK
-                $userInfo->setMobilePhoneVerifyCode(NULL);
-                $userInfo->setMobilePhoneVerifyCodeDate(NULL);
-                $userInfo->setPreferredMobilePhoneVerified(true);
-
+            $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
+            if( $phoneNumberVerified ) {
+                $userInfo->setVerified();
                 $em->flush();
-
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     'Your mobile phone number has been successfully verified.'
                 );
 
+                //EventLog: $eventType, $event, $testing
+                $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyMobileCodeAction';
+                $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
+                
                 return $this->redirect($this->generateUrl('main_common_home'));
             } else {
 //                $this->get('session')->getFlashBag()->add(
@@ -123,6 +121,31 @@ class TelephonyController extends OrderAbstractController {
 //                    'Invalid verification code.'
 //                );
             }
+
+            //2) use $verificationCode to verify the verification code in userInfo, if equal then change => verified
+//            $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
+//            $phoneNumber = $userInfo->getPreferredMobilePhone();
+//            $notExpired = $userInfo->verificationCodeIsNotExpired();
+//            if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
+//                //OK
+//                $userInfo->setMobilePhoneVerifyCode(NULL);
+//                $userInfo->setMobilePhoneVerifyCodeDate(NULL);
+//                $userInfo->setPreferredMobilePhoneVerified(true);
+//
+//                $em->flush();
+//
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    'Your mobile phone number has been successfully verified.'
+//                );
+//
+//                return $this->redirect($this->generateUrl('main_common_home'));
+//            } else {
+////                $this->get('session')->getFlashBag()->add(
+////                    'warning',
+////                    'Invalid verification code.'
+////                );
+//            }
         } else {
 //            $this->get('session')->getFlashBag()->add(
 //                'warning',
@@ -224,7 +247,7 @@ class TelephonyController extends OrderAbstractController {
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function verifyCode(Request $request) {
+    public function verifyCodeAction(Request $request) {
 
         //testing
         //$lastRoute = $request->getSession()->get('originalRouteOnLogin');
@@ -233,7 +256,7 @@ class TelephonyController extends OrderAbstractController {
 
         try {
             $em = $this->getDoctrine()->getManager();
-            //$userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil = $this->get('user_service_utility');
 
             // Get data from session
             //$data = $this->get('session')->get('user');
@@ -262,17 +285,19 @@ class TelephonyController extends OrderAbstractController {
                 $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
                 if( $userInfo ) {
-                    $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
-                    if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-                        $userInfo->setMobilePhoneVerifyCode(NULL);
-                        $userInfo->setMobilePhoneVerifyCodeDate(NULL);
-                        $userInfo->setPreferredMobilePhoneVerified(true);
-                        $em->flush();
 
+                    $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
+                    if( $phoneNumberVerified ) {
+                        $userInfo->setVerified();
+                        $em->flush();
                         $this->get('session')->getFlashBag()->add(
                             'notice',
                             'Mobile phone number is verified!.'
                         );
+
+                        //EventLog: $eventType, $event, $testing
+                        $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyCodeAction';
+                        $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
 
                         //redirect to the last root or home page
                         $lastRoute = $request->getSession()->get('originalRouteOnLogin');
@@ -284,7 +309,6 @@ class TelephonyController extends OrderAbstractController {
                         } else {
                             return $this->redirectToRoute($siteName.'_home');
                         }
-
                     } else {
                         //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                         $this->get('session')->getFlashBag()->add(
@@ -292,6 +316,38 @@ class TelephonyController extends OrderAbstractController {
                             'Verification code does not match.'
                         );
                     }
+
+//                    $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
+//                    $notExpired = $userInfo->verificationCodeIsNotExpired();
+//                    if( $notExpired && $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
+//                        $userInfo->setMobilePhoneVerifyCode(NULL);
+//                        $userInfo->setMobilePhoneVerifyCodeDate(NULL);
+//                        $userInfo->setPreferredMobilePhoneVerified(true);
+//                        $em->flush();
+//
+//                        $this->get('session')->getFlashBag()->add(
+//                            'notice',
+//                            'Mobile phone number is verified!.'
+//                        );
+//
+//                        //redirect to the last root or home page
+//                        $lastRoute = $request->getSession()->get('originalRouteOnLogin');
+//                        //exit('$lastRoute='.$lastRoute);
+//                        if( $lastRoute ) {
+//                            //I should be redirected to the URL I was trying to visit after login.
+//                            $request->getSession()->set('originalRouteOnLogin',NULL);
+//                            return $this->redirect($lastRoute);
+//                        } else {
+//                            return $this->redirectToRoute($siteName.'_home');
+//                        }
+//
+//                    } else {
+//                        //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+//                        $this->get('session')->getFlashBag()->add(
+//                            'warning',
+//                            'Verification code does not match.'
+//                        );
+//                    }
                 }
             } else {
                 //exit("Invalid input parameters: verificationCode=[$verificationCode], phoneNumber=[$phoneNumber]");
@@ -470,21 +526,37 @@ class TelephonyController extends OrderAbstractController {
             $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
             if ($userInfo) {
-                $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
-                if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-                    $userInfo->setMobilePhoneVerifyCode(NULL);
-                    $userInfo->setMobilePhoneVerifyCodeDate(NULL);
-                    $userInfo->setPreferredMobilePhoneVerified(true);
+
+                $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
+                if( $phoneNumberVerified ) {
+                    $userInfo->setVerified();
                     $em->flush();
                     $res = "OK";
 
-                    //EventLog
-
-
+                    //EventLog: $eventType, $event, $testing
+                    $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyCodeAjaxAction';
+                    $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
                 } else {
                     //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                     $res = "Verification code does not match";
                 }
+
+//                $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
+//                $notExpired = $userInfo->verificationCodeIsNotExpired();
+//                if( $notExpired && $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
+//                    $userInfo->setMobilePhoneVerifyCode(NULL);
+//                    $userInfo->setMobilePhoneVerifyCodeDate(NULL);
+//                    $userInfo->setPreferredMobilePhoneVerified(true);
+//                    $em->flush();
+//                    $res = "OK";
+//
+//                    //EventLog
+//
+//
+//                } else {
+//                    //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+//                    $res = "Verification code does not match";
+//                }
             } else {
                 //exit("userInfo not found");
                 $res = "User Info is not found";
@@ -590,6 +662,7 @@ class TelephonyController extends OrderAbstractController {
      */
     public function verifyAccountRequestCodeAjaxAction(Request $request)
     {
+        $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         $userRequest = NULL;
@@ -615,21 +688,36 @@ class TelephonyController extends OrderAbstractController {
         $res = "Phone number is not verified";
 
         if( $userRequest && $verificationCode ) {
-            
-            $userVerificationCode = $userRequest->getMobilePhoneVerifyCode();
-            if( $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-                $userRequest->setMobilePhoneVerifyCode(null);
-                $userRequest->setMobilePhoneVerifyCodeDate(null);
-                $userRequest->setMobilePhoneVerified(true);
+
+            $phoneNumberVerified = $userRequest->verifyCode($verificationCode);
+            if( $phoneNumberVerified ) {
+                $userRequest->setVerified();
                 $em->flush();
                 $res = "OK";
 
-                //EventLog
-
+                //EventLog: $eventType, $event, $testing
+                $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyAccountRequestCodeAjaxAction';
+                $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
             } else {
                 //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
                 $res = "Verification code does not match";
             }
+
+//            $userVerificationCode = $userRequest->getMobilePhoneVerifyCode();
+//            $notExpired = $userRequest->verificationCodeIsNotExpired();
+//            if( $notExpired && $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
+//                $userRequest->setMobilePhoneVerifyCode(null);
+//                $userRequest->setMobilePhoneVerifyCodeDate(null);
+//                $userRequest->setMobilePhoneVerified(true);
+//                $em->flush();
+//                $res = "OK";
+//
+//                //EventLog
+//
+//            } else {
+//                //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+//                $res = "Verification code does not match";
+//            }
             
         } else {
             $res = "Invalid parameters";

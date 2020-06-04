@@ -231,9 +231,10 @@ class UserInfo extends BaseUserAttributes {
     public function setPreferredMobilePhone($preferredMobilePhone)
     {
         if( $this->preferredMobilePhone != $preferredMobilePhone ) {
-            $this->setPreferredMobilePhoneVerified(false);
-            $this->setMobilePhoneVerifyCode(NULL);
-            $this->setMobilePhoneVerifyCodeDate(NULL);
+            //$this->setPreferredMobilePhoneVerified(false);
+            //$this->setMobilePhoneVerifyCode(NULL);
+            //$this->setMobilePhoneVerifyCodeDate(NULL);
+            $this->setUnVerified();
         }
 
         $this->preferredMobilePhone = $preferredMobilePhone;
@@ -287,6 +288,46 @@ class UserInfo extends BaseUserAttributes {
         $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
     }
 
+    public function verifyCode($verificationCode) {
+        $userVerificationCode = $this->getMobilePhoneVerifyCode();
+        $phoneNumber = $this->getPreferredMobilePhone();
+        $notExpired = $this->verificationCodeIsNotExpired();
+        if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
+            //OK
+//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+//            $this->setPreferredMobilePhoneVerified(true);
+            $this->setVerified();
+
+            return $phoneNumber;
+        }
+
+        return false;
+    }
+    public function setVerified() {
+        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setPreferredMobilePhoneVerified(true);
+    }
+    public function setUnVerified() {
+        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setPreferredMobilePhoneVerified(false);
+    }
+    public function verificationCodeIsNotExpired() {
+        $expireDate = new \DateTime();
+        $expireDate->modify("-2 day");
+        $verificationCodeCreationDate = $this->getMobilePhoneVerifyCodeDate();
+        if( !$verificationCodeCreationDate ) {
+            return true;
+        }
+
+        if( $verificationCodeCreationDate >= $expireDate ) {
+            return true;
+        }
+
+        return false;
+    }
 
 
     /**

@@ -417,7 +417,7 @@ function validateMrntypeIdentifier() {
 
 function sendVerificationCode(phoneNumber) {
 
-    console.log('phoneNumber=' + phoneNumber);
+    console.log('sendVerificationCode: phoneNumber=' + phoneNumber);
     var btn = document.getElementById("send-verification-code-button-modal");
     var lbtn = Ladda.create( btn );
     lbtn.start();

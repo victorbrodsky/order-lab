@@ -2107,6 +2107,7 @@ Pathology and Laboratory Medicine",
     }
     public function generateVerificationCode($counter=0) {
         $code = random_int(100000, 999999);
+        //$code = 111;
 
         $repository = $this->em->getRepository('AppUserdirectoryBundle:UserInfo');
         $dql =  $repository->createQueryBuilder("userinfo");
@@ -2115,7 +2116,7 @@ Pathology and Laboratory Medicine",
         $dql->where("userinfo.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
         //$queryParameters = array('mobilePhoneVerifyCode'=>$code);
 
-        $dql->andWhere("userinfo.mobilePhoneVerifyCodeDate => :expireDate");
+        $dql->andWhere("userinfo.mobilePhoneVerifyCodeDate >= :expireDate");
         $expireDate = new \DateTime();
         $expireDate->modify("-2 day");
 
@@ -2180,34 +2181,27 @@ Pathology and Laboratory Medicine",
         return $message;
     }
     public function userHasPhoneNumber($phoneNumber) {
-//        $user = $this->security->getUser();
-//        $userInfos = $user->getInfos();
-//        //exit('$userInfos count='.count($userInfos));
-//        foreach($userInfos as $userInfo) {
-//            $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
-//            exit("phoneNumber=[$phoneNumber] ?= userPreferredMobilePhone=[$userPreferredMobilePhone]");
-//            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
-//                return true;
-//            }
-//        }
-//        exit('111');
-//        return false;
-
-        //$user = $this->container->get('security.token_storage')->getToken()->getUser();
-        //exit("phoneNumber=[$phoneNumber]");
         $user = $this->security->getUser();
+
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
         if( $userInfo ) {
             $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
-            //echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
-            //exit();
+            echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            exit();
             //exit("phoneNumber=[$phoneNumber] ?= userPreferredMobilePhone=[$userPreferredMobilePhone]");
             if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
                 return true;
             }
+
+            //additional canonical check (without '+')
+            $phoneNumber = str_replace('+','',$phoneNumber);
+            $userPreferredMobilePhone = str_replace('+','',$userPreferredMobilePhone);
+            if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
+                return true;
+            }
         } else {
-            //exit("userInfo not found by phoneNumber=".$phoneNumber);
+            exit("userInfo not found by phoneNumber=".$phoneNumber);
         }
 
         return false;
@@ -2280,7 +2274,7 @@ Pathology and Laboratory Medicine",
         $dql->where("userrequest.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
         //$queryParameters = array('mobilePhoneVerifyCode'=>$code);
 
-        $dql->andWhere("userrequest.mobilePhoneVerifyCodeDate => :expireDate");
+        $dql->andWhere("userrequest.mobilePhoneVerifyCodeDate >= :expireDate");
         $expireDate = new \DateTime();
         $expireDate->modify("-2 day");
 
@@ -2306,6 +2300,33 @@ Pathology and Laboratory Medicine",
         return $code;
     }
 
+    public function setVerificationEventLog($eventType, $event, $testing=false) {
+        if( $this->security && $user = $this->security->getUser() ) {
+            //$user = $this->security->getUser();
+        } else {
+            $user = null;
+        }
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( !$testing ) {
+            //            createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $event, $user, null, null, $eventType);
+        }
+    }
+
+//    public function verificationCodeIsNotExpired( $mobilePhoneHolder ) {
+//        $expireDate = new \DateTime();
+//        $expireDate->modify("-2 day");
+//        $verificationCodeCreationDate = $mobilePhoneHolder->getMobilePhoneVerifyCodeDate();
+//        if( !$verificationCodeCreationDate ) {
+//            return true;
+//        }
+//
+//        if( $mobilePhoneHolder && $expireDate && $verificationCodeCreationDate >= $expireDate ) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     ///////////////////////////// EOF TELEPHONY ////////////////////////////////////
 
