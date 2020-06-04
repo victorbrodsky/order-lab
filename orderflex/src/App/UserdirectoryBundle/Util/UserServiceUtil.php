@@ -2184,11 +2184,12 @@ Pathology and Laboratory Medicine",
         $user = $this->security->getUser();
 
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
-
+        
         if( $userInfo ) {
+            //exit($userInfo->getId());
             $userPreferredMobilePhone = $userInfo->getPreferredMobilePhone();
-            echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
-            exit();
+            //echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            //exit();
             //exit("phoneNumber=[$phoneNumber] ?= userPreferredMobilePhone=[$userPreferredMobilePhone]");
             if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
                 return true;
@@ -2197,11 +2198,13 @@ Pathology and Laboratory Medicine",
             //additional canonical check (without '+')
             $phoneNumber = str_replace('+','',$phoneNumber);
             $userPreferredMobilePhone = str_replace('+','',$userPreferredMobilePhone);
+            //echo "[$phoneNumber] =? [$userPreferredMobilePhone]<br>";
+            //exit();
             if( $phoneNumber && $userPreferredMobilePhone && $phoneNumber == $userPreferredMobilePhone ) {
                 return true;
             }
         } else {
-            exit("userInfo not found by phoneNumber=".$phoneNumber);
+            //exit("userInfo not found by phoneNumber=".$phoneNumber);
         }
 
         return false;
@@ -2301,15 +2304,14 @@ Pathology and Laboratory Medicine",
     }
 
     public function setVerificationEventLog($eventType, $event, $testing=false) {
-        if( $this->security && $user = $this->security->getUser() ) {
-            //$user = $this->security->getUser();
-        } else {
-            $user = null;
-        }
+        $user = null;
+        if( $this->security ) {
+            $user = $this->security->getUser();
+        } 
         $userSecUtil = $this->container->get('user_security_utility');
         if( !$testing ) {
             //            createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $event, $user, null, null, $eventType);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $event, $user, $user, null, $eventType);
         }
     }
 

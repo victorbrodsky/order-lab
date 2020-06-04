@@ -695,7 +695,7 @@ class UserRequest
         $notExpired = $this->verificationCodeIsNotExpired();
         if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
             //OK
-//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerified(NULL);
 //            $this->setMobilePhoneVerifyCodeDate(NULL);
 //            $this->setMobilePhoneVerifyCode(true);
             $this->setVerified();
@@ -706,12 +706,12 @@ class UserRequest
         return false;
     }
     public function setVerified() {
-        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerified(NULL);
         $this->setMobilePhoneVerifyCodeDate(NULL);
         $this->setMobilePhoneVerifyCode(true);
     }
     public function setUnVerified() {
-        $this->setMobilePhoneVerifyCode(NULL);
+        $this->setMobilePhoneVerified(NULL);
         $this->setMobilePhoneVerifyCodeDate(NULL);
         $this->setMobilePhoneVerifyCode(false);
     }

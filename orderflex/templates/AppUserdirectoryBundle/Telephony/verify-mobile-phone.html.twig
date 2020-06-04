@@ -124,6 +124,7 @@
             <div class="col-md-4">
 
                 <form action="{{ url('employees_verify_code') }}" method="get">
+                    {#TODO: get phoneNumber from phoneNumberToVerify field#}
                     <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
                     <input type="hidden" class="form-control" name="siteName" value="{{ sitename }}">
                     <div class="form-group">

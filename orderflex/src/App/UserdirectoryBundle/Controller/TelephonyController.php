@@ -120,6 +120,15 @@ class TelephonyController extends OrderAbstractController {
 //                    'warning',
 //                    'Invalid verification code.'
 //                );
+                if( $userInfo->getPreferredMobilePhoneVerified() ) {
+                    $resFailed = "Mobile phone number is already verified";
+                } else {
+                    $resFailed = "Verification failed";
+                }
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $resFailed
+                );
             }
 
             //2) use $verificationCode to verify the verification code in userInfo, if equal then change => verified
@@ -253,6 +262,7 @@ class TelephonyController extends OrderAbstractController {
         //$lastRoute = $request->getSession()->get('originalRouteOnLogin');
         //return $this->redirect($lastRoute);
         //exit('$lastRoute='.$lastRoute);
+        $logger = $this->container->get('logger');
 
         try {
             $em = $this->getDoctrine()->getManager();
@@ -309,13 +319,19 @@ class TelephonyController extends OrderAbstractController {
                         } else {
                             return $this->redirectToRoute($siteName.'_home');
                         }
-                    } else {
+                    } else { //if $phoneNumberVerified
                         //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
+                        if( $userInfo->getMobilePhoneVerified() ) {
+                            $resFailed = "Mobile phone number is already verified";
+                        } else {
+                            $resFailed = "Verification failed";
+                        }
+                        $logger->error("verifyCodeAction: ".$resFailed);
                         $this->get('session')->getFlashBag()->add(
                             'warning',
-                            'Verification code does not match.'
+                            $resFailed
                         );
-                    }
+                    } //else $phoneNumberVerified
 
 //                    $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
 //                    $notExpired = $userInfo->verificationCodeIsNotExpired();
@@ -348,17 +364,21 @@ class TelephonyController extends OrderAbstractController {
 //                            'Verification code does not match.'
 //                        );
 //                    }
-                }
+                } else { //if $userInfo
+                    $logger->error("verifyCodeAction: userInfo not found by phoneNumber=".$phoneNumber); //TODO: check this error after phone is modified on the verification page
+                } //else $userInfo
             } else {
+                $logger->error("verifyCodeAction: Logical error: invalid input parameters. phoneNumber=".$phoneNumber);
                 //exit("Invalid input parameters: verificationCode=[$verificationCode], phoneNumber=[$phoneNumber]");
                 $this->get('session')->getFlashBag()->add(
                     'warning',
                     'Logical error: invalid input parameters.'
                 );
-            }
+            } //else $userInfo
 
             //exit('Mobile phone number not verified.');
 
+            $logger->error("verifyCodeAction: Logical error: Unknown error. phoneNumber=".$phoneNumber);
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 'Mobile phone number not verified.'
@@ -372,7 +392,7 @@ class TelephonyController extends OrderAbstractController {
             //exit("Verification code is incorrect");
             $this->addFlash(
                 'error',
-                'Verification code is incorrect'
+                'Verification failed'
             );
             return $this->redirectToRoute('employees_verify_mobile_phone',array('siteName'=>$siteName, 'phoneNumber'=>$phoneNumber));
         }
@@ -537,8 +557,12 @@ class TelephonyController extends OrderAbstractController {
                     $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyCodeAjaxAction';
                     $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
                 } else {
-                    //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
-                    $res = "Verification code does not match";
+                    //exit("Verification failed: phoneNumberVerified=[$phoneNumberVerified]");
+                    if( $userInfo->getPreferredMobilePhoneVerified() ) {
+                        $res = "Mobile phone number is already verified";
+                    } else {
+                        $res = "Verification failed";
+                    }
                 }
 
 //                $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
@@ -699,8 +723,11 @@ class TelephonyController extends OrderAbstractController {
                 $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyAccountRequestCodeAjaxAction';
                 $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
             } else {
-                //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
-                $res = "Verification code does not match";
+                if( $userRequest->getMobilePhoneVerified() ) {
+                    $res = "Mobile phone number is already verified";
+                } else {
+                    $res = "Verification failed";
+                }
             }
 
 //            $userVerificationCode = $userRequest->getMobilePhoneVerifyCode();
