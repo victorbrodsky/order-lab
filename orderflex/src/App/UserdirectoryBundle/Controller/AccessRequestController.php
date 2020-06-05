@@ -338,6 +338,14 @@ class AccessRequestController extends OrderAbstractController
         if( count($phonesArr)>0 && $phonesArr[0]['phone'] ) {
             $accReq->setPhone($phonesArr[0]['phone']);
         }
+
+        //mobilePhone
+//        $phonesArr = $user->getAllPhones();
+//        if( count($phonesArr)>0 && $phonesArr[0]['mobilePhone'] ) {
+//            $accReq->setMobilePhone($phonesArr[0]['mobilePhone']);
+//        }
+        $accReq->setMobilePhone($user->getPreferredMobilePhone());
+
         //job title
         $accReq->setJob($userDetalsArr["title"]);
         //organizationalGroup
@@ -538,6 +546,7 @@ class AccessRequestController extends OrderAbstractController
         $msg .= "<br>"."<br>" . $user->getUsernameOptimal() . " has supplied the following information:"."<br>";
         $msg .= "<br>"."E-Mail: ".$accReq->getEmail();
         $msg .= "<br>"."Phone Number: ".$accReq->getPhone();
+        $msg .= "<br>"."Mobile Phone Number: ".$accReq->getMobilePhone();
         $msg .= "<br>"."Job Title: ".$accReq->getJob();
         $msg .= "<br>"."Organizational Group: ".$accReq->getOrganizationalGroup();
         $msg .= "<br>"."Reason for Access Request: ".$accReq->getReason();

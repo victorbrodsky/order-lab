@@ -647,13 +647,19 @@ class UserRequest
      */
     public function setMobilePhone($mobilePhone)
     {
+        if( $mobilePhone ) {
+            //strip '-' and ' '
+            $mobilePhone = str_replace('-','',$mobilePhone);
+            $mobilePhone = str_replace(' ','',$mobilePhone);
+        }
+        
         if( $this->mobilePhone != $mobilePhone ) {
 //            $this->setMobilePhoneVerified(false);
 //            $this->setMobilePhoneVerifyCode(NULL);
 //            $this->setMobilePhoneVerifyCodeDate(NULL);
             $this->setUnVerified();
         }
-        
+
         $this->mobilePhone = $mobilePhone;
     }
 
@@ -706,14 +712,14 @@ class UserRequest
         return false;
     }
     public function setVerified() {
-        $this->setMobilePhoneVerified(NULL);
+        $this->setMobilePhoneVerified(true);
         $this->setMobilePhoneVerifyCodeDate(NULL);
-        $this->setMobilePhoneVerifyCode(true);
+        $this->setMobilePhoneVerifyCode(NULL);
     }
     public function setUnVerified() {
-        $this->setMobilePhoneVerified(NULL);
+        $this->setMobilePhoneVerified(false);
         $this->setMobilePhoneVerifyCodeDate(NULL);
-        $this->setMobilePhoneVerifyCode(false);
+        $this->setMobilePhoneVerifyCode(NULL);
     }
     public function verificationCodeIsNotExpired() {
         $expireDate = new \DateTime();

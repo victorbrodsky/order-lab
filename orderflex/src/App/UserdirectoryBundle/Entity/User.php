@@ -2120,6 +2120,18 @@ class User extends UserBase {
             $phone['phone'] = $this->getPreferredPhone();
             $phonesArr[] = $phone;
         }
+        
+        //getPreferredMobilePhone
+        if( $this->getPreferredMobilePhone() ) {
+            $phone = array();
+            if( count($phonesArr) > 0 ) {
+                $phone['prefix'] = "Preferred Mobile: ";
+            } else {
+                $phone['prefix'] = "";
+            }
+            $phone['phone'] = $this->getPreferredMobilePhone();
+            $phonesArr[] = $phone;
+        }
 
         if( count($phonesArr) == 1 ) {
             $phonesArr[0]['prefix'] = "";

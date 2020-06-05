@@ -104,6 +104,7 @@ class TelephonyController extends OrderAbstractController {
             $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
             if( $phoneNumberVerified ) {
                 $userInfo->setVerified();
+                $user->addRole("ROLE_CRN_RECIPIENT");
                 $em->flush();
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -262,7 +263,7 @@ class TelephonyController extends OrderAbstractController {
         //$lastRoute = $request->getSession()->get('originalRouteOnLogin');
         //return $this->redirect($lastRoute);
         //exit('$lastRoute='.$lastRoute);
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         try {
             $em = $this->getDoctrine()->getManager();
@@ -299,10 +300,11 @@ class TelephonyController extends OrderAbstractController {
                     $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
                     if( $phoneNumberVerified ) {
                         $userInfo->setVerified();
+                        $user->addRole("ROLE_CRN_RECIPIENT");
                         $em->flush();
                         $this->get('session')->getFlashBag()->add(
                             'notice',
-                            'Mobile phone number is verified!.'
+                            'Mobile phone number is verified!'
                         );
 
                         //EventLog: $eventType, $event, $testing
@@ -326,7 +328,7 @@ class TelephonyController extends OrderAbstractController {
                         } else {
                             $resFailed = "Verification failed";
                         }
-                        $logger->error("verifyCodeAction: ".$resFailed);
+                        //$logger->error("verifyCodeAction: ".$resFailed);
                         $this->get('session')->getFlashBag()->add(
                             'warning',
                             $resFailed
@@ -365,10 +367,10 @@ class TelephonyController extends OrderAbstractController {
 //                        );
 //                    }
                 } else { //if $userInfo
-                    $logger->error("verifyCodeAction: userInfo not found by phoneNumber=".$phoneNumber); //TODO: check this error after phone is modified on the verification page
+                    //$logger->error("verifyCodeAction: userInfo not found by phoneNumber=".$phoneNumber); //TODO: check this error after phone is modified on the verification page
                 } //else $userInfo
             } else {
-                $logger->error("verifyCodeAction: Logical error: invalid input parameters. phoneNumber=".$phoneNumber);
+                //$logger->error("verifyCodeAction: Logical error: invalid input parameters. phoneNumber=".$phoneNumber);
                 //exit("Invalid input parameters: verificationCode=[$verificationCode], phoneNumber=[$phoneNumber]");
                 $this->get('session')->getFlashBag()->add(
                     'warning',
@@ -378,7 +380,7 @@ class TelephonyController extends OrderAbstractController {
 
             //exit('Mobile phone number not verified.');
 
-            $logger->error("verifyCodeAction: Logical error: Unknown error. phoneNumber=".$phoneNumber);
+            //$logger->error("verifyCodeAction: Logical error: Unknown error. phoneNumber=".$phoneNumber);
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 'Mobile phone number not verified.'
@@ -550,6 +552,7 @@ class TelephonyController extends OrderAbstractController {
                 $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
                 if( $phoneNumberVerified ) {
                     $userInfo->setVerified();
+                    $user->addRole("ROLE_CRN_RECIPIENT");
                     $em->flush();
                     $res = "OK";
 
@@ -716,6 +719,7 @@ class TelephonyController extends OrderAbstractController {
             $phoneNumberVerified = $userRequest->verifyCode($verificationCode);
             if( $phoneNumberVerified ) {
                 $userRequest->setVerified();
+                $userRequest->addRole("ROLE_CRN_RECIPIENT");
                 $em->flush();
                 $res = "OK";
 

@@ -116,6 +116,32 @@ class AccessRequest
      */
     private $phone;
 
+    ///////////////// mobilePhone /////////////////////
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mobilePhone;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $mobilePhoneVerifyCode;
+
+    /**
+     * mobilePhoneVerifyCode generation Date. Used for expiration date.
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $mobilePhoneVerifyCodeDate;
+
+    /**
+     * Is the mobile phone number verified?
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $mobilePhoneVerified;
+    ///////////////// EOF mobilePhone ///////////////////////
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -343,6 +369,8 @@ class AccessRequest
         $this->phone = $phone;
     }
 
+
+
     /**
      * @return mixed
      */
@@ -488,5 +516,126 @@ class AccessRequest
 
         return $str;
     }
+
+    /////////////// Mobile Phone /////////////
+    /**
+     * @return mixed
+     */
+    public function getMobilePhone()
+    {
+        return $this->mobilePhone;
+    }
+
+    /**
+     * @param mixed $mobilePhone
+     */
+    public function setMobilePhone($mobilePhone)
+    {
+        if( $mobilePhone ) {
+            //strip '-' and ' '
+            $mobilePhone = str_replace('-','',$mobilePhone);
+            $mobilePhone = str_replace(' ','',$mobilePhone);
+        }
+
+        if( $this->mobilePhone != $mobilePhone ) {
+//            $this->setMobilePhoneVerified(false);
+//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+            $this->setUnVerified();
+        }
+
+        $this->mobilePhone = $mobilePhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMobilePhoneVerifyCode()
+    {
+        return $this->mobilePhoneVerifyCode;
+    }
+
+    /**
+     * @param mixed $mobilePhoneVerifyCode
+     */
+    public function setMobilePhoneVerifyCode($mobilePhoneVerifyCode)
+    {
+        $this->mobilePhoneVerifyCode = $mobilePhoneVerifyCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMobilePhoneVerifyCodeDate()
+    {
+        return $this->mobilePhoneVerifyCodeDate;
+    }
+
+    /**
+     * @param mixed $mobilePhoneVerifyCodeDate
+     */
+    public function setMobilePhoneVerifyCodeDate($mobilePhoneVerifyCodeDate)
+    {
+        $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
+    }
+
+    public function verifyCode($verificationCode) {
+        $userVerificationCode = $this->getMobilePhoneVerifyCode();
+        $phoneNumber = $this->getMobilePhone();
+        $notExpired = $this->verificationCodeIsNotExpired();
+        if( $notExpired && $phoneNumber && $userVerificationCode && $verificationCode && $userVerificationCode == $verificationCode ) {
+            //OK
+//            $this->setMobilePhoneVerified(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+//            $this->setMobilePhoneVerifyCode(true);
+            $this->setVerified();
+
+            return true;
+        }
+
+        return false;
+    }
+    public function setVerified() {
+        $this->setMobilePhoneVerified(true);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setMobilePhoneVerifyCode(NULL);
+    }
+    public function setUnVerified() {
+        $this->setMobilePhoneVerified(false);
+        $this->setMobilePhoneVerifyCodeDate(NULL);
+        $this->setMobilePhoneVerifyCode(NULL);
+    }
+    public function verificationCodeIsNotExpired() {
+        $expireDate = new \DateTime();
+        $expireDate->modify("-2 day");
+        $verificationCodeCreationDate = $this->getMobilePhoneVerifyCodeDate();
+        if( !$verificationCodeCreationDate ) {
+            return true;
+        }
+
+        if( $verificationCodeCreationDate >= $expireDate ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMobilePhoneVerified()
+    {
+        return $this->mobilePhoneVerified;
+    }
+
+    /**
+     * @param mixed $mobilePhoneVerified
+     */
+    public function setMobilePhoneVerified($mobilePhoneVerified)
+    {
+        $this->mobilePhoneVerified = $mobilePhoneVerified;
+    }
+    /////////////// EOF Mobile Phone /////////////
+
 
 }

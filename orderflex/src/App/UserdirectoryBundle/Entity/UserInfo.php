@@ -230,6 +230,12 @@ class UserInfo extends BaseUserAttributes {
      */
     public function setPreferredMobilePhone($preferredMobilePhone)
     {
+        if( $preferredMobilePhone ) {
+            //strip '-' and ' '
+            $preferredMobilePhone = str_replace('-','',$preferredMobilePhone);
+            $preferredMobilePhone = str_replace(' ','',$preferredMobilePhone);
+        }
+
         if( $this->preferredMobilePhone != $preferredMobilePhone ) {
             //$this->setPreferredMobilePhoneVerified(false);
             //$this->setMobilePhoneVerifyCode(NULL);

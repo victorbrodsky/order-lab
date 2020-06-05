@@ -45,87 +45,120 @@
 {% block content %}
 
     {#<div class="row">#}
-        {#<div class="col-md-3">#}
+        {#<div class="col-md-4">#}
         {#</div>#}
 
-        {#<div class="col-md-6">#}
-            {#{% if mobilePhoneVerified %}#}
-                {#<br><br>#}
-                {#<p class="text-success">Mobile phone number is already verified</p>#}
-            {#{% else %}#}
-                {#<p class="text-danger">Mobile phone number is not verified</p>#}
+        {#{% set mobilePhoneVerified = false %}#}
 
-                {#<input id="phoneNumberToVerify" type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                {#<p>#}
+        {#<div class="col-md-4">#}
+
+            {#<div id="phone-number-verify-status-modal">#}
+                {#{% if mobilePhoneVerified %}#}
+                    {#<p class="text-success">Mobile phone number verified</p>#}
+                {#{% else %}#}
+                    {#<p class="text-danger">Mobile phone number is not verified</p>#}
+                {#{% endif %}#}
+            {#</div>#}
+
+            {#<div class="input-group mb-3">#}
+                {#<div class="input-group-btn">#}
                     {#<button#}
-                            {#id="send-verification-code-button"#}
-                            {#type="button" class="btn btn-success send-verification-code"#}
-                            {#onclick="sendVerificationCode({{ phoneNumber }});"#}
-                    {#>Send Verification Code to {{ phoneNumber }}</button>#}
-                {#</p>#}
-            {#{% endif %}#}
-
-            {#<a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>#}
-            {#<form action="{{ url('employees_verify_mobile_phone_ajax') }}" method="get">#}
-            {#<form action="{{ path('employees_verify_mobile_phone_ajax',{'phoneNumber': phoneNumber}) }}" method="get">#}
-                {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
-                {#<p>#}
-                    {#<button type="submit" class="btn btn-success send-verification-code">Send Verification Code to {{ phoneNumber }}</button>#}
-                {#</p>#}
-            {#</form>#}
+                            {#id="send-verification-code-button-modal"#}
+                            {#type="button" class="btn btn-success send-verification-code-button"#}
+                            {#onclick="sendVerificationCode($('#phoneNumberToVerify').val());"#}
+                    {#>Send Verification Code to</button>#}
+                {#</div>#}
+                {#<input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+            {#</div>#}
 
         {#</div>#}
 
-        {#<div class="col-md-3">#}
+        {#<div class="col-md-4">#}
         {#</div>#}
     {#</div>#}
 
-    <div class="row">
-        <div class="col-md-4">
-        </div>
+    {#<br><br>#}
 
-        {% set mobilePhoneVerified = false %}
+    {#{% if not mobilePhoneVerified %}#}
+        {#<div class="row">#}
 
-        <div class="col-md-4">
+            {#<div class="col-md-4">#}
+            {#</div>#}
 
-            <div id="phone-number-verify-status-modal">
-                {% if mobilePhoneVerified %}
-                    <p class="text-success">Mobile phone number verified</p>
-                {% else %}
-                    <p class="text-danger">Mobile phone number is not verified</p>
-                {% endif %}
-            </div>
+            {#<div class="col-md-4">#}
 
-            <div class="input-group mb-3">
-                <div class="input-group-btn">
-                    <button
-                            id="send-verification-code-button-modal"
-                            type="button" class="btn btn-success send-verification-code-button"
-                            onclick="sendVerificationCode($('#phoneNumberToVerify').val());"
-                    >Send Verification Code to</button>
-                </div>
-                <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-        </div>
-    </div>
-
-    <br><br>
-
-    {% if not mobilePhoneVerified %}
-        <div class="row">
-
-            <div class="col-md-4">
-            </div>
-
-            <div class="col-md-4">
-
-                <form action="{{ url('employees_verify_code') }}" method="get">
+                {#<form action="{{ url('employees_verify_code') }}" method="get">#}
                     {#TODO: get phoneNumber from phoneNumberToVerify field#}
-                    <input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                    {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
+                    {#<input type="hidden" class="form-control" name="siteName" value="{{ sitename }}">#}
+                    {#<div class="form-group">#}
+                        {#<input type="text" class="form-control" name="verify_code" placeholder="Enter code here">#}
+                    {#</div>#}
+
+                    {#<div class="form-group">#}
+                        {#<button type="submit" class="btn btn-success">Verify Now</button>#}
+                    {#</div>#}
+                {#</form>#}
+
+            {#</div>#}
+
+            {#<div class="col-md-4">#}
+            {#</div>#}
+
+        {#</div>#}
+    {#{% endif %}#}
+
+
+
+
+    <form action="{{ url('employees_verify_code') }}" method="get">
+
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+
+            {#{% set mobilePhoneVerified = false %}#}
+
+            <div class="col-md-4">
+
+                <div id="phone-number-verify-status-modal">
+                    {% if mobilePhoneVerified %}
+                        <p class="text-success">Mobile phone number is already verified</p>
+                    {% else %}
+                        <p class="text-danger">Mobile phone number is not verified</p>
+                    {% endif %}
+                </div>
+
+                {% if not mobilePhoneVerified %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-btn">
+                            <button
+                                    id="send-verification-code-button-modal"
+                                    type="button" class="btn btn-success send-verification-code-button"
+                                    onclick="sendVerificationCode($('#phoneNumberToVerify').val());"
+                            >Send Verification Code to</button>
+                        </div>
+                        <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-4">
+            </div>
+        </div>
+
+        {% if not mobilePhoneVerified %}
+
+            <br><br>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                </div>
+
+                <div class="col-md-4">
+                    {#<input type="hidden" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">#}
                     <input type="hidden" class="form-control" name="siteName" value="{{ sitename }}">
                     <div class="form-group">
                         <input type="text" class="form-control" name="verify_code" placeholder="Enter code here">
@@ -134,14 +167,16 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Verify Now</button>
                     </div>
-                </form>
+                </div>
+
+                <div class="col-md-4">
+                </div>
 
             </div>
 
-            <div class="col-md-4">
-            </div>
+        {% endif %}
 
-        </div>
-    {% endif %}
+    </form>
+
 
 {% endblock %}

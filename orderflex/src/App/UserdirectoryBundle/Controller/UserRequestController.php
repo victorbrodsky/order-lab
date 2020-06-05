@@ -176,6 +176,10 @@ class UserRequestController extends OrderAbstractController
 
             $entity->setStatus('active');
 
+            if( $entity->getMobilePhone() ) {
+                $entity->setUnVerified();
+            }
+
             $em->persist($entity);
             $em->flush(); //comment out for testing
 

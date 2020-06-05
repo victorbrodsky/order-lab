@@ -339,6 +339,10 @@ class AuthUtil {
             if( array_key_exists('telephoneNumber', $searchRes) ) {
                 $user->setPreferredPhone($searchRes['telephoneNumber']);
             }
+
+            if( array_key_exists('mobile', $searchRes) ) {
+                $user->setPreferredMobilePhone($searchRes['mobile']);
+            }
         }
 
         return $user;
@@ -499,6 +503,7 @@ class AuthUtil {
             $user->setLastName($searchRes['lastName']);
             $user->setDisplayName($searchRes['displayName']);
             $user->setPreferredPhone($searchRes['telephoneNumber']);
+            $user->setPreferredMobilePhone($searchRes['mobile']);
         }
 
         //cwid is admin cwid
@@ -1103,7 +1108,7 @@ class AuthUtil {
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
-        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
@@ -1181,6 +1186,9 @@ class AuthUtil {
             }
             if( array_key_exists('telephonenumber', $info[$x]) ) {
                 $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+            }
+            if( array_key_exists('mobile', $info[$x]) ) {
+                $searchRes['mobile'] = $info[$x]['mobile'][0];
             }
             if( array_key_exists('company', $info[$x]) ) {
                 $searchRes['company'] = $info[$x]['company'][0];    //not used currently
@@ -1440,7 +1448,7 @@ class AuthUtil {
 
         echo "ldapBindDN=[".$ldapBindDN."]<br>";
 
-        $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
+        $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
 
         $displayNameArr = array();
@@ -1551,6 +1559,9 @@ class AuthUtil {
                 }
                 if (array_key_exists('telephonenumber', $info[$x])) {
                     $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+                }
+                if( array_key_exists('mobile', $info[$x]) ) {
+                    $searchRes['mobile'] = $info[$x]['mobile'][0];
                 }
                 if (array_key_exists('company', $info[$x])) {
                     $searchRes['company'] = $info[$x]['company'][0];    //not used currently
