@@ -71,7 +71,7 @@
                     <button
                             id="send-verification-code-button"
                             type="button" class="btn btn-success send-verification-code-button"
-                            onclick="sendVerificationAccountRequestCode($('#phoneNumberToVerify').val(),{{ userRequest.id }});"
+                            onclick="sendVerificationAccountRequestCode($('#phoneNumberToVerify').val(),{{ requestObject.id }},{{ objectName }});"
                     >Send Verification Code to</button>
                 </div>
                 <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
@@ -95,7 +95,7 @@
                     <button
                             id="verify-code-button"
                             type="button" class="btn btn-success verify-code-button"
-                            onclick="verifyPhoneNumberAccountRequestCode($('#phone-number-verification-code').val(),{{ userRequest.id }});"
+                            onclick="verifyPhoneNumberAccountRequestCode($('#phone-number-verification-code').val(),{{ requestObject.id }},{{ objectName }});"
                     >Verify</button>
                 </div>
             </div>

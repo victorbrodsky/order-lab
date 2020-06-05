@@ -190,7 +190,9 @@ class UserRequestController extends OrderAbstractController
 
             //redirect to verify mobile phone number if isRequireVerifyMobilePhone
             if( $securityUtil->isRequireVerifyMobilePhone($this->siteName) ) {
-                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request', array('sitename'=>$this->siteName,'id'=>$entity->getId())));
+                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request', 
+                    array('sitename'=>$this->siteName,'id'=>$entity->getId(),'objectName'=>'UserRequest')
+                ));
             }
 
             return $this->redirect( $this->generateUrl($this->siteName.'_login') );

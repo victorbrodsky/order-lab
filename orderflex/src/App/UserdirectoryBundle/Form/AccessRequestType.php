@@ -57,7 +57,7 @@ class AccessRequestType extends AbstractType
         ));
         
         $builder->add( 'email', EmailType::class, array(
-                'label'=>'* Email:',
+                'label'=>'Email:',
                 'required'=> true, //does not work here
                 'attr' => array('class'=>'form-control email-mask', 'required'=>'required'), //'required'=>'required' does not work here
         ));

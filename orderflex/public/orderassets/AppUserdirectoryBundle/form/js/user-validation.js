@@ -509,7 +509,7 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
 }
 
 
-function sendVerificationAccountRequestCode(phoneNumber,userRequestId) {
+function sendVerificationAccountRequestCode(phoneNumber,userRequestId,objectName) {
 
     console.log('phoneNumber=' + phoneNumber);
     var btn = document.getElementById("send-verification-code-button");
@@ -523,7 +523,7 @@ function sendVerificationAccountRequestCode(phoneNumber,userRequestId) {
         timeout: _ajaxTimeout,
         //type: "GET",
         type: "POST",
-        data: {phoneNumber: phoneNumber, userRequestId: userRequestId},
+        data: {phoneNumber: phoneNumber, objectName: objectName, userRequestId: userRequestId},
         //dataType: 'json',
         async: asyncflag
     }).done(function(response) {
@@ -548,7 +548,7 @@ function sendVerificationAccountRequestCode(phoneNumber,userRequestId) {
 
     return true;
 }
-function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId) {
+function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId,objectName) {
 
     //console.log('phoneNumber=' + phoneNumber+"; verificationCode="+verificationCode);
     var btn = document.getElementById("verify-code-button");
@@ -562,7 +562,7 @@ function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId) {
         timeout: _ajaxTimeout,
         //type: "GET",
         type: "POST",
-        data: {verificationCode: verificationCode, userRequestId: userRequestId},
+        data: {verificationCode: verificationCode, objectName: objectName, userRequestId: userRequestId},
         //dataType: 'json',
         async: asyncflag
     }).done(function(response) {

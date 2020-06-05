@@ -2252,9 +2252,9 @@ Pathology and Laboratory Medicine",
     }
 
 
-    public function assignAccountRequestVerificationCode($userRequest,$phoneNumber) {
+    public function assignAccountRequestVerificationCode($userRequest,$objectName,$phoneNumber) {
         //$text = random_int(100000, 999999);
-        $code = $this->generateAccountRequestVerificationCode();
+        $code = $this->generateAccountRequestVerificationCode($objectName);
 
         //$userInfo = $userRequest->getMobilePhone($phoneNumber);
 
@@ -2267,10 +2267,10 @@ Pathology and Laboratory Medicine",
 
         return $code;
     }
-    public function generateAccountRequestVerificationCode($counter=0) {
+    public function generateAccountRequestVerificationCode($objectName,$counter=0) {
         $code = random_int(100000, 999999);
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:UserRequest');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:',$objectName);
         $dql =  $repository->createQueryBuilder("userrequest");
         $dql->select('userrequest');
 
@@ -2297,7 +2297,7 @@ Pathology and Laboratory Medicine",
             }
 
             $counter++;
-            $code = $this->generateAccountRequestVerificationCode($counter);
+            $code = $this->generateAccountRequestVerificationCode($objectName,$counter);
         }
 
         return $code;

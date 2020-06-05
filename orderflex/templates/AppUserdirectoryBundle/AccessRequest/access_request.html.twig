@@ -74,16 +74,22 @@
             {#<form action="{{ path(sitename~'_access_request_create') }}" method="post">#}
             {{ form_start(form, {'action': path(sitename~'_access_request_create'), 'method': 'POST'}) }}
 
-                <div id="confirm-div">
-                <p>
-                    <button class="btn btn-info" type="button" onclick="showDetails();">Yes, please!</button>
-                    &nbsp;
-                    <a class="btn btn-info" href="{{ path('employees_no_thanks_accessrequest',{"sitename":sitename}) }}">No, thanks!</a>
-                </p>
-                </div>
+                {% if collapsein is not defined %}
+                    {% set collapsein = null %}
+                {% endif %}
+
+                {% if not collapsein %}
+                    <div id="confirm-div">
+                    <p>
+                        <button class="btn btn-info" type="button" onclick="showDetails();">Yes, please!</button>
+                        &nbsp;
+                        <a class="btn btn-info" href="{{ path('employees_no_thanks_accessrequest',{"sitename":sitename}) }}">No, thanks!</a>
+                    </p>
+                    </div>
+                {% endif %}
 
                 {#style="display: none"#}
-                <div id="details-div" class="collapse">
+                <div id="details-div" class="collapse {{ collapsein }}">
                     {{ form_errors(form) }}
 
                     {{ formmacros.field(form.firstName) }}

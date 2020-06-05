@@ -3,6 +3,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Entity\UserRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -104,7 +105,9 @@ class TelephonyController extends OrderAbstractController {
             $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
             if( $phoneNumberVerified ) {
                 $userInfo->setVerified();
-                $user->addRole("ROLE_CRN_RECIPIENT");
+                if( $this->siteName == 'crn' ) {
+                    $user->addRole("ROLE_CRN_RECIPIENT");
+                }
                 $em->flush();
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -300,7 +303,9 @@ class TelephonyController extends OrderAbstractController {
                     $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
                     if( $phoneNumberVerified ) {
                         $userInfo->setVerified();
-                        $user->addRole("ROLE_CRN_RECIPIENT");
+                        if( $siteName == 'crn' ) {
+                            $user->addRole("ROLE_CRN_RECIPIENT");
+                        }
                         $em->flush();
                         $this->get('session')->getFlashBag()->add(
                             'notice',
@@ -552,7 +557,9 @@ class TelephonyController extends OrderAbstractController {
                 $phoneNumberVerified = $userInfo->verifyCode($verificationCode);
                 if( $phoneNumberVerified ) {
                     $userInfo->setVerified();
-                    $user->addRole("ROLE_CRN_RECIPIENT");
+                    if( $this->siteName == 'crn' ) {
+                        $user->addRole("ROLE_CRN_RECIPIENT");
+                    }
                     $em->flush();
                     $res = "OK";
 
@@ -604,14 +611,23 @@ class TelephonyController extends OrderAbstractController {
     /**
      * Get verification form for Account Request
      *
-     * @Route("/verify-mobile-phone/account-request/{sitename}/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
+     * @Route("/verify-mobile-phone/account-request/{sitename}/{objectName}/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
      */
-    public function verifyAccountRequestMobilePhoneAction(Request $request, $sitename, UserRequest $userRequest) {
+    public function verifyAccountRequestMobilePhoneAction(Request $request, $sitename, $objectName, $id) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        if( $objectName && $id ) {
+            $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($id);
+        } else {
+            throw new \Exception("Logical Error: object name and id are not specified");
+        }
+        
         //exit('verifyAccountRequestMobilePhoneAction');
         //It's better to check if current user has a $phoneNumber
-        $phoneNumber = $userRequest->getMobilePhone();
+        $phoneNumber = $requestObject->getMobilePhone();
 
-        $mobilePhoneVerified = $userRequest->getMobilePhoneVerified();
+        $mobilePhoneVerified = $requestObject->getMobilePhoneVerified();
         if( !$mobilePhoneVerified ) {
             $mobilePhoneVerified = false;
         }
@@ -619,9 +635,10 @@ class TelephonyController extends OrderAbstractController {
         return $this->render('AppUserdirectoryBundle/Telephony/verify-account-request-mobile-phone.html.twig', array(
             'sitename' => $sitename,
             'title' => "Mobile Phone Verification",
-            'userRequest' => $userRequest,
+            'requestObject' => $requestObject,
             'phoneNumber' => $phoneNumber,
-            'mobilePhoneVerified' => $mobilePhoneVerified
+            'mobilePhoneVerified' => $mobilePhoneVerified,
+            'objectName' => $objectName
         ));
     }
     /**
@@ -639,9 +656,15 @@ class TelephonyController extends OrderAbstractController {
         
         $phoneNumber = $request->get('phoneNumber');
         $userRequestId = $request->get('userRequestId');
+        $objectName = $request->get('objectName');
 
         if( $userRequestId ) {
-            $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+            //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+            if( $objectName && $userRequestId ) {
+                $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+            } else {
+                throw new \Exception("Logical Error: object name and id are not specified");
+            }
         } else {
             $json = json_encode("Account Request is not found");
             $response = new Response($json);
@@ -650,15 +673,15 @@ class TelephonyController extends OrderAbstractController {
         }
 
         //if new phone number entered, the old verification is invalid => reassign the phone number and reset its properties (verification code and status)
-        if( $userRequest ) {
-            $userRequestMobilePhone = $userRequest->getMobilePhone();
-            if( $userRequestMobilePhone && $userRequestMobilePhone != $phoneNumber ) {
-                $userRequest->setMobilePhone($phoneNumber);
+        if( $requestObject ) {
+            $requestObjectMobilePhone = $requestObject->getMobilePhone();
+            if( $requestObjectMobilePhone && $requestObjectMobilePhone != $phoneNumber ) {
+                $requestObject->setMobilePhone($phoneNumber);
                 $em->flush();
             }
         }
 
-        $verifyCode = $userServiceUtil->assignAccountRequestVerificationCode($userRequest,$phoneNumber);
+        $verifyCode = $userServiceUtil->assignAccountRequestVerificationCode($requestObject,$objectName,$phoneNumber);
 
         $text = "Mobile phone number verification code $verifyCode.";
 
@@ -698,9 +721,15 @@ class TelephonyController extends OrderAbstractController {
         //$verificationCode = $request->query->get('verificationCode');
         $userRequestId = $request->request->get('userRequestId');
         $userRequestId = trim($userRequestId);
+        $objectName = $request->get('objectName');
 
         if( $userRequestId ) {
-            $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+            //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
+            if( $objectName && $userRequestId ) {
+                $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+            } else {
+                throw new \Exception("Logical Error: object name and id are not specified");
+            }
         } else {
             $json = json_encode("Account Request is not found");
             $response = new Response($json);
@@ -714,12 +743,14 @@ class TelephonyController extends OrderAbstractController {
 
         $res = "Phone number is not verified";
 
-        if( $userRequest && $verificationCode ) {
+        if( $requestObject && $verificationCode ) {
 
-            $phoneNumberVerified = $userRequest->verifyCode($verificationCode);
+            $phoneNumberVerified = $requestObject->verifyCode($verificationCode);
             if( $phoneNumberVerified ) {
-                $userRequest->setVerified();
-                $userRequest->addRole("ROLE_CRN_RECIPIENT");
+                $requestObject->setVerified();
+                if( $this->siteName == 'crn' ) {
+                    $requestObject->addRole("ROLE_CRN_RECIPIENT");
+                }
                 $em->flush();
                 $res = "OK";
 
@@ -727,7 +758,7 @@ class TelephonyController extends OrderAbstractController {
                 $eventMsg = 'Mobile phone number '.$phoneNumberVerified.' has been successfully verified by verifyAccountRequestCodeAjaxAction';
                 $userServiceUtil->setVerificationEventLog('Mobile Phone Verified', $eventMsg);
             } else {
-                if( $userRequest->getMobilePhoneVerified() ) {
+                if( $requestObject->getMobilePhoneVerified() ) {
                     $res = "Mobile phone number is already verified";
                 } else {
                     $res = "Verification failed";

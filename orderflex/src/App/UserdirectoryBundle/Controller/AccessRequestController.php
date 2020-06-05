@@ -364,6 +364,7 @@ class AccessRequestController extends OrderAbstractController
     public function getParams() {
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $securityUtil = $this->get('user_security_utility');
 
         $params = array();
 
@@ -392,6 +393,9 @@ class AccessRequestController extends OrderAbstractController
         //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
+        //make mobile phone number required field
+        $requireVerifyMobilePhone = $securityUtil->isRequireVerifyMobilePhone($this->siteName);
+        $params['requireVerifyMobilePhone'] = $requireVerifyMobilePhone;
 
         return $params;
     }
@@ -418,7 +422,7 @@ class AccessRequestController extends OrderAbstractController
 //    }
 
      /**
-      * On click button: Yes, please!
+      * Submit Access Request. On click button: Yes, please!
       *
       * @Route("/access-requests/new/pending", name="employees_access_request_create", methods={"POST"})
       * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
@@ -488,14 +492,33 @@ class AccessRequestController extends OrderAbstractController
         //$request = $this->get('request');
         $form->handleRequest($request);
 
+        $requireVerifyMobilePhone = $secUtil->isRequireVerifyMobilePhone($this->siteName);
+        if( !$accReq->getMobilePhone() && $requireVerifyMobilePhone ) {
+            $error = new FormError("Primary Mobile Phone Number is empty");
+            $form->get('mobilePhone')->addError($error);
+        }
+        
         if( $form->isSubmitted() && $form->isValid() ) {
             //exit('new access request valid !!!');
             //echo "email=".$accReq->getEmail()."<br>";
         } else {
             //exit('Access Request form is not valid.');
+
+            //@Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
+
+            return $this->render("AppUserdirectoryBundle/AccessRequest/access_request.html.twig",
+                array(
+                    'user' => $user,
+                    'form' => $form->createView(),
+                    'sitename' => $sitename,
+                    'sitenamefull' => $sitenameFull,
+                    'pendinguser' => true,
+                    'collapsein' => 'in'
+                )
+            );
         }
 
-        //exit('new access request flush');
+        exit('new access request flush');
         $em->persist($accReq);
         $em->flush();
 
@@ -512,7 +535,7 @@ class AccessRequestController extends OrderAbstractController
         $emailBody = 'Your access request for the ' .
             //'<a href="'.$siteurl.'">'.$sitenameFull.'</a>' .
             $sitenameFull . ': ' . $siteurl . ' ' .
-            ' was successfully submitted and and will be reviewed.'.$emailStr;
+            ' was successfully submitted and will be reviewed.'.$emailStr;
 
         $emailUtil->sendEmail( $email, "Access request confirmation for site: ".$sitenameFull, $emailBody );
 
@@ -588,8 +611,25 @@ class AccessRequestController extends OrderAbstractController
             );
             //$this->get('security.context')->setToken(null);
             $this->get('security.token_storage')->setToken(null);
+
+            //redirect to verify mobile phone number if isRequireVerifyMobilePhone
+            if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
+                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request',
+                    array('sitename'=>$this->siteName,'id'=>$accReq->getId(),'objectName'=>'AccessRequest')
+                ));
+            }
+
             return $this->redirect($this->generateUrl($sitename . '_login'));
         } else {
+
+            //TODO: show verify button on the request_confirmation.html.twig page
+            //redirect to verify mobile phone number if isRequireVerifyMobilePhone
+//            if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
+//                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request',
+//                    array('sitename'=>$this->siteName,'id'=>$accReq->getId(),'objectName'=>'AccessRequest')
+//                ));
+//            }
+
             return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
         }
     }
