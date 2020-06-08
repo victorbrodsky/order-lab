@@ -417,6 +417,15 @@ function validateMrntypeIdentifier() {
 
 function sendVerificationCode(phoneNumber) {
 
+    if( phoneNumber ) {
+        //phoneNumber = phoneNumber.replace("-", "");
+        //phoneNumber = phoneNumber.replace(" ", "");
+        //phoneNumber = phoneNumber.replace("_", "");
+        phoneNumber = phoneNumber.replace(/-/g, '');
+        phoneNumber = phoneNumber.replace(/ /g, '');
+        phoneNumber = phoneNumber.replace(/_/g, '');
+    }
+
     console.log('sendVerificationCode: phoneNumber=' + phoneNumber);
     var btn = document.getElementById("send-verification-code-button-modal");
     var lbtn = Ladda.create( btn );

@@ -25,7 +25,7 @@ class TelephonyController extends OrderAbstractController {
      *
      * @Route("/verify-mobile-phone/{siteName}/{phoneNumber}", name="employees_verify_mobile_phone", methods={"GET"})
      */
-    public function verifyMobilePhoneAction(Request $request, $siteName, $phoneNumber )
+    public function verifyMobilePhoneAction(Request $request, $siteName, $phoneNumber=null )
     {
         //$em = $this->getDoctrine()->getManager();
 
@@ -51,11 +51,16 @@ class TelephonyController extends OrderAbstractController {
         //It's better to check if current user has a $phoneNumber
         $preferredMobilePhone = $user->getPreferredMobilePhone();
 
-        if( $preferredMobilePhone != $phoneNumber ) {
+        if( $preferredMobilePhone && $phoneNumber && $preferredMobilePhone != $phoneNumber ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+        //$userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+        $userInfo = $user->getUserInfo();
+
+        //if( !$phoneNumber ) {
+        //    $phoneNumber = $userInfo->getPreferredMobilePhone();
+        //}
 
         if( $userInfo ) {
             $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();

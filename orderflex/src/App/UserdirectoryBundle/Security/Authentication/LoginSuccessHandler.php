@@ -205,7 +205,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $userInfo = $user->getUserInfo();
             $mobilePhoneVerified = $userInfo->getPreferredMobilePhoneVerified();
             $phoneNumber = $userInfo->getPreferredMobilePhone();
-            if( $phoneNumber && !$mobilePhoneVerified ) {
+            //if( $phoneNumber && !$mobilePhoneVerified ) {
+            if( !$mobilePhoneVerified ) {
                 $session->set('originalRouteOnLogin',$lastRoute);
                 $verify_url = $this->router->generate('employees_verify_mobile_phone', array('siteName'=>$this->siteName,'phoneNumber'=>$phoneNumber));
                 $response = new RedirectResponse($verify_url);
