@@ -536,7 +536,7 @@ class AccessRequestController extends OrderAbstractController
 //        }
         $accReq->updateUserMobilePhoneByAccessRequest();
 
-        $em->flush(); //testing
+        $em->flush(); 
 
         $email = $user->getEmail();
         $emailStr = "";

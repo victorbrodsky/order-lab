@@ -2741,7 +2741,7 @@ class TransResRequestUtil
         $emailUtil->sendEmail( $piEmailArr, $emailSubject, $emailBody, $ccs, $senderEmail, $attachmentPath );
 
         $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . implode(", ",$piEmailArr) . " with CC to " . $ccs;
-        $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody;
+        $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody . "<br>attachmentPath=" . $attachmentPath;
 
         //event log
         $eventType = "Invoice PDF Issued";
@@ -3293,7 +3293,7 @@ class TransResRequestUtil
 
         //event log
         $eventType = "Invoice PDF Issued";
-        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg."<br>attachmentPath=".$attachmentPath);
 
         return $msg;
     }
