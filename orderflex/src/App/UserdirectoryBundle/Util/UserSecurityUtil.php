@@ -426,12 +426,15 @@ class UserSecurityUtil {
 
         if( $userRole === null ) {
             //use roles array
+            return null;
         }
         else if( $userRole == "Platform Administrator" ) {
 
             $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
 
         } else if( $userRole == "Administrator" ) {
+
+            $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN"); //default for admin
 
             if( $sitename == $this->container->getParameter('scan.sitename') ) {
                 $roles = array("ROLE_SCANORDER_ADMIN");
@@ -455,6 +458,10 @@ class UserSecurityUtil {
 
             if( $sitename == $this->container->getParameter('calllog.sitename') ) {
                 $roles = array("ROLE_CALLLOG_ADMIN");
+            }
+
+            if( $sitename == $this->container->getParameter('crn.sitename') ) {
+                $roles = array("ROLE_CRN_ADMIN");
             }
 
             if( $sitename == $this->container->getParameter('translationalresearch.sitename') ) {

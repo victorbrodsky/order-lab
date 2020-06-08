@@ -518,9 +518,25 @@ class AccessRequestController extends OrderAbstractController
             );
         }
 
-        exit('new access request flush');
+        //exit('new access request flush');
         $em->persist($accReq);
-        $em->flush();
+
+        //update user's email, phone and mobile phone
+        $accessRequestEmail = $accReq->getEmail();
+        if( $accessRequestEmail != $user->getEmail() ) {
+            $user->setEmail($accessRequestEmail);
+        }
+        $accessRequestPhone = $accReq->getPhone();
+        if( $accessRequestPhone != $user->getPreferredPhone() ) {
+            $user->setPreferredMobilePhone($accessRequestPhone);
+        }
+//        $accessRequestMobilePhone = $accReq->getMobilePhone();
+//        if( $accessRequestMobilePhone != $user->getPreferredMobilePhone() ) {
+//            $user->setPreferredMobilePhone($accessRequestMobilePhone);
+//        }
+        $accReq->updateUserMobilePhoneByAccessRequest();
+
+        $em->flush(); //testing
 
         $email = $user->getEmail();
         $emailStr = "";
@@ -624,15 +640,40 @@ class AccessRequestController extends OrderAbstractController
 
             //TODO: show verify button on the request_confirmation.html.twig page
             //redirect to verify mobile phone number if isRequireVerifyMobilePhone
-//            if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
-//                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request',
-//                    array('sitename'=>$this->siteName,'id'=>$accReq->getId(),'objectName'=>'AccessRequest')
-//                ));
-//            }
+            if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $text
+                );
+
+                return $this->redirect($this->generateUrl('employees_verify_mobile_phone_account_request',
+                    array('sitename'=>$this->siteName,'id'=>$accReq->getId(),'objectName'=>'AccessRequest')
+                ));
+            }
 
             return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));
         }
     }
+
+//    public function updateUserMobilePhoneByAccessRequest($user,$accReq) {
+//        $userInfo = $user->getUserInfo();
+//        $accessRequestMobilePhone = $accReq->getMobilePhone();
+//        if( $accessRequestMobilePhone != $userInfo->getPreferredMobilePhone() ) {
+//            $userInfo->setPreferredMobilePhone($accessRequestMobilePhone);
+//        }
+//        $accessRequestMobilePhoneVerifyCode = $accReq->getMobilePhoneVerifyCode();
+//        if( $accessRequestMobilePhoneVerifyCode != $userInfo->getMobilePhoneVerifyCode() ) {
+//            $userInfo->setMobilePhoneVerifyCode($accessRequestMobilePhoneVerifyCode);
+//        }
+//        $accessRequestMobilePhoneVerifyCodeDate = $accReq->getMobilePhoneVerifyCodeDate();
+//        if( $accessRequestMobilePhoneVerifyCodeDate != $userInfo->getMobilePhoneVerifyCodeDate() ) {
+//            $userInfo->setMobilePhoneVerifyCodeDate($accessRequestMobilePhoneVerifyCodeDate);
+//        }
+//        $accessRequestPreferredMobilePhoneVerified = $accReq->getPreferredMobilePhoneVerified();
+//        if( $accessRequestPreferredMobilePhoneVerified != $userInfo->getPreferredMobilePhoneVerified() ) {
+//            $userInfo->setPreferredMobilePhoneVerified($accessRequestPreferredMobilePhoneVerified);
+//        }
+//    }
 
 //    public function reLoginUser($sitename) {
 //        echo "relogin sitename=".$sitename."<br>";

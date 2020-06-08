@@ -108,8 +108,10 @@
         {% endif %}
         {{ formmacros.simplefield( "Status Updated On:", updatedate, "", "disabled" ) }}
 
+        {% if accreq.updatedby %}
         {% set updatedby = '<a href="'~path(sitenameshowuser~'_showuser', { 'id': accreq.updatedby.id })~'">'~accreq.updatedby~'</a>' %}
-        {{ formmacros.simplefield( "Status Updated By:", updatedby, "", "disabled" ) }}
+            {{ formmacros.simplefield( "Status Updated By:", updatedby, "", "disabled" ) }}
+        {% endif %}
 
         <hr>
             {#access request details#}
@@ -118,7 +120,14 @@
             {{ formmacros.simplefield( "Last Name:", accreq.lastName, "", "disabled" ) }}
             {{ formmacros.simplefield( "Email:", accreq.email, "", "disabled" ) }}
             {{ formmacros.simplefield( "Phone Number:", accreq.phone, "", "disabled" ) }}
-            {{ formmacros.simplefield( "Mobile Phone Number:", accreq.mobilePhone, "", "disabled" ) }}
+
+            {% if accreq.getMobilePhoneVerified %}
+                {% set verifiedStatus = '<span class="text-success">Verified</span>' %}
+            {% else %}
+                {% set verifiedStatus = '<span class="text-danger">Unverified</span>' %}
+            {% endif %}
+            {{ formmacros.simplefield( "Mobile Phone Number:", accreq.mobilePhone~" "~verifiedStatus, "", "disabled" ) }}
+
             {{ formmacros.simplefield( "Job title:", accreq.job, "", "disabled" ) }}
             {{ formmacros.simplefield( "Organizational Group:", accreq.organizationalGroup, "", "disabled" ) }}
             {{ formmacros.simplefield( "Reason for access request:", accreq.reason, "", "disabled" ) }}

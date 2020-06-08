@@ -71,7 +71,7 @@
                     <button
                             id="send-verification-code-button"
                             type="button" class="btn btn-success send-verification-code-button"
-                            onclick="sendVerificationAccountRequestCode($('#phoneNumberToVerify').val(),{{ requestObject.id }},{{ objectName }});"
+                            onclick="sendVerificationAccountRequestCode($('#phoneNumberToVerify').val(),{{ requestObject.id }},'{{ objectName }}');"
                     >Send Verification Code to</button>
                 </div>
                 <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
@@ -95,7 +95,7 @@
                     <button
                             id="verify-code-button"
                             type="button" class="btn btn-success verify-code-button"
-                            onclick="verifyPhoneNumberAccountRequestCode($('#phone-number-verification-code').val(),{{ requestObject.id }},{{ objectName }});"
+                            onclick="verifyPhoneNumberAccountRequestCode($('#phone-number-verification-code').val(),{{ requestObject.id }},'{{ objectName }}');"
                     >Verify</button>
                 </div>
             </div>
@@ -106,7 +106,8 @@
 
 
     <br><br>
-    <a id="loginhref" class="btn btn-info" href="{{ path(sitename~'_login') }}" style="display: none;">Back to login page</a>
+    {#<a id="loginhref" class="btn btn-info" href="{{ path(sitename~'_login') }}" style="display: none;">Back to login page</a>#}
+    <a id="loginhref" class="btn btn-info" href="{{ path('main_common_home') }}" style="display: none;">Return to Main Home Page</a>
 
 
     {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}

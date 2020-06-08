@@ -609,7 +609,7 @@ class TelephonyController extends OrderAbstractController {
 
 
     /**
-     * Get verification form for Account Request
+     * Get verification form for Account/Access Request
      *
      * @Route("/verify-mobile-phone/account-request/{sitename}/{objectName}/{id}", name="employees_verify_mobile_phone_account_request", methods={"GET"})
      */
@@ -677,6 +677,11 @@ class TelephonyController extends OrderAbstractController {
             $requestObjectMobilePhone = $requestObject->getMobilePhone();
             if( $requestObjectMobilePhone && $requestObjectMobilePhone != $phoneNumber ) {
                 $requestObject->setMobilePhone($phoneNumber);
+
+                if( $objectName == 'AccessRequest' && method_exists($requestObject,'updateUserMobilePhoneByAccessRequest') ) {
+                    $requestObject->updateUserMobilePhoneByAccessRequest();
+                }
+
                 $em->flush();
             }
         }
@@ -751,6 +756,11 @@ class TelephonyController extends OrderAbstractController {
                 if( $this->siteName == 'crn' ) {
                     $requestObject->addRole("ROLE_CRN_RECIPIENT");
                 }
+
+                if( $objectName == 'AccessRequest' && method_exists($requestObject,'updateUserMobilePhoneByAccessRequest') ) {
+                    $requestObject->updateUserMobilePhoneByAccessRequest();
+                }
+
                 $em->flush();
                 $res = "OK";
 

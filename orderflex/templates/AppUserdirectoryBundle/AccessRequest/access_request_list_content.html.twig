@@ -66,9 +66,25 @@
             <td>{{ entity.user }}</td>
             <td>{{ entity.user.keytype }}</td>
             <td>{{ entity.user.primaryPublicUserId }}</td>
+
             <td>{{ entity.user.email }}</td>
             <td>{{ entity.user.preferredPhone }}</td>
-            <td>{{ entity.user.preferredMobilePhone }}</td>
+            <td>
+                {{ entity.user.preferredMobilePhone }}
+                {% set userInfo = entity.user.getUSerInfo() %}
+                {% if userInfo %}
+                    {#<br>#}
+                    {% if userInfo.getPreferredMobilePhoneVerified %}
+                        <span class="text-success">Verified</span>
+                    {% else %}
+                        <span class="text-danger">Unverified</span>
+                    {% endif %}
+                {% endif %}
+            </td>
+            {#<td>{{ entity.email }}</td>#}
+            {#<td>{{ entity.phone }}</td>#}
+            {#<td>{{ entity.mobilePhone }}</td>#}
+
             <td>
                 {% for role in user_security_utility.getUserRolesBySite(entity.user, sitename, true) %}
                     {% if role.name != "ROLE_USER" %}

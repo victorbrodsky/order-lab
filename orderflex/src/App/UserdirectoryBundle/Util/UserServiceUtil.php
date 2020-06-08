@@ -2270,7 +2270,7 @@ Pathology and Laboratory Medicine",
     public function generateAccountRequestVerificationCode($objectName,$counter=0) {
         $code = random_int(100000, 999999);
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:',$objectName);
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:'.$objectName);
         $dql =  $repository->createQueryBuilder("userrequest");
         $dql->select('userrequest');
 

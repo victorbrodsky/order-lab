@@ -635,6 +635,27 @@ class AccessRequest
     {
         $this->mobilePhoneVerified = $mobilePhoneVerified;
     }
+
+    public function updateUserMobilePhoneByAccessRequest() {
+        $user = $this->getUser();
+        $userInfo = $user->getUserInfo();
+        $accessRequestMobilePhone = $this->getMobilePhone();
+        if( $accessRequestMobilePhone != $userInfo->getPreferredMobilePhone() ) {
+            $userInfo->setPreferredMobilePhone($accessRequestMobilePhone);
+        }
+        $accessRequestMobilePhoneVerifyCode = $this->getMobilePhoneVerifyCode();
+        if( $accessRequestMobilePhoneVerifyCode != $userInfo->getMobilePhoneVerifyCode() ) {
+            $userInfo->setMobilePhoneVerifyCode($accessRequestMobilePhoneVerifyCode);
+        }
+        $accessRequestMobilePhoneVerifyCodeDate = $this->getMobilePhoneVerifyCodeDate();
+        if( $accessRequestMobilePhoneVerifyCodeDate != $userInfo->getMobilePhoneVerifyCodeDate() ) {
+            $userInfo->setMobilePhoneVerifyCodeDate($accessRequestMobilePhoneVerifyCodeDate);
+        }
+        $accessRequestMobilePhoneVerified = $this->getMobilePhoneVerified();
+        if( $accessRequestMobilePhoneVerified != $userInfo->getPreferredMobilePhoneVerified() ) {
+            $userInfo->setPreferredMobilePhoneVerified($accessRequestMobilePhoneVerified);
+        }
+    }
     /////////////// EOF Mobile Phone /////////////
 
 

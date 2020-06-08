@@ -94,9 +94,16 @@
 
                     {{ formmacros.field(form.firstName) }}
                     {{ formmacros.field(form.lastName) }}
-                    {{ formmacros.field(form.email) }}
-                    {{ formmacros.field(form.phone) }}
-                    {{ formmacros.field(form.mobilePhone) }}
+
+                    {#{{ formmacros.field(form.email) }}#}
+                    {{ usermacros.emailPhoneField(form.email,'show','email',"") }}
+
+                    {#{{ formmacros.field(form.phone) }}#}
+                    {{ usermacros.emailPhoneField(form.preferredPhone,'show','phone',"") }}
+
+                    {#{{ formmacros.field(form.mobilePhone) }}#}
+                    {{ usermacros.mobilePhoneField(form,'show',"") }}
+
                     {{ formmacros.field(form.job) }}
 
                     {% if form.organizationalGroup is defined %}
