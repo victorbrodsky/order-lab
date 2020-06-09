@@ -424,6 +424,9 @@ function sendVerificationCode(phoneNumber) {
         phoneNumber = phoneNumber.replace(/-/g, '');
         phoneNumber = phoneNumber.replace(/ /g, '');
         phoneNumber = phoneNumber.replace(/_/g, '');
+    } else {
+        alert("Please enter your mobile phone number");
+        return false;
     }
 
     console.log('sendVerificationCode: phoneNumber=' + phoneNumber);
@@ -477,6 +480,11 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
     //$('#phone-number-verify-status').html('Verified');
     //return;
 
+    if( !verificationCode ) {
+        alert('Please enter your verification code');
+        return false;
+    }
+
     //console.log('phoneNumber=' + phoneNumber+"; verificationCode="+verificationCode);
     var btn = document.getElementById("verify-code-button");
     var lbtn = Ladda.create( btn );
@@ -520,6 +528,18 @@ function verifyPhoneNumberCode(phoneNumber,verificationCode) {
 
 function sendVerificationAccountRequestCode(phoneNumber,userRequestId,objectName) {
 
+    if( phoneNumber ) {
+        //phoneNumber = phoneNumber.replace("-", "");
+        //phoneNumber = phoneNumber.replace(" ", "");
+        //phoneNumber = phoneNumber.replace("_", "");
+        phoneNumber = phoneNumber.replace(/-/g, '');
+        phoneNumber = phoneNumber.replace(/ /g, '');
+        phoneNumber = phoneNumber.replace(/_/g, '');
+    } else {
+        alert("Please enter your mobile phone number");
+        return false;
+    }
+
     console.log('phoneNumber=' + phoneNumber);
     var btn = document.getElementById("send-verification-code-button");
     var lbtn = Ladda.create( btn );
@@ -558,6 +578,11 @@ function sendVerificationAccountRequestCode(phoneNumber,userRequestId,objectName
     return true;
 }
 function verifyPhoneNumberAccountRequestCode(verificationCode,userRequestId,objectName) {
+
+    if( !verificationCode ) {
+        alert('Please enter your verification code');
+        return false;
+    }
 
     //console.log('phoneNumber=' + phoneNumber+"; verificationCode="+verificationCode);
     var btn = document.getElementById("verify-code-button");

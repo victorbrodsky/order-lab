@@ -51,6 +51,9 @@ class TelephonyController extends OrderAbstractController {
         //It's better to check if current user has a $phoneNumber
         $preferredMobilePhone = $user->getPreferredMobilePhone();
 
+        //$logger = $this->container->get('logger');
+        //$logger->error($preferredMobilePhone . "?=" . $phoneNumber);
+
         if( $preferredMobilePhone && $phoneNumber && $preferredMobilePhone != $phoneNumber ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -285,6 +288,12 @@ class TelephonyController extends OrderAbstractController {
             $phoneNumber = $request->query->get('phoneNumber');
             $phoneNumber = trim($phoneNumber);
 
+            if( $phoneNumber ) {
+                //strip '-' and ' '
+                $phoneNumber = str_replace('-','',$phoneNumber);
+                $phoneNumber = str_replace(' ','',$phoneNumber);
+            }
+
             $siteName = $request->query->get('siteName');
             $siteName = trim($siteName);
 
@@ -333,7 +342,7 @@ class TelephonyController extends OrderAbstractController {
                         }
                     } else { //if $phoneNumberVerified
                         //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
-                        if( $userInfo->getMobilePhoneVerified() ) {
+                        if( $userInfo->getPreferredMobilePhoneVerified() ) {
                             $resFailed = "Mobile phone number is already verified";
                         } else {
                             $resFailed = "Verification failed";
@@ -345,37 +354,6 @@ class TelephonyController extends OrderAbstractController {
                         );
                     } //else $phoneNumberVerified
 
-//                    $userVerificationCode = $userInfo->getMobilePhoneVerifyCode();
-//                    $notExpired = $userInfo->verificationCodeIsNotExpired();
-//                    if( $notExpired && $verificationCode && $userVerificationCode && $verificationCode == $userVerificationCode ) {
-//                        $userInfo->setMobilePhoneVerifyCode(NULL);
-//                        $userInfo->setMobilePhoneVerifyCodeDate(NULL);
-//                        $userInfo->setPreferredMobilePhoneVerified(true);
-//                        $em->flush();
-//
-//                        $this->get('session')->getFlashBag()->add(
-//                            'notice',
-//                            'Mobile phone number is verified!.'
-//                        );
-//
-//                        //redirect to the last root or home page
-//                        $lastRoute = $request->getSession()->get('originalRouteOnLogin');
-//                        //exit('$lastRoute='.$lastRoute);
-//                        if( $lastRoute ) {
-//                            //I should be redirected to the URL I was trying to visit after login.
-//                            $request->getSession()->set('originalRouteOnLogin',NULL);
-//                            return $this->redirect($lastRoute);
-//                        } else {
-//                            return $this->redirectToRoute($siteName.'_home');
-//                        }
-//
-//                    } else {
-//                        //exit("Not equal verification code: verificationCode=[$verificationCode], userVerificationCode=[$userVerificationCode]");
-//                        $this->get('session')->getFlashBag()->add(
-//                            'warning',
-//                            'Verification code does not match.'
-//                        );
-//                    }
                 } else { //if $userInfo
                     //$logger->error("verifyCodeAction: userInfo not found by phoneNumber=".$phoneNumber); //TODO: check this error after phone is modified on the verification page
                 } //else $userInfo
@@ -393,7 +371,7 @@ class TelephonyController extends OrderAbstractController {
             //$logger->error("verifyCodeAction: Logical error: Unknown error. phoneNumber=".$phoneNumber);
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                'Mobile phone number not verified.'
+                'Mobile phone number is not verified.'
             );
 
             //exit("OK verificationCode=[$verificationCode]");

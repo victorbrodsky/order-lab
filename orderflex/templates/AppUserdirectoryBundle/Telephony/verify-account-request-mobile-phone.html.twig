@@ -74,7 +74,7 @@
                             onclick="sendVerificationAccountRequestCode($('#phoneNumberToVerify').val(),{{ requestObject.id }},'{{ objectName }}');"
                     >Send Verification Code to</button>
                 </div>
-                <input id="phoneNumberToVerify" class="form-control" name="phoneNumber" value="{{ phoneNumber }}">
+                <input id="phoneNumberToVerify" class="form-control phone-mask" name="phoneNumber" value="{{ phoneNumber }}">
             </div>
 
         </div>

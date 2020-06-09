@@ -264,8 +264,10 @@ abstract class BasePermissionVoter extends Voter {
 //            //there is no institution info => skip the institution check
 //            //echo "subject is string; subject=".$subject."<br>";
 //        }
+
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
+            //exit("Parent canEdit checkPermittedInstitutions failed");
             return false;
         }
 
@@ -346,6 +348,10 @@ abstract class BasePermissionVoter extends Voter {
 
     //check if subject is under user's permitted/collaborated institutions
     protected function checkPermittedInstitutions( $subject, $user ) {
+
+        //do not use permitted institution scope or user's "Order data visible to members of (Institutional PHI Scope):" should match role permission's "Institution(s):"
+        return true;
+
         //$subject: string (i.e. "FellowshipApplication") or entity
         if( is_object($subject) ) {
             //echo "subject is object <br>";

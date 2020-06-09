@@ -259,6 +259,10 @@ class UserInfo extends BaseUserAttributes {
      */
     public function setPreferredMobilePhoneVerified($preferredMobilePhoneVerified)
     {
+//        if( $preferredMobilePhoneVerified && $preferredMobilePhoneVerified != $this->preferredMobilePhoneVerified ) {
+//            $this->setMobilePhoneVerifyCode(NULL);
+//            $this->setMobilePhoneVerifyCodeDate(NULL);
+//        }
         $this->preferredMobilePhoneVerified = $preferredMobilePhoneVerified;
     }
 

@@ -53,6 +53,12 @@ class FellAppPermissionVoter extends BasePermissionVoter
             }
         }
 
+        //testing: if can edit than can view: it's already done in the parent class
+//        if( $this->canEdit($subject,$token) ) {
+//            return true;
+//        }
+        //exit('fellapp no canEdit');
+
         if( parent::canView($subject,$token) ) {
             //exit('fellapp parent canView parent ok');
             return $this->fellappAdditionalCheck($subject,$token);
@@ -67,8 +73,12 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //exit('fellapp canEdit');
 
         if( parent::canEdit($subject,$token) ) {
+            //exit('fellapp parent canEdit');
             return $this->fellappAdditionalCheck($subject,$token);
+        } else {
+            //exit('fellapp parent canEdit NO');
         }
+
         //exit('fellapp canEdit false');
 
         return false;
