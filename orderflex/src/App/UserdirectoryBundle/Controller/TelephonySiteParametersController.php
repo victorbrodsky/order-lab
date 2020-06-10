@@ -27,17 +27,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 
 
-
+//Route("/settings/telephony-settings")
 /**
  * TelephonySiteParameters controller.
- *
- * @Route("/telephony-settings")
  */
 class TelephonySiteParametersController extends SiteParametersController
 {
 
     /**
-     * @Route("/show-content/", name="employees_telephonysiteparameters_show", methods={"GET"})
+     * @Route("/telephony-settings/show-content/", name="employees_telephonysiteparameters_show", methods={"GET"})
      * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form-content.html.twig")
      */
     public function telephonySiteParameterPreviewAction(Request $request)
@@ -62,7 +60,7 @@ class TelephonySiteParametersController extends SiteParametersController
     }
 
     /**
-     * @Route("/show/", name="employees_telephonysiteparameters_show", methods={"GET"})
+     * @Route("/telephony-settings/show/", name="employees_telephonysiteparameters_show", methods={"GET"})
      * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig")
      */
     public function telephonySiteParameterShowAction(Request $request)
@@ -87,7 +85,7 @@ class TelephonySiteParametersController extends SiteParametersController
     }
 
     /**
-     * @Route("/edit/", name="employees_telephonysiteparameters_edit", methods={"GET", "POST"})
+     * @Route("/telephony-settings/edit/", name="employees_telephonysiteparameters_edit", methods={"GET", "POST"})
      * @Template("AppUserdirectoryBundle/TelephonySiteParameters/telephony-form.html.twig")
      */
     public function telephonySiteParameterEditAction( Request $request ) {

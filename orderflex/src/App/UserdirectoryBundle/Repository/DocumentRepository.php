@@ -86,7 +86,8 @@ class DocumentRepository extends EntityRepository {
 
             $documentHolder->$removeMethodName($doc);
 
-            if( $doc->getId() ) {
+            //check if id is numeric to prevent the case when $doc->getId() = "undefined"
+            if( $doc->getId() && is_numeric($doc->getId()) ) {
 
                 $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($doc->getId());
                 if( $docDb ) {
