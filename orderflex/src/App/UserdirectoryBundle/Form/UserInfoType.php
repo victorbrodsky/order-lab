@@ -85,12 +85,14 @@ class UserInfoType extends AbstractType
         ));
 
         //Admin can set mobile phone to verified
-        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            $builder->add('preferredMobilePhoneVerified', CheckboxType::class, array(
-                'label' => 'Mobile Phone Verified:',
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'style' => 'margin:0')
-            ));
+        if( isset($this->params['container']) ) {
+            if ($this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                $builder->add('preferredMobilePhoneVerified', CheckboxType::class, array(
+                    'label' => 'Mobile Phone Verified:',
+                    'required' => false,
+                    'attr' => array('class' => 'form-control', 'style' => 'margin:0')
+                ));
+            }
         }
 
     }
