@@ -45,6 +45,7 @@
 <body>
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
     <div class="container">
 
@@ -96,13 +97,13 @@
                     {{ formmacros.field(form.lastName) }}
 
                     {#{{ formmacros.field(form.email) }}#}
-                    {{ usermacros.emailPhoneField(form.email,'show','email',"") }}
+                    {{ usermacros.emailPhoneField(form.email,'edit','email',"") }}
 
                     {#{{ formmacros.field(form.phone) }}#}
-                    {{ usermacros.emailPhoneField(form.preferredPhone,'show','phone',"") }}
+                    {{ usermacros.emailPhoneField(form.phone,'edit','phone',"") }}
 
                     {#{{ formmacros.field(form.mobilePhone) }}#}
-                    {{ usermacros.mobilePhoneField(form,'show',"") }}
+                    {{ usermacros.mobilePhoneField(form,'edit',"") }}
 
                     {{ formmacros.field(form.job) }}
 

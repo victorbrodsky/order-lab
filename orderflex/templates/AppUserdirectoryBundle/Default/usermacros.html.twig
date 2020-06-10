@@ -1019,7 +1019,13 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
 
-    {% set field = userInfo.preferredMobilePhone %}
+    {% set field = null %}
+    {% if userInfo.preferredMobilePhone is defined %}
+        {% set field = userInfo.preferredMobilePhone %}
+    {% endif %}
+    {% if userInfo.mobilePhone is defined %}
+        {% set field = userInfo.mobilePhone %}
+    {% endif %}
 
     {% if label == "" %}
         {% set value = field.vars.value %}
@@ -1094,6 +1100,9 @@
         {{ formmacros.field(field) }}
         {% if userInfo.preferredMobilePhoneVerified is defined %}
             {{ formmacros.checkbox(userInfo.preferredMobilePhoneVerified) }}
+        {% endif %}
+        {% if userInfo.mobilePhoneVerified is defined %}
+            {{ formmacros.checkbox(userInfo.mobilePhoneVerified) }}
         {% endif %}
         {#{{ usermacros.phoneFieldWithVerified(userInfo,field) }}#}
     {% endif %}

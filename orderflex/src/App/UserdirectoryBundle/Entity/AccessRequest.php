@@ -579,6 +579,16 @@ class AccessRequest
         $this->mobilePhoneVerifyCodeDate = $mobilePhoneVerifyCodeDate;
     }
 
+    //Link methods for UserInfo
+    public function getPreferredMobilePhoneVerified()
+    {
+        return $this->getMobilePhoneVerified();
+    }
+    public function getPreferredMobilePhone()
+    {
+        return $this->getMobilePhone();
+    }
+
     public function verifyCode($verificationCode) {
         $userVerificationCode = $this->getMobilePhoneVerifyCode();
         $phoneNumber = $this->getMobilePhone();
