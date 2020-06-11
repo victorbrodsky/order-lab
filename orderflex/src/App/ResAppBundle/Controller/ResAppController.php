@@ -847,6 +847,8 @@ class ResAppController extends OrderAbstractController {
         if( count($resTypes) == 0 ) {
             return array();
         }
+
+        $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
         
         $resappUtil->addEmptyResAppFields($entity); //testing
 
@@ -914,7 +916,8 @@ class ResAppController extends OrderAbstractController {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'resappTypes' => $resTypes
+            'resappTypes' => $resTypes,
+            'resappVisas' => $resappVisas
         );
 
         //echo "routeName=$routeName;  action=$action; method=$method<br>";
@@ -1350,6 +1353,8 @@ class ResAppController extends OrderAbstractController {
             return array();
         }
 
+        $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
+
         $params = array(
             'cycle' => $cycle,
             'em' => $this->getDoctrine()->getManager(),
@@ -1358,7 +1363,8 @@ class ResAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'cycle_type' => "update",
-            'resappTypes' => $resTypes
+            'resappTypes' => $resTypes,
+            'resappVisas' => $resappVisas
         );
         //Edit Form
         $form = $this->createForm( ResidencyApplicationType::class, $entity, array(

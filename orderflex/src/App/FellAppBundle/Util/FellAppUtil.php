@@ -277,7 +277,7 @@ class FellAppUtil {
     }
 
     //get all fellowship visa status
-    public function getFellowshipVisaStatuses( $asEntities=false ) {
+    public function getFellowshipVisaStatuses( $asEntities=false, $idName = true ) {
         $em = $this->em;
 
         $repository = $em->getRepository('AppFellAppBundle:VisaStatus');
@@ -300,13 +300,19 @@ class FellAppUtil {
             return $fellTypes;
         }
 
+        $filterTypeArr = array();
+
         //add statuses
         foreach( $fellTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
-            $filterType[$type->getId()] = $type->getName();
+            if( $idName ) {
+                $filterTypeArr[$type->getId()] = $type->getName();
+            } else {
+                $filterTypeArr[$type->getName()] = $type->getName();
+            }
         }
 
-        return $filterType;
+        return $filterTypeArr;
     }
 
 //    public function getFellowshipTypesWithSpecials_OLD() {
@@ -662,6 +668,9 @@ class FellAppUtil {
             $user->addEmploymentStatus($employmentStatus);
         }
 
+        //citizenships
+        $this->addEmptyCitizenships($fellowshipApplication);
+
         //locations
         $this->addEmptyLocations($fellowshipApplication);
 
@@ -753,6 +762,18 @@ class FellAppUtil {
 
     }
 
+    public function addEmptyCitizenships($fellowshipApplication) {
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $citizenships = $fellowshipApplication->getCitizenships();
+
+        if( count($citizenships) == 0 ) {
+            $citizenship = new Citizenship($author);
+            $fellowshipApplication->addCitizenship($citizenship);
+        } else {
+            //
+        }
+    }
 
     public function addEmptyLocations($fellowshipApplication) {
 

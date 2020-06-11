@@ -277,7 +277,7 @@ class ResAppUtil {
     }
 
     //get all residency visa status
-    public function getResidencyVisaStatuses( $asEntities=false ) {
+    public function getResidencyVisaStatuses( $asEntities=false, $idName = true ) {
         $em = $this->em;
 
         $repository = $em->getRepository('AppResAppBundle:VisaStatus');
@@ -300,13 +300,20 @@ class ResAppUtil {
             return $resTypes;
         }
 
+        $filterTypeArr = array();
+
         //add statuses
         foreach( $resTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
-            $filterType[$type->getId()] = $type->getName();
+            //$filterType[$type->getId()] = $type->getName();
+            if( $idName ) {
+                $filterTypeArr[$type->getId()] = $type->getName();
+            } else {
+                $filterTypeArr[$type->getName()] = $type->getName();
+            }
         }
 
-        return $filterType;
+        return $filterTypeArr;
     }
 
 //    public function getResidencyTypesWithSpecials_OLD() {
@@ -662,6 +669,9 @@ class ResAppUtil {
             $user->addEmploymentStatus($employmentStatus);
         }
 
+        //citizenships
+        $this->addEmptyCitizenships($residencyApplication);
+
         //locations
         $this->addEmptyLocations($residencyApplication);
 
@@ -753,6 +763,18 @@ class ResAppUtil {
 
     }
 
+    public function addEmptyCitizenships($residencyApplication) {
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $citizenships = $residencyApplication->getCitizenships();
+
+        if( count($citizenships) == 0 ) {
+            $citizenship = new Citizenship($author);
+            $residencyApplication->addCitizenship($citizenship);
+        } else {
+            //
+        }
+    }
 
     public function addEmptyLocations($residencyApplication) {
 

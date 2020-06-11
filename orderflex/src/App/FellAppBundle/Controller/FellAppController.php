@@ -843,6 +843,10 @@ class FellAppController extends OrderAbstractController {
         if( count($fellTypes) == 0 ) {
             return array();
         }
+
+        $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
+        //var_dump($fellappVisas);
+        //exit('111');
         
         $fellappUtil->addEmptyFellAppFields($entity); //testing
 
@@ -901,7 +905,8 @@ class FellAppController extends OrderAbstractController {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'fellappTypes' => $fellTypes
+            'fellappTypes' => $fellTypes,
+            'fellappVisas' => $fellappVisas
         );
 
 //        $form = $this->createForm(
@@ -1334,6 +1339,8 @@ class FellAppController extends OrderAbstractController {
             return array();
         }
 
+        $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
+
         $params = array(
             'cycle' => $cycle,
             'em' => $this->getDoctrine()->getManager(),
@@ -1342,7 +1349,8 @@ class FellAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'cycle_type' => "update",
-            'fellappTypes' => $fellTypes
+            'fellappTypes' => $fellTypes,
+            'fellappVisas' => $fellappVisas
         );
         //Edit Form
         $form = $this->createForm( FellowshipApplicationType::class, $entity, array(

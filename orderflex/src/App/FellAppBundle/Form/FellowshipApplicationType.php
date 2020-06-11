@@ -401,8 +401,21 @@ class FellowshipApplicationType extends AbstractType
 
         $this->userLocations($builder);
 
+//        $builder->add('citizenships', CollectionType::class, array(
+//            'entry_type' => CitizenshipType::class,
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__citizenships__',
+//        ));
         $builder->add('citizenships', CollectionType::class, array(
-            'entry_type' => CitizenshipType::class,
+            'entry_type' => FellAppCitizenshipType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
