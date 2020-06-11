@@ -1847,7 +1847,8 @@ class RequestController extends OrderAbstractController
 
         if( $externalId ) {
             //echo $externalId."<br>";
-            $dql->andWhere('LOWER(transresRequest.exportId) LIKE LOWER(:exportId)');
+            //$dql->andWhere('LOWER(transresRequest.exportId) LIKE LOWER(:exportId)');
+            $dql->andWhere("CAST(transresRequest.exportId as VARCHAR) LIKE LOWER(:exportId)");
             $dqlParameters['exportId'] = "%".$externalId."%";
             $advancedFilter++;
         }

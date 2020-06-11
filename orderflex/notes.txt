@@ -506,5 +506,17 @@ SMS:
 https://symfony.com/doc/current/notifier.html
 https://www.twilio.com/code-exchange/sms-notifications
 
-
-
+Error for exportId (integer):
+http://127.0.0.1/order/index_dev.php/translational-research/projects/?
+filter[projectSpecialty][0]=1
+&filter[projectSpecialty][1]=2
+&filter[projectSpecialty][2]=4
+&filter[searchId]=&
+filter[state][0]=All-except-Drafts-and-Canceled
+&filter[startDate]=&filter[endDate]=&filter[searchIrbNumber]=&
+filter[searchTitle]=&filter[submitter]=&filter[fundingNumber]=&
+filter[fundingType]=&filter[searchProjectType]=&
+filter[exportId]=14541
+&filter[humanTissue]=&filter[exemptIrbApproval]=&filter[fromExpectedCompletionDate]=&
+filter[toExpectedCompletionDate]=&filter[briefDescription]=&
+filter[fromImplicitExpDate]=&filter[toImplicitExpDate]=

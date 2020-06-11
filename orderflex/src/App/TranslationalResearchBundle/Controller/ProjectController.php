@@ -376,7 +376,8 @@ class ProjectController extends OrderAbstractController
         }
 
         if( $exportId ) {
-            $dql->andWhere("LOWER(project.exportId) LIKE LOWER(:exportId)");
+            //$dql->andWhere("LOWER(project.exportId) LIKE LOWER(:exportId)");
+            $dql->andWhere("CAST(project.exportId as VARCHAR) LIKE LOWER(:exportId)");
             $dqlParameters["exportId"] = "%".$exportId."%";
             $advancedFilter++;
         }
