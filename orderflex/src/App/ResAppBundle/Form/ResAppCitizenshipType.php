@@ -67,12 +67,10 @@ class ResAppCitizenshipType extends AbstractType
         } else {
             //var_dump($this->params['resappVisas']);
             //exit('111');
-            $builder->add('visa', ChoiceType::class, array( //flipped
+            $builder->add('visa', ChoiceType::class, array(
                 'label' => 'Visa Status:',
                 'required'=> false,
-                //'multiple' => false,
-                'choices' => $this->params['resappVisas'], //flipped
-                //'choices_as_values' => true,
+                'choices' => $this->params['resappVisas'],
                 'attr' => array('class' => 'combobox'),
             ));
         }

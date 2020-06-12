@@ -339,7 +339,32 @@ class ResidencyApplication extends BaseUserAttributes {
     private $boardCertifications;
 
     /////////// EOF user objects /////////////
-    
+
+    //Additional fields (citizenship and visa status (similar to the fellowship site) is under citizenship object)
+    /**
+     * Minority: yes/no or Yes/No/Unknown
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $minority;
+
+    /**
+     * number of 1st author publications
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $firstPublications;
+
+    /**
+     * number of all publications
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $allPublications;
+
+
+
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -1034,8 +1059,53 @@ class ResidencyApplication extends BaseUserAttributes {
         $this->rank = $rank;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMinority()
+    {
+        return $this->minority;
+    }
 
+    /**
+     * @param mixed $minority
+     */
+    public function setMinority($minority)
+    {
+        $this->minority = $minority;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getFirstPublications()
+    {
+        return $this->firstPublications;
+    }
+
+    /**
+     * @param mixed $firstPublications
+     */
+    public function setFirstPublications($firstPublications)
+    {
+        $this->firstPublications = $firstPublications;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAllPublications()
+    {
+        return $this->allPublications;
+    }
+
+    /**
+     * @param mixed $allPublications
+     */
+    public function setAllPublications($allPublications)
+    {
+        $this->allPublications = $allPublications;
+    }
 
 
 

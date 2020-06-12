@@ -28,6 +28,7 @@ use App\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -466,6 +467,30 @@ class ResidencyApplicationType extends AbstractType
 
         //////////////////////////////////////////////////////////////
 
+        //Additional fields
+        $minorities = array(
+            "Yes" => "Yes",
+            "No" => "No",
+            "Unknown" => "Unknown"
+        );
+        $builder->add('minority', ChoiceType::class, array(
+            'label' => 'Minority:',
+            'required' => false,
+            'choices' => $minorities,
+            'attr' => array('class' => 'combobox'),
+        ));
+
+        $builder->add('firstPublications', null, array(
+            'label' => 'Number of 1st author publications:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('allPublications', null, array(
+            'label' => 'Number of all publications:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
 
     }
 

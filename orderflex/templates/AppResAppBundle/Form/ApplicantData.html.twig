@@ -314,6 +314,23 @@
             {% endif %}
 
 
+            <div class="well">
+                {#<label class="col-xs-12 control-label">Other:</label>#}
+                <div class="row withpaddingtop">
+                    <div class="col-xs-4">
+                        {{ form_row(form.minority) }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_row(form.firstPublications) }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_row(form.allPublications) }}
+                    </div>
+                    {#<div class="col-xs-3">#}
+                    {#</div>#}
+                </div>
+            </div>
+
         </div> <!-- panel-body -->
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
