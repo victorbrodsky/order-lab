@@ -468,15 +468,24 @@ class ResidencyApplicationType extends AbstractType
         //////////////////////////////////////////////////////////////
 
         //Additional fields
-        $minorities = array(
-            "Yes" => "Yes",
-            "No" => "No",
+        //Blacks or African Americans, Hispanics or Latinos, American Indians or Alaska Natives, and Native Hawaiians and other Pacific Islanders
+//        $ethnicities = array(
+//            "Yes" => "Yes",
+//            "No" => "No",
+//            "Unknown" => "Unknown"
+//        );
+        //Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
+        $ethnicities = array(
+            "Black or African American" => "Black or African American",
+            "Hispanic or Latino" => "Hispanic or Latino",
+            "American Indian or Alaska Native" => "American Indian or Alaska Native",
+            "Native Hawaiian and other Pacific Islander" => "Native Hawaiian and other Pacific Islander",
             "Unknown" => "Unknown"
         );
-        $builder->add('minority', ChoiceType::class, array(
-            'label' => 'Minority:',
+        $builder->add('ethnicity', ChoiceType::class, array(
+            'label' => 'Is the applicant a member of any of the following groups?:',
             'required' => false,
-            'choices' => $minorities,
+            'choices' => $ethnicities,
             'attr' => array('class' => 'combobox'),
         ));
 

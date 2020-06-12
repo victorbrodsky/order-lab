@@ -342,11 +342,12 @@ class ResidencyApplication extends BaseUserAttributes {
 
     //Additional fields (citizenship and visa status (similar to the fellowship site) is under citizenship object)
     /**
-     * Minority: yes/no or Yes/No/Unknown
+     * Ethnicity: yes/no or Yes/No/Unknown
+     * Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $minority;
+    private $ethnicity;
 
     /**
      * number of 1st author publications
@@ -362,8 +363,13 @@ class ResidencyApplication extends BaseUserAttributes {
      */
     private $allPublications;
 
+    //AOA (Yes/No): boolean
 
+    //Couples match (Yes/No): boolean
 
+    //PostSoph (Post-Sophomore Fellowship in Pathology) (Yes/No): choices
+
+    //Residency types: AP/EXP CP/EXP +Experimental Pathology
 
 
     public function __construct($author=null) {
@@ -1062,17 +1068,17 @@ class ResidencyApplication extends BaseUserAttributes {
     /**
      * @return mixed
      */
-    public function getMinority()
+    public function getEthnicity()
     {
-        return $this->minority;
+        return $this->ethnicity;
     }
 
     /**
-     * @param mixed $minority
+     * @param mixed $ethnicity
      */
-    public function setMinority($minority)
+    public function setEthnicity($ethnicity)
     {
-        $this->minority = $minority;
+        $this->ethnicity = $ethnicity;
     }
 
     /**
