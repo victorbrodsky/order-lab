@@ -294,7 +294,7 @@ class ReminderUtil
             $invoiceReminderBodyReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
 
             //testing:
-            $piEmailArr = 'oli2002@med.cornell.edu';
+            $piEmailArr = array('oli2002@med.cornell.edu');
             $ccs = 'oli2002@med.cornell.edu';
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
