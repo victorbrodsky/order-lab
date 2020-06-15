@@ -2193,7 +2193,7 @@ Pathology and Laboratory Medicine",
         //echo "currentDate=".$currentDate->format('Y-m-d H:i:s')."<br>";
 
         $maxTime = '30';
-        $maxTime = '1'; //testing
+        //$maxTime = '1'; //testing
 
         $currentDate = $currentDate->modify("-$maxTime minutes");
 
