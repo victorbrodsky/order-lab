@@ -298,8 +298,6 @@ class ReminderUtil
             $ccs = 'oli2002@med.cornell.edu';
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
-            $fullPathTest = getcwd();
-            exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; fullPathTest=".$fullPathTest);
 
             $invoiceMsg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
             "<br>Subject: ".$invoiceReminderSubjectReady."<br>Body: ".$invoiceReminderBodyReady."<br>attachmentPath=".$attachmentPath;
@@ -311,6 +309,9 @@ class ReminderUtil
             $resultArr[] = $invoice->getOid();
             $sentInvoices++;
 
+            //testing
+            $fullPathTest = getcwd();
+            exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; fullPathTest=".$fullPathTest);
         }//foreach $invoices
 
         if( $sentInvoices == 0 ) {
