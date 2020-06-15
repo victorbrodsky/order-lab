@@ -1909,6 +1909,25 @@ Pathology and Laboratory Medicine",
         $logger->notice($res);
         //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
 
+        //////////////////// 4) Status (every 1 hour) ////////////////////
+        $cronJobName = "cron:status --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $statusFrequency = 30;
+        $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
+
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+            $this->addCronJobLinux($statusCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF 4) Status ////////////////////
+
         return $res;
     }
     public function createEmailCronLinux( $mailerFlushQueueFrequency = 15 ) {
@@ -2088,6 +2107,120 @@ Pathology and Laboratory Medicine",
         return $encoder;
     }
 
+    //check system status. Used by StatusCronCommand (php bin/console cron:status --env=prod)
+    public function checkStatus() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $msg = "checkStatus";
+
+        $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
+        if( !$maintenance ) {
+            return "Maintenance is off";
+        }
+
+        //1) check event log for
+        // "Site Settings parameter [maintenance] has been updated by" and
+        // "updated value: 1"
+
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->leftJoin('logger.eventType', 'eventType');
+
+        $queryParameters = array();
+
+        //Site Settings Parameter Updated
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $queryParameters['eventTypeName'] = 'Site Settings Parameter Updated';
+
+        //Site Settings parameter [maintenance] has been updated by
+        $eventStr1 = "Site Settings parameter [maintenance] has been updated by";
+        $dql->andWhere("logger.event LIKE :eventStr1");
+        $queryParameters['eventStr1'] = '%'.$eventStr1.'%';
+
+        //updated value:<br>1
+        $eventStr2 = "updated value:<br>1";
+        $dql->andWhere("logger.event LIKE :eventStr2");
+        $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
+
+        $dql->orderBy("logger.id","DESC");
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters( $queryParameters );
+
+        $query->setMaxResults(1);
+        $log = $query->getOneOrNullResult();
+
+        if( !$log ) {
+            return "Maintenance is off";
+        }
+
+        //2) get latest date
+        echo "log ID=".$log->getId()."<br>";
+        $latestDate = $log->getCreationdate();
+        echo "latestDate=".$latestDate->format('Y-m-d H:i:s')."<br>";
+
+        //3) check if currentDate is more latestDate by 30 min
+        $currentDate = new \DateTime();
+        echo "currentDate=".$currentDate->format('Y-m-d H:i:s')."<br>";
+
+        $maxTime = '30';
+        //$maxTime = '1'; //testing
+
+        $currentDate = $currentDate->modify("-$maxTime minutes");
+
+        if( $currentDate > $latestDate ) {
+            //$msg = "more than $maxTime min";
+            //send email to admin
+            $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+
+            //except these users
+            $exceptionUsers = $userSecUtil->getSiteSettingParameter('emailCriticalErrorExceptionUsers');
+            $exceptionUsersEmails = array();
+            foreach($exceptionUsers as $exceptionUser) {
+                // echo "exceptionUser=".$exceptionUser."<br>";
+                $exceptionUsersEmails[] = $exceptionUser->getSingleEmail();
+            }
+
+            if( count($exceptionUsersEmails) > 0 ) {
+                $emails = array_diff($emails, $exceptionUsersEmails);
+            }
+
+            $emails = array_unique($emails);
+
+            //echo "emails: <br>";
+            //print_r($emails);
+            //exit('111');
+
+            $subject = "Maintenance Mode On Longer than $maxTime minutes";
+            $msg = "Maintenance Mode has been turned on for longer than $maxTime minutes. Please turn it off to allow users to log in:";
+
+            //employees_siteparameters_edit
+            //@Route("/{id}/edit", name="employees_siteparameters_edit", methods={"GET"})
+            //$param = trim( $request->get('param') );
+            $url = $this->container->get('router')->generate(
+                'employees_siteparameters_edit',
+                array(
+                    'id' => 1,
+                    'param' => 'maintenance'
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $msg = $msg . " " . $url;
+
+            $emailUtil->sendEmail($emails,$subject,$msg);
+
+        } else {
+            $msg = "Max time is ok";
+        }
+
+        //4) send warning email
+
+        return $msg;
+    }
     
     ///////////////////////////// TELEPHONY ////////////////////////////////////
     public function assignVerificationCode($user,$phoneNumber) {

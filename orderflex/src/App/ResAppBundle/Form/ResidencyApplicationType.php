@@ -480,7 +480,8 @@ class ResidencyApplicationType extends AbstractType
             "Hispanic or Latino" => "Hispanic or Latino",
             "American Indian or Alaska Native" => "American Indian or Alaska Native",
             "Native Hawaiian and other Pacific Islander" => "Native Hawaiian and other Pacific Islander",
-            "Unknown" => "Unknown"
+            "Unknown" => "Unknown",
+            "None" => "None"
         );
         $builder->add('ethnicity', ChoiceType::class, array(
             'label' => 'Is the applicant a member of any of the following groups?:',

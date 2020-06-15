@@ -168,6 +168,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:delete-orphan' }
 
+    App\UserdirectoryBundle\Command\StatusCronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:status' }
+
     App\UserdirectoryBundle\Command\SwiftCronCommand:
         tags:
             - { name: 'console.command', command: 'cron:swift' }
