@@ -518,9 +518,9 @@ class Document {
         //$fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
 
-//        if( $fullPath && $withRealPath ) {
-//            $fullPath = realpath($fullPath);
-//        }
+        if( $fullPath && $withRealPath ) {
+            $fullPath = realpath($fullPath);
+        }
 
         return $fullPath;
     }
