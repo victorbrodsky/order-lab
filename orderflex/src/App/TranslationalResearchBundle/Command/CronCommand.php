@@ -60,6 +60,8 @@ class CronCommand extends Command {
 
         ////////////// unpaid invoices //////////////
         $results = $transresReminderUtil->sendReminderUnpaidInvoices();
+        $output->writeln($results); //testing
+        return true; //testing
         ////////////// EOF unpaid invoices //////////////
 
         ////////////// delayed projects //////////////
