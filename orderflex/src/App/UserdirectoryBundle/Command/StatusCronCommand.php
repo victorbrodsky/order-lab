@@ -58,31 +58,10 @@ class StatusCronCommand extends Command {
 
     //php bin/console cron:status --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
-
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatus();
         $output->writeln($res);
         return true;
-
-        //$logger = $this->container->get('logger');
-
-        //$cmd = 'php bin/console swiftmailer:spool:send --env=prod';
-
-        //$oExec = pclose(popen("start /B ". $cmd, "r"));
-        //$result = exec($cmd);
-
-        // Outputs all the result of shellcommand "ls", and returns
-        // the last output line into $last_line. Stores the return value
-        // of the shell command in $retval.
-        //$last_line = system($cmd, $retval);
-
-        // Printing additional info
-        //Last line of the output: ' . $last_line . '
-        //Return value: ' . $retval;
-
-        //$logger->notice("cron:swift: Last line of the output:".$last_line."; Return value:".$retval);
-
-        $output->writeln($res);
     }
 
 } 
