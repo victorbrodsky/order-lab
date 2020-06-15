@@ -1002,7 +1002,7 @@ class Invoice {
             if ($days) {
                 return $dueDate->format('m/d/Y') . " (" . $days . " days ago" . ")";
             } else {
-                return $dueDate->format('m/d/Y') . " (" . "just now" . ")";;
+                return $dueDate->format('m/d/Y') . " (" . "just now" . ")";
             }
         } else {
             return null;

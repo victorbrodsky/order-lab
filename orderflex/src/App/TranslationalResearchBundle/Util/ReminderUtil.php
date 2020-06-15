@@ -272,9 +272,11 @@ class ReminderUtil
             //Attachment: Invoice PDF
             $attachmentPath = null;
             $invoicePDF = $invoice->getRecentPDF();
+            $logger->notice("Invoice OID=".$invoice->getOid()."; invoicePDF=".$invoicePDF);
             if ($invoicePDF) {
                 //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
+                $logger->notice("invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
             }
 
             //replace [[...]]
@@ -283,8 +285,13 @@ class ReminderUtil
             $invoiceReminderSubjectReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderSubject,$project,$transresRequest,$invoice);
             $invoiceReminderBodyReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
 
+            //testing:
+            $piEmailArr = 'oli2002@med.cornell.edu';
+            $ccs = 'oli2002@med.cornell.edu';
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
+            $fullPathTest = getcwd();
+            exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; fullPathTest=".$fullPathTest);
 
             $invoiceMsg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
             "<br>Subject: ".$invoiceReminderSubjectReady."<br>Body: ".$invoiceReminderBodyReady."<br>attachmentPath=".$attachmentPath;
