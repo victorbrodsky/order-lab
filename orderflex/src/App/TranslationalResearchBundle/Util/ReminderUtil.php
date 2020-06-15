@@ -209,6 +209,11 @@ class ReminderUtil
             return $invoices;
         }
 
+
+        //testing
+        $testInvoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findByOid('APCP606-REQ20735-V1');
+        $invoices = array($testInvoice);
+
         foreach($invoices as $invoice) {
 
 //            $dueDateStr = null;
@@ -240,6 +245,7 @@ class ReminderUtil
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
             //save to DB (disable for testing)
+            $testing = true; //testing
             if( !$testing ) {
                 $this->em->flush($invoice);
             }
