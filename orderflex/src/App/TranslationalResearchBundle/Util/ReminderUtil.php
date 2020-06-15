@@ -211,8 +211,8 @@ class ReminderUtil
 
 
         //testing
-        $testInvoiceId = 'APCP1002-REQ17582-V1'; //dev
-        //$testInvoiceId = 'APCP606-REQ20735-V1'; //prod
+        //$testInvoiceId = 'APCP1002-REQ17582-V1'; //dev
+        $testInvoiceId = 'APCP606-REQ20735-V1'; //prod
         $testInvoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($testInvoiceId);
         $invoices = array($testInvoice);
 

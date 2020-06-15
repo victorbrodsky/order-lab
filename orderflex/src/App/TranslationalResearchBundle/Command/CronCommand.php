@@ -47,7 +47,7 @@ class CronCommand extends Command {
             ->setDescription('Translational Research Unpaid Invoice Reminder Email');
     }
 
-    //php app/console cron:invoice-reminder-emails --env=prod
+    //php bin/console cron:invoice-reminder-emails --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         //$logger = $this->container->get('logger');
