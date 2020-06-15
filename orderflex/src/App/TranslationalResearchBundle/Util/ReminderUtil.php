@@ -212,9 +212,9 @@ class ReminderUtil
 
         //testing
         //$testInvoiceId = 'APCP1002-REQ17582-V1'; //dev
-        $testInvoiceId = 'APCP606-REQ20735-V1'; //prod
-        $testInvoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($testInvoiceId);
-        $invoices = array($testInvoice);
+        //$testInvoiceId = 'APCP606-REQ20735-V1'; //prod
+        //$testInvoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($testInvoiceId);
+        //$invoices = array($testInvoice);
 
         foreach($invoices as $invoice) {
 
@@ -247,7 +247,6 @@ class ReminderUtil
             $invoice->setInvoiceReminderCount($invoiceReminderCounter);
 
             //save to DB (disable for testing)
-            $testing = true; //testing
             if( !$testing ) {
                 $this->em->flush($invoice);
             }
@@ -284,7 +283,7 @@ class ReminderUtil
             if ($invoicePDF) {
                 //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
-                $logger->notice("invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
+                $logger->notice("invoicePDF exists: invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
             }
 
             //replace [[...]]
@@ -294,8 +293,8 @@ class ReminderUtil
             $invoiceReminderBodyReady = $transresUtil->replaceTextByNamingConvention($invoiceReminderBody,$project,$transresRequest,$invoice);
 
             //testing:
-            $piEmailArr = array('oli2002@med.cornell.edu');
-            $ccs = 'oli2002@med.cornell.edu';
+            //$piEmailArr = array('oli2002@med.cornell.edu');
+            //$ccs = 'oli2002@med.cornell.edu';
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
 
@@ -310,8 +309,7 @@ class ReminderUtil
             $sentInvoices++;
 
             //testing
-            $fullPathTest = getcwd();
-            exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; fullPathTest=".$fullPathTest);
+            //exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
         }//foreach $invoices
 
         if( $sentInvoices == 0 ) {
