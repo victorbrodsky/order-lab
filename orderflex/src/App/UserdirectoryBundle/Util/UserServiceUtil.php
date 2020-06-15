@@ -2184,13 +2184,13 @@ Pathology and Laboratory Medicine",
         }
 
         //2) get latest date
-        echo "log ID=".$log->getId()."<br>";
+        //echo "log ID=".$log->getId()."<br>";
         $latestDate = $log->getCreationdate();
-        echo "latestDate=".$latestDate->format('Y-m-d H:i:s')."<br>";
+        //echo "latestDate=".$latestDate->format('Y-m-d H:i:s')."<br>";
 
         //3) check if currentDate is more latestDate by 30 min
         $currentDate = new \DateTime();
-        echo "currentDate=".$currentDate->format('Y-m-d H:i:s')."<br>";
+        //echo "currentDate=".$currentDate->format('Y-m-d H:i:s')."<br>";
 
         $maxTime = '30';
         $maxTime = '1'; //testing

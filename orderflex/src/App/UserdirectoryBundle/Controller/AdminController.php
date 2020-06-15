@@ -8189,7 +8189,7 @@ class AdminController extends OrderAbstractController
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Status cron job is generated.'
+            'Status cron job is generated (check for Maintenance).'
         );
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
