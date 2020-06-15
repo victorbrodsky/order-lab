@@ -8175,6 +8175,27 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
+    /**
+     * @Route("/list/generate-cron-jobs/status", name="user_populate_cron_status_jobs", methods={"GET"})
+     */
+    public function generateCronStatusJobAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->createStatusCronLinux();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Status cron job is generated.'
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //exit("Form Node Tree generated: ".$count);
+    }
+
     //Blood Product Transfused
     public function generateBloodProductTransfused() {
 

@@ -1910,6 +1910,34 @@ Pathology and Laboratory Medicine",
         //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
 
         //////////////////// 4) Status (every 30 minutes) ////////////////////
+//        $cronJobName = "cron:status --env=prod";
+//
+//        $phpPath = $this->getPhpPath();
+//        $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+//
+//        $statusFrequency = 30;
+//        $statusFrequency = 5;
+//        $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
+//
+//        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+//            $this->addCronJobLinux($statusCronJob);
+//            $res = "Created $cronJobName cron job";
+//        } else {
+//            $res = "$cronJobName already exists";
+//        }
+//
+//        $logger->notice($res);
+        $res = $this->createStatusCronLinux();
+        //$logger->notice($res);
+        //////////////////// EOF 4) Status ////////////////////
+
+        return $res;
+    }
+    public function createStatusCronLinux( $statusFrequency = 30 ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating status cron job for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
         $cronJobName = "cron:status --env=prod";
 
         $phpPath = $this->getPhpPath();
@@ -1927,9 +1955,6 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice($res);
-        //////////////////// EOF 4) Status ////////////////////
-
-        return $res;
     }
     public function createEmailCronLinux( $mailerFlushQueueFrequency = 15 ) {
         $logger = $this->container->get('logger');
