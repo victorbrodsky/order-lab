@@ -2226,7 +2226,10 @@ Pathology and Laboratory Medicine",
             //employees_siteparameters_edit
             //@Route("/{id}/edit", name="employees_siteparameters_edit", methods={"GET"})
             //$param = trim( $request->get('param') );
-            $url = $this->container->get('router')->generate(
+
+            $router = $userSecUtil->getRequestContextRouter();
+
+            $url = $router->generate(
                 'employees_siteparameters_edit',
                 array(
                     'id' => 1,
