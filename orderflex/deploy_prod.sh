@@ -117,6 +117,8 @@ function prep(){
 
 
     echo "*** Set permissions ***"
+    chmod a+x $PROJECT_LOCAL_PATH
+
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/log
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/public

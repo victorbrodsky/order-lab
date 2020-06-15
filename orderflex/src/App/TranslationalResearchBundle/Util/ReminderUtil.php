@@ -279,12 +279,13 @@ class ReminderUtil
             //Attachment: Invoice PDF
             $attachmentPath = null;
             $invoicePDF = $invoice->getRecentPDF();
-            $logger->notice("Invoice OID=".$invoice->getOid()."; invoicePDF=".$invoicePDF);
+            //$logger->notice("Invoice OID=".$invoice->getOid()."; invoicePDF=".$invoicePDF);
             if ($invoicePDF) {
                 //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
                 $logger->notice("invoicePDF exists: invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
             }
+            $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
 
             //replace [[...]]
             $transresRequest = $invoice->getTransresRequest();
