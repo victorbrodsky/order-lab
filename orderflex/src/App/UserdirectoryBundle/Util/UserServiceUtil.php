@@ -1909,13 +1909,14 @@ Pathology and Laboratory Medicine",
         $logger->notice($res);
         //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
 
-        //////////////////// 4) Status (every 1 hour) ////////////////////
+        //////////////////// 4) Status (every 30 minutes) ////////////////////
         $cronJobName = "cron:status --env=prod";
 
         $phpPath = $this->getPhpPath();
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
         $statusFrequency = 30;
+        $statusFrequency = 5;
         $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
