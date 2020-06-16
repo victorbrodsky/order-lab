@@ -217,7 +217,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
-            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
+            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getAnimalName().' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
             'query_builder' => function (EntityRepository $er) {
