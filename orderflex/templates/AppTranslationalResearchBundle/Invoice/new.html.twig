@@ -166,6 +166,10 @@
             </p>
         {% endif %}
 
+        {% if transresRequest and transresRequest.getCreateDate() %}
+            {{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled", "", "", "2-6") }}
+        {% endif %}
+
         {% if form.dueDate is defined %}
             {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
         {% endif %}

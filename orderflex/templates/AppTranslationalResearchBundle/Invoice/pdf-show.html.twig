@@ -56,6 +56,11 @@
             {#<p>#}
                 {#<b>Account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
             {#</p>#}
+            {% if invoice.getTransresRequest() and invoice.getTransresRequest().getCreateDate() %}
+                <p>
+                    Service Date: {{ invoice.getTransresRequest().getCreateDate()|date("m/d/Y",false) }}
+                </p>
+            {% endif %}
             <p>
                 Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
             </p>
