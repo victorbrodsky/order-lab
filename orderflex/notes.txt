@@ -520,3 +520,16 @@ filter[exportId]=14541
 &filter[humanTissue]=&filter[exemptIrbApproval]=&filter[fromExpectedCompletionDate]=&
 filter[toExpectedCompletionDate]=&filter[briefDescription]=&
 filter[fromImplicitExpDate]=&filter[toImplicitExpDate]=
+
+Residency:
+https://path-cal.med.cornell.edu/PathResApp/index.jsp
+
+C:\Users\ch3\Documents\MyDocs\WCMC\MyPC\Java\Procedure.txt
+C:\Users\ch3\Documents\MyDocs\WCMC\Residency
+
+PRA_APPLICANT_INFO - application
+PRA_APPLICANT_CV_INFO - document
+PRA_APPLICANT_UPDATE_CV_INFO - document 2
+PRA_ENROLLMENT_INFO - enrollment
+PRA_EVALUATION_FORM_INFO - evaluation
+PRA_FACULTY_RESIDENT_INFO - evaluator

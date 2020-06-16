@@ -73,10 +73,10 @@ class ProductType extends AbstractType
         ));
 
         if( $this->params["cycle"] != "new" ) {
-            $builder->add('completed', null, array(
+            $builder->add('completed', TextType::class, array(
                 'label' => "Completed Quantity:",
                 'required' => false,
-                'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
             ));
         }
 
