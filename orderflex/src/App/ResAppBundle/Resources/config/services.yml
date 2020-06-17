@@ -48,6 +48,10 @@ services:
         class: App\ResAppBundle\Util\RecLetterUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    resapp_import_from_old_system_util:
+          class: App\ResAppBundle\Util\ImportFromOldSystem
+          arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
     resapp_role_voter:
         class: App\ResAppBundle\Security\Voter\ResAppRoleVoter

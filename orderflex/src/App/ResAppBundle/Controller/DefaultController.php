@@ -18,6 +18,7 @@
 namespace App\ResAppBundle\Controller;
 
 use App\ResAppBundle\Entity\ResidencyApplication;
+use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -214,5 +215,23 @@ class DefaultController extends OrderAbstractController
         }
 
         exit("end of resapp thumbnails, counter=$counter");
+    }
+
+    /**
+     * @Route("/import-from-old-system", name="resapp_import_from_old_system")
+     */
+    public function importFromOldSystemAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
+
+        $res = $importFromOldSystemUtil->importApplications();
+        
+        exit($res);
     }
 }

@@ -363,11 +363,26 @@ class ResidencyApplication extends BaseUserAttributes {
      */
     private $allPublications;
 
-    //AOA (Yes/No): boolean
+    /**
+     * AOA (Yes/No): boolean
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $aoa;
 
-    //Couples match (Yes/No): boolean
+    /**
+     * Couples match (Yes/No): boolean
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $couple;
 
-    //PostSoph (Post-Sophomore Fellowship in Pathology) (Yes/No): choices
+    /**
+     * PostSoph (Post-Sophomore Fellowship in Pathology) (Yes/No): choices
+     * 
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $postSoph;
 
     //Residency types: AP/EXP CP/EXP +Experimental Pathology
 
@@ -1113,6 +1128,55 @@ class ResidencyApplication extends BaseUserAttributes {
         $this->allPublications = $allPublications;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAoa()
+    {
+        return $this->aoa;
+    }
+
+    /**
+     * @param mixed $aoa
+     */
+    public function setAoa($aoa)
+    {
+        $this->aoa = $aoa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCouple()
+    {
+        return $this->couple;
+    }
+
+    /**
+     * @param mixed $couple
+     */
+    public function setCouple($couple)
+    {
+        $this->couple = $couple;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostSoph()
+    {
+        return $this->postSoph;
+    }
+
+    /**
+     * @param mixed $postSoph
+     */
+    public function setPostSoph($postSoph)
+    {
+        $this->postSoph = $postSoph;
+    }
+
+    
 
 
     public function clearReports() {
