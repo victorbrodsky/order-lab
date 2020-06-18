@@ -1006,21 +1006,21 @@
 
 
                                         {#Set recommendation status by RecLetterAuthorFirstName RecLetterAuthorLastName to ‘uploaded’#}
-                                        {% if entity.hasAllCheckmarks() == false %}
-                                            <hr>
-                                            {% for reference in entity.getReferences() %}
-                                                {% if reference.getRecLetterReceived() == false %}
-                                                    {% set referenceFullName = reference.getFullName() %}
-                                                    <li>
-                                                        <a
-                                                            general-data-confirm="Are you sure you want to set recommendation status by {{ referenceFullName }} to 'uploaded'?"
-                                                            href="{{ path('resapp_reference_letter_received', {'id': reference.id}) }}">
-                                                            Set recommendation status by {{ referenceFullName }} to 'uploaded'
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% endif %}
+                                        {#{% if entity.hasAllCheckmarks() == false %}#}
+                                            {#<hr>#}
+                                            {#{% for reference in entity.getReferences() %}#}
+                                                {#{% if reference.getRecLetterReceived() == false %}#}
+                                                    {#{% set referenceFullName = reference.getFullName() %}#}
+                                                    {#<li>#}
+                                                        {#<a#}
+                                                            {#general-data-confirm="Are you sure you want to set recommendation status by {{ referenceFullName }} to 'uploaded'?"#}
+                                                            {#href="{{ path('resapp_reference_letter_received', {'id': reference.id}) }}">#}
+                                                            {#Set recommendation status by {{ referenceFullName }} to 'uploaded'#}
+                                                        {#</a>#}
+                                                    {#</li>#}
+                                                {#{% endif %}#}
+                                            {#{% endfor %}#}
+                                        {#{% endif %}#}
 
                                         <hr>
 
@@ -1048,28 +1048,28 @@
                                         </li>
 
                                         {#invite references#}
-                                        {% if entity.hasAllCheckmarksOrReferenceLetters() == false %}
-                                            <hr>
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('resapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">
-                                                    Invite all remaining references to submit letters
-                                                </a>
-                                                {% for reference in entity.getReferences() %}
+                                        {#{% if entity.hasAllCheckmarksOrReferenceLetters() == false %}#}
+                                            {#<hr>#}
+                                            {#<li>#}
+                                                {#<a#}
+                                                    {#general-data-confirm="Are you sure you want to invite all remaining references to submit letters?"#}
+                                                    {#general-data-callback="refreshpage"#}
+                                                    {#href="{{ path('resapp_invite_references_submit_letters', { 'id': entity.id }, true) }}">#}
+                                                    {#Invite all remaining references to submit letters#}
+                                                {#</a>#}
+                                                {#{% for reference in entity.getReferences() %}#}
                                                     {#{% if reference.getDocuments()|length == 0 %}#}
-                                                    {% if reference.hasReferenceLetter() == false %}
-                                                        {% set referenceName = reference.getFullName() %}
-                                                        <a target="_blank"
-                                                            general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"
-                                                            href="{{ path('resapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">
-                                                            Invite {{ referenceName }} to submit a reference letter
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </li>
-                                        {% endif %}
+                                                    {#{% if reference.hasReferenceLetter() == false %}#}
+                                                        {#{% set referenceName = reference.getFullName() %}#}
+                                                        {#<a target="_blank"#}
+                                                            {#general-data-confirm="Are you sure you want to invite Invite {{ referenceName }} to submit a reference letter?"#}
+                                                            {#href="{{ path('resapp_invite_reference_submit_letter', { 'id': entity.id, 'referenceid': reference.id }, true) }}">#}
+                                                            {#Invite {{ referenceName }} to submit a reference letter#}
+                                                        {#</a>#}
+                                                    {#{% endif %}#}
+                                                {#{% endfor %}#}
+                                            {#</li>#}
+                                        {#{% endif %}#}
 
                                         {% if entity.getRecentReport() %}
                                             {#Invite Interviewers to Rate#}

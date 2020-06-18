@@ -598,7 +598,7 @@ class ResAppController extends OrderAbstractController {
             //'allowPopulateResApp' => $allowPopulateResApp,
             //'acceptingApplication' => $acceptingApplication,
             'resappfilter' => $filterform->createView(),
-            'startDate' => $startDate,
+            //'startDate' => $startDate,
             'filter' => $resSubspecId,
             'accessreqs' => $accessreqsCount,
             'currentYear' => $startYearStr, //$currentYear, //TODO: adopt the currentYear to currentYears in controller and html

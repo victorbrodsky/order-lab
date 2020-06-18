@@ -27,6 +27,7 @@ namespace App\ResAppBundle\Util;
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\Examination;
+use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -144,6 +145,13 @@ class ImportFromOldSystem {
             //MD
 
             $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
+
+            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
+            if( $residencyApplicationDb ) {
+                $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
+                continue; //skip this fell application, because it already exists in DB
+            }
+
             $lastName = $this->getValueByHeaderName('LAST_NAME', $rowData, $headers);
             $firstName = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
 
@@ -188,8 +196,8 @@ class ImportFromOldSystem {
             $displayName = $firstName . " " . $lastName;
 
             //create logger which must be deleted on successefull creation of application
-            $eventAttempt = "Attempt of creating Residency Applicant " . $displayName . " with unique applicant ID=" . $id;
-            $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('resapp.sitename'), $eventAttempt, $systemUser, null, null, 'Residency Application Creation Failed');
+            //$eventAttempt = "Attempt of creating Residency Applicant " . $displayName . " with unique applicant ID=" . $id;
+            //$eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('resapp.sitename'), $eventAttempt, $systemUser, null, null, 'Residency Application Creation Failed');
 
 
             //check if the user already exists in DB by $googleFormId
@@ -233,6 +241,25 @@ class ImportFromOldSystem {
             $user->addResidencyApplication($residencyApplication);
 
             //////////////// populate fields ////////////////////
+
+            if( $id ) {
+                $residencyApplication->setGoogleFormId($id);
+            }
+
+            if( $enrolmentId ) {
+                $enrolmentStartYear = $this->enrolmentYearArr[$enrolmentId];
+                //echo "enrolmentStartYear=$enrolmentStartYear <br>";
+
+                $enrolmentEndYear = (int)$enrolmentStartYear+1;
+                //echo "enrolmentEndYear=$enrolmentEndYear <br>";
+                //echo "enrolment=$enrolmentStartYear-$enrolmentEndYear <br>";
+
+                //trainingPeriodStart
+                $residencyApplication->setStartDate($this->transformDatestrToDate($enrolmentStartYear));
+                //trainingPeriodEnd
+                $residencyApplication->setEndDate($this->transformDatestrToDate($enrolmentEndYear));
+            }
+
             //fellowshipType
             if( $residencyType ) {
                 //$logger->notice("fellowshipType=[".$fellowshipType."]");
@@ -242,37 +269,6 @@ class ImportFromOldSystem {
                 $residencyTypeEntity = $transformer->reverseTransform($residencyType);
                 $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
             }
-
-//            //Training
-//            //$medSchool = $this->getValueByHeaderName('MED_SCHOOL', $rowData, $headers);
-//            //$graduateDate = $this->getValueByHeaderName('DATE_GRADUATE', $rowData, $headers); //Training->completionDate
-//
-//            //Degree
-//            if( $mdPhd || $do || $md ) {
-//                $training = new Training($systemUser);
-//                $training->setOrderinlist(1);
-//                $residencyApplication->addTraining($training);
-//                $residencyApplication->getUser()->addTraining($training);
-//
-//                if ($mdPhd) {
-//                    $schoolDegree = trim($mdPhd);
-//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
-//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//                    $training->setDegree($schoolDegreeEntity);
-//                }
-//                if ($do) {
-//                    $schoolDegree = trim($do);
-//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
-//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//                    $training->setDegree($schoolDegreeEntity);
-//                }
-//                if ($md) {
-//                    $schoolDegree = trim($md);
-//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
-//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//                    $training->setDegree($schoolDegreeEntity);
-//                }
-//            }
 
             $this->createResAppTraining($residencyApplication,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
 
@@ -289,41 +285,50 @@ class ImportFromOldSystem {
             }
             $residencyApplication->addExamination($examination);
 
-        }
+            if( $interviewDate ) {
+                $residencyApplication->setInterviewDate($this->transformDatestrToDate($interviewDate));
+            }
+
+            if( $createDate ) {
+                $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
+            }
+
+            //$activeD = $this->getValueByHeaderName('ACTIVED', $rowData, $headers); //?
+
+            if( $aoa ) {
+                $residencyApplication->setAoa($aoa);
+            }
+
+            if( $couples == '1' ) {
+                $couples = true;
+            } else {
+                $couples = false;
+            }
+            $residencyApplication->setCouple($couples);
+
+            //Post-Sophomore Fellowship in Pathology/No
+            if( $postSoph == '1' ) {
+                $residencyApplication->setPostSoph($postSophPathologyEntity);
+            } else {
+                $residencyApplication->setPostSoph($postSophNoneEntity);
+            }
+
+            //exit('end applicant');
+
+            //$em->persist($user);
+            //$em->flush();
+
+            $event = "Populated residency applicant " . $displayName . "; Application ID " . $residencyApplication->getId();
+            //$logger->notice($event);
+            echo "$event <br>";
+
+            echo "###################### <br>";
+
+            exit('end application');
+
+        } //for
 
 
-        if( $interviewDate ) {
-            $residencyApplication->setInterviewDate($this->transformDatestrToDate($interviewDate));
-        }
-
-        if( $createDate ) {
-            $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
-        }
-
-        if( $enrolmentId ) {
-            $residencyApplication->setGoogleFormId($enrolmentId);
-        }
-
-        //$activeD = $this->getValueByHeaderName('ACTIVED', $rowData, $headers); //?
-
-        if( $aoa ) {
-            $residencyApplication->setAoa($aoa);
-        }
-
-        $couples = $this->getValueByHeaderName('COUPLES', $rowData, $headers);
-        if( $couples == '1' ) {
-            $couples = true;
-        } else {
-            $couples = false;
-        }
-        $residencyApplication->setCouple($couples);
-
-        //Post-Sophomore Fellowship in Pathology/No
-        if( $postSoph == '1' ) {
-            $residencyApplication->setPostSoph($postSophPathologyEntity);
-        } else {
-            $residencyApplication->setPostSoph($postSophNoneEntity);
-        }
 
         return $res;
     }

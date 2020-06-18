@@ -234,4 +234,55 @@ class DefaultController extends OrderAbstractController
         
         exit($res);
     }
+    /**
+     * @Route("/import-from-old-system-files1", name="resapp_import_from_old_system_files1")
+     */
+    public function importFromOldSystem2Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
+
+        $res = $importFromOldSystemUtil->importApplicationsFiles1();
+
+        exit($res);
+    }
+    /**
+     * @Route("/import-from-old-system-files2", name="resapp_import_from_old_system_files2")
+     */
+    public function importFromOldSystem3Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
+
+        $res = $importFromOldSystemUtil->importApplicationsFiles2();
+
+        exit($res);
+    }
+    /**
+     * @Route("/import-from-old-system-interview", name="resapp_import_from_old_system_interview")
+     */
+    public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
+
+        $res = $importFromOldSystemUtil->importApplicationsFilesInterview();
+
+        exit($res);
+    }
 }
