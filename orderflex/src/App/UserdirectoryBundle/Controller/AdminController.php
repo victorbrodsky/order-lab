@@ -24,6 +24,7 @@ use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
 use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
+use App\ResAppBundle\Entity\PostSophList;
 use App\ResAppBundle\Entity\ResAppRank;
 use App\ResAppBundle\Entity\ResAppStatus;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
@@ -918,6 +919,7 @@ class AdminController extends OrderAbstractController
         $count_ResAppStatus = $this->generateResAppStatus();
         $count_ResAppRank = $this->generateResAppRank();
         $count_ResAppVisaStatus = $this->generateResAppVisaStatus();
+        $count_PostSophList = $this->generatePostSophList();
         $count_ResAppLanguageProficiency = $this->generateResAppLanguageProficiency();
 
         $logger->notice("Finished generateLanguageProficiency");
@@ -1045,7 +1047,8 @@ class AdminController extends OrderAbstractController
             'ResApp Statuses='.$count_ResAppStatus.', '.
             'ResApp Ranks='.$count_ResAppRank.', '.
             'ResAppVisaStatus='.$count_ResAppVisaStatus.', '.
-            'ResAppVisaStatus='.$count_ResAppLanguageProficiency.', '.
+            'PostSophList='.$count_PostSophList.', '.
+            'ResAppLanguageProficiency='.$count_ResAppLanguageProficiency.', '.
 
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
@@ -6088,6 +6091,44 @@ class AdminController extends OrderAbstractController
 
     }
 
+    public function generatePostSophList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$entities = $em->getRepository('AppResAppBundle:PostSophList')->findAll();
+        //if( $entities ) {
+        //    return -1;
+        //}
+
+        $elements = array(
+            "Pathology",
+            "None"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $listEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $entity = new PostSophList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
     public function generateResAppLanguageProficiency() {
 
         $em = $this->getDoctrine()->getManager();
@@ -7107,6 +7148,7 @@ class AdminController extends OrderAbstractController
             "resappranks" => array('ResAppRank','resappranks-list','Residency Application Rank'),
             "resapplanguageproficiency" => array('LanguageProficiency','resapplanguageproficiency-list','Residency Language Proficiency'),
             "resappvisastatus" => array('VisaStatus','resappvisastatus-list','Residency Visa Status'),
+            "postsoph" => array('PostSophList','postsoph-list','Post Soph List'),
         );
 
         if( $withcustom ) {

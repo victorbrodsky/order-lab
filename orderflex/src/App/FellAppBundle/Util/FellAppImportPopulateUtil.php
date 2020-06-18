@@ -1555,58 +1555,9 @@ class FellAppImportPopulateUtil {
     }
 
     public function transformDatestrToDate($datestr) {
-
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr,$this->container->getParameter('fellapp.sitename'));
-
-//        $date = null;
-//
-//        if( !$datestr ) {
-//            return $date;
-//        }
-//        $datestr = trim($datestr);
-//        //echo "###datestr=".$datestr."<br>";
-//
-//        if( strtotime($datestr) === false ) {
-//            // bad format
-//            $msg = 'transformDatestrToDate: Bad format of datetime string='.$datestr;
-//            //throw new \UnexpectedValueException($msg);
-//            $logger = $this->container->get('logger');
-//            $logger->error($msg);
-//            //$this->sendEmailToSystemEmail("Bad format of datetime string", $msg);
-//
-//            //send email
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $systemUser = $userSecUtil->findSystemUser();
-//            $event = "Fellowship Applicantions warning: " . $msg;
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Warning');
-//
-//            //exit('bad');
-//            return $date;
-//        }
-//
-////        if( !$this->valid_date($datestr) ) {
-////            $msg = 'Date string is not valid'.$datestr;
-////            throw new \UnexpectedValueException($msg);
-////            $logger = $this->container->get('logger');
-////            $logger->error($msg);
-////        }
-//
-//        try {
-//            $date = new \DateTime($datestr);
-//        } catch (Exception $e) {
-//            $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
-//            //throw new \UnexpectedValueException($msg);
-//            $logger = $this->container->get('logger');
-//            $logger->error($msg);
-//            $this->sendEmailToSystemEmail("Bad format of datetime string", $msg);
-//        }
-//
-//        return $date;
     }
-//    function valid_date($date) {
-//        return (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date));
-//    }
 
     public function createFellAppBoardCertification($em,$fellowshipApplication,$author,$typeStr,$rowData,$headers) {
 

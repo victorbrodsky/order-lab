@@ -378,9 +378,9 @@ class ResidencyApplication extends BaseUserAttributes {
     private $couple;
 
     /**
-     * PostSoph (Post-Sophomore Fellowship in Pathology) (Yes/No): choices
+     * Post-Sophomore Fellowship: [Pathology / None]
      * 
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToOne(targetEntity="PostSophList", cascade={"persist","remove"})
      */
     private $postSoph;
 
@@ -1175,6 +1175,8 @@ class ResidencyApplication extends BaseUserAttributes {
     {
         $this->postSoph = $postSoph;
     }
+
+
 
     
 

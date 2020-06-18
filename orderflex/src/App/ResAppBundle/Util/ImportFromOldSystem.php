@@ -26,7 +26,9 @@ namespace App\ResAppBundle\Util;
 
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Examination;
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -102,6 +104,15 @@ class ImportFromOldSystem {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
 
+        $postSophPathologyEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName("Pathology");
+        if( !$postSophPathologyEntity ) {
+            throw new EntityNotFoundException('Unable to find PostSophList entity by name='."Pathology");
+        }
+        $postSophNoneEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName("None");
+        if( !$postSophNoneEntity ) {
+            throw new EntityNotFoundException('Unable to find PostSophList entity by name='."None");
+        }
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -137,7 +148,7 @@ class ImportFromOldSystem {
             $firstName = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
 
             //AP, CP, AP/CP, AP/EXP, CP/EXP
-            $type = $this->getValueByHeaderName('AP_CP', $rowData, $headers);
+            $residencyType = $this->getValueByHeaderName('AP_CP', $rowData, $headers);
 
             //Training
             $medSchool = $this->getValueByHeaderName('MED_SCHOOL', $rowData, $headers);
@@ -153,6 +164,7 @@ class ImportFromOldSystem {
             //Post-Sophomore Fellowship in Pathology/No
             $postSoph = $this->getValueByHeaderName('POSTSOPH', $rowData, $headers);
 
+            //Training
             $mdPhd = $this->getValueByHeaderName('MD_PHD', $rowData, $headers);
             $do = $this->getValueByHeaderName('DO', $rowData, $headers);
             $md = $this->getValueByHeaderName('MD', $rowData, $headers);
@@ -220,38 +232,149 @@ class ImportFromOldSystem {
 
             $user->addResidencyApplication($residencyApplication);
 
-            //Degree
-            if( $mdPhd || $do || $md ) {
-                $training = new Training($systemUser);
-                $training->setOrderinlist(1);
-                $residencyApplication->addTraining($training);
-                $residencyApplication->getUser()->addTraining($training);
-
-                if ($mdPhd) {
-                    $schoolDegree = trim($mdPhd);
-                    $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-                    $training->setDegree($schoolDegreeEntity);
-                }
-                if ($do) {
-                    $schoolDegree = trim($do);
-                    $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-                    $training->setDegree($schoolDegreeEntity);
-                }
-                if ($md) {
-                    $schoolDegree = trim($md);
-                    $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-                    $training->setDegree($schoolDegreeEntity);
-                }
+            //////////////// populate fields ////////////////////
+            //fellowshipType
+            if( $residencyType ) {
+                //$logger->notice("fellowshipType=[".$fellowshipType."]");
+                $residencyType = trim($residencyType);
+                $residencyType = $this->capitalizeIfNotAllCapital($residencyType);
+                $transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySpecialty');
+                $residencyTypeEntity = $transformer->reverseTransform($residencyType);
+                $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
             }
+
+//            //Training
+//            //$medSchool = $this->getValueByHeaderName('MED_SCHOOL', $rowData, $headers);
+//            //$graduateDate = $this->getValueByHeaderName('DATE_GRADUATE', $rowData, $headers); //Training->completionDate
+//
+//            //Degree
+//            if( $mdPhd || $do || $md ) {
+//                $training = new Training($systemUser);
+//                $training->setOrderinlist(1);
+//                $residencyApplication->addTraining($training);
+//                $residencyApplication->getUser()->addTraining($training);
+//
+//                if ($mdPhd) {
+//                    $schoolDegree = trim($mdPhd);
+//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
+//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//                    $training->setDegree($schoolDegreeEntity);
+//                }
+//                if ($do) {
+//                    $schoolDegree = trim($do);
+//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
+//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//                    $training->setDegree($schoolDegreeEntity);
+//                }
+//                if ($md) {
+//                    $schoolDegree = trim($md);
+//                    $transformer = new GenericTreeTransformer($em, $systemUser, 'TrainingDegreeList');
+//                    $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//                    $training->setDegree($schoolDegreeEntity);
+//                }
+//            }
+
+            $this->createResAppTraining($residencyApplication,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
+
+            //USMLE scores: $usmleStep1, $usmleStep2, $usmleStep3
+            $examination = new Examination($systemUser);
+            if( $usmleStep1 ) {
+                $examination->setUSMLEStep1Score($usmleStep1);
+            }
+            if( $usmleStep2 ) {
+                $examination->setUSMLEStep2CKScore($usmleStep2);
+            }
+            if( $usmleStep3 ) {
+                $examination->setUSMLEStep3Score($usmleStep3);
+            }
+            $residencyApplication->addExamination($examination);
+
         }
 
+
+        if( $interviewDate ) {
+            $residencyApplication->setInterviewDate($this->transformDatestrToDate($interviewDate));
+        }
+
+        if( $createDate ) {
+            $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
+        }
+
+        if( $enrolmentId ) {
+            $residencyApplication->setGoogleFormId($enrolmentId);
+        }
+
+        //$activeD = $this->getValueByHeaderName('ACTIVED', $rowData, $headers); //?
+
+        if( $aoa ) {
+            $residencyApplication->setAoa($aoa);
+        }
+
+        $couples = $this->getValueByHeaderName('COUPLES', $rowData, $headers);
+        if( $couples == '1' ) {
+            $couples = true;
+        } else {
+            $couples = false;
+        }
+        $residencyApplication->setCouple($couples);
+
+        //Post-Sophomore Fellowship in Pathology/No
+        if( $postSoph == '1' ) {
+            $residencyApplication->setPostSoph($postSophPathologyEntity);
+        } else {
+            $residencyApplication->setPostSoph($postSophNoneEntity);
+        }
 
         return $res;
     }
 
+    public function createResAppTraining($residencyApplication,$author,$medSchool,$graduateDate,$mdPhd,$do,$md) {
+        $em = $this->em;
+
+        $training = new Training($author);
+
+        $training->setOrderinlist(1);
+        $residencyApplication->addTraining($training);
+        $residencyApplication->getUser()->addTraining($training);
+
+        if ($mdPhd) {
+            $schoolDegree = trim($mdPhd);
+            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+            $training->setDegree($schoolDegreeEntity);
+        }
+        if ($do) {
+            $schoolDegree = trim($do);
+            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+            $training->setDegree($schoolDegreeEntity);
+        }
+        if ($md) {
+            $schoolDegree = trim($md);
+            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+            $training->setDegree($schoolDegreeEntity);
+        }
+
+        if( $medSchool ) {
+            $params = array('type'=>'Educational');
+            $medSchool = trim($medSchool);
+            $schoolName = $this->capitalizeIfNotAllCapital($medSchool);
+            $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
+            $schoolNameEntity = $transformer->reverseTransform($schoolName);
+            $training->setInstitution($schoolNameEntity);
+        }
+
+        if( $graduateDate ) {
+            $training->setCompletionDate($this->transformDatestrToDate($graduateDate));
+        }
+
+    }
+
+    public function transformDatestrToDate($datestr) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        return $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr,$this->container->getParameter('resapp.sitename'));
+    }
 
     public function getEnrolmentYear() {
 

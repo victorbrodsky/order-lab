@@ -265,6 +265,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/", name="resappranks-list", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency-list", methods={"GET"})
      * @Route("/list/resappvisastatus/", name="resappvisastatus-list", methods={"GET"})
+     * @Route("/list/postsoph/", name="postsoph-list", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
@@ -747,6 +748,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/", name="resappranks_create", methods={"POST"})
      * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency_create", methods={"POST"})
      * @Route("/list/resappvisastatus/", name="resappvisastatus_create", methods={"POST"})
+     * @Route("/list/postsoph/", name="postsoph_create", methods={"POST"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1063,6 +1065,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/new", name="resappranks_new", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/new", name="resapplanguageproficiency_new", methods={"GET"})
      * @Route("/list/resappvisastatus/new", name="resappvisastatus_new", methods={"GET"})
+     * @Route("/list/postsoph/new", name="postsoph_new", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1337,6 +1340,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/{id}", name="resappranks_show", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_show", methods={"GET"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_show", methods={"GET"})
+     * @Route("/list/postsoph/{id}", name="postsoph_show", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
@@ -1606,6 +1610,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/{id}/edit", name="resappranks_edit", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/{id}/edit", name="resapplanguageproficiency_edit", methods={"GET"})
      * @Route("/list/resappvisastatus/{id}/edit", name="resappvisastatus_edit", methods={"GET"})
+     * @Route("/list/postsoph/{id}/edit", name="postsoph_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -1913,6 +1918,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/{id}", name="resappranks_update", methods={"PUT"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_update", methods={"PUT"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_update", methods={"PUT"})
+     * @Route("/list/postsoph/{id}", name="postsoph_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2527,6 +2533,11 @@ class ListController extends OrderAbstractController
             case "resappvisastatus":
                 $className = "VisaStatus";
                 $displayName = "Residency Visa Status";
+                $bundleName = "ResAppBundle";
+                break;
+            case "postsoph":
+                $className = "PostSophList";
+                $displayName = "Post Soph List";
                 $bundleName = "ResAppBundle";
                 break;
 
@@ -3434,6 +3445,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappranks/{id}", name="resappranks_delete", methods={"DELETE"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_delete", methods={"DELETE"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_delete", methods={"DELETE"})
+     * @Route("/list/postsoph/{id}", name="postsoph_delete", methods={"DELETE"})
      *
      *
      */
