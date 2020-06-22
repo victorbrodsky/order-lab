@@ -42,6 +42,7 @@ class ImportFromOldSystem {
 
     private $path = "C:\Users\ch3\Documents\MyDocs\WCMC\Residency\DB";
     private $enrolmentYearArr = array();
+    private $residencySpecialtyArr = array();
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
@@ -68,7 +69,13 @@ class ImportFromOldSystem {
 
         $res = "import Residency Applications";
 
+        $this->getResidencySpecialties();
+        dump($this->residencySpecialtyArr);
+
         $this->getEnrolmentYear();
+        dump($this->enrolmentYearArr);
+
+        //exit('111');
 
         try {
             $inputFileName = $this->path . "/"."PRA_APPLICANT_INFO.csv";
@@ -103,6 +110,10 @@ class ImportFromOldSystem {
         $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+        $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+        if( !$archiveStatus ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."archive");
         }
 
         $postSophPathologyEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName("Pathology");
@@ -149,6 +160,7 @@ class ImportFromOldSystem {
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
             if( $residencyApplicationDb ) {
                 $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
+                echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
                 continue; //skip this fell application, because it already exists in DB
             }
 
@@ -255,18 +267,26 @@ class ImportFromOldSystem {
                 //echo "enrolment=$enrolmentStartYear-$enrolmentEndYear <br>";
 
                 //trainingPeriodStart
-                $residencyApplication->setStartDate($this->transformDatestrToDate($enrolmentStartYear));
+                $enrolmentStartYear = $enrolmentStartYear."-07-01";
+                $startDate = $this->transformDatestrToDate($enrolmentStartYear);
+                //echo "startDate ($enrolmentStartYear)=".$startDate->format('Y-m-d H:i:s')."<br>";
+                $residencyApplication->setStartDate($startDate);
                 //trainingPeriodEnd
-                $residencyApplication->setEndDate($this->transformDatestrToDate($enrolmentEndYear));
+                $enrolmentEndYear = $enrolmentEndYear."-06-30";
+                $endDate = $this->transformDatestrToDate($enrolmentEndYear);
+                //echo "endDate ($enrolmentEndYear)=".$endDate->format('Y-m-d H:i:s')."<br>";
+                $residencyApplication->setEndDate($endDate);
             }
 
             //fellowshipType
             if( $residencyType ) {
                 //$logger->notice("fellowshipType=[".$fellowshipType."]");
                 $residencyType = trim($residencyType);
-                $residencyType = $this->capitalizeIfNotAllCapital($residencyType);
-                $transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySpecialty');
-                $residencyTypeEntity = $transformer->reverseTransform($residencyType);
+                //$residencyType = $this->capitalizeIfNotAllCapital($residencyType);
+                $residencyType = strtoupper($residencyType);
+                //$transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySpecialty');
+                //$residencyTypeEntity = $transformer->reverseTransform($residencyType);
+                $residencyTypeEntity = $this->residencySpecialtyArr[$residencyType];
                 $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
             }
 
@@ -294,6 +314,12 @@ class ImportFromOldSystem {
             }
 
             //$activeD = $this->getValueByHeaderName('ACTIVED', $rowData, $headers); //?
+            //DELETE applicant, just set actived=0
+            if( $activeD ) {
+                $residencyApplication->setAppStatus($activeStatus);
+            } else {
+                $residencyApplication->setAppStatus($archiveStatus);
+            }
 
             if( $aoa ) {
                 $residencyApplication->setAoa($aoa);
@@ -315,8 +341,8 @@ class ImportFromOldSystem {
 
             //exit('end applicant');
 
-            //$em->persist($user);
-            //$em->flush();
+            $em->persist($user);
+            $em->flush();
 
             $event = "Populated residency applicant " . $displayName . "; Application ID " . $residencyApplication->getId();
             //$logger->notice($event);
@@ -339,6 +365,10 @@ class ImportFromOldSystem {
         $training = new Training($author);
 
         $training->setOrderinlist(1);
+
+        $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        $training->setTrainingType($trainingType);
+
         $residencyApplication->addTraining($training);
         $residencyApplication->getUser()->addTraining($training);
 
@@ -431,11 +461,67 @@ class ImportFromOldSystem {
 
             //echo $row.": $firstName $lastName (ID $id) <br>";
 
+            $startYear = (int)$startYear;
+
             $enrolmentYearArr[$enrolmentId] = $startYear;
         }
 
         $this->enrolmentYearArr = $enrolmentYearArr;
         //return $enrolmentYearArr;
+    }
+
+    public function getResidencySpecialties() {
+
+        $residencySpecialtyStrArr = array('AP','CP','AP/CP','AP/EXP','CP/EXP');
+
+        $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $pathologyInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        $pathologyInstitutionId = $pathologyInstitution->getId();
+
+        foreach($residencySpecialtyStrArr as $residencySpecialtyStr) {
+            $residencySpecialtyEntity = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialtyStr);
+
+            $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
+            $dql =  $repository->createQueryBuilder("list");
+            $dql->select('list');
+            $dql->leftJoin("list.institution", "institution");
+            $dql->where("list.name = :name AND institution.id = :institutionId");
+
+            $query = $this->em->createQuery($dql);
+            $query->setParameters(
+                array(
+                    'name' => $residencySpecialtyStr,
+                    'institutionId' => $pathologyInstitutionId
+                )
+            );
+
+            $residencySpecialtyEntity = NULL;
+            $residencySpecialties = $query->getResult();
+            if( count($residencySpecialties) > 0 ) {
+                $residencySpecialtyEntity = $residencySpecialties[0];
+            }
+
+            if( !$residencySpecialtyEntity ) {
+                throw new EntityNotFoundException('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
+            }
+
+            $residencySpecialtyArr[$residencySpecialtyStr] = $residencySpecialtyEntity;
+        }
+
+        $this->residencySpecialtyArr = $residencySpecialtyArr;
     }
 
     public function getValueByHeaderName($header, $row, $headers) {

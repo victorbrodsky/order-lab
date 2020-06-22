@@ -343,19 +343,13 @@ class ResAppController extends OrderAbstractController {
             $resSubspecId = $filter;
         }
 
-        //if( $filter == "ALL" ) {
-        if( !$filter ) {
+        if( 0 && !$filter ) {
             $restypeArr = array();
             foreach( $residencyTypes as $residencyTypeID => $residencyTypeName ) {
-                //if( $residencyTypeID != "ALL" ) {
-                    //echo "residencyType=".$residencyTypeID."<br>";
-                    //$dql->orWhere("residencySubspecialty.id = ".$residencyTypeID);
                 $restypeArr[] = "residencySubspecialty.id = ".$residencyTypeID;
-                //}
             }
             $dql->andWhere( implode(" OR ", $restypeArr) );
             $searchFlag = true;
-            //$resSubspecId = $filter;
         }
 
         $orWhere = array();

@@ -380,7 +380,7 @@ class ResidencyApplication extends BaseUserAttributes {
     /**
      * Post-Sophomore Fellowship: [Pathology / None]
      * 
-     * @ORM\OneToOne(targetEntity="PostSophList", cascade={"persist","remove"})
+     * @ORM\ManyToOne(targetEntity="PostSophList", cascade={"persist","remove"})
      */
     private $postSoph;
 
@@ -1339,6 +1339,7 @@ class ResidencyApplication extends BaseUserAttributes {
         $schoolName = "";
 
         foreach( $this->getTrainings() as $item ) {
+            echo "training=".$item->getId()."; Institution=".$item->getInstitution()."<br>";
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
 
                 $schoolName = "";
@@ -1380,6 +1381,8 @@ class ResidencyApplication extends BaseUserAttributes {
                         $schoolName = $schoolName . "<br>" . $locationStr;
                     }
                 }
+
+                //echo "schoolName=$schoolName <br>";
 
                 break;
             }

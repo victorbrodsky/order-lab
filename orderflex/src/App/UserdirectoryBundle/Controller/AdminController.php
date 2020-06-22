@@ -5004,22 +5004,45 @@ class AdminController extends OrderAbstractController
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $pathologyInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
         $residencies = array(
             "AP",
             "CP",
-            "AP/CP"
+            "AP/CP",
+            'AP/EXP',
+            'CP/EXP'
         );
 
         $count = 10;
         foreach( $residencies as $residency ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residency) ) {
+            $listEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residency);
+            if( $listEntity ) {
+                if( !$listEntity->getInstitution() ) {
+                    $listEntity->setInstitution($pathologyInstitution);
+                }
                 continue;
             }
 
             $listEntity = new ResidencySpecialty();
             $this->setDefaultList($listEntity,$count,$username,$residency);
 
+            $listEntity->setInstitution($pathologyInstitution);
             //$listEntity->setBoardCertificateAvailable(true);
 
             $em->persist($listEntity);
