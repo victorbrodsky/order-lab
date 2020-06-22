@@ -1339,7 +1339,7 @@ class ResidencyApplication extends BaseUserAttributes {
         $schoolName = "";
 
         foreach( $this->getTrainings() as $item ) {
-            echo "training=".$item->getId()."; Institution=".$item->getInstitution()."<br>";
+            //echo "training=".$item->getId()."; Institution=".$item->getInstitution()."<br>";
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
 
                 $schoolName = "";

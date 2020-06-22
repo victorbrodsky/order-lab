@@ -380,7 +380,7 @@
 
                 <th>Medical School</th>
                 <th>Residency</th>
-                <th>Residency</th>
+                {#<th>Fellowsip</th>#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'resapp.interviewDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'resapp.interviewScore') }}</th>
@@ -642,9 +642,9 @@
                     <td>
                         {{ entity.getResidencyDescription()|raw }}
                     </td>
-                    <td>
-                        {{ entity.getPostResidencyResidencyDescription()|raw }}
-                    </td>
+                    {#<td>#}
+                        {#{{ entity.getPostResidencyResidencyDescription()|raw }}#}
+                    {#</td>#}
 
                     {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}
                     <td class="rowlink-skip">

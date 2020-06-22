@@ -502,6 +502,22 @@ class ResidencyApplicationType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
+        $builder->add('aoa', CheckboxType::class, array(
+            'label' => 'AOA:',
+            'required' => false,
+            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+        ));
+        $builder->add('couple', CheckboxType::class, array(
+            'label' => 'Couples:',
+            'required' => false,
+            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+        ));
+        $builder->add('postSoph', null, array(
+            'label' => 'Post-Sophomore Fellowship:',
+            'required' => false,
+            'attr' => array('class' => 'combobox'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

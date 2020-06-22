@@ -903,6 +903,8 @@ class ResAppController extends OrderAbstractController {
             $action = null; //$this->generateUrl('resapp_update', array('id' => $entity->getId()));
         }
 
+        $fullForm = false;
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -911,7 +913,8 @@ class ResAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'resappTypes' => $resTypes,
-            'resappVisas' => $resappVisas
+            'resappVisas' => $resappVisas,
+            'fullForm' => $fullForm
         );
 
         //echo "routeName=$routeName;  action=$action; method=$method<br>";
@@ -948,7 +951,8 @@ class ResAppController extends OrderAbstractController {
             'pathbase' => 'resapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('resapp.sitename'),
-            'route' => $routeName
+            'route' => $routeName,
+            'fullForm' => $fullForm
         );
     }
 
@@ -1329,12 +1333,15 @@ class ResAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,$eventType);
         }
 
+        $fullForm = false;
+        
         return array(
             'form' => $form->createView(),
             'entity' => $entity,
             'pathbase' => 'resapp',
             'cycle' => $cycle,
-            'sitename' => $this->getParameter('resapp.sitename')
+            'sitename' => $this->getParameter('resapp.sitename'),
+            'fullForm' => $fullForm
         );
     }
     private function createResAppEditForm( ResidencyApplication $entity, $cycle )
@@ -1352,6 +1359,8 @@ class ResAppController extends OrderAbstractController {
 
         $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
 
+        $fullForm = false;
+
         $params = array(
             'cycle' => $cycle,
             'em' => $this->getDoctrine()->getManager(),
@@ -1361,7 +1370,8 @@ class ResAppController extends OrderAbstractController {
             'container' => $this->container,
             'cycle_type' => "update",
             'resappTypes' => $resTypes,
-            'resappVisas' => $resappVisas
+            'resappVisas' => $resappVisas,
+            'fullForm' => $fullForm
         );
         //Edit Form
         $form = $this->createForm( ResidencyApplicationType::class, $entity, array(

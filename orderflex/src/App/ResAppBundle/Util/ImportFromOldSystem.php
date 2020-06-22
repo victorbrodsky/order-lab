@@ -137,6 +137,9 @@ class ImportFromOldSystem {
             FALSE);
         //print_r($headers);
 
+        $testing = true;
+        $testing = false;
+
         $residencyApplications = new ArrayCollection();
 
         //for each user in excel
@@ -156,6 +159,12 @@ class ImportFromOldSystem {
             //MD
 
             $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
+
+            //testing
+            if( $id != '2697' ) {
+                echo 'Skip this residency application with googleFormId='.$id."<br>";
+                continue;
+            }
 
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
             if( $residencyApplicationDb ) {
@@ -341,8 +350,10 @@ class ImportFromOldSystem {
 
             //exit('end applicant');
 
-            $em->persist($user);
-            $em->flush();
+            if( !$testing ) {
+                $em->persist($user);
+                $em->flush();
+            }
 
             $event = "Populated residency applicant " . $displayName . "; Application ID " . $residencyApplication->getId();
             //$logger->notice($event);

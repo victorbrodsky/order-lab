@@ -27,6 +27,14 @@
         {% set collapsein = "" %}
     {% endif %}
 
-    {% include 'AppResAppBundle/Form/applicant-content.html.twig' %}
+    {% if fullForm is not defined %}
+        {% set fullForm = true %}
+    {% endif %}
+
+    {% if fullForm %}
+        {% include 'AppResAppBundle/Form/applicant-content.html.twig' %}
+    {% else %}
+        {% include 'AppResAppBundle/Form/applicant-content-simple.html.twig' %}
+    {% endif %}
 
 {% endblock %}
