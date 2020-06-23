@@ -161,17 +161,12 @@ class ImportFromOldSystem {
             $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
 
             //testing
-            if( $id != '1173' ) {
-                echo 'Skip this residency application with googleFormId='.$id."<br>";
-                continue;
-            }
+//            if( $id != '2422' ) {
+//                echo 'Skip this residency application with googleFormId='.$id."<br>";
+//                continue;
+//            }
 
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
-            if( $residencyApplicationDb ) {
-                $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
-                echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
-                continue; //skip this fell application, because it already exists in DB
-            }
 
             $lastName = $this->getValueByHeaderName('LAST_NAME', $rowData, $headers);
             $firstName = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
@@ -202,6 +197,87 @@ class ImportFromOldSystem {
             $usmleStep1 = $this->getValueByHeaderName('USMLE_STEP1', $rowData, $headers);
             $usmleStep2 = $this->getValueByHeaderName('USMLE_STEP2', $rowData, $headers);
             $usmleStep3 = $this->getValueByHeaderName('USMLE_STEP3', $rowData, $headers);
+
+            //Convert: ACTIVED	AOA	COUPLES	MD_PHD	POSTSOPH DO
+            if( $activeD."" == '1' ) {
+                $activeD = true;
+            } else {
+                $activeD = false;
+            }
+
+            if( $aoa."" == '1' ) {
+                $aoa = true;
+            } else {
+                $aoa = false;
+            }
+
+            if( $couples."" == '1' ) {
+                $couples = true;
+            } else {
+                $couples = false;
+            }
+
+            if( $postSoph."" == '1' ) {
+                $postSoph = true;
+            } else {
+                $postSoph = false;
+            }
+
+            if( $mdPhd."" == '1' ) {
+                $mdPhd = true;
+            } else {
+                $mdPhd = false;
+            }
+            if( $do."" == '1' ) {
+                $do = true;
+            } else {
+                $do = false;
+            }
+            if( $md."" == '1' ) {
+                $md = true;
+            } else {
+                $md = false;
+            }
+
+            //Modify
+            if( $residencyApplicationDb ) {
+
+                $modified = false;
+
+                echo "Start modify $firstName $lastName (ID $id) Medschool=$medSchool <br>";
+                //$this->modifyTraining($residencyApplicationDb,$systemUser,$mdPhd,$do,$md);
+                $training = $this->setResAppTraining($residencyApplicationDb,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
+                if( $training ) {
+                    $em->persist($training);
+                    $modified = true;
+                }
+
+                //TODO: modify AOA, Couples
+                if( $residencyApplicationDb->getAoa() != $aoa ) {
+                    $residencyApplicationDb->setAoa($aoa);
+                    $modified = true;
+                }
+                if( $residencyApplicationDb->getCouple() != $couples ) {
+                    $residencyApplicationDb->setCouple($couples);
+                    $modified = true;
+                }
+
+                if( $modified ) {
+                    $em->flush();
+                }
+
+                $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
+                echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
+
+                exit("EOF $firstName $lastName (ID $id)");
+                continue; //skip this fell application, because it already exists in DB
+            }
+
+            if( $residencyApplicationDb ) {
+                $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
+                echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
+                continue; //skip this fell application, because it already exists in DB
+            }
 
             echo $row.": $firstName $lastName (ID $id) <br>";
 
@@ -299,7 +375,7 @@ class ImportFromOldSystem {
                 $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
             }
 
-            $this->createResAppTraining($residencyApplication,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
+            $this->setResAppTraining($residencyApplication,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
 
             //USMLE scores: $usmleStep1, $usmleStep2, $usmleStep3
             $examination = new Examination($systemUser);
@@ -322,7 +398,6 @@ class ImportFromOldSystem {
                 $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
             }
 
-            //$activeD = $this->getValueByHeaderName('ACTIVED', $rowData, $headers); //?
             //DELETE applicant, just set actived=0
             if( $activeD ) {
                 $residencyApplication->setAppStatus($activeStatus);
@@ -330,19 +405,11 @@ class ImportFromOldSystem {
                 $residencyApplication->setAppStatus($archiveStatus);
             }
 
-            if( $aoa ) {
-                $residencyApplication->setAoa($aoa);
-            }
-
-            if( $couples == '1' ) {
-                $couples = true;
-            } else {
-                $couples = false;
-            }
+            $residencyApplication->setAoa($aoa);
             $residencyApplication->setCouple($couples);
 
             //Post-Sophomore Fellowship in Pathology/No
-            if( $postSoph == '1' ) {
+            if( $postSoph ) {
                 $residencyApplication->setPostSoph($postSophPathologyEntity);
             } else {
                 $residencyApplication->setPostSoph($postSophNoneEntity);
@@ -361,7 +428,7 @@ class ImportFromOldSystem {
 
             echo "###################### <br>";
 
-            exit('end application');
+            //exit('end application');
 
         } //for
 
@@ -370,44 +437,70 @@ class ImportFromOldSystem {
         return $res;
     }
 
-    public function createResAppTraining($residencyApplication,$author,$medSchool,$graduateDate,$mdPhd,$do,$md) {
+    public function setResAppTraining($residencyApplication,$author,$medSchool,$graduateDate,$mdPhd,$do,$md) {
         $em = $this->em;
 
-        $training = new Training($author);
+        $training = NULL;
+        $user = $residencyApplication->getUser();
 
-        $training->setOrderinlist(1);
+        $trainings = $residencyApplication->getTrainings();
+        if( count($trainings) > 0 ) {
+            $training = $trainings[0];
+        }
+
+        //remove existing training
+        foreach( $residencyApplication->getTrainings() as $thisTraining ) {
+            $residencyApplication->removeTraining($thisTraining);
+        }
+        foreach( $user->getTrainings() as $thisTraining ) {
+            $user->removeTraining($thisTraining);
+        }
+
+        if( !$trainings ) {
+            $training = new Training($author);
+            $training->setOrderinlist(1);
+        }
 
         $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
         $training->setTrainingType($trainingType);
 
         $residencyApplication->addTraining($training);
-        $residencyApplication->getUser()->addTraining($training);
+        $user->addTraining($training);
+
+        $schoolDegree = NULL;
 
         if ($mdPhd) {
-            $schoolDegree = trim($mdPhd);
-            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-            $training->setDegree($schoolDegreeEntity);
+            $schoolDegree = "MD/PhD";
+            $this->setTrainingDegree($training,$schoolDegree,$author);
+//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//            $training->setDegree($schoolDegreeEntity);
         }
         if ($do) {
-            $schoolDegree = trim($do);
-            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-            $training->setDegree($schoolDegreeEntity);
+            $schoolDegree = "DO";
+            $this->setTrainingDegree($training,$schoolDegree,$author);
+//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//            $training->setDegree($schoolDegreeEntity);
         }
         if ($md) {
-            $schoolDegree = trim($md);
-            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-            $training->setDegree($schoolDegreeEntity);
+            $schoolDegree = "MD";
+            $this->setTrainingDegree($training,$schoolDegree,$author);
+//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
+//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+//            $training->setDegree($schoolDegreeEntity);
+        }
+
+        if( !$schoolDegree ) {
+            $training->setDegree(NULL);
         }
 
         if( $medSchool ) {
             $params = array('type'=>'Educational');
             $medSchool = trim($medSchool);
-            $schoolName = $this->capitalizeIfNotAllCapital($medSchool);
+            //$medSchool = $this->capitalizeIfNotAllCapital($medSchool);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
-            $schoolNameEntity = $transformer->reverseTransform($schoolName);
+            $schoolNameEntity = $transformer->reverseTransform($medSchool);
             $training->setInstitution($schoolNameEntity);
         }
 
@@ -415,6 +508,65 @@ class ImportFromOldSystem {
             $training->setCompletionDate($this->transformDatestrToDate($graduateDate));
         }
 
+        return $training;
+    }
+    public function setTrainingDegree($training,$schoolDegree,$author) {
+        $transformer = new GenericTreeTransformer($this->em, $author, 'TrainingDegreeList');
+        $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
+        $training->setDegree($schoolDegreeEntity);
+    }
+
+    //Modify setTrainingDegree in User->training
+    public function modifyTraining($residencyApplicationDb,$author,$mdPhd,$do,$md) {
+        //$residencyApplication->addTraining($training);
+        //$residencyApplication->getUser()->addTraining($training);
+
+        $schoolDegree = NULL;
+        if ($mdPhd) {
+            $schoolDegree = "MD/PhD";
+        }
+        if ($do) {
+            $schoolDegree = "DO";
+        }
+        if ($md) {
+            $schoolDegree = "MD";
+        }
+
+        if( !$schoolDegree ) {
+            exit("No degree found.");
+        }
+
+        $modified = false;
+
+        //$residencyApplication->addTraining($training);
+        $appTrainings = $residencyApplicationDb->getTrainings();
+        if( count($appTrainings) > 0 ) {
+            $appTraining = $appTrainings[0];
+            if( $appTraining->getDegree() != $schoolDegree ) {
+                $this->setTrainingDegree($appTraining,$schoolDegree,$author);
+
+                $this->em->persist($appTraining);
+                $modified = true;
+            }
+        }
+
+        //$residencyApplication->getUser()->addTraining($training);
+        $userTrainings = $residencyApplicationDb->getUser()->getTrainings();
+        if( count($userTrainings) > 0 ) {
+            $userTraining = $userTrainings[0];
+            if( $userTraining->getDegree() != $schoolDegree ) {
+                $this->setTrainingDegree($userTraining,$schoolDegree,$author);
+
+                $this->em->persist($userTraining);
+                $modified = true;
+            }
+        }
+
+        if( $modified ) {
+            $this->em->flush();
+        }
+
+        return true;
     }
 
     public function transformDatestrToDate($datestr) {
@@ -557,6 +709,10 @@ class ImportFromOldSystem {
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
+        }
+
+        if( $res ) {
+            $res = trim($res);
         }
 
         //echo "res=".$res."<br>";
