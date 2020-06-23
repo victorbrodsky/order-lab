@@ -450,10 +450,16 @@ class ImportFromOldSystem {
 
         //remove existing training
         foreach( $residencyApplication->getTrainings() as $thisTraining ) {
-            $residencyApplication->removeTraining($thisTraining);
+            if( $training && $training->getId() != $thisTraining->getId() ) {
+                $residencyApplication->removeTraining($thisTraining);
+                $em->remove($thisTraining);
+            }
         }
         foreach( $user->getTrainings() as $thisTraining ) {
-            $user->removeTraining($thisTraining);
+            if( $training && $training->getId() != $thisTraining->getId() ) {
+                $user->removeTraining($thisTraining);
+                $em->remove($thisTraining);
+            }
         }
 
         if( !$trainings ) {
