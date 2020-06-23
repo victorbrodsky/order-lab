@@ -42,6 +42,8 @@ use Sinergi\BrowserDetector\Os;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+//TODO: move methods to UserSecurityUtil or UserServiceUtil
+
 class UserUtil {
 
 

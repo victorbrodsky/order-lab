@@ -161,7 +161,7 @@ class ImportFromOldSystem {
             $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
 
             //testing
-            if( $id != '2697' ) {
+            if( $id != '1173' ) {
                 echo 'Skip this residency application with googleFormId='.$id."<br>";
                 continue;
             }

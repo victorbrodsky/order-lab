@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 
-use App\UserdirectoryBundle\Util\UserUtil;
+//use App\UserdirectoryBundle\Util\UserUtil;
 
 
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
@@ -80,9 +80,9 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $user = $token->getUser();
         $options = array();
-        $em = $this->em;
+        //$em = $this->em;
         //$userUtil = new UserUtil();
-        //$secUtil = $this->container->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
 
         //I should be redirected to the URL I was trying to visit after login.
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
@@ -98,7 +98,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $session = $request->getSession();
 
-        $res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->secAuth,$this->container);
+        //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->secAuth,$this->container);
+        $res = $secUtil->getMaxIdleTimeAndMaintenance();
 
         //check for maintenance
         $maintenance = $res['maintenance'];
@@ -112,7 +113,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session->set('maxIdleTime',$maxIdleTime);
         
         //set site email
-        $siteEmail = UserUtil::getSiteSetting($em,'siteEmail');
+        //$siteEmail = UserUtil::getSiteSetting($em,'siteEmail');
+        $siteEmail = $secUtil->getSiteSettingParameter('siteEmail');
         $session->set('siteEmail',$siteEmail);
 
         //set original site name
@@ -122,7 +124,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         if( $this->secAuth->isGranted($this->roleBanned) ) {
             $options['eventtype'] = 'Banned User Login Attempt';
             $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site';
-            UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+//            UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+            $secUtil->setLoginAttempt($request,$options);
             //exit('banned user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
@@ -140,7 +143,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         if( $this->secAuth->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
             $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site';
-            UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+            //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+            $secUtil->setLoginAttempt($request,$options);
             //exit('Unapproved user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
         }
@@ -149,7 +153,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to '.$this->siteNameStr.' site';
 
-        UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        $secUtil->setLoginAttempt($request,$options);
 
         //Initial Configuration Completed
         $userSecUtil = $this->container->get('user_security_utility');
@@ -246,8 +251,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //exit("user is not ok!");
         //throw new \Exception( 'user is not ok!' );
 
+        $secUtil = $this->container->get('user_security_utility');
+
         $options = array();
-        $em = $this->em;
+        //$em = $this->em;
         //$userUtil = new UserUtil();
 
         $options['sitename'] = $this->siteName;
@@ -256,7 +263,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options['serverresponse'] = $exception->getMessage();
 
         //testing
-        UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        $secUtil->setLoginAttempt($request,$options);
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 

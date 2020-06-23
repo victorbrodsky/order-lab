@@ -199,6 +199,125 @@
                     {% endfor %}
                 {% endif %}
 
+                {#Education#}
+                {% for training in form.trainings %}
+
+                    {% set trainingLabel = "Training:" %}
+                    {% set majorLabel = "Major:" %}
+                    {% set degreeLabel = "Degree:" %}
+                    {% set showTraining = false %}
+
+                    {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
+                        {#{% set trainingLabel = "Medical School" %}#}
+                        {#{% set showTraining = true %}#}
+
+                        <div class="well">
+                            <label class="control-label">Medical School</label>
+                            <br>
+                            {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
+                            {{ formmacros.field(training.institution) }}
+                            {#{{ form_row(training.institution) }}#}
+                            {{ formmacros.field(training.degree) }}
+                        </div>
+
+                    {% endif %}
+
+                    {#{% if showTraining %}#}
+
+                        {#<div class="well">#}
+                            {#<label class="col-xs-12 control-label">{{ trainingLabel }}</label>#}
+                            {#<div class="row withpaddingtop">#}
+                                {#<div class="col-xs-6">#}
+                                    {#<label for="undergraduateSchoolStart" class="control-label">Start Date</label>#}
+                                    {#<input type="text" class="datepicker form-control allow-future-date" id="undergraduateSchoolStart" name="undergraduateSchoolStart" placeholder="Start Date">#}
+                                    {#{{ formmacros.fieldDateLabel_vertical(training.startDate,'allow-future-date') }}#}
+                                {#</div>#}
+                                {#<div class="col-xs-6">#}
+                                    {#<label for="undergraduateSchoolEnd" class="control-label">Finish Date</label>#}
+                                    {#<input type="text" class="datepicker form-control allow-future-date" id="undergraduateSchoolEnd" name="undergraduateSchoolEnd" placeholder="Finish Date">#}
+                                    {#{{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="row withpaddingtop">#}
+                                {#<div class="col-xs-6">#}
+                                    {#<label for="undergraduateSchoolName" class="control-label">School Name</label>#}
+                                    {#<input type="text" class="form-control" id="undergraduateSchoolName" name="undergraduateSchoolName" placeholder="Undergraduate School">#}
+                                    {#{{ form_row(training.institution) }}#}
+                                {#</div>#}
+                                {#<div class="col-xs-6">#}
+                                    {#{{ form_row(training.geoLocation.city) }}#}
+                                {#</div>#}
+                            {#</div>#}
+                            {#<div class="row withpaddingtop">#}
+                                {#<div class="col-xs-6">#}
+                                    {#{{ form_row(training.geoLocation.state) }}#}
+                                {#</div>#}
+                                {#<div class="col-xs-6">#}
+                                    {#{{ form_row(training.geoLocation.country) }}#}
+                                {#</div>#}
+                            {#</div>#}
+
+                            {#{% if trainingLabel == "Residency:" %}#}
+
+                                {#<div class="row withpaddingtop">#}
+                                    {#<div class="col-xs-12">#}
+                                        {#{{ form_row(training.residencySpecialty,{'label':'Area of Training (AP, CP, AP/CP, other)'}) }}#}
+                                    {#</div>#}
+                                {#</div>#}
+
+                            {#{% else %}#}
+
+                                {#{% if degreeLabel %}#}
+                                    {#<div class="row withpaddingtop">#}
+                                        {#<div class="col-xs-6">#}
+                                            {#<label for="undergraduateSchoolMajor" class="control-label">Major</label>#}
+                                            {#<input type="text" class="form-control" id="undergraduateSchoolMajor" name="undergraduateSchoolMajor" placeholder="Major">#}
+                                            {#{{ form_row(training.majors,{'label':majorLabel}) }}#}
+                                        {#</div>#}
+                                        {#<div class="col-xs-6">#}
+                                            {#<label for="undergraduateSchoolDegree" class="control-label">Degree</label>#}
+                                            {#<input type="text" class="form-control" id="undergraduateSchoolDegree" name="undergraduateSchoolDegree" placeholder="Degree">#}
+                                            {#{{ form_row(training.degree) }}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#{% else %}#}
+                                    {#<div class="row withpaddingtop">#}
+                                        {#<div class="col-xs-12">#}
+                                            {#{{ form_row(training.majors,{'label':majorLabel}) }}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#{% endif %}#}
+
+                            {#{% endif %}#}
+
+                        {#</div>#}
+
+
+                        {#<div class="well">#}
+                            {#<label class="control-label">{{ trainingLabel }}</label>#}
+                            {#<br>#}
+                            {#{{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}#}
+                            {#{{ formmacros.field(training.institution) }}#}
+                            {#{{ form_row(training.institution) }}#}
+                            {#{{ formmacros.field(training.degree) }}#}
+                        {#</div>#}
+
+                    {#{% endif %}#}
+
+                {% endfor %}
+
+                {#National Board#}
+                <div class="well">
+                    <label class="control-label">National Boards</label>
+                    <br>
+                    {% for examination in form.examinations %}
+                        {{ formmacros.field(examination.USMLEStep1Score) }}
+                        {{ formmacros.field(examination.USMLEStep2CKScore) }}
+                        {{ formmacros.field(examination.USMLEStep3Score) }}
+                    {% endfor %}
+                </div>
+
+
                 {% if form.citizenships is defined %}
                     {% for citizenship in form.citizenships %}
                         {{ formmacros.field(citizenship.country) }}
@@ -250,7 +369,7 @@
 {% endif %}
 
 <!-- Signature -->
-{% include 'AppResAppBundle/Form/Signature.html.twig' %}
+{#{% include 'AppResAppBundle/Form/Signature.html.twig' %}#}
 
 
 </div>

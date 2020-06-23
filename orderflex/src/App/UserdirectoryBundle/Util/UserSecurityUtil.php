@@ -44,6 +44,9 @@ use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Entity\Logger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+use Sinergi\BrowserDetector\Browser;
+use Sinergi\BrowserDetector\Os;
+
 class UserSecurityUtil {
 
     protected $em;
@@ -1378,6 +1381,122 @@ class UserSecurityUtil {
         }
 
         return $res;
+    }
+
+    public function setLoginAttempt( $request, $options ) {
+
+        //return;
+
+        $user = null;
+        $username = null;
+        $roles = null;
+
+        if( !array_key_exists('serverresponse', $options) ) {
+            //$options['serverresponse'] = null;
+            $options['serverresponse'] = http_response_code();
+        }
+
+        //find site object by sitename
+        $site = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        if( !$site ) {
+            //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
+        }
+
+        $logger = new Logger($site);
+
+        $token = $this->secToken->getToken();
+
+        if( $token ) {
+
+            $user = $this->secToken->getToken()->getUser();
+            $username = $token->getUsername();
+
+            if( $user && is_object($user) ) {
+                $roles = $user->getRoles();
+            } else {
+                $user = null;
+            }
+
+            $logger->setUser($user);
+
+        } else {
+
+            $username = $request->get('_username');
+
+            $userDb = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+            $user = $userDb;
+
+            $logger->setUser($userDb);
+
+        }
+
+        if( $options['eventtype'] == "Bad Credentials" ) {
+            $options['event'] = $options['event'] . ". Username=".$username;
+        }
+
+        $logger->setRoles($roles);
+        $logger->setUsername($username);
+        $logger->setIp($request->getClientIp());
+        $logger->setWidth($request->get('display_width'));
+        $logger->setHeight($request->get('display_height'));
+        $logger->setEvent($options['event']);
+        $logger->setServerresponse($options['serverresponse']);
+
+        ////////////// browser info //////////////
+        //$browser = BrowserInfo::Instance();
+        //$name = $browser->getBrowser();
+        //$version = $browser->getVersion();
+        //$platform = $browser->getPlatform();
+        $browser = new Browser();
+        $name = $browser->getName();
+        $version = $browser->getVersion();
+
+        $os = new Os();
+        $platform = $os->getName();
+
+        $browserInfo = $name . " " . $version . " on " . $platform;
+        //echo "Your browser: " . $browserInfo . "<br>";
+        ////////////// EOF browser info //////////////
+
+        $userAgent = $browserInfo . "; User Agent: " . $_SERVER['HTTP_USER_AGENT'];
+        $logger->setUseragent($userAgent);
+
+        //set Event Type
+        $eventtype = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
+        $logger->setEventType($eventtype);
+
+        //set eventEntity
+        $eventEntity = null;
+
+        if( array_key_exists('eventEntity', $options) && $options['eventEntity'] ) {
+
+            $eventEntity = $options['eventEntity'];
+
+        } elseif( $user && $user instanceof User && $user->getId() ) {
+
+            $eventEntity = $user;
+        }
+
+        if( $eventEntity ) {
+            //get classname, entity name and id of subject entity
+            $class = new \ReflectionClass($eventEntity);
+            $className = $class->getShortName();
+            $classNamespace = $class->getNamespaceName();
+
+            //set classname, entity name and id of subject entity
+            $logger->setEntityNamespace($classNamespace);
+            $logger->setEntityName($className);
+            $logger->setEntityId($eventEntity->getId());
+
+            //create EventObjectTypeList if not exists
+            $eventObjectType = $this->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
+            if( $eventObjectType ) {
+                $logger->setObjectType($eventObjectType);
+            }
+        }
+
+        $this->em->persist($logger);
+        $this->em->flush();
     }
 
     public function getMaxIdleTime() {

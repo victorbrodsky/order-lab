@@ -56,7 +56,7 @@ class ResAppTrainingType extends AbstractType
         ));
 
         $builder->add('completionDate', DateType::class, array(
-            'label' => 'Completion Date:',
+            'label' => 'Graduation Date:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',

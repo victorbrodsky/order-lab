@@ -533,3 +533,5 @@ PRA_APPLICANT_UPDATE_CV_INFO - document 2
 PRA_ENROLLMENT_INFO - enrollment
 PRA_EVALUATION_FORM_INFO - evaluation
 PRA_FACULTY_RESIDENT_INFO - evaluator
+
+Bing: https://store.ihcworld.com/cart.php
