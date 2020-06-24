@@ -40,13 +40,16 @@ class ImportFromOldSystem {
     private $em;
     private $container;
 
-    private $path = "C:\Users\ch3\Documents\MyDocs\WCMC\Residency\DB";
+    private $path = NULL;   //"../../../../../ResidencyImport";    //"C:\Users\ch3\Documents\MyDocs\WCMC\Residency";
     private $enrolmentYearArr = array();
     private $residencySpecialtyArr = array();
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $this->path = $projectRoot . "/../../ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
     }
 
     //PRA_APPLICANT_INFO - application
@@ -57,12 +60,137 @@ class ImportFromOldSystem {
     //PRA_FACULTY_RESIDENT_INFO - evaluator
 
 
+    public function importApplicationsFiles1() {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $em = $this->em;
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $res = "import files 1";
+
+
+        try {
+            $inputFileName = $this->path . "/DB_file1/" . "PRA_APPLICANT_CV_INFO.csv";
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            throw new IOException($event);
+        }
+
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        echo "rows=$highestRow columns=$highestColumn <br>";
+        //$logger->notice("rows=$highestRow columns=$highestColumn");
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+        //print_r($headers);
+
+        //$testing = true;
+        $testing = false;
+
+        //$residencyApplications = new ArrayCollection();
+
+        //for each user in excel
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
+
+            //FILE_NAME	FILE_TYPE	FILE_SIZE	IMAGE
+
+            $fileOriginalName = $this->getValueByHeaderName('FILE_NAME', $rowData, $headers);
+
+            $fileType = $this->getValueByHeaderName('FILE_TYPE', $rowData, $headers);
+
+            $fileSize = $this->getValueByHeaderName('FILE_SIZE', $rowData, $headers);
+
+            //C:\Users\ch3\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
+            $imagePath = $this->getValueByHeaderName('IMAGE', $rowData, $headers);
+
+            //get file name
+            $fileName = basename($imagePath);
+            echo "fileName=".$fileName."<br>";
+
+            //get file path
+            $inputFilePath = $this->path . "/DB_file1/files/" . $fileName;
+            echo "inputFilePath=".$inputFilePath."<br>";
+
+            if( file_exists($inputFilePath) ) {
+                echo $row.": The file exists: $inputFilePath <br>";
+            } else {
+                exit($row.": The file does not exist: $inputFilePath <br>");
+            }
+
+            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
+
+            if( !$residencyApplicationDb ) {
+                exit($row.": ResidencyApplication not found by id=$id <br>");
+            }
+
+            //create Document and attach to $residencyApplicationDb
+            $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$systemUser);
+
+            if( $document ) {
+                $em->persist($document);
+                $em->flush();
+                echo $row.": Created file $fileName for ResidencyApplication with id=$id <br>";
+            }
+
+            exit("EOF File1");
+        }
+
+
+    }
+    public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $systemUser ) {
+        $document = NULL;
+
+        $fileExtStr = NULL;
+        if( $fileType == "pdf" ) {
+            $fileExtStr = "pdf";
+        }
+        if( $fileType == "doc" ) {
+            $fileExtStr = "doc";
+        }
+        if( !$fileExtStr ) {
+            exit("Unknown file type ".$fileType);
+        }
+
+        $fileUniqueName = $currentDatetimeTimestamp.'ID'.$residencyApplicationDb->getId().$fileExtStr;
+
+        return $document;
+    }
+
+
 
 
     public function importApplications() {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+
+        //$projectRoot = $this->container->get('kernel')->getProjectDir();
+        //exit("projectRoot=$projectRoot");
 
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
@@ -78,7 +206,8 @@ class ImportFromOldSystem {
         //exit('111');
 
         try {
-            $inputFileName = $this->path . "/"."PRA_APPLICANT_INFO.csv";
+            $inputFileName = $this->path . "/DB/" . "PRA_APPLICANT_INFO.csv";
+            //$inputFileName = "../../../../../../ResidencyImport" . "/DB/"."PRA_APPLICANT_INFO.csv";
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
@@ -137,10 +266,10 @@ class ImportFromOldSystem {
             FALSE);
         //print_r($headers);
 
-        $testing = true;
+        //$testing = true;
         $testing = false;
 
-        $residencyApplications = new ArrayCollection();
+        //$residencyApplications = new ArrayCollection();
 
         //for each user in excel
         for( $row = 2; $row <= $highestRow; $row++ ){
@@ -161,7 +290,7 @@ class ImportFromOldSystem {
             $id = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
 
             //testing
-//            if( $id != '2422' ) {
+//            if( $id != '2493' ) {
 //                echo 'Skip this residency application with googleFormId='.$id."<br>";
 //                continue;
 //            }
@@ -240,37 +369,39 @@ class ImportFromOldSystem {
             }
 
             //Modify
-            if( $residencyApplicationDb ) {
+            if( 0 ) {
+                if ($residencyApplicationDb) {
 
-                $modified = false;
+                    $modified = false;
 
-                echo "Start modify $firstName $lastName (ID $id) Medschool=$medSchool <br>";
-                //$this->modifyTraining($residencyApplicationDb,$systemUser,$mdPhd,$do,$md);
-                $training = $this->setResAppTraining($residencyApplicationDb,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);
-                if( $training ) {
-                    $em->persist($training);
-                    $modified = true;
+                    echo "Start modify $firstName $lastName (ID $id) Medschool=$medSchool <br>";
+                    //$this->modifyTraining($residencyApplicationDb,$systemUser,$mdPhd,$do,$md);
+                    $training = $this->setResAppTraining($residencyApplicationDb, $systemUser, $medSchool, $graduateDate, $mdPhd, $do, $md);
+                    if ($training) {
+                        $em->persist($training);
+                        $modified = true;
+                    }
+
+                    //TODO: modify AOA, Couples
+                    if ($residencyApplicationDb->getAoa() != $aoa) {
+                        $residencyApplicationDb->setAoa($aoa);
+                        $modified = true;
+                    }
+                    if ($residencyApplicationDb->getCouple() != $couples) {
+                        $residencyApplicationDb->setCouple($couples);
+                        $modified = true;
+                    }
+
+                    if ($modified) {
+                        $em->flush();
+                    }
+
+                    $logger->notice('Skip this residency application, because it already exists in DB. googleFormId=' . $id);
+                    echo 'Skip this residency application, because it already exists in DB. googleFormId=' . $id . "<br>";
+
+                    //exit("EOF $firstName $lastName (ID $id)");
+                    continue; //skip this fell application, because it already exists in DB
                 }
-
-                //TODO: modify AOA, Couples
-                if( $residencyApplicationDb->getAoa() != $aoa ) {
-                    $residencyApplicationDb->setAoa($aoa);
-                    $modified = true;
-                }
-                if( $residencyApplicationDb->getCouple() != $couples ) {
-                    $residencyApplicationDb->setCouple($couples);
-                    $modified = true;
-                }
-
-                if( $modified ) {
-                    $em->flush();
-                }
-
-                $logger->notice('Skip this residency application, because it already exists in DB. googleFormId='.$id);
-                echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
-
-                exit("EOF $firstName $lastName (ID $id)");
-                continue; //skip this fell application, because it already exists in DB
             }
 
             if( $residencyApplicationDb ) {
@@ -278,6 +409,8 @@ class ImportFromOldSystem {
                 echo 'Skip this residency application, because it already exists in DB. googleFormId='.$id."<br>";
                 continue; //skip this fell application, because it already exists in DB
             }
+            
+            //exit('Testing');
 
             echo $row.": $firstName $lastName (ID $id) <br>";
 
@@ -448,18 +581,25 @@ class ImportFromOldSystem {
             $training = $trainings[0];
         }
 
+        $removedTrainingArr = array();
         //remove existing training
         foreach( $residencyApplication->getTrainings() as $thisTraining ) {
             if( $training && $training->getId() != $thisTraining->getId() ) {
                 $residencyApplication->removeTraining($thisTraining);
-                $em->remove($thisTraining);
+                //$em->remove($thisTraining);
+                $removedTrainingArr[$thisTraining->getId()] = $thisTraining;
             }
         }
         foreach( $user->getTrainings() as $thisTraining ) {
             if( $training && $training->getId() != $thisTraining->getId() ) {
                 $user->removeTraining($thisTraining);
-                $em->remove($thisTraining);
+                //$em->remove($thisTraining);
+                $removedTrainingArr[$thisTraining->getId()] = $thisTraining;
             }
+        }
+
+        foreach($removedTrainingArr as $removedTraining) {
+            $em->remove($removedTraining);
         }
 
         if( !$trainings ) {
@@ -478,23 +618,14 @@ class ImportFromOldSystem {
         if ($mdPhd) {
             $schoolDegree = "MD/PhD";
             $this->setTrainingDegree($training,$schoolDegree,$author);
-//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//            $training->setDegree($schoolDegreeEntity);
         }
         if ($do) {
             $schoolDegree = "DO";
             $this->setTrainingDegree($training,$schoolDegree,$author);
-//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//            $training->setDegree($schoolDegreeEntity);
         }
         if ($md) {
             $schoolDegree = "MD";
             $this->setTrainingDegree($training,$schoolDegree,$author);
-//            $transformer = new GenericTreeTransformer($em, $author, 'TrainingDegreeList');
-//            $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
-//            $training->setDegree($schoolDegreeEntity);
         }
 
         if( !$schoolDegree ) {
@@ -522,58 +653,59 @@ class ImportFromOldSystem {
         $training->setDegree($schoolDegreeEntity);
     }
 
-    //Modify setTrainingDegree in User->training
-    public function modifyTraining($residencyApplicationDb,$author,$mdPhd,$do,$md) {
-        //$residencyApplication->addTraining($training);
-        //$residencyApplication->getUser()->addTraining($training);
-
-        $schoolDegree = NULL;
-        if ($mdPhd) {
-            $schoolDegree = "MD/PhD";
-        }
-        if ($do) {
-            $schoolDegree = "DO";
-        }
-        if ($md) {
-            $schoolDegree = "MD";
-        }
-
-        if( !$schoolDegree ) {
-            exit("No degree found.");
-        }
-
-        $modified = false;
-
-        //$residencyApplication->addTraining($training);
-        $appTrainings = $residencyApplicationDb->getTrainings();
-        if( count($appTrainings) > 0 ) {
-            $appTraining = $appTrainings[0];
-            if( $appTraining->getDegree() != $schoolDegree ) {
-                $this->setTrainingDegree($appTraining,$schoolDegree,$author);
-
-                $this->em->persist($appTraining);
-                $modified = true;
-            }
-        }
-
-        //$residencyApplication->getUser()->addTraining($training);
-        $userTrainings = $residencyApplicationDb->getUser()->getTrainings();
-        if( count($userTrainings) > 0 ) {
-            $userTraining = $userTrainings[0];
-            if( $userTraining->getDegree() != $schoolDegree ) {
-                $this->setTrainingDegree($userTraining,$schoolDegree,$author);
-
-                $this->em->persist($userTraining);
-                $modified = true;
-            }
-        }
-
-        if( $modified ) {
-            $this->em->flush();
-        }
-
-        return true;
-    }
+//    //NOT USED
+//    //Modify setTrainingDegree in User->training
+//    public function modifyTraining($residencyApplicationDb,$author,$mdPhd,$do,$md) {
+//        //$residencyApplication->addTraining($training);
+//        //$residencyApplication->getUser()->addTraining($training);
+//
+//        $schoolDegree = NULL;
+//        if ($mdPhd) {
+//            $schoolDegree = "MD/PhD";
+//        }
+//        if ($do) {
+//            $schoolDegree = "DO";
+//        }
+//        if ($md) {
+//            $schoolDegree = "MD";
+//        }
+//
+//        if( !$schoolDegree ) {
+//            exit("No degree found.");
+//        }
+//
+//        $modified = false;
+//
+//        //$residencyApplication->addTraining($training);
+//        $appTrainings = $residencyApplicationDb->getTrainings();
+//        if( count($appTrainings) > 0 ) {
+//            $appTraining = $appTrainings[0];
+//            if( $appTraining->getDegree() != $schoolDegree ) {
+//                $this->setTrainingDegree($appTraining,$schoolDegree,$author);
+//
+//                $this->em->persist($appTraining);
+//                $modified = true;
+//            }
+//        }
+//
+//        //$residencyApplication->getUser()->addTraining($training);
+//        $userTrainings = $residencyApplicationDb->getUser()->getTrainings();
+//        if( count($userTrainings) > 0 ) {
+//            $userTraining = $userTrainings[0];
+//            if( $userTraining->getDegree() != $schoolDegree ) {
+//                $this->setTrainingDegree($userTraining,$schoolDegree,$author);
+//
+//                $this->em->persist($userTraining);
+//                $modified = true;
+//            }
+//        }
+//
+//        if( $modified ) {
+//            $this->em->flush();
+//        }
+//
+//        return true;
+//    }
 
     public function transformDatestrToDate($datestr) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -584,7 +716,7 @@ class ImportFromOldSystem {
 
         $logger = $this->container->get('logger');
 
-        $inputFileName = $this->path . "/"."PRA_ENROLLMENT_INFO.csv";
+        $inputFileName = $this->path . "/DB/"."PRA_ENROLLMENT_INFO.csv";
 
         try {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
@@ -743,4 +875,9 @@ class ImportFromOldSystem {
         }
         return $s;
     }
+
+
+
+
+
 } 

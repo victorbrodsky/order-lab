@@ -912,7 +912,7 @@
                                                     </span>
                                                 {% else %}
                                                     {#Only can verify its own mobile phone number#}
-                                                    {% if app.user.getId() == user.id %}
+                                                    {% if app.user.getId() == user.id and user_security_utility.getSiteSettingParameter('phoneNumberVerification','Telephony') %}
                                                         {#<a style="color: white;" class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.getPreferredMobilePhone}) }}" target="_blank">Verify</a>#}
 
                                                         {#<button type="button"#}

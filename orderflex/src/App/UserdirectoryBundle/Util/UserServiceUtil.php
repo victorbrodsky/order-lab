@@ -2320,6 +2320,14 @@ Pathology and Laboratory Medicine",
 
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $phoneNumberVerification = $userSecUtil->getSiteSettingParameter('phoneNumberVerification','Telephony');
+        if( !$phoneNumberVerification ) {
+            $message = (object) [
+                'errorMessage' => "Phone number verification is disabled.",
+            ];
+            return $message;
+        }
+
         $twilioSid = $userSecUtil->getSiteSettingParameter('twilioSid','Telephony');
         $twilioApiKey = $userSecUtil->getSiteSettingParameter('twilioApiKey','Telephony');
         $fromPhoneNumber = $userSecUtil->getSiteSettingParameter('fromPhoneNumber','Telephony');
@@ -2346,6 +2354,7 @@ Pathology and Laboratory Medicine",
         $user = $this->security->getUser();
 
         $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
+        //$userInfo = $user->getUserInfo();
         
         if( $userInfo ) {
             //exit($userInfo->getId());

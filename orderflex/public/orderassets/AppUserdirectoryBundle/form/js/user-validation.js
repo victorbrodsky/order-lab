@@ -458,6 +458,9 @@ function sendVerificationCode(phoneNumber) {
             //$("#send-verification-code-button-modal").html('Verification Code sent to +'+phoneNumber);
             //$("#send-verification-code-button-modal").prop('disabled', true);
             //$("#send-verification-code-button").attr('disabled','disabled');
+        } else {
+            lbtn.stop();
+            alert(response);
         }
     }).always(function() {
         //lbtn.stop();
@@ -566,6 +569,9 @@ function sendVerificationAccountRequestCode(phoneNumber,userRequestId,objectName
                 '. Please enter the code below and click "Verify" button.</p>';
             $("#phone-number-verify-status").html(confStatusHtml);
             $("#send-verification-code-button").html('Resend the text message with the verification code');
+        } else {
+            alert(response);
+            lbtn.stop();
         }
     }).always(function() {
         //lbtn.stop();

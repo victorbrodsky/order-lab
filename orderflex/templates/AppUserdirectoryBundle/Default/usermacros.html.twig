@@ -1067,7 +1067,7 @@
                         </span>
                     {% else %}
                         {#Only can verify its own mobile phone number#}
-                        {% if app.user.getId() == userInfo.vars.value.user.id %}
+                        {% if app.user.getId() == userInfo.vars.value.user.id and user_security_utility.getSiteSettingParameter('phoneNumberVerification','Telephony') %}
                             {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
                             {#<a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>#}
                             <button type="button"
@@ -1135,7 +1135,7 @@
                         </span>
                 {% else %}
                     {#Only can verify its own mobile phone number#}
-                    {% if app.user.getId() == userInfo.vars.value.user.id %}
+                    {% if app.user.getId() == userInfo.vars.value.user.id and user_security_utility.getSiteSettingParameter('phoneNumberVerification','Telephony') %}
                         {#<button class="btn btn-primary" type="button" onclick="verifyMobilePhoneNumber(userInfo.vars.value.user.id,userInfo.vars.value.preferredMobilePhone)">Verify</button>#}
                         {#<a class="btn btn-primary" href="{{ path('employees_verify_mobile_phone', {'phoneNumber': userInfo.vars.value.preferredMobilePhone }) }}" target="_blank">Verify</a>#}
                         <button type="button"
