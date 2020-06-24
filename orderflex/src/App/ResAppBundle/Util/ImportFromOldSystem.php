@@ -25,6 +25,7 @@
 namespace App\ResAppBundle\Util;
 
 use App\ResAppBundle\Entity\ResidencyApplication;
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\Examination;
 use App\UserdirectoryBundle\Entity\Training;
@@ -152,8 +153,8 @@ class ImportFromOldSystem {
             $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$systemUser);
 
             if( $document ) {
-                $em->persist($document);
-                $em->flush();
+                //$em->persist($document);
+                //$em->flush();
                 echo $row.": Created file $fileName for ResidencyApplication with id=$id <br>";
             }
 
@@ -162,7 +163,7 @@ class ImportFromOldSystem {
 
 
     }
-    public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $systemUser ) {
+    public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $author ) {
         $document = NULL;
 
         $fileExtStr = NULL;
@@ -176,7 +177,40 @@ class ImportFromOldSystem {
             exit("Unknown file type ".$fileType);
         }
 
-        $fileUniqueName = $currentDatetimeTimestamp.'ID'.$residencyApplicationDb->getId().$fileExtStr;
+        //create unique file name
+        $currentDatetime = new \DateTime();
+        $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+
+        $fileUniqueName = $currentDatetimeTimestamp.'ID'.$residencyApplicationDb->getId().".".$fileExtStr;
+
+        $inputFileSize = filesize($inputFilePath);
+        if( !$inputFileSize ) {
+            exit("Invalid file size=".$inputFileSize);
+        }
+
+        $documentType = "Residency Application Document";
+        $path = 'Uploaded'.'/'.'resapp/';
+
+        //check if file already exists by file id
+        $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($fileUniqueName);
+        if( $documentDb ) {
+            echo "Document already exists with uniqueid=".$fileUniqueName."; Application Id=".$residencyApplicationDb->getId();
+            //$logger->notice($event);
+            return null;
+        }
+
+        $fileOriginalName = basename($fileOriginalName);
+        echo "fileOriginalName=".$fileOriginalName."<br>";
+
+        $object = new Document($author);
+        $object->setUniqueid($fileUniqueName);
+        $object->setUniquename($fileUniqueName);
+        $object->setUploadDirectory($path);
+        $object->setSize($inputFileSize);
+
+        $object->setCleanOriginalname($fileOriginalName);
+
+        $residencyApplicationDb->addDocument($object);
 
         return $document;
     }
