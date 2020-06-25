@@ -887,7 +887,8 @@ class ImportFromOldSystem {
             }
 
             if( !$residencySpecialtyEntity ) {
-                throw new EntityNotFoundException('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
+                exit('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
+                //throw new EntityNotFoundException('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
             }
 
             $residencySpecialtyArr[$residencySpecialtyStr] = $residencySpecialtyEntity;
