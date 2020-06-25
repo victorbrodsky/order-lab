@@ -76,6 +76,8 @@ class ImportFromOldSystem {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        set_time_limit(720); //12 min
+
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
@@ -264,6 +266,8 @@ class ImportFromOldSystem {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+
+        set_time_limit(720); //12 min
 
         //$projectRoot = $this->container->get('kernel')->getProjectDir();
         //exit("projectRoot=$projectRoot");
