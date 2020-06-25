@@ -637,7 +637,7 @@ class ImportFromOldSystem {
 
             echo "###################### <br>";
 
-            exit('end application');
+            //exit('end application');
 
         } //for
 
