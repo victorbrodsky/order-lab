@@ -152,7 +152,15 @@ class ImportFromOldSystem {
             //get file name
             $fileName = basename($imagePath);
             //TODO: test this
-            echo "fileName=".$fileName."<br>";
+            echo "fileName1=".$fileName."<br>";
+
+            if( strpos($fileName, DIRECTORY_SEPARATOR) !== false ) {
+                //C:\Users\ccc\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
+                echo "strip ".DIRECTORY_SEPARATOR." from fileName=$fileName <br>";
+                $pathinfoArr = pathinfo('/usr/admin/config/test.xml');
+                $fileName = $pathinfoArr['basename'];
+            }
+            echo "fileName2=".$fileName."<br>";
 
             //get file path
             $inputFilePath = $this->path . DIRECTORY_SEPARATOR . $dataFileFolder . DIRECTORY_SEPARATOR. "files" . DIRECTORY_SEPARATOR . $fileName;
