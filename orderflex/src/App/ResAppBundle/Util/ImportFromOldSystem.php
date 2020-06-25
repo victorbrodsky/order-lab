@@ -151,7 +151,8 @@ class ImportFromOldSystem {
 
             //get file name
             $fileName = basename($imagePath);
-            //echo "fileName=".$fileName."<br>";
+            //TODO: test this
+            echo "fileName=".$fileName."<br>";
 
             //get file path
             $inputFilePath = $this->path . DIRECTORY_SEPARATOR . $dataFileFolder . DIRECTORY_SEPARATOR. "files" . DIRECTORY_SEPARATOR . $fileName;
