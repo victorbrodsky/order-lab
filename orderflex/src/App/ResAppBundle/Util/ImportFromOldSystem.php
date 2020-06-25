@@ -684,6 +684,9 @@ class ImportFromOldSystem {
         }
 
         $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        if( !$trainingType ) {
+            exit("TrainingTypeList not found by name=Medical");
+        }
         $training->setTrainingType($trainingType);
 
         $residencyApplication->addTraining($training);

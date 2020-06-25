@@ -3189,7 +3189,7 @@ class ListController extends OrderAbstractController
         $res['fullClassName'] = "App\\".$bundleName."\\Entity\\".$className;
         $res['entityNamespace'] = "App\\".$bundleName."\\Entity";
         $res['bundleName'] = "App".$bundleName;
-        $res['displayName'] = $displayName;
+        $res['displayName'] = $displayName . ", class: [" . $className . "]";
         //$res['labels'] = $labels;
 
         //check parent name
