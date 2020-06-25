@@ -51,7 +51,7 @@ class ImportFromOldSystem {
         $this->container = $container;
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
-        $this->path = $projectRoot . "/../../ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
+        $this->path = $projectRoot . DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
         if( file_exists($this->path) ) {
             //echo $row.": The file exists: $inputFilePath <br>";
         } else {
@@ -72,7 +72,7 @@ class ImportFromOldSystem {
     //PRA_FACULTY_RESIDENT_INFO - evaluator
 
 
-    public function importApplicationsFiles1($max) {
+    public function importApplicationsFiles1( $max, $dataFileName, $fileTypeName ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -85,7 +85,8 @@ class ImportFromOldSystem {
 
 
         try {
-            $inputFileName = $this->path . "/DB_file1/" . "PRA_APPLICANT_CV_INFO.csv";
+            //$inputFileName = $this->path . "/DB_file1/" . "PRA_APPLICANT_CV_INFO.csv";
+            $inputFileName = $this->path . DIRECTORY_SEPARATOR . $dataFileName;
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
@@ -171,7 +172,7 @@ class ImportFromOldSystem {
             }
 
             //create Document and attach to $residencyApplicationDb
-            $fileTypeName = 'ERAS1';
+            //$fileTypeName = 'ERAS1';
             $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$fileTypeName,$systemUser);
 
             if( $document ) {

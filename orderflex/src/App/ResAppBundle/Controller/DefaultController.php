@@ -247,7 +247,9 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplicationsFiles1($max);
+        $dataFileName = "DB_file1" . DIRECTORY_SEPARATOR . "PRA_APPLICANT_CV_INFO.csv";
+        $fileTypeName = 'ERAS1';
+        $res = $importFromOldSystemUtil->importApplicationsFiles1($max,$dataFileName,$fileTypeName);
 
         exit($res);
     }
