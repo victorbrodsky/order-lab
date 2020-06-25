@@ -154,10 +154,10 @@ class ImportFromOldSystem {
             //TODO: test this
             echo "fileName1=".$fileName."<br>";
 
-            if( strpos($fileName, DIRECTORY_SEPARATOR) !== false ) {
+            if( strpos($fileName, ":") !== false ) {
                 //C:\Users\ccc\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
-                echo "strip ".DIRECTORY_SEPARATOR." from fileName=$fileName <br>";
-                $pathinfoArr = pathinfo('/usr/admin/config/test.xml');
+                echo "Get basename from fileName=$fileName <br>";
+                $pathinfoArr = pathinfo($fileName);
                 $fileName = $pathinfoArr['basename'];
             }
             echo "fileName2=".$fileName."<br>";
