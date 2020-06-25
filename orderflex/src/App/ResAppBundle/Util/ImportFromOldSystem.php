@@ -42,6 +42,7 @@ class ImportFromOldSystem {
     private $container;
 
     private $path = NULL;   //"../../../../../ResidencyImport";    //"C:\Users\ch3\Documents\MyDocs\WCMC\Residency";
+    private $uploadPath = NULL;
     private $enrolmentYearArr = array();
     private $residencySpecialtyArr = array();
 
@@ -51,6 +52,11 @@ class ImportFromOldSystem {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $this->path = $projectRoot . "/../../ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
+        $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
+        $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
     }
 
     //PRA_APPLICANT_INFO - application
@@ -131,14 +137,14 @@ class ImportFromOldSystem {
 
             //get file name
             $fileName = basename($imagePath);
-            echo "fileName=".$fileName."<br>";
+            //echo "fileName=".$fileName."<br>";
 
             //get file path
             $inputFilePath = $this->path . "/DB_file1/files/" . $fileName;
-            echo "inputFilePath=".$inputFilePath."<br>";
+            //echo "inputFilePath=".$inputFilePath."<br>";
 
             if( file_exists($inputFilePath) ) {
-                echo $row.": The file exists: $inputFilePath <br>";
+                //echo $row.": The file exists: $inputFilePath <br>";
             } else {
                 exit($row.": The file does not exist: $inputFilePath <br>");
             }
@@ -150,12 +156,15 @@ class ImportFromOldSystem {
             }
 
             //create Document and attach to $residencyApplicationDb
-            $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$systemUser);
+            $fileTypeName = 'ERAS1';
+            $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$fileTypeName,$systemUser);
 
             if( $document ) {
-                //$em->persist($document);
-                //$em->flush();
-                echo $row.": Created file $fileName for ResidencyApplication with id=$id <br>";
+                $em->persist($document);
+                $em->flush();
+                echo $row.": Created file $fileName for ResidencyApplication ID#".$residencyApplicationDb->getId().", ".$residencyApplicationDb->getApplicantFullName()." with id=$id <br>";
+            } else {
+                echo $row.": File $fileName not created for ResidencyApplication ID#".$residencyApplicationDb->getId().", ".$residencyApplicationDb->getApplicantFullName()." with id=$id <br>";
             }
 
             exit("EOF File1");
@@ -163,7 +172,7 @@ class ImportFromOldSystem {
 
 
     }
-    public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $author ) {
+    public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $fileTypeName, $author ) {
         $document = NULL;
 
         $fileExtStr = NULL;
@@ -178,18 +187,20 @@ class ImportFromOldSystem {
         }
 
         //create unique file name
-        $currentDatetime = new \DateTime();
-        $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+        //$currentDatetime = new \DateTime();
+        //$currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+        //$fileUniqueName = $currentDatetimeTimestamp.'ID'.$residencyApplicationDb->getId().".".$fileExtStr;
 
-        $fileUniqueName = $currentDatetimeTimestamp.'ID'.$residencyApplicationDb->getId().".".$fileExtStr;
+        $fileUniqueName = 'imported-'.$fileTypeName.'-'.'ID'.$residencyApplicationDb->getId().".".$fileExtStr;
 
         $inputFileSize = filesize($inputFilePath);
+        //echo "inputFileSize=".$inputFileSize."<br>";
         if( !$inputFileSize ) {
             exit("Invalid file size=".$inputFileSize);
         }
 
-        $documentType = "Residency Application Document";
-        $path = 'Uploaded'.'/'.'resapp/';
+        //$documentType = "Residency Application Document";
+        //$uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.'resapp'.DIRECTORY_SEPARATOR.'documents'.DIRECTORY_SEPARATOR;
 
         //check if file already exists by file id
         $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($fileUniqueName);
@@ -200,17 +211,43 @@ class ImportFromOldSystem {
         }
 
         $fileOriginalName = basename($fileOriginalName);
-        echo "fileOriginalName=".$fileOriginalName."<br>";
+        //echo "fileOriginalName=".$fileOriginalName."<br>";
 
-        $object = new Document($author);
-        $object->setUniqueid($fileUniqueName);
-        $object->setUniquename($fileUniqueName);
-        $object->setUploadDirectory($path);
-        $object->setSize($inputFileSize);
+        //copy file to resapp folder
+        //$destinationFolder = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->uploadPath;
+        $destinationFolder = realpath($this->uploadPath);
+        //echo "destinationFolder=".$destinationFolder."<br>";
+        if( !file_exists($destinationFolder) ) {
+            //echo "Create destination folder <br>";
+            mkdir($destinationFolder, 0700, true);
+            chmod($destinationFolder, 0700);
+        }
+        $destinationFilePath = $destinationFolder . DIRECTORY_SEPARATOR . $fileUniqueName;
+        if( !file_exists($destinationFilePath) ) {
+            if( !copy($inputFilePath, $destinationFilePath ) ) {
+                //echo "failed to copy $filePath...\n<br>";
+                $errorMsg = "Residency Application document $inputFilePath - Failed to copy to destination folder; filePath=".$destinationFilePath;
+                exit($errorMsg);
+            }
+        }
 
-        $object->setCleanOriginalname($fileOriginalName);
+        $document = new Document($author);
+        $document->setUniqueid($fileUniqueName);
+        $document->setUniquename($fileUniqueName);
+        $document->setUploadDirectory($this->uploadPath);
+        $document->setSize($inputFileSize);
 
-        $residencyApplicationDb->addDocument($object);
+        $document->setCleanOriginalname($fileOriginalName);
+
+        $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+        $documentType = "Residency Application Document";
+        $documentTypeObject = $transformer->reverseTransform($documentType);
+        //echo "documentTypeObject ID=".$documentTypeObject->getId()."<br>";
+        if( $documentTypeObject ) {
+            $document->setType($documentTypeObject);
+        }
+
+        $residencyApplicationDb->addDocument($document);
 
         return $document;
     }
@@ -416,7 +453,7 @@ class ImportFromOldSystem {
                         $modified = true;
                     }
 
-                    //TODO: modify AOA, Couples
+                    //modify AOA, Couples
                     if ($residencyApplicationDb->getAoa() != $aoa) {
                         $residencyApplicationDb->setAoa($aoa);
                         $modified = true;
@@ -595,7 +632,7 @@ class ImportFromOldSystem {
 
             echo "###################### <br>";
 
-            //exit('end application');
+            exit('end application');
 
         } //for
 

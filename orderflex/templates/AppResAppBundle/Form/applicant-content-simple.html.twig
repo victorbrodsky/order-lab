@@ -335,11 +335,22 @@
 
 
                 <div class="well form-element-holder user-Otherdocuments">
-                    <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
+                    <label class="col-xs-12 control-label">Documents (All documents will be added to the Complete Application PDF)</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
 
                             {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="well form-element-holder user-ResidencyApplication">
+                    <label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+
+                            {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}
 
                         </div>
                     </div>
