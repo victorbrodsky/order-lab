@@ -157,8 +157,11 @@ class ImportFromOldSystem {
             if( strpos($fileName, ":") !== false ) {
                 //C:\Users\ccc\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
                 echo "Get basename from fileName=$fileName <br>";
-                $pathinfoArr = pathinfo($fileName);
-                $fileName = $pathinfoArr['basename'];
+                //$pathinfoArr = pathinfo($fileName);
+                //$fileName = $pathinfoArr['basename'];
+                //Get filename from path
+                $pathArr = explode("\\", $fileName);
+                $fileName = end($pathArr);
             }
             echo "fileName2=".$fileName."<br>";
 
