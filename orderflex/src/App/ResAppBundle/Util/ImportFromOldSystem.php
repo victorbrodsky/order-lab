@@ -52,6 +52,11 @@ class ImportFromOldSystem {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $this->path = $projectRoot . "/../../ResidencyImport"; //Place 'ResidencyImport' to the same folder as 'order-lab'
+        if( file_exists($this->path) ) {
+            //echo $row.": The file exists: $inputFilePath <br>";
+        } else {
+            exit("Source folder does not exist. path=[".$this->path."]<br>");
+        }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
