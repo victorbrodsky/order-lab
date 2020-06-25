@@ -247,9 +247,10 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $dataFileName = "DB_file1" . DIRECTORY_SEPARATOR . "PRA_APPLICANT_CV_INFO.csv";
+        $dataFileFolder = "DB_file1";
+        $dataFileName = $dataFileFolder . DIRECTORY_SEPARATOR . "PRA_APPLICANT_CV_INFO.csv";
         $fileTypeName = 'ERAS1';
-        $res = $importFromOldSystemUtil->importApplicationsFiles1($max,$dataFileName,$fileTypeName);
+        $res = $importFromOldSystemUtil->importApplicationsFiles($max,$dataFileName,$dataFileFolder,$fileTypeName);
 
         exit($res);
     }
@@ -266,7 +267,10 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplicationsFiles2($max);
+        $dataFileFolder = "DB_file2";
+        $dataFileName = $dataFileFolder . DIRECTORY_SEPARATOR . "PRA_APPLICANT_UPDATE_CV_INFO.csv";
+        $fileTypeName = 'ERAS2';
+        $res = $importFromOldSystemUtil->importApplicationsFiles($max,$dataFileName,$dataFileFolder,$fileTypeName);
 
         exit($res);
     }

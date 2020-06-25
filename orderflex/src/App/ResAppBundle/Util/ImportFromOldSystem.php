@@ -72,16 +72,14 @@ class ImportFromOldSystem {
     //PRA_FACULTY_RESIDENT_INFO - evaluator
 
 
-    public function importApplicationsFiles1( $max, $dataFileName, $fileTypeName ) {
+    public function importApplicationsFiles( $max, $dataFileName, $dataFileFolder, $fileTypeName ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         set_time_limit(720); //12 min
 
         $em = $this->em;
-        $default_time_zone = $this->container->getParameter('default_time_zone');
-
-        $res = "import files 1";
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
 
 
         try {
@@ -156,7 +154,7 @@ class ImportFromOldSystem {
             //echo "fileName=".$fileName."<br>";
 
             //get file path
-            $inputFilePath = $this->path . "/DB_file1/files/" . $fileName;
+            $inputFilePath = $this->path . DIRECTORY_SEPARATOR . $dataFileFolder . DIRECTORY_SEPARATOR. "files" . DIRECTORY_SEPARATOR . $fileName;
             //echo "inputFilePath=".$inputFilePath."<br>";
 
             if( file_exists($inputFilePath) ) {
@@ -168,7 +166,10 @@ class ImportFromOldSystem {
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
 
             if( !$residencyApplicationDb ) {
-                exit($row.": ResidencyApplication not found by id=$id <br>");
+                $errorMsg = $dataFileName.": Skip ResidencyApplication not found by id=$id";
+                echo $errorMsg."<br>";
+                $logger->notice($errorMsg);
+                continue;
             }
 
             //create Document and attach to $residencyApplicationDb
@@ -184,10 +185,10 @@ class ImportFromOldSystem {
                 echo $row.": File $fileName not created for ResidencyApplication ID#".$residencyApplicationDb->getId().", ".$residencyApplicationDb->getApplicantFullName()." with id=$id <br>";
             }
 
-            exit("EOF File1");
+            //exit("EOF $fileTypeName");
         }
 
-        return "Imported files 1 count=".$count;
+        return "Imported $fileTypeName files: count=".$count;
     }
     public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $fileTypeName, $author ) {
         $document = NULL;
