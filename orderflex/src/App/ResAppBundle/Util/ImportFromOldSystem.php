@@ -625,14 +625,14 @@ class ImportFromOldSystem {
             }
 
             //exit('end applicant');
+            $event = "Populated residency applicant " . $displayName . "; Application ID " . $residencyApplication->getId();
 
             if( !$testing ) {
                 $em->persist($user);
                 $em->flush();
+                $logger->notice($event);
             }
 
-            $event = "Populated residency applicant " . $displayName . "; Application ID " . $residencyApplication->getId();
-            //$logger->notice($event);
             echo "$event <br>";
 
             echo "###################### <br>";
