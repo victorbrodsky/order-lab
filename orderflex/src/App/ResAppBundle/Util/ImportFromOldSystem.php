@@ -678,7 +678,7 @@ class ImportFromOldSystem {
             $em->remove($removedTraining);
         }
 
-        if( !$trainings ) {
+        if( !$training ) {
             $training = new Training($author);
             $training->setOrderinlist(1);
         }
