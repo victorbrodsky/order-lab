@@ -72,7 +72,7 @@ class ImportFromOldSystem {
     //PRA_FACULTY_RESIDENT_INFO - evaluator
 
 
-    public function importApplicationsFiles1() {
+    public function importApplicationsFiles1($max) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -119,7 +119,8 @@ class ImportFromOldSystem {
         //$testing = true;
         $testing = false;
 
-        //$residencyApplications = new ArrayCollection();
+        $count = 0;
+        $processingCount = 0;
 
         //for each user in excel
         for( $row = 2; $row <= $highestRow; $row++ ) {
@@ -141,6 +142,13 @@ class ImportFromOldSystem {
 
             //C:\Users\ch3\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
             $imagePath = $this->getValueByHeaderName('IMAGE', $rowData, $headers);
+
+            $processingCount++;
+            if( $max && $processingCount > (int)$max ) {
+                exit('end of processing '.$max.' applications'); //.($processingCount+1).">=".$max
+            }
+
+            echo $row.": fileOriginalName=$fileOriginalName (ID $id) <br>";
 
             //get file name
             $fileName = basename($imagePath);
@@ -169,6 +177,7 @@ class ImportFromOldSystem {
             if( $document ) {
                 $em->persist($document);
                 $em->flush();
+                $count++;
                 echo $row.": Created file $fileName for ResidencyApplication ID#".$residencyApplicationDb->getId().", ".$residencyApplicationDb->getApplicantFullName()." with id=$id <br>";
             } else {
                 echo $row.": File $fileName not created for ResidencyApplication ID#".$residencyApplicationDb->getId().", ".$residencyApplicationDb->getApplicantFullName()." with id=$id <br>";
@@ -177,7 +186,7 @@ class ImportFromOldSystem {
             exit("EOF File1");
         }
 
-
+        return "Imported files 1 count=".$count;
     }
     public function attachDocument( $residencyApplicationDb, $inputFilePath, $fileOriginalName, $fileType, $fileTypeName, $author ) {
         $document = NULL;
@@ -262,7 +271,7 @@ class ImportFromOldSystem {
 
 
 
-    public function importApplications() {
+    public function importApplications($max=NULL) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -275,7 +284,7 @@ class ImportFromOldSystem {
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $res = "import Residency Applications";
+        //$res = "Import Residency Applications";
 
         $this->getResidencySpecialties();
         dump($this->residencySpecialtyArr);
@@ -350,6 +359,8 @@ class ImportFromOldSystem {
         $testing = false;
 
         //$residencyApplications = new ArrayCollection();
+        $count = 0;
+        $processingCount = 0;
 
         //for each user in excel
         for( $row = 2; $row <= $highestRow; $row++ ){
@@ -374,8 +385,6 @@ class ImportFromOldSystem {
 //                echo 'Skip this residency application with googleFormId='.$id."<br>";
 //                continue;
 //            }
-
-            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
 
             $lastName = $this->getValueByHeaderName('LAST_NAME', $rowData, $headers);
             $firstName = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
@@ -406,6 +415,14 @@ class ImportFromOldSystem {
             $usmleStep1 = $this->getValueByHeaderName('USMLE_STEP1', $rowData, $headers);
             $usmleStep2 = $this->getValueByHeaderName('USMLE_STEP2', $rowData, $headers);
             $usmleStep3 = $this->getValueByHeaderName('USMLE_STEP3', $rowData, $headers);
+
+
+            $processingCount++;
+            if( $max && $processingCount > (int)$max ) {
+                exit('end of processing '.$max.' applications'); //.($processingCount+1).">=".$max
+            }
+
+            echo $row.": $firstName $lastName (ID $id) <br>";
 
             //Convert: ACTIVED	AOA	COUPLES	MD_PHD	POSTSOPH DO
             if( $activeD."" == '1' ) {
@@ -447,6 +464,8 @@ class ImportFromOldSystem {
             } else {
                 $md = false;
             }
+
+            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
 
             //Modify
             if( 0 ) {
@@ -492,7 +511,7 @@ class ImportFromOldSystem {
             
             //exit('Testing');
 
-            echo $row.": $firstName $lastName (ID $id) <br>";
+            //echo $row.": $firstName $lastName (ID $id) <br>";
 
             $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
             $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
@@ -635,11 +654,16 @@ class ImportFromOldSystem {
                 $em->persist($user);
                 $em->flush();
                 $logger->notice($event);
+                $count++;
             }
 
             echo "$event <br>";
 
             echo "###################### <br>";
+
+//            if( $max && $count >= $max ) {
+//                exit('end of import count='.$count);
+//            }
 
             //exit('end application');
 
@@ -647,7 +671,7 @@ class ImportFromOldSystem {
 
 
 
-        return $res;
+        return "Imported residency applications. count=$count <br>";
     }
 
     public function setResAppTraining($residencyApplication,$author,$medSchool,$graduateDate,$mdPhd,$do,$md) {

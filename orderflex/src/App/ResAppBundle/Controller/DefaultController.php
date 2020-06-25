@@ -218,9 +218,9 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/import-from-old-system", name="resapp_import_from_old_system")
+     * @Route("/import-from-old-system/{max}", name="resapp_import_from_old_system")
      */
-    public function importFromOldSystemAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+    public function importFromOldSystemAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         //exit("not allowed");
 
@@ -230,14 +230,14 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplications();
+        $res = $importFromOldSystemUtil->importApplications($max);
         
         exit($res);
     }
     /**
-     * @Route("/import-from-old-system-files1", name="resapp_import_from_old_system_files1")
+     * @Route("/import-from-old-system-files1/{max}", name="resapp_import_from_old_system_files1")
      */
-    public function importFromOldSystem2Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+    public function importFromOldSystem2Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         //exit("not allowed");
 
@@ -247,14 +247,14 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplicationsFiles1();
+        $res = $importFromOldSystemUtil->importApplicationsFiles1($max);
 
         exit($res);
     }
     /**
-     * @Route("/import-from-old-system-files2", name="resapp_import_from_old_system_files2")
+     * @Route("/import-from-old-system-files2/{max}", name="resapp_import_from_old_system_files2")
      */
-    public function importFromOldSystem3Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+    public function importFromOldSystem3Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         //exit("not allowed");
 
@@ -264,14 +264,14 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplicationsFiles2();
+        $res = $importFromOldSystemUtil->importApplicationsFiles2($max);
 
         exit($res);
     }
     /**
-     * @Route("/import-from-old-system-interview", name="resapp_import_from_old_system_interview")
+     * @Route("/import-from-old-system-interview/{max}", name="resapp_import_from_old_system_interview")
      */
-    public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+    public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
         //exit("not allowed");
 
@@ -281,7 +281,7 @@ class DefaultController extends OrderAbstractController
 
         //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
 
-        $res = $importFromOldSystemUtil->importApplicationsFilesInterview();
+        $res = $importFromOldSystemUtil->importApplicationsFilesInterview($max);
 
         exit($res);
     }
