@@ -161,12 +161,11 @@ class ImportFromOldSystem {
 
             //get file name
             $fileName = basename($imagePath);
-            //TODO: test this
-            echo "fileName1=".$fileName."<br>";
+            //echo "fileName1=".$fileName."<br>";
 
             if( strpos($fileName, ":") !== false ) {
                 //C:\Users\ccc\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
-                echo "Get basename from fileName=$fileName <br>";
+                //echo "Get basename from fileName=$fileName <br>";
                 //$pathinfoArr = pathinfo($fileName);
                 //$fileName = $pathinfoArr['basename'];
                 //Get filename from path
@@ -187,17 +186,9 @@ class ImportFromOldSystem {
 
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
 
-            //Modify
-            if( 1 ) {
+            //Modify files
+            if( 0 ) {
                 if ($residencyApplicationDb) {
-
-//                    echo "Start modify (ID $id), residencyApplicationDb ID=".$residencyApplicationDb->getId()." <br>";
-//                    //Delete existing all documents from DB and re-create ERAS file as a Cover Letter using addCoverLetter
-//                    $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$fileTypeName,$systemUser);
-//                    if( $document ) {
-//                        $em->persist($document);
-//                        $modified = true;
-//                    }
 
                     //Move documents from 'documents' to 'CoverLetter' and change type to 'Residency ERAS Document'
                     $modified = false;
@@ -528,7 +519,7 @@ class ImportFromOldSystem {
 
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
 
-            //Modify
+            //Modify applications
             if( 0 ) {
                 if ($residencyApplicationDb) {
 
@@ -542,7 +533,7 @@ class ImportFromOldSystem {
                         $modified = true;
                     }
 
-                    //modify AOA, Couples
+                    //AOA, Couples
                     if ($residencyApplicationDb->getAoa() != $aoa) {
                         $residencyApplicationDb->setAoa($aoa);
                         $modified = true;
@@ -820,60 +811,6 @@ class ImportFromOldSystem {
         $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
         $training->setDegree($schoolDegreeEntity);
     }
-
-//    //NOT USED
-//    //Modify setTrainingDegree in User->training
-//    public function modifyTraining($residencyApplicationDb,$author,$mdPhd,$do,$md) {
-//        //$residencyApplication->addTraining($training);
-//        //$residencyApplication->getUser()->addTraining($training);
-//
-//        $schoolDegree = NULL;
-//        if ($mdPhd) {
-//            $schoolDegree = "MD/PhD";
-//        }
-//        if ($do) {
-//            $schoolDegree = "DO";
-//        }
-//        if ($md) {
-//            $schoolDegree = "MD";
-//        }
-//
-//        if( !$schoolDegree ) {
-//            exit("No degree found.");
-//        }
-//
-//        $modified = false;
-//
-//        //$residencyApplication->addTraining($training);
-//        $appTrainings = $residencyApplicationDb->getTrainings();
-//        if( count($appTrainings) > 0 ) {
-//            $appTraining = $appTrainings[0];
-//            if( $appTraining->getDegree() != $schoolDegree ) {
-//                $this->setTrainingDegree($appTraining,$schoolDegree,$author);
-//
-//                $this->em->persist($appTraining);
-//                $modified = true;
-//            }
-//        }
-//
-//        //$residencyApplication->getUser()->addTraining($training);
-//        $userTrainings = $residencyApplicationDb->getUser()->getTrainings();
-//        if( count($userTrainings) > 0 ) {
-//            $userTraining = $userTrainings[0];
-//            if( $userTraining->getDegree() != $schoolDegree ) {
-//                $this->setTrainingDegree($userTraining,$schoolDegree,$author);
-//
-//                $this->em->persist($userTraining);
-//                $modified = true;
-//            }
-//        }
-//
-//        if( $modified ) {
-//            $this->em->flush();
-//        }
-//
-//        return true;
-//    }
 
     public function transformDatestrToDate($datestr) {
         $userSecUtil = $this->container->get('user_security_utility');
