@@ -222,7 +222,7 @@ class DefaultController extends OrderAbstractController
      */
     public function importFromOldSystemAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
@@ -239,7 +239,7 @@ class DefaultController extends OrderAbstractController
      */
     public function importFromOldSystem2Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
@@ -259,7 +259,7 @@ class DefaultController extends OrderAbstractController
      */
     public function importFromOldSystem3Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
@@ -275,6 +275,8 @@ class DefaultController extends OrderAbstractController
         exit($res);
     }
     /**
+     * http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
+     * 
      * @Route("/import-from-old-system-interview/{max}", name="resapp_import_from_old_system_interview")
      */
     public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {

@@ -36,6 +36,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+//PRA_APPLICANT_INFO - application
+//PRA_APPLICANT_CV_INFO - document
+//PRA_APPLICANT_UPDATE_CV_INFO - document 2
+//PRA_ENROLLMENT_INFO - enrollment
+//PRA_EVALUATION_FORM_INFO - evaluation
+//PRA_FACULTY_RESIDENT_INFO - evaluator
+
 class ImportFromOldSystem {
 
     private $em;
@@ -46,6 +53,7 @@ class ImportFromOldSystem {
     private $enrolmentYearArr = array();
     private $residencySpecialtyArr = array();
     private $documentErasType = NULL;
+    private $usersArr = array();
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
@@ -65,12 +73,137 @@ class ImportFromOldSystem {
         $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
     }
 
-    //PRA_APPLICANT_INFO - application
-    //PRA_APPLICANT_CV_INFO - document
-    //PRA_APPLICANT_UPDATE_CV_INFO - document 2
-    //PRA_ENROLLMENT_INFO - enrollment
-    //PRA_EVALUATION_FORM_INFO - evaluation
-    //PRA_FACULTY_RESIDENT_INFO - evaluator
+    //http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
+    public function importApplicationsFilesInterview($max) {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        set_time_limit(720); //12 min
+
+        $em = $this->em;
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $this->getFacultyResident();
+        //dump($this->usersArr);
+        //exit('EOF importApplicationsFilesInterview');
+
+        try {
+            //$inputFileName = $this->path . "/DB_file1/" . "PRA_APPLICANT_CV_INFO.csv";
+            $inputFileName = $this->path . "/DB/"."PRA_EVALUATION_FORM_INFO.csv";
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            throw new IOException($event);
+        }
+
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        echo "rows=$highestRow columns=$highestColumn <br>";
+        //$logger->notice("rows=$highestRow columns=$highestColumn");
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+        //print_r($headers);
+
+        //$testing = true;
+        $testing = false;
+
+        $count = 0;
+        $processingCount = 0;
+
+        //for each user in excel
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //EVAL_FORM_ID
+            //FACULTY_RESIDENT_ID
+            //APPLICANT_ID
+            //DATE_INTERVIEW
+            //ACADEMIC_RANK         (Academic Performance / Accomplishments)
+            //PERSONALITY_RANK      (Interpersonal / Communication Skills)
+            //RES_POTENTIAL_RANK    (Attitude / Work Ethic / Team Player)
+            //TOTAL_RANKS
+            //LANG_PROFICIENCY
+            //COMMENTS
+            //COMPLETE_EVAL
+            //DATE_CREATED
+            //WHEN_ACCESS_EVAL_FORM
+            //OVERALL_FIT
+            //MIN_RANK
+            //MAX_RANK
+
+            $evalFormId = $this->getValueByHeaderName('EVAL_FORM_ID', $rowData, $headers);
+            $facultyResidentId = $this->getValueByHeaderName('FACULTY_RESIDENT_ID', $rowData, $headers);
+            $applicantId = $this->getValueByHeaderName('APPLICANT_ID', $rowData, $headers);
+            $dateInterview = $this->getValueByHeaderName('DATE_INTERVIEW', $rowData, $headers);
+
+            $academicRank = $this->getValueByHeaderName('ACADEMIC_RANK', $rowData, $headers);
+            $personalityRank = $this->getValueByHeaderName('PERSONALITY_RANK', $rowData, $headers);
+            $potentialRank = $this->getValueByHeaderName('RES_POTENTIAL_RANK', $rowData, $headers);
+            $totalRank = $this->getValueByHeaderName('TOTAL_RANKS', $rowData, $headers);
+            $langProficiency = $this->getValueByHeaderName('LANG_PROFICIENCY', $rowData, $headers);
+            $comment = $this->getValueByHeaderName('COMMENTS', $rowData, $headers);
+            $overallFit = $this->getValueByHeaderName('OVERALL_FIT', $rowData, $headers);
+
+            $minRank = $this->getValueByHeaderName('MIN_RANK', $rowData, $headers);
+            $maxRank = $this->getValueByHeaderName('MAX_RANK', $rowData, $headers);
+
+            $completeEval = $this->getValueByHeaderName('COMPLETE_EVAL', $rowData, $headers);
+            $dateCreated = $this->getValueByHeaderName('DATE_CREATED', $rowData, $headers);
+            $whenAccessEvalForm = $this->getValueByHeaderName('WHEN_ACCESS_EVAL_FORM', $rowData, $headers);
+
+            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($applicantId);
+
+            if( !$residencyApplicationDb ) {
+                $errorMsg = $row.": Skip ResidencyApplication not found by id=$applicantId";
+                echo $errorMsg."<br>";
+                $logger->notice($errorMsg);
+                continue;
+            }
+
+            //Check if user exists for non-empty review
+            if( $academicRank ) {
+                $facultyResidentArr = $this->usersArr[$facultyResidentId];
+                $facultyResident = $facultyResidentArr['user'];
+                $facultyResidentLastName = $facultyResidentArr['LAST_NAME']; //'LAST_NAME' => $LAST_NAME,
+                $facultyResidentFirstName = $facultyResidentArr['FIRST_NAME'];//'FIRST_NAME' => $FIRST_NAME,
+                $facultyResidentPhone = $facultyResidentArr['PHONE'];//'PHONE' => $PHONE,
+                $facultyResidentEmail = $facultyResidentArr['EMAIL'];//'EMAIL' => $EMAIL,
+                if( !$facultyResident ) {
+                    echo $count.": academicRank=$academicRank: No user exists: FirstName=$facultyResidentFirstName, LastName=$facultyResidentLastName, email=$facultyResidentEmail, phone$facultyResidentPhone<br>";
+                    $count++;
+                } else {
+
+                    //echo $row.": Evaluation id=$evalFormId, facultyResident=".$facultyResident."<br>";
+
+                }
+            }
+
+            $processingCount++;
+        }
+
+        return "Imported evaluations: count=".$processingCount;
+    }
 
 
     public function importApplicationsFiles( $max, $dataFileName, $dataFileFolder, $fileTypeName ) {
@@ -929,6 +1062,107 @@ class ImportFromOldSystem {
         }
 
         $this->residencySpecialtyArr = $residencySpecialtyArr;
+    }
+
+    public function getFacultyResident() {
+
+        $logger = $this->container->get('logger');
+
+        $inputFileName = $this->path . "/DB/"."PRA_FACULTY_RESIDENT_INFO.csv";
+
+        try {
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            throw new IOException($event);
+        }
+
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        //echo "rows=$highestRow columns=$highestColumn <br>";
+        //$logger->notice("rows=$highestRow columns=$highestColumn");
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+        //print_r($headers);
+
+        $usersArr = array();
+
+        $count = 0;
+        $notFoundUserCount = 0;
+
+        //for each user in excel
+        for( $row = 2; $row <= $highestRow; $row++ ){
+
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //FACULTY_RESIDENT_ID
+            //LAST_NAME
+            //FIRST_NAME
+            //PHONE
+            //EMAIL
+            //DATE_CREATED
+            //ACTIVED
+            //ROLE
+
+
+            $FACULTY_RESIDENT_ID = $this->getValueByHeaderName('FACULTY_RESIDENT_ID', $rowData, $headers);
+            $LAST_NAME = $this->getValueByHeaderName('LAST_NAME', $rowData, $headers);
+            $FIRST_NAME = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
+            $PHONE = $this->getValueByHeaderName('PHONE', $rowData, $headers);
+            $EMAIL = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
+            $DATE_CREATED = $this->getValueByHeaderName('DATE_CREATED', $rowData, $headers);
+            $ACTIVED = $this->getValueByHeaderName('ACTIVED', $rowData, $headers);
+            $ROLE = $this->getValueByHeaderName('ROLE', $rowData, $headers);
+
+            $emailArr = explode("@",$EMAIL); //ecesarm@med.cornell.edu
+            if( count($emailArr) > 0 ) {
+                $cwid = $emailArr[0];
+            }
+            if( !$cwid ) {
+                exit("No CWID found by email=".$EMAIL);
+            }
+
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+            if( !$user ) {
+                $notFoundUserCount++;
+                $errorMsg = $notFoundUserCount.": No user found by cwid=".$cwid." (firstName=$FIRST_NAME, lastName=$LAST_NAME)";
+                //echo $errorMsg."<br>";
+                //exit($errorMsg);
+            }
+
+            $usersArr[$FACULTY_RESIDENT_ID] = array(
+                'user' => $user,
+                'cwid' => $cwid,
+                'LAST_NAME' => $LAST_NAME,
+                'FIRST_NAME' => $FIRST_NAME,
+                'PHONE' => $PHONE,
+                'EMAIL' => $EMAIL,
+                'DATE_CREATED' => $DATE_CREATED,
+                'ROLE' => $ROLE
+            );
+
+            $count++;
+        }
+
+        echo "Total count $count, notFoundUserCount=$notFoundUserCount <br>";
+        $this->usersArr = $usersArr;
+        //return $enrolmentYearArr;
     }
 
     public function getValueByHeaderName($header, $row, $headers) {
