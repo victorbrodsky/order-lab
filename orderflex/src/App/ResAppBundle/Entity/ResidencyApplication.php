@@ -72,6 +72,8 @@ class ResidencyApplication extends BaseUserAttributes {
     private $institution;
 
     /**
+     * Use Cover Letter DB for ERAS (Electronic Residency Application Service) files. Only the latest ERAS file will be used in the application's PDF
+     *
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="resapp_resApp_coverLetter",
      *      joinColumns={@ORM\JoinColumn(name="resApp_id", referencedColumnName="id", onDelete="CASCADE")},

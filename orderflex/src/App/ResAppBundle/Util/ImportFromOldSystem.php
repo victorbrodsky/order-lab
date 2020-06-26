@@ -45,6 +45,7 @@ class ImportFromOldSystem {
     private $uploadPath = NULL;
     private $enrolmentYearArr = array();
     private $residencySpecialtyArr = array();
+    private $documentErasType = NULL;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
@@ -103,6 +104,15 @@ class ImportFromOldSystem {
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
+        //Document Type
+        $transformer = new GenericTreeTransformer($this->em, $systemUser, "DocumentTypeList", "UserdirectoryBundle");
+        $documentType = "Residency ERAS Document";
+        $documentErasTypeObject = $transformer->reverseTransform($documentType);
+        if( !$documentErasTypeObject ) {
+            exit("Document Type can not be found/created by name 'Residency ERAS Document'");
+        }
+        $this->documentErasType = $documentErasTypeObject;
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -147,7 +157,7 @@ class ImportFromOldSystem {
                 exit('end of processing '.$max.' applications'); //.($processingCount+1).">=".$max
             }
 
-            echo $row.": fileOriginalName=$fileOriginalName (ID $id) <br>";
+            //echo $row.": fileOriginalName=$fileOriginalName (ID $id) <br>";
 
             //get file name
             $fileName = basename($imagePath);
@@ -163,7 +173,7 @@ class ImportFromOldSystem {
                 $pathArr = explode("\\", $fileName);
                 $fileName = end($pathArr);
             }
-            echo "fileName2=".$fileName."<br>";
+            //echo "fileName2=".$fileName."<br>";
 
             //get file path
             $inputFilePath = $this->path . DIRECTORY_SEPARATOR . $dataFileFolder . DIRECTORY_SEPARATOR. "files" . DIRECTORY_SEPARATOR . $fileName;
@@ -176,6 +186,44 @@ class ImportFromOldSystem {
             }
 
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
+
+            //Modify
+            if( 1 ) {
+                if ($residencyApplicationDb) {
+
+//                    echo "Start modify (ID $id), residencyApplicationDb ID=".$residencyApplicationDb->getId()." <br>";
+//                    //Delete existing all documents from DB and re-create ERAS file as a Cover Letter using addCoverLetter
+//                    $document = $this->attachDocument($residencyApplicationDb,$inputFilePath,$fileOriginalName,$fileType,$fileTypeName,$systemUser);
+//                    if( $document ) {
+//                        $em->persist($document);
+//                        $modified = true;
+//                    }
+
+                    //Move documents from 'documents' to 'CoverLetter' and change type to 'Residency ERAS Document'
+                    $modified = false;
+                    foreach($residencyApplicationDb->getDocuments() as $document) {
+                        $document->setType($this->documentErasType);
+                        $residencyApplicationDb->removeDocument($document);
+                        $residencyApplicationDb->addCoverLetter($document);
+                        $modified = true;
+                    }
+
+                    if ($modified) {
+                        $em->flush();
+
+                        $msg = "Document ".$document." moved for ".$residencyApplicationDb->getApplicantFullName();
+                        echo $msg."<br>";
+                        $logger->notice($msg);
+                    }
+
+                    $logger->notice('Skip this residency application, because it already exists in DB. googleFormId=' . $id);
+                    echo 'Skip this residency application, because it already exists in DB. googleFormId=' . $id . "<br>";
+
+                    //exit("EOF $firstName $lastName (ID $id)");
+                    continue; //skip this fell application, because it already exists in DB
+                }
+            }
+
 
             if( !$residencyApplicationDb ) {
                 $errorMsg = $dataFileName.": Skip ResidencyApplication not found by id=$id";
@@ -269,15 +317,14 @@ class ImportFromOldSystem {
 
         $document->setCleanOriginalname($fileOriginalName);
 
-        $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-        $documentType = "Residency Application Document";
-        $documentTypeObject = $transformer->reverseTransform($documentType);
+        //$transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
+        //$documentType = "Residency Application Document";
+        //$documentTypeObject = $transformer->reverseTransform($documentType);
         //echo "documentTypeObject ID=".$documentTypeObject->getId()."<br>";
-        if( $documentTypeObject ) {
-            $document->setType($documentTypeObject);
-        }
+        $document->setType($this->documentErasType);
 
-        $residencyApplicationDb->addDocument($document);
+        //$residencyApplicationDb->addDocument($document);
+        $residencyApplicationDb->addCoverLetter($document);
 
         return $document;
     }

@@ -333,28 +333,35 @@
                 {{ formmacros.field(form.postSoph) }}
 
 
-
-                <div class="well form-element-holder user-Otherdocuments">
-                    <label class="col-xs-12 control-label">Documents (All documents will be added to the Complete Application PDF)</label>
-                    <div class="row withpaddingtop">
-                        <div class="col-xs-12">
-
-                            {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}
-
-                        </div>
-                    </div>
-                </div>
-
                 <div class="well form-element-holder user-ResidencyApplication">
                     <label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
-
                             {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}
-
                         </div>
                     </div>
                 </div>
+
+                {#Use Cover Letter DB for ERAS (Electronic Residency Application Service) files. Only the latest ERAS file will be used in the application's PDF#}
+                <div class="well form-element-holder user-ResidencyApplication">
+                    <label class="col-xs-12 control-label">ERAS files (Only the last document will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Residency ERAS Document') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="well form-element-holder user-Otherdocuments">
+                    <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}
+                        </div>
+                    </div>
+                </div>
+
+
 
 
             </div> <!-- panel-body -->
