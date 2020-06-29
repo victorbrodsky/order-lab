@@ -1658,7 +1658,7 @@ class UserSecurityUtil {
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
             $event = $sitename." warning: " . $msg;
-            $userSecUtil->createUserEditEvent($sitename,$event,$systemUser,null,null,'Warning');
+            //$userSecUtil->createUserEditEvent($sitename,$event,$systemUser,null,null,'Warning');
 
             //exit('bad');
             return $date;

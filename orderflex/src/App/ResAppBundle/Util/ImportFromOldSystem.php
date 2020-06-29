@@ -24,6 +24,7 @@
 
 namespace App\ResAppBundle\Util;
 
+use App\ResAppBundle\Entity\Interview;
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
@@ -84,7 +85,7 @@ class ImportFromOldSystem {
         $em = $this->em;
         //$default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $this->getFacultyResident();
+        $this->getFacultyResident(false);
         //dump($this->usersArr);
         //exit('EOF importApplicationsFilesInterview');
 
@@ -163,7 +164,7 @@ class ImportFromOldSystem {
             $totalRank = $this->getValueByHeaderName('TOTAL_RANKS', $rowData, $headers);
             $langProficiency = $this->getValueByHeaderName('LANG_PROFICIENCY', $rowData, $headers);
             $comment = $this->getValueByHeaderName('COMMENTS', $rowData, $headers);
-            $overallFit = $this->getValueByHeaderName('OVERALL_FIT', $rowData, $headers);
+            $overallFit = $this->getValueByHeaderName('OVERALL_FIT', $rowData, $headers); //No field in Interviewer
 
             $minRank = $this->getValueByHeaderName('MIN_RANK', $rowData, $headers);
             $maxRank = $this->getValueByHeaderName('MAX_RANK', $rowData, $headers);
@@ -182,19 +183,38 @@ class ImportFromOldSystem {
             }
 
             //Check if user exists for non-empty review
-            if( $academicRank ) {
+            if( $academicRank || $personalityRank || $potentialRank || $totalRank || $langProficiency || $comment ) {
                 $facultyResidentArr = $this->usersArr[$facultyResidentId];
-                $facultyResident = $facultyResidentArr['user'];
+                $interviewer = $facultyResidentArr['user'];
                 $facultyResidentLastName = $facultyResidentArr['LAST_NAME']; //'LAST_NAME' => $LAST_NAME,
                 $facultyResidentFirstName = $facultyResidentArr['FIRST_NAME'];//'FIRST_NAME' => $FIRST_NAME,
                 $facultyResidentPhone = $facultyResidentArr['PHONE'];//'PHONE' => $PHONE,
                 $facultyResidentEmail = $facultyResidentArr['EMAIL'];//'EMAIL' => $EMAIL,
-                if( !$facultyResident ) {
+                if( !$interviewer ) {
                     echo $count.": academicRank=$academicRank: No user exists: FirstName=$facultyResidentFirstName, LastName=$facultyResidentLastName, email=$facultyResidentEmail, phone$facultyResidentPhone<br>";
                     $count++;
                 } else {
 
-                    //echo $row.": Evaluation id=$evalFormId, facultyResident=".$facultyResident."<br>";
+                    //echo $row.": Evaluation id=$evalFormId, facultyResident=".$interviewer."<br>";
+
+                    $interview = new Interview();
+                    $interview->setInterviewer($interviewer);
+                    $interview->setLocation($interviewer->getMainLocation());
+
+                    //echo "dateInterview=$dateInterview <br>";
+                    $dateInterviewStr = $this->transformDatestrToDate($dateInterview);
+                    //exit("dateInterviewStr=".$dateInterviewStr->format('Y-m-d H:i:s'));
+                    echo "dateInterview=[$dateInterview]=>[".$dateInterviewStr->format('Y-m-d H:i:s')."]<br>";
+                    $interview->setInterviewDate($dateInterviewStr);
+
+                    $interview->setAcademicRank($academicRank);
+                    $interview->setPersonalityRank($personalityRank);
+                    $interview->setPotentialRank($potentialRank);
+                    $interview->setLanguageProficiency($langProficiency);
+                    $interview->setTotalRank($totalRank);
+                    $interview->setComment($comment);
+
+                    $residencyApplicationDb->addInterview($interview);
 
                 }
             }
@@ -1064,9 +1084,11 @@ class ImportFromOldSystem {
         $this->residencySpecialtyArr = $residencySpecialtyArr;
     }
 
-    public function getFacultyResident() {
+    public function getFacultyResident($allowCreate=false) {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $authUtil = $this->container->get('authenticator_utility');
 
         $inputFileName = $this->path . "/DB/"."PRA_FACULTY_RESIDENT_INFO.csv";
 
@@ -1085,7 +1107,6 @@ class ImportFromOldSystem {
             throw new IOException($event);
         }
 
-
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -1097,6 +1118,30 @@ class ImportFromOldSystem {
             TRUE,
             FALSE);
         //print_r($headers);
+
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $localUserkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$localUserkeytype ) {
+            throw new EntityNotFoundException('Unable to find local user keytype');
+        }
+
+        $ldapUserkeytype = $userSecUtil->getUsernameType('ldap-user');
+        if( !$ldapUserkeytype ) {
+            throw new EntityNotFoundException('Unable to find ldap-user user keytype');
+        }
+
+        $employmentType = $this->em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
+        }
+
+        $yestardayDate = new \DateTime();
+        $yestardayDate = $yestardayDate->add(\DateInterval::createFromDateString('yesterday'));
 
         $usersArr = array();
 
@@ -1120,7 +1165,6 @@ class ImportFromOldSystem {
             //ACTIVED
             //ROLE
 
-
             $FACULTY_RESIDENT_ID = $this->getValueByHeaderName('FACULTY_RESIDENT_ID', $rowData, $headers);
             $LAST_NAME = $this->getValueByHeaderName('LAST_NAME', $rowData, $headers);
             $FIRST_NAME = $this->getValueByHeaderName('FIRST_NAME', $rowData, $headers);
@@ -1129,6 +1173,7 @@ class ImportFromOldSystem {
             $DATE_CREATED = $this->getValueByHeaderName('DATE_CREATED', $rowData, $headers);
             $ACTIVED = $this->getValueByHeaderName('ACTIVED', $rowData, $headers);
             $ROLE = $this->getValueByHeaderName('ROLE', $rowData, $headers);
+            $mobilenumber = NULL;
 
             $emailArr = explode("@",$EMAIL); //ecesarm@med.cornell.edu
             if( count($emailArr) > 0 ) {
@@ -1138,13 +1183,115 @@ class ImportFromOldSystem {
                 exit("No CWID found by email=".$EMAIL);
             }
 
+            $cwid = $this->canonicalize($cwid);
+
             $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+
+            if( !$user ) {
+                $emailCanonical = $this->canonicalize($EMAIL);
+                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($emailCanonical);
+            }
+
             if( !$user ) {
                 $notFoundUserCount++;
                 $errorMsg = $notFoundUserCount.": No user found by cwid=".$cwid." (firstName=$FIRST_NAME, lastName=$LAST_NAME)";
-                //echo $errorMsg."<br>";
-                //exit($errorMsg);
-            }
+                echo $errorMsg."<br>";
+
+                if( $allowCreate ) {
+
+                    //Create new interviewer user
+                    $lastNameCap = $this->capitalizeIfNotAllCapital($LAST_NAME);
+                    $firstNameCap = $this->capitalizeIfNotAllCapital($FIRST_NAME);
+
+                    //$lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
+                    //$firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
+                    //Last Name + First Name + Email
+                    //$username = $lastNameCap . "_" . $firstNameCap;
+
+                    //$authUtil = new AuthUtil($this->container,$em);
+                    $searchRes = $authUtil->searchLdap($cwid,1,false);
+                    //echo "1 searchRes=".$searchRes."<br>";
+                    if( $searchRes == NULL || count($searchRes) == 0 ) {
+                        $searchRes = $authUtil->searchLdap($cwid,2,false);
+                    }
+                    //echo "2 searchRes=".$searchRes."<br>";
+                    if( $searchRes == NULL || count($searchRes) == 0 ) {
+                        $userkeytype = $localUserkeytype;
+
+                    } else {
+                        echo "### ldap user=".$cwid."###<br>";
+                        //exit('111');
+                        $userkeytype = $ldapUserkeytype;
+
+                        if( array_key_exists('telephonenumber', $searchRes) ) {
+                            $ldapPhone = $searchRes['telephoneNumber'];
+                            $ldapPhone = trim($ldapPhone);
+                            if( $PHONE != $ldapPhone ) {
+                                $PHONE = $ldapPhone;
+                            }
+                        }
+                        if( array_key_exists('mobile', $searchRes) ) {
+                            $mobilenumber = $searchRes['mobile'];
+                        }
+
+                        if (array_key_exists('mail', $searchRes)) {
+                            $ldapEmail = $searchRes['mail'];
+                            $ldapEmail = trim($ldapEmail);
+                            if( $EMAIL != $ldapEmail ) {
+                                $EMAIL = $ldapEmail;
+                            }
+                        }
+                    }
+
+                    $displayName = $FIRST_NAME . " " . $LAST_NAME;
+
+                    //create excel user
+                    $addobjects = false;
+                    $user = new User($addobjects);
+                    $user->setKeytype($userkeytype);
+                    $user->setPrimaryPublicUserId($cwid);
+                    $user->setAuthor($systemUser);
+                    $user->setEnabled(false);
+
+                    //set unique username
+                    $usernameUnique = $user->createUniqueUsername();
+                    $user->setUsername($usernameUnique);
+                    $user->setUsernameCanonical($usernameUnique);
+
+                    $user->setEmail($EMAIL);
+                    $user->setEmailCanonical($EMAIL);
+
+                    $user->setFirstName($FIRST_NAME);
+                    $user->setLastName($LAST_NAME);
+                    //$user->setMiddleName($middleName);
+                    $user->setDisplayName($displayName);
+                    $user->setPassword("");
+                    $user->setCreatedby('resapp_migration');
+                    $user->getPreferences()->setTimezone($default_time_zone);
+
+                    //Pathology Residency Applicant in EmploymentStatus
+                    $employmentStatus = new EmploymentStatus($systemUser);
+                    $employmentStatus->setEmploymentType($employmentType);
+                    $employmentStatus->setTerminationDate($yestardayDate);
+                    $user->addEmploymentStatus($employmentStatus);
+
+                    $user->setPreferredPhone($PHONE);
+
+                    if( $mobilenumber ) {
+                        $user->setPreferredMobilePhone($mobilenumber);
+                    }
+
+                    $this->em->persist($user);
+                    $this->em->flush();
+                    //exit('EOF create new user='.$user);
+
+                } else { //if( $allowCreate ) {
+
+                    exit("EOF getFacultyResident: ".$errorMsg);
+
+                } //else( $allowCreate ) {
+
+            } //if user
 
             $usersArr[$FACULTY_RESIDENT_ID] = array(
                 'user' => $user,
@@ -1161,8 +1308,8 @@ class ImportFromOldSystem {
         }
 
         echo "Total count $count, notFoundUserCount=$notFoundUserCount <br>";
+        //exit('EOF');
         $this->usersArr = $usersArr;
-        //return $enrolmentYearArr;
     }
 
     public function getValueByHeaderName($header, $row, $headers) {
@@ -1216,7 +1363,22 @@ class ImportFromOldSystem {
         return $s;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function canonicalize($string)
+    {
+        if (null === $string) {
+            return;
+        }
 
+        $encoding = mb_detect_encoding($string);
+        $result = $encoding
+            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+            : mb_convert_case($string, MB_CASE_LOWER);
+
+        return $result;
+    }
 
 
 

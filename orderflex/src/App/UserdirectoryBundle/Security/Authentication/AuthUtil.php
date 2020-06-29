@@ -1033,7 +1033,7 @@ class AuthUtil {
         return NULL;
     }
 
-    public function searchLdap($username,$ldapType=1) {
+    public function searchLdap($username,$ldapType=1,$withWarning=true) {
 
         //echo "username=".$username."<br>";
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1123,7 +1123,13 @@ class AuthUtil {
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            if( $withWarning ) {
+                $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            } else {
+                $sr = @ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            }
+
             if( $sr ) {
                 $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);

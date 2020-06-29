@@ -650,7 +650,7 @@ class ResAppUtil {
 
 
 
-    public function addEmptyResAppFields($residencyApplication) {
+    public function addAllEmptyResAppFields($residencyApplication) {
 
         $em = $this->em;
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -691,7 +691,42 @@ class ResAppUtil {
         $this->addEmptyReferences($residencyApplication);
 
     }
+    public function addEmptyResAppFields($residencyApplication) {
 
+        $em = $this->em;
+        $user = $residencyApplication->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        //Pathology Residency Applicant in EmploymentStatus
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
+        }
+        if( count($user->getEmploymentStatus()) == 0 ) {
+            $employmentStatus = new EmploymentStatus($author);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+        }
+
+        //citizenships
+        $this->addEmptyCitizenships($residencyApplication);
+        
+        //Education
+        $this->addEmptyTrainings($residencyApplication);
+
+        //National Boards (examination): oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1DatePassed
+        $this->addEmptyNationalBoards($residencyApplication);
+
+        //Medical Licensure: oleg_resappbundle_residencyapplication[stateLicenses][0][licenseNumber]
+        //$this->addEmptyStateLicenses($residencyApplication);
+
+        //Board Certification
+        //$this->addEmptyBoardCertifications($residencyApplication);
+
+        //References
+        //$this->addEmptyReferences($residencyApplication);
+
+    }
 
     //app_resappbundle_residencyapplication_references_0_name
     public function addEmptyReferences($residencyApplication) {

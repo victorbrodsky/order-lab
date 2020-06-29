@@ -274,6 +274,28 @@ class DefaultController extends OrderAbstractController
 
         exit($res);
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interviewers
+     *
+     * @Route("/import-from-old-system-interviewers", name="resapp_import_from_old_system_interviewers")
+     */
+    public function importFromOldSystemInterviewersAction( Request $request, ImportFromOldSystem $importFromOldSystemUtil ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$importFromOldSystemUtil = $this->container->get('resapp_rec_letter_util');
+
+        $allowCreate = true;
+        //$allowCreate = false;
+        $res = $importFromOldSystemUtil->getFacultyResident($allowCreate);
+
+        exit($res);
+    }
     /**
      * http://127.0.0.1/order/index_dev.php/residency-applications/import-from-old-system-interview
      * 
