@@ -110,6 +110,14 @@ class ImportFromOldSystem {
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
+        $ranks = $em->getRepository('AppResAppBundle:ResAppRank')->findAll();
+        $ranksArr = array();
+        foreach($ranks as $rank) {
+            $ranksArr[$rank->getValue()] = $rank;
+        }
+        dump($ranksArr);
+        //exit('111');
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -182,6 +190,14 @@ class ImportFromOldSystem {
                 continue;
             }
 
+            $interviewDb = $this->getExistingInterview($residencyApplicationDb,$facultyResidentId);
+            if( $interviewDb ) {
+                $errorMsg = $row.": Skip Existing Interview: residencyApplicationDb=$residencyApplicationDb, facultyResidentId=$facultyResidentId";
+                echo $errorMsg."<br>";
+                $logger->notice($errorMsg);
+                continue;
+            }
+
             //Check if user exists for non-empty review
             if( $academicRank || $personalityRank || $potentialRank || $totalRank || $langProficiency || $comment ) {
                 $facultyResidentArr = $this->usersArr[$facultyResidentId];
@@ -190,6 +206,7 @@ class ImportFromOldSystem {
                 $facultyResidentFirstName = $facultyResidentArr['FIRST_NAME'];//'FIRST_NAME' => $FIRST_NAME,
                 $facultyResidentPhone = $facultyResidentArr['PHONE'];//'PHONE' => $PHONE,
                 $facultyResidentEmail = $facultyResidentArr['EMAIL'];//'EMAIL' => $EMAIL,
+
                 if( !$interviewer ) {
                     echo $count.": academicRank=$academicRank: No user exists: FirstName=$facultyResidentFirstName, LastName=$facultyResidentLastName, email=$facultyResidentEmail, phone$facultyResidentPhone<br>";
                     $count++;
@@ -207,15 +224,31 @@ class ImportFromOldSystem {
                     echo "dateInterview=[$dateInterview]=>[".$dateInterviewStr->format('Y-m-d H:i:s')."]<br>";
                     $interview->setInterviewDate($dateInterviewStr);
 
-                    $interview->setAcademicRank($academicRank);
-                    $interview->setPersonalityRank($personalityRank);
-                    $interview->setPotentialRank($potentialRank);
-                    $interview->setLanguageProficiency($langProficiency);
+                    //$academicRank = number_format($academicRank, 1);
+                    //$academicRankEntity = $ranksArr[$academicRank];
+                    $academicRankEntity = $this->convertToDecimal($academicRank,$ranksArr);
+                    $interview->setAcademicRank($academicRankEntity); //ResAppRank
+
+                    //$personalityRank = number_format($personalityRank, 1);
+                    //$personalityRankEntity = $ranksArr[$personalityRank];
+                    $personalityRankEntity = $this->convertToDecimal($personalityRank,$ranksArr);
+                    $interview->setPersonalityRank($personalityRankEntity); //ResAppRank
+
+                    //$potentialRank = number_format($potentialRank, 1);
+                    //$potentialRankEntity = $ranksArr[$potentialRank];
+                    $potentialRankEntity = $this->convertToDecimal($potentialRank,$ranksArr);
+                    $interview->setPotentialRank($potentialRankEntity); //ResAppRank
+
                     $interview->setTotalRank($totalRank);
+
+                    $interview->setLanguageProficiency($langProficiency);
                     $interview->setComment($comment);
 
                     $residencyApplicationDb->addInterview($interview);
 
+                    //TODO: ResidencyApplication -> Rank?
+
+                    //exit('EOF Interview');
                 }
             }
 
@@ -223,6 +256,44 @@ class ImportFromOldSystem {
         }
 
         return "Imported evaluations: count=".$processingCount;
+    }
+    public function getExistingInterview( $residencyApplicationDb, $facultyResidentId ) {
+
+        $facultyResidentArr = $this->usersArr[$facultyResidentId];
+        $interviewer = $facultyResidentArr['user'];
+        if( !$interviewer ) {
+            exit("Interviewer not found by facultyResidentId=$facultyResidentId");
+        }
+
+        $repository = $this->em->getRepository('AppResAppBundle:Interview');
+        $dql = $repository->createQueryBuilder('interview');
+        $dql->leftJoin("interview.resapp","resapp");
+        $dql->leftJoin("interview.interviewer","interviewer");
+
+        $dql->where("resapp.id = :resappId AND interviewer.id = :interviewerId");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'resappId' => $residencyApplicationDb->getId(),
+            'interviewerId' => $interviewer->getId(),
+        ));
+
+        $interviews = $query->getResult();
+
+        if( count($interviews) > 0 ) {
+            return true;
+        }
+
+        return false;
+    }
+    public function convertToDecimal($str,$ranksArr) {
+        $decimal = number_format($str, 1);
+        $rankEntity = $ranksArr[$decimal];
+        if( !$rankEntity ) {
+            exit("Rank not found by str=$str, decimal=$decimal");
+        }
+        return $rankEntity;
     }
 
 
@@ -1217,10 +1288,11 @@ class ImportFromOldSystem {
                     //echo "2 searchRes=".$searchRes."<br>";
                     if( $searchRes == NULL || count($searchRes) == 0 ) {
                         $userkeytype = $localUserkeytype;
-
+                        $disabledUser = true;
                     } else {
                         echo "### ldap user=".$cwid."###<br>";
                         //exit('111');
+                        $disabledUser = false;
                         $userkeytype = $ldapUserkeytype;
 
                         if( array_key_exists('telephonenumber', $searchRes) ) {
@@ -1251,7 +1323,7 @@ class ImportFromOldSystem {
                     $user->setKeytype($userkeytype);
                     $user->setPrimaryPublicUserId($cwid);
                     $user->setAuthor($systemUser);
-                    $user->setEnabled(false);
+
 
                     //set unique username
                     $usernameUnique = $user->createUniqueUsername();
@@ -1272,7 +1344,12 @@ class ImportFromOldSystem {
                     //Pathology Residency Applicant in EmploymentStatus
                     $employmentStatus = new EmploymentStatus($systemUser);
                     $employmentStatus->setEmploymentType($employmentType);
-                    $employmentStatus->setTerminationDate($yestardayDate);
+
+                    if( $disabledUser ) {
+                        $user->setEnabled(false);
+                        $employmentStatus->setTerminationDate($yestardayDate);
+                    }
+
                     $user->addEmploymentStatus($employmentStatus);
 
                     $user->setPreferredPhone($PHONE);
