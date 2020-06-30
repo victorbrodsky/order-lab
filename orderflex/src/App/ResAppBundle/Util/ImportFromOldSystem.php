@@ -1384,7 +1384,7 @@ class ImportFromOldSystem {
 
                 } else { //if( $allowCreate ) {
 
-                    exit("EOF get Faculty Resident: ".$errorMsg);
+                    //exit("EOF get Faculty Resident: ".$errorMsg);
 
                 } //else( $allowCreate ) {
 
