@@ -208,8 +208,11 @@ class UtilController extends OrderAbstractController {
         $paramArr = array('instTypeEducational' => 'Educational','instTypeMedical' => 'Medical');
 
         if( $newCycle ) {
-            $query->andWhere("(list.type = :typedef)");
+            //$query->andWhere("(list.type = :typedef)");
+            //$paramArr['typedef'] = 'default';
+            $query->andWhere("(list.type = :typedef OR list.type = :typeadd)");
             $paramArr['typedef'] = 'default';
+            $paramArr['typeadd'] = 'user-added';
         } else {
             $query->andWhere("(list.type = :typedef OR list.type = :typeadd)");
             $paramArr['typedef'] = 'default';

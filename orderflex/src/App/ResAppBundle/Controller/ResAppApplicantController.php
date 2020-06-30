@@ -383,7 +383,7 @@ class ResAppApplicantController extends OrderAbstractController {
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
-            $emailStr = " Emails have not been sent: there are no destination emails.";
+            $emailStr = " Emails have not been sent: there are no destination emails. Probably itinerary or interviewer(s) do not exists.";
         }
 
         $logger = $this->container->get('logger');

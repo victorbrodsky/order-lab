@@ -430,7 +430,7 @@ class ResidencyApplicationType extends AbstractType
         }
 
         $builder->add('examinations', CollectionType::class, array(
-            'entry_type' => ExaminationType::class,
+            'entry_type' => ResAppExaminationType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,

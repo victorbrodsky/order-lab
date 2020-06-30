@@ -332,15 +332,16 @@
                 {{ formmacros.checkbox(form.couple) }}
                 {{ formmacros.field(form.postSoph) }}
 
-
-                <div class="well form-element-holder user-ResidencyApplication">
-                    <label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>
-                    <div class="row withpaddingtop">
-                        <div class="col-xs-12">
-                            {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}
+                {% if cycle != "download" %}
+                    <div class="well form-element-holder user-ResidencyApplication">
+                        <label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
 
                 {#Use Cover Letter DB for ERAS (Electronic Residency Application Service) files. Only the latest ERAS file will be used in the application's PDF#}
                 <div class="well form-element-holder user-ResidencyApplication">

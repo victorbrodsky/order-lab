@@ -1561,7 +1561,7 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         $resappUtil->addEmptyResAppFields($residencyApplication);
 
-        $resappVisas = $resappUtil->getFellowshipVisaStatuses(false,false);
+        $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
 
         $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         if( count($resTypes) == 0 ) {
