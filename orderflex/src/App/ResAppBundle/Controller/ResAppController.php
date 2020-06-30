@@ -1235,7 +1235,7 @@ class ResAppController extends OrderAbstractController {
             }
             /////////////// EOF Process Removed Collections ///////////////
 
-            $this->calculateScore($entity);
+            $this->calculateScore($entity); // /edit/{id}  /edit-with-default-interviewers/{id}
 
             $this->processDocuments($entity);
 
@@ -1561,6 +1561,8 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         $resappUtil->addEmptyResAppFields($residencyApplication);
 
+        $resappVisas = $resappUtil->getFellowshipVisaStatuses(false,false);
+
         $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         if( count($resTypes) == 0 ) {
             return array();
@@ -1573,7 +1575,8 @@ class ResAppController extends OrderAbstractController {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'resappTypes' => $resTypes
+            'resappTypes' => $resTypes,
+            'resappVisas' => $resappVisas
 
         );
         //$form = $this->createForm( new ResidencyApplicationType($params), $residencyApplication );
@@ -1647,7 +1650,7 @@ class ResAppController extends OrderAbstractController {
 
             //exit('form valid');
 
-            $this->calculateScore($residencyApplication);
+            $this->calculateScore($residencyApplication); // /applicant/new
 
             $this->processDocuments($residencyApplication);
 
@@ -2203,7 +2206,7 @@ class ResAppController extends OrderAbstractController {
 
             $resapp = $interview->getResapp();
 
-            $this->calculateScore($resapp);
+            $this->calculateScore($resapp); // /interview/update/{id}
             
             //Upon submitting the first interview evaluation form for a given application, 
             //if the current application status is not "Interviewee", automatically switch it to "Interviewee".

@@ -593,7 +593,7 @@ class FellAppController extends OrderAbstractController {
             'allowPopulateFellApp' => $allowPopulateFellApp,
             'acceptingApplication' => $acceptingApplication,
             'fellappfilter' => $filterform->createView(),
-            'startDate' => $startDate,
+            //'startDate' => $startDate,
             'filter' => $fellSubspecId,
             'accessreqs' => $accessreqsCount,
             'currentYear' => $startYearStr, //$currentYear, //TODO: adopt the currentYear to currentYears in controller and html
@@ -1540,13 +1540,19 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
 
+        $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
+
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+
         $params = array(
             'cycle' => 'new',
             'em' => $this->getDoctrine()->getManager(),
             'user' => $fellowshipApplication->getUser(),
             'cloneuser' => null,
             'roles' => $user->getRoles(),
-            'container' => $this->container
+            'container' => $this->container,
+            'fellappTypes' => $fellTypes,
+            'fellappVisas' => $fellappVisas
         );
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
         $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //new

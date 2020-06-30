@@ -246,7 +246,10 @@ class ImportFromOldSystem {
 
                     $residencyApplicationDb->addInterview($interview);
 
-                    //TODO: ResidencyApplication -> Rank?
+                    //calculate total Interview Score (interviewScore) for all existing interviews
+                    $this->calculateScore($residencyApplicationDb);
+
+                    //TODO: ResidencyApplication -> Rank? : NotUsed
 
                     //exit('EOF Interview');
                 }
@@ -294,6 +297,23 @@ class ImportFromOldSystem {
             exit("Rank not found by str=$str, decimal=$decimal");
         }
         return $rankEntity;
+    }
+    public function calculateScore($entity) {
+        $count = 0;
+        $score = 0;
+        foreach( $entity->getInterviews() as $interview ) {
+            $totalRank = $interview->getTotalRank();
+            if( $totalRank ) {
+                $score = $score + $totalRank;
+                $count++;
+            }
+        }
+        if( $count > 0 ) {
+            $score = $score/$count;
+            $score = round($score,1);
+        }
+
+        $entity->setInterviewScore($score);
     }
 
 
@@ -1364,7 +1384,7 @@ class ImportFromOldSystem {
 
                 } else { //if( $allowCreate ) {
 
-                    exit("EOF getFacultyResident: ".$errorMsg);
+                    exit("EOF get Faculty Resident: ".$errorMsg);
 
                 } //else( $allowCreate ) {
 
