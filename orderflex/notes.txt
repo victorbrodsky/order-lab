@@ -537,3 +537,15 @@ PRA_FACULTY_RESIDENT_INFO - evaluator
 
 Bing: https://store.ihcworld.com/cart.php
 
+cn=Users,ou=NYP Users,DC=a,DC=wcmc-ad,DC=net
+
+cn=Users,dc=a,dc=wcmc-ad,dc=net
+ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
+ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+
+ou=NYP Users,ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+
+(|(OU=<someOU1>)(OU=<someOU2>))
+(|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
+(|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
+

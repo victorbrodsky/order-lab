@@ -3425,7 +3425,7 @@ class UserController extends OrderAbstractController
 
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
-            if( $currentKeyType && $currentKeyType != $originalKeyType ) {
+            if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
                 $uniqueUsername = $entity->createUniqueUsername();
                 $entity->setUsernameForce($uniqueUsername);
             }
@@ -4445,7 +4445,34 @@ class UserController extends OrderAbstractController
 
         //process $changeset: author, subjectuser, oldvalue, newvalue
         foreach( $changeset as $key => $value ) {
-            if( $value[0] != $value[1] ) {
+
+            // $value[0] $value[1] can be objects
+            if( is_object($value[0]) ) {
+                //object
+                if( $value[0] instanceof \DateTime ) {
+                    $oldValue = $this->convertDateTimeToStr($value[0]);
+                } else {
+                    $oldValue = $value[0]."";
+                }
+            } else {
+                //not object
+                $oldValue = $value[0];
+            }
+
+            if( is_object($value[1]) ) {
+                //object
+                if( $value[1] instanceof \DateTime ) {
+                    $newValue = $this->convertDateTimeToStr($value[1]);
+                } else {
+                    $newValue = $value[1]."";
+                }
+            } else {
+                //not object
+                $newValue = $value[1];
+            }
+
+            //if( $value[0] != $value[1] ) {
+            if( $oldValue != $newValue ) {
 
                 if( is_object($key) ) {
                     //if $key is object then skip it, because we don't want to have non-informative record such as: credentials(stateLicense New): old value=, new value=Credentials
@@ -4454,8 +4481,8 @@ class UserController extends OrderAbstractController
 
                 $field = $key;
 
-                $oldValue = $value[0];
-                $newValue = $value[1];
+                //$oldValue = $value[0];
+                //$newValue = $value[1];
 
                 if( $oldValue instanceof \DateTime ) {
                     $oldValue = $this->convertDateTimeToStr($value[0]);

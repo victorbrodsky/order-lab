@@ -228,7 +228,9 @@ class UserType extends AbstractType
 
         $primaryPublicUserIdAttr = array('class'=>'form-control form-control-modif');
         if( $this->cycle != 'create' ) {
-            $primaryPublicUserIdAttr['readonly'] = true;
+            if( !$this->roleAdmin ) {
+                $primaryPublicUserIdAttr['readonly'] = true;
+            }
         }
         $builder->add('primaryPublicUserId', null, array(
             'label' => 'Primary Public User ID:',
