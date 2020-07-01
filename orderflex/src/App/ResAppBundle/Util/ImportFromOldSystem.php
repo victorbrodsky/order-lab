@@ -238,29 +238,44 @@ class ImportFromOldSystem {
 
                     //$academicRank = number_format($academicRank, 1);
                     //$academicRankEntity = $ranksArr[$academicRank];
-                    $academicRankEntity = $this->convertToDecimal($academicRank,$ranksArr);
-                    $interview->setAcademicRank($academicRankEntity); //ResAppRank
+                    $academicRankEntity = $this->convertToRank($academicRank,$ranksArr);
+                    if( $academicRankEntity ) {
+                        $interview->setAcademicRank($academicRankEntity); //ResAppRank
+                    }
 
                     //$personalityRank = number_format($personalityRank, 1);
                     //$personalityRankEntity = $ranksArr[$personalityRank];
-                    $personalityRankEntity = $this->convertToDecimal($personalityRank,$ranksArr);
-                    $interview->setPersonalityRank($personalityRankEntity); //ResAppRank
+                    $personalityRankEntity = $this->convertToRank($personalityRank,$ranksArr);
+                    if( $personalityRankEntity ) {
+                        $interview->setPersonalityRank($personalityRankEntity); //ResAppRank
+                    }
 
                     //$potentialRank = number_format($potentialRank, 1);
                     //$potentialRankEntity = $ranksArr[$potentialRank];
-                    $potentialRankEntity = $this->convertToDecimal($potentialRank,$ranksArr);
-                    $interview->setPotentialRank($potentialRankEntity); //ResAppRank
+                    $potentialRankEntity = $this->convertToRank($potentialRank,$ranksArr);
+                    if( $potentialRankEntity ) {
+                        $interview->setPotentialRank($potentialRankEntity); //ResAppRank
+                    }
 
+                    //$totalRankDecimal = number_format($totalRank, 2);
+                    if( $totalRank > 9 ) {
+                        //$totalRank = $academicRank + $personalityRank + $potentialRank;
+                        $totalRank = 9;
+                        //echo "TotalRank=$totalRank <br>";
+                    }
+                    $totalRank = number_format($totalRank, 1);
                     $interview->setTotalRank($totalRank);
 
                     //LanguageProficiency
                     $langProficiencyEntity = $this->em->getRepository('AppResAppBundle:LanguageProficiency')->findOneByName($langProficiency);
-                    if( !$langProficiencyEntity ) {
-                        exit("LanguageProficiency not found by langProficiency=$langProficiency");
-                    }
+//                    if( !$langProficiencyEntity ) {
+//                        exit("LanguageProficiency not found by langProficiency=$langProficiency");
+//                    }
                     //echo "langProficiency=$langProficiency => $langProficiencyEntity <br>";
                     //exit('111');
-                    $interview->setLanguageProficiency($langProficiencyEntity);
+                    if( $langProficiencyEntity ) {
+                        $interview->setLanguageProficiency($langProficiencyEntity);
+                    }
 
                     $interview->setComment($comment);
 
@@ -318,8 +333,17 @@ class ImportFromOldSystem {
 
         return false;
     }
-    public function convertToDecimal($str,$ranksArr) {
+    public function convertToRank($str,$ranksArr) {
+        if( (int)$str > 3 ) {
+            $str = '3';
+        }
         $decimal = number_format($str, 1);
+        //echo "[$str]=>[$decimal] <br>";
+        if( array_key_exists($decimal, $ranksArr) === false ) {
+            echo "Warning: Rank not valid [$str]=>[$decimal] <br>";
+            return NULL;
+            //exit("Rank not valid [$str]=>[$decimal]");
+        }
         $rankEntity = $ranksArr[$decimal];
         if( !$rankEntity ) {
             exit("Rank not found by str=$str, decimal=$decimal");
