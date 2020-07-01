@@ -303,7 +303,7 @@ class DefaultController extends OrderAbstractController
      */
     public function importFromOldSystem4Action( Request $request, ImportFromOldSystem $importFromOldSystemUtil, $max=NULL ) {
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
