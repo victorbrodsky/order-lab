@@ -4446,7 +4446,7 @@ class UserController extends OrderAbstractController
         //process $changeset: author, subjectuser, oldvalue, newvalue
         foreach( $changeset as $key => $value ) {
 
-            // $value[0] $value[1] can be objects
+            // $value[0], $value[1] can be objects
             if( is_object($value[0]) ) {
                 //object
                 if( $value[0] instanceof \DateTime ) {
@@ -4458,7 +4458,6 @@ class UserController extends OrderAbstractController
                 //not object
                 $oldValue = $value[0];
             }
-
             if( is_object($value[1]) ) {
                 //object
                 if( $value[1] instanceof \DateTime ) {

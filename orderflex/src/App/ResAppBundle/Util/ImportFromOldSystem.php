@@ -118,6 +118,11 @@ class ImportFromOldSystem {
         dump($ranksArr);
         //exit('111');
 
+//        $statusComplete = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName('complete');
+//        if( !$statusComplete ) {
+//            exit("ResAppStatus not found by langProficiency=complete");
+//        }
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -181,6 +186,13 @@ class ImportFromOldSystem {
             $dateCreated = $this->getValueByHeaderName('DATE_CREATED', $rowData, $headers);
             $whenAccessEvalForm = $this->getValueByHeaderName('WHEN_ACCESS_EVAL_FORM', $rowData, $headers);
 
+//            if( $applicantId == '14' ) {
+//                //ok
+//            } else {
+//                echo "Skip Interview applicantId=$applicantId <br>";
+//                continue;
+//            }
+
             $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($applicantId);
 
             if( !$residencyApplicationDb ) {
@@ -192,7 +204,7 @@ class ImportFromOldSystem {
 
             $interviewDb = $this->getExistingInterview($residencyApplicationDb,$facultyResidentId);
             if( $interviewDb ) {
-                $errorMsg = $row.": Skip Existing Interview: residencyApplicationDb=$residencyApplicationDb, facultyResidentId=$facultyResidentId";
+                $errorMsg = $row.": Skip Existing Evaluation id=$evalFormId: residencyApplicationDb=$residencyApplicationDb, facultyResidentId=$facultyResidentId";
                 echo $errorMsg."<br>";
                 $logger->notice($errorMsg);
                 continue;
@@ -212,7 +224,7 @@ class ImportFromOldSystem {
                     $count++;
                 } else {
 
-                    //echo $row.": Evaluation id=$evalFormId, facultyResident=".$interviewer."<br>";
+                    echo $row.": Evaluation id=$evalFormId (applicant=".$residencyApplicationDb->getUser()."), facultyResident=".$interviewer."<br>";
 
                     $interview = new Interview();
                     $interview->setInterviewer($interviewer);
@@ -221,7 +233,7 @@ class ImportFromOldSystem {
                     //echo "dateInterview=$dateInterview <br>";
                     $dateInterviewStr = $this->transformDatestrToDate($dateInterview);
                     //exit("dateInterviewStr=".$dateInterviewStr->format('Y-m-d H:i:s'));
-                    echo "dateInterview=[$dateInterview]=>[".$dateInterviewStr->format('Y-m-d H:i:s')."]<br>";
+                    //echo "dateInterview=[$dateInterview]=>[".$dateInterviewStr->format('Y-m-d H:i:s')."]<br>";
                     $interview->setInterviewDate($dateInterviewStr);
 
                     //$academicRank = number_format($academicRank, 1);
@@ -241,7 +253,15 @@ class ImportFromOldSystem {
 
                     $interview->setTotalRank($totalRank);
 
-                    $interview->setLanguageProficiency($langProficiency);
+                    //LanguageProficiency
+                    $langProficiencyEntity = $this->em->getRepository('AppResAppBundle:LanguageProficiency')->findOneByName($langProficiency);
+                    if( !$langProficiencyEntity ) {
+                        exit("LanguageProficiency not found by langProficiency=$langProficiency");
+                    }
+                    //echo "langProficiency=$langProficiency => $langProficiencyEntity <br>";
+                    //exit('111');
+                    $interview->setLanguageProficiency($langProficiencyEntity);
+
                     $interview->setComment($comment);
 
                     $residencyApplicationDb->addInterview($interview);
@@ -251,12 +271,20 @@ class ImportFromOldSystem {
 
                     //TODO: ResidencyApplication -> Rank? : NotUsed
 
-                    //exit('EOF Interview');
+                    //$completeEval of the Interview
+                    //$residencyApplicationDb->setAppStatus($statusComplete);
+
+                    $em->persist($interview);
+                    $em->flush();
+
+                    //exit('EOF 0Interview applicantId='.$applicantId);
                 }
-            }
+            } //if( $academicRank
 
             $processingCount++;
-        }
+
+            //exit('EOF 1Interview applicantId='.$applicantId);
+        } //for
 
         return "Imported evaluations: count=".$processingCount;
     }
