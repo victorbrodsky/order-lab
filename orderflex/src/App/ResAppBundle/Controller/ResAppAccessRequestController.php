@@ -53,8 +53,10 @@ class ResAppAccessRequestController extends AccessRequestController
         return parent::accessRequestCreatePlain($request);
     }
 
+
+
     /**
-     * @Route("/access-requests/new", name="scan_access_request_new", methods={"GET"})
+     * @Route("/access-requests/new", name="resapp_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()

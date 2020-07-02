@@ -147,6 +147,7 @@ class ResAppController extends OrderAbstractController {
         $enableGoolge = false;
         $searchFlag = false;
         $currentYear = date("Y")+2;
+        //$currentYear = date("Y")+1;
         $defaultStartDates = $currentYear;
 
         $residencyTypes = $resappUtil->getResidencyTypesByUser($user);

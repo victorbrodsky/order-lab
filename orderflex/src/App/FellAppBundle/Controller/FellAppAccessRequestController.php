@@ -54,7 +54,7 @@ class FellAppAccessRequestController extends AccessRequestController
     }
 
     /**
-     * @Route("/access-requests/new", name="scan_access_request_new", methods={"GET"})
+     * @Route("/access-requests/new", name="fellapp_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
     public function accessRequestCreateAction()

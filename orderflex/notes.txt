@@ -549,3 +549,21 @@ ou=NYP Users,ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
 (|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
 (|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
 
+<meta http-equiv = "refresh" content = "5; url = https://view.med.cornell.edu/residency-applications" />
+You will be redirected to a new Residency site. Please contact Oleg Ivanov oli2002@med.cornell.edu for more details.
+You will be automatically redirected to a new Residency site <a href="https://view.med.cornell.edu/residency-applications">https://view.med.cornell.edu/residency-applications</a>.
+
+
+<script type="text/javascript">
+    function countdown() {
+        var i = document.getElementById('counter');
+        if (parseInt(i.innerHTML)<=0) {
+            location.href = 'login.php';
+        }
+        if (parseInt(i.innerHTML)!=0) {
+            i.innerHTML = parseInt(i.innerHTML)-1;
+        }
+    }
+    setInterval(function(){ countdown(); },1000);
+</script>
+
