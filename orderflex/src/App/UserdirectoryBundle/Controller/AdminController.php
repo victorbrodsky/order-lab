@@ -1526,6 +1526,16 @@ class AdminController extends OrderAbstractController
                 "Access to specific Residency Application type as Director",
                 50
             ),
+            "ROLE_RESAPP_DIRECTOR_WCM_APEXP" => array(
+                "Residency Program Director WCM AP/EXP",
+                "Access to specific Residency Application type as Director",
+                50
+            ),
+            "ROLE_RESAPP_DIRECTOR_WCM_CPEXP" => array(
+                "Residency Program Director WCM CP/EXP",
+                "Access to specific Residency Application type as Director",
+                50
+            ),
             //Program-Coordinator (3 types)
             "ROLE_RESAPP_COORDINATOR_WCM_AP" => array(
                 "Residency Program Coordinator WCM AP",
@@ -1539,6 +1549,16 @@ class AdminController extends OrderAbstractController
             ),
             "ROLE_RESAPP_COORDINATOR_WCM_APCP" => array(
                 "Residency Program Coordinator WCM AP/CP",
+                "Access to specific Residency Application type as Coordinator",
+                40
+            ),
+            "ROLE_RESAPP_COORDINATOR_WCM_APEXP" => array(
+                "Residency Program Coordinator WCM AP/EXP",
+                "Access to specific Residency Application type as Coordinator",
+                40
+            ),
+            "ROLE_RESAPP_COORDINATOR_WCM_CPEXP" => array(
+                "Residency Program Coordinator WCM CP/EXP",
                 "Access to specific Residency Application type as Coordinator",
                 40
             ),
@@ -1556,6 +1576,16 @@ class AdminController extends OrderAbstractController
             ),
             "ROLE_RESAPP_INTERVIEWER_WCM_APCP" => array(
                 "Residency Program Interviewer WCM AP/CP",
+                "Access to specific Residency Application type as Interviewer",
+                30
+            ),
+            "ROLE_RESAPP_INTERVIEWER_WCM_APEXP" => array(
+                "Residency Program Interviewer WCM AP/EXP",
+                "Access to specific Residency Application type as Interviewer",
+                30
+            ),
+            "ROLE_RESAPP_INTERVIEWER_WCM_CPEXP" => array(
+                "Residency Program Interviewer WCM CP/EXP",
                 "Access to specific Residency Application type as Interviewer",
                 30
             ),
@@ -2243,6 +2273,20 @@ class AdminController extends OrderAbstractController
         if( strpos($role,'APCP') !== false ) {
             $APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
             $entity->setResidencySubspecialty($APCP);
+            $this->addSingleSiteToEntity($entity,"resapp");
+            $this->addResAppPermission($entity);
+        }
+
+        if( strpos($role,'APEXP') !== false ) {
+            $APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/EXP");
+            $entity->setResidencySubspecialty($APEXP);
+            $this->addSingleSiteToEntity($entity,"resapp");
+            $this->addResAppPermission($entity);
+        }
+
+        if( strpos($role,'CPEXP') !== false ) {
+            $CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP/EXP");
+            $entity->setResidencySubspecialty($CPEXP);
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
