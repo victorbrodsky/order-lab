@@ -165,10 +165,10 @@ class ResappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Itinerary / Interview Schedule (Please upload PDFs to ensure proper integration in the Complete Application PDF)")')->count()
         );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Signature")')->count()
-        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Signature")')->count()
+//        );
     }
 
     public function testMyInterview() {
@@ -280,11 +280,11 @@ class ResappTest extends WebTestBase
 //        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
+            $crawler->filter('html:contains("Applicant")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Signature")')->count()
+            $crawler->filter('html:contains("Residency Application Type")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -301,11 +301,11 @@ class ResappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
+            $crawler->filter('html:contains("Applicant")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Signature")')->count()
+            $crawler->filter('html:contains("Residency Application Type")')->count()
         );
         $this->assertGreaterThan(
             0,
