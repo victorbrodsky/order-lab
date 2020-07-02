@@ -155,7 +155,11 @@ class ResappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
+            $crawler->filter('html:contains("Applicant")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Residency Application Type")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -270,10 +274,10 @@ class ResappTest extends WebTestBase
         //Test Show
         $crawler = $this->client->request('GET', '/residency-applications/show/'.$resappId);
 
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Download Application as a PDF")')->count()
-        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Download Application as a PDF")')->count()
+//        );
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Applicant Data")')->count()
