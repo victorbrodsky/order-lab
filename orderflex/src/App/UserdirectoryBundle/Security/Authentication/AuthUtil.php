@@ -65,7 +65,7 @@ class AuthUtil {
 
 
 
-    public function LocalAuthentication($token, $userProvider) {
+    public function LocalAuthentication($token) {
 
         //echo "LocalAuthentication<br>";
         //echo "username=".$token->getUsername()."<br>";
@@ -144,7 +144,7 @@ class AuthUtil {
     }
 
 
-    public function PacsvendorAuthentication($token, $userProvider) {
+    public function PacsvendorAuthentication($token) {
 
         //echo "PacsvendorAuthentication<br>";
         //exit();
@@ -167,7 +167,7 @@ class AuthUtil {
         return NULL;
     }
 
-    public function LdapAuthentication($token, $userProvider, $ldapType=1) {
+    public function LdapAuthentication($token, $ldapType=1) {
         return $this->LdapAuthenticationByUsernamePassword($token->getUsername(),$token->getCredentials(),$ldapType);
     }
     public function LdapAuthenticationByUsernamePassword($username, $password, $ldapType=1) {
@@ -373,7 +373,7 @@ class AuthUtil {
     }
 
     //Do not use search before bind. Search might take a long time
-    public function LdapAuthenticationWithSearch($token, $userProvider, $ldapType=1) {
+    public function LdapAuthenticationWithSearch($token, $ldapType=1) {
 
         //$this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
@@ -428,7 +428,7 @@ class AuthUtil {
         //$this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
 
         //if user exists in ldap, try bind this user and password
-        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials(),$ldapType);
+        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials(),$ldapType); //LdapAuthenticationWithSearch
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
@@ -521,7 +521,7 @@ class AuthUtil {
         return $user;
     }
 
-    public function authenticateUserToken( $subjectUser, $token, $userProvider ) {
+    public function authenticateUserToken( $subjectUser, $token ) {
 
         if( !$subjectUser ) {
             return NULL;
@@ -543,7 +543,7 @@ class AuthUtil {
         if( $identifierKeytype == 'local-user' ) {
             $token->setUser($subjectUser);
             $this->logger->warning('Trying authenticating the local user with username=' . $identifierUsername);
-            $user = $this->LocalAuthentication($token, $userProvider);
+            $user = $this->LocalAuthentication($token);
 
             return $user;
         }
@@ -553,7 +553,7 @@ class AuthUtil {
             //Case 2: "NYP CWID"
             $token->setUser($subjectUser);
             $this->logger->warning('Trying authenticating the LDAP user with username=' . $identifierUsername);
-            $user = $this->LdapAuthentication($token, $userProvider);
+            $user = $this->LdapAuthentication($token);
 
             return $user;
         }
@@ -562,7 +562,7 @@ class AuthUtil {
     }
 
     //check identifier by keytype i.e. "Local User", identifier number and fields username and password (identifier number)
-    public function identifierAuthentication($token, $userProvider) {
+    public function identifierAuthentication($token) {
 
         $username = $token->getUsername();
         //$credentials = $token->getCredentials();

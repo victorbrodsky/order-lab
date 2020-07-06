@@ -143,6 +143,9 @@ class DashboardUtil
             //"60. PIs with most projects" => "pis-with-most-projects",
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
+            "60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
+            "61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+
             "" => "",
             "" => "",
             "" => "",
@@ -6083,10 +6086,15 @@ class DashboardUtil
 
         }
 
-        if( $chartType == "" ) {
+        if( $chartType == "fellapp-number-applicant-by-year" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            //get fellapp applications by year
+            
 
         }
-        if( $chartType == "" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+            $transresUtil = $this->container->get('transres_util');
 
         }
         if( $chartType == "" ) {

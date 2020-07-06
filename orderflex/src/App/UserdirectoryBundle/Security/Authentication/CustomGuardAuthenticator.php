@@ -261,7 +261,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             $providerKey
         );
 
-        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,null,$providerKey);
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
@@ -311,7 +311,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
             $password,
             $providerKey
         );
-        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,null,$providerKey);
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
         if( $usernamePasswordToken ) {
             return true;
         }
@@ -336,7 +336,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
 
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
-    public function authenticateToken($token, $userProvider, $providerKey)
+    public function authenticateToken($token, $providerKey)
     {
         //echo "CustomGuardAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
@@ -374,10 +374,10 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
+                $user = $authUtil->LdapAuthentication($token, $ldapType = 1);
 
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
-                    $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 2);
+                    $user = $authUtil->LdapAuthentication($token, $ldapType = 2);
                 }
 
                 if( !$user ) {
@@ -392,10 +392,10 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 2);
+                $user = $authUtil->LdapAuthentication($token, $ldapType = 2);
 
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
-                    $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
+                    $user = $authUtil->LdapAuthentication($token, $ldapType = 1);
                 }
                 ////////////////////EOF ldap authentication ////////////////////
                 break;
@@ -404,7 +404,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
                 //////////////////////////////////////////////////////////////////////
                 //                       1) local authentication                   //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LocalAuthentication($token, $userProvider);
+                $user = $authUtil->LocalAuthentication($token);
                 ////////////////////EOF first local authentication //////////////////
                 break;
 
@@ -413,7 +413,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
                 //////////////////////////////////////////////////////////////////////
                 //                       2) pacsvendor authentication                   //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
+                $user = $authUtil->PacsvendorAuthentication($token);
                 ////////////////////EOF pacsvendor authentication //////////////////
                 break;
 
@@ -421,7 +421,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
                 //////////////////////////////////////////////////////////////////////
                 //                       4) External IDs                            //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->identifierAuthentication($token, $userProvider);
+                $user = $authUtil->identifierAuthentication($token);
                 ////////////////////EOF External IDs authentication //////////////////
                 break;
 

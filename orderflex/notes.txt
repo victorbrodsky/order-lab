@@ -545,6 +545,12 @@ ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
 
 ou=NYP Users,ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
 
+CN=Users,DC=a,DC=wcmc-ad,DC=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net;ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net
+Some folks at NYP also have WCM roles which would give them AD accounts. 
+It sounds like they need a new role sponsored by someone at WCM. Anyone designated as an administrator of the department/division you wish for them to have a role under can submit a new identity request using our affiliate role system.
+You can see the administrators on the tab of the same name on the department/division page in our web directory. Example page: https://directory.weill.cornell.edu/departments/1851100000
+nyptestuser1
+
 (|(OU=<someOU1>)(OU=<someOU2>))
 (|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
 (|(CN=Users)(OU=NYP Users)),DC=a,DC=wcmc-ad,DC=net
