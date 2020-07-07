@@ -25,6 +25,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Ldap\Adapter\ExtLdap\ConnectionOptions;
+use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -293,6 +295,155 @@ class DefaultController extends OrderAbstractController
         }
 
         exit("EOF Test 2");
+
+    }
+
+
+    /**
+     * @Route("/login-testing/{username}/{password}/", name="employees_login_testing")
+     */
+    public function loginTestingAction( Request $request, $username, $password ) {
+
+        //exit("disabled");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+
+
+        $this->loginTest($username,$password);
+
+
+
+        exit("EOF Login Testing");
+
+    }
+
+    public function loginTest( $thisUser, $password ) {
+        $host = 'a.wcmc-ad.net';
+
+        //$options = 'X_SASL_MECH'; //array(X_SASL_MECH);
+
+        $encryption = 'none';
+        //$encryption = 'ssl';
+        //$encryption = 'tls';
+
+        $ldap = Ldap::create('ext_ldap', [
+            'host' => $host,
+            'port' => 389,
+            'version' => 3,
+            'encryption' => $encryption,
+            //'options' => $options
+            //'options' => array(x_sasl_mech)
+            //'x_sasl_mech'
+        ]);
+
+        //$ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldaps://$host:636']);
+
+        //$dn = "OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+        $dn = "cn=Users,DC=a,DC=wcmc-ad,DC=net";
+
+        $dn = "cn=".$thisUser.",".$dn;
+        echo "dn: [$dn]<br>";
+        echo "password=[$password]<br>";
+
+        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+        //$dn = "CN=xxx";
+        //$dn = "CN=xxx,DC=a,DC=wcmc-ad,DC=net";
+        //$password = "xxx";
+
+        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+        //$password = "xxx";
+
+        $r = $ldap->bind($dn, $password);
+
+        dump($r);
+
+//        if( $r ) {
+//            exit('OK');
+//        } else {
+//            exit('NOT OK');
+//        }
+
+        exit('EOF');
+    }
+
+
+    public function loginTest_php( $thisUser, $password ) {
+
+        //$thisUser = $_SERVER['REMOTE_USER'];
+        //$thisUser = "nyptestuser1";
+        $thisServer = 'a.wcmc-ad.net';
+
+        # Bind to the directory Server
+        $ldap = ldap_connect("ldap://$thisServer");
+        if($ldap) {
+            $r = ldap_bind($ldap);
+        } else {
+            echo "Unable to connect to $thisServer!";
+        }
+
+        # Set an option
+        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+        echo "<h1>Kerberos Credentials</h1>\n";
+        echo "<pre>\n";
+        system('klist');
+        echo "</pre>\n";
+
+        $dn = "DC=a,DC=wcmc-ad,DC=net";
+
+        $r=ldap_sasl_bind ( $ldap, NULL, $password, 'DIGEST-MD5', NULL, $thisUser, $dn);
+
+        if( $r ) {
+            exit('OK');
+        } else {
+            exit('NOT OK');
+        }
+
+        exit('111');
+
+        # Bind using the default Kerberos credentials
+        //if (ldap_sasl_bind($ldap,"","","GSSAPI")) {
+        if (ldap_sasl_bind($ldap,$thisUser,$password,"GSSAPI")) {
+
+            # Search the Directory
+            //$dn = "cn=people,dc=stanford,dc=edu";
+            //$filter = "(|(uid=$thisUser)(mail=$thisUser@*))";
+            //DistinguishedName="DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+            //AttributeNameUUID="objectGuid" AttributeNameUser="sAMAccountName" PageSize="10">
+            $dn = "DC=a,DC=wcmc-ad,DC=net";
+            $filter = "(objectClass=user)";
+            echo "<h1>LDAP Search</h1>\n";
+            echo "Host: $thisServer<br />\n";
+            echo "Base DN: $dn<br />\n";
+            echo "Filter: $filter<br />\n";
+            echo "REMOTE_USER: $thisUser<br />\n";
+
+            $result = ldap_search($ldap, $dn, $filter);
+            if ($result) {
+                echo "<blockquote>\n";
+                $cnt = ldap_count_entries($ldap, $result);
+                echo "Number of entries returned is $cnt<br />\n";
+                $info = ldap_get_entries($ldap,$result);
+                echo "Data for " . $info["count"] . " items returned:<p>";
+                print("\n");
+                for($i=0;$i<$info["count"];$i++) {
+                    echo "dn is: " . $info[$i]["dn"] . "<br />";
+                    print("\n");
+                    echo "first cn entry is: " . $info[$i]["cn"][0] . "<br />";
+                    print("\n");
+                    echo "first email is: " . $info[$i]["mail"][0] . "<br /> <hr />";
+                    print("\n");
+                }
+                echo "</blockquote>\n";
+            }
+        } else {
+            echo '<font color="red">Bind to the directory failed.</font>'."\n";
+        }
+
+        ldap_close($ldap);
 
     }
 

@@ -540,7 +540,7 @@ Bing: https://store.ihcworld.com/cart.php
 cn=Users,ou=NYP Users,DC=a,DC=wcmc-ad,DC=net
 
 cn=Users,dc=a,dc=wcmc-ad,dc=net
-ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
+ou=NYP Users,dc=a,dc=wcmc-ad,dc=net (ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net)
 ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net
 
 ou=NYP Users,ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net

@@ -1222,7 +1222,7 @@ class UtilController extends OrderAbstractController {
         //One user has "cn" as displayName rather than cwid. This causes the error that this user does not exists in LDAP
         $useLdapSearch = TRUE;
         if( $useLdapSearch ) {
-            $searchRes = $authUtil->searchLdap($userId);
+            $searchRes = $authUtil->searchLdap($userId); //TODO: use ldapType=2 too
             if ($searchRes == NULL || count($searchRes) == 0) {
                 $output = "notok";
             }
