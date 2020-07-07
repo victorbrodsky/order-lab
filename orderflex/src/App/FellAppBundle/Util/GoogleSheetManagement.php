@@ -310,9 +310,11 @@ class GoogleSheetManagement {
                 return $documentDb;
             }
 
+            //echo "Attempt to download file from Google drive file id=".$fileId."; title=".$file->getTitle()."; path=$path <br>";
             //$logger->notice("Attempt to download file from Google drive file id=".$fileId."; title=".$file->getTitle());
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
+            //$googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            //$response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
+            $response = $this->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
             if( !$response ) {
                 throw new IOException('Error application file response is empty: file id='.$fileId."; documentType=".$documentType);
@@ -340,6 +342,7 @@ class GoogleSheetManagement {
                 $filesize = mb_strlen($response) / 1024; //KBs,
             }
 
+            //exit("filesize=$filesize".", path=".$path); //testing
 
             $object = new Document($author);
             $object->setUniqueid($file->getId());
@@ -1026,6 +1029,7 @@ class GoogleSheetManagement {
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
+                //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
                 $logger->error("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
                 return null;
             }
@@ -1053,7 +1057,51 @@ class GoogleSheetManagement {
             print "An error occurred: " . $e->getMessage();
         }
     }
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param File $file Drive File instance.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile22($service, $file, $type=null) {
+        //$downloadUrl = $file->getDownloadUrl();
+        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
+            $downloadUrl = $file->getExportLinks()['text/csv'];
+        } else {
+            $downloadUrl = $file->getDownloadUrl();
+        }
+        if ($downloadUrl) {
+            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+            echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+            if ($httpRequest->getResponseHttpCode() == 200) {
+                return $httpRequest->getResponseBody();
+            } else {
+                // An error occurred.
+                exit("Error:".$httpRequest->getResponseHttpCode());
+                return null;
+            }
+        } else {
+            // The file doesn't have any content stored on Drive.
+            exit("The file doesn't have any content stored on Drive.");
+            return null;
+        }
+    }
+    function downloadFile11($driveService, $file, $type=null) {
+        //$fileId = '0BwwA4oUTeiV1UVNwOHItT0xfa2M';
+        $fileId = $file->getId();
+        echo "fileId=$fileId <br>";
+//        $response = $driveService->files->get($fileId,
+//            array('alt' => 'media')
+//        );
+        $response = $driveService->files->export($fileId, 'text/csv', array(
+            'alt' => 'media'));
 
+        //$response = $driveService->files->get($fileId);
+        $content = $response->getBody()->getContents();
+        exit('content='.$content);
+    }
 
 
 

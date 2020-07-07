@@ -114,6 +114,9 @@
     "egulias/email-validator": {
         "version": "2.1.14"
     },
+    "firebase/php-jwt": {
+        "version": "v5.2.0"
+    },
     "friendsofsymfony/comment-bundle": {
         "version": "v2.4.0"
     },
@@ -155,6 +158,21 @@
         "files": [
             "./config/packages/google_apiclient.yaml"
         ]
+    },
+    "google/apiclient-services": {
+        "version": "v0.139"
+    },
+    "google/auth": {
+        "version": "v1.9.0"
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.5"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.6.1"
     },
     "hoa/compiler": {
         "version": "3.17.08.08"
@@ -291,11 +309,17 @@
     "phpoption/phpoption": {
         "version": "1.7.2"
     },
+    "phpseclib/phpseclib": {
+        "version": "2.0.27"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
     "psr/container": {
         "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/link": {
         "version": "1.0.0"
@@ -305,6 +329,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

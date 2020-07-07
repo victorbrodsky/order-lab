@@ -521,6 +521,7 @@ class AuthUtil {
         return $user;
     }
 
+    //Used by ajax authenticate-user/
     public function authenticateUserToken( $subjectUser, $token ) {
 
         if( !$subjectUser ) {
@@ -554,6 +555,12 @@ class AuthUtil {
             $token->setUser($subjectUser);
             $this->logger->warning('Trying authenticating the LDAP user with username=' . $identifierUsername);
             $user = $this->LdapAuthentication($token);
+
+            if( !$user ) {
+                //Try to use user's credential authentication under Credentials->Identifiers-> identifier type "Local User"
+                //This identifier must have status "Verified by Administrator" and checked "Identifier enables system/service access" checkbox
+                $user = $this->simpleIdentifierAuthetication($token,false);
+            }
 
             return $user;
         }
@@ -713,7 +720,7 @@ class AuthUtil {
         $userSecUtil->createUserEditEvent($sitename,$event,$subjectUser,$subjectUser,$request,'Successful Login');
     }
 
-    public function simpleIdentifierAuthetication($token) {
+    public function simpleIdentifierAuthetication($token, $fullAuth=true) {
         //find verified identifier with "Local User" type.
         // Use oleg_userdirectorybundle_user[credentials][identifiers][0][field] as entered password
 
@@ -736,11 +743,14 @@ class AuthUtil {
         //echo "subjectUser=$subjectUser <br>";
 
         if( $subjectUser ) {
-            $this->addEventLog($subjectUser,$identifierKeytypeName);
 
-            if( $this->canLogin($subjectUser) === false ) {
-                //exit('cannot login');
-                //return NULL;
+            if( $fullAuth ) {
+                $this->addEventLog($subjectUser, $identifierKeytypeName);
+
+                if ($this->canLogin($subjectUser) === false) {
+                    //exit('cannot login');
+                    //return NULL;
+                }
             }
 
             //exit('login OK!');
