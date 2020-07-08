@@ -1039,6 +1039,9 @@ class GoogleSheetManagement {
         ////////////// EOF testing //////////////
 
         $logger = $this->container->get('logger');
+
+        $fileId = $file->getId();
+
         if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
             //$downloadUrl = $file->getExportLinks()['text/csv'];
 
@@ -1047,19 +1050,25 @@ class GoogleSheetManagement {
 
             //exportLink does not work anymore (since ~26 June 2020) for cvs files. The body has 307 Temporary Redirect: The document has moved here.
             //Therefore, use api file export HTTP request: https://developers.google.com/drive/api/v3/reference/files/export
-            $fileId = $file->getId();
+            //$fileId = $file->getId();
             $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
 
         } else {
             $downloadUrl = $file->getDownloadUrl();
         }
+
+        $body = "Logical error downloading file (ID $fileId)";
+
+        //testing
+        //$downloadUrl = null;
+
         //echo "downloadUrl=".$downloadUrl."<br>";
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             //$request = new \Google_Http_Request($downloadUrl);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
-            if ($httpRequest->getResponseHttpCode() == 200) {
+            if( $httpRequest->getResponseHttpCode() == 200 ) {
                 //$logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
                 //$logger->notice("getResponseBody=".$httpRequest->getResponseBody());
                 return $httpRequest->getResponseBody();
@@ -1070,14 +1079,43 @@ class GoogleSheetManagement {
                 //https://stackoverflow.com/questions/39340374/php-google-drive-api-http-response
                 //return $httpRequest->getResponseBody(); //testing
                 //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
-                $logger->error("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
-                return null;
+
+                $body = "Error downloading $type file (ID $fileId): invalid response =".$httpRequest->getResponseHttpCode()."; downloadUrl=".$downloadUrl;
+                //return null;
             }
         } else {
             // The file doesn't have any content stored on Drive.
-            $logger->error("Error download file: downloadUrl is null=".$downloadUrl);
-            return null;
+            $body = "Error downloading $type file (ID $fileId): downloadUrl is null; downloadUrl=".$downloadUrl;
+            //return null;
         }
+
+        ////////////////// ERROR //////////////////
+        $logger->error($body);
+
+        //Create error notification email
+        $subject = "[ORDER] ERROR: can not download $type file for Fellowship Application";
+        //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
+        //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+
+        $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+        //Send email to admins
+        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+        if (!$emails) {
+            $emails = $ccs;
+            $ccs = null;
+        }
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
+        ////////////////// EOF ERROR //////////////////
+        
+        return null;
     }
     /**
      * Print a file's metadata.

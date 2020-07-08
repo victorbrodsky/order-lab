@@ -226,6 +226,8 @@ class DefaultController extends OrderAbstractController
      */
     public function testGoogleAction( Request $request ) {
 
+        //exit("not allowed");
+        
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
@@ -247,7 +249,7 @@ class DefaultController extends OrderAbstractController
 
         $file = $service->files->get($fileId);
         echo "file ID=".$file->getId()."<br>";
-        $content = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
+        $content = $googlesheetmanagement->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
         dump($content);
         exit($content);
 //
@@ -310,6 +312,8 @@ class DefaultController extends OrderAbstractController
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
+
+        exit('not allowed');
 
         /// testing ///
         $fileId = $file->getId();

@@ -127,6 +127,58 @@ class FellAppImportPopulateUtil {
             $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
         }
+        
+        //Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications
+        $fellappUtil = $this->container->get('fellapp_util');
+        $currentYear = date("Y")+2;
+        $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
+
+        if( $filesGoogleDrive ) {
+            $fellowshipDbApplicationsCount = (int)count($fellowshipDbApplications);
+            $filesGoogleDriveCount = (int)count($filesGoogleDrive);
+            //echo "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount <br>";
+
+            if( $fellowshipDbApplicationsCount >= $filesGoogleDriveCount ) {
+                //echo "Ok, Number of DB applications is equal or more than on Google drive <br>";
+            } else {
+
+                $body = "Warning: number of the fellowship applications on google drive is more than imported to the order's DB: 
+                filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
+
+                $result = $result . "<br><br>" . $body;
+
+                //echo $body."<br>";
+
+                ////////////////// ERROR //////////////////
+                $logger->error($body);
+
+                //Create error notification email
+                $subject = "[ORDER] Warning: Number of Fellowship Application on Google Drive is more than imported to order";
+                //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
+                //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+
+                $userSecUtil = $this->container->get('user_security_utility');
+                $systemUser = $userSecUtil->findSystemUser();
+
+                $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+                //Send email to admins
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                if (!$emails) {
+                    $emails = $ccs;
+                    $ccs = null;
+                }
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
+                ////////////////// EOF ERROR //////////////////
+
+            }
+
+
+        }
 
         return $result;
     }
