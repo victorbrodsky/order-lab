@@ -46,7 +46,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use App\FellAppBundle\Util\CustomDefaultServiceRequest;
 
-class GoogleSheetManagement {
+class GoogleSheetManagementModified {
 
     protected $em;
     protected $container;
@@ -286,12 +286,42 @@ class GoogleSheetManagement {
         } while ($pageToken);
         return $result;
     }
+    /**
+     * Retrieve a list of File resources.
+     *
+     * @param Google_Service_Drive $folderId folder ID.
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @return Array List of Google_Service_Drive_DriveFile resources.
+     */
+    function retrieveFilesByFolderIdV2($folderId,$service) {
+        $result = array();
+        $pageToken = NULL;
+
+        do {
+            try {
+                $parameters = array('q' => "'".$folderId."' in parents and trashed=false");
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+
+                $files = $service->files->listFiles($parameters);
+                //$files = $service->files->listFiles(array())->getFiles();
+
+                //$result = array_merge($result, $files->getItems());
+                $result = array_merge($result, $files->getFiles());
+
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                //print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+        return $result;
+    }
 
 
     public function downloadFileToServer($author, $service, $fileId, $documentType, $path) {
         $logger = $this->container->get('logger');
-
-        //$fileId = '1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ'; //testing
 
         $file = null;
         try {
@@ -312,21 +342,16 @@ class GoogleSheetManagement {
                 return $documentDb;
             }
 
+            //echo "Attempt to download file from Google drive file id=".$fileId."; title=".$file->getTitle()."; path=$path <br>";
             //$logger->notice("Attempt to download file from Google drive file id=".$fileId."; title=".$file->getTitle());
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
-
-            //echo "fileId=".$file->getId()."<br>";
-            //$response = $this->downloadGeneralFile($service, $file);
-            //dump($response);
-            //exit('111');
-
+            //$googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            //$response = $googlesheetmanagement->downloadFile($service, $file, $documentType);
+            $response = $this->downloadFile($service, $file, $documentType);
             //echo "response=".$response."<br>";
             if( !$response ) {
                 throw new IOException('Error application file response is empty: file id='.$fileId."; documentType=".$documentType);
             }
-
-            //exit('file ok');
+            //exit('ok download file');
 
             //create unique file name
             $currentDatetime = new \DateTime();
@@ -350,6 +375,7 @@ class GoogleSheetManagement {
                 $filesize = mb_strlen($response) / 1024; //KBs,
             }
 
+            exit("filesize=$filesize".", path=".$path); //testing
 
             $object = new Document($author);
             $object->setUniqueid($file->getId());
@@ -705,7 +731,6 @@ class GoogleSheetManagement {
 
 
     public function getGoogleToken() {
-        //$res = $this->authenticationP12Key();
         $res = $this->authenticationGoogle();
         $obj_client_auth = $res['client'];
         $obj_token  = json_decode($obj_client_auth->getAccessToken() );
@@ -713,13 +738,18 @@ class GoogleSheetManagement {
     }
 
     public function getGoogleService() {
-        //$res = $this->authenticationP12Key();
         $res = $this->authenticationGoogle();
         return $res['service'];
     }
 
     public function authenticationGoogle() {
-        return $this->authenticationP12Key();
+        //P12 auth
+        //return $this->authenticationP12Key();
+
+        //API key auth
+        return $this->getClientV1();
+
+        //OAuth
         //return $this->authenticationGoogleOAuth();
     }
 
@@ -846,7 +876,8 @@ class GoogleSheetManagement {
         //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
 //        $scopes = $googleDriveApiUrlFellApp;
 
-        $client = $this->getClient();
+        //$client = $this->getClient();
+        $client = $this->getClientV2();
 
         //$service = null;
         $service = new \Google_Service_Drive($client);
@@ -926,7 +957,7 @@ class GoogleSheetManagement {
      * Returns an authorized API client.
      * @return Google_Client the authorized client object
      */
-    function getClient2() {
+    function getClientV2_OLD() {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1008,6 +1039,148 @@ class GoogleSheetManagement {
 
         return $client;
     }
+    function getClientV1() {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$pkey ) {
+            $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
+        }
+
+        $key = 'AIzaSyAxLocIWBMAY9bZ8z-HBzBAZe84UWd89VM'; //testing
+
+        $client = new \Google_Client();
+        $client->setApplicationName("Fellowship Applications");
+        $client->setDeveloperKey($key);
+
+        //$client->setAccessType('offline');
+        //$client->setPrompt('select_account consent');
+       //$client->setIncludeGrantedScopes(true);   // incremental auth
+
+        // set the scope(s) that will be used
+        //https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds https://www.googleapis.com/auth/activity
+
+        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        if( !$user_to_impersonate ) {
+            throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        }
+
+        // this is needed only if you need to perform
+        // domain-wide admin actions, and this must be
+        // an admin account on the domain; it is not
+        // necessary in your example but provided for others
+        //$client->setSubject($user_to_impersonate);
+
+        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        if( !$scopes ) {
+            throw new \InvalidArgumentException('Google scope is not defined in Site Parameters.');
+        }
+
+
+        $scopes = array(
+
+            'https://www.googleapis.com/auth/drive',
+            'https://www.googleapis.com/auth/drive.file',
+            'https://www.googleapis.com/auth/drive.readonly',
+            'https://www.googleapis.com/auth/drive.metadata.readonly',
+            'https://www.googleapis.com/auth/drive.appdata',
+            'https://www.googleapis.com/auth/drive.metadata',
+            'https://www.googleapis.com/auth/drive.photos.readonly',
+
+//            'https://www.googleapis.com/auth/drive',
+//            'https://www.googleapis.com/auth/drive.appdata',
+//            'https://www.googleapis.com/auth/drive.file',
+//
+//            'https://spreadsheets.google.com/feeds',
+//            'https://www.googleapis.com/auth/activity'
+        );
+
+        $client->setScopes($scopes);
+
+        //$service = null;
+        $service = new \Google_Service_Drive($client);
+
+        $res = array(
+            'client' => $client,
+            'service' => $service
+        );
+
+        return $res;
+    }
+    function getClientV2() {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+//        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+//        if( !$pkey ) {
+//            $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
+//        }
+//
+//        $key = 'AIzaSyAxLocIWBMAY9bZ8z-HBzBAZe84UWd89VM'; //testing
+
+        $client = new \Google_Client();
+        $client->setApplicationName("Fellowship Applications");
+
+        //client_secret.json
+        //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util
+        //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\client_secret.json
+        $dir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR .
+            "src" . DIRECTORY_SEPARATOR . "App" . DIRECTORY_SEPARATOR . "FellAppBundle" .
+            DIRECTORY_SEPARATOR . "Util"
+        ;
+        $credentialFile = $dir . DIRECTORY_SEPARATOR . "client_secret.json";
+
+        $client->setAuthConfig($credentialFile);
+
+        //$client->setAccessType('offline');
+        //$client->setPrompt('select_account consent');
+        //$client->setIncludeGrantedScopes(true);   // incremental auth
+
+        // set the scope(s) that will be used
+        //https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds https://www.googleapis.com/auth/activity
+
+        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        if( !$user_to_impersonate ) {
+            throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        }
+
+        // this is needed only if you need to perform
+        // domain-wide admin actions, and this must be
+        // an admin account on the domain; it is not
+        // necessary in your example but provided for others
+        $client->setSubject($user_to_impersonate);
+
+        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        if( !$scopes ) {
+            throw new \InvalidArgumentException('Google scope is not defined in Site Parameters.');
+        }
+
+
+        $scopes = array(
+
+            'https://www.googleapis.com/auth/drive',
+            'https://www.googleapis.com/auth/drive.file',
+            'https://www.googleapis.com/auth/drive.readonly',
+            'https://www.googleapis.com/auth/drive.metadata.readonly',
+            'https://www.googleapis.com/auth/drive.appdata',
+            'https://www.googleapis.com/auth/drive.metadata',
+            'https://www.googleapis.com/auth/drive.photos.readonly',
+
+//            'https://www.googleapis.com/auth/drive',
+//            'https://www.googleapis.com/auth/drive.appdata',
+//            'https://www.googleapis.com/auth/drive.file',
+//
+//            'https://spreadsheets.google.com/feeds',
+//            'https://www.googleapis.com/auth/activity'
+        );
+
+        $client->setScopes($scopes);
+
+        return $client;
+    }
 
 
     /**
@@ -1019,37 +1192,15 @@ class GoogleSheetManagement {
      * @return String The file's content if successful, null otherwise.
      */
     function downloadFile($service, $file, $type=null) {
-
-        /// testing ///
-        //$fileId = $file->getId();
-        //$content = $service->files->get($fileId, array(
-        //    'alt' => 'media' ));
-        //$content = $service->files->get($fileId);
-        //dump($content);
-        //$link = $content['exportLinks'];
-        //$exportLinks = $link['text/csv'];
-        //echo "exportLinks=".$exportLinks."<br>";
-        //$request = new \Google_Http_Request($exportLinks, 'GET', null, null);
-        //$httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-        //return $httpRequest->getResponseBody();
-        //dump($httpRequest->getResponseBody());
-        //exit('333');
-        //return $content;
-        /// EOF testing ///
-
         $logger = $this->container->get('logger');
         if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
             $downloadUrl = $file->getExportLinks()['text/csv'];
-
-            //$exportLinks = $file->getExportLinks();
-            //$downloadUrl = $exportLinks['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
         } else {
             $downloadUrl = $file->getDownloadUrl();
         }
         //echo "downloadUrl=".$downloadUrl."<br>";
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-            //$request = new \Google_Http_Request($downloadUrl);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
             if ($httpRequest->getResponseHttpCode() == 200) {
@@ -1058,10 +1209,6 @@ class GoogleSheetManagement {
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
-                //TODO: test why: 307 Temporary Redirect: The document has moved here
-                //https://github.com/googleapis/google-api-php-client/issues/102
-                //https://stackoverflow.com/questions/39340374/php-google-drive-api-http-response
-                //return $httpRequest->getResponseBody(); //testing
                 //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
                 $logger->error("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
                 return null;
@@ -1090,7 +1237,51 @@ class GoogleSheetManagement {
             print "An error occurred: " . $e->getMessage();
         }
     }
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param File $file Drive File instance.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile22($service, $file, $type=null) {
+        //$downloadUrl = $file->getDownloadUrl();
+        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
+            $downloadUrl = $file->getExportLinks()['text/csv'];
+        } else {
+            $downloadUrl = $file->getDownloadUrl();
+        }
+        if ($downloadUrl) {
+            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+            echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+            if ($httpRequest->getResponseHttpCode() == 200) {
+                return $httpRequest->getResponseBody();
+            } else {
+                // An error occurred.
+                exit("Error:".$httpRequest->getResponseHttpCode());
+                return null;
+            }
+        } else {
+            // The file doesn't have any content stored on Drive.
+            exit("The file doesn't have any content stored on Drive.");
+            return null;
+        }
+    }
+    function downloadFile11($driveService, $file, $type=null) {
+        //$fileId = '0BwwA4oUTeiV1UVNwOHItT0xfa2M';
+        $fileId = $file->getId();
+        echo "fileId=$fileId <br>";
+//        $response = $driveService->files->get($fileId,
+//            array('alt' => 'media')
+//        );
+        $response = $driveService->files->export($fileId, 'text/csv', array(
+            'alt' => 'media'));
 
+        //$response = $driveService->files->get($fileId);
+        $content = $response->getBody()->getContents();
+        exit('content='.$content);
+    }
 
 
 
@@ -1111,8 +1302,8 @@ class GoogleSheetManagement {
         //$systemUser = $userSecUtil->findSystemUser();
 
         //get Google service
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $service = $googlesheetmanagement->getGoogleService();
+        //$googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $this->getGoogleService();
 
         if( !$service ) {
             $event = "Google API service failed!";
@@ -1142,7 +1333,9 @@ class GoogleSheetManagement {
 
         if( 1 ) {
             $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-            //echo "configFile ID=".$configFile->getId()."<br>";
+            if( !$configFile ) {
+                return "Fellowship Application config file 'config.json' not found in $configFileFolderIdFellApp";
+            }
             $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
 
             //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
@@ -1218,6 +1411,56 @@ class GoogleSheetManagement {
 
         return NULL;
     }
+    /**
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param String $folderId ID of the folder to print files from.
+     * @param String $fileName Name (Title) of the config file to find.
+     */
+    function findConfigFileInFolderV2($service, $folderId, $fileName) {
+        $pageToken = NULL;
+
+        do {
+            try {
+
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+
+                echo "folderId=$folderId <br>";
+
+                //$parameters = array();
+                //$parameters = array('q' => "trashed=false and title='config.json'");
+                //$children = $service->children->listChildren($folderId, $parameters);
+                //$parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
+                $parameters = array(
+                    //'q' => "name='".$fileName."'"." and trashed=false and title='".$fileName."'",
+                    'q' => "name='".$fileName."'"." and trashed=false",
+                );
+
+                $files = $service->files->listFiles($parameters);
+
+//                $pageToken = NULL;
+//                $parameters = array();
+//                if ($pageToken) {
+//                    $parameters['pageToken'] = $pageToken;
+//                }
+//                $files = $service->children->listChildren($folderId, $parameters);
+
+                foreach ($files->getItems() as $file) {
+                    //echo "File ID=" . $file->getId()."<br>";
+                    //echo "File Title=" . $file->getTitle()."<br>";
+
+                    return $file;
+                }
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+
+        return NULL;
+    }
 
     /**
      * Download a file's content.
@@ -1245,4 +1488,3 @@ class GoogleSheetManagement {
 
 
 }
-

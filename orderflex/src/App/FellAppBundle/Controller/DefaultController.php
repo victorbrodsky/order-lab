@@ -215,4 +215,79 @@ class DefaultController extends OrderAbstractController
 
         exit("end of fellapp thumbnails, counter=$counter");
     }
+
+
+
+    /**
+     * @Route("/test-google", name="fellapp_test_google")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
+     */
+    public function testGoogleAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+
+        $service = $googlesheetmanagement->getGoogleService();
+
+        if( !$service ) {
+            $event = "Google API service failed!";
+            exit($event);
+        }
+
+//        $fileId = '1AIZwd6RWvVAMQHsDVE_wPpIVXFPMq1TKe1PrtvZtdsw';
+//        $file = $service->files->get($fileId);
+//        $content = $this->downloadFile($service, $file);
+//        exit($content);
+//
+//        $response = $service->files->export($fileId, 'text/csv', array(
+//            'alt' => 'media'));
+//        $content = $response->getBody()->getContents();
+//
+//        exit($content);
+
+        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+        if( !$configFileFolderIdFellApp ) {
+            exit('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+            return NULL;
+        }
+
+        $configFile = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        if( !$configFile ) {
+            exit("Config file 'config.json' not found in $configFileFolderIdFellApp");
+        }
+
+        $contentConfigFile = $googlesheetmanagement->downloadGeneralFile($service, $configFile);
+
+        exit($contentConfigFile);
+
+        exit('EOF testGoogleAction');
+    }
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param File $file Drive File instance.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile($service, $file) {
+        $downloadUrl = $file->getDownloadUrl();
+        if ($downloadUrl) {
+            $request = new Google_Http_Request($downloadUrl, 'GET', null, null);
+            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+            if ($httpRequest->getResponseHttpCode() == 200) {
+                return $httpRequest->getResponseBody();
+            } else {
+                // An error occurred.
+                return null;
+            }
+        } else {
+            // The file doesn't have any content stored on Drive.
+            return null;
+        }
+    }
+
 }

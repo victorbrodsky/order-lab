@@ -239,7 +239,7 @@ class CalllogTest extends WebTestBase
             $value = $record->textContent;
             //echo "records=".trim($value)."";
             //exit('exit111');
-            $this->assertNotEmpty($value,"Field value is empty");
+            $this->assertNotEmpty($value,"Field value is empty"); //might be empty if <p><br></p>
         }
 
         //return;

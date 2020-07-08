@@ -572,3 +572,4 @@ You will be automatically redirected to a new Residency site <a href="https://vi
     setInterval(function(){ countdown(); },1000);
 </script>
 
+

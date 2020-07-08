@@ -12,7 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^2.1",
         "friendsofsymfony/comment-bundle": "^3",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
-        "google/apiclient": "^2.0",
+        "google/apiclient": "1.0.*@beta",
         "knplabs/knp-paginator-bundle": "^5.1",
         "knplabs/knp-snappy-bundle": "^1.7",
         "oneup/uploader-bundle": "^2.1",
