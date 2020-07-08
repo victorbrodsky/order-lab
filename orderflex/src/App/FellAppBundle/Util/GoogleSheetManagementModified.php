@@ -1049,7 +1049,7 @@ class GoogleSheetManagementModified {
             $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
         }
 
-        $key = 'AIzaSyAxLocIWBMAY9bZ8z-HBzBAZe84UWd89VM'; //testing
+        $key = 'google_api_key'; //testing
 
         $client = new \Google_Client();
         $client->setApplicationName("Fellowship Applications");

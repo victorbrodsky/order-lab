@@ -350,6 +350,7 @@ class GoogleSheetManagement {
                 $filesize = mb_strlen($response) / 1024; //KBs,
             }
 
+            //exit('file ok: filesize='.$filesize);
 
             $object = new Document($author);
             $object->setUniqueid($file->getId());
@@ -1020,7 +1021,7 @@ class GoogleSheetManagement {
      */
     function downloadFile($service, $file, $type=null) {
 
-        /// testing ///
+        ////////////// testing //////////////
         //$fileId = $file->getId();
         //$content = $service->files->get($fileId, array(
         //    'alt' => 'media' ));
@@ -1035,14 +1036,20 @@ class GoogleSheetManagement {
         //dump($httpRequest->getResponseBody());
         //exit('333');
         //return $content;
-        /// EOF testing ///
+        ////////////// EOF testing //////////////
 
         $logger = $this->container->get('logger');
         if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
-            $downloadUrl = $file->getExportLinks()['text/csv'];
+            //$downloadUrl = $file->getExportLinks()['text/csv'];
 
             //$exportLinks = $file->getExportLinks();
             //$downloadUrl = $exportLinks['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+            //exportLink does not work anymore (since ~26 June 2020) for cvs files. The body has 307 Temporary Redirect: The document has moved here.
+            //Therefore, use api file export HTTP request: https://developers.google.com/drive/api/v3/reference/files/export
+            $fileId = $file->getId();
+            $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
+
         } else {
             $downloadUrl = $file->getDownloadUrl();
         }

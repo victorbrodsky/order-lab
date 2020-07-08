@@ -219,6 +219,8 @@ class DefaultController extends OrderAbstractController
 
 
     /**
+     * http://127.0.0.1/order/index_dev.php/fellowship-applications/test-google
+     *
      * @Route("/test-google", name="fellapp_test_google")
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
@@ -238,10 +240,16 @@ class DefaultController extends OrderAbstractController
             exit($event);
         }
 
-//        $fileId = '1AIZwd6RWvVAMQHsDVE_wPpIVXFPMq1TKe1PrtvZtdsw';
-//        $file = $service->files->get($fileId);
-//        $content = $this->downloadFile($service, $file);
-//        exit($content);
+        $fileId = '1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ'; //1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ json
+        //$fileId = '1OM2G8yI_gmSMG-KP1liBG611-CJO0GXEY5wCn_4CZWY'; //excel
+        $fileId = '16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU'; //excel //SYLK file
+        //$fileId = '1HrAOhG6d-kfv1KVSRNmK8po7LkbBwsuK'; //pdf
+
+        $file = $service->files->get($fileId);
+        echo "file ID=".$file->getId()."<br>";
+        $content = $this->downloadFile($service, $file, 'Fellowship Application Spreadsheet');
+        dump($content);
+        exit($content);
 //
 //        $response = $service->files->export($fileId, 'text/csv', array(
 //            'alt' => 'media'));
@@ -255,12 +263,14 @@ class DefaultController extends OrderAbstractController
             return NULL;
         }
 
-        $configFile = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-        if( !$configFile ) {
+        $file = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        if( !$file ) {
             exit("Config file 'config.json' not found in $configFileFolderIdFellApp");
         }
 
-        $contentConfigFile = $googlesheetmanagement->downloadGeneralFile($service, $configFile);
+        //$contentConfigFile = $googlesheetmanagement->downloadGeneralFile($service, $file);
+
+        $contentConfigFile = $googlesheetmanagement->downloadSimpleFile($service, $file, null);
 
         exit($contentConfigFile);
 
@@ -273,19 +283,107 @@ class DefaultController extends OrderAbstractController
      * @param File $file Drive File instance.
      * @return String The file's content if successful, null otherwise.
      */
-    function downloadFile($service, $file) {
+    function downloadSimpleFile($service, $file) {
         $downloadUrl = $file->getDownloadUrl();
         if ($downloadUrl) {
-            $request = new Google_Http_Request($downloadUrl, 'GET', null, null);
+            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             if ($httpRequest->getResponseHttpCode() == 200) {
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
+                //return $httpRequest->getResponseBody();
                 return null;
             }
         } else {
             // The file doesn't have any content stored on Drive.
+            return null;
+        }
+    }
+
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Servie_Drive $service Drive API service instance.
+     * @param Google_Servie_Drive_DriveFile $file Drive File instance.
+     * @param String $type Document type string.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile($service, $file, $type=null) {
+
+        /// testing ///
+        $fileId = $file->getId();
+        //$content = $service->files->get($fileId, array('alt' => 'media' ));
+        //$content = $service->files->get($fileId);
+        //modelData
+        //dump($content['modelData']);
+        //echo "modelData=".$content['modelData']."<br>";
+        //echo "content=".$content."<br>";
+        //dump($content);
+        //$link = $content['exportLinks'];
+        //$exportLinks = $link['text/csv'];
+        //echo "exportLinks=".$exportLinks."<br>";
+        //$request = new \Google_Http_Request($exportLinks, 'GET', null, null);
+        //$httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+        //return $httpRequest->getResponseBody();
+        //dump($httpRequest->getResponseBody());
+
+        //https://www.googleapis.com/drive/v3/files/fileId/export
+        //https://www.googleapis.com/drive/v2/files/16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU/export?mimeType=text/csv
+        //https://docs.google.com/document/d/16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU/export?format=pdf
+        //https://docs.google.com/spreadsheets/d/16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU/export?format=csv
+
+        //exit('333');
+        //return $content;
+        /// EOF testing ///
+
+        $logger = $this->container->get('logger');
+        if( $type && ($type == 'Fellowship Application Spreadsheet' || $type == 'Fellowship Application Backup Spreadsheet' || $type == 'Fellowship Recommendation Letter Spreadsheet') ) {
+
+            //dump($file->getExportLinks());
+            //$downloadUrl = $file->getExportLinks()['text/csv'];
+            $downloadUrl = $file->getAlternateLink();
+            echo "AlternateLink=".$downloadUrl."<br>";
+
+            $downloadUrl = $file->getEmbedLink();
+            echo "EmbedLink=".$downloadUrl."<br>";
+
+            //$exportLinks = $file->getExportLinks();
+            //$downloadUrl = $exportLinks['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            //$downloadUrl = $exportLinks['application/vnd.google-apps.spreadsheet'];
+            //$downloadUrl = $exportLinks['text/csv'];
+
+            $downloadUrl = 'https://docs.google.com/spreadsheets/d/16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU/export?format=csv';
+            //                https://docs.google.com/spreadsheets/export?id=16yxO0PhBel3UXSnBVfIUknA0DamhFUIs6KZG7i2l2aU&exportFormat=csv
+
+            $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
+
+        } else {
+            $downloadUrl = $file->getDownloadUrl();
+        }
+        echo "downloadUrl=".$downloadUrl."<br>";
+        if ($downloadUrl) {
+            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+            //$request = new \Google_Http_Request($downloadUrl);
+            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+            echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+            if ($httpRequest->getResponseHttpCode() == 200) {
+                //$logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
+                //$logger->notice("getResponseBody=".$httpRequest->getResponseBody());
+                return $httpRequest->getResponseBody();
+            } else {
+                // An error occurred.
+                //TODO: test why: 307 Temporary Redirect: The document has moved here
+                //https://github.com/googleapis/google-api-php-client/issues/102
+                //https://stackoverflow.com/questions/39340374/php-google-drive-api-http-response
+                return $httpRequest->getResponseBody(); //testing
+                //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
+                $logger->error("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
+                return null;
+            }
+        } else {
+            // The file doesn't have any content stored on Drive.
+            $logger->error("Error download file: downloadUrl is null=".$downloadUrl);
             return null;
         }
     }
