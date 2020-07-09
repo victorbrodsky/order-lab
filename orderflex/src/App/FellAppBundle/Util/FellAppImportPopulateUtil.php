@@ -1963,5 +1963,74 @@ class FellAppImportPopulateUtil {
     }
 
 
+    
+    public function verifyImport() {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('allowPopulateFellApp');
+
+        if( !$allowPopulateFellApp ) {
+            return "Nothing to verify: allowPopulateFellApp is not set";
+        }
+
+        //Get Last successful import date
+        $eventtype = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
+        $lastImportTimestamps = $this->em->getRepository('AppUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        if( count($lastImportTimestamps) != 1 ) {
+            $lastImportTimestamp = null;
+        } else {
+            $lastImportTimestamp = $lastImportTimestamps[0]->getCreationdate();
+        }
+        //echo "lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s')."<br>";
+
+        $res = "Verify Import Unknown";
+
+        $date24Ago = new \DateTime();
+        $date24Ago->modify('-24 hours');
+        //$date24Ago->modify('-12 hours'); //testing
+
+        //check if timestamp of the last successful fellowship application import is more than 24 hours ago from current time
+        if( $lastImportTimestamp > $date24Ago ) {
+            //OK
+            $res = "Verify Import OK:"." lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s');
+            //echo "$res <br>";
+        } else {
+            //NOT OK
+            //echo "Verify Import Not OK! lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s')."  <br>";
+
+            //Create error notification email
+            $subject = "[ORDER] WARNING: Last Fellowship Application successfully imported over 24 hours ago";
+
+            $body = "Warning! Last fellowship application was successfully imported over 24 hours ago. 
+            This usually indicates an issue with the automated import process for all fellowship applications 
+            potentially resulting in some successfully submitted fellowship applications not being received. 
+            Please check Google Sheets and Google Drive (as well as your e-mail confirmation notifications) 
+            to verify that each of the submitted applications appears in the system, 
+            then troubleshoot the import process to make sure each API call and process step completes fully.";
+
+            $logger->error($body);
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+
+            $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+            //Send email to admins
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+            if (!$emails) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
+
+            $res = $body;
+        }
+
+        return $res;
+    }
 
 } 

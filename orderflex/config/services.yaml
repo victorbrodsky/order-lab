@@ -197,6 +197,10 @@ services:
         tags:
             - { name: 'console.command', command: 'fellapp:generatereport' }
 
+    App\FellAppBundle\Command\VerifyImportCommand:
+            tags:
+                - { name: 'console.command', command: 'fellapp:verifyimport' }
+
     App\ResAppBundle\Command\GenerateReportRunCommand:
         tags:
             - { name: 'console.command', command: 'resapp:generatereportrun' }

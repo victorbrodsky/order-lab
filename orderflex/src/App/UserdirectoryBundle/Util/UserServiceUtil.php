@@ -1890,6 +1890,26 @@ Pathology and Laboratory Medicine",
         $logger->notice($res);
         //////////////////// EOF ImportFellowshipApplications ////////////////////
 
+        //////////////////// 2a) Verify Import Fellowship Applications (every 6 hours) ////////////////////
+
+        $cronJobName = "fellapp:verifyimport --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $fellappCronJob = "06 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
+
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+
+            $res = $this->addCronJobLinux($fellappCronJob);
+
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF ImportFellowshipApplications ////////////////////
 
         //////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
         $cronJobName = "cron:invoice-reminder-emails --env=prod";
