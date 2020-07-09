@@ -1993,6 +1993,7 @@ class FellAppImportPopulateUtil {
         if( $lastImportTimestamp > $date24Ago ) {
             //OK
             $res = "Verify Import OK:"." lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s');
+            $logger->notice($res);
             //echo "$res <br>";
         } else {
             //NOT OK
