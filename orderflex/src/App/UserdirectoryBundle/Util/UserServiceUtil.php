@@ -1897,7 +1897,7 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $fellappVerifyImportCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $fellappVerifyImportCronJob = "0 0/6 * * *" . " " . $fellappVerifyImportCronJobCommand; //every 6 hours
+        $fellappVerifyImportCronJob = "0 */6 * * *" . " " . $fellappVerifyImportCronJobCommand; //every 6 hours
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
