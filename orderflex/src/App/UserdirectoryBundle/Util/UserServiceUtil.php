@@ -1892,7 +1892,7 @@ Pathology and Laboratory Medicine",
 
         //////////////////// 2a) Verify Import Fellowship Applications (every 6 hours) ////////////////////
 
-        $cronJobName = "fellapp:verifyimport --env=prod";
+        $cronJobName = "cron:verifyimport --env=prod";
 
         $phpPath = $this->getPhpPath();
         $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";

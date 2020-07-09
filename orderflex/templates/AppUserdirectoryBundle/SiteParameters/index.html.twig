@@ -328,6 +328,13 @@
                 <td></td>
             </tr>
             <tr>
+                <td>Fellowship Applications Verification Import cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("verifyimport")|raw }}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
                     {{ user_service_utility.getCronStatus("invoice-reminder-emails")|raw }}

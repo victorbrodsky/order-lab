@@ -199,7 +199,7 @@ services:
 
     App\FellAppBundle\Command\VerifyImportCommand:
             tags:
-                - { name: 'console.command', command: 'fellapp:verifyimport' }
+                - { name: 'console.command', command: 'cron:verifyimport' }
 
     App\ResAppBundle\Command\GenerateReportRunCommand:
         tags:

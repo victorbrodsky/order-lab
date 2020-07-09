@@ -38,7 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class VerifyImportCommand extends Command {
 
-    protected static $defaultName = 'fellapp:verifyimport';
+    protected static $defaultName = 'cron:verifyimport';
     private $container;
     private $em;
 
@@ -54,7 +54,7 @@ class VerifyImportCommand extends Command {
         $this->setDescription('Verify Importing and Populating Fellowship Applications from Google Form');
     }
 
-    //php bin/console fellapp:verifyimport --env=prod
+    //php bin/console cron:verifyimport --env=prod
     //runs every 6 hours
     protected function execute(InputInterface $input, OutputInterface $output) {
 
