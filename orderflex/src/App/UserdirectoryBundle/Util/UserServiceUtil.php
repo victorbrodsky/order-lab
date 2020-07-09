@@ -1897,13 +1897,13 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $fellappVerifyImportCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $fellappVerifyImportCronJob = "0 0/6 * * *" . " " . $fellappVerifyImportCronJobCommand; //0 minutes - every hour
+        $fellappVerifyImportCronJob = "0 0/6 * * *" . " " . $fellappVerifyImportCronJobCommand; //every 6 hours
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
             $res = $this->addCronJobLinux($fellappVerifyImportCronJob);
 
-            $res = "Created $cronJobName cron job";
+            $res = "Created $cronJobName cron job: $fellappVerifyImportCronJob";
         } else {
             $res = "$cronJobName already exists";
         }
