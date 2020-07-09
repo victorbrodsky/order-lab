@@ -1897,7 +1897,7 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $fellappCronJob = "06 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
+        $fellappCronJob = "00 0/6 * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
 
@@ -1976,7 +1976,21 @@ Pathology and Laboratory Medicine",
 
         $logger->notice($res);
     }
-    public function createEmailCronLinux( $mailerFlushQueueFrequency = 15 ) {
+    public function createEmailCronLinux( $mailerFlushQueueFrequency = null ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+
+        if( !$mailerFlushQueueFrequency ) {
+            $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
+        }
+
+        if( $useSpool && $mailerFlushQueueFrequency ) {
+            //OK create email cron
+        } else {
+            return false;
+        }
+
         $logger = $this->container->get('logger');
         $logger->notice("Creating cron jobs for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
