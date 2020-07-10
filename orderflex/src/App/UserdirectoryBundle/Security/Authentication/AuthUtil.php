@@ -1043,6 +1043,63 @@ class AuthUtil {
         return NULL;
     }
 
+    //It might work
+    //remove: fabiang/sasl symfony/ldap
+    public function laminasBind( $username, $password, $ldapType=1 ) {
+
+        echo "username=[$username], password=[$password] <br>";
+
+        //$host = 'a.wcmc-ad.net';
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $postfix = $this->getPostfix($ldapType);
+
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
+
+        $options = [
+            'host'              => $LDAPHost,
+            //'username'          => 'xxx',
+            //'password'          => 'xxx',
+            //'bindRequiresDn'    => false,
+            'accountDomainName' => $LDAPHost,
+            'baseDn'            => 'dc=a,dc=wcmc-ad,dc=net',
+            //'useSsl'            => true,
+            //'useStartTls'      => true
+        ];
+
+        $ldap = new \Laminas\Ldap\Ldap($options);
+        //$ldap->bind($username, $password);
+
+        try {
+            $ldap->bind($username, $password);
+            $acctname = $ldap->getCanonicalAccountName($username);
+            echo "SUCCESS: authenticated $acctname\n";
+            return 1;
+        } catch (LdapException $zle) {
+            echo '  ' . $zle->getMessage() . "\n";
+            //if ($zle->getCode() === LdapException::LDAP_X_DOMAIN_MISMATCH) {
+            //    continue;
+            //}
+            $this->logger->notice("Laminas Bind failed:" . $zle->getMessage());
+            exit("Laminas Bind failed:" . $zle->getMessage());
+
+            return NULL;
+        }
+
+        //dump($ldap);
+        //exit('EOF');
+
+        //$acctname = $ldap->getCanonicalAccountName($username, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+
+        $acctname = $ldap->getCanonicalAccountName($username, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+        echo "acctname=[$acctname] <br>";
+
+        //dump($acctname);
+
+        echo "EOF loginLaminasTest <br>";
+        exit('EOF');
+    }
+
     public function searchLdap($username,$ldapType=1,$withWarning=true) {
 
         //echo "username=".$username."<br>";

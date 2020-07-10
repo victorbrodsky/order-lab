@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Fabiang\Sasl\Sasl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -310,17 +311,79 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $authUtil = $this->container->get('authenticator_utility');
+        $authUtil->laminasBind($username,$password);
 
+        //$this->loginLaminasTest($username,$password);
 
-        $this->loginTest($username,$password);
-
+        //$this->loginTest($username,$password);
+        //$this->loginSymfonyTest($username,$password);
 
 
         exit("EOF Login Testing");
 
     }
 
-    public function loginTest( $thisUser, $password ) {
+    //It might work
+    //remove: fabiang/sasl symfony/ldap
+    public function loginLaminasTest( $thisUser, $password ) {
+
+        echo "username=[$thisUser], password=[$password] <br>";
+
+        $host = 'a.wcmc-ad.net';
+
+        $options = [
+            'host'              => $host,
+            //'username'          => 'xxx',
+            //'password'          => 'xxx',
+            //'bindRequiresDn'    => false,
+            'accountDomainName' => $host,
+            'baseDn'            => 'dc=a,dc=wcmc-ad,dc=net',
+            //'useSsl'            => true,
+            //'useStartTls'      => true
+        ];
+
+        $ldap = new \Laminas\Ldap\Ldap($options);
+        $ldap->bind($thisUser, $password);
+
+        dump($ldap);
+        //exit('EOF');
+
+        //$acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+
+        $acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+        echo "acctname=[$acctname] <br>";
+
+        //dump($acctname);
+
+        echo "EOF loginLaminasTest <br>";
+        exit('EOF');
+    }
+
+    public function loginFabiangTest( $thisUser, $password ) {
+
+        echo "username=[$thisUser], password=[$password] <br>";
+
+        $host = 'a.wcmc-ad.net';
+
+        $factory = new Sasl();
+
+        $mechanism = $factory->factory('SCRAM-SHA-1', array(
+            'authcid'  => $thisUser,
+            'secret'   => $password,
+            //'authzid'  => 'authzid', // optional. Username to proxy as
+            //'service'  => 'servicename', // optional. Name of the service
+            'hostname' => $host, // optional. Hostname of the service
+        ));
+
+        $response = $mechanism->createResponse();
+
+        dump($response);
+
+        exit('EOF');
+    }
+
+    public function loginSymfonyTest( $thisUser, $password ) {
         $host = 'a.wcmc-ad.net';
 
         //$options = 'X_SASL_MECH'; //array(X_SASL_MECH);
@@ -333,7 +396,7 @@ class DefaultController extends OrderAbstractController
             'host' => $host,
             'port' => 389,
             'version' => 3,
-            'encryption' => $encryption,
+            //'encryption' => $encryption,
             //'options' => $options
             //'options' => array(x_sasl_mech)
             //'x_sasl_mech'
@@ -343,8 +406,11 @@ class DefaultController extends OrderAbstractController
 
         //$dn = "OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
         $dn = "cn=Users,DC=a,DC=wcmc-ad,DC=net";
+        //$dn = "DC=a,DC=wcmc-ad,DC=net";
 
         $dn = "cn=".$thisUser.",".$dn;
+
+        //$dn = $thisUser;
         echo "dn: [$dn]<br>";
         echo "password=[$password]<br>";
 
@@ -366,7 +432,8 @@ class DefaultController extends OrderAbstractController
 //            exit('NOT OK');
 //        }
 
-        exit('EOF');
+        echo "EOF loginSymfonyTest <br>";
+        //exit('EOF loginSymfonyTest');
     }
 
 

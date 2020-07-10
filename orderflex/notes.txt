@@ -573,3 +573,10 @@ You will be automatically redirected to a new Residency site <a href="https://vi
 </script>
 
 
+
+
+The new eSlide Manager/SQL 2017 server, below:
+Host: wPATH-ESMP01.med.cornell.edu
+IP: 10.63.37.33
+
+

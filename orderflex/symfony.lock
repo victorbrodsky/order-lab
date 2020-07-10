@@ -105,6 +105,9 @@
     "egulias/email-validator": {
         "version": "2.1.14"
     },
+    "fabiang/sasl": {
+        "version": "v1.0.1"
+    },
     "friendsofsymfony/comment-bundle": {
         "version": "v2.4.0"
     },
@@ -196,6 +199,12 @@
         "files": [
             "./config/packages/knp_snappy.yaml"
         ]
+    },
+    "laminas/laminas-ldap": {
+        "version": "2.10.3"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.4"
     },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
