@@ -1063,6 +1063,8 @@ class AuthUtil {
             //'bindRequiresDn'    => false,
             'accountDomainName' => $LDAPHost,
             'baseDn'            => 'dc=a,dc=wcmc-ad,dc=net',
+            //'baseDn'            => 'cn=Users,dc=a,dc=wcmc-ad,dc=net',
+            //'baseDn'            => 'ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net',
             //'useSsl'            => true,
             //'useStartTls'      => true
         ];
@@ -1072,8 +1074,10 @@ class AuthUtil {
 
         try {
             $ldap->bind($username, $password);
-            $acctname = $ldap->getCanonicalAccountName($username);
-            echo "SUCCESS: authenticated $acctname\n";
+            //$acctname = $ldap->getCanonicalAccountName($username);
+            //$acctname = $ldap->getCanonicalAccountName($username, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+            //echo "SUCCESS: authenticated $acctname\n";
+            echo "SUCCESS: authenticated";
             return 1;
         } catch (LdapException $zle) {
             echo '  ' . $zle->getMessage() . "\n";
