@@ -1,35 +1,43 @@
-#! /usr/bin/perl -w
+use Net::LDAP;
 
-use strict;
+$ldap = Net::LDAP->new( 'a.wcmc-ad.net' )  or  die "$@";
 
-use Net::LDAP 0.33;
-use Authen::SASL 2.10;
+#$mesg = $ldap->bind;                         # anonymous bind
 
-# -------- Adjust to your environment --------
-my $adhost      = 'theserver.bla.net';
-my $ldap_base   = 'dc=bla,dc=net';
-my $ldap_filter = '(&(sAMAccountName=BLAAGROL))';
+#$mesg->code  and  die $mesg->error;          # check for errors
 
-my $sasl = Authen::SASL->new(mechanism => 'GSSAPI');
-my $ldap;
+#$srch = $ldap->search( base   => "c=US",     # perform a search
+                        #                       filter => "(&(sn=Barr)(o=Texas Instruments))"
+                        #                     );
 
-eval {
-    $ldap = Net::LDAP->new($adhost,
-                           onerror => 'die')
-      or  die "Cannot connect to LDAP host '$adhost': '$@'";
-    $ldap->bind(sasl => $sasl);
-};
+#$srch->code  and  die $srch->error;          # check for errors
 
-if ($@) {
-    chomp $@;
-    die   "\nBind error         : $@",
-          "\nDetailed SASL error: ", $sasl->error,
-          "\nTerminated";
-}
+#foreach $entry ($srch->entries) { $entry->dump; }
 
-print "\nLDAP bind() succeeded, working in authenticated state";
+#$mesg = $ldap->unbind;                       # take down session
 
-my $mesg = $ldap->search(base   => $ldap_base,
-                         filter => $ldap_filter);
 
-# -------- evaluate $mesg
+#$ldap = Net::LDAP->new( 'ldaps://ldap.example.com' )  or  die "$@";
+
+# https://metacpan.org/pod/distribution/perl-ldap/lib/Net/LDAP.pod
+# simple bind with DN and password
+$mesg = $ldap->bind( 'oli2002',
+                     password => 'secret'
+                   );
+
+$mesg->code  and  die $mesg->error;          # check for errors
+
+#$result = $ldap->add( 'cn=Barbara Jensen, o=University of Michigan, c=US',
+#                      attrs => [
+#                        cn          => ['Barbara Jensen', 'Barbs Jensen'],
+#                        sn          => 'Jensen',
+#                        mail        => 'b.jensen@umich.edu',
+#                        objectclass => ['top', 'person',
+#                                        'organizationalPerson',
+#                                        'inetOrgPerson' ],
+#                      ]
+#                    );
+#
+#$result->code  and  warn "failed to add entry: ", $result->error;
+
+$mesg = $ldap->unbind;                       # take down session
