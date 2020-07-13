@@ -747,9 +747,9 @@ class FellAppImportPopulateUtil {
 
         $populatedFellowshipApplications = new ArrayCollection();
 
+        ////////////////// Potential ERROR //////////////////
         $logger->notice("document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
         if( !$highestRow || $highestRow < 3 ) {
-            ////////////////// Potential ERROR //////////////////
             //Create error notification email
             $subject = "[ORDER] Error: Invalid number of rows in Fellowship Application Spreadsheet";
             $body = "Invalid number of rows in Fellowship Application Spreadsheet: number of rows: $highestRow. 
@@ -774,8 +774,8 @@ class FellAppImportPopulateUtil {
             $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Fellowship Application Creation Failed');
-            ////////////////// EOF Potential ERROR //////////////////
         }
+        ////////////////// EOF Potential ERROR //////////////////
 
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
