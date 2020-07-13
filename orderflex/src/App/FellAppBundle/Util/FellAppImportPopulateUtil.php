@@ -747,6 +747,8 @@ class FellAppImportPopulateUtil {
 
         $populatedFellowshipApplications = new ArrayCollection();
 
+        exit("EXIT: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
 
