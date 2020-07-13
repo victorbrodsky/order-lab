@@ -300,6 +300,9 @@ class InvoiceItem {
             if( !$unitPrice ) {
                 $unitPrice = NULL;
             }
+        } else {
+            //if unitPrice is ""
+            $unitPrice = NULL;
         }
 
         $this->unitPrice = $unitPrice;
@@ -325,6 +328,9 @@ class InvoiceItem {
             if( !$total ) {
                 $total = NULL;
             }
+        } else {
+            //if total is ""
+            $total = NULL;
         }
 
         $this->total = $total;

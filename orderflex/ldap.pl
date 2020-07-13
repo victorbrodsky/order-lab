@@ -1,3 +1,5 @@
+#https://centos.pkgs.org/7/centos-x86_64/perl-LDAP-0.56-6.el7.noarch.rpm.html
+
 use Net::LDAP;
 
 $ldap = Net::LDAP->new( 'a.wcmc-ad.net' )  or  die "$@";
