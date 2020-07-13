@@ -273,7 +273,7 @@ class FellAppImportPopulateUtil {
             $logger->notice("Start processing datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
                 ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
             
-            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument() );
+            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile );
             $count = count($populatedFellowshipApplications);
 
             if( $count > 0 ) {
@@ -462,7 +462,7 @@ class FellAppImportPopulateUtil {
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
 
-        $populatedBackupApplications = $this->populateSingleFellApp($backupDb, true);
+        $populatedBackupApplications = $this->populateSingleFellApp($backupDb, null, true);
 
         return count($populatedBackupApplications);
     }
@@ -581,7 +581,7 @@ class FellAppImportPopulateUtil {
 
 
     //2) populate a single fellowship application from spreadsheet to DB (using uploaded files from Google Drive)
-    public function populateSingleFellApp( $document, $deleteSourceRow=false ) {
+    public function populateSingleFellApp( $document, $datafile=null, $deleteSourceRow=false ) {
 
         $logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -605,7 +605,7 @@ class FellAppImportPopulateUtil {
 //            $inputFileName = $path . "/" . $inputFileName;
 //        }
         //2b) populate applicants
-        $populatedFellowshipApplications = $this->populateSpreadsheet($document,$deleteSourceRow);
+        $populatedFellowshipApplications = $this->populateSpreadsheet($document,$datafile,$deleteSourceRow);
 
 //        if( $populatedCount && $populatedCount > 0 ) {
 //            //set applicantData from 'active' to 'populated'
@@ -633,7 +633,7 @@ class FellAppImportPopulateUtil {
 
 
     /////////////// populate methods /////////////////
-    public function populateSpreadsheet( $document, $deleteSourceRow=false ) {
+    public function populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false ) {
 
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
@@ -774,6 +774,16 @@ class FellAppImportPopulateUtil {
             $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Fellowship Application Creation Failed');
+
+            ///////////// Delete erogenous spreadsheet $datafile and associated document /////////////
+            $logger->error("Removing erogenous spreadsheet ($inputFileName): datafileId=".$datafile->getId()." and associated documentId=".$document->getId());
+            unlink($inputFileName);
+            $em->remove($document);
+            if( $datafile ) {
+                $em->remove($datafile);
+            }
+            $em->flush();
+            return false;
         }
         ////////////////// EOF Potential ERROR //////////////////
 
@@ -882,6 +892,9 @@ class FellAppImportPopulateUtil {
                     //$logger->error("Source sheet does not exists with filename=".$inputFileName);
                     //remove from DB
                     $em->remove($document);
+                    if( $datafile ) {
+                        $em->remove($datafile);
+                    }
                     $em->flush();
                     //delete file
                     unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
@@ -1366,11 +1379,15 @@ class FellAppImportPopulateUtil {
                 if( count($errorMsgArr) > 0 ) {
 
                     //delete erroneous spreadsheet from filesystem and $document from DB
-                    if( 0 && file_exists($inputFileName) ) {
+                    if( file_exists($inputFileName) ) {
                         //$logger->error("Source sheet does not exists with filename=".$inputFileName);
                         //remove from DB
                         $em->remove($document);
-                        $em->flush($document);
+                        if( $datafile ) {
+                            $em->remove($datafile);
+                        }
+                        //$em->flush($document);
+                        $em->flush();
                         //delete file
                         unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
                         $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
