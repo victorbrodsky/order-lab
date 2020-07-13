@@ -2,7 +2,7 @@
 
 use Net::LDAP;
 
-$ldap = Net::LDAP->new( 'a.wcmc-ad.net', port=389 )  or  die "$@";
+$ldap = Net::LDAP->new( 'a.wcmc-ad.net', port=389, scheme=>'ldap', version=>'LDAPv2', timeout=>5  )  or  die "$@";
 
 #$mesg = $ldap->bind;                         # anonymous bind
 

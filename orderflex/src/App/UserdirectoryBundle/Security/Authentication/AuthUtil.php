@@ -1319,6 +1319,12 @@ class AuthUtil {
             return NULL;
         }
 
+        if( !ldap_set_option($cnx, LDAP_OPT_NETWORK_TIMEOUT, 10) ) {
+            $this->logger->warning("Ldap: Could not set timeout 10 second");
+            ldap_unbind($cnx);
+            return NULL;
+        }
+
         if( !ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3) ) {
             $this->logger->warning("Ldap: Could not set version 3");
             ldap_unbind($cnx);
