@@ -649,6 +649,7 @@ class FellAppImportPopulateUtil {
             $event = "Google API service failed!";
             $logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
+            $logger->error($event. " while processing ".$document->getServerPath());
             return false;
         }
 
