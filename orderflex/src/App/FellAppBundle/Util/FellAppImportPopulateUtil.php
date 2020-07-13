@@ -747,6 +747,9 @@ class FellAppImportPopulateUtil {
 
         $populatedFellowshipApplications = new ArrayCollection();
 
+        echo "document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow <br>";
+
+
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
 
@@ -756,8 +759,8 @@ class FellAppImportPopulateUtil {
                 TRUE,
                 FALSE);
 
-            dump($rowData);
-            exit("EXIT: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+            //dump($rowData);
+            //exit("EXIT: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
 
             //$logger->notice(print_r($rowData[0]));
             //print_r($rowData[0]);
@@ -779,8 +782,8 @@ class FellAppImportPopulateUtil {
             //testing
             echo "googleFormId=$googleFormId <br>";
             //if( $googleFormId == 'aullah_augusta_edu_Ullah_Asad_2020-07-12_23_50_26' ) {
-                dump($rowData[0]);
-                exit($row . ": " . $googleFormId);
+                //dump($rowData[0]);
+                //exit($row . ": " . $googleFormId);
             //}
 
             if( !$googleFormId ) {
