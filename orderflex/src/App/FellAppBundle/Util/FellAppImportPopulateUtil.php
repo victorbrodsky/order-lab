@@ -748,6 +748,34 @@ class FellAppImportPopulateUtil {
         $populatedFellowshipApplications = new ArrayCollection();
 
         $logger->notice("document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+        if( !$highestRow || $highestRow < 3 ) {
+            ////////////////// Potential ERROR //////////////////
+            //Create error notification email
+            $subject = "[ORDER] Error: Invalid number of rows in Fellowship Application Spreadsheet";
+            $body = "Invalid number of rows in Fellowship Application Spreadsheet: number of rows: $highestRow. 
+            The applicant data is located in row number 3. The applicant data might be missing.";
+
+            $logger->error($body);
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+
+            $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+            //Send email to admins
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+            if (!$emails) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emails = $ccs = 'oli2002@med.cornell.edu'; //testing
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Fellowship Application Creation Failed');
+            ////////////////// EOF Potential ERROR //////////////////
+        }
 
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
@@ -779,7 +807,7 @@ class FellAppImportPopulateUtil {
             $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
 
             //testing
-            echo "googleFormId=$googleFormId <br>";
+            //echo "googleFormId=$googleFormId <br>";
             //if( $googleFormId == 'aullah_augusta_edu_Ullah_Asad_2020-07-12_23_50_26' ) {
                 //dump($rowData[0]);
                 //exit($row . ": " . $googleFormId);
