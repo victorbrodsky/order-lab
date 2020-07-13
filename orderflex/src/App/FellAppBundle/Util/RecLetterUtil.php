@@ -434,7 +434,7 @@ class RecLetterUtil {
         $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder();
 
         //2) Import recommendation letter from Google Drive Folder
-        $filesGoogleDrive = $this->importLetterFromGoogleDriveFolder();
+        $importedLetters = $this->importLetterFromGoogleDriveFolder();
 
         //2) Populate applications from DataFile DB object
         $populatedCount = $this->populateApplicationsFromDataFile();
@@ -451,7 +451,7 @@ class RecLetterUtil {
         //exit('eof processFellAppFromGoogleDrive');
 
         $result = "Finish processing Fellowship Recommendation Letters on Google Drive and on server.<br>".
-            "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
+            "filesGoogleDrive=".count($filesGoogleDrive).", importedLetters=".count($importedLetters).", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications)
             //.", First generated report in queue=".$generatedReport
         ;

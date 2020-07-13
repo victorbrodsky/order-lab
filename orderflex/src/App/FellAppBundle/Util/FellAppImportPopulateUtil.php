@@ -775,8 +775,8 @@ class FellAppImportPopulateUtil {
 
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Fellowship Application Creation Failed');
 
-            ///////////// Delete erogenous spreadsheet $datafile and associated document /////////////
-            $logger->error("Removing erogenous spreadsheet ($inputFileName): datafileId=".$datafile->getId()." and associated documentId=".$document->getId());
+            ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
+            $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=".$datafile->getId()." and associated documentId=".$document->getId());
             unlink($inputFileName);
             $em->remove($document);
             if( $datafile ) {
