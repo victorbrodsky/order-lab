@@ -255,6 +255,24 @@ class FellAppImportPopulateUtil {
 
         foreach( $datafiles as $datafile ) {
 
+            if( $datafile->getCreationDate() ) {
+                $datafileCreationDateStr = $datafile->getCreationDate()->format('d-m-Y H:i:s');
+            } else {
+                $datafileCreationDateStr = "Unknown date";
+            }
+
+            $datafileDocument = $datafile->getDocument();
+            if( $datafileDocument ) {
+                $spreadsheetUniqueName = $datafileDocument->getUniquename();
+                $uploadDir = $datafileDocument->getUploadDirectory();
+            } else {
+                $spreadsheetUniqueName = "Unknown document";
+                $uploadDir = "Unknown directory";
+            }
+
+            $logger->notice("Start processing datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
+                ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
+            
             $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument() );
             $count = count($populatedFellowshipApplications);
 
@@ -274,6 +292,9 @@ class FellAppImportPopulateUtil {
                 } else {
                     $logger->warning("Error populating data file ID ".$datafile->getId());
                 }
+            } else {
+                $logger->warning("Warning: failed to process datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
+                    ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
             }
 
         }
