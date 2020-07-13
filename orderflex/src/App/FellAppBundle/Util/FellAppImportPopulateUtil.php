@@ -767,14 +767,15 @@ class FellAppImportPopulateUtil {
             //echo "</pre>";
             //exit('exit');
 
-            dump($rowData[0]);
-            exit();
-
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
             $email = $this->getValueByHeaderName('email', $rowData, $headers);
             $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
             $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+
+            //testing
+            dump($rowData[0]);
+            exit($row.": ".$googleFormId);
 
             if( !$googleFormId ) {
                 //echo $row.": skip ID is null <br>";
