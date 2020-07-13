@@ -777,12 +777,12 @@ class FellAppImportPopulateUtil {
 
             ///////////// Delete erogenous spreadsheet $datafile and associated document /////////////
             $logger->error("Removing erogenous spreadsheet ($inputFileName): datafileId=".$datafile->getId()." and associated documentId=".$document->getId());
-            unlink($inputFileName);
+            //unlink($inputFileName);
             $em->remove($document);
             if( $datafile ) {
                 $em->remove($datafile);
             }
-            $em->flush();
+            //$em->flush();
             return false;
         }
         ////////////////// EOF Potential ERROR //////////////////
