@@ -654,7 +654,7 @@ class FellAppImportPopulateUtil {
         }
 
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        $logger->notice("Population a single application sheet with filename=".$inputFileName);
+        $logger->notice("Population a single application sheet (document ID=".$document->getId().") with filename=".$inputFileName);
 
         //if ruuning from cron path must be: $path = getcwd() . "/web";
         //$inputFileName = $path . "/" . $inputFileName;
