@@ -749,7 +749,6 @@ class FellAppImportPopulateUtil {
 
         echo "document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow <br>";
 
-
         //for each user in excel
         for( $row = 3; $row <= $highestRow; $row++ ){
 
