@@ -992,7 +992,8 @@ class AuthUtil {
         $postfix = $this->getPostfix($ldapType);
 
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        $cnx = $this->connectToLdap($LDAPHost);
+        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
+        $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
 
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
 
@@ -1308,10 +1309,10 @@ class AuthUtil {
     }
 
     //return ldap connection
-    public function connectToLdap( $LDAPHost ) {
+    public function connectToLdap( $LDAPHost, $LDAPPort=389 ) {
 
-        $cnx = @ldap_connect($LDAPHost);
-        //$cnx = ldap_connect($LDAPHost);
+        //$cnx = @ldap_connect($LDAPHost,$LDAPPort);
+        $cnx = ldap_connect($LDAPHost,$LDAPPort);
 
         if( !$cnx ) {
             $this->logger->warning("Ldap: Could not connect to LDAP");
