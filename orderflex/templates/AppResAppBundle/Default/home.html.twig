@@ -65,17 +65,22 @@
     {% if lastImportTimestamp and resappids is defined and resappids %}
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
-            <a href="{{ path('resapp_download_applicants_list_excel', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+            <a href="{{ path('resapp_download_applicants_list_excel', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                    data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">
                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
                     <i class="fa fa-file-excel-o"></i>
             </a>
-            <a href="{{ path('resapp_download_interview_applicants_list_doc', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+            <a href="{{ path('resapp_download_interview_applicants_list_doc', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                data-toggle="tooltip" title="Download Displayed Interviewee Summaries in Word">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-word-o"></i>
             </a>
-            <a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"
+            {#<a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'currentYear': currentYear, 'resappTypeId': resappTypeId }, true) }}"#}
+               {#data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">#}
+                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                {#<i class="fa fa-file-pdf-o"></i>#}
+            {#</a>#}
+            <a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-pdf-o"></i>
@@ -137,13 +142,25 @@
                         {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
                     {#</div>#}
 
-                    {{ form_row(resappfilter.startDates, {'attr': {'placeholder': 'Start Year'}}) }}
+                    {{ form_row(resappfilter.startDates, {'attr': {'placeholder': 'Residency Start Year'}}) }}
 
                 </div>
+                <div class="col-xs-2">
+                    {#{{ formmacros.fieldDateLabel_vertical(resappfilter.startDate,'allow-future-date') }}#}
+                    {#<div class="input-group input-group-reg date allow-future-date">#}
+                    {#{{ form_row(resappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}#}
+                    {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+                    {#</div>#}
+
+                    {{ form_row(resappfilter.applicationSeasonStartDates, {'attr': {'placeholder': 'Application Season Start Year'}}) }}
+
+                </div>
+
+
                 {#<div class="col-xs-2">#}
                     {#{{ formmacros.fieldDateLabel_vertical(resappfilter.endDate,'allow-future-date') }}#}
                 {#</div>#}
-                <div class="col-xs-4">
+                <div class="col-xs-2">
                     {{ form_row(resappfilter.filter,{'attr': {'placeholder': 'Residency Type'}}) }}
                 </div>
                 <div class="col-xs-4">
@@ -167,10 +184,10 @@
 
                     <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(resappfilter.active) }}   {{ form_label(resappfilter.active) }}
-                    {#{{ resappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
-                    {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
-                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {#{{ resappmacros.addBadge( filter, seasonStartYear, active, activeTotal, 'active' ) }}#}
+                    {#<span class="badge" data-toggle="tooltip" title="for {{ seasonStartYear }}">#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[active]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                     {{ active }}
                     </a>
                     </span>
@@ -184,8 +201,8 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.priority) }}   {{ form_label(resappfilter.priority) }}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[priority]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[priority]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ priority }}
                     </a>
                     </span>
@@ -199,9 +216,9 @@
 
                     <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(resappfilter.complete) }}   {{ form_label(resappfilter.complete) }}
-                    {#{{ resappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
-                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {#{{ resappmacros.addBadge( filter, seasonStartYear, complete, completeTotal, 'complete' ) }}#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                     {{ complete }}
                     </a>
                     </span>
@@ -215,9 +232,9 @@
 
                     <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(resappfilter.interviewee) }}   {{ form_label(resappfilter.interviewee) }}
-                    {#{{ resappmacros.addBadge( filter, currentYear, interviewee, intervieweeTotal, 'interviewee' ) }}#}
-                    <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {#{{ resappmacros.addBadge( filter, seasonStartYear, interviewee, intervieweeTotal, 'interviewee' ) }}#}
+                    <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[interviewee]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ interviewee }}
                     </a>
                     </span>
@@ -231,8 +248,8 @@
 
                     {#<div style="white-space: nowrap; display: inline;">#}
                     {#{{ form_widget(resappfilter.onhold) }}   {{ form_label(resappfilter.onhold) }}#}
-                    {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
-                    {#<a style="color: white;" href="{{ path('resapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">#}
+                    {#<span class="badge" data-toggle="tooltip" title="for {{ seasonStartYear }}">#}
+                    {#<a style="color: white;" href="{{ path('resapp_home',{'filter[onhold]':1,'filter[filter]':filter,'filter[startDate]':seasonStartYear}) }}">#}
                         {#{{ onhold }}#}
                     {#</a>#}
                     {#</span>#}
@@ -246,8 +263,8 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.accepted) }}   {{ form_label(resappfilter.accepted) }}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[accepted]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[accepted]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ accepted }}
                     </a>
                     </span>
@@ -261,8 +278,8 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.acceptedandnotified) }}   {{ form_label(resappfilter.acceptedandnotified) }}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ acceptedandnotified }}
                     </a>
                     </span>
@@ -276,9 +293,9 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.reject) }}   {{ form_label(resappfilter.reject) }}
-                        {#{{ resappmacros.addBadge( filter, currentYear, reject, rejectTotal, 'reject' ) }}#}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {#{{ resappmacros.addBadge( filter, seasonStartYear, reject, rejectTotal, 'reject' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[reject]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ reject }}
                     </a>
                     </span>
@@ -292,8 +309,8 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.rejectedandnotified) }}   {{ form_label(resappfilter.rejectedandnotified) }}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[rejectedandnotified]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ rejectedandnotified }}
                     </a>
                     </span>
@@ -307,9 +324,9 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.hidden) }}   {{ form_label(resappfilter.hidden) }}
-                        {#{{ resappmacros.addBadge( filter, currentYear, hidden, hiddenTotal, 'hidden' ) }}#}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {#{{ resappmacros.addBadge( filter, seasonStartYear, hidden, hiddenTotal, 'hidden' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[hidden]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ hidden }}
                     </a>
                     </span>
@@ -323,9 +340,9 @@
 
                     <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.archived) }}   {{ form_label(resappfilter.archived) }}
-                        {#{{ resappmacros.addBadge( filter, currentYear, archived, archivedTotal, 'archived' ) }}#}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('resapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {#{{ resappmacros.addBadge( filter, seasonStartYear, archived, archivedTotal, 'archived' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[archived]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
                         {{ archived }}
                     </a>
                     </span>

@@ -305,7 +305,7 @@ class DefaultController extends OrderAbstractController
      */
     public function loginTestingAction( Request $request, $username, $password ) {
 
-        //exit("disabled");
+        exit("disabled");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));

@@ -146,9 +146,12 @@ class ResAppController extends OrderAbstractController {
 
         $enableGoolge = false;
         $searchFlag = false;
-        $currentYear = date("Y")+2;
-        //$currentYear = date("Y")+1;
+        //$currentYear = date("Y")+2;
+        $currentYear = date("Y")+1;
         $defaultStartDates = $currentYear;
+
+        $applicationSeasonStartDate = date("Y");
+        $defaultApplicationSeasonStartDates = $applicationSeasonStartDate;
 
         $residencyTypes = $resappUtil->getResidencyTypesByUser($user);
         //echo "residencyTypes count=".count($residencyTypes)."<br>";
@@ -223,6 +226,7 @@ class ResAppController extends OrderAbstractController {
         $filter = $filterform['filter']->getData();
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData();
+        $applicationSeasonStartDates = $filterform['applicationSeasonStartDates']->getData();
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
         $complete = $filterform['complete']->getData();
@@ -256,6 +260,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
                     'filter[filter]' => $residencyTypeId,
@@ -277,6 +282,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -298,6 +304,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route, //'resapp_home',
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -459,6 +466,39 @@ class ResAppController extends OrderAbstractController {
             $startYearStr = $currentYear;
         }
 
+        if( $applicationSeasonStartDates ) {
+            //echo "applicationSeasonStartDates=$applicationSeasonStartDates <br>";
+            if(1) {
+                //date as string
+                $applicationSeasonStartDateCriterions = array();
+                $applicationSeasonStartDatesArr = explode(",",$applicationSeasonStartDates);
+                $seasonStartYearStr = $applicationSeasonStartDates;
+                foreach ($applicationSeasonStartDatesArr as $applicationSeasonStartDate) {
+                    $bottomDate = $applicationSeasonStartDate . "-01-01";
+                    $topDate = $applicationSeasonStartDate . "-12-31";
+                    //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
+                    $applicationSeasonStartDateCriterions[] = "("."resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
+                }
+                $applicationSeasonStartDateCriterion = implode(" OR ",$applicationSeasonStartDateCriterions);
+                $dql->andWhere($applicationSeasonStartDateCriterion);
+                if ($applicationSeasonStartDates != $defaultApplicationSeasonStartDates) {
+                    $searchFlag = true;
+                }
+            } else {
+                //date as DateTime object
+                $seasonStartYearStr = $applicationSeasonStartDates->format('Y');
+                $bottomDate = $seasonStartYearStr."-01-01";
+                $topDate = $seasonStartYearStr."-12-31";
+                $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+                if( $seasonStartYearStr != $currentYear ) {
+                    $searchFlag = true;
+                }
+            }
+        } else {
+            $seasonStartYearStr = $currentYear;
+        }
+
         if( $route == "resapp_myinterviewees" ) {
             $dql->leftJoin("resapp.interviews", "interviews");
             $dql->andWhere("interviews.interviewer = " . $user->getId() );
@@ -493,39 +533,39 @@ class ResAppController extends OrderAbstractController {
             $accessreqsCount = count($accessreqs);
         }
 
-        //use date from the filter ($startYearStr) instead of $currentYear
+        //use date from the filter ($seasonStartYearStr) instead of $currentYear
 
-        $complete = $resappUtil->getResAppByStatusAndYear('complete',$resSubspecId,$startYearStr);
+        $complete = $resappUtil->getResAppByStatusAndYear('complete',$resSubspecId,$seasonStartYearStr);
         $completeTotal = $resappUtil->getResAppByStatusAndYear('complete',$resSubspecId);
 
-        $hidden = $resappUtil->getResAppByStatusAndYear('hide',$resSubspecId,$startYearStr);
+        $hidden = $resappUtil->getResAppByStatusAndYear('hide',$resSubspecId,$seasonStartYearStr);
         $hiddenTotal = $resappUtil->getResAppByStatusAndYear('hide',$resSubspecId);
 
-        $archived = $resappUtil->getResAppByStatusAndYear('archive',$resSubspecId,$startYearStr);
+        $archived = $resappUtil->getResAppByStatusAndYear('archive',$resSubspecId,$seasonStartYearStr);
         $archivedTotal = $resappUtil->getResAppByStatusAndYear('archive',$resSubspecId);
 
-        $active = $resappUtil->getResAppByStatusAndYear('active',$resSubspecId,$startYearStr);
+        $active = $resappUtil->getResAppByStatusAndYear('active',$resSubspecId,$seasonStartYearStr);
         $activeTotal = $resappUtil->getResAppByStatusAndYear('active',$resSubspecId);
 
-        $interviewee = $resappUtil->getResAppByStatusAndYear('interviewee',$resSubspecId,$startYearStr);
+        $interviewee = $resappUtil->getResAppByStatusAndYear('interviewee',$resSubspecId,$seasonStartYearStr);
         $intervieweeTotal = $resappUtil->getResAppByStatusAndYear('interviewee',$resSubspecId);
 
-        $reject = $resappUtil->getResAppByStatusAndYear('reject',$resSubspecId,$startYearStr);
+        $reject = $resappUtil->getResAppByStatusAndYear('reject',$resSubspecId,$seasonStartYearStr);
         $rejectTotal = $resappUtil->getResAppByStatusAndYear('reject',$resSubspecId);
 
-        //$onhold = $resappUtil->getResAppByStatusAndYear('onhold',$resSubspecId,$startYearStr);
+        //$onhold = $resappUtil->getResAppByStatusAndYear('onhold',$resSubspecId,$seasonStartYearStr);
         //$onholdTotal = $resappUtil->getResAppByStatusAndYear('onhold',$resSubspecId);
 
-        $priority = $resappUtil->getResAppByStatusAndYear('priority',$resSubspecId,$startYearStr);
+        $priority = $resappUtil->getResAppByStatusAndYear('priority',$resSubspecId,$seasonStartYearStr);
         $priorityTotal = $resappUtil->getResAppByStatusAndYear('priority',$resSubspecId);
 
-        $accepted = $resappUtil->getResAppByStatusAndYear('accepted',$resSubspecId,$startYearStr);
+        $accepted = $resappUtil->getResAppByStatusAndYear('accepted',$resSubspecId,$seasonStartYearStr);
         $acceptedTotal = $resappUtil->getResAppByStatusAndYear('accepted',$resSubspecId);
 
-        $acceptedandnotified = $resappUtil->getResAppByStatusAndYear('acceptedandnotified',$resSubspecId,$startYearStr);
+        $acceptedandnotified = $resappUtil->getResAppByStatusAndYear('acceptedandnotified',$resSubspecId,$seasonStartYearStr);
         $acceptedandnotifiedTotal = $resappUtil->getResAppByStatusAndYear('acceptedandnotified',$resSubspecId);
 
-        $rejectedandnotified = $resappUtil->getResAppByStatusAndYear('rejectedandnotified',$resSubspecId,$startYearStr);
+        $rejectedandnotified = $resappUtil->getResAppByStatusAndYear('rejectedandnotified',$resSubspecId,$seasonStartYearStr);
         $rejectedandnotifiedTotal = $resappUtil->getResAppByStatusAndYear('rejectedandnotified',$resSubspecId);
 
         $idsArr = array();
@@ -544,8 +584,8 @@ class ResAppController extends OrderAbstractController {
                 $resSubspecArg = $residencyTypes;
             }
 
-            $awaitedInterviews = count($resappUtil->getResAppByStatusAndYear('interviewee-not',$resSubspecArg,$startYearStr,$user));
-            $receivedInterviews = count($resappUtil->getResAppByStatusAndYear('interviewee',$resSubspecArg,$startYearStr,$user));
+            $awaitedInterviews = count($resappUtil->getResAppByStatusAndYear('interviewee-not',$resSubspecArg,$seasonStartYearStr,$user));
+            $receivedInterviews = count($resappUtil->getResAppByStatusAndYear('interviewee',$resSubspecArg,$seasonStartYearStr,$user));
             //echo "awaitedInterviews=".$awaitedInterviews."<br>";
             //echo "receivedInterviews=".$receivedInterviews."<br>";
         }
@@ -597,6 +637,7 @@ class ResAppController extends OrderAbstractController {
             'filter' => $resSubspecId,
             'accessreqs' => $accessreqsCount,
             'currentYear' => $startYearStr, //$currentYear, //TODO: adopt the currentYear to currentYears in controller and html
+            'seasonStartYear' => $seasonStartYearStr,
             'hiddenTotal' => count($hiddenTotal),
             'archivedTotal' => count($archivedTotal),
             'hidden' => count($hidden),

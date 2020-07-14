@@ -48,9 +48,19 @@ class ResidencyApplication extends BaseUserAttributes {
     private $user;
 
     /**
+     * Residency Start Year
+     *
      * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
+
+    /**
+     * Application Season Start Year
+     * the year that was imported from the old site: enrolment dates in 2019 => 2019-2020
+     *
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $applicationSeasonStartDate;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -637,6 +647,22 @@ class ResidencyApplication extends BaseUserAttributes {
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationSeasonStartDate()
+    {
+        return $this->applicationSeasonStartDate;
+    }
+
+    /**
+     * @param mixed $applicationSeasonStartDate
+     */
+    public function setApplicationSeasonStartDate($applicationSeasonStartDate)
+    {
+        $this->applicationSeasonStartDate = $applicationSeasonStartDate;
     }
 
     /**

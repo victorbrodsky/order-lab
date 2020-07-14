@@ -53,13 +53,22 @@ class ResAppFilterType extends AbstractType
 //            //'attr' => array('class'=>'datepicker datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
 //        ));
 
-        //date as string
+        //Residency Start Year
         $builder->add('startDates', TextType::class, array(
             'label' => false, //'Start Date',
             //'placeholder' => 'Start Date',
             'required' => false,
             //'data' => $startDates, //$this->params['defaultStartDates'],
-            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
+            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Residency Start Year', 'data-toggle'=>'tooltip'),
+        ));
+
+        //Application Season Start Year: the year that was imported from the old site: enrolment dates in 2019 => 2019-2020
+        $builder->add('applicationSeasonStartDates', TextType::class, array(
+            'label' => false, //'Start Date',
+            //'placeholder' => 'Start Date',
+            'required' => false,
+            //'data' => $startDates, //$this->params['defaultStartDates'],
+            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Application Season Start Year', 'data-toggle'=>'tooltip'),
         ));
 
 //        $builder->add('filter', 'entity', array(
