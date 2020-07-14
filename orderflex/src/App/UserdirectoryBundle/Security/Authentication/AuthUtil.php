@@ -210,7 +210,7 @@ class AuthUtil {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
 
-            $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$username);
+            $this->logger->notice("findUserByUsername: authenticated successfully, existing user found in DB by token->getUsername()=".$username);
 
             if( $this->canLogin($user) === false ) {
                 $this->logger->warning("Ldap Authentication: User cannot login ".$user);
@@ -752,6 +752,8 @@ class AuthUtil {
                     //return NULL;
                 }
             }
+
+            $this->logger->notice("User authenticated successfully by simpleIdentifierAuthetication function. username=".$username."; identifierKeytype=".$identifierKeytypeName);
 
             //exit('login OK!');
             return $subjectUser;
