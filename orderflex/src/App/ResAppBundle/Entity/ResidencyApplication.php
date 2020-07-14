@@ -49,10 +49,16 @@ class ResidencyApplication extends BaseUserAttributes {
 
     /**
      * Residency Start Year
+     * Usually: $startDate = $applicationSeasonStartDate + 1 year
      *
      * @ORM\Column(type="date", nullable=true)
      */
     private $startDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $endDate;
 
     /**
      * Application Season Start Year
@@ -65,8 +71,8 @@ class ResidencyApplication extends BaseUserAttributes {
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $endDate;
-
+    private $applicationSeasonEndDate;
+    
     /**
      * Residency Specialties (ResidencySpecialty)
      *
@@ -663,6 +669,22 @@ class ResidencyApplication extends BaseUserAttributes {
     public function setApplicationSeasonStartDate($applicationSeasonStartDate)
     {
         $this->applicationSeasonStartDate = $applicationSeasonStartDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationSeasonEndDate()
+    {
+        return $this->applicationSeasonEndDate;
+    }
+
+    /**
+     * @param mixed $applicationSeasonEndDate
+     */
+    public function setApplicationSeasonEndDate($applicationSeasonEndDate)
+    {
+        $this->applicationSeasonEndDate = $applicationSeasonEndDate;
     }
 
     /**

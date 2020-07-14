@@ -65,12 +65,12 @@
     {% if lastImportTimestamp and resappids is defined and resappids %}
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
-            <a href="{{ path('resapp_download_applicants_list_excel', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
+            <a href="{{ path('resapp_download_applicants_list_excel', { 'resappIds': resappids, 'currentYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                    data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">
                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
                     <i class="fa fa-file-excel-o"></i>
             </a>
-            <a href="{{ path('resapp_download_interview_applicants_list_doc', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
+            <a href="{{ path('resapp_download_interview_applicants_list_doc', { 'resappIds': resappids, 'currentYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                data-toggle="tooltip" title="Download Displayed Interviewee Summaries in Word">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-word-o"></i>
@@ -80,7 +80,7 @@
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 {#<i class="fa fa-file-pdf-o"></i>#}
             {#</a>#}
-            <a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'seasonStartYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
+            <a href="{{ path('resapp_download_interview_applicants_list_pdf', { 'resappIds': resappids, 'currentYear': seasonStartYear, 'resappTypeId': resappTypeId }, true) }}"
                data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-pdf-o"></i>
@@ -593,7 +593,12 @@
                     </td>
 
                     <td>
-                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank">{{ entity.id }}</a>
+                        {% if entity.googleFormId %}
+                            {% set applicationId = entity.id~'('~entity.googleFormId~')' %}
+                        {% else %}
+                            {% set applicationId = entity.id %}
+                        {% endif %}
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank">{{ applicationId }}</a>
                     </td>
 
                     <td class="rowlink-skip">

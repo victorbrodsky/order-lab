@@ -315,4 +315,64 @@ class DefaultController extends OrderAbstractController
 
         exit($res);
     }
+
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/residency-applications/update-application-season-start-date
+     *
+     * @Route("/update-application-season-start-date", name="resapp_update_application_season_start_date")
+     */
+    public function updateApplicationSeasonStartDateAction( Request $request ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get spreadsheets older than X year
+        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql =  $repository->createQueryBuilder("application");
+        $dql->select('application');
+
+        //$dql->where("documentType.name = 'Residency Photo'");
+        //$dql->where("application.applicationSeasonStartDate IS NULL");
+        $dql->where("application.applicationSeasonEndDate IS NULL");
+
+        $query = $em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $applications = $query->getResult();
+        echo "applications count=".count($applications)."<br>";
+
+        $counter = 0;
+
+        foreach($applications as $application) {
+
+            $counter++;
+
+            $startDate = $application->getStartDate();
+            echo $counter." (ID=".$application->getId().":".$application->getGoogleFormId()."): Date1=".$startDate->format('Y-m-d')." => ";
+            if( !$startDate ) {
+                exit("No start date");
+            }
+
+            //Copy the values for all residency applications from “Start Year” to “Application Season Start Year”
+            $application->setApplicationSeasonStartDate($startDate);
+
+            //Usually: $startDate = $applicationSeasonStartDate + 1 year
+            $startDate->modify('+1 year');
+            echo "Date2=".$startDate->format('Y-m-d')."<br>";
+            $application->setStartDate($startDate);
+
+            //$em->flush();
+        }
+
+        $res = "Update application season start date: counter=$counter";
+
+        exit($res);
+    }
 }
