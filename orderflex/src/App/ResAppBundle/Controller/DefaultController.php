@@ -375,7 +375,7 @@ class DefaultController extends OrderAbstractController
             $application->setApplicationSeasonStartDate( $application->getStartDate() );
             $application->setApplicationSeasonEndDate( $application->getEndDate() );
 
-            $em->flush();
+            //$em->flush();
 
             //Set Start/End date +1 year
             $startDate2 = $application->getStartDate();
@@ -391,7 +391,7 @@ class DefaultController extends OrderAbstractController
             $application->setStartDate($startDatePlusOne);
             $application->setEndDate($endDatePlusOne);
 
-            $em->flush();
+            //$em->flush();
 
             //exit("EOF");
         }
