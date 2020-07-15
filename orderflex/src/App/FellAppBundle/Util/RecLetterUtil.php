@@ -1038,6 +1038,7 @@ class RecLetterUtil {
         return count($letters);
     }
 
+    //NOT USED
     public function getLatestDocument( $documents ) {
         foreach( $documents as $document ) {
             echo $document->getId().": CreateDate=".$document->getCreatedate()->format('m/d/Y \a\t H:i').

@@ -341,6 +341,8 @@ class DefaultController extends OrderAbstractController
         //$dql->where("application.applicationSeasonStartDate IS NULL");
         $dql->where("application.applicationSeasonEndDate IS NULL");
 
+        $dql->orderBy("application.id","ASC");
+
         $query = $em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
@@ -355,20 +357,41 @@ class DefaultController extends OrderAbstractController
             $counter++;
 
             $startDate = $application->getStartDate();
-            echo $counter." (ID=".$application->getId().":".$application->getGoogleFormId()."): Date1=".$startDate->format('Y-m-d')." => ";
+            $endDate = $application->getEndDate();
+
+            echo $counter." (ID=".$application->getId().", ExternalID=".$application->getGoogleFormId()."): Date1=".
+                $startDate->format('Y-m-d')."~".$endDate->format('Y-m-d')." => ";
+
             if( !$startDate ) {
                 exit("No start date");
             }
+            if( !$endDate ) {
+                exit("No end date");
+            }
 
             //Copy the values for all residency applications from “Start Year” to “Application Season Start Year”
-            $application->setApplicationSeasonStartDate($startDate);
+            $application->setApplicationSeasonStartDate( $application->getStartDate() );
+            $application->setApplicationSeasonEndDate( $application->getEndDate() );
+
+            $em->flush();
+
+            //Set Start/End date +1 year
+            $startDate2 = $application->getStartDate();
+            $startDatePlusOne = clone $startDate2;
+
+            $endDate2 = $application->getEndDate();
+            $endDatePlusOne = clone $endDate2;
 
             //Usually: $startDate = $applicationSeasonStartDate + 1 year
-            $startDate->modify('+1 year');
-            echo "Date2=".$startDate->format('Y-m-d')."<br>";
-            $application->setStartDate($startDate);
+            $startDatePlusOne->modify('+1 year');
+            $endDatePlusOne->modify('+1 year');
+            echo "Date2=".$startDatePlusOne->format('Y-m-d').", ".$endDatePlusOne->format('Y-m-d')."<br>";
+            $application->setStartDate($startDatePlusOne);
+            $application->setEndDate($endDatePlusOne);
 
-            //$em->flush();
+            $em->flush();
+
+            //exit("EOF");
         }
 
         $res = "Update application season start date: counter=$counter";
