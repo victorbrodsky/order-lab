@@ -330,6 +330,8 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
         }
 
+        ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes;
+
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
