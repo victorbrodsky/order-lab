@@ -936,7 +936,7 @@ class RecLetterUtil {
             //use download datetime as letter datetime
             $latestLetterId = null;
             $latestLetter = $letters->last(); //Last by createdate
-            $this->getLatestDocument($letters);
+            //$this->getLatestDocument($letters);
             if( $latestLetter ) {
                 $latestLetterId = $latestLetter->getId();
                 //$latestLetterCreatedDate = $latestLetter->getExternalOrDbCreatedate();

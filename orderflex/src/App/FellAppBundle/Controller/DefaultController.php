@@ -401,7 +401,7 @@ class DefaultController extends OrderAbstractController
      */
     public function testLatestReferenceLetterAction( Request $request, Reference $reference ) {
 
-        //exit("not allowed");
+        exit("not allowed");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
