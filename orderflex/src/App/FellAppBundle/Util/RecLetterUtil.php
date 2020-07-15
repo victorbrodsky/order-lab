@@ -903,7 +903,7 @@ class RecLetterUtil {
     }
 
     //check if this reference already has a letter
-    public function checkReferenceAlreadyHasLetter($fellapp,$reference) {
+    public function checkReferenceAlreadyHasLetter($fellapp,$reference,$testing=false) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -922,7 +922,7 @@ class RecLetterUtil {
         }
 
         //check if this reference already has a letter
-        $letters = $reference->getDocuments();
+        $letters = $reference->getDocuments(); //"createdate" = "ASC". Ascending means that earlier values precede later ones: 2000, 2001, 2002 ...
 
         //echo "letters count=".count($letters)."<br>";
         //This check is done after the letter has been added, therefore check if number of letters more than 1
@@ -935,7 +935,8 @@ class RecLetterUtil {
 
             //use download datetime as letter datetime
             $latestLetterId = null;
-            $latestLetter = $letters->last();
+            //$latestLetter = $letters->last();
+            $latestLetter = $this->getLatestDocument($letters);
             if( $latestLetter ) {
                 $latestLetterId = $latestLetter->getId();
                 $latestLetterCreatedDate = $latestLetter->getExternalOrDbCreatedate();
@@ -1021,6 +1022,11 @@ class RecLetterUtil {
                 $ccAdminEmails = null;
             }
 
+            //$testing = true;
+            if( $testing ) {
+                $emails = $ccAdminEmails = 'oli2002@med.cornell.edu'; //testing
+            }
+
             $emailUtil->sendEmail( $emails, $subject, $body, $ccAdminEmails );
 
             //echo "Email sent: $subject <br><br><br> $body <br>";
@@ -1028,6 +1034,19 @@ class RecLetterUtil {
         } //if count($letters) > 0
 
         return count($letters);
+    }
+
+    public function getLatestDocument( $documents ) {
+        foreach( $documents as $document ) {
+            echo $document->getId().": CreateDate=".$document->getCreatedate()->format('m/d/Y \a\t H:i').
+                "; getExternalOrDbCreatedate=".$document->getExternalOrDbCreatedate()->format('m/d/Y \a\t H:i')."<br>";
+        }
+
+        $latestDocument = $documents->last();
+        echo $latestDocument->getId()." (Latest): CreateDate=".$latestDocument->getCreatedate()->format('m/d/Y \a\t H:i').
+            "; getExternalOrDbCreatedate=".$latestDocument->getExternalOrDbCreatedate()->format('m/d/Y \a\t H:i')."<br>";
+
+        return $latestDocument;
     }
 
     public function populateApplicationsFromDataFile() {

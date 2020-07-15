@@ -1032,18 +1032,18 @@ class AuthUtil {
 
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
-            $this->logger->notice("ldapBindUnix: error res=".$res);
-            $this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
+            $this->logger->notice("simple Ldap: ldap_error=".ldap_error($cnx)."; res=".$res."; user=".$username);
+            //$this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
         } else {
-            $this->logger->notice("Successfully authenticated by simple ldap ldap_bind");
+            $this->logger->notice("simple Ldap: Successfully authenticated by simple ldap ldap_bind for $username");
             ldap_unbind($cnx);
             return 1;
         }
 
-        $this->logger->notice("Simple ldap failed for unknown reason");
+        $this->logger->notice("Simple ldap failed for unknown reason for $username");
         return NULL;
     }
 

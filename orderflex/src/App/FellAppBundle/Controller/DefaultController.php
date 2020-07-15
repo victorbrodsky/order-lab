@@ -18,6 +18,7 @@
 namespace App\FellAppBundle\Controller;
 
 use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -392,4 +393,28 @@ class DefaultController extends OrderAbstractController
         }
     }
 
+
+    /**
+     * http://127.0.0.1/order/fellowship-applications/test-latest-reference-letter
+     *
+     * @Route("/test-latest-reference-letter/{id}", name="fellapp_test-latest-reference-letter")
+     */
+    public function testLatestReferenceLetterAction( Request $request, Reference $reference ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
+        }
+
+        //$em = $this->getDoctrine()->getManager();
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+
+        $fellapp = $reference->getFellapp();
+
+        $testing = true;
+        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference,$testing);
+
+        exit("end of testLatestReferenceLetterAction");
+    }
 }

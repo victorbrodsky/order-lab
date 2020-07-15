@@ -48,6 +48,8 @@
   
     <label class="control-label">Reference #{{ refcount }}</label>
 
+    <input type="hidden" id="reference_id" value="{{ reference.id }}" />
+
     {% if cycle != "download" %}
         {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
             <p>Hash ID (visible to admin): {{ reference.vars.value.recLetterHashId }}</p>
