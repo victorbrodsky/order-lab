@@ -935,11 +935,12 @@ class RecLetterUtil {
 
             //use download datetime as letter datetime
             $latestLetterId = null;
-            //$latestLetter = $letters->last();
-            $latestLetter = $this->getLatestDocument($letters);
+            $latestLetter = $letters->last(); //Last by createdate
+            //$latestLetter = $this->getLatestDocument($letters);
             if( $latestLetter ) {
                 $latestLetterId = $latestLetter->getId();
-                $latestLetterCreatedDate = $latestLetter->getExternalOrDbCreatedate();
+                //$latestLetterCreatedDate = $latestLetter->getExternalOrDbCreatedate();
+                $latestLetterCreatedDate = $latestLetter->getCreatedate();
                 if ($latestLetterCreatedDate) {
                     //$latestLetterCreatedDateStr = "submitted on " . $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
                     $latestLetterTimeStr = $latestLetterCreatedDate->format('m/d/Y \a\t H:i');
@@ -980,7 +981,8 @@ class RecLetterUtil {
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     $letterLink = '<a href="' . $letterLink . '">' . $letterLink . '</a>';
-                    $letterCreatedDate = $letter->getExternalOrDbCreatedate();
+                    //$letterCreatedDate = $letter->getExternalOrDbCreatedate();
+                    $letterCreatedDate = $letter->getCreatedate();
                     if ($letterCreatedDate) {
                         $letterCreatedDateStr = "received on " . $letterCreatedDate->format('m/d/Y \a\t H:i'); //use 'received' instead of 'submitted', since the current google drive api 1.0 can not get create date ($file->getCreatedTime)
                     } else {
