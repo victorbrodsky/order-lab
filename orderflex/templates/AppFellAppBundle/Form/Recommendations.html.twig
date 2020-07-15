@@ -48,7 +48,7 @@
   
     <label class="control-label">Reference #{{ refcount }}</label>
 
-    <input type="hidden" id="reference_id" value="{{ reference.id }}" />
+    <input type="hidden" id="reference_id" value="{{ reference.vars.value.id }}" />
 
     {% if cycle != "download" %}
         {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
