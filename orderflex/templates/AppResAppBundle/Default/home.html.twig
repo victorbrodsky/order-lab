@@ -134,28 +134,15 @@
         {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
         {{ form_start(resappfilter) }}
 
-            <div class="row">                
+            <div class="row">
+
                 <div class="col-xs-2">
-                    {#{{ formmacros.fieldDateLabel_vertical(resappfilter.startDate,'allow-future-date') }}#}
-                    {#<div class="input-group input-group-reg date allow-future-date">#}
-                        {#{{ form_row(resappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}#}
-                        {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                    {#</div>#}
-
-                    {{ form_row(resappfilter.startDates, {'attr': {'placeholder': 'Residency Start Year'}}) }}
-
-                </div>
-                <div class="col-xs-2">
-                    {#{{ formmacros.fieldDateLabel_vertical(resappfilter.startDate,'allow-future-date') }}#}
-                    {#<div class="input-group input-group-reg date allow-future-date">#}
-                    {#{{ form_row(resappfilter.startDate, {'attr': {'placeholder': 'Start Year'}}) }}#}
-                    {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                    {#</div>#}
-
                     {{ form_row(resappfilter.applicationSeasonStartDates, {'attr': {'placeholder': 'Application Season Start Year'}}) }}
-
                 </div>
 
+                <div class="col-xs-2">
+                    {{ form_row(resappfilter.startDates, {'attr': {'placeholder': 'Residency Start Year'}}) }}
+                </div>
 
                 {#<div class="col-xs-2">#}
                     {#{{ formmacros.fieldDateLabel_vertical(resappfilter.endDate,'allow-future-date') }}#}

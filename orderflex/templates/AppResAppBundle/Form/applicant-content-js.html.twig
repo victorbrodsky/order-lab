@@ -35,8 +35,13 @@
         //Pre-set training period for which applying only for new form
         if( cycle == "new" ) {
             var now = new Date();
-            $(".resapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 2, 6, 1));
-            $(".resapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 3, 5, 30));
+            var addStartYear = 1; //2;
+            //var addEndYear = addStartYear + 1;
+            $(".resapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + addStartYear, 6, 1));
+            $(".resapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + addStartYear + 1, 5, 30));
+
+            $(".resapp-applicationSeasonStartDate").datepicker().datepicker("setDate", new Date(now.getFullYear(), 6, 1));
+            $(".resapp-applicationSeasonEndDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 1, 5, 30));
         }
 
         //add listener on rank change

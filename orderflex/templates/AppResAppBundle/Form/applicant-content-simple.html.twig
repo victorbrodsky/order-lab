@@ -187,6 +187,10 @@
             <div class="panel-body">
 
                 {{ formmacros.field(form.residencySubspecialty) }}
+
+                {{ formmacros.fieldDateLabel(form.applicationSeasonStartDate,'allow-future-date') }}
+                {{ formmacros.fieldDateLabel(form.applicationSeasonEndDate,'allow-future-date') }}
+
                 {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
                 {{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}
 

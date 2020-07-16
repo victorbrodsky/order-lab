@@ -260,7 +260,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
-                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
                     'filter[filter]' => $residencyTypeId,
@@ -282,7 +282,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
-                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -304,7 +304,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route, //'resapp_home',
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
-                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
