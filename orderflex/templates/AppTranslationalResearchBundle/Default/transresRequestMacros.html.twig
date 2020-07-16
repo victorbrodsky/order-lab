@@ -342,6 +342,70 @@
 
 {% endmacro %}
 
+{% macro visualInfoSections(form, cycle, sitename) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype') %}
+
+    <div id="form-prototype-data"
+         data-prototype-user-visualinfos = "{{ visualInfosPrototype|e }}"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
+    <div class="transres-visualinfos-holder">
+        {% for visualInfo in form.visualInfos %}
+            {#{{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}#}
+            {{ transresRequestMacros.visualInfoForm(visualInfo, cycle, 'transres-visualinfos', 'noprototype', sitename, 1) }}
+        {% endfor %}
+        {#{{ usermacros.addNewObjectBtn(cycle,'transres-visualinfos','Add Photo',null,'transresInvoiceItemListeneres') }}#}
+        {% if cycle != "show" and cycle != "download" %}
+            {{ usermacros.addNewObjectBtn(cycle,'transres-visualinfos','Add Photo') }}
+        {% endif %}
+    </div>
+{% endmacro %}
+{% macro visualInfoForm( visualInfo, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set formvisualInfo = visualInfo.vars.prototype %}
+    {% else %}
+        {% set formvisualInfo = visualInfo %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {#{{ formmacros.field(visualInfo.comment) }}#}
+        {#{{ formmacros.field(visualInfo.catalog) }}#}
+
+        <div class="row">
+            <div class="col-xs-11">
+            </div>
+            <div class="col-xs-1">
+                {% if cycle != "show" and showAddDeleteBtn %}
+                    <button type="button" class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span></button>
+                {% endif %}
+            </div>
+        </div>
+
+        {{ formmacros.field(formvisualInfo.comment) }}
+        {{ formmacros.field(formvisualInfo.catalog) }}
+
+    </div>
+
+{% endmacro %}
+
 {% macro productSections(form, cycle, sitename) %}
 
     {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}

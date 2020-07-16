@@ -202,11 +202,45 @@ class AntibodyList extends ListAbstract
     private $exportId;
 
 
+    /**
+     * Inventory Stock
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $inventory;
+
+    /**
+     * Unit Price
+     *
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $unitPrice;
+
+    /**
+     * Tissue Type
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tissueType;
+
+    /**
+     * Similar to http://store.ihcworld.com/abi-1-ihc-antibody/
+     *
+     * @ORM\OneToMany(targetEntity="VisualInfo", mappedBy="antibody", cascade={"persist","remove"})
+     * @ORM\OrderBy({"orderinlist" = "ASC","updatedate" = "DESC"})
+     */
+    private $visualInfos;
+
+
+
+
     public function __construct($author=null) {
 
         parent::__construct($author);
 
         $this->documents = new ArrayCollection();
+        $this->visualInfos = new ArrayCollection();
     }
 
 
@@ -550,6 +584,79 @@ class AntibodyList extends ListAbstract
     {
         $this->exportId = $exportId;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVisualInfos()
+    {
+        return $this->visualInfos;
+    }
+    public function addVisualInfo( $item )
+    {
+        if( !$item )
+            return;
+
+        if( !$this->visualInfos->contains($item) ) {
+            $item->setAntibody($this);
+            $this->visualInfos->add($item);
+        }
+    }
+    public function removeVisualInfo($item)
+    {
+        $this->visualInfos->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInventory()
+    {
+        return $this->inventory;
+    }
+
+    /**
+     * @param mixed $inventory
+     */
+    public function setInventory($inventory)
+    {
+        $this->inventory = $inventory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnitPrice()
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param mixed $unitPrice
+     */
+    public function setUnitPrice($unitPrice)
+    {
+        $this->unitPrice = $unitPrice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTissueType()
+    {
+        return $this->tissueType;
+    }
+
+    /**
+     * @param mixed $tissueType
+     */
+    public function setTissueType($tissueType)
+    {
+        $this->tissueType = $tissueType;
+    }
+
+    
+
     
     public function getAllComments($separator="\r\n") {
         $res = "";

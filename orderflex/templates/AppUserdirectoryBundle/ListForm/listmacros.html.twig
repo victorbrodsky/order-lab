@@ -1046,6 +1046,9 @@
         {{ formmacros.field(form.comment2) }}
         {{ formmacros.field(form.datasheet) }}
 
+        {#{{ formmacros.field(form.inventory) }}#}
+        {#{{ formmacros.field(form.unitPrice) }}#}
+        {#{{ formmacros.field(form.tissueType) }}#}
     {% endif %}
 
     {% if form.documents is defined %}
@@ -1078,6 +1081,29 @@
 
     {% endif %}
 
+    {% if form.inventory is defined %}
+        {{ formmacros.field(form.inventory) }}
+    {% endif %}
+    {% if form.unitPrice is defined %}
+        {{ formmacros.field(form.unitPrice) }}
+    {% endif %}
+    {% if form.tissueType is defined %}
+        {{ formmacros.field(form.tissueType) }}
+    {% endif %}
+
+    {#Antibody's visualInfos#}
+    {% if form.visualInfos is defined %}
+        {#<div class="transres-visualinfos-holder">#}
+            {#{% for visualInfo in form.visualInfos %}#}
+                {#{{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}#}
+                {#{{ transresRequestMacros.visualInfoForm(visualInfo, cycle, 'transres-visualinfos', 'noprototype', sitename, 1) }}#}
+            {#{% endfor %}#}
+            {#{{ usermacros.addNewObjectBtn(cycle,'transres-visualinfos','Add Photo') }}#}
+        {#</div>#}
+
+        {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+        {{ transresRequestMacros.visualInfoSections(form,cycle) }}
+    {% endif %}
 
 {% endmacro %}
 

@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use App\TranslationalResearchBundle\Form\VisualInfoType;
 use Doctrine\ORM\EntityRepository;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
@@ -925,6 +926,33 @@ class GenericListType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__documentsid__',
+            ));
+
+
+            $builder->add('inventory',null,array(
+                'label' => "Inventory Stock:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('unitPrice',null,array(
+                'label' => "Unit Price:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('tissueType',null,array(
+                'label' => "Tissue Type:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('visualInfos', CollectionType::class, array(
+                'entry_type' => VisualInfoType::class,
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__visualinfo__',
             ));
 
         }
