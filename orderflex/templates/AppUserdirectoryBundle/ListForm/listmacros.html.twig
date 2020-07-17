@@ -1020,6 +1020,7 @@
 
     {#AntibodyList#}
     {% if form.igconcentration is defined %}
+        {#additionalRelationships#}
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
              data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"

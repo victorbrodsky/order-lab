@@ -346,6 +346,117 @@
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
+    cycle={{ cycle }}<br>
+
+    {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype') %}
+    <div id="form-prototype-data2"
+         data-prototype-user-visualinfos = "{{ visualInfosPrototype|e }}"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
+    {#Visual Infos#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#visualinfo">
+                    Visual Info(s)
+                </a>
+            </h4>
+        </div>
+        <div id="visualinfo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="user-visualinfos-holder">
+                    {% for visualInfo in form.visualInfos %}
+                        {{ transresRequestMacros.visualInfoForm(visualInfo,cycle,'user-visualinfos','noprototype') }}
+                    {% endfor %}
+                    {{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+                       {#visualInfo, cycle, classname, prototype, sitename, showAddDeleteBtn#}
+{% macro visualInfoForm( field, cycle, classname, prototype ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+    {% if prototype == "prototype" %}
+        {% set formfield = field.vars.prototype %}
+    {% else %}
+        {% set formfield = field %}
+    {% endif %}
+
+    {% if "show" in cycle %}
+        {% set showFlag = true %}
+    {% else %}
+        {% set showFlag = false %}
+    {% endif %}
+
+    {% if formfield.comment.vars.value != "" or not showFlag %}
+
+        {#{% if classname == 'user-privatecomments' and (formfield.vars.value and formfield.vars.value.status == 0 or prototype == 'prototype') %}#}
+            {#{% set wellclass = "user-alert-warning" %}#}
+        {#{% else %}#}
+            {% set wellclass = "" %}
+        {#{% endif %}#}
+
+        {#alert style="padding-bottom:120px;"#}
+        <div class="user-collection-holder alert {{classname}} {{wellclass}}">
+
+            {% if cycle != 'show_user' %}
+                <div class="text-right" style="padding-bottom: 10px">
+                    <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            {% endif %}
+
+            {{ formmacros.field(formfield.id) }}
+
+            {{ formmacros.field(formfield.comment) }}
+            {{ formmacros.field(formfield.catalog) }}
+
+            {% if formfield.documents is defined or prototype == 'prototype' %}
+                {#{{ usermacros.fileuploadLabelField( formfield, formfield.documents, cycle, classname, prototype ) }}#}
+
+                <p>
+                <div class="row files-upload-holder">
+                    <div class="col-xs-6" align="right">
+                        <strong>Attached Antibody Photo:</strong>
+                    </div>
+                    <div class="col-xs-6" align="left">
+                        {{ usermacros.documentsContainer(formfield,formfield.documents,cycle,prototype,1,'default','Antibody Photo') }}
+                    </div>
+                </div>
+                </p>
+
+            {% endif %}
+
+            {% if showFlag and formfield.vars.value and formfield.vars.value.updateAuthor %}
+                {% set authorHref = path(employees_sitename~'_showuser',{'id':formfield.vars.value.updateAuthor.getId()}) %}
+                {% set authorAndDate =
+                "Updated by <a href=\"" ~ authorHref ~ "\">" ~
+                formfield.vars.value.updateAuthor.getUsernameOptimal()~"</a> on " ~
+                formfield.vars.value.updatedate|date('Y-m-d') ~ " at " ~ formfield.vars.value.updatedate|date('h:i a')
+                %}
+                {{ formmacros.simplefield("",authorAndDate,"simple-field", "disabled") }}
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        {% do formfield.comment.setRendered %}
+        {% do formfield.catalog.setRendered %}
+
+    {% endif %}
+
+{% endmacro %}
+
+{% macro visualInfoSections2(form, cycle, sitename) %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
     {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype') %}
 
     <div id="form-prototype-data"
@@ -366,7 +477,7 @@
         {% endif %}
     </div>
 {% endmacro %}
-{% macro visualInfoForm( visualInfo, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro visualInfoForm2( visualInfo, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 

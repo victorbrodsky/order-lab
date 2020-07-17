@@ -952,7 +952,7 @@ class GenericListType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__visualinfo__',
+                'prototype_name' => '__visualinfos__',
             ));
 
         }

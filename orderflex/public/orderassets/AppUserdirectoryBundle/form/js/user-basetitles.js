@@ -135,7 +135,7 @@ function getBaseTitleForm( elclass ) {
 
         var collectionHolder = $(dataholder);
         var prototype = collectionHolder.data('prototype-'+identLowerCase);
-        //console.log("prototype="+prototype);
+        //console.log("prototype2="+prototype);
     }
 
     //grant __documentContainers__ => 0

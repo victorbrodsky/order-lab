@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\OrderformBundle\Controller\ScanListController;
+use App\TranslationalResearchBundle\Entity\VisualInfo;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\UsernameType;
@@ -794,6 +795,12 @@ class ListController extends OrderAbstractController
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
             }
 
+            if( method_exists($entity, "getVisualInfos") ) {
+                foreach( $entity->getVisualInfos() as $visualInfo) {
+                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -1109,6 +1116,9 @@ class ListController extends OrderAbstractController
         $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['bundleName'].':'.$mapper['className'].' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
+
+        //add visual info
+        $this->addVisualInfo($entity);
 
         $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
 
@@ -1641,6 +1651,9 @@ class ListController extends OrderAbstractController
         //add permissions
         //$this->addPermissions($entity);
 
+        //add visual info
+        $this->addVisualInfo($entity);
+
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit',false);
         $deleteForm = $this->createDeleteForm($id,$pathbase);
 
@@ -1659,6 +1672,15 @@ class ListController extends OrderAbstractController
             //echo "add permission for ".$entity."<br>";
             $permission = new Permission();
             $entity->addPermission($permission);
+        }
+    }
+
+    private function addVisualInfo($entity) {
+        if( method_exists($entity,'getVisualInfos') ) {
+            if( count($entity->getVisualInfos()) == 0 ) {
+                $item = new VisualInfo();
+                $entity->addVisualInfo($item);
+            }
         }
     }
 
@@ -1959,6 +1981,13 @@ class ListController extends OrderAbstractController
             }
         }
 
+        if( method_exists($entity,'getVisualInfos') ) {
+            $originalVisualInfos = array();
+            foreach( $entity->getVisualInfos() as $visualInfo ) {
+                $originalVisualInfos[] = $visualInfo;
+            }
+        }
+
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
@@ -2034,6 +2063,37 @@ class ListController extends OrderAbstractController
             }
             /////////// EOF remove permissions. Used for roles ///////////
 
+            /////////// remove visual infos. Used for antibody ///////////
+            if( method_exists($entity,'getVisualInfos') ) {
+
+                /////////////// Process Removed Collections ///////////////
+                $removedVisualInfoCollections = array();
+
+                $removedInfo = $this->removeVisualInfoCollection($originalVisualInfos,$entity->getVisualInfos(),$entity);
+                if( $removedInfo ) {
+                    $removedVisualInfoCollections[] = $removedInfo;
+                }
+                /////////////// EOF Process Removed Collections ///////////////
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before removeVisualInfoCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                $changedInfoArr = $this->setEventLogChanges($entity);
+                //exit('1');
+                //set Edit event log for removed collection and changed fields or added collection
+                if( count($changedInfoArr) > 0 || count($removedVisualInfoCollections) > 0 ) {
+                    $event = "Visual Infosof the Antibody ".$entity->getId()." has been changed by ".$user.":"."<br>";
+                    $event = $event . implode("<br>", $changedInfoArr);
+                    $event = $event . "<br>" . implode("<br>", $removedVisualInfoCollections);
+                    //$userSecUtil = $this->get('user_security_utility');
+                    //echo "event=".$event."<br>";
+                    //print_r($removedCollections);
+                    //exit();
+                    $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'Role Permission Updated');
+                }
+                //exit();
+            }
+            /////////// EOF remove visual infos. Used for antibody ///////////
+
             if( $entity instanceof UsernameType ) {
                 $entity->setEmptyAbbreviation();
             }
@@ -2048,6 +2108,14 @@ class ListController extends OrderAbstractController
 
             if( method_exists($entity, "getDocuments") ) {
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
+            }
+
+            if( 0 && method_exists($entity, "getVisualInfos") ) {
+                echo "<br><br>getVisualInfos: <br>";
+                foreach( $entity->getVisualInfos() as $visualInfo) {
+                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
+                    //exit('exit visualinfo');
+                }
             }
 
             $em->flush();
@@ -2109,6 +2177,22 @@ class ListController extends OrderAbstractController
                 $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
                 $entity->removePermission($element);
                 $element->setRole(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function removeVisualInfoCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removeVisualInfo($element);
+                $element->setAntibody(NULL);
                 $em->persist($element);
                 $em->remove($element);
             }

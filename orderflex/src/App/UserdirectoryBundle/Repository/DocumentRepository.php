@@ -81,7 +81,7 @@ class DocumentRepository extends EntityRepository {
 
 //            echo "document id:<br>";
 //            print_r($doc->getId());
-//            echo "doc id=".$doc->getId()."<br>";
+            //echo "doc id=".$doc->getId()."<br>";
 //            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);

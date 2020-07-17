@@ -714,7 +714,11 @@ abstract class ListAbstract
 
     public function addUpdateAuthorRole($role) {
         $role = strtoupper($role);
-        if( !in_array($role, $this->updateAuthorRoles, true) ) {
+        if( $this->updateAuthorRoles ) {
+            if( !in_array($role, $this->updateAuthorRoles, true) ) {
+                $this->updateAuthorRoles[] = $role;
+            }
+        } else {
             $this->updateAuthorRoles[] = $role;
         }
     }
