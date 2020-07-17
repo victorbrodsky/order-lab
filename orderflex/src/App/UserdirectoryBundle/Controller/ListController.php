@@ -2110,7 +2110,7 @@ class ListController extends OrderAbstractController
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
             }
 
-            if( 0 && method_exists($entity, "getVisualInfos") ) {
+            if( method_exists($entity, "getVisualInfos") ) {
                 echo "<br><br>getVisualInfos: <br>";
                 foreach( $entity->getVisualInfos() as $visualInfo) {
                     $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
