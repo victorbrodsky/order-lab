@@ -1250,6 +1250,20 @@ class FellAppController extends OrderAbstractController {
             //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
             //exit('report');
 
+//            //set Edit event log for removed collection and changed fields or added collection
+//            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
+//                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+//                $event = $event . implode("<br>", $changedInfoArr);
+//                $event = $event . "<br>" . implode("<br>", $removedCollections);
+//                $event = $event . $reportsDiffInfoStr;
+//                //echo "Diff event=".$event."<br>";
+//                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+//            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
             //set Edit event log for removed collection and changed fields or added collection
             if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
                 $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
@@ -1259,10 +1273,6 @@ class FellAppController extends OrderAbstractController {
                 //echo "Diff event=".$event."<br>";
                 $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
             //don't regenerate report if it was added.
             //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
