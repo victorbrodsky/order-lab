@@ -2111,11 +2111,11 @@ class ListController extends OrderAbstractController
             }
 
             if( method_exists($entity, "getVisualInfos") ) {
-                echo "<br><br>getVisualInfos: <br>";
+//                echo "<br><br>getVisualInfos: <br>";
                 foreach( $entity->getVisualInfos() as $visualInfo) {
-                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
-                    //exit('exit visualinfo');
+                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
                 }
+                //exit('exit visualinfo');
             }
 
             $em->flush();

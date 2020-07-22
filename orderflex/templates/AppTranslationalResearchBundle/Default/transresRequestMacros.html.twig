@@ -405,7 +405,7 @@
         {#alert style="padding-bottom:120px;"#}
         <div class="user-collection-holder alert {{classname}} {{wellclass}}">
 
-            {% if cycle != 'show_user' %}
+            {% if not showFlag %}
                 <div class="text-right" style="padding-bottom: 10px">
                     <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
                 </div>

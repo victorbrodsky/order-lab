@@ -546,7 +546,7 @@ class UserSecurityUtil {
     }
 
     //$subjectEntities: single object or array of objects
-    public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
+    public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event',$flush=true) {
 
         //testing
         //return null;
@@ -660,8 +660,11 @@ class UserSecurityUtil {
         //$logger->notice("usersec: timezone=".date_default_timezone_get());
 
         $em->persist($eventLog);
-//        $em->flush($eventLog);
-        $em->flush();
+        $em->flush($eventLog);
+
+//        if( $flush ) {
+//            $em->flush();
+//        }
 
         if( $saveEventObjectType ) {
             $em->flush($eventObjectType);

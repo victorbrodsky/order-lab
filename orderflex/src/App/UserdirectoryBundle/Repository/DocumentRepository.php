@@ -81,26 +81,31 @@ class DocumentRepository extends EntityRepository {
 
 //            echo "document id:<br>";
 //            print_r($doc->getId());
-            //echo "doc id=".$doc->getId()."<br>";
+
+            $documentId = $doc->getId();
+            //echo "doc id=".$documentId."<br>";
 //            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);
 
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
-            if( $doc->getId() && is_numeric($doc->getId()) ) {
+            if( $documentId && is_numeric($documentId) ) {
 
-                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($doc->getId());
+                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+                //$docDb = $doc;
+
+                //echo "docDb: [".$docDb."]<br>";
                 if( $docDb ) {
 
                     //echo "docDb id=".$docDb->getId()."<br>";
                     //set type if not set
-                    if (!$docDb->getType() && $docType) {
+                    if( !$docDb->getType() && $docType ) {
                         $docDb->setType($docType);
                     }
 
                     $documentHolder->$addMethodName($docDb);
                 } else {
-                    //exit("Document not found by id=".$doc->getId());
+                    //exit("Document not found by id=".$documentId);
                 }
 
             } //if
@@ -111,6 +116,110 @@ class DocumentRepository extends EntityRepository {
 //        foreach( $documentHolder->$getMethod() as $doc ) {
 //            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
 //        }
+
+        //exit('eof documents processing');
+
+        return $documentHolder;
+    }
+    //Why new, empty document is created
+    public function processDocumentsTest($documentHolder, $docfieldname=null, $docType=null, $attachmentHolder=null) {
+
+        if( $documentHolder == null ) {
+            //echo "not exists: document=".$documentHolder."<br>";
+            return $documentHolder;
+        }
+
+        //testing
+        $class = new \ReflectionClass($documentHolder);
+        $className = $class->getShortName();
+        echo "<br><br>className=".$className."<br>";
+
+        if( $docfieldname ) {
+            //
+        } else {
+            $docfieldname = "Document";
+        }
+
+        $addMethodName = "add".$docfieldname;
+        $removeMethodName = "remove".$docfieldname;
+        $getMethod = "get".$docfieldname."s";
+        echo "getMethod=".$getMethod."<br>";
+        echo "removeMethodName=".$removeMethodName."<br>";
+
+        echo "before processing holder count=".count($documentHolder->$getMethod())."<br>";
+        foreach( $documentHolder->$getMethod() as $doc ) {
+            echo "starting doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+        }
+
+        if( count($documentHolder->$getMethod()) == 0 ) {
+            echo "return: no documents<br>";
+
+            //prvenet create an empty DocumentContainer and AttachmentContainer: remove DocumentContainer from AttachmentContainer
+            //$attachmentContainer = null;
+            //if( $documentHolder->getAttachmentContainer() )
+            if( $documentHolder && method_exists($documentHolder, 'getAttachmentContainer') ) {
+                $attachmentContainer = $documentHolder->getAttachmentContainer();
+                if( $attachmentContainer && method_exists($attachmentContainer, 'removeDocumentContainer') ) {
+                    $attachmentContainer->removeDocumentContainer($documentHolder);
+                }
+            }
+
+            if( $attachmentHolder ) {
+                $attachmentHolder->setAttachmentContainer(null);
+            }
+
+            return null;
+            //return $documentHolder;
+        }
+
+        echo get_class($documentHolder).": holder id=".$documentHolder->getId()."<br>";
+        echo "<br>$getMethod: before processing holder count=".count($documentHolder->$getMethod())."<br>";
+
+        //get type by $documentHolder class
+        if( !$docType ) {
+            $docType = $this->getDocumentTypeByHolder($documentHolder);
+        }
+
+        foreach( $documentHolder->$getMethod() as $doc ) {
+
+//            echo "document id:<br>";
+//            print_r($doc->getId());
+
+            $documentId = $doc->getId();
+            echo "doc id=".$documentId."<br>";
+//            echo "<br>";
+
+            //$documentHolder->$removeMethodName($doc);
+            //$this->_em->persist($doc);
+
+            //check if id is numeric to prevent the case when $doc->getId() = "undefined"
+            if( $documentId && is_numeric($documentId) ) {
+
+                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+                //$docDb = $doc;
+
+                echo "docDb: [".$docDb."]<br>";
+                if( $docDb ) {
+
+                    echo "docDb id=".$docDb->getId()."<br>";
+                    //set type if not set
+                    if( !$docDb->getType() && $docType ) {
+                        $docDb->setType($docType);
+                    }
+
+                    //$documentHolder->$addMethodName($docDb);
+                } else {
+                    //exit("Document not found by id=".$documentId);
+                }
+
+            } //if
+
+        } //foreach
+
+        echo "after processing holder count=".count($documentHolder->$getMethod())."<br>";
+        foreach( $documentHolder->$getMethod() as $doc ) {
+            echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+        }
 
         //exit('eof documents processing');
 
