@@ -495,8 +495,10 @@
 
     {% else %}
 
+        {% do formfield.id.setRendered %}
         {% do formfield.comment.setRendered %}
         {% do formfield.catalog.setRendered %}
+        {% do formfield.setRendered %}
 
     {% endif %}
 

@@ -1987,12 +1987,12 @@ class ListController extends OrderAbstractController
             }
         }
 
-//        if( method_exists($entity,'getVisualInfos') ) {
-//            $originalVisualInfos = array();
-//            foreach( $entity->getVisualInfos() as $visualInfo ) {
-//                $originalVisualInfos[] = $visualInfo;
-//            }
-//        }
+        if( method_exists($entity,'getVisualInfos') ) {
+            $originalVisualInfos = array();
+            foreach( $entity->getVisualInfos() as $visualInfo ) {
+                $originalVisualInfos[] = $visualInfo;
+            }
+        }
 
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
@@ -2070,34 +2070,37 @@ class ListController extends OrderAbstractController
             /////////// EOF remove permissions. Used for roles ///////////
 
             /////////// remove visual infos. Used for antibody ///////////
-//            if( method_exists($entity,'getVisualInfos') ) {
-//
-//                /////////////// Process Removed Collections ///////////////
-//                $removedVisualInfoCollections = array();
-//
-//                $removedInfo = $this->removeVisualInfoCollection($originalVisualInfos,$entity->getVisualInfos(),$entity);
-//                if( $removedInfo ) {
-//                    $removedVisualInfoCollections[] = $removedInfo;
-//                }
-//                /////////////// EOF Process Removed Collections ///////////////
-//
-//                /////////////// Add event log on edit (edit or add collection) ///////////////
-//                /////////////// Must run before removeVisualInfoCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-//                $changedInfoArr = $this->setEventLogChanges($entity);
-//                //exit('1');
-//                //set Edit event log for removed collection and changed fields or added collection
-//                if( count($changedInfoArr) > 0 || count($removedVisualInfoCollections) > 0 ) {
-//                    $event = "Visual Infosof the Antibody ".$entity->getId()." has been changed by ".$user.":"."<br>";
-//                    $event = $event . implode("<br>", $changedInfoArr);
-//                    $event = $event . "<br>" . implode("<br>", $removedVisualInfoCollections);
-//                    //$userSecUtil = $this->get('user_security_utility');
-//                    //echo "event=".$event."<br>";
-//                    //print_r($removedCollections);
-//                    //exit();
-//                    $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'Role Permission Updated');
-//                }
-//                //exit();
-//            }
+            if( method_exists($entity,'getVisualInfos') ) {
+
+                /////////////// Process Removed Collections ///////////////
+                $removedVisualInfoCollections = array();
+
+                $removedInfo = $this->removeVisualInfoCollection($originalVisualInfos,$entity->getVisualInfos(),$entity);
+                if( $removedInfo ) {
+                    $removedVisualInfoCollections[] = $removedInfo;
+                }
+                /////////////// EOF Process Removed Collections ///////////////
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before removeVisualInfoCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                if(0) {
+                    //This caused doctrine problems to persist the VisualInfos->documents
+                    $changedInfoArr = $this->setEventLogChanges($entity);
+                    //exit('1');
+                    //set Edit event log for removed collection and changed fields or added collection
+                    if (count($changedInfoArr) > 0 || count($removedVisualInfoCollections) > 0) {
+                        $event = "Visual Infosof the Antibody " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
+                        $event = $event . implode("<br>", $changedInfoArr);
+                        $event = $event . "<br>" . implode("<br>", $removedVisualInfoCollections);
+                        //$userSecUtil = $this->get('user_security_utility');
+                        //echo "event=".$event."<br>";
+                        //print_r($removedCollections);
+                        //exit();
+                        $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'), $event, $user, $entity, $request, 'Role Permission Updated');
+                    }
+                }
+                //exit();
+            }
             /////////// EOF remove visual infos. Used for antibody ///////////
 
             if( $entity instanceof UsernameType ) {

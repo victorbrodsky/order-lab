@@ -45,7 +45,6 @@ class VisualInfoType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__documentsid__',
-            //'prototype_name' => '__visualinfos__',
         ));
         
         $builder->add('comment',null,array(
