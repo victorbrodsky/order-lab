@@ -833,6 +833,7 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
+
     <hr>
 
     {% if form.url is defined %}
@@ -1103,7 +1104,8 @@
         {#</div>#}
 
         {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
-        {{ transresRequestMacros.visualInfoSections(form,cycle) }}
+        {#{{ transresRequestMacros.visualInfoSections(form,cycle) }}#}
+        {{ transresRequestMacros.visualInfoSimpleSections(form,cycle) }}
     {% endif %}
 
 {% endmacro %}

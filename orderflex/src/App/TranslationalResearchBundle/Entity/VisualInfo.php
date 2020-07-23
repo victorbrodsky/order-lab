@@ -83,7 +83,7 @@ class VisualInfo {
 //     **/
 //    protected $documents;
     /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document")
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_visualinfo_document",
      *      joinColumns={@ORM\JoinColumn(name="visualinfo_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -91,6 +91,14 @@ class VisualInfo {
      * @ORM\OrderBy({"createdate" = "DESC"})
      **/
     protected $documents;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document")
+//     * @ORM\JoinTable(name="transres_visualinfo_document",
+//     *      joinColumns={@ORM\JoinColumn(name="visualinfo_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    protected $documents;
 
     /**
      * Comment for document

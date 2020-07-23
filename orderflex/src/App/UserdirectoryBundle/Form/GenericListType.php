@@ -944,15 +944,23 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
+//            $builder->add('visualInfos', CollectionType::class, array(
+//                'entry_type' => VisualInfoType::class,
+//                'label' => false,
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__visualinfos__',
+//            ));
             $builder->add('visualInfos', CollectionType::class, array(
                 'entry_type' => VisualInfoType::class,
                 'label' => false,
-                'required' => false,
+                'required' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__visualinfos__',
             ));
 
         }

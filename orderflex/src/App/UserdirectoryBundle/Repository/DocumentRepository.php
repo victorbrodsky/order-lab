@@ -189,7 +189,7 @@ class DocumentRepository extends EntityRepository {
             echo "doc id=".$documentId."<br>";
 //            echo "<br>";
 
-            //$documentHolder->$removeMethodName($doc);
+            $documentHolder->$removeMethodName($doc);
             //$this->_em->persist($doc);
 
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
@@ -207,7 +207,10 @@ class DocumentRepository extends EntityRepository {
                         $docDb->setType($docType);
                     }
 
-                    //$documentHolder->$addMethodName($docDb);
+                    //$this->_em->persist($docDb);
+                    //$this->_em->persist($documentHolder);
+
+                    $documentHolder->$addMethodName($docDb);
                 } else {
                     //exit("Document not found by id=".$documentId);
                 }

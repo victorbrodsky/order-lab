@@ -476,7 +476,12 @@ class Document {
 
 
     public function __toString() {
-        return $this->getRelativeUploadFullPath();
+        if( $this->getId() ) {
+            $id = $this->getId();
+        } else {
+            $id = "Unknown";
+        }
+        return "ID:$id: ".$this->getRelativeUploadFullPath();
     }
 
 //    public function getTestPath() {

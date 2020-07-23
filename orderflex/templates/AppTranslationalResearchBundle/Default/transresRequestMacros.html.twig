@@ -342,11 +342,60 @@
 
 {% endmacro %}
 
+{% macro visualInfoSimpleSections(form, cycle, sitename) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+
+    cycle={{ cycle }}<br>
+
+    {#Visual Infos#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#visualinfo">
+                    Visual Info(s)
+                </a>
+            </h4>
+        </div>
+        <div id="visualinfo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                {#<div class="user-visualinfos-holder">#}
+                    {#{% for visualInfo in form.visualInfos %}#}
+                        {#{{ transresRequestMacros.visualInfoSimpleForm(visualInfo,cycle,'user-visualinfos','noprototype') }}#}
+                    {#{% endfor %}#}
+                    {#{{ usermacros.addNewObjectBtn(cycle,'user-visualinfos','Add Visual Info') }}#}
+                {#</div>#}
+
+                {% for visualInfo in form.visualInfos %}
+
+                    {{ formmacros.field(visualInfo.id) }}
+
+                    {{ formmacros.field(visualInfo.comment) }}
+                    {{ formmacros.field(visualInfo.catalog) }}
+
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Attached Antibody Photo:</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(visualInfo,visualInfo.documents,cycle,'noprototype',8,'default','Antibody Photo','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro visualInfoSections(form, cycle, sitename) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
-    cycle={{ cycle }}<br>
+    {#cycle={{ cycle }}<br>#}
 
     {% set visualInfosPrototype = transresRequestMacros.visualInfoForm(form.visualInfos,cycle,'user-visualinfos','prototype') %}
     <div id="form-prototype-data2"
