@@ -2124,19 +2124,19 @@ class ListController extends OrderAbstractController
 
                     //$visualInfo->setAntibody();
                     
-                    //$em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
-                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
+                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
+                    //$em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
 
-                    foreach( $visualInfo->getDocuments() as $doc ) {
-                        //$em->persist($doc);
-                        echo "$visualInfo: final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-                    }
+//                    foreach( $visualInfo->getDocuments() as $doc ) {
+//                        //$em->persist($doc);
+//                        echo "$visualInfo: final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//                    }
                 }
 
-                echo "VisualInfos Count=".count($entity->getVisualInfos())."<br>";
-                foreach( $entity->getVisualInfos() as $visualInfo) {
-                    echo "visualInfo ID=".$visualInfo->getId().": final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-                }
+//                echo "VisualInfos Count=".count($entity->getVisualInfos())."<br>";
+//                foreach( $entity->getVisualInfos() as $visualInfo) {
+//                    echo "visualInfo ID=".$visualInfo->getId().": final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//                }
 
                 //exit('exit visualinfo');
             }
