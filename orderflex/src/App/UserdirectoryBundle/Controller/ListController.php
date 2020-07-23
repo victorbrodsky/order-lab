@@ -2120,31 +2120,14 @@ class ListController extends OrderAbstractController
             }
 
             if( method_exists($entity, "getVisualInfos") ) {
-//                echo "<br><br>getVisualInfos: <br>";
                 foreach( $entity->getVisualInfos() as $visualInfo) {
                     //echo "<br><br>getVisualInfos ID=".$visualInfo->getId().": <br>";
-                    //$em->persist($visualInfo);
-
-                    //$visualInfo->setAntibody();
-                    
                     $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
                     //$em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
-
-//                    foreach( $visualInfo->getDocuments() as $doc ) {
-//                        //$em->persist($doc);
-//                        echo "$visualInfo: final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-//                    }
                 }
-
-//                echo "VisualInfos Count=".count($entity->getVisualInfos())."<br>";
-//                foreach( $entity->getVisualInfos() as $visualInfo) {
-//                    echo "visualInfo ID=".$visualInfo->getId().": final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
-//                }
-
                 //exit('exit visualinfo');
             }
 
-            //$em->persist($entity);
             $em->flush();
 
             //EventLog
