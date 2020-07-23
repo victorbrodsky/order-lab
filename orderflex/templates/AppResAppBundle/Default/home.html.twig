@@ -370,7 +370,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'resapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>
-                <th>Photo</th>
+                {#<th>Photo</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
 
@@ -528,26 +528,28 @@
 
                     {############ X of Y reference letters received ###########}
                     {#count all reference letters and upload documents#}
-                    {% set notEmptyRef = 0 %}
-                    {% set letterCount = 0 %}
-                    {% set totalDocCount = 0 %}
-                    {% for refLetter in entity.references %}
-                        {% set totalDocCount = totalDocCount + refLetter.documents|length %}
-                        {% if refLetter.name %}
-                            {% set notEmptyRef = notEmptyRef + 1 %}
+                    {#{% set notEmptyRef = 0 %}#}
+                    {#{% set letterCount = 0 %}#}
+                    {#{% set totalDocCount = 0 %}#}
+                    {#{% for refLetter in entity.references %}#}
+                        {#{% set totalDocCount = totalDocCount + refLetter.documents|length %}#}
+                        {#{% if refLetter.name %}#}
+                            {#{% set notEmptyRef = notEmptyRef + 1 %}#}
                             {#{% if refLetter.documents|length > 0 %}#}
-                            {% if refLetter.hasReferenceLetter() %}
-                                {% set letterCount = letterCount + 1 %}
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    {% set styleStr = "color:#707070;" %}
+                            {#{% if refLetter.hasReferenceLetter() %}#}
+                                {#{% set letterCount = letterCount + 1 %}#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                    {#{% set styleStr = "color:#707070;" %}#}
                     {#X of Y reference letters received#}
-                    {% set docNumberStr = "docs" %}
-                    {% if totalDocCount == 1 %}
-                        {% set docNumberStr = "doc" %}
-                    {% endif %}
-                    {% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}
+                    {#{% set docNumberStr = "docs" %}#}
+                    {#{% if totalDocCount == 1 %}#}
+                        {#{% set docNumberStr = "doc" %}#}
+                    {#{% endif %}#}
+                    {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                    {% set letterCountStr = "" %}
+                    {% set styleStr = "" %}
                     {############ EOF X of Y reference letters received ###########}
 
 
@@ -572,7 +574,7 @@
                     </td>
 
                     <td>
-                        {{ entity.appStatus.getAction() }}: {{ letterCountStr }}
+                        {{ entity.appStatus.getAction() }}
                     </td>
 
                     <td>
@@ -588,22 +590,22 @@
                         <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank">{{ applicationId }}</a>
                     </td>
 
-                    <td class="rowlink-skip">
-                        <div style="height: 60px; width: 60px;">
-                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
-                            {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-                            <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-                        {% else %}
-                            {% if entity.avatars|length > 0 %}
+                    {#<td class="rowlink-skip">#}
+                        {#<div style="height: 60px; width: 60px;">#}
+                        {#{% if is_granted('ROLE_PLATFORM_DEMO') %}#}
+                            {#{% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                            {#<img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
+                        {#{% else %}#}
+                            {#{% if entity.avatars|length > 0 %}#}
                                 {#{{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar','') }}#}
-                                {{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar',null,null,null,'snapshot-small') }}
-                            {% else %}
-                                {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
-                                <img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">
-                            {% endif %}
-                        {% endif %}
-                        </div>
-                    </td>
+                                {#{{ usermacros.showDocumentAsImage(entity.avatars|last,'Avatar',null,null,null,'snapshot-small') }}#}
+                            {#{% else %}#}
+                                {#{% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}#}
+                                {#<img src="{{ avatarImage }}" alt="Avatar" style="max-width:100%; max-height:100%;">#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                        {#</div>#}
+                    {#</td>#}
 
                     {#<td>#}
                         {#{{  entity.appStatus }}#}
@@ -754,58 +756,17 @@
 
                     <td class="rowlink-skip">
 
-                        {#X of Y reference letters received (removed by now as asked by Jessica)#}
-                        {#count all reference letters and upload documents#}
-                        {#{% set notEmptyRef = 0 %}#}
-                        {#{% set letterCount = 0 %}#}
-                        {#{% set totalDocCount = 0 %}#}
-                        {#{% for refLetter in entity.references %}#}
-                            {#{% set totalDocCount = totalDocCount + refLetter.documents|length %}#}
-                            {#{% if refLetter.name %}#}
-                                {#{% set notEmptyRef = notEmptyRef + 1 %}#}
-                                {#{% if refLetter.documents|length > 0 %}#}
-                                    {#{% set letterCount = letterCount + 1 %}#}
-                                {#{% endif %}#}
-                            {#{% endif %}#}
-                        {#{% endfor %}#}
-                        {#{% set letterCountStr = "" %}#}
-                        {#{% set styleStr = "color:#707070;" %}#}
-
-                        {#{% if letterCount > 0 %}#}
-                            {#{% set letterCountStr = letterCount ~  " reference letters received" %}#}
-                            {#{% set styleStr = "" %}#}
-                        {#{% endif %}#}
-
-                        {#X of Y reference letters received#}
-                        {#{% set docNumberStr = "docs" %}#}
-                        {#{% if totalDocCount == 1 %}#}
-                            {#{% set docNumberStr = "doc" %}#}
-                        {#{% endif %}#}
-                        {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
-                        {#{% set styleStr = "" %}#}
-
                         {% if entity.appStatus.name == 'complete' %}
-                            {% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}
+                            {#{% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}#}
+                            {% set letterCountStr = "Complete" %}
                         {% elseif entity.appStatus.name == 'interviewee' %}
-                            {% set letterCountStr = "Interviewee" ~ " (" ~ letterCountStr ~ ")" %}
+                            {#{% set letterCountStr = "Interviewee" ~ " (" ~ letterCountStr ~ ")" %}#}
+                            {% set letterCountStr = "Interviewee" %}
                         {% else %}
-                            {#X of Y reference letters received#}
-                            {#{% set docNumberStr = "docs" %}#}
-                            {#{% if totalDocCount == 1 %}#}
-                                {#{% set docNumberStr = "doc" %}#}
-                            {#{% endif %}#}
-                            {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
                             {% set styleStr = "" %}
                         {% endif %}
 
-                        {#<a#}
-                            {#href="{{ path('employees_file_pdf-preview', { 'id': entity.id}) }}" target="_blank">#}
-                            {#<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>#}
-                        {#</a>#}
                         {% if entity.getRecentReport() %}
-                            {#<a href="{{ entity.getRecentReport().getAbsoluteUploadFullPath }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">#}
-                                {#<span class="glyphicon glyphicon-certificate" aria-hidden="true" style="{{ styleStr }}"></span>#}
-                            {#</a>#}
                             <a href="{{ path('resapp_view_pdf', { 'id': entity.id}) }}" target="_blank" data-toggle="tooltip" title="{{ letterCountStr }}">
                                 <span class="glyphicon glyphicon-file" aria-hidden="true" style="{{ styleStr }}"></span>
                             </a>

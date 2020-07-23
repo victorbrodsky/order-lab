@@ -4014,7 +4014,9 @@ class AdminController extends OrderAbstractController
         $elements = array(
             'AP',
             'CP',
-            'AP/CP'
+            'AP/CP',
+            'AP/EXP',
+            'CP/EXP'
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
