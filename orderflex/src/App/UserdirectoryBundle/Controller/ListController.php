@@ -1120,7 +1120,7 @@ class ListController extends OrderAbstractController
         $entity->setOrderinlist($nextorder);
 
         //add visual info
-        $this->addVisualInfo($entity); //new
+        //$this->addVisualInfo($entity); //new
 
         $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
 
@@ -1655,7 +1655,7 @@ class ListController extends OrderAbstractController
         //$this->addPermissions($entity);
 
         //add visual info
-        $this->addVisualInfo($entity); //edit
+        //$this->addVisualInfo($entity); //edit
 
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit',false);
         $deleteForm = $this->createDeleteForm($id,$pathbase);
@@ -2136,7 +2136,7 @@ class ListController extends OrderAbstractController
 
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
         } else {
-            exit("Form is invalid");
+            //exit("Form is invalid");
         }
 
         return array(
