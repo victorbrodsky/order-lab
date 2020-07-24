@@ -2278,14 +2278,14 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos($role,'APEXP') !== false ) {
-            $APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/EXP");
+            $APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology AP/EXP");
             $entity->setResidencySubspecialty($APEXP);
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'CPEXP') !== false ) {
-            $CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP/EXP");
+            $CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology CP/EXP");
             $entity->setResidencySubspecialty($CPEXP);
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
@@ -5070,8 +5070,8 @@ class AdminController extends OrderAbstractController
             "AP",
             "CP",
             "AP/CP",
-            'AP/EXP',
-            'CP/EXP'
+            'Pathology AP/EXP',
+            'Pathology CP/EXP'
         );
 
         $count = 10;

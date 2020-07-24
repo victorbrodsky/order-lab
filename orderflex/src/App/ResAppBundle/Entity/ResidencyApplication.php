@@ -80,6 +80,13 @@ class ResidencyApplication extends BaseUserAttributes {
      */
     private $residencySubspecialty;
 
+//    /**
+//     * Residency Type (ResidencyTrackList)
+//     *
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ResidencyTrackList", cascade={"persist"})
+//     */
+//    private $residencyTrack;
+
     /**
      * This should be the link to WCMC's "Department of Pathology and Laboratory Medicine"
      *
@@ -622,6 +629,22 @@ class ResidencyApplication extends BaseUserAttributes {
     {
         return $this->residencySubspecialty;
     }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getResidencyTrack()
+//    {
+//        return $this->residencyTrack;
+//    }
+//
+//    /**
+//     * @param mixed $residencyTrack
+//     */
+//    public function setResidencyTrack($residencyTrack)
+//    {
+//        $this->residencyTrack = $residencyTrack;
+//    }
 
     /**
      * @param mixed $institution

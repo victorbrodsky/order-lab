@@ -1172,6 +1172,7 @@ class ImportFromOldSystem {
         //return $enrolmentYearArr;
     }
 
+    //TODO: ResidencySpecialty -> ResidencyTrackList
     public function getResidencySpecialties() {
 
         $residencySpecialtyStrArr = array('AP','CP','AP/CP','AP/EXP','CP/EXP');
@@ -1194,9 +1195,10 @@ class ImportFromOldSystem {
         $pathologyInstitutionId = $pathologyInstitution->getId();
 
         foreach($residencySpecialtyStrArr as $residencySpecialtyStr) {
-            $residencySpecialtyEntity = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialtyStr);
+            //$residencySpecialtyEntity = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialtyStr);
 
-            $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
+            //$repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
+            $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
             $dql =  $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->leftJoin("list.institution", "institution");
@@ -1217,7 +1219,7 @@ class ImportFromOldSystem {
             }
 
             if( !$residencySpecialtyEntity ) {
-                exit('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
+                exit('Unable to find ResidencyTrackList entity by name='.$residencySpecialtyStr);
                 //throw new EntityNotFoundException('Unable to find ResidencySpecialty entity by name='.$residencySpecialtyStr);
             }
 

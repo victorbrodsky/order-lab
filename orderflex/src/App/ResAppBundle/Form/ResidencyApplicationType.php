@@ -131,7 +131,7 @@ class ResidencyApplicationType extends AbstractType
 
         $builder->add('startDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => "Residency Start Date:",
+            'label' => "Start Date:", //"Residency Start Date:"
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
             'attr' => array('class' => 'datepicker form-control resapp-startDate'),
             'required' => false,
@@ -139,7 +139,7 @@ class ResidencyApplicationType extends AbstractType
 
         $builder->add('endDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => "Residency End Date:",
+            'label' => "Expected Graduation Date:", //"Residency End Date:",
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control resapp-endDate'),
             'required' => false,

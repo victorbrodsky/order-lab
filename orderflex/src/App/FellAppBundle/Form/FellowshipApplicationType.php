@@ -138,7 +138,7 @@ class FellowshipApplicationType extends AbstractType
 
         $builder->add('endDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => "End Date:",
+            'label' => "Expected Graduation Date:",
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
             'required' => false,
