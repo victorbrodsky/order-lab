@@ -49,20 +49,20 @@ class FellappSiteParameterType extends AbstractType
 
         $builder->add('acceptedEmailSubject', null, array(
             'label' => 'Subject of e-mail to the accepted applicant:',
-            'attr' => array('class' => 'form-control geo-field-county')
+            'attr' => array('class' => 'form-control')
         ));
         $builder->add('acceptedEmailBody', null, array(
             'label' => 'Body of e-mail to the accepted applicant:',
-            'attr' => array('class' => 'form-control geo-field-county')
+            'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('rejectedEmailSubject', null, array(
             'label' => 'Subject of e-mail to the rejected applicant:',
-            'attr' => array('class' => 'form-control geo-field-county')
+            'attr' => array('class' => 'form-control')
         ));
         $builder->add('rejectedEmailBody', null, array(
             'label' => 'Body of e-mail to the rejected applicant:',
-            'attr' => array('class' => 'form-control geo-field-county')
+            'attr' => array('class' => 'form-control')
         ));
 
         if( $this->params['cycle'] != 'show' ) {

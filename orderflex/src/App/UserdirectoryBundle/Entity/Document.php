@@ -593,6 +593,18 @@ class Document {
         //return "http://collage.med.cornell.edu/".$this->getRelativeUploadFullPath();
     }
 
+    public function getSizeBySize($size=null)
+    {
+        $path = $this->getServerPath($size);
+        if( file_exists($path) ) {
+           //ok
+        } else {
+            return null;
+        }
+        $fileSize = filesize($path);
+        return $fileSize;
+    }
+
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
     //Accepted path: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents\filename.pdf
     public function getAttachmentEmailPath()
@@ -625,9 +637,9 @@ class Document {
         return '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $subdomain;
     }
 
-    public function getFileSystemPath() {
+    public function getFileSystemPath($size=null) {
         //echo "getcwd=".getcwd()."<br>";
-        return getcwd() . "\\" . $this->getServerPath();
+        return getcwd() . "\\" . $this->getServerPath($size);
     }
 
     public function getSizeStr()

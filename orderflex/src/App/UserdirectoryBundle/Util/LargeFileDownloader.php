@@ -66,6 +66,7 @@ class LargeFileDownloader {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
 
+        //echo $filenameClean.": size=".$size."<br>";
         //echo "filename=".$filename."<br>";
         //exit('111');
         //remove commas

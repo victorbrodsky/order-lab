@@ -99,7 +99,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('exceptionAccount', null, array(
-            'label' => "Exception Account for the Fellowship Application (the application is still shown to for testing purposes):",
+            'label' => "Exception Account for the Fellowship Application (the application is still shown to this google user for testing purposes):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

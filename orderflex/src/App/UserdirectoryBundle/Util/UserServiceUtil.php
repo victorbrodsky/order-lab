@@ -764,7 +764,7 @@ class UserServiceUtil {
             "maxIdleTime" => "30",
             "environment" => "dev",
             "siteEmail" => "email@email.com",
-            "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
+            "loginInstruction" => 'Please use your <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a> to log in.',
 
             "enableAutoAssignmentInstitutionalScope" => true,
 

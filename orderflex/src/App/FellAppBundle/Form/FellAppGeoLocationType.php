@@ -131,7 +131,7 @@ class FellAppGeoLocationType extends AbstractType
             ));
 
             $builder->add('country', null, array(
-                'label' => 'County:',
+                'label' => 'Country:',
                 'required' => false,
                 'attr' => array('class' => 'form-control'),
             ));

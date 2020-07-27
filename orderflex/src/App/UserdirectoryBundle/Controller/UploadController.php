@@ -291,6 +291,7 @@ class UploadController extends OrderAbstractController {
         $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
 
         $originalname = null;
+        //$size = null;
         $response = new Response();
 
         if( $document ) {
@@ -308,6 +309,7 @@ class UploadController extends OrderAbstractController {
                 $abspath = $document->getAbsoluteUploadFullPath();
                 $size = $document->getSize();
                 //echo "not snapshot abspath=$abspath <br>";
+                //exit('exit notsnapshot');
             } else {
 
                 $viewTypeArr = explode("-", $viewType);
@@ -322,14 +324,16 @@ class UploadController extends OrderAbstractController {
                 //get small thumbnail - i.e. used for the fellowship application list //small-18sec, original-25sec
                 if( $resize == "small" ) {
                     $originalname = $document->getOriginalnameClean();
-                    $size = $document->getSize();
-                    $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                    //$size = $document->getSize();
+                    //$size = $document->getSizeBySize($resize);
+                    //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                    $abspath = $document->getFileSystemPath($resize);
                     //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
-
                     if( file_exists($abspath) ) {
-                        //echo "The file $abspath exists";
+                        //echo "The file $abspath exists <br>";
+                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
                     } else {
-                        //echo "The file $abspath does not exists";
+                        //echo "The file $abspath does not exists <br>";
                         //try to re-generate thumbnails for jpg and jpeg
                         if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
                             $userServiceUtil = $this->container->get('user_service_utility');
@@ -342,17 +346,21 @@ class UploadController extends OrderAbstractController {
 
                         $abspath = $document->getAbsoluteUploadFullPath($resize);
                     }
+                    $size = $document->getSizeBySize($resize);
+                    //exit('exit small: '.$abspath);
                 }
                 //get small thumbnail - i.e. used for the fellowship application view
                 elseif( $resize == "medium" ) {
                     $originalname = $document->getOriginalnameClean();
-                    $size = $document->getSize();
-                    $abspath = $document->getAbsoluteUploadFullPath($resize,true);
-
+                    //$size = $document->getSize();
+                    //$size = $document->getSizeBySize($resize);
+                    //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+                    $abspath = $document->getFileSystemPath($resize);
                     if( file_exists($abspath) ) {
-                        //echo "The file $abspath exists";
+                        //echo "The file $abspath exists <br>";
+                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
                     } else {
-                        //echo "The file $abspath does not exists";
+                        //echo "The file $abspath does not exists <br>";
                         //try to re-generate thumbnails
                         if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
                             $userServiceUtil = $this->container->get('user_service_utility');
@@ -365,7 +373,8 @@ class UploadController extends OrderAbstractController {
 
                         $abspath = $document->getAbsoluteUploadFullPath($resize);
                     }
-
+                    $size = $document->getSizeBySize($resize);
+                    //exit('exit medium: '.$abspath);
                 } else {
                     //default
                     $originalname = $document->getOriginalnameClean();
