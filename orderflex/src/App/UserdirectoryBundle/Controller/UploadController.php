@@ -347,7 +347,7 @@ class UploadController extends OrderAbstractController {
                         $abspath = $document->getAbsoluteUploadFullPath($resize);
                     }
                     $size = $document->getSizeBySize($resize);
-                    //exit('exit small: '.$abspath);
+                    //exit('exit small: '.$abspath."; size=".$size);
                 }
                 //get small thumbnail - i.e. used for the fellowship application view
                 elseif( $resize == "medium" ) {
@@ -383,6 +383,12 @@ class UploadController extends OrderAbstractController {
                     //echo "default abspath=$abspath <br>";
                 }
             }
+
+            //There is no small, medium size for PDF. PDF is not resize and always the same size.
+            if( !$size ) {
+                $size = $document->getSize();
+            }
+
             //abspath=http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg
             //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
             //echo "abspath=$abspath <br>";
@@ -392,8 +398,8 @@ class UploadController extends OrderAbstractController {
             if( $abspath || $originalname || $size ) {
                 //echo "abspath=".$abspath."<br>";
                 //echo "originalname=".$originalname."<br>";
-                //echo "size=".$size."<br>";
-
+                //echo "$abspath: size=".$size."<br>";
+                //exit(111);
                 $downloader = new LargeFileDownloader();
                 ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
                 //$viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
