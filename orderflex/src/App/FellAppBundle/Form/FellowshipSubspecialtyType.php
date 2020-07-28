@@ -41,9 +41,11 @@ class FellowshipSubspecialtyType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('user')
                     ->leftJoin("user.infos", "infos")
+                    ->leftJoin("user.preferences", "preferences")
                     ->leftJoin("user.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                     ->orderBy("user.username", "ASC");
             }
         ));
@@ -58,9 +60,11 @@ class FellowshipSubspecialtyType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos", "infos")
+                        ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
                 }
         ));
@@ -74,9 +78,11 @@ class FellowshipSubspecialtyType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos", "infos")
+                        ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
                 }
         ));
