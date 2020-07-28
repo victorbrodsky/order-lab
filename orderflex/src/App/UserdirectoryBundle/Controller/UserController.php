@@ -3970,7 +3970,7 @@ class UserController extends OrderAbstractController
         $encoded = $encoder->encodePassword($user, $user->getPassword());
 
         //password is the same as original one
-        if( !$newUser && hash_equals($originalPassword, $user->getPassword()) ) {
+        if( !$newUser && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {
             if( $this->isEncodedPassword($user->getPassword()) ) {
                 //exit('password is already encoded and it is the same');
                 return;
