@@ -4004,12 +4004,13 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateResidencyTrackList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $elements = array(
             'AP',
@@ -4019,10 +4020,12 @@ class AdminController extends OrderAbstractController
             'CP/EXP'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
-
         $count = 10;
         foreach( $elements as $value ) {
+
+            if( $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($value) ) {
+                continue;
+            }
 
             $entity = new ResidencyTrackList();
             $this->setDefaultList($entity,$count,$username,null);

@@ -71,6 +71,13 @@ class Roles extends ListAbstract {
     private $residencySubspecialty;
 
     /**
+     * Residency Type (ResidencyTrackList)
+     *
+     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
+     */
+    private $residencyTrack;
+
+    /**
      * Each single role page should show the whole associated list of the answered
      * permissions list items ("Submit Orders", "Add a New Slide", etc) and
      * the answers themselves for each (WCMC, NYP) in a Select2 box for each permission.
@@ -184,6 +191,21 @@ class Roles extends ListAbstract {
         $this->residencySubspecialty = $residencySubspecialty;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getResidencyTrack()
+    {
+        return $this->residencyTrack;
+    }
+
+    /**
+     * @param mixed $residencyTrack
+     */
+    public function setResidencyTrack($residencyTrack)
+    {
+        $this->residencyTrack = $residencyTrack;
+    }
 
     /**
      * @param mixed $institution

@@ -396,21 +396,50 @@
     {% set interviewDescrStr = "" %}
     {% set interviewsArr = [] %}
     {% set interviewsAwaitingArr = [] %}
+    {% set currentUserHasReview = false %}
 
     {% for interview in fellapp.interviews if interview.interviewer %}
         {% if not interview.totalRank %}
             {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
-        {% else %}
-            {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
-            {% set interviewDescrStr =
-            interviewerUrl~":<br>"~
-            "Academic Rank - "~interview.academicRank~
-            "<br>Personality Rank - "~interview.personalityRank~
-            "<br>Potential Rank - "~interview.potentialRank~
-            "<br>Language Proficiency - "~interview.languageProficiency~
-            "<br>Total Rank - "~interview.totalRank~
-            "<br>Comment: "~interview.comment|e %}
-            {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
+        {% endif %}
+
+        {#current logged in user provided review#}
+        {% if
+            interview.totalRank and
+            (app.user and app.user.id == interview.interviewer.id and interview.totalRank)
+        %}
+            {% set currentUserHasReview = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% for interview in fellapp.interviews if interview.interviewer %}
+        {#{% if not interview.totalRank %}#}
+            {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}#}
+        {#{% else %}#}
+            {#logged in user is admin, director, coordinator or can view only it's own review#}
+            {#{% if#}
+                {#(is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR'))#}
+                {#or#}
+                {#(app.user and app.user.id == interview.interviewer.id)#}
+            {#%}#}
+        {#logged in user is admin, director, coordinator or current logged in user if provided review#}
+        {% if interview.totalRank %}
+            {% if
+                (is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR'))
+                or
+                currentUserHasReview
+            %}
+                {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
+                {% set interviewDescrStr =
+                interviewerUrl~":<br>"~
+                "Academic Rank - "~interview.academicRank~
+                "<br>Personality Rank - "~interview.personalityRank~
+                "<br>Potential Rank - "~interview.potentialRank~
+                "<br>Language Proficiency - "~interview.languageProficiency~
+                "<br>Total Rank - "~interview.totalRank~
+                "<br>Comment: "~interview.comment|e %}
+                {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
+            {% endif %}
         {% endif %}
     {% endfor %}
     {#EOF Calculating evaluation received and evaluation modal#}
@@ -445,17 +474,20 @@
             </p>
 
             <p>
-            {% if fellapp.itinerarys|length > 0 and fellapp.getRecentReport() %}
-                {% if reallinks %}
-                    <a href="{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>
+            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
+                {% if fellapp.itinerarys|length > 0 and fellapp.getRecentReport() %}
+                    {% if reallinks %}
+                        <a href="{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>
+                    {% else %}
+                        <a
+                            onclick="sendInviteInterviewersToRate('{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
+                            href="#">Invite these interviewers to submit evaluations</a>
+                     {% endif %}
                 {% else %}
-                    <a
-                        onclick="sendInviteInterviewersToRate('{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
-                        href="#">Invite these interviewers to submit evaluations</a>
-                 {% endif %}
-            {% else %}
-                <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
+                    <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
+                {% endif %}
             {% endif %}
+
             {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
                 <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
             {% endif %}

@@ -170,7 +170,7 @@ class ResAppController extends OrderAbstractController {
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $warningMsg = "No residency types (subspecialties) are found.";
+            $warningMsg = "No residency types are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application type.</a>';
 
             $this->get('session')->getFlashBag()->add(
