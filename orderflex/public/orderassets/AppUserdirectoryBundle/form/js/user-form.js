@@ -366,11 +366,24 @@ function userCloneListener() {
     });
 }
 
+// function initPasswordBox() {
+//     var userType = $('.user-keytype-field').select2('data').text;
+//     console.log('onchange userType='+userType);
+//     if( userType && userType == "Local User" ) {
+//         $('#user-change-password-box').show();
+//         $('#user-password-box').show();
+//     } else {
+//         $('#user-change-password-box').hide();
+//         $('#user-password-box').hide();
+//     }
+// }
+
 function userTypeListener() {
 
     function showHidePasswordBox(userType) {
         if( userType && userType == "Local User" ) {
             $('#user-password-box').show();
+            //if originally user type was not "Local User", password fields do not exists => possible solution => create them by js
         } else {
             $('#user-password-box').hide();
         }
@@ -382,7 +395,7 @@ function userTypeListener() {
 
     $('.user-keytype-field').on("change", function(e) {
         var userType = $(this).select2('data').text;
-        //console.log('onchange userType='+userType);
+        console.log('onchange userType='+userType);
         showHidePasswordBox(userType);
         var newpassword = generatePassword(8, true);
         //console.log('newpassword='+newpassword);

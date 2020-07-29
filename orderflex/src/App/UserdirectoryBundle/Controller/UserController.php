@@ -2497,6 +2497,13 @@ class UserController extends OrderAbstractController
             //set unique username
             $user->setUniqueUsername();
 
+            $currentKeyType = $user->getKeytype();
+            if( $currentKeyType ) {
+                if( $currentKeyType->getName() != "Local User" && $currentKeyType->getName() != "External Authentication" ) {
+                    $user->setPassword(NULL);
+                }
+            }
+
             //password can not be NULL
             if( $user->getPassword() == NULL ) {
                 $user->setPassword("");
@@ -3462,6 +3469,21 @@ class UserController extends OrderAbstractController
             //set parents for institution tree for Administrative and Academical Titles
             //$this->setCompositeTreeNode($entity);
 
+            if( $currentKeyType->getName() != "Local User" ) {
+                $entity->setPassword(NULL);
+            }
+
+            //ignore if password '********'
+//            if( $entity->getPassword() == '********' ) {
+//                return;
+//            }
+            
+            //password can not be NULL
+            if( $entity->getPassword() == NULL ) {
+                $entity->setPassword("");
+            }
+            //exit("password=".$entity->getPassword());
+            
             //encrypt password
             $this->encryptPassword($entity,$originalPassword); //updateUser
 
@@ -3965,6 +3987,12 @@ class UserController extends OrderAbstractController
             //exit('no original password');
             return;
         }
+
+//        //set salt
+//        if( !$user->getSalt() ) {
+//            $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+//            $user->setSalt($salt);
+//        }
 
         $encoder = $this->container->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());

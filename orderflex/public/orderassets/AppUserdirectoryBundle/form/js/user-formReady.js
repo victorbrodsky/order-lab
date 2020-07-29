@@ -87,10 +87,12 @@ $(document).ready(function() {
     initDatetimepicker();
 
     userCloneListener();
-
+    
     userTypeListener();
 
     userPreferencesHideListener();
+
+    //initPasswordBox();
 
     identifierTypeListener();
 

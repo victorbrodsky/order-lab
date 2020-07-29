@@ -233,7 +233,7 @@
                                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
                                     {#reset password button#}
                                     <div id="user-change-password-box">
-                                        {#{{ formmacros.simplefield("Password:",'<button class="btn btn-sm btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>') }}#}
+                                    {#<div id="user-change-password-box" style="display:none;">#}
                                         <div class="row">
                                             <div class="col-xs-6" align="right">
                                                 <strong>Password:</strong>
@@ -242,13 +242,11 @@
                                                 <button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>
                                             </div>
                                         </div>
-                                        {#<p>#}
-                                            {#<button class="btn btn-success" name="btn-user-change-password-box" type="button" onclick="resetUserPassword(this)">Reset Password</button>#}
-                                        {#</p>#}
                                     </div>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
+                        {#cycle={{ cycle }}<br>#}
                         {% if cycle == 'edit_user' or cycle == 'create_user' %}
                             {#show two password fields#}
                             <div id="user-password-box" style="display:none;">

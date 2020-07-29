@@ -258,6 +258,15 @@ class UserType extends AbstractType
             return;
         }
 
+//        if( !$this->subjectUser->getId() || ($this->subjectUser->getId() && $this->subjectUser->getKeytype()) ) {
+//            //continue
+//            //$optionsArr = array('attr' => array('class' => 'password-field form-control'));
+//        } else {
+//            //echo "no password";
+//            //$optionsArr = array('attr' => array('class' => 'password-field form-control', 'style' => "display:none;"));
+//            return;
+//        }
+
         if( $this->cycle == "show" ) {
             return;
         }
@@ -272,6 +281,7 @@ class UserType extends AbstractType
             //'type' => $fieldType,
             'invalid_message' => 'Please make sure the passwords match',
             'options' => array('attr' => array('class' => 'password-field form-control')),
+            //'options' => $optionsArr,
             'required' => true,
             'first_options'  => array('label' => 'Password:'),
             'second_options' => array('label' => 'Repeat Password:'),

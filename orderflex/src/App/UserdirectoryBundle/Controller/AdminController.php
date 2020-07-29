@@ -2094,6 +2094,8 @@ class AdminController extends OrderAbstractController
                 //testing
                 //$this->setInstitutionResidency($entity,$role);
 
+                $this->resetResidencyTrack($entity,$role);
+
                 continue; //temporary disable to override alias, description, level
             }
 
@@ -2257,38 +2259,104 @@ class AdminController extends OrderAbstractController
         $entity->setInstitution($wcmc);
 
         if( strpos($role,'AP') !== false ) {
-            $AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
-            $entity->setResidencySubspecialty($AP);
+            //$AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
+            //$entity->setResidencySubspecialty($AP);
+
+            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
+            $entity->setResidencyTrack($residencyAP);
+
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'CP') !== false ) {
-            $CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
-            $entity->setResidencySubspecialty($CP);
+            //$CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
+            //$entity->setResidencySubspecialty($CP);
+
+            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
+            $entity->setResidencyTrack($residencyCP);
+
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'APCP') !== false ) {
-            $APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
-            $entity->setResidencySubspecialty($APCP);
+            //$APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
+            //$entity->setResidencySubspecialty($APCP);
+
+            $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
+            $entity->setResidencyTrack($residencyAPCP);
+
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'APEXP') !== false ) {
-            $APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology AP/EXP");
-            $entity->setResidencySubspecialty($APEXP);
+            //$APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology AP/EXP");
+            //$entity->setResidencySubspecialty($APEXP);
+
+            $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
+            $entity->setResidencyTrack($residencyAPEXP);
+
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
         }
 
         if( strpos($role,'CPEXP') !== false ) {
-            $CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology CP/EXP");
-            $entity->setResidencySubspecialty($CPEXP);
+            //$CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology CP/EXP");
+            //$entity->setResidencySubspecialty($CPEXP);
+
+            $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
+            $entity->setResidencyTrack($residencyCPEXP);
+
             $this->addSingleSiteToEntity($entity,"resapp");
             $this->addResAppPermission($entity);
+        }
+    }
+    //entity - role object
+    //role - role string
+    public function resetResidencyTrack($entity,$role) {
+
+        if( $entity->getResidencyTrack() ) {
+            return;
+        }
+        
+        if( strpos($role,'_WCM_') === false ) {
+            return;
+        }
+
+        if( strpos($role,'_RESAPP_') === false ) {
+            return;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //$entity->setInstitution($wcmc);
+
+        if( strpos($role,'AP') !== false ) {
+            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
+            $entity->setResidencyTrack($residencyAP);
+        }
+
+        if( strpos($role,'CP') !== false ) {
+            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
+            $entity->setResidencyTrack($residencyCP);
+        }
+
+        if( strpos($role,'APCP') !== false ) {
+            $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
+            $entity->setResidencyTrack($residencyAPCP);
+        }
+
+        if( strpos($role,'APEXP') !== false ) {
+            $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
+            $entity->setResidencyTrack($residencyAPEXP);
+        }
+
+        if( strpos($role,'CPEXP') !== false ) {
+            $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
+            $entity->setResidencyTrack($residencyCPEXP);
         }
     }
 

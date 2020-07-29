@@ -72,6 +72,11 @@ class AuthUtil {
         //exit();
         //return NULL;
 
+        if( !$token->getCredentials() ) {
+            //empty password
+            return NULL;
+        }
+
         //get clean username
         //$userSecUtil = $this->container->get('user_security_utility');
         //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
@@ -125,7 +130,18 @@ class AuthUtil {
                 //$encoder = $userServiceUtil->getUserEncoder($user);
                 //$encodeRes = $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt());
                 $encoder = $this->container->get('security.password_encoder');
-                $encodeRes = $encoder->isPasswordValid($user,$token->getCredentials());
+
+                $encodeRes = $encoder->isPasswordValid($user,$token->getCredentials()); //does not work
+
+//                $encoded = $encoder->encodePassword($user, $token->getCredentials());
+//                echo "compare: [". $encoded . "]==[" . $user->getPassword() ."]<br>";
+//                if( hash_equals($encoded, $user->getPassword()) ) {
+//                    $encodeRes = true;
+//                } else {
+//                    $encodeRes = false;
+//                }
+//                exit("encodeRes=$encodeRes");
+
                 if( $encodeRes ) {
                     //exit('password invalid ['.$token->getCredentials().']');
                     return $user;

@@ -127,16 +127,19 @@ function validateUser(btnEl,origuserid) {
     }
 
     //Check if local user and password empty
-    if( userTypeText == "Local User" ) {
-        if( !passwordFirst || !passwordSecond ) {
-            $('#userinfo').collapse('show');
-            addErrorAlert("Please make sure the password is not empty for a local user");
-            $('#oleg_userdirectorybundle_user_password_first').parent().addClass("has-error");
-            $('#oleg_userdirectorybundle_user_password_second').parent().addClass("has-error");
-            lbtn.stop();
-            return false;
-        }
-    }
+    //console.log("userTypeText="+userTypeText+"; passwordFirst="+passwordFirst);
+    //alert('stop');
+    // if( userTypeText == "Local User" ) {
+    //     if( !passwordFirst ) {
+    //         $('#userinfo').collapse('show');
+    //         $('#user-password-box').show();
+    //         addErrorAlert("Please make sure the password is not empty for a local user");
+    //         $('#oleg_userdirectorybundle_user_password_first').parent().addClass("has-error");
+    //         $('#oleg_userdirectorybundle_user_password_second').parent().addClass("has-error");
+    //         lbtn.stop();
+    //         return false;
+    //     }
+    // }
 
     //check usertype + userid combination
     var user = checkUsertypeUserid(userType,primaryPublicUserId);
