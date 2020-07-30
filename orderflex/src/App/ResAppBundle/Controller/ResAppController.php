@@ -879,7 +879,8 @@ class ResAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $resappUtil = $this->container->get('resapp_util');
 
-        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        $resTypes = $resappUtil->getResidencyTypes(true);
         if( count($resTypes) == 0 ) {
             return array();
         }
@@ -1394,7 +1395,8 @@ class ResAppController extends OrderAbstractController {
         //$resappUtil = $this->container->get('resapp_util');
         $resappUtil->addEmptyResAppFields($entity);
 
-        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        $resTypes = $resappUtil->getResidencyTypes(true);
         if( count($resTypes) == 0 ) {
             return array();
         }
@@ -1605,7 +1607,8 @@ class ResAppController extends OrderAbstractController {
 
         $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
 
-        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        $resTypes = $resappUtil->getResidencyTypes(true);
         if( count($resTypes) == 0 ) {
             return array();
         }

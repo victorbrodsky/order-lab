@@ -67,7 +67,10 @@ class ResAppManagement extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
 
         //get all residency types using institution: ResidencySubspecialty objects that have $coordinators, $directors, $interviewers
-        $residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        $residencyTypes = $resappUtil->getResidencyTypes(true);
+        //dump($residencyTypes);
+        //exit('111');
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencySubspecialty object is not updated.
         //Synchronise the ResidencySubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
@@ -90,6 +93,7 @@ class ResAppManagement extends OrderAbstractController {
 
         return array(
             'entities' => $residencyTypes,
+            //provide array of ResAppTypeConfig
             'manual' => $manual
         );
 
@@ -653,7 +657,8 @@ class ResAppManagement extends OrderAbstractController {
 
 
         //get all residency types using institution
-        $residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        $residencyTypes = $resappUtil->getResidencyTypes(true);
 
         //exit('1');
         return array(

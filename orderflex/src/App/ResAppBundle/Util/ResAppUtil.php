@@ -24,6 +24,7 @@
 
 namespace App\ResAppBundle\Util;
 
+use App\ResAppBundle\Entity\ResAppTypeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -206,7 +207,8 @@ class ResAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( $userSecUtil->hasGlobalUserRole( "ROLE_RESAPP_ADMIN", $user ) ) {
-            return $this->getResidencyTypesByInstitution(false);
+            //return $this->getResidencyTypesByInstitution(false);
+            return $this->getResidencyTypes(false);
         }
 
         $filterTypes = array();
@@ -233,7 +235,9 @@ class ResAppUtil {
     }
 
     //get all residency application types (with WCMC Pathology) using role
+    //NOT USED. Replaced by getResidencyTypes
     public function getResidencyTypesByInstitution( $asEntities=false ) {
+      
         $em = $this->em;
 
         $mapper = array(
@@ -258,6 +262,41 @@ class ResAppUtil {
         $dql->orderBy("list.orderinlist","ASC");
 
         $query = $em->createQuery($dql);
+
+        $resTypes = $query->getResult();
+        //echo "resTypes count=".count($resTypes)."<br>";
+
+        if( $asEntities ) {
+            return $resTypes;
+        }
+
+        //add statuses
+        $filterType = array();
+        foreach( $resTypes as $type ) {
+            //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
+    }
+    //get all residency application types
+    public function getResidencyTypes( $asEntities=false ) {
+        $em = $this->em;
+
+        //get list of residency type with extra "ALL"
+        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
+        $dql = $repository->createQueryBuilder('list');
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters(
+            array(
+                'typedef' => 'default',
+                'typeadd' => 'user-added',
+            )
+        );
 
         $resTypes = $query->getResult();
         //echo "resTypes count=".count($resTypes)."<br>";
@@ -493,6 +532,17 @@ class ResAppUtil {
     }
     public function getRoleByResidencySubspecialtyAndRolename( $residencySubspecialty, $roleName ) {
         $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        foreach( $roles as $role ) {
+            if( strpos($role,$roleName) !== false ) {
+                return $role;
+                break;
+            }
+        }
+
+        return null;
+    }
+    public function getRoleByResidencyTrackAndRolename( $residencyTrack, $roleName ) {
+        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $roles as $role ) {
             if( strpos($role,$roleName) !== false ) {
                 return $role;
@@ -1487,11 +1537,16 @@ class ResAppUtil {
         //iterate over all ResidencySubspecialty objects
         foreach( $residencyTypes as $residencySubspecialty ) {
             //$residencyType - Pain Medicine => ROLE_RESAPP_DIRECTOR_WCM_PAINMEDICINE
-            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_COORDINATOR_");
-            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_DIRECTOR_");
-            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_INTERVIEWER_");
+//            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_COORDINATOR_");
+//            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_DIRECTOR_");
+//            $this->synchroniseSingleResidencySubspecialtyAndProfileRoles($residencySubspecialty,"_INTERVIEWER_");
+
+            $this->synchroniseSingleResidencyTrackAndProfileRoles($residencySubspecialty,"_COORDINATOR_");
+            $this->synchroniseSingleResidencyTrackAndProfileRoles($residencySubspecialty,"_DIRECTOR_");
+            $this->synchroniseSingleResidencyTrackAndProfileRoles($residencySubspecialty,"_INTERVIEWER_");
         }
     }
+    //NOT USED. Replaced by synchroniseSingleResidencyTrackAndProfileRoles
     public function synchroniseSingleResidencySubspecialtyAndProfileRoles( $residencySubspecialty, $roleName ) {
         //1) get all users with role ROLE_RESAPP_DIRECTOR_WCM_PAINMEDICINE
         $users = $this->getUsersOfResidencySubspecialtyByRole($residencySubspecialty,$roleName); //"_COORDINATOR_"
@@ -1553,6 +1608,110 @@ class ResAppUtil {
             //$this->em->persist($residencySubspecialty);
             $this->em->flush($residencySubspecialty);
         }
+    }
+    public function synchroniseSingleResidencyTrackAndProfileRoles( $residencyTrack, $roleName ) {
+        //1) get all users with role ROLE_RESAPP_DIRECTOR_WCM_PAINMEDICINE
+        $users = $this->getUsersOfResidencySubspecialtyByRole($residencyTrack,$roleName); //"_COORDINATOR_"
+
+        $resAppTypeConfig = $this->getResappTypeConfig($residencyTrack);
+        if( !$resAppTypeConfig ) {
+            $resAppTypeConfig = new ResAppTypeConfig();
+            $resAppTypeConfig->setResidencyTrack($residencyTrack);
+            $this->em->persist($resAppTypeConfig);
+            $this->em->flush();
+        }
+
+        //2) for each $coordinators in the ResidencySubspecialty - check if this user exists in the coordinators, add if not.
+        if( $roleName == "_COORDINATOR_" ) {
+            $attachedUsers = $resAppTypeConfig->getCoordinators();
+        }
+        if( $roleName == "_DIRECTOR_" ) {
+            $attachedUsers = $resAppTypeConfig->getDirectors();
+        }
+        if( $roleName == "_INTERVIEWER_" ) {
+            $attachedUsers = $resAppTypeConfig->getInterviewers();
+        }
+
+        $modified = false;
+
+        foreach( $users as $user ) {
+
+            //Add user to ResidencySubspecialty if user is not attached yet
+            if( $user && !$attachedUsers->contains($user) ) {
+                if( $roleName == "_COORDINATOR_" ) {
+                    $resAppTypeConfig->addCoordinator($user);
+                }
+                if( $roleName == "_DIRECTOR_" ) {
+                    $resAppTypeConfig->addDirector($user);
+                }
+                if( $roleName == "_INTERVIEWER_" ) {
+                    $resAppTypeConfig->addInterviewer($user);
+                }
+                $modified = true;
+            }
+
+        }
+
+        //Removing the role manually => remove user from $residencySubspecialty: remove user from ResidencySubspecialty if user does not have role
+        //get coordinators => check if each coordinator has role => if not => remove this user from ResidencySubspecialty
+        //$role = $this->getRoleByResidencySubspecialtyAndRolename($residencySubspecialty,$roleName );
+        $role = $this->getRoleByResidencyTrackAndRolename($residencyTrack,$roleName );
+        //echo $roleName.": role=".$role."<br>";
+
+        foreach( $attachedUsers as $user ) {
+            if( !$user->hasRole($role) ) {
+                //echo $roleName.": remove user=".$user."!!!!!!!!!!!!<br>";
+                if ($roleName == "_COORDINATOR_") {
+                    $residencyTrack->removeCoordinator($user);
+                }
+                if ($roleName == "_DIRECTOR_") {
+                    $residencyTrack->removeDirector($user);
+                }
+                if ($roleName == "_INTERVIEWER_") {
+                    $residencyTrack->removeInterviewer($user);
+                }
+                $modified = true;
+            }
+        }
+
+
+        if( $modified ) {
+            //$this->em->persist($residencySubspecialty);
+            //$this->em->flush($resAppTypeConfig);
+            $this->em->flush();
+        }
+    }
+
+    public function getResappTypeConfig($residencyTrack) {
+
+        if( !$residencyTrack ) {
+            return NULL;
+        }
+        if( !$residencyTrack->getId() ) {
+            return NULL;
+        }
+
+        $repository = $this->em->getRepository('AppResAppBundle:ResAppTypeConfig');
+        $dql = $repository->createQueryBuilder("resapptypeconfig");
+
+        //$resappIdInteger = $resapp->getId()."";
+        //echo "resappIdInteger=".$resappIdInteger."<br>";
+
+        $dql->innerJoin('resapptypeconfig.residencyTrack', 'residencyTrack');
+        $dql->where("residencyTrack.id = :residencyTrackId");
+
+        $dql->orderBy("resapptypeconfig.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+
+        $query->setParameters(
+            array(
+                'residencyTrackId' => $residencyTrack->getId()
+            )
+        );
+
+        $loggers = $query->getResult();
     }
 
     //compare original and final users => get removed users => for each removed user, remove the role
