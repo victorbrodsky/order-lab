@@ -2094,7 +2094,14 @@ class AdminController extends OrderAbstractController
                 //testing
                 //$this->setInstitutionResidency($entity,$role);
 
-                $this->resetResidencyTrack($entity,$role);
+                $resResidencyTrack = $this->resetResidencyTrack($entity,$role);
+                if( $resResidencyTrack ) {
+                    $em->flush();
+                    $this->get('session')->getFlashBag()->add(
+                        'notice',
+                        "Set residency track for $role"
+                    );
+                }
 
                 continue; //temporary disable to override alias, description, level
             }
@@ -2318,15 +2325,15 @@ class AdminController extends OrderAbstractController
     public function resetResidencyTrack($entity,$role) {
 
         if( $entity->getResidencyTrack() ) {
-            return;
+            return NULL;
         }
         
         if( strpos($role,'_WCM_') === false ) {
-            return;
+            return NULL;
         }
 
         if( strpos($role,'_RESAPP_') === false ) {
-            return;
+            return NULL;
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -2334,30 +2341,52 @@ class AdminController extends OrderAbstractController
         //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //$entity->setInstitution($wcmc);
 
-        if( strpos($role,'AP') !== false ) {
-            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
-            $entity->setResidencyTrack($residencyAP);
-        }
-
-        if( strpos($role,'CP') !== false ) {
-            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
-            $entity->setResidencyTrack($residencyCP);
-        }
-
-        if( strpos($role,'APCP') !== false ) {
+        if( strpos($role,'_APCP') !== false ) {
             $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
+            if( !$residencyAPCP ) {
+                exit("ResidencyTrackList not found: AP/CP");
+            }
             $entity->setResidencyTrack($residencyAPCP);
+            return $entity;
         }
 
-        if( strpos($role,'APEXP') !== false ) {
+        if( strpos($role,'_APEXP') !== false ) {
             $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
+            if( !$residencyAPEXP ) {
+                exit("ResidencyTrackList not found: AP/EXP");
+            }
             $entity->setResidencyTrack($residencyAPEXP);
+            return $entity;
         }
 
-        if( strpos($role,'CPEXP') !== false ) {
+        if( strpos($role,'_CPEXP') !== false ) {
             $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
+            if( !$residencyCPEXP ) {
+                exit("ResidencyTrackList not found: CP/EXP");
+            }
             $entity->setResidencyTrack($residencyCPEXP);
+            return $entity;
         }
+
+        if( strpos($role,'_AP') !== false ) {
+            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
+            if( !$residencyAP ) {
+                exit("ResidencyTrackList not found: AP");
+            }
+            $entity->setResidencyTrack($residencyAP);
+            return $entity;
+        }
+
+        if( strpos($role,'_CP') !== false ) {
+            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
+            if( !$residencyCP ) {
+                exit("ResidencyTrackList not found: CP");
+            }
+            $entity->setResidencyTrack($residencyCP);
+            return $entity;
+        }
+
+        return NULL;
     }
 
     //entity - role object

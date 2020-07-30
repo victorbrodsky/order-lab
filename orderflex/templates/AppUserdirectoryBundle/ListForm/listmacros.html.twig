@@ -50,8 +50,8 @@
             {% if entities|first.fellowshipSubspecialty is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Subspecialty', 'fellowshipSubspecialty.name') }}</th>
             {% endif %}
-            {% if entities|first.residencySubspecialty is defined %}
-                <th>{{ knp_pagination_sortable(entities, 'Residency Specialty', 'residencySubspecialty.name') }}</th>
+            {% if entities|first.residencyTrack is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Residency Track', 'residencyTrack.name') }}</th>
             {% endif %}
 
             {% if entities|first.organizationalGroupType is defined %}
@@ -210,9 +210,9 @@
                         {{ entity.fellowshipSubspecialty }}
                     </td>
                 {% endif %}
-                {% if entity.residencySubspecialty is defined %}
+                {% if entity.residencyTrack is defined %}
                     <td>
-                        {{ entity.residencySubspecialty }}
+                        {{ entity.residencyTrack }}
                     </td>
                 {% endif %}
 
@@ -925,6 +925,10 @@
 
     {% if form.residencySubspecialty is defined %}
         {{ formmacros.field(form.residencySubspecialty) }}
+    {% endif %}
+
+    {% if form.residencyTrack is defined %}
+        {{ formmacros.field(form.residencyTrack) }}
     {% endif %}
 
     {% if form.formNodes is defined %}
