@@ -106,6 +106,7 @@ class ResAppManagement extends OrderAbstractController {
      */
     public function addResidencyApplicationTypeAction(Request $request )
     {
+        exit('Not supported');
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
@@ -263,6 +264,8 @@ class ResAppManagement extends OrderAbstractController {
     public function removeResidencyApplicationTypeAction(Request $request, $resaptypeid )
     {
 
+        exit('Not supported');
+
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -345,7 +348,7 @@ class ResAppManagement extends OrderAbstractController {
         //$args = $this->getResappSpecialtyForm($routeName,$restype);
         //return $this->render('AppResAppBundle/Management/new.html.twig', $args);
 
-        $form = $this->getResappSpecialtyForm($restype,$cycle);
+        $form = $this->getResappSpecialtyForm($restype,$cycle); //show
 
         return array(
             'cycle' => $cycle,
@@ -392,13 +395,13 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         //$form = $this->createForm(ResidencyTrackType::class,$restype);
-        $form = $this->getResappSpecialtyForm($restype,$cycle);
+        $form = $this->getResappSpecialtyForm($restype,$cycle); //edit
 
         $form->handleRequest($request);
 
 
         if( $form->isSubmitted() && $form->isValid() ) {
-            //exit('form valid');
+            //exit('residency-type/edit form valid');
 
             //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
             //compare original and final users => get removed users => for each removed user, remove the role
@@ -411,6 +414,8 @@ class ResAppManagement extends OrderAbstractController {
             $this->assignResAppAccessRoles($restype,$restype->getDirectors(),"DIRECTOR");
             $this->assignResAppAccessRoles($restype,$restype->getCoordinators(),"COORDINATOR");
             $this->assignResAppAccessRoles($restype,$restype->getInterviewers(),"INTERVIEWER");
+
+            //exit('2 residency-type/edit form valid');
 
             $em->persist($restype);
             $em->flush();
@@ -453,7 +458,6 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         $form = $this->createForm(
-            //ResidencyTrackType::class,
             ResidencyTrackListType::class,
             $restype,
             array(
