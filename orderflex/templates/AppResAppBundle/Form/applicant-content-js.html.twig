@@ -109,10 +109,10 @@
 
         var error = null;
 
-        //required: residencySubspecialty
-        var residencySubspecialty = $('.resapp-residencySubspecialty').first().select2('val');
-        //console.log('residencySubspecialty=('+residencySubspecialty+')');
-        if( !error && !residencySubspecialty ) {
+        //required: residencyTrack
+        var residencyTrack = $('.resapp-residencyTrack').first().select2('val');
+        //console.log('residencyTrack=('+residencyTrack+')');
+        if( !error && !residencyTrack ) {
             error = "Please select in the Residency Type before uploading";
         }
 

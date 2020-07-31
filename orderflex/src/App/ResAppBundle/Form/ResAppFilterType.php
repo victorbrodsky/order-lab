@@ -78,7 +78,7 @@ class ResAppFilterType extends AbstractType
 //            'label' => false,
 //            'required'=> false,
 //            'multiple' => false,
-//            'attr' => array('class' => 'combobox resapp-residencySubspecialty-filter'),
+//            'attr' => array('class' => 'combobox resapp-residencyTrack-filter'),
 //            'query_builder' => function(EntityRepository $er) {
 //                    return $er->createQueryBuilder('list')
 //                        ->where("list.type = :typedef OR list.type = :typeadd")
@@ -96,7 +96,7 @@ class ResAppFilterType extends AbstractType
             //'multiple' => false,
             'choices' => $this->params['resTypes'], //flipped
             //'choices_as_values' => true,
-            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty-filter'),
+            'attr' => array('class' => 'combobox combobox-width resapp-residencyTrack-filter'),
         ));
         
         $builder->add('search', TextType::class, array(

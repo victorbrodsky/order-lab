@@ -225,19 +225,19 @@ class ResAppLoggerController extends LoggerController
 //        $roleObjects = $em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'resapp', "ROLE_RESAPP_");
 //        $residencyTypes = array();
 //        foreach ($roleObjects as $roleObject) {
-//            if ($roleObject->getResidencySubspecialty()) {
-//                $residencyTypes[] = $roleObject->getResidencySubspecialty()->getId() . "";  //$roleObject->getResidencySubspecialty()."";
-//                //echo "role add=" . $roleObject->getResidencySubspecialty()->getId() . ":" . $roleObject->getResidencySubspecialty()->getName() . "<br>";
+//            if ($roleObject->getResidencyTrack()) {
+//                $residencyTypes[] = $roleObject->getResidencyTrack()->getId() . "";  //$roleObject->getResidencyTrack()."";
+//                //echo "role add=" . $roleObject->getResidencyTrack()->getId() . ":" . $roleObject->getResidencyTrack()->getName() . "<br>";
 //            }
 //        }
 //        //echo "count=" . count($residencyTypes) . "<br>";
 //
-//        //2) subquery to get a residency application object with logger.entityId and residencySubspecialty in the $residencyTypes array
+//        //2) subquery to get a residency application object with logger.entityId and residencyTrack in the $residencyTypes array
 //        $subquery = $em->createQueryBuilder()
 //            ->select('resapp.id')
 //            ->from('AppResAppBundle:ResidencyApplication', 'resapp')
-//            ->leftJoin('resapp.residencySubspecialty','residencySubspecialty')
-//            ->where('CAST(resapp.id AS TEXT) = logger.entityId AND residencySubspecialty.id IN('.implode(",", $residencyTypes).')') //AND residencySubspecialty.id IN(37)
+//            ->leftJoin('resapp.residencyTrack','residencyTrack')
+//            ->where('CAST(resapp.id AS TEXT) = logger.entityId AND residencyTrack.id IN('.implode(",", $residencyTypes).')') //AND residencyTrack.id IN(37)
 //            ->getDQL();
 //        $subquery = '('.$subquery.')';
 //

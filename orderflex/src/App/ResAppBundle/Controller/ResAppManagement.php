@@ -26,7 +26,7 @@ use App\ResAppBundle\Entity\Interview;
 use App\ResAppBundle\Form\ResAppCreateResidencyType;
 use App\ResAppBundle\Form\ResAppResidencyApplicationType;
 use App\ResAppBundle\Form\ResAppManagementType;
-//use App\ResAppBundle\Form\ResidencySubspecialtyType;
+//use App\ResAppBundle\Form\ResidencyTrackType;
 use App\ResAppBundle\Form\InterviewType;
 use App\UserdirectoryBundle\Entity\User;
 use App\OrderformBundle\Helper\ErrorHelper;
@@ -68,15 +68,15 @@ class ResAppManagement extends OrderAbstractController {
         //$user = $this->get('security.token_storage')->getToken()->getUser();
         $resappUtil = $this->container->get('resapp_util');
 
-        //get all residency types using institution: ResidencySubspecialty objects that have $coordinators, $directors, $interviewers
+        //get all residency types using institution: ResidencyTrack objects that have $coordinators, $directors, $interviewers
         //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $residencyTypes = $resappUtil->getResidencyTracks(true);
+        $residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
         //dump($residencyTypes);
         //exit('111');
 
-        //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencySubspecialty object is not updated.
-        //Synchronise the ResidencySubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
-        $resappUtil->synchroniseResidencySubspecialtyAndProfileRoles($residencyTypes);
+        //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencyTrack object is not updated.
+        //Synchronise the ResidencyTrack's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        $resappUtil->synchroniseResidencyTrackAndProfileRoles($residencyTypes);
 
         //manual message how to add/remove residency types
 //        $linkUrl = $this->generateUrl(
@@ -95,7 +95,6 @@ class ResAppManagement extends OrderAbstractController {
 
         return array(
             'entities' => $residencyTypes,
-            //provide array of ResAppTypeConfig
             'manual' => $manual
         );
 
@@ -159,41 +158,43 @@ class ResAppManagement extends OrderAbstractController {
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////// 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
-            $mapper = array(
-                'prefix' => 'App',
-                'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution'
-            );
+            if(0) {
+                $mapper = array(
+                    'prefix' => 'App',
+                    'bundleName' => 'UserdirectoryBundle',
+                    'className' => 'Institution'
+                );
 
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                "Pathology and Laboratory Medicine",
-                $wcmc,
-                $mapper
-            );
+                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+                $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                    "Pathology and Laboratory Medicine",
+                    $wcmc,
+                    $mapper
+                );
 
-            if( $pathology ) {
-                if( $subspecialtyType->getInstitution() ) {
-                    $msg = "Residency track ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
-                        ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
+                if ($pathology) {
+                    if ($subspecialtyType->getInstitution()) {
+                        $msg = "Residency track " . $subspecialtyType->getName() . " already has an associated institution " . $subspecialtyType->getInstitution() .
+                            ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
 
-                    //Flash
-                    $this->get('session')->getFlashBag()->add(
-                        'warning',
-                        $msg
-                    );
+                        //Flash
+                        $this->get('session')->getFlashBag()->add(
+                            'warning',
+                            $msg
+                        );
 
-                    return $this->redirectToRoute('resapp_residencytype_settings');
-                } else {
-                    $subspecialtyType->setInstitution($pathology);
-                    if (!$testing) {
-                        $em->persist($subspecialtyType);
-                        $em->flush($subspecialtyType);
-                        $msg = "Residency track linked with an associated institution ".$subspecialtyType->getInstitution().".";
+                        return $this->redirectToRoute('resapp_residencytype_settings');
+                    } else {
+                        $subspecialtyType->setInstitution($pathology);
+                        if (!$testing) {
+                            $em->persist($subspecialtyType);
+                            $em->flush($subspecialtyType);
+                            $msg = "Residency track linked with an associated institution " . $subspecialtyType->getInstitution() . ".";
+                        }
+                        $count++;
                     }
-                    $count++;
                 }
-            }
+            } //if(0)
             //////// EOF 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -204,7 +205,7 @@ class ResAppManagement extends OrderAbstractController {
             //Description: Access to specific Residency Application type as Interviewer
             //site: resapp
             //Institution: WCMC
-            //ResidencySubspecialty: Breast Pathology
+            //ResidencyTrack: Breast Pathology
             //Permissions: Create a New Residency Application, Modify a Residency Application, Submit an interview evaluation
 
             $countInt = $resappUtil->createOrEnableResAppRole($subspecialtyType,"INTERVIEWER",$pathology,$testing);
@@ -280,7 +281,7 @@ class ResAppManagement extends OrderAbstractController {
 
         //exit('not implemented');
 
-        //1) unlink ResidencySubspecialty and Institution
+        //1) unlink ResidencyTrack and Institution
         $inst = $subspecialtyType->getInstitution();
         $subspecialtyType->setInstitution(null);
         $em->persist($subspecialtyType);
@@ -288,7 +289,7 @@ class ResAppManagement extends OrderAbstractController {
 
         //2) set roles to disabled
         $removedRoles = array();
-        //$roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($subspecialtyType);
+        //$roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($subspecialtyType);
         $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
@@ -336,9 +337,9 @@ class ResAppManagement extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Track Type by id='.$id);
         }
 
-        //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencySubspecialty object is not updated.
-        //Synchronise the ResidencySubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
-        $resappUtil->synchroniseResidencySubspecialtyAndProfileRoles( array($restype) );
+        //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencyTrack object is not updated.
+        //Synchronise the ResidencyTrack's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        $resappUtil->synchroniseResidencyTrackAndProfileRoles( array($restype) );
 
         //$routeName = $request->get('_route');
         //$args = $this->getResappSpecialtyForm($routeName,$restype);
@@ -390,7 +391,7 @@ class ResAppManagement extends OrderAbstractController {
             $origInterviewers->add($item);
         }
 
-        //$form = $this->createForm(ResidencySubspecialtyType::class,$restype);
+        //$form = $this->createForm(ResidencyTrackType::class,$restype);
         $form = $this->getResappSpecialtyForm($restype,$cycle);
 
         $form->handleRequest($request);
@@ -452,7 +453,7 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         $form = $this->createForm(
-            //ResidencySubspecialtyType::class,
+            //ResidencyTrackType::class,
             ResidencyTrackListType::class,
             $restype,
             array(
@@ -475,14 +476,14 @@ class ResAppManagement extends OrderAbstractController {
 
 
     //assign ROLE_RESAPP_INTERVIEWER corresponding to application
-    public function assignResAppAccessRoles($residencySubspecialty,$users,$roleSubstr) {
+    public function assignResAppAccessRoles($residencyTrack,$users,$roleSubstr) {
 
-        //echo "assignResAppAccessRoles: residencySubspecialty=$residencySubspecialty; roleSubstr=$roleSubstr <br>";
+        //echo "assignResAppAccessRoles: residencyTrack=$residencyTrack; roleSubstr=$roleSubstr <br>";
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleResType = null;
-        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencySubspecialty);
+        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
+        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
             //echo "assignResAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos($role,$roleSubstr) !== false ) {
@@ -491,7 +492,7 @@ class ResAppManagement extends OrderAbstractController {
             }
         }
         if( !$interviewerRoleResType ) {
-            throw new EntityNotFoundException('Unable to find role by ResidencyTrack='.$residencySubspecialty);
+            throw new EntityNotFoundException('Unable to find role by ResidencyTrack='.$residencyTrack);
         }
 
         foreach( $users as $user ) {
@@ -546,11 +547,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "DIRECTOR" );
 //
 //
 //        //CYTOPATHOLOGY
@@ -565,11 +566,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
 //
 //        //GASTROINTESTINALPATHOLOGY
 //        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gastrointestinal Pathology");
@@ -581,11 +582,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
 //
 //
 //        //GENITOURINARYPATHOLOGY
@@ -600,11 +601,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
 //
 //        //GYNECOLOGICPATHOLOGY
 //        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gynecologic Pathology");
@@ -615,11 +616,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
 //
 //        //HEMATOPATHOLOGY
 //        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Hematopathology");
@@ -635,11 +636,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "DIRECTOR" );
 //
 //
 //        //MOLECULARGENETICPATHOLOGY
@@ -658,11 +659,11 @@ class ResAppManagement extends OrderAbstractController {
 //            'cwid'
 //        );
 //        //interviewers
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
 //        //coordinators
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
 //        //directors
-//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
+//        $this->addUsersToResidencyTrack( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
 //
 //
 //        //get all residency types using institution
@@ -677,7 +678,7 @@ class ResAppManagement extends OrderAbstractController {
 //    }
 
     //$roleStr = ROLE_RESAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
-    public function addUsersToResidencySubspecialty( $residencySubspecialty, $users, $roleName, $bossType ) {
+    public function addUsersToResidencyTrack( $residencyTrack, $users, $roleName, $bossType ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -704,20 +705,20 @@ class ResAppManagement extends OrderAbstractController {
             //$userObjects[] = $user;
 
             if( strpos($roleStr,'INTERVIEWER') !== false ) {
-                if( !$residencySubspecialty->isUserExistByMethodStr($user, 'getInterviewers') ) {
-                    $residencySubspecialty->addInterviewer($user);
+                if( !$residencyTrack->isUserExistByMethodStr($user, 'getInterviewers') ) {
+                    $residencyTrack->addInterviewer($user);
                 }
             }
 
             if( strpos($roleStr,'COORDINATOR') !== false ) {
-                if( !$residencySubspecialty->isUserExistByMethodStr($user, 'getCoordinators') ) {
-                    $residencySubspecialty->addCoordinator($user);
+                if( !$residencyTrack->isUserExistByMethodStr($user, 'getCoordinators') ) {
+                    $residencyTrack->addCoordinator($user);
                 }
             }
 
             if( strpos($roleStr,'DIRECTOR') !== false ) {
-                if( !$residencySubspecialty->isUserExistByMethodStr($user, 'getDirectors') ) {
-                    $residencySubspecialty->addDirector($user);
+                if( !$residencyTrack->isUserExistByMethodStr($user, 'getDirectors') ) {
+                    $residencyTrack->addDirector($user);
                 }
             }
 
@@ -725,11 +726,11 @@ class ResAppManagement extends OrderAbstractController {
 
 
         if( strpos($roleStr,'COORDINATOR') !== false ) {
-            $this->assignResAppAccessRoles($residencySubspecialty,$residencySubspecialty->getCoordinators(),"COORDINATOR");
+            $this->assignResAppAccessRoles($residencyTrack,$residencyTrack->getCoordinators(),"COORDINATOR");
         }
 
         if( strpos($roleStr,'DIRECTOR') !== false ) {
-            $this->assignResAppAccessRoles($residencySubspecialty,$residencySubspecialty->getDirectors(),"DIRECTOR");
+            $this->assignResAppAccessRoles($residencyTrack,$residencyTrack->getDirectors(),"DIRECTOR");
         }
 
         $em->flush();

@@ -952,7 +952,7 @@ class ImportFromOldSystem {
                 //$transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySpecialty');
                 //$residencyTypeEntity = $transformer->reverseTransform($residencyType);
                 $residencyTypeEntity = $this->residencySpecialtyArr[$residencyType];
-                $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
+                $residencyApplication->setResidencyTrack($residencyTypeEntity);
             }
 
             $this->setResAppTraining($residencyApplication,$systemUser,$medSchool,$graduateDate,$mdPhd,$do,$md);

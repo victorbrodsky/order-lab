@@ -759,8 +759,8 @@ class ResAppImportPopulateUtil {
                 $errorMsgArr[] = "End Date is null";
             }
 
-            //getResidencySubspecialty
-            //if( !$residencyApplication->getResidencySubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+            //getResidencyTrack
+            //if( !$residencyApplication->getResidencyTrack() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
             if( count($errorMsgArr) > 0 ) {
 
                 //delete erroneous spreadsheet from filesystem and $document from DB
@@ -796,7 +796,7 @@ class ResAppImportPopulateUtil {
                     $this->sendEmailToSystemEmail($subjectError, $event);
                 }
 
-                continue; //skip this res application, because getResidencySubspecialty is null => something is wrong
+                continue; //skip this res application, because getResidencyTrack is null => something is wrong
             }
             ////////////////// EOF validate spreadsheet ////////////////////////
 
@@ -1248,7 +1248,7 @@ class ResAppImportPopulateUtil {
                 }
 
                 //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
-                //if( !$residencyApplication->getResidencySubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                //if( !$residencyApplication->getResidencyTrack() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
                 if( count($errorMsgArr) > 0 ) {
 
                     //delete erroneous spreadsheet from filesystem and $document from DB
@@ -1285,7 +1285,7 @@ class ResAppImportPopulateUtil {
                         $this->sendEmailToSystemEmail($subjectError, $event);
                     }
 
-                    continue; //skip this res application, because getResidencySubspecialty is null => something is wrong
+                    continue; //skip this res application, because getResidencyTrack is null => something is wrong
                 }
                 //////////////////// EOF second validate the application //////////////////////
 

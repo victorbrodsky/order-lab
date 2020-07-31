@@ -629,6 +629,14 @@ class ResidencyApplication extends BaseUserAttributes {
     {
         return $this->residencySubspecialty;
     }
+    
+    /**
+     * @param mixed $residencyTrack
+     */
+    public function setResidencyTrack($residencyTrack)
+    {
+        $this->residencyTrack = $residencyTrack;
+    }
 
     /**
      * @return mixed
@@ -636,14 +644,6 @@ class ResidencyApplication extends BaseUserAttributes {
     public function getResidencyTrack()
     {
         return $this->residencyTrack;
-    }
-
-    /**
-     * @param mixed $residencyTrack
-     */
-    public function setResidencyTrack($residencyTrack)
-    {
-        $this->residencyTrack = $residencyTrack;
     }
 
     /**

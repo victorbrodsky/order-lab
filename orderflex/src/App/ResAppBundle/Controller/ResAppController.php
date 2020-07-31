@@ -330,7 +330,7 @@ class ResAppController extends OrderAbstractController {
         //$dql->groupBy('resapp');
         $dql->orderBy("resapp.id","DESC");
         $dql->leftJoin("resapp.appStatus", "appStatus");
-        $dql->leftJoin("resapp.residencySubspecialty", "residencySubspecialty");
+        $dql->leftJoin("resapp.residencyTrack", "residencyTrack");
         $dql->leftJoin("resapp.user", "applicant");
         $dql->leftJoin("applicant.infos", "applicantinfos");
         //$dql->leftJoin("applicant.credentials", "credentials");
@@ -346,7 +346,7 @@ class ResAppController extends OrderAbstractController {
 
         $resSubspecId = null;
         if( $filter ) { //&& $filter != "ALL"
-            $dql->andWhere("residencySubspecialty.id = ".$filter);
+            $dql->andWhere("residencyTrack.id = ".$filter);
             $searchFlag = true;
             $resSubspecId = $filter;
         }
@@ -354,7 +354,7 @@ class ResAppController extends OrderAbstractController {
         if( 0 && !$filter ) {
             $restypeArr = array();
             foreach( $residencyTypes as $residencyTypeID => $residencyTypeName ) {
-                $restypeArr[] = "residencySubspecialty.id = ".$residencyTypeID;
+                $restypeArr[] = "residencyTrack.id = ".$residencyTypeID;
             }
             $dql->andWhere( implode(" OR ", $restypeArr) );
             $searchFlag = true;
@@ -879,8 +879,7 @@ class ResAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $resappUtil = $this->container->get('resapp_util');
 
-        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $resTypes = $resappUtil->getResidencyTypes(true);
+        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         if( count($resTypes) == 0 ) {
             return array();
         }
@@ -1395,8 +1394,7 @@ class ResAppController extends OrderAbstractController {
         //$resappUtil = $this->container->get('resapp_util');
         $resappUtil->addEmptyResAppFields($entity);
 
-        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $resTypes = $resappUtil->getResidencyTypes(true);
+        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         if( count($resTypes) == 0 ) {
             return array();
         }
@@ -1607,8 +1605,8 @@ class ResAppController extends OrderAbstractController {
 
         $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
 
-        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $resTypes = $resappUtil->getResidencyTypes(true);
+        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
+        //$resTypes = $resappUtil->getResidencyTypes(true);
         if( count($resTypes) == 0 ) {
             return array();
         }
@@ -1640,9 +1638,9 @@ class ResAppController extends OrderAbstractController {
 
         $applicant = $residencyApplication->getUser();
 
-        if( !$residencyApplication->getResidencySubspecialty() ) {
+        if( !$residencyApplication->getResidencyTrack() ) {
             //exit("ResidencySpecialty is null");
-            $form['residencySubspecialty']->addError(new FormError('Please select in the Residency Type before uploading'));
+            $form['residencyTrack']->addError(new FormError('Please select in the Residency Type before uploading'));
         }
         if( !$applicant->getEmail() ) {
             $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));
@@ -1779,12 +1777,12 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $residencySubspecialty = $application->getResidencyTrack();
+        $residencyTrack = $application->getResidencyTrack();
 
         //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleResType = null;
-        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencySubspecialty);
+        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
+        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
             if( strpos($role,'INTERVIEWER') !== false ) {
                 $interviewerRoleResType = $role;
@@ -1792,9 +1790,9 @@ class ResAppController extends OrderAbstractController {
             }
         }
         if( !$interviewerRoleResType ) {
-            //throw new EntityNotFoundException('Unable to find role by ResidencySubspecialty='.$residencySubspecialty);
+            //throw new EntityNotFoundException('Unable to find role by ResidencyTrack='.$residencyTrack);
             $logger = $this->container->get('logger');
-            $logger->warning('Unable to find role by ResidencyTrack='.$residencySubspecialty);
+            $logger->warning('Unable to find role by ResidencyTrack='.$residencyTrack);
             return false;
         }
 
@@ -2781,16 +2779,16 @@ class ResAppController extends OrderAbstractController {
         }
        
         $em = $this->getDoctrine()->getManager();
-        $residencySubspecialty = null;
+        $residencyTrack = null;
         $institutionNameResappName = "";
         
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
         }
         
-        if( $residencySubspecialty ) {
-            $institution = $residencySubspecialty->getInstitution();
-            $institutionNameResappName = $institution." ".$residencySubspecialty." ";
+        if( $residencyTrack ) {
+            $institution = $residencyTrack->getInstitution();
+            $institutionNameResappName = $institution." ".$residencyTrack." ";
         }
         
         $resappUtil = $this->container->get('resapp_util');

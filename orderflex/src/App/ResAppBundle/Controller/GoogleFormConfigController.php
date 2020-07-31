@@ -106,8 +106,7 @@ class GoogleFormConfigController extends OrderAbstractController
         }
 
         $resappUtil = $this->get('resapp_util');
-        //$resTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $resTypes = $resappUtil->getResidencyTypes(true);
+        $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         $resVisaStatus = $resappUtil->getResidencyVisaStatuses(true);
 
         //link to http://127.0.0.1/order/residency-applications/residency-types-settings

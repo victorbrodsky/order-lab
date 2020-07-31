@@ -78,7 +78,7 @@ class RecLetterUtil {
         }
 
         // Residency Type of the Application +
-        $type = $resapp->getResidencySubspecialty();
+        $type = $resapp->getResidencyTrack();
         if( $type ) {
             $typeId = $type->getId();
         } else {
@@ -228,7 +228,7 @@ class RecLetterUtil {
             $resapp = $reference->getResapp();
         }
 
-        $resappType = $resapp->getResidencySubspecialty();
+        $resappType = $resapp->getResidencyTrack();
         if( $resappType ) {
             $resappTypeStr = $resappType->getName();
         } else {
@@ -298,7 +298,7 @@ class RecLetterUtil {
         $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
         $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
         $uploadFormLink = $uploadFormLink . "&Applicant-E-Mail=" . $applicant->getSingleEmail();
-        $uploadFormLink = $uploadFormLink . "&Residency-Type=" . $resapp->getResidencySubspecialty()->getName();
+        $uploadFormLink = $uploadFormLink . "&Residency-Type=" . $resapp->getResidencyTrack()->getName();
         $uploadFormLink = $uploadFormLink . "&Residency-Start-Date=" . $resapp->getStartDate()->format("m/d/Y");
         $uploadFormLink = $uploadFormLink . "&Residency-End-Date=" . $resapp->getEndDate()->format("m/d/Y");
         $uploadFormLink = $uploadFormLink . "&Reference-First-Name=" . $reference->getFirstName();
@@ -931,7 +931,7 @@ class RecLetterUtil {
             $router = $userSecUtil->getRequestContextRouter();
 
             $subject = "More than one recommendation letter received from ".$reference->getFullName()." in support of "
-                .$applicantName."'s application ".$resapp->getId()." for the ".$resapp->getResidencySubspecialty()." $startDateStr residency";
+                .$applicantName."'s application ".$resapp->getId()." for the ".$resapp->getResidencyTrack()." $startDateStr residency";
 
             //use download datetime as letter datetime
             $latestLetterId = null;
@@ -950,7 +950,7 @@ class RecLetterUtil {
             }
 
             $body = "More than one recommendation letter has been received from ".$reference->getFullName()." in support of "
-                .$applicantName."'s application ".$resapp->getId()." for the ".$resapp->getResidencySubspecialty()." $startDateStr residency.";
+                .$applicantName."'s application ".$resapp->getId()." for the ".$resapp->getResidencyTrack()." $startDateStr residency.";
             $body = $body . " The latest document was received on ".$latestLetterTimeStr.".";
             $body = $body . "<br><br>" . "Please review these letters of recommendation and delete any duplicates or erroneously added documents.";
 
@@ -1080,7 +1080,7 @@ class RecLetterUtil {
         $subject =
             "A new recommendation letter has been received for "
             . $applicantName . "'s application ID#" . $resapp->getId()
-            . " for the " . $resapp->getResidencySubspecialty() . " " . $startDateStr
+            . " for the " . $resapp->getResidencyTrack() . " " . $startDateStr
         ;
 
         $resappLink = $router->generate(
@@ -1214,13 +1214,13 @@ class RecLetterUtil {
             }
 
             //Subject: ApplicantFirstName ApplicantLastName's ResidencyType ResidencyYear residency application is now complete!
-            //$subject = $applicantName . "'s " . $resapp->getResidencySubspecialty() . " " . $startDateStr . " residency application is now complete!";
+            //$subject = $applicantName . "'s " . $resapp->getResidencyTrack() . " " . $startDateStr . " residency application is now complete!";
 
             //"Subject="3 recommendation letters have now been received for ApplicantFirstName ApplicantsLastName's application ID#XXX for the ResidencyType ResidencyYear"
             $subject =
                 $refCounter . " recommendation letters have now been received for "
                 . $applicantName . "'s application ID#" . $resapp->getId()
-                . " for the " . $resapp->getResidencySubspecialty() . " " . $startDateStr
+                . " for the " . $resapp->getResidencyTrack() . " " . $startDateStr
             ;
 
             //Body: We have received all X reference letters in support of
@@ -1238,7 +1238,7 @@ class RecLetterUtil {
             $resappLink = '<a href="'.$resappLink.'">'.$resappLink.'</a>';
 
 //            $body = "We have received all $refCounter reference letters in support of " . $applicantName . "'s "
-//                . $resapp->getResidencySubspecialty() . " " . $startDateStr . " residency application."
+//                . $resapp->getResidencyTrack() . " " . $startDateStr . " residency application."
 //                . "<br>".$statusStr
 //                . "<br><br>"."You can review the recommendation letters here:"
 //                . "<br>".implode("<br>",$reviewLetterLinkArr)
@@ -1304,9 +1304,9 @@ class RecLetterUtil {
             $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
             $dql = $repository->createQueryBuilder("resapp");
             $dql->select('resapp');
-            $dql->leftJoin("resapp.residencySubspecialty", "residencySubspecialty");
+            $dql->leftJoin("resapp.residencyTrack", "residencyTrack");
             $dql->leftJoin("resapp.user", "user");
-            $dql->where("residencySubspecialty.id = :residencySubspecialtyId");
+            $dql->where("residencyTrack.id = :residencyTrackId");
             $dql->andWhere("user.email = :applicantEmail");
             $dql->andWhere("resapp.id != :resappId");
 
@@ -1320,7 +1320,7 @@ class RecLetterUtil {
             $query = $this->em->createQuery($dql);
 
             $query->setParameters(array(
-                "residencySubspecialtyId" => $resapp->getResidencySubspecialty()->getId(),
+                "residencyTrackId" => $resapp->getResidencyTrack()->getId(),
                 "applicantEmail" => $applicantEmail,
                 "resappId" => $resapp->getId()
             ));

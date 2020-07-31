@@ -75,9 +75,9 @@ class GoogleFormConfigType extends AbstractType
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['resTypes'],
-            'invalid_message' => 'residencySubspecialty invalid value',
+            'invalid_message' => 'residencyTrack invalid value',
             //'choices_as_values' => true,
-            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
+            'attr' => array('class' => 'combobox combobox-width resapp-residencyTrack'),
         ));
 
         $builder->add('applicationFormNote', null, array(

@@ -92,7 +92,7 @@ class DefaultController extends OrderAbstractController
         $uploadedLetterDb = $letters->first();
         $res = $resappRecLetterUtil->sendRefLetterReceivedNotificationEmail($resapp,$uploadedLetterDb);
 
-        $resappType = $resapp->getResidencySubspecialty();
+        $resappType = $resapp->getResidencyTrack();
         echo "ID=".$resapp->getId().", resappType=".$resappType.": res=".$res."<br>";
 
         exit("end of sendRefLetterReceivedNotificationEmail test");
@@ -397,6 +397,98 @@ class DefaultController extends OrderAbstractController
         }
 
         $res = "Update application season start date: counter=$counter";
+
+        exit($res);
+    }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/residency-applications/update-application-residency-track
+     *
+     * @Route("/update-application-residency-track", name="resapp_update_application_residency_track")
+     */
+    public function updateApplicationResidencyTrackAction( Request $request ) {
+
+        //exit("not allowed");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes;
+
+        $em = $this->getDoctrine()->getManager();
+
+        //get spreadsheets older than X year
+        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql =  $repository->createQueryBuilder("application");
+        $dql->select('application');
+
+        $dql->where("application.residencyTrack IS NULL");
+
+        $dql->orderBy("application.id","ASC");
+
+        $query = $em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $applications = $query->getResult();
+        echo "applications count=".count($applications)."<br>";
+
+        $counter = 0;
+
+        foreach($applications as $application) {
+
+            $counter++;
+
+            $residencySubspecialty = $application->getResidencySubspecialty();
+
+            echo $counter." (ID=".$application->getId().", ExternalID=".$application->getGoogleFormId()."): residencySubspecialty=". $residencySubspecialty."";
+
+            if( !$residencySubspecialty ) {
+                exit("No residencySubspecialty");
+            }
+
+            //convert residencySubspecialty to residencyTrack
+            $name = NULL;
+            switch ($residencySubspecialty) {
+                case "Pathology AP/EXP":
+                    $name = "AP/EXP";
+                    break;
+                case "Pathology CP/EXP":
+                    $name = "CP/EXP";
+                    break;
+                case "AP/CP":
+                    $name = "AP/CP";
+                    break;
+                case "CP":
+                    $name = "CP";
+                    break;
+                case "AP":
+                    $name = "AP";
+                    break;
+                default:
+                    exit("No Residency Track name found");
+            }
+
+            if( !$name ) {
+                exit("No Residency Track name is NULL");
+            }
+
+            $residencyTrack = $em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findOneByName($name);
+            if( !$residencyTrack ) {
+                exit("Residency Track entity not found by name=[".$name."]");
+            }
+
+            echo " => residencyTrack=".$residencyTrack->getName()."<br>";
+
+            $application->setResidencyTrack( $residencyTrack );
+
+            $em->flush();
+
+            //exit("EOF");
+        }
+
+        $res = "Update application Residency Track: counter=$counter";
 
         exit($res);
     }

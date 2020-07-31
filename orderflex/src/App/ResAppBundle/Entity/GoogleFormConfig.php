@@ -199,14 +199,14 @@ class GoogleFormConfig {
     {
         return $this->residencySubspecialties;
     }
-    public function addResidencySubspecialty($item)
+    public function addResidencyTrack($item)
     {
         if( $item && !$this->residencySubspecialties->contains($item) ) {
             $this->residencySubspecialties->add($item);
         }
 
     }
-    public function removeResidencySubspecialty($item)
+    public function removeResidencyTrack($item)
     {
         $this->residencySubspecialties->removeElement($item);
     }

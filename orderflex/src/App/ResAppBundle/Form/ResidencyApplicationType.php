@@ -60,17 +60,17 @@ class ResidencyApplicationType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-//        $builder->add('residencySubspecialty',null, array(
+//        $builder->add('residencyTrack',null, array(
 //            'label' => '* Residency Type:',
 //            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
+//            'attr' => array('class' => 'combobox combobox-width resapp-residencyTrack'),
 //        ));
-//        $builder->add('residencySubspecialty', 'entity', array(
+//        $builder->add('residencyTrack', 'entity', array(
 //            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
 //            'label'=> "* Residency Application Type:",
 //            'required'=> false,
 //            //'multiple' => true,
-//            'attr' => array('class'=>'combobox combobox-width resapp-residencySubspecialty'),
+//            'attr' => array('class'=>'combobox combobox-width resapp-residencyTrack'),
 //            'query_builder' => function(EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
 //                    ->leftJoin("list.institution","institution")
@@ -95,15 +95,15 @@ class ResidencyApplicationType extends AbstractType
             $resappChoices = array();
         }
 
-        $builder->add('residencySubspecialty', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+        $builder->add('residencyTrack', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
             'label' => "Residency Application Type:",
             //'required' => true,
             'required' => false,
             'choices' => $resappChoices,   //$this->params['resappTypes'], //$resTypes,
-            //'invalid_message' => 'residencySubspecialty invalid value',
+            //'invalid_message' => 'residencyTrack invalid value',
             //'choices_as_values' => true,
-            'attr' => array('class' => 'combobox combobox-width resapp-residencySubspecialty'),
+            'attr' => array('class' => 'combobox combobox-width resapp-residencyTrack'),
         ));
 
         if( 0 && $this->params['cycle'] == "edit" ) {

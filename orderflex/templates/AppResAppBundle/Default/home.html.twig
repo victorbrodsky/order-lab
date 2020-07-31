@@ -366,7 +366,7 @@
                     <th>Rejection Emailed?</th>
                 {% endif %}
 
-                <th>{{ knp_pagination_sortable(entities, 'Residency Type', 'residencySubspecialty.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Residency Type', 'residencyTrack.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'resapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>
@@ -568,8 +568,8 @@
                     {% endif %}
 
                     <td>
-                        {% if entity.residencySubspecialty %}
-                            {{  entity.residencySubspecialty.name }}
+                        {% if entity.residencyTrack %}
+                            {{  entity.residencyTrack.name }}
                         {% endif %}
                     </td>
 

@@ -125,9 +125,9 @@ class ResAppApplicantController extends OrderAbstractController {
 //        ->orderBy('rank');
         //$dql->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank');
         $dql->select('resapp');
-        $dql->leftJoin("resapp.residencySubspecialty", "residencySubspecialty");
+        $dql->leftJoin("resapp.residencyTrack", "residencyTrack");
 
-        $dql->where("residencySubspecialty.id = " . $resappType->getId() );
+        $dql->where("residencyTrack.id = " . $resappType->getId() );
 
         $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
@@ -563,16 +563,16 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $residencySubspecialty = null;
+        $residencyTrack = null;
         $institutionNameResappName = "";
 
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
         }
 
-        if( $residencySubspecialty ) {
-            $institution = $residencySubspecialty->getInstitution();
-            $institutionNameResappName = $institution." ".$residencySubspecialty." ";
+        if( $residencyTrack ) {
+            $institution = $residencyTrack->getInstitution();
+            $institutionNameResappName = $institution." ".$residencyTrack." ";
         }
 
         //url=http://collage.med.cornell.edu/order/residency-applications/show/2
@@ -657,16 +657,16 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $residencySubspecialty = null;
+        $residencyTrack = null;
         $institutionNameResappName = "";
 
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
         }
 
-        if( $residencySubspecialty ) {
-            $institution = $residencySubspecialty->getInstitution();
-            $institutionNameResappName = $institution." ".$residencySubspecialty." ";
+        if( $residencyTrack ) {
+            $institution = $residencyTrack->getInstitution();
+            $institutionNameResappName = $institution." ".$residencyTrack." ";
         }
 
         //[YEAR] [WCMC (top level of actual institution)] [RESIDENCY-TYPE] Residency Candidate Data generated on [DATE] at [TIME] EST.xls

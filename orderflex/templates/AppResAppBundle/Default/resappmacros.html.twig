@@ -256,7 +256,7 @@
         {% endif %}
     {% endif %}
 
-    Interview Evaluations: {% if resapp.residencySubspecialty %} {{resapp.residencySubspecialty.name}}{% endif %} {{resapp.startDate|date('Y','UTC')}}<br>
+    Interview Evaluations: {% if resapp.residencyTrack %} {{resapp.residencyTrack.name}}{% endif %} {{resapp.startDate|date('Y','UTC')}}<br>
     {% if is_granted('ROLE_PLATFORM_DEMO') %}
         Applicant Demo
     {% else %}

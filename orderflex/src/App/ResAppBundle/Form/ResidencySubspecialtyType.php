@@ -94,6 +94,6 @@ class ResidencySubspecialtyType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'oleg_resappbundle_residencySubspecialty';
+        return 'oleg_resappbundle_residencySpecialty';
     }
 }
