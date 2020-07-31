@@ -38,7 +38,139 @@ class ResidencyTrackList extends ListAbstract
      **/
     protected $original;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+     **/
+    private $institution;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="App\ResAppBundle\Entity\ResAppTypeConfig", cascade={"persist", "remove"})
+//     * @ORM\JoinColumn(name="resapptypeconfig_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $resappTypeConfig;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_residencytrack_coordinator",
+     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="coordinator_id", referencedColumnName="id")}
+     * )
+     **/
+    private $coordinators;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_residencytrack_director",
+     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="director_id", referencedColumnName="id")}
+     * )
+     **/
+    private $directors;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="user_residencytrack_interviewer",
+     *      joinColumns={@ORM\JoinColumn(name="residencytrack_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="interviewer_id", referencedColumnName="id")}
+     * )
+     **/
+    private $interviewers;
+
+
+
+    public function __construct( $author = null ) {
+        $this->coordinators = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+        $this->interviewers = new ArrayCollection();
+
+        parent::__construct($author);
+    }
+    
     
 
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getResappTypeConfig()
+//    {
+//        return $this->resappTypeConfig;
+//    }
+//
+//    /**
+//     * @param mixed $resappTypeConfig
+//     */
+//    public function setResappTypeConfig($resappTypeConfig)
+//    {
+//        $this->resappTypeConfig = $resappTypeConfig;
+//    }
+
+    public function addCoordinator($item)
+    {
+        if( $item && !$this->coordinators->contains($item) ) {
+            $this->coordinators->add($item);
+        }
+        return $this;
+    }
+    public function removeCoordinator($item)
+    {
+        $this->coordinators->removeElement($item);
+    }
+    public function getCoordinators()
+    {
+        return $this->coordinators;
+    }
+
+    public function addDirector($item)
+    {
+        if( $item && !$this->directors->contains($item) ) {
+            $this->directors->add($item);
+        }
+        return $this;
+    }
+    public function removeDirector($item)
+    {
+        $this->directors->removeElement($item);
+    }
+    public function getDirectors()
+    {
+        return $this->directors;
+    }
+
+    public function addInterviewer($item)
+    {
+        if( $item && !$this->interviewers->contains($item) ) {
+            $this->interviewers->add($item);
+        }
+        return $this;
+    }
+    public function removeInterviewer($item)
+    {
+        $this->interviewers->removeElement($item);
+    }
+    public function getInterviewers()
+    {
+        return $this->interviewers;
+    }
+
+    public function getClassName()
+    {
+        return "ResidencyTrackList";
+    }
 }

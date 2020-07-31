@@ -98,7 +98,7 @@ class ResidencySpecialty extends ListAbstract
         $this->directors = new ArrayCollection();
         $this->interviewers = new ArrayCollection();
 
-        parent::__construct();
+        parent::__construct($author);
     }
 
 

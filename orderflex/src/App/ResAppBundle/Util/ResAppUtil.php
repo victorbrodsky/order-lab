@@ -280,16 +280,37 @@ class ResAppUtil {
         return $filterType;
     }
     //get all residency application types
-    public function getResidencyTypes( $asEntities=false ) {
-        $em = $this->em;
+    public function getResidencyTracks( $asEntities=false, $withInst=false ) {
+
+        if( $withInst ) {
+            $mapper = array(
+                'prefix' => 'App',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+
+            $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+            //exit("wcm=".$wcmc);
+            $pathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+        }
 
         //get list of residency type with extra "ALL"
-        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
         $dql = $repository->createQueryBuilder('list');
         $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        if( $withInst ) {
+            $dql->leftJoin("list.institution", "institution");
+            $dql->where("institution.id = " . $pathology->getId());
+        }
+
         $dql->orderBy("list.orderinlist","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $this->em->createQuery($dql);
 
         $query->setParameters(
             array(
@@ -531,7 +552,8 @@ class ResAppUtil {
         return $users;
     }
     public function getRoleByResidencySubspecialtyAndRolename( $residencySubspecialty, $roleName ) {
-        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        //$roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencySubspecialty);
         foreach( $roles as $role ) {
             if( strpos($role,$roleName) !== false ) {
                 return $role;
@@ -1613,23 +1635,23 @@ class ResAppUtil {
         //1) get all users with role ROLE_RESAPP_DIRECTOR_WCM_PAINMEDICINE
         $users = $this->getUsersOfResidencySubspecialtyByRole($residencyTrack,$roleName); //"_COORDINATOR_"
 
-        $resAppTypeConfig = $this->getResappTypeConfig($residencyTrack);
-        if( !$resAppTypeConfig ) {
-            $resAppTypeConfig = new ResAppTypeConfig();
-            $resAppTypeConfig->setResidencyTrack($residencyTrack);
-            $this->em->persist($resAppTypeConfig);
-            $this->em->flush();
-        }
+//        $resAppTypeConfig = $this->getResappTypeConfig($residencyTrack);
+//        if( !$resAppTypeConfig ) {
+//            $resAppTypeConfig = new ResAppTypeConfig();
+//            $resAppTypeConfig->setResidencyTrack($residencyTrack);
+//            $this->em->persist($resAppTypeConfig);
+//            $this->em->flush();
+//        }
 
         //2) for each $coordinators in the ResidencySubspecialty - check if this user exists in the coordinators, add if not.
         if( $roleName == "_COORDINATOR_" ) {
-            $attachedUsers = $resAppTypeConfig->getCoordinators();
+            $attachedUsers = $residencyTrack->getCoordinators();
         }
         if( $roleName == "_DIRECTOR_" ) {
-            $attachedUsers = $resAppTypeConfig->getDirectors();
+            $attachedUsers = $residencyTrack->getDirectors();
         }
         if( $roleName == "_INTERVIEWER_" ) {
-            $attachedUsers = $resAppTypeConfig->getInterviewers();
+            $attachedUsers = $residencyTrack->getInterviewers();
         }
 
         $modified = false;
@@ -1639,13 +1661,13 @@ class ResAppUtil {
             //Add user to ResidencySubspecialty if user is not attached yet
             if( $user && !$attachedUsers->contains($user) ) {
                 if( $roleName == "_COORDINATOR_" ) {
-                    $resAppTypeConfig->addCoordinator($user);
+                    $residencyTrack->addCoordinator($user);
                 }
                 if( $roleName == "_DIRECTOR_" ) {
-                    $resAppTypeConfig->addDirector($user);
+                    $residencyTrack->addDirector($user);
                 }
                 if( $roleName == "_INTERVIEWER_" ) {
-                    $resAppTypeConfig->addInterviewer($user);
+                    $residencyTrack->addInterviewer($user);
                 }
                 $modified = true;
             }
@@ -1682,37 +1704,37 @@ class ResAppUtil {
         }
     }
 
-    public function getResappTypeConfig($residencyTrack) {
-
-        if( !$residencyTrack ) {
-            return NULL;
-        }
-        if( !$residencyTrack->getId() ) {
-            return NULL;
-        }
-
-        $repository = $this->em->getRepository('AppResAppBundle:ResAppTypeConfig');
-        $dql = $repository->createQueryBuilder("resapptypeconfig");
-
-        //$resappIdInteger = $resapp->getId()."";
-        //echo "resappIdInteger=".$resappIdInteger."<br>";
-
-        $dql->innerJoin('resapptypeconfig.residencyTrack', 'residencyTrack');
-        $dql->where("residencyTrack.id = :residencyTrackId");
-
-        $dql->orderBy("resapptypeconfig.id","DESC");
-        $query = $this->em->createQuery($dql);
-
-        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
-
-        $query->setParameters(
-            array(
-                'residencyTrackId' => $residencyTrack->getId()
-            )
-        );
-
-        $loggers = $query->getResult();
-    }
+//    public function getResappTypeConfig($residencyTrack) {
+//
+//        if( !$residencyTrack ) {
+//            return NULL;
+//        }
+//        if( !$residencyTrack->getId() ) {
+//            return NULL;
+//        }
+//
+//        $repository = $this->em->getRepository('AppResAppBundle:ResAppTypeConfig');
+//        $dql = $repository->createQueryBuilder("resapptypeconfig");
+//
+//        //$resappIdInteger = $resapp->getId()."";
+//        //echo "resappIdInteger=".$resappIdInteger."<br>";
+//
+//        $dql->innerJoin('resapptypeconfig.residencyTrack', 'residencyTrack');
+//        $dql->where("residencyTrack.id = :residencyTrackId");
+//
+//        $dql->orderBy("resapptypeconfig.id","DESC");
+//        $query = $this->em->createQuery($dql);
+//
+//        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+//
+//        $query->setParameters(
+//            array(
+//                'residencyTrackId' => $residencyTrack->getId()
+//            )
+//        );
+//
+//        $loggers = $query->getResult();
+//    }
 
     //compare original and final users => get removed users => for each removed user, remove the role
     public function processRemovedUsersByResidencySetting( $residencySubspecialty, $newUsers, $origUsers, $roleName ) {

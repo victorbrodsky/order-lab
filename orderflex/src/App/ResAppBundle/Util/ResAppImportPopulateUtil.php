@@ -926,9 +926,9 @@ class ResAppImportPopulateUtil {
                     //$logger->notice("residencyType=[".$residencyType."]");
                     $residencyType = trim($residencyType);
                     $residencyType = $this->capitalizeIfNotAllCapital($residencyType);
-                    $transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySubspecialty');
+                    $transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencyTrackList');
                     $residencyTypeEntity = $transformer->reverseTransform($residencyType);
-                    $residencyApplication->setResidencySubspecialty($residencyTypeEntity);
+                    $residencyApplication->setResidencyTrack($residencyTypeEntity);
                 }
 
                 //////////////////////// assign local institution from SiteParameters ////////////////////////
@@ -1225,7 +1225,7 @@ class ResAppImportPopulateUtil {
 
                 //////////////////// second validate the application //////////////////////
                 $errorMsgArr = array();
-                if( !$residencyApplication->getResidencySubspecialty() ) {
+                if( !$residencyApplication->getResidencyTrack() ) {
                     $errorMsgArr[] = "Residency Type is null";
                 }
                 if( count($residencyApplication->getReferences()) == 0 ) {

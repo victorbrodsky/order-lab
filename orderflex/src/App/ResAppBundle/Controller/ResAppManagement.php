@@ -17,6 +17,8 @@
 
 namespace App\ResAppBundle\Controller;
 
+use App\ResAppBundle\Form\ResidencyTrackListType;
+use App\UserdirectoryBundle\Entity\ResidencyTrackList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use App\ResAppBundle\Entity\ResidencyApplication;
@@ -24,7 +26,7 @@ use App\ResAppBundle\Entity\Interview;
 use App\ResAppBundle\Form\ResAppCreateResidencyType;
 use App\ResAppBundle\Form\ResAppResidencyApplicationType;
 use App\ResAppBundle\Form\ResAppManagementType;
-use App\ResAppBundle\Form\ResidencySubspecialtyType;
+//use App\ResAppBundle\Form\ResidencySubspecialtyType;
 use App\ResAppBundle\Form\InterviewType;
 use App\UserdirectoryBundle\Entity\User;
 use App\OrderformBundle\Helper\ErrorHelper;
@@ -68,7 +70,7 @@ class ResAppManagement extends OrderAbstractController {
 
         //get all residency types using institution: ResidencySubspecialty objects that have $coordinators, $directors, $interviewers
         //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $residencyTypes = $resappUtil->getResidencyTypes(true);
+        $residencyTypes = $resappUtil->getResidencyTracks(true);
         //dump($residencyTypes);
         //exit('111');
 
@@ -139,12 +141,13 @@ class ResAppManagement extends OrderAbstractController {
             //$userSecUtil = $this->container->get('user_security_utility');
             //$site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('resapp');
 
-            $subspecialtyType = $form["residencysubspecialtytype"]->getData();
+            //$subspecialtyType = $form["residencysubspecialtytype"]->getData();
+            $subspecialtyType = $form["residencytracklisttype"]->getData();
             if( !$subspecialtyType ) {
                 //Flash
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    "Please select Residency Subspecialty"
+                    "Please select Residency Track"
                 );
                 return array(
                     'form' => $form->createView(),
@@ -171,7 +174,7 @@ class ResAppManagement extends OrderAbstractController {
 
             if( $pathology ) {
                 if( $subspecialtyType->getInstitution() ) {
-                    $msg = "Subspecialty ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
+                    $msg = "Residency track ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
                         ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
 
                     //Flash
@@ -186,7 +189,7 @@ class ResAppManagement extends OrderAbstractController {
                     if (!$testing) {
                         $em->persist($subspecialtyType);
                         $em->flush($subspecialtyType);
-                        $msg = "Subspecialty linked with an associated institution ".$subspecialtyType->getInstitution().".";
+                        $msg = "Residency track linked with an associated institution ".$subspecialtyType->getInstitution().".";
                     }
                     $count++;
                 }
@@ -269,9 +272,10 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resaptypeid);
+        //$subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resaptypeid);
+        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackListType')->find($resaptypeid);
         if( !$subspecialtyType ) {
-            throw $this->createNotFoundException('Unable to find ResidencySpecialty by id='.$resaptypeid);
+            throw $this->createNotFoundException('Unable to find ResidencyTrackListType by id='.$resaptypeid);
         }
 
         //exit('not implemented');
@@ -284,7 +288,8 @@ class ResAppManagement extends OrderAbstractController {
 
         //2) set roles to disabled
         $removedRoles = array();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($subspecialtyType);
+        //$roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($subspecialtyType);
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
             $em->persist($role);
@@ -324,10 +329,11 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "show";
 
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
+        //$restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
+        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($id);
 
         if( !$restype ) {
-            throw $this->createNotFoundException('Unable to find Residency Specialty Type by id='.$id);
+            throw $this->createNotFoundException('Unable to find Residency Track Type by id='.$id);
         }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this ResidencySubspecialty object is not updated.
@@ -361,10 +367,11 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "edit";
 
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
+        //$restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
+        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($id);
 
         if( !$restype ) {
-            throw $this->createNotFoundException('Unable to find Residency Subspecialty Type by id='.$id);
+            throw $this->createNotFoundException('Unable to find Residency Track Type by id='.$id);
         }
 
         $origDirectors = new ArrayCollection();
@@ -445,7 +452,8 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         $form = $this->createForm(
-            ResidencySubspecialtyType::class,
+            //ResidencySubspecialtyType::class,
+            ResidencyTrackListType::class,
             $restype,
             array(
                 'disabled' => $disabled,
@@ -473,7 +481,8 @@ class ResAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleResType = null;
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencySubspecialty);
         foreach( $interviewerResTypeRoles as $role ) {
             //echo "assignResAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos($role,$roleSubstr) !== false ) {
@@ -482,7 +491,7 @@ class ResAppManagement extends OrderAbstractController {
             }
         }
         if( !$interviewerRoleResType ) {
-            throw new EntityNotFoundException('Unable to find role by ResidencySubspecialty='.$residencySubspecialty);
+            throw new EntityNotFoundException('Unable to find role by ResidencyTrack='.$residencySubspecialty);
         }
 
         foreach( $users as $user ) {
@@ -507,165 +516,165 @@ class ResAppManagement extends OrderAbstractController {
 
 
 
-    /**
-     * NOT USED
-     *
-     * @Route("/populate-default", name="resapp_populate_default", methods={"GET"})
-     * @Template("AppResAppBundle/Management/management.html.twig")
-     */
-    public function populateDefaultAction(Request $request) {
-
-        exit("populateDefaultAction NOT USED");
-
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $resappUtil = $this->container->get('resapp_util');
-
-
-        //populate default directors, coordinators, interviewers
-
-        //BREASTPATHOLOGY
-        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Breast Pathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "DIRECTOR" );
-
-
-        //CYTOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Cytopathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
-
-        //GASTROINTESTINALPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gastrointestinal Pathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
-
-
-        //GENITOURINARYPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Genitourinary Pathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
-
-        //GYNECOLOGICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gynecologic Pathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
-
-        //HEMATOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Hematopathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "DIRECTOR" );
-
-
-        //MOLECULARGENETICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Molecular Genetic Pathology");
-        $users = array(
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid',
-            'cwid'
-        );
-        //interviewers
-        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
-        //coordinators
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
-        //directors
-        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
-
-
-        //get all residency types using institution
-        //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
-        $residencyTypes = $resappUtil->getResidencyTypes(true);
-
-        //exit('1');
-        return array(
-            'entities' => $residencyTypes
-        );
-
-    }
+//    /**
+//     * NOT USED
+//     *
+//     * @Route("/populate-default", name="resapp_populate_default", methods={"GET"})
+//     * @Template("AppResAppBundle/Management/management.html.twig")
+//     */
+//    public function populateDefaultAction(Request $request) {
+//
+//        exit("populateDefaultAction NOT USED");
+//
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $resappUtil = $this->container->get('resapp_util');
+//
+//
+//        //populate default directors, coordinators, interviewers
+//
+//        //BREASTPATHOLOGY
+//        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Breast Pathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, $users, "BREASTPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $BREASTPATHOLOGY, array('cwid'), "BREASTPATHOLOGY", "DIRECTOR" );
+//
+//
+//        //CYTOPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Cytopathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "CYTOPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
+//
+//        //GASTROINTESTINALPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gastrointestinal Pathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GASTROINTESTINALPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GASTROINTESTINALPATHOLOGY", "DIRECTOR" );
+//
+//
+//        //GENITOURINARYPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Genitourinary Pathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GENITOURINARYPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
+//
+//        //GYNECOLOGICPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Gynecologic Pathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "GYNECOLOGICPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
+//
+//        //HEMATOPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Hematopathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "HEMATOPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "HEMATOPATHOLOGY", "DIRECTOR" );
+//
+//
+//        //MOLECULARGENETICPATHOLOGY
+//        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Molecular Genetic Pathology");
+//        $users = array(
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid',
+//            'cwid'
+//        );
+//        //interviewers
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, $users, "MOLECULARGENETICPATHOLOGY", "INTERVIEWER" );
+//        //coordinators
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "COORDINATOR" );
+//        //directors
+//        $this->addUsersToResidencySubspecialty( $Cytopathology, array('cwid'), "MOLECULARGENETICPATHOLOGY", "DIRECTOR" );
+//
+//
+//        //get all residency types using institution
+//        //$residencyTypes = $resappUtil->getResidencyTypesByInstitution(true);
+//        $residencyTypes = $resappUtil->getResidencyTypes(true);
+//
+//        //exit('1');
+//        return array(
+//            'entities' => $residencyTypes
+//        );
+//
+//    }
 
     //$roleStr = ROLE_RESAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
     public function addUsersToResidencySubspecialty( $residencySubspecialty, $users, $roleName, $bossType ) {

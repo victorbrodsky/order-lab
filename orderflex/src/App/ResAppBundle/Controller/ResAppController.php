@@ -1779,11 +1779,12 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $residencySubspecialty = $application->getResidencySubspecialty();
+        $residencySubspecialty = $application->getResidencyTrack();
 
         //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleResType = null;
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencySubspecialty($residencySubspecialty);
+        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencySubspecialty);
         foreach( $interviewerResTypeRoles as $role ) {
             if( strpos($role,'INTERVIEWER') !== false ) {
                 $interviewerRoleResType = $role;
@@ -1793,7 +1794,7 @@ class ResAppController extends OrderAbstractController {
         if( !$interviewerRoleResType ) {
             //throw new EntityNotFoundException('Unable to find role by ResidencySubspecialty='.$residencySubspecialty);
             $logger = $this->container->get('logger');
-            $logger->warning('Unable to find role by ResidencySubspecialty='.$residencySubspecialty);
+            $logger->warning('Unable to find role by ResidencyTrack='.$residencySubspecialty);
             return false;
         }
 
@@ -1941,7 +1942,7 @@ class ResAppController extends OrderAbstractController {
             $logger->notice("Residency application ".$resapp->getId()." status has been marked as Priority to the directors and coordinators emails " . implode(", ",$responsibleEmails));
 
             //Subject: FirstName LastName has marked FirstName LastName's ResidencyType residency application (ID:id#) as "Priority"
-            $emailSubject = $user." has marked ".$resapp->getUser()->getUsernameShortest()."'s ".$resapp->getResidencySubspecialty().
+            $emailSubject = $user." has marked ".$resapp->getUser()->getUsernameShortest()."'s ".$resapp->getResidencyTrack().
                 " residency application (ID:".$resapp->getId().") as 'Priority'";
 
             //Body: FirstName LastName (CWID: xxx1234) has marked FirstName LastName's ResidencyType
@@ -2784,7 +2785,7 @@ class ResAppController extends OrderAbstractController {
         $institutionNameResappName = "";
         
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resappTypeId);
+            $residencySubspecialty = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
         }
         
         if( $residencySubspecialty ) {

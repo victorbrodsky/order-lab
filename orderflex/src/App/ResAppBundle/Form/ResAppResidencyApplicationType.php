@@ -37,9 +37,26 @@ class ResAppResidencyApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'residencysubspecialtytype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
-            'label'=> "Residency Specialty:",
+//        $builder->add( 'residencysubspecialtytype', EntityType::class, array(
+//            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+//            'label'=> "Residency Specialty:",
+//            'required'=> false,
+//            //'multiple' => true,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    //->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->where("list.type = :typedef") //show only default
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        //'typeadd' => 'user-added',
+//                ));
+//            },
+//        ));
+        $builder->add( 'residencytracklisttype', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+            'label'=> "Residency Track:",
             'required'=> false,
             //'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -51,7 +68,7 @@ class ResAppResidencyApplicationType extends AbstractType
                     ->setParameters( array(
                         'typedef' => 'default',
                         //'typeadd' => 'user-added',
-                ));
+                    ));
             },
         ));
 

@@ -1627,8 +1627,8 @@ class ReportGenerator {
         $currentDate = new \DateTime();
         $subjectUser = $entity->getUser();
 
-        if( $entity->getResidencySubspecialty() ) {
-            $resappType = $entity->getResidencySubspecialty()->getName();
+        if( $entity->getResidencyTrack() ) {
+            $resappType = $entity->getResidencyTrack()->getName();
         } else {
             $resappType = "Unknown";
             $logger->warning("Unknown residency type for resapp id=".$entity->getId());
