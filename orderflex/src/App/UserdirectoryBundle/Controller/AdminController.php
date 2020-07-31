@@ -2323,7 +2323,8 @@ class AdminController extends OrderAbstractController
     //entity - role object
     //role - role string
     public function resetResidencyTrack($entity,$role) {
-        return NULL; //testing
+        //return NULL; //testing
+
         if( $entity->getResidencyTrack() ) {
             return NULL;
         }
