@@ -4110,24 +4110,40 @@ class AdminController extends OrderAbstractController
 //            return -1;
 //        }
 
+//        A- For AP/CP, “Expected Duration (in years): 4
+//        B- For AP/EXP, “Expected Duration (in years): 4
+//        C- For CP/EXP, “Expected Duration (in years): 4
+//        D- For AP, “Expected Duration (in years): 3
+//        E- For CP, “Expected Duration (in years): 3
+
         $elements = array(
-            'AP',
-            'CP',
-            'AP/CP',
-            'AP/EXP',
-            'CP/EXP'
+            'AP'=>3,
+            'CP'=>3,
+            'AP/CP'=>4,
+            'AP/EXP'=>4,
+            'CP/EXP'=>4
         );
 
         $count = 10;
-        foreach( $elements as $value ) {
+        foreach( $elements as $value=>$duration ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($value) ) {
+            $entity = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($value);
+            if( $entity ) {
+
+                //update $entity->setDuration($duration);
+                if( !$entity->getDuration() ) {
+                    $entity->setDuration($duration);
+                    $em->flush();
+                }
+
                 continue;
             }
 
             $entity = new ResidencyTrackList();
             $this->setDefaultList($entity,$count,$username,null);
             $entity->setName( trim($value) );
+
+            $entity->setDuration($duration);
 
             $em->persist($entity);
             $em->flush();

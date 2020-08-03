@@ -77,6 +77,16 @@ class ResidencyTrackList extends ListAbstract
      **/
     private $interviewers;
 
+    //Expected Duration (in years)
+    //A- For AP/CP, “Expected Duration (in years): 4
+    //B- For AP/EXP, “Expected Duration (in years): 4
+    //C- For CP/EXP, “Expected Duration (in years): 4
+    //D- For AP, “Expected Duration (in years): 3
+    //E- For CP, “Expected Duration (in years): 3
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $duration;
 
 
     public function __construct( $author = null ) {
@@ -168,6 +178,24 @@ class ResidencyTrackList extends ListAbstract
     {
         return $this->interviewers;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param mixed $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
+
+    
 
     public function getClassName()
     {

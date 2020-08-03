@@ -975,6 +975,13 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( strtolower($this->mapper['className']) == strtolower("ResidencyTrackList") ) {
+            $builder->add('duration',null,array(
+                'label' => "Expected Duration (in years):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
 
 
     }

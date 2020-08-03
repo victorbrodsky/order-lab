@@ -1112,6 +1112,11 @@
         {#{{ transresRequestMacros.visualInfoSimpleSections(form,cycle) }}#}
     {% endif %}
 
+    {#ResidencyTrackList->duration#}
+    {% if form.duration is defined %}
+        {{ formmacros.field(form.duration) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}
