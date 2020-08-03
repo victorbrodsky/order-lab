@@ -1631,7 +1631,7 @@ class ReportGenerator {
             $resappType = $entity->getResidencyTrack()->getName();
         } else {
             $resappType = "Unknown";
-            $logger->warning("Unknown residency type for resapp id=".$entity->getId());
+            $logger->warning("Unknown residency track for resapp id=".$entity->getId());
         }
 
         $serverTimezone = date_default_timezone_get(); //server timezone

@@ -170,8 +170,8 @@ class ResAppController extends OrderAbstractController {
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $warningMsg = "No residency types are found.";
-            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application type.</a>';
+            $warningMsg = "No residency tracks are found.";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application track.</a>';
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -835,8 +835,8 @@ class ResAppController extends OrderAbstractController {
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $warningMsg = "No residency types (subspecialties) are found.";
-            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application type.</a>';
+            $warningMsg = "No residency tracks are found.";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application track.</a>';
 
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -1640,7 +1640,7 @@ class ResAppController extends OrderAbstractController {
 
         if( !$residencyApplication->getResidencyTrack() ) {
             //exit("ResidencySpecialty is null");
-            $form['residencyTrack']->addError(new FormError('Please select in the Residency Type before uploading'));
+            $form['residencyTrack']->addError(new FormError('Please select in the Residency Track before uploading'));
         }
         if( !$applicant->getEmail() ) {
             $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));

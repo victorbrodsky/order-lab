@@ -148,7 +148,7 @@
                     {#{{ formmacros.fieldDateLabel_vertical(resappfilter.endDate,'allow-future-date') }}#}
                 {#</div>#}
                 <div class="col-xs-2">
-                    {{ form_row(resappfilter.filter,{'attr': {'placeholder': 'Residency Type'}}) }}
+                    {{ form_row(resappfilter.filter,{'attr': {'placeholder': 'Residency Track'}}) }}
                 </div>
                 <div class="col-xs-4">
                     {{ form_row(resappfilter.search, {'attr': {'placeholder': 'Search by Name'}}) }}
@@ -366,7 +366,7 @@
                     <th>Rejection Emailed?</th>
                 {% endif %}
 
-                <th>{{ knp_pagination_sortable(entities, 'Residency Type', 'residencyTrack.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Residency Track', 'residencyTrack.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'resapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>

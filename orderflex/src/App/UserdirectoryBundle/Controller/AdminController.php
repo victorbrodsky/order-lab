@@ -4131,10 +4131,10 @@ class AdminController extends OrderAbstractController
             if( $entity ) {
 
                 //update $entity->setDuration($duration);
-                if( !$entity->getDuration() ) {
-                    $entity->setDuration($duration);
-                    $em->flush();
-                }
+//                if( !$entity->getDuration() ) {
+//                    $entity->setDuration($duration);
+//                    $em->flush();
+//                }
 
                 continue;
             }

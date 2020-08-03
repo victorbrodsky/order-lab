@@ -716,7 +716,7 @@ class ResAppImportPopulateUtil {
             $errorMsgArr = array();
             $residencyType = $this->getValueByHeaderName('residencyType', $rowData, $headers);
             if( !$residencyType ) {
-                $errorMsgArr[] = "Residency Type is null";
+                $errorMsgArr[] = "Residency Track is null";
             }
             $ref1 = $this->createResAppReference($em,$systemUser,'recommendation1',$rowData,$headers,true);
             if( !$ref1 ) {
@@ -1226,7 +1226,7 @@ class ResAppImportPopulateUtil {
                 //////////////////// second validate the application //////////////////////
                 $errorMsgArr = array();
                 if( !$residencyApplication->getResidencyTrack() ) {
-                    $errorMsgArr[] = "Residency Type is null";
+                    $errorMsgArr[] = "Residency Track is null";
                 }
                 if( count($residencyApplication->getReferences()) == 0 ) {
                     $errorMsgArr[] = "References are null";
