@@ -270,7 +270,7 @@ class FellAppController extends OrderAbstractController {
                 $fellowshipTypeId = key($fellowshipTypes);
             }
             //Show only "Active", "Priority", "Complete", "Interviewee", "Rejected"
-            //filter[startDate]=2021&
+            //filter[startDates]=2021&
             //filter[active]=1&filter[priority]=1&filter[complete]=1&filter[interviewee]=1&filter[reject]=1
             return $this->redirect( $this->generateUrl($route,
                 array(
@@ -358,7 +358,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $orWhere = array();
-        $orWhere[] = "appStatus.id IS NULL";
+        //$orWhere[] = "appStatus.id IS NULL"; //ignore status if no status is selected
 
         if( $hidden ) {
             $orWhere[] = "appStatus.name = 'hide'";
@@ -473,6 +473,8 @@ class FellAppController extends OrderAbstractController {
         $limit = 200;
         //$limit = 10; //testing
         $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+
         $paginator  = $this->get('knp_paginator');
         $fellApps = $paginator->paginate(
             $query,

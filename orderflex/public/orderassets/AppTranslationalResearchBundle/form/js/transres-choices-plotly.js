@@ -14,7 +14,7 @@ function transresGetCharts() {
 
     document.getElementById("charts").innerHTML = "";
 
-    var startDate = $("#filter_startDate").val();
+    var startDate = $("#filter_startDates").val();
     //console.log("startDate="+startDate);
 
     var endDate = $("#filter_endDate").val();

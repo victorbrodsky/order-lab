@@ -139,19 +139,19 @@
 {% macro addBadge( filter, currentYear, currentYearCount, totalCount, statusName ) %}
 
     {% set filterStatus = "'filter["~statusName~"]'" %}
-    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[filter]':"~filter~",'filter[startDate]':"~currentYear %}
-    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[startDate]':"~currentYear %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[filter]':"~filter~",'filter[startDates]':"~currentYear %}
+    {% set paramsCurrentYear = "'filter["~statusName~"]':1, 'filter[startDates]':"~currentYear %}
 
     {% set paramsCurrentYear = [] %}
     {% set paramsCurrentYear = paramsCurrentYear|merge(["'filter["~statusName~"]':1"])  %}
 
     paramsCurrentYear={{ paramsCurrentYear }}<br>
-    {% set paramsTotal = "'filter["~statusName~"]':1, 'filter[filter]':filter,'filter[startDate]':"~currentYear %}
+    {% set paramsTotal = "'filter["~statusName~"]':1, 'filter[filter]':filter,'filter[startDates]':"~currentYear %}
 
-    {#href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}"#}
+    {#href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}"#}
 
     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
-        <a style="color: white;" href="{{ path('fellapp_home',{filterStatus:1,'filter[filter]':filter,'filter[startDate]':currentYear}) }}">
+        <a style="color: white;" href="{{ path('fellapp_home',{filterStatus:1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
             {{ currentYearCount }}
         </a>
     </span>

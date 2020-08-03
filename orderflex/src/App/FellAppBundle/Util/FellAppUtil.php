@@ -581,7 +581,7 @@ class FellAppUtil {
         $linkToList = $this->container->get('router')->generate(
             'fellapp_home',
             array(
-                'filter[startDate]' => $fellowshipApplication->getStartDate()->format('Y'), //2018
+                'filter[startDates]' => $fellowshipApplication->getStartDate()->format('Y'), //2018
                 'filter[filter]' => $fellowshipApplication->getFellowshipSubspecialty()->getId()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
