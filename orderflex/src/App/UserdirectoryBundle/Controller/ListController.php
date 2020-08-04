@@ -279,7 +279,7 @@ class ListController extends OrderAbstractController
 
         return $this->getList($request);
     }
-    public function getList($request, $limit=50) {
+    public function getList_Orig($request, $limit=50) {
 
         $routeName = $request->get('_route');
 
@@ -504,6 +504,242 @@ class ListController extends OrderAbstractController
             //,array('distinct'=>true)
             //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
             ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
+        );
+        //echo "list count=".count($entities)."<br>";
+        //exit();
+
+        ///////////// check if show "create a new entity" link //////////////
+        $createNew = true;
+        $reflectionClass = new \ReflectionClass($mapper['fullClassName']);
+        $compositeReflection = new \ReflectionClass("App\\UserdirectoryBundle\\Entity\\CompositeNodeInterface");
+        if( $reflectionClass->isSubclassOf($compositeReflection) ) {
+            $createNew = false;
+            //echo "dont show create new link";
+        } else {
+            //echo "show create new link";
+        }
+        ///////////// EOF check if show "create a new entity" link //////////////
+
+        return array(
+            'entities' => $entities,
+            'displayName' => $mapper['displayName'],
+            'linkToListId' => $mapper['linkToListId'],
+            'pathbase' => $pathbase,
+            'withCreateNewEntityLink' => $createNew,
+            'filterform' => $filterform->createView(),
+            'routename' => $routeName,
+            'sitename' => $this->sitename,
+            'cycle' => 'show'
+        );
+    }
+    public function getList($request, $limit=50) {
+
+        $routeName = $request->get('_route');
+
+        //get object name: stain-list => stain
+        $pieces = explode("-", $routeName);
+        $pathbase = $pieces[0];
+
+        $mapper = $this->classListMapper($pathbase,$request);
+        //echo "bundleName=".$mapper['bundleName']."<br>";
+        //echo "className=".$mapper['className']."<br>";
+
+        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $dql =  $repository->createQueryBuilder("ent");
+        $dql->select('ent');
+        //$dql->groupBy('ent');
+
+        $dql->leftJoin("ent.creator", "creator");
+        $dql->leftJoin("ent.updatedby", "updatedby");
+
+        //$dql->addGroupBy('creator.username');
+        //$dql->addGroupBy('updatedby.username');
+
+        $entityClass = $mapper['fullClassName'];   //"App\\OrderformBundle\\Entity\\".$mapper['className'];
+
+        //synonyms and original
+        //$dql->leftJoin("ent.synonyms", "synonyms");
+        //$dql->addGroupBy('synonyms.name');
+        //$dql->leftJoin("ent.original", "original");
+        //$dql->addGroupBy('original.name');
+
+        //$dql->leftJoin("ent.objectType", "objectType");
+
+//        if( method_exists($entityClass,'getResearchlab') ) {
+//            $dql->leftJoin("ent.researchlab", "researchlab");
+//            $dql->leftJoin("researchlab.user", "user");
+//            $dql->addSelect('COUNT(user) AS HIDDEN usercount');
+//        }
+
+        if(0) {
+            if (method_exists($entityClass, 'getParent')) {
+                $dql->leftJoin("ent.parent", "parent");
+                $dql->addGroupBy('parent.name');
+            }
+
+            if (method_exists($entityClass, 'getOrganizationalGroupType')) {
+                $dql->leftJoin("ent.organizationalGroupType", "organizationalGroupType");
+                $dql->addGroupBy('organizationalGroupType.name');
+            }
+
+            if (method_exists($entityClass, 'getRoles')) {
+                $dql->leftJoin("ent.roles", "roles");
+                $dql->addGroupBy('roles.name');
+            }
+
+            if (method_exists($entityClass, 'getAttributes')) {
+                $dql->leftJoin("ent.attributes", "attributes");
+                $dql->addGroupBy('attributes');
+            }
+
+            if (method_exists($entityClass, 'getPermissionObjectList')) {
+                $dql->leftJoin("ent.permissionObjectList", "permissionObjectList");
+                $dql->addGroupBy('permissionObjectList');
+            }
+            if (method_exists($entityClass, 'getPermissionActionList')) {
+                $dql->leftJoin("ent.permissionActionList", "permissionActionList");
+                $dql->addGroupBy('permissionActionList');
+            }
+
+            if (method_exists($entityClass, 'getInstitution')) {
+                $dql->leftJoin("ent.institution", "institution");
+                $dql->addGroupBy('institution');
+            }
+
+            if (method_exists($entityClass, 'getInstitutions')) {
+                $dql->leftJoin("ent.institutions", "institutions");
+                $dql->addGroupBy('institutions');
+            }
+
+            if (method_exists($entityClass, 'getCollaborationType')) {
+                $dql->leftJoin("ent.collaborationType", "collaborationType");
+                $dql->addGroupBy('collaborationType');
+            }
+
+            if (method_exists($entityClass, 'getSites')) {
+                $dql->leftJoin("ent.sites", "sites");
+                $dql->addGroupBy('sites.name');
+            }
+
+            if (method_exists($entityClass, 'getFellowshipSubspecialty')) {
+                $dql->leftJoin("ent.fellowshipSubspecialty", "fellowshipSubspecialty");
+                $dql->addGroupBy('fellowshipSubspecialty.name');
+            }
+        }
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+//		$postData = $request->query->all();
+//		if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
+
+        $dqlParameters = array();
+
+        $params = array("className" => $mapper['className']);
+        $filterform = $this->createForm(ListFilterType::class, null, array(
+            //'action' => $this->generateUrl($routeName),
+            'form_custom_value'=>$params,
+            'method' => 'GET',
+        ));
+        //$filterform->submit($request);
+        $filterform->handleRequest($request);
+        $search = $filterform['search']->getData();
+
+        //echo "search=".$search."<br>";
+        //$search = $request->request->get('filter')['search'];
+        //$search = $request->query->get('search');
+        //echo "2search=".$search."<br>";
+
+        $filterTypes = null;
+        if( isset($filterform['type']) ) {
+            $filterTypes = $filterform['type']->getData();
+        }
+
+        $search = NULL;
+        if( $search ) {
+            $searchStr = "";
+
+            if( is_numeric($search) ) {
+                //echo "int <br>";
+                $searchInt = intval($search);
+                $searchStr = "ent.id = :searchInt OR";
+                $dqlParameters['searchInt'] = $searchInt;
+            }
+
+            $searchStr = $searchStr."
+                LOWER(ent.name) LIKE LOWER(:search) 
+                OR LOWER(ent.abbreviation) LIKE LOWER(:search) 
+                OR LOWER(ent.shortname) LIKE LOWER(:search) 
+                OR LOWER(ent.description) LIKE LOWER(:search)
+                ";
+
+            if (method_exists($entityClass, 'getSection')) {
+                $searchStr = $searchStr . " OR LOWER(ent.section) LIKE LOWER(:search)";
+            }
+
+            if (method_exists($entityClass, 'getProductId')) {
+                $searchStr = $searchStr . " OR LOWER(ent.productId) LIKE LOWER(:search)";
+            }
+
+            if (method_exists($entityClass, 'getFeeUnit')) {
+                $searchStr = $searchStr . " OR LOWER(ent.feeUnit) LIKE LOWER(:search)";
+            }
+
+            if (method_exists($entityClass, 'getFee')) {
+                $searchStr = $searchStr . " OR LOWER(ent.fee) LIKE LOWER(:search)";
+            }
+
+            //AntibodyList
+            if( method_exists($entityClass, 'getDatasheet') ) {
+                $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.altname) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.company) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.catalog) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.lot) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.igconcentration) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.clone) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.host) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.reactivity) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.control) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.protocol) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.retrieval) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.dilution) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.storage) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.comment) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.comment1) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.comment2) LIKE LOWER(:search)";
+                $searchStr = $searchStr . " OR LOWER(ent.datasheet) LIKE LOWER(:search)";
+            }
+
+            $dql->andWhere($searchStr);
+            $dqlParameters['search'] = '%'.$search.'%';
+        } //$search
+
+        $filterTypes = null;
+        if( $filterTypes && count($filterTypes) > 0 ) {
+            $dql->andWhere("ent.type IN (:filterTypes)");
+            $dqlParameters['filterTypes'] = $filterTypes;
+        }
+
+        //echo "dql=".$dql."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $limit = 50;
+
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        $paginator = $this->get('knp_paginator');
+        $entities = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1), /*page number*/
+            $limit                          /*limit per page*/
+            //,array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
+            //,array('distinct'=>true)
+            //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
+            //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
         );
         //echo "list count=".count($entities)."<br>";
         //exit();
