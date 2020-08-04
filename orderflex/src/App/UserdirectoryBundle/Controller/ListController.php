@@ -382,9 +382,12 @@ class ListController extends OrderAbstractController
 		//Pass sorting parameters directly to query; Somehow, knp_paginator does not sort correctly according to sorting parameters
 		$postData = $request->query->all();
 		if( isset($postData['sort']) ) {
-            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+            //$dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+            //$dql->orderBy("ent.createdate","DESC");
+            $dql->orderBy($postData['sort'],$postData['direction']);
         } else {
-            $dql = $dql . " ORDER BY ent.orderinlist ASC";
+            //$dql = $dql . " ORDER BY ent.orderinlist ASC";
+            $dql->orderBy("ent.orderinlist","ASC");
         }
 
         $dqlParameters = array();
@@ -476,6 +479,7 @@ class ListController extends OrderAbstractController
                 $searchStr = $searchStr . " OR LOWER(ent.datasheet) LIKE LOWER(:search)";
             }
 
+            //echo "searchStr=$searchStr <br>";
             $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
         }
