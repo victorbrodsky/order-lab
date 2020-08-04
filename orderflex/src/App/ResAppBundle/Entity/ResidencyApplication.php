@@ -607,10 +607,21 @@ class ResidencyApplication extends BaseUserAttributes {
     }
 
     /**
+     * Expected Graduation Date: startDate + ResidencyTrackList->duration - 1 day
+     *
      * @return mixed
      */
     public function getEndDate()
     {
+        $startDate = $this->getStartDate();
+        $residencyTrack = $this->getResidencyTrack();
+        if( $startDate && $residencyTrack && $duration=$residencyTrack->getDuration() ) {
+            $expectedEndDate = clone $startDate;
+            $expectedEndDate->modify('+'.$duration.' year');
+            $expectedEndDate->modify('-1 day');
+            return $expectedEndDate;
+        }
+
         return $this->endDate;
     }
 
@@ -1680,6 +1691,26 @@ class ResidencyApplication extends BaseUserAttributes {
             }
         }
         return true;
+    }
+
+    //Get Itinerary note for applications before migration to a new server in June 2020.
+    //In old server Itinerary had been included in ERAS file.
+    public function getItineraryNote() {
+        //Itinerary (Only the last Itinerary will be added to the Complete Application PDF)
+        //Itinerary (Only the last Itinerary will be added to the Complete Application PDF; For applicants who started in 2020 or earlier, the itinerary may be in the ERAS PDF)
+
+        //$startDate = $this->getStartDate();
+        //$startDate2020 = new \DateTime('2020-01-01');
+        //if( $startDate &&  $startDate2020 < $startDate ) { //“Start Year” = “2020” or less
+
+        //Migrated applications have googleFormId
+        if( $this->getGoogleFormId() ) {
+            $note = "Itinerary (Only the last Itinerary will be added to the Complete Application PDF; For applicants who started in 2020 or earlier, the itinerary may be in the ERAS PDF)";
+        } else {
+            $note = "Itinerary (Only the last Itinerary will be added to the Complete Application PDF)";
+        }
+
+        return $note;
     }
 
     public function __toString() {

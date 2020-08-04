@@ -43,7 +43,8 @@
             </div>
 
             <div class="well form-element-holder user-itinerarys">
-                <label class="col-xs-12 control-label">Itinerary (Only the last Itinerary will be added to the Complete Application PDF)</label>
+                {#<label class="col-xs-12 control-label">Itinerary (Only the last Itinerary will be added to the Complete Application PDF)</label>#}
+                <label class="col-xs-12 control-label">{{ entity.getItineraryNote() }}</label>
                 <div class="row withpaddingtop">
 
                     <div class="col-xs-12">

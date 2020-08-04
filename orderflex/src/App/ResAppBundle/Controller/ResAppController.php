@@ -956,7 +956,8 @@ class ResAppController extends OrderAbstractController {
             'container' => $this->container,
             'resappTypes' => $resTypes,
             'resappVisas' => $resappVisas,
-            'fullForm' => $fullForm
+            'fullForm' => $fullForm,
+            'entity' => $entity
         );
 
         //echo "routeName=$routeName;  action=$action; method=$method<br>";
