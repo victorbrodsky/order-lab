@@ -183,7 +183,7 @@ class ResappTest extends WebTestBase
 //        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Residency Type")')->count()
+            $crawler->filter('html:contains("Residency Track")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -206,7 +206,7 @@ class ResappTest extends WebTestBase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Residency Type")')->count()
+            $crawler->filter('html:contains("Residency Track")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -225,7 +225,7 @@ class ResappTest extends WebTestBase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Please use this page to add or remove Directors, Coordinators and Interviewers for specific residency type")')->count()
+            $crawler->filter('html:contains("Please use this page to add or remove Directors, Coordinators and Interviewers for specific residency track")')->count()
         );
         $this->assertGreaterThan(
             0,
