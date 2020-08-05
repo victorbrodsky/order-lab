@@ -832,6 +832,11 @@ class UserSecurityUtil {
             $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
         }
 
+        //If $userkeytype is null (disabled or hidden), use defaultPrimaryPublicUserIdType from site settings
+        if( !$userkeytype ) {
+            $userkeytype = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+        }
+
         if( !$userkeytype ) {
             throw new \Exception('User keytype is empty for prefix '.$usernamePrefix." and username=".$username);
         }

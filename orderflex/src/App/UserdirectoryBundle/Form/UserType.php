@@ -329,6 +329,7 @@ class UserType extends AbstractType
                 $attr['readonly'] = true;
             }
         }
+        //echo "label=$label<br>";
         //echo $this->cycle.": attr="."<br>";
         //print_r($attr);
 
@@ -340,15 +341,18 @@ class UserType extends AbstractType
             'required' => true,
             'multiple' => false,
             'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
+                return $this->getUserQueryBuilder($er,$this->cycle);
+            }
         );
 
         if( $defaultPrimaryPublicUserIdType ) {
@@ -358,6 +362,31 @@ class UserType extends AbstractType
 
         $builder->add('keytype', EntityType::class, $paramArr);
         return $builder;
+    }
+    //Get UsernameType:
+    //default and user-added for new (create a new user)
+    //default, user-added and disabled for all others (view, edit existing user)
+    public function getUserQueryBuilder($er,$cycle) {
+        $queryBuilder = $er->createQueryBuilder('list');
+        if( $cycle == 'new' || $cycle == 'create' ) {
+            $queryBuilder
+                ->where("list.type = :typedef OR list.type = :typeadd")
+                ->orderBy("list.orderinlist", "ASC")
+                ->setParameters(array(
+                    'typedef' => 'default',
+                    'typeadd' => 'user-added',
+                ));
+        } else {
+            $queryBuilder
+                ->where("list.type = :typedef OR list.type = :typeadd OR list.type = :typedisabled")
+                ->orderBy("list.orderinlist", "ASC")
+                ->setParameters(array(
+                    'typedef' => 'default',
+                    'typeadd' => 'user-added',
+                    'typedisabled' => 'disabled'
+                ));
+        }
+        return $queryBuilder;
     }
 
 
