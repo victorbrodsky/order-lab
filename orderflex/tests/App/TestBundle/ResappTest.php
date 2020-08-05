@@ -227,10 +227,10 @@ class ResappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Please use this page to add or remove Directors, Coordinators and Interviewers for specific residency track")')->count()
         );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Add a New Residency Application Type")')->count()
-        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Add a New Residency Application Type")')->count()
+//        );
     }
 
     //TODO: PHPUnit\\Framework\\Error\\Deprecated(code: 8192): implode(): Passing glue string after array is deprecated. Swap the parameters at /opt/order-lab/orderflex/vendor/google/apiclient/src/Google/Http/REST.php:134)
