@@ -1972,7 +1972,7 @@ class UserController extends OrderAbstractController
             //$resArr["title"] = 2;//"Software Engineer";
         }
 
-        $resArr['company'] = 'WCM CWID';
+        //$resArr['company'] = 'WCM CWID'; //testing
 
         //exit('exit user search');
         $json = json_encode($resArr);
