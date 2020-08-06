@@ -194,101 +194,88 @@ class ResidencyApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
+//        $builder->add('reprimand', CheckboxType::class, array(
+//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control resapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
+//        ));
+//        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
+//        $builder->add('reprimandDocuments', CollectionType::class, array(
+//            'entry_type' => DocumentType::class,
+//            'label' => 'Upload Reprimand Explanation(s):',
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__documentsid__',
+//        ));
 
-        //        $builder->add('reprimand','choice', array(
-        //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-        //            'required' => false,
-        //            'choices' => array('Yes'=>'Yes','No'=>'No'),
-        //            'attr' => array('class' => 'combobox'),
-        //        ));
-        $builder->add('reprimand', CheckboxType::class, array(
-            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-            'required' => false,
-            'attr' => array('class' => 'form-control resapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('reprimandDocuments', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Upload Reprimand Explanation(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
-
-        //        $builder->add('lawsuit','choice', array(
-        //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-        //            'required' => false,
-        //            'choices' => array('Yes'=>'Yes','No'=>'No'),
-        //            'attr' => array('class' => 'combobox'),
-        //        ));
-        $builder->add('lawsuit', CheckboxType::class, array(
-            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
-            'required' => false,
-            'attr' => array('class' => 'form-control resapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('lawsuitDocuments', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Upload Legal Explanation(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+//        $builder->add('lawsuit', CheckboxType::class, array(
+//            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control resapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
+//        ));
+//        $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
+//        $builder->add('lawsuitDocuments', CollectionType::class, array(
+//            'entry_type' => DocumentType::class,
+//            'label' => 'Upload Legal Explanation(s):',
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__documentsid__',
+//        ));
 
 
-        $builder->add('references', CollectionType::class, array(
-            'entry_type' => ReferenceType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => 'Reference(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__references__',
-        ));
+//        $builder->add('references', CollectionType::class, array(
+//            'entry_type' => ReferenceType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $this->params
+//            ),
+//            'label' => 'Reference(s):',
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__references__',
+//        ));
+//
+//
+//        $builder->add('honors', null, array(
+//            'required' => false,
+//            'label' => false,
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
 
-
-        $builder->add('honors', null, array(
-            'required' => false,
-            'label' => false,
-            'attr' => array('class' => 'textarea form-control')
-        ));
-
-        $builder->add('publications', null, array(
-            'required' => false,
-            'label' => false,
-            'attr' => array('class' => 'textarea form-control')
-        ));
-
-        $builder->add('memberships', null, array(
-            'required' => false,
-            'label' => false,
-            'attr' => array('class' => 'textarea form-control')
-        ));
-
-
-        $builder->add('signatureName', null, array(
-            'label' => 'Signature:',
-            'required' => false,
-            'attr' => array('class' => 'form-control'),
-        ));
-
-        $builder->add('signatureDate', null, array(
-            'label' => 'Date:',
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
+//        $builder->add('publications', null, array(
+//            'required' => false,
+//            'label' => false,
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
+//
+//        $builder->add('memberships', null, array(
+//            'required' => false,
+//            'label' => false,
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
+//
+//
+//        $builder->add('signatureName', null, array(
+//            'label' => 'Signature:',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control'),
+//        ));
+//
+//        $builder->add('signatureDate', null, array(
+//            'label' => 'Date:',
+//            'widget' => 'single_text',
+//            'required' => false,
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control'),
+//        ));
 
 
         $builder->add('reports', CollectionType::class, array(
@@ -391,16 +378,16 @@ class ResidencyApplicationType extends AbstractType
 
         /////////////////// user objects ////////////////////////////
 
-        $builder->add('avatars', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Applicant Photo(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+//        $builder->add('avatars', CollectionType::class, array(
+//            'entry_type' => DocumentType::class,
+//            'label' => 'Applicant Photo(s):',
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__documentsid__',
+//        ));
 
         $builder->add('trainings', CollectionType::class, array(
             'entry_type' => ResAppTrainingType::class,
@@ -416,7 +403,7 @@ class ResidencyApplicationType extends AbstractType
             'prototype_name' => '__trainings__',
         ));
 
-        $this->userLocations($builder);
+        //$this->userLocations($builder);
 
         if(0) {
             $builder->add('citizenships', CollectionType::class, array(
@@ -456,30 +443,30 @@ class ResidencyApplicationType extends AbstractType
             'prototype_name' => '__examinations__',
         ));
 
-        $builder->add('stateLicenses', CollectionType::class, array(
-            'entry_type' => StateLicenseType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__statelicenses__',
-        ));
+//        $builder->add('stateLicenses', CollectionType::class, array(
+//            'entry_type' => StateLicenseType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $this->params
+//            ),
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__statelicenses__',
+//        ));
 
-        $builder->add('boardCertifications', CollectionType::class, array(
-            'entry_type' => BoardCertificationType::class,
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__boardcertifications__',
-        ));
+//        $builder->add('boardCertifications', CollectionType::class, array(
+//            'entry_type' => BoardCertificationType::class,
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__boardcertifications__',
+//        ));
 
         //////////////////////////////////////////////////////////////
 

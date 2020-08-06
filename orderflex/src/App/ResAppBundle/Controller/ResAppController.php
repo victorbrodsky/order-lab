@@ -887,6 +887,9 @@ class ResAppController extends OrderAbstractController {
         $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
         
         $resappUtil->addEmptyResAppFields($entity); //testing
+//        foreach( $entity->getTrainings() as $training ) {
+//            echo "training=".$training->getTrainingType()."<br>";
+//        }
 
         if( $routeName == "resapp_show" ) {
             $cycle = 'show';

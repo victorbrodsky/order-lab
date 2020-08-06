@@ -69,13 +69,13 @@ class ResAppTrainingType extends AbstractType
                 'label' => 'Degree:',
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-trainingdegree')
             ));
-
-            $builder->add('majors', CustomSelectorType::class, array(
-                'label' => 'Major:',
-                'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'trainingmajors'
-            ));
+//
+//            $builder->add('majors', CustomSelectorType::class, array(
+//                'label' => 'Major:',
+//                'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'trainingmajors'
+//            ));
 
             $builder->add('institution', CustomSelectorType::class, array(
                 'label' => 'Educational Institution:',
@@ -84,34 +84,49 @@ class ResAppTrainingType extends AbstractType
                 'classtype' => 'traininginstitution'
             ));
 
-            //residencySpecialty
-            $builder->add('residencySpecialty', CustomSelectorType::class, array(
-                'label' => 'Residency Specialty:',
-                'attr' => array('class' => 'ajax-combobox-residencyspecialty', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'residencyspecialty'
+//            //residencySpecialty
+//            $builder->add('residencySpecialty', CustomSelectorType::class, array(
+//                'label' => 'Residency Specialty:',
+//                'attr' => array('class' => 'ajax-combobox-residencyspecialty', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'residencyspecialty'
+//            ));
+            //residencyTrack
+//            $builder->add('residencyTrack', null, array(
+//                'label' => 'Residency Track:',
+//                'attr' => array('class' => 'form-control'),
+//            ));
+//            $builder->add('residencyTrack', CustomSelectorType::class, array(
+//                'label' => 'Residency Specialty:',
+//                'attr' => array('class' => 'ajax-combobox-residencytrack', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'residencytrack'
+//            ));
+            $builder->add('residencyTrack', null, array(
+                'label' => 'Residency Track:',
+                'attr' => array('class' => 'form-control'),
             ));
 
-            //jobTitle
-            $builder->add('jobTitle', CustomSelectorType::class, array(
-                'label' => 'Job or Experience Title:',
-                'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'jobTitle'
-            ));
+//            //jobTitle
+//            $builder->add('jobTitle', CustomSelectorType::class, array(
+//                'label' => 'Job or Experience Title:',
+//                'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'jobTitle'
+//            ));
         } else {
             $builder->add('degree', null, array(
                 'label' => 'Degree:',
                 'attr' => array('class' => 'form-control')
             ));
 
-            $builder->add('majors', null, array(
-                'label' => 'Major:',
-                //'attr' => array('class' => 'form-control'),
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox'),
-            ));
+//            $builder->add('majors', null, array(
+//                'label' => 'Major:',
+//                //'attr' => array('class' => 'form-control'),
+//                'required' => false,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox'),
+//            ));
 
             $builder->add('institution', null, array(
                 'label' => 'Educational Institution:',
@@ -119,8 +134,14 @@ class ResAppTrainingType extends AbstractType
             ));
 
             //residencySpecialty
-            $builder->add('residencySpecialty', null, array(
-                'label' => 'Residency Specialty:',
+//            $builder->add('residencySpecialty', null, array(
+//                'label' => 'Residency Specialty:',
+//                'attr' => array('class' => 'form-control'),
+//            ));
+
+            //residencyTrack
+            $builder->add('residencyTrack', null, array(
+                'label' => 'Residency Track:',
                 'attr' => array('class' => 'form-control'),
             ));
 
@@ -157,11 +178,11 @@ class ResAppTrainingType extends AbstractType
 
         }
 
-        $builder->add( 'description', TextareaType::class, array(
-            'label'=>'Description:',
-            'required'=>false,
-            'attr' => array('class' => 'textarea form-control')
-        ));
+//        $builder->add( 'description', TextareaType::class, array(
+//            'label'=>'Description:',
+//            'required'=>false,
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
 
         $builder->add('geoLocation', ResAppGeoLocationType::class, array(
             'form_custom_value' => $this->params,

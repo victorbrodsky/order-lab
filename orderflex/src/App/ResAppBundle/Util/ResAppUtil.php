@@ -707,11 +707,45 @@ class ResAppUtil {
     
 
 
+    public function addEmptyResAppFields($residencyApplication) {
+        //echo "add EmptyResAppFields <br>";
+        $em = $this->em;
+        $user = $residencyApplication->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
+        //Pathology Residency Applicant in EmploymentStatus
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
+        }
+        if( count($user->getEmploymentStatus()) == 0 ) {
+            $employmentStatus = new EmploymentStatus($author);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+        }
 
+        //citizenships
+        $this->addEmptyCitizenships($residencyApplication);
+        
+        //Education
+        $this->addEmptyTrainings($residencyApplication);
 
+        //National Boards (examination): oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1DatePassed
+        $this->addEmptyNationalBoards($residencyApplication);
+
+        //Medical Licensure: oleg_resappbundle_residencyapplication[stateLicenses][0][licenseNumber]
+        //$this->addEmptyStateLicenses($residencyApplication);
+
+        //Board Certification
+        //$this->addEmptyBoardCertifications($residencyApplication);
+
+        //References
+        //$this->addEmptyReferences($residencyApplication);
+
+    }
+    //Not Used. Remnant from fellowship
     public function addAllEmptyResAppFields($residencyApplication) {
-
+        //echo "add AllEmptyResAppFields <br>";
         $em = $this->em;
         //$userSecUtil = $this->container->get('user_security_utility');
         //$systemUser = $userSecUtil->findSystemUser();
@@ -749,42 +783,6 @@ class ResAppUtil {
 
         //References
         $this->addEmptyReferences($residencyApplication);
-
-    }
-    public function addEmptyResAppFields($residencyApplication) {
-
-        $em = $this->em;
-        $user = $residencyApplication->getUser();
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
-
-        //Pathology Residency Applicant in EmploymentStatus
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
-        if( !$employmentType ) {
-            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
-        }
-        if( count($user->getEmploymentStatus()) == 0 ) {
-            $employmentStatus = new EmploymentStatus($author);
-            $employmentStatus->setEmploymentType($employmentType);
-            $user->addEmploymentStatus($employmentStatus);
-        }
-
-        //citizenships
-        $this->addEmptyCitizenships($residencyApplication);
-        
-        //Education
-        $this->addEmptyTrainings($residencyApplication);
-
-        //National Boards (examination): oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1DatePassed
-        $this->addEmptyNationalBoards($residencyApplication);
-
-        //Medical Licensure: oleg_resappbundle_residencyapplication[stateLicenses][0][licenseNumber]
-        //$this->addEmptyStateLicenses($residencyApplication);
-
-        //Board Certification
-        //$this->addEmptyBoardCertifications($residencyApplication);
-
-        //References
-        //$this->addEmptyReferences($residencyApplication);
 
     }
 
@@ -908,20 +906,22 @@ class ResAppUtil {
     }
 
     public function addEmptyTrainings($residencyApplication) {
-
+        //echo "add Empty Trainings <br>";
         //set TrainingType
-        $this->addTrainingByType($residencyApplication,"Undergraduate",1);
-        $this->addTrainingByType($residencyApplication,"Graduate",2);
-        $this->addTrainingByType($residencyApplication,"Medical",3);
-        $this->addTrainingByType($residencyApplication,"Residency",4);
-        $this->addTrainingByType($residencyApplication,"Post-Residency Residency",5);
+        //$this->addTrainingByType($residencyApplication,"Undergraduate",1);
+        //$this->addTrainingByType($residencyApplication,"Graduate",2);
+        $this->addTrainingByType($residencyApplication,"Medical",1);
+        $this->addTrainingByType($residencyApplication,"Residency",4); //Previous Residency
+        //$this->addTrainingByType($residencyApplication,"Post-Residency Residency",5);
 
-        $maxNumber = 1;
-        $this->addTrainingByType($residencyApplication,"GME",6,$maxNumber);
+        //$maxNumber = 1;
         //$this->addTrainingByType($residencyApplication,"GME",6,$maxNumber);
 
-        $maxNumber = 3;
-        $this->addTrainingByType($residencyApplication,"Other",7,$maxNumber);
+        //$this->addTrainingByType($residencyApplication,"GME",6,$maxNumber);
+
+        //$maxNumber = 3;
+        //$this->addTrainingByType($residencyApplication,"Other",7,$maxNumber);
+
         //$this->addTrainingByType($residencyApplication,"Other",8,$maxNumber);
         //$this->addTrainingByType($residencyApplication,"Other",9,$maxNumber);
 

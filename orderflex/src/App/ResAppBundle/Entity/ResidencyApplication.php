@@ -1639,16 +1639,6 @@ class ResidencyApplication extends BaseUserAttributes {
         return implode(", ",$resArr);
     }
 
-    //Area of training
-    //GME Institution, Finish Date
-    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
-    public function getPostResidencyResidencyDescription() {
-        $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Post-Residency Residency",true,true);
-        $resArr[] = $name;
-        return implode(", ",$resArr);
-    }
-
     public function getInfo() {
         $info = $this->getId();
 

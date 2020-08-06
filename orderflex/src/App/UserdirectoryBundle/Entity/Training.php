@@ -66,6 +66,11 @@ class Training extends BaseUserAttributes
     private $residencySpecialty;
 
     /**
+     * @ORM\ManyToOne(targetEntity="ResidencyTrackList")
+     */
+    private $residencyTrack;
+
+    /**
      * @ORM\ManyToOne(targetEntity="FellowshipSubspecialty")
      */
     private $fellowshipSubspecialty;
@@ -249,6 +254,22 @@ class Training extends BaseUserAttributes
     public function getResidencySpecialty()
     {
         return $this->residencySpecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResidencyTrack()
+    {
+        return $this->residencyTrack;
+    }
+
+    /**
+     * @param mixed $residencyTrack
+     */
+    public function setResidencyTrack($residencyTrack)
+    {
+        $this->residencyTrack = $residencyTrack;
     }
 
     /**
