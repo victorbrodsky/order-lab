@@ -1395,8 +1395,15 @@ class ResAppController extends OrderAbstractController {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $resappUtil = $this->container->get('resapp_util');
 
-        //$resappUtil = $this->container->get('resapp_util');
+//        echo "training1 count=".count($entity->getTrainings())."<br>";
+//        foreach( $entity->getTrainings() as $training ) {
+//            echo "training1=".$training->getTrainingType()."<br>";
+//        }
         $resappUtil->addEmptyResAppFields($entity);
+//        echo "training2 count=".count($entity->getTrainings())."<br>";
+//        foreach( $entity->getTrainings() as $training ) {
+//            echo "training2=".$training->getTrainingType()."<br>";
+//        }
 
         $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         if( count($resTypes) == 0 ) {

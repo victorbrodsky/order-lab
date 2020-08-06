@@ -907,40 +907,26 @@ class ResAppUtil {
 
     public function addEmptyTrainings($residencyApplication) {
         //echo "add Empty Trainings <br>";
-        //set TrainingType
-        //$this->addTrainingByType($residencyApplication,"Undergraduate",1);
-        //$this->addTrainingByType($residencyApplication,"Graduate",2);
         $this->addTrainingByType($residencyApplication,"Medical",1);
         $this->addTrainingByType($residencyApplication,"Residency",4); //Previous Residency
-        //$this->addTrainingByType($residencyApplication,"Post-Residency Residency",5);
-
-        //$maxNumber = 1;
-        //$this->addTrainingByType($residencyApplication,"GME",6,$maxNumber);
-
-        //$this->addTrainingByType($residencyApplication,"GME",6,$maxNumber);
-
-        //$maxNumber = 3;
-        //$this->addTrainingByType($residencyApplication,"Other",7,$maxNumber);
-
-        //$this->addTrainingByType($residencyApplication,"Other",8,$maxNumber);
-        //$this->addTrainingByType($residencyApplication,"Other",9,$maxNumber);
-
     }
     public function addTrainingByType($residencyApplication,$typeName,$orderinlist,$maxNumber=1) {
-
+        //echo "<br><br>####### add TrainingByType: $typeName #######<br>";
         $user = $residencyApplication->getUser();
 
-        $specificTraining = null;
-
         $trainings = $user->getTrainings();
+        //echo "training count=".count($trainings)."<br>";
 
         $count = 0;
 
         foreach( $trainings as $training ) {
+            //echo "training=".$training->getTrainingType()."<br>";
             if( $training->getTrainingType() && $training->getTrainingType()->getName()."" == $typeName ) {
+                //echo $typeName.": count++=[".$training->getTrainingType()->getName()."]<br>";
                 $count++;
             }
         }
+        //echo $typeName.": maxNumber=".$maxNumber.", count=".$count."<br>";
 
         //add up to maxNumber
         for( $count; $count < $maxNumber; $count++ ) {
@@ -950,9 +936,7 @@ class ResAppUtil {
 
     }
     public function addSingleTraining($residencyApplication,$typeName,$orderinlist) {
-
         //echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
-
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
@@ -971,7 +955,6 @@ class ResAppUtil {
 
         $residencyApplication->addTraining($training);
         $residencyApplication->getUser()->addTraining($training);
-
     }
 
 

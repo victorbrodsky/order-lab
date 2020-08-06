@@ -207,13 +207,13 @@
                 {% for training in form.trainings %}
 
                     {#{% if training.vars.value.trainingType %}#}
-                        {#training: {{ training.vars.value.trainingType.name }}#}
+                        {#training: {{ training.vars.value.trainingType.name }}<br>#}
                     {#{% endif %}#}
 
                     {% set trainingLabel = "Training:" %}
                     {% set majorLabel = "Major:" %}
                     {% set degreeLabel = "Degree:" %}
-                    {% set showTraining = false %}
+                    {#{% set showTraining = false %}#}
 
                     {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
                         {#{% set trainingLabel = "Medical School" %}#}
@@ -273,10 +273,14 @@
                 {#Education: Previous Residency#}
                 {% for training in form.trainings %}
 
+                    {#{% if training.vars.value.trainingType %}#}
+                        {#training: {{ training.vars.value.trainingType.name }}<br>#}
+                    {#{% endif %}#}
+
                     {% set trainingLabel = "Training:" %}
                     {% set majorLabel = "Major:" %}
                     {% set degreeLabel = "Degree:" %}
-                    {% set showTraining = false %}
+                    {#{% set showTraining = false %}#}
 
                     {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
 
