@@ -2702,31 +2702,56 @@ class ResAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/regenerate-all-complete-application-pdfs/", name="resapp_regenerate_reports")
+     * http://127.0.0.1/order/index_dev.php/residency-applications/regenerate-all-complete-application-pdfs/2021
+     *
+     * @Route("/regenerate-all-complete-application-pdfs/{year}", name="resapp_regenerate_reports")
      *
      * @Template("AppResAppBundle/Form/new.html.twig")
      */
-    public function regenerateAllReportsAction(Request $request) {
+    public function regenerateAllReportsAction(Request $request, $year) {
 
-        exit("This method is disabled for security reason.");
+        //exit("This method is disabled for security reason.");
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
+        if( !$year ) {
+            exit("Please provide start year");
+        }
+
         $resappRepGen = $this->container->get('resapp_reportgenerator');
-        $numDeleted = $resappRepGen->regenerateAllReports();
+
+        $resapps = $resappRepGen->getResApplicationsByYear($year);
+        foreach($resapps as $resapp) {
+            echo $year.": ".$resapp->getUser()->getUsernameOptimal().", ".$resapp->getStartDate()->format('m-d-Y')."<br>";
+        }
+        $numDeleted = count($resapps);
+
+        //exit('Testing: resapps count='.count($resapps));
+
+        
+        $numDeleted = $resappRepGen->regenerateAllReports($year);
 
         $em = $this->getDoctrine()->getManager();
-        $resapps = $em->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+        
+        //$resapps = $em->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+        $resapps = $resappRepGen->getResApplicationsByYear($year);
+        
         $estimatedTime = count($resapps)*5; //5 min for each report
+        $msg = 'All Application Reports will be regenerated. Estimated processing time for ' .
+            count($resapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes in queue ' . $numDeleted;
+
+        exit($msg);
+
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'All Application Reports will be regenerated. Estimated processing time for ' . count($resapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes in queue ' . $numDeleted
+            $msg
         );
 
         return $this->redirect( $this->generateUrl('resapp_home') );
     }
+    
 
     /**
      * @Route("/reset-queue-and-run/", name="resapp_reset_queue_run")

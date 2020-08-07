@@ -87,7 +87,7 @@ class ReportGenerator {
 
 
 
-    public function regenerateAllReports() {
+    public function regenerateAllReports($startYearStr) {
 
         $queue = $this->getQueue();
 
@@ -99,12 +99,32 @@ class ReportGenerator {
         $numDeleted = $query->execute();
 
         //add all reports generation to queue
-        $resapps = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+        //$resapps = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+        $resapps = $this->getResApplicationsByYear($startYearStr);
         foreach( $resapps as $resapp ) {
             $this->addResAppReportToQueue($resapp->getId());
         }
 
         return $numDeleted;
+    }
+    public function getResApplicationsByYear($startYearStr) {
+
+        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql = $repository->createQueryBuilder("resapp");
+        $dql->select('resapp');
+
+        //startDate
+        //$startDate = $resapp->getStartDate();
+        //$startYearStr = $startDate->format('Y');
+        $bottomDate = $startYearStr."-01-01";
+        $topDate = $startYearStr."-12-31";
+        $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+        $query = $this->em->createQuery($dql);
+
+        $resapps = $query->getResult();
+
+        return $resapps;
     }
 
     public function resetQueueRun() {

@@ -99,7 +99,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('exceptionAccount', null, array(
-            'label' => "Exception Account for the Residency Application (the application is still shown to for testing purposes):",
+            'label' => "Exception Account for the Residency Application (the application is still shown to this google user for testing purposes):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -125,7 +125,7 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('letterExceptionAccount', null, array(
-            'label' => "Exception Account for the recommendation letter form (the form is still shown to for testing purposes):",
+            'label' => "Exception Account for the recommendation letter form (the form is still shown to this google user for testing purposes):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
