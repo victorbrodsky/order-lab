@@ -2598,11 +2598,13 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
+     * http://127.0.0.1/order/index_dev.php/fellowship-applications/regenerate-all-complete-application-pdfs/2021
+     * 
+     * @Route("/regenerate-all-complete-application-pdfs/{year}", name="fellapp_regenerate_reports")
      *
      * @Template("AppFellAppBundle/Form/new.html.twig")
      */
-    public function regenerateAllReportsAction(Request $request) {
+    public function regenerateAllReportsAction(Request $request, $year) {
 
         exit("This method is disabled for security reason.");
 
@@ -2610,11 +2612,17 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        if( !$year ) {
+            exit("Please provide start year");
+        }
+
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-        $numDeleted = $fellappRepGen->regenerateAllReports();
+        $numDeleted = $fellappRepGen->regenerateAllReports($year);
 
         $em = $this->getDoctrine()->getManager();
-        $fellapps = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        //$fellapps = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $fellappRepGen->getFellApplicationsByYear($year);
+        
         $estimatedTime = count($fellapps)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',

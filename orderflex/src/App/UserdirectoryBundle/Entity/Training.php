@@ -453,7 +453,34 @@ class Training extends BaseUserAttributes
         $this->description = $description;
     }
 
+    public function isEmpty() {
 
+        if( $this->getStartDate() ) {
+            return false;
+        }
+
+        if( $this->getCompletionDate() ) {
+            return false;
+        }
+
+        if( $this->getInstitution() ) {
+            return false;
+        }
+
+        if( $this->getDegree() ) {
+            return false;
+        }
+
+        $locationStr = $this->getGeoLocation()->getFullGeoLocation();
+        if( $locationStr ) {
+            return false;
+        }
+        if( $this->getResidencyTrack() ) {
+            return false;
+        }
+
+        return true;
+    }
 
 
     public function __toString() {

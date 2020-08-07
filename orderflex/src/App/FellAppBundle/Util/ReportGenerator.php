@@ -87,8 +87,12 @@ class ReportGenerator {
 
 
 
-    public function regenerateAllReports() {
+    public function regenerateAllReports($startYearStr) {
 
+        if( !$startYearStr ) {
+            exit("Please provide start year");
+        }
+        
         $queue = $this->getQueue();
 
         //reset queue
@@ -99,12 +103,30 @@ class ReportGenerator {
         $numDeleted = $query->execute();
 
         //add all reports generation to queue
-        $fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        //$fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $this->getFellApplicationsByYear($startYearStr);
         foreach( $fellapps as $fellapp ) {
             $this->addFellAppReportToQueue($fellapp->getId());
         }
 
         return $numDeleted;
+    }
+    public function getFellApplicationsByYear($startYearStr) {
+
+        $repository = $this->em->getRepository('AppResAppBundle:FellowshipApplication');
+        $dql = $repository->createQueryBuilder("fellapp");
+        $dql->select('fellapp');
+
+        //startDate
+        $bottomDate = $startYearStr."-01-01";
+        $topDate = $startYearStr."-12-31";
+        $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+
+        $query = $this->em->createQuery($dql);
+
+        $fellapps = $query->getResult();
+
+        return $fellapps;
     }
 
     public function resetQueueRun() {

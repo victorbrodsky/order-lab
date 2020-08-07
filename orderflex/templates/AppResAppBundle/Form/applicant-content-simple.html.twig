@@ -285,19 +285,39 @@
                     {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
 
                         <div class="well">
-                            <label class="control-label">Previous Residency</label>
-                            <br>
-                            {{ formmacros.fieldDateLabel(training.startDate,'allow-future-date') }}
-                            {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
-                            {{ formmacros.field(training.institution) }}
-                            {{ formmacros.field(training.degree) }}
+                            {% if cycle == "download" %}
+                                {% if training.vars.value.isEmpty() %}
+                                    <label class="control-label">Previous Residency - not entered</label>
+                                {% else %}
+                                    <label class="control-label">Previous Residency</label>
+                                    <br>
 
-                            {{ formmacros.field(training.geoLocation.city) }}
-                            {{ formmacros.field(training.geoLocation.state) }}
-                            {{ formmacros.field(training.geoLocation.country) }}
+                                    {{ formmacros.fieldDateLabel_notempty(training.startDate,'show','allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel_notempty(training.completionDate,'show','allow-future-date') }}
+                                    {{ formmacros.field_notempty(training.institution,'show') }}
+                                    {{ formmacros.field_notempty(training.degree,'show') }}
 
-                            {{ formmacros.field(training.residencyTrack) }}
-                            {#{{ form_row(training.residencyTrack,{'label':'Area of Training (AP, CP, AP/CP, other)'}) }}#}
+                                    {{ formmacros.field_notempty(training.geoLocation.city,'show') }}
+                                    {{ formmacros.field_notempty(training.geoLocation.state,'show') }}
+                                    {{ formmacros.field_notempty(training.geoLocation.country,'show') }}
+
+                                    {{ formmacros.field_notempty(training.residencyTrack,'show') }}
+                                {% endif %}
+                            {% else %}
+                                <label class="control-label">Previous Residency</label>
+                                <br>
+
+                                {{ formmacros.fieldDateLabel(training.startDate,'allow-future-date') }}
+                                {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
+                                {{ formmacros.field(training.institution) }}
+                                {{ formmacros.field(training.degree) }}
+
+                                {{ formmacros.field(training.geoLocation.city) }}
+                                {{ formmacros.field(training.geoLocation.state) }}
+                                {{ formmacros.field(training.geoLocation.country) }}
+
+                                {{ formmacros.field(training.residencyTrack) }}
+                            {% endif %}
                         </div>
 
                     {% endif %}

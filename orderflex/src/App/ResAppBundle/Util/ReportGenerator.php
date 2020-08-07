@@ -89,6 +89,10 @@ class ReportGenerator {
 
     public function regenerateAllReports($startYearStr) {
 
+        if( !$startYearStr ) {
+            exit("Please provide start year");
+        }
+
         $queue = $this->getQueue();
 
         //reset queue

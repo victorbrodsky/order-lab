@@ -1429,8 +1429,8 @@ class ResidencyApplication extends BaseUserAttributes {
                 $schoolName = "";
 
                 //AP, CP, AP/CP, other or Area of Training
-                if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
-                    $schoolName = $schoolName . $item->getResidencySpecialty();
+                if( $withResidencySpecialty && $item->getResidencyTrack() ) {
+                    $schoolName = $schoolName . $item->getResidencyTrack();
                 }
                 if( $withResidencySpecialty && $item->getMajors() ) {
                     $majorArr = array();
@@ -1702,6 +1702,7 @@ class ResidencyApplication extends BaseUserAttributes {
 
         return $note;
     }
+
 
     public function __toString() {
         return "ResidencyApplication";
