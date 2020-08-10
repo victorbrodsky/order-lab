@@ -2751,6 +2751,33 @@ class ResAppController extends OrderAbstractController {
 
         return $this->redirect( $this->generateUrl('resapp_home') );
     }
+    /**
+     * http://127.0.0.1/order/index_dev.php/residency-applications/clear-all-queue-processes
+     *
+     * @Route("/clear-all-queue-processes", name="resapp_clear_all_queue_processes")
+     */
+    public function clearAllQueueProcessesAction(Request $request) {
+
+        //exit("This method is disabled for security reason.");
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+        }
+
+        $resappRepGen = $this->container->get('resapp_reportgenerator');
+
+        $processesCount = $resappRepGen->clearProcesses();
+
+        //$queueCount = $resappRepGen->clearQueue();
+
+        //$processesCount = $resappRepGen->clearProcesses();
+        
+        //$msg = "Cleared $queueCount queues and $processesCount processes";
+
+        $msg = "Cleared $processesCount processes";
+
+        exit($msg);
+    }
     
 
     /**

@@ -496,6 +496,44 @@ class ReportGenerator {
         return $numUpdated;
     }
 
+//    //NOT USED
+//    public function clearQueue() {
+//        $queues = $this->em->getRepository('AppResAppBundle:ReportQueue')->findAll();
+//
+//        $count = 0;
+//        foreach($queues as $queue) {
+//            //$process = $queue->getRunningProcess();
+//            //$this->em->remove($process);
+//            //$this->em->flush();
+//            $queue->setRunningProcess(NULL);
+//            $queue->setRunning(false);
+//            $this->em->remove($queue);
+//            $this->em->flush();
+//            $count++;
+//        }
+//
+//        return $count;
+//    }
+    public function clearProcesses() {
+        $processes = $this->em->getRepository('AppResAppBundle:Process')->findAll();
+
+        $count = 0;
+        foreach($processes as $process) {
+            //$process->setRunningProcess(NULL);
+
+            $queue = $process->getReportQueue();
+            $queue->setRunningProcess(NULL);
+            $queue->setRunning(false);
+            //$this->em->remove($queue);
+
+            $this->em->remove($process);
+            
+            $this->em->flush();
+            $count++;
+        }
+
+        return $count;
+    }
 
 
     //**************************************************************************************//

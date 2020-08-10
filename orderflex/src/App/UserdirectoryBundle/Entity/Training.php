@@ -471,10 +471,13 @@ class Training extends BaseUserAttributes
             return false;
         }
 
-        $locationStr = $this->getGeoLocation()->getFullGeoLocation();
-        if( $locationStr ) {
-            return false;
+        if( $this->getGeoLocation() ) {
+            $locationStr = $this->getGeoLocation()->getFullGeoLocation();
+            if ($locationStr) {
+                return false;
+            }
         }
+
         if( $this->getResidencyTrack() ) {
             return false;
         }
