@@ -2656,6 +2656,13 @@ class CallLogUtil
             $info = implode("; ",$infoArr);
         }
 
+        if( count($infoArr) == 1 ) {
+            $info = "Preceding author: ".$info;
+        }
+        if( count($infoArr) > 1 ) {
+            $info = "Preceding authors: ".$info;
+        }
+
         return $info;
     }
 
