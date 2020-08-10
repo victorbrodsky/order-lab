@@ -79,6 +79,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $response = null;
 
         $user = $token->getUser();
+
+        if( $user ) {
+            $username = $user->getUsername();
+        } else {
+            $username = $user."";
+        }
+
         $options = array();
         //$em = $this->em;
         //$userUtil = new UserUtil();
@@ -123,7 +130,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $this->secAuth->isGranted($this->roleBanned) ) {
             $options['eventtype'] = 'Banned User Login Attempt';
-            $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site';
+            $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site. Username='.$username;
 //            UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
             $secUtil->setLoginAttempt($request,$options);
             //exit('banned user');
@@ -142,7 +149,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $this->secAuth->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
-            $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site';
+            $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site. Username='.$username;
             //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
             $secUtil->setLoginAttempt($request,$options);
             //exit('Unapproved user');
@@ -151,7 +158,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //exit('user ok');
         $options['eventtype'] = "Successful Login";
-        $options['event'] = 'Successful login to '.$this->siteNameStr.' site';
+        $options['event'] = 'Successful login to '.$this->siteNameStr.' site. Username='.$username;
 
         //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
