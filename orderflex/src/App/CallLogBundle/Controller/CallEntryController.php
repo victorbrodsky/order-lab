@@ -472,6 +472,7 @@ class CallEntryController extends OrderAbstractController
         $taskUpdatedBy = $filterform['taskUpdatedBy']->getData();
         $taskAddedBy = $filterform['taskAddedBy']->getData();
         $attachmentType = $filterform['attachmentType']->getData();
+        $messageId = $filterform['id']->getData();
 
         $initialCommunicationFilter = $filterform['initialCommunication']->getData();
         $accessionTypeFilter = $filterform['accessionType']->getData();
@@ -903,6 +904,36 @@ class CallEntryController extends OrderAbstractController
                 $dql->andWhere("documents.id IS NOT NULL");
                 $dql->andWhere("calllogEntryMessage.calllogAttachmentType = :calllogAttachmentTypeId");
                 $queryParameters['calllogAttachmentTypeId'] = $attachmentType;
+            }
+            $advancedFilter++;
+        }
+
+        if( $messageId ) {
+            $versionId = NULL;
+            if (strpos($messageId, '.') !== false) {
+                //OID has '.'
+                $messageIdArr = explode('.',$messageId);
+                if( count($messageIdArr) == 2 ) {
+                    $messageId = $messageIdArr[0];
+                    $versionId = $messageIdArr[1];
+                } elseif( count($messageIdArr) > 2 ) {
+                    $messageId = $messageIdArr[0];
+                }
+//                $dql->andWhere("message.oid = :messageId AND message.version = :versionId");
+//                $queryParameters['messageId'] = $messageId;
+//                $queryParameters['versionId'] = $versionId;
+            } else {
+//                $dql->andWhere("message.oid = :messageId");
+//                $queryParameters['messageId'] = $messageId;
+            }
+
+            if( $messageId && $versionId ) {
+                $dql->andWhere("message.oid = :messageOid AND message.version = :versionId");
+                $queryParameters['messageOid'] = $messageId;
+                $queryParameters['versionId'] = $versionId;
+            } elseif( $messageId ) {
+                $dql->andWhere("message.oid = :messageOid");
+                $queryParameters['messageOid'] = $messageId;
             }
             $advancedFilter++;
         }

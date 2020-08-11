@@ -140,6 +140,12 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name, First Name", 'style'=>'width:50%; float:right; height:28px;'),
         ));
 
+        $builder->add('id', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Call Log ID", 'style'=>'height:28px;'),
+        ));
+
         $builder->add('author', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
             'label' => false,
