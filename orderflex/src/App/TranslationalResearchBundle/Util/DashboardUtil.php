@@ -1645,6 +1645,12 @@ class DashboardUtil
 //            $this->quantityLimit = $quantityLimit;
 //        }
 
+        //dump($request->query);
+        //echo "startDate=".$startDate."<br>";
+        //echo "endDate=".$endDate."<br>";
+        //echo "projectSpecialty=".$projectSpecialty."<br>";
+        //exit('');
+
         if( !$startDate ) {
             //set to 1900
             $startDate = "01/01/1900"; //10/31/2017 to DateTime
