@@ -137,6 +137,7 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             //'data' => $this->params['search'],
             'empty_data' => $this->params['search'],
+            'data' => $this->params['search'],
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name, First Name", 'style'=>'width:50%; float:right; height:28px;'),
         ));
 
@@ -244,8 +245,10 @@ class CalllogFilterType extends AbstractType
         $builder->add('messageStatus', ChoiceType::class, array(
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),
             'choices' => $this->params['messageStatuses'],
+            //'empty_data' => $this->params['messageStatus'],
+            //'data' => $this->params['messageStatus'],
+            'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),
             //'choices_as_values' => true,
         ));
 

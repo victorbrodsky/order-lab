@@ -172,7 +172,7 @@
                         <li id="nav-bar-calllogsearch">
                             {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
                             {#<form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform" name="calllogsearchform" method="get" action="{{ path('calllog_home') }}">#}
-                            {{ form_start(navbarfilterform, {'action': path('calllog_home'), 'attr': {'id':"calllogsearchform", 'class': 'navbar-form navbar-left form-inline'}}) }}
+                            {{ form_start(navbarfilterform, {'action': path('calllog_home_navbarsearch'), 'attr': {'id':"calllogsearchform", 'class': 'navbar-form navbar-left form-inline'}}) }}
                                 <div class="input-group">
                                     {{ form_widget(navbarfilterform.searchtype) }}
                                     <div class="form-group has-feedback">
