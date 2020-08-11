@@ -146,64 +146,6 @@ class CallEntryController extends OrderAbstractController
 //        }
         //exit();
 
-//        if( $route == "calllog_home_navbarsearch" ) {
-//
-//            $defaultMrnType = $calllogUtil->getDefaultMrnType();
-//            $defaultMrnTypeId = null;
-//            if( $defaultMrnType ) {
-//                $defaultMrnTypeId = $defaultMrnType->getId();
-//            }
-//
-//            $navbarParams = array();
-//            $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
-//            $navbarParams['container'] = $this->container;
-//            $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
-//                //'action' => $this->generateUrl('calllog_home'),
-//                'method'=>'GET',
-//                'form_custom_value'=>$navbarParams
-//            ));
-//            $navbarfilterform->handleRequest($request);
-//            $calllogsearchtype = $navbarfilterform['searchtype']->getData();
-//            $calllogsearch = $navbarfilterform['search']->getData();
-//            //$messageStatusFilter = "All except deleted";
-//            //$messageStatusFilter = 1;
-//            //$metaphone = $navbarfilterform['metaphone']->getData();
-//            //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
-//            if( $calllogsearchtype == 'MRN or Last Name' ) {
-//                $searchFilter = $calllogsearch;
-//            }
-//            //if( $calllogsearchtype == 'NYH MRN' ) {
-//            if( $calllogsearchtype == $defaultMrnType ) {
-//                $searchFilter = $calllogsearch;
-//            }
-//            if( $calllogsearchtype == 'Entry full text' ) {
-//                $entryBodySearchFilter = $calllogsearch;
-//            }
-//            if( $calllogsearchtype == 'Last Name' ) {
-//                $searchFilter = $calllogsearch;
-//            }
-//            if( $calllogsearchtype == 'Last Name similar to' ) {
-//                $searchFilter = $calllogsearch;
-//                $metaphone = true;
-//            }
-//            if( $calllogsearchtype == 'Message Type' ) {
-//                $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories,$messageCategorieDefaultIdStr);
-//                //echo "navbar messageCategoryTypeId=".$messageCategoryTypeId."<br>";
-//                $messageCategory = $messageCategoryTypeId; //Other_59 => Other: Chemistry: Pathology Call Log Entry
-//            }
-//
-//            $redirect = $this->redirect($this->generateUrl('calllog_home',
-//                array(
-//                    'filter[messageStatus]' => "All except deleted",
-//                    'filter[messageCategory]' => $messageCategoryTypeId,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-//                    'filter[mrntype]' => $defaultMrnTypeId,
-//                    //'filter[mrntype]'=>$mrntype,
-//                    'filter[search]'=>$calllogsearch,
-//                )
-//            ));
-//            return array('redirect' => $redirect);
-//        }
-
         if( $route == "calllog_alerts" ) {
             $alerts = true;
             $title = $title . " (Alerts)";
@@ -219,7 +161,7 @@ class CallEntryController extends OrderAbstractController
         $query = $res['query'];
         $filterform = $res['filterform'];
         $advancedFilter = $res['advancedFilter'];
-        echo "advancedFilter=".$advancedFilter."<br>";
+        //echo "advancedFilter=".$advancedFilter."<br>";
 
         //Sort Default by ID
 //        $paginationParams = array(
@@ -299,12 +241,6 @@ class CallEntryController extends OrderAbstractController
         $route = $request->get('_route');
         //exit("route=".$route);
         //$title = "Call Case List";
-
-        //$alerts = false;
-        //if( $route == "calllog_alerts" ) {
-        //    $alerts = true;
-        //    $title = $title . " (Alerts)";
-        //}
 
         //$messageStatuses
         $messageStatuses = $em->getRepository('AppOrderformBundle:MessageStatusList')->findBy(array('type'=>array('default','user-added')));
@@ -412,73 +348,62 @@ class CallEntryController extends OrderAbstractController
         $referringProviders = $calllogUtil->getReferringProvidersWithUserWrappers();
 
         ///////////////// search in navbar /////////////////
-        if(1) {
-            $navbarParams = array();
-            $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
-            $navbarParams['container'] = $this->container;
-            $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
-                //'action' => $this->generateUrl('calllog_home'),
-                'method' => 'GET',
-                'form_custom_value' => $navbarParams
+        $navbarParams = array();
+        $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
+        $navbarParams['container'] = $this->container;
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
+            //'action' => $this->generateUrl('calllog_home'),
+            'method' => 'GET',
+            'form_custom_value' => $navbarParams
+        ));
+        $navbarfilterform->handleRequest($request);
+        $calllogsearchtype = $navbarfilterform['searchtype']->getData();
+        $calllogsearch = $navbarfilterform['search']->getData();
+        //$messageStatusFilter = "All except deleted";
+        //$messageStatusFilter = 1;
+        //$metaphone = $navbarfilterform['metaphone']->getData();
+        //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
+
+        $redirectParams = array(
+            'filter[messageStatus]' => "All except deleted"
+        );
+        if ($calllogsearchtype == 'MRN or Last Name') {
+            $searchFilter = $calllogsearch;
+            //$mrntypeFilter = $defaultMrnTypeId;
+            $redirectParams['filter[search]'] = $calllogsearch;
+        }
+        //if( $calllogsearchtype == 'NYH MRN' ) {
+        if ($calllogsearchtype == $defaultMrnType) {
+            $searchFilter = $calllogsearch;
+            $redirectParams['filter[search]'] = $calllogsearch;
+        }
+        if ($calllogsearchtype == 'Entry full text') {
+            $entryBodySearchFilter = $calllogsearch;
+            $redirectParams['filter[entryBodySearch]'] = $calllogsearch;
+        }
+        if ($calllogsearchtype == 'Last Name') {
+            $searchFilter = $calllogsearch;
+            $redirectParams['filter[search]'] = $calllogsearch;
+        }
+        if ($calllogsearchtype == 'Last Name similar to') {
+            $searchFilter = $calllogsearch;
+            $metaphone = true;
+            $redirectParams['filter[search]'] = $calllogsearch;
+            $redirectParams['filter[metaphone]'] = $metaphone;
+        }
+        if ($calllogsearchtype == 'Message Type') {
+            $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch, $messageCategories, $messageCategorieDefaultIdStr);
+            //echo "navbar messageCategoryTypeId=".$messageCategoryTypeId."<br>";
+            $messageCategory = $messageCategoryTypeId; //Other_59 => Other: Chemistry: Pathology Call Log Entry
+            $redirectParams['filter[messageCategory]'] = $messageCategoryTypeId;
+        }
+        //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
+
+        if ($route == "calllog_home_navbarsearch") {
+            $redirect = $this->redirect($this->generateUrl('calllog_home',
+                $redirectParams
             ));
-            $navbarfilterform->handleRequest($request);
-            $calllogsearchtype = $navbarfilterform['searchtype']->getData();
-            $calllogsearch = $navbarfilterform['search']->getData();
-            //$messageStatusFilter = "All except deleted";
-            //$messageStatusFilter = 1;
-            //$metaphone = $navbarfilterform['metaphone']->getData();
-            //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
-
-            $redirectParams = array(
-                'filter[messageStatus]' => "All except deleted"
-            );
-
-            if ($calllogsearchtype == 'MRN or Last Name') {
-                $searchFilter = $calllogsearch;
-                //$mrntypeFilter = $defaultMrnTypeId;
-                $redirectParams['filter[search]'] = $calllogsearch;
-            }
-            //if( $calllogsearchtype == 'NYH MRN' ) {
-            if ($calllogsearchtype == $defaultMrnType) {
-                $searchFilter = $calllogsearch;
-                $redirectParams['filter[search]'] = $calllogsearch;
-            }
-            if ($calllogsearchtype == 'Entry full text') {
-                $entryBodySearchFilter = $calllogsearch;
-                $redirectParams['filter[entryBodySearch]'] = $calllogsearch;
-            }
-            if ($calllogsearchtype == 'Last Name') {
-                $searchFilter = $calllogsearch;
-                $redirectParams['filter[search]'] = $calllogsearch;
-            }
-            if ($calllogsearchtype == 'Last Name similar to') {
-                $searchFilter = $calllogsearch;
-                $metaphone = true;
-                $redirectParams['filter[search]'] = $calllogsearch;
-                $redirectParams['filter[metaphone]'] = $metaphone;
-            }
-            if ($calllogsearchtype == 'Message Type') {
-                $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch, $messageCategories, $messageCategorieDefaultIdStr);
-                //echo "navbar messageCategoryTypeId=".$messageCategoryTypeId."<br>";
-                $messageCategory = $messageCategoryTypeId; //Other_59 => Other: Chemistry: Pathology Call Log Entry
-                $redirectParams['filter[messageCategory]'] = $messageCategoryTypeId;
-            }
-            //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
-
-            if ($route == "calllog_home_navbarsearch") {
-                //exit($route.": redirect to calllog_home");
-                $redirect = $this->redirect($this->generateUrl('calllog_home',
-                    $redirectParams
-//                    array(
-//                        'filter[messageStatus]' => "All except deleted",
-//                        'filter[messageCategory]' => $messageCategoryTypeId,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-//                        'filter[mrntype]' => $defaultMrnTypeId,
-//                        //'filter[mrntype]'=>$mrntype,
-//                        'filter[search]' => $calllogsearch,
-//                    )
-                ));
-                return array('redirect' => $redirect);
-            }
+            return array('redirect' => $redirect);
         }
         ///////////////// EOF search in navbar /////////////////
 
@@ -893,7 +818,7 @@ class CallEntryController extends OrderAbstractController
 //        }
         if( $messageStatusFilter ) {
             $advancedFilter++;
-            echo "string=[$messageStatusFilter]<br>";
+            //echo "string=[$messageStatusFilter]<br>";
             if ( strval($messageStatusFilter) != strval(intval($messageStatusFilter)) ) {
                 //echo "string=[$messageStatusFilter]<br>";
                 $messageStatusStr = null;
