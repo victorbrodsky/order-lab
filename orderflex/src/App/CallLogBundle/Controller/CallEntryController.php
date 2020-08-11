@@ -258,7 +258,6 @@ class CallEntryController extends OrderAbstractController
         $messageStatusesChoice["All Drafts"] = "All Drafts";
         $messageStatusesChoice["All post-signature drafts"] = "All post-signature drafts";
 
-        //$calllogsearch = null;
         $searchFilter = null;
         $entryBodySearchFilter = null;
         $messageCategory = null;
@@ -329,7 +328,7 @@ class CallEntryController extends OrderAbstractController
         if( $defaultMrnType ) {
             $defaultMrnTypeId = $defaultMrnType->getId();
         }
-        //echo "defaultMrnTypeId=".$defaultMrnTypeId."<br>";
+        //echo "defaultMrnTypeId=".$defaultMrnTypeId.", ".$defaultMrnType->getName()."<br>";
 
         //get mrntypes ($mrntypeChoices)
         $mrntypeChoices = array();
@@ -365,7 +364,8 @@ class CallEntryController extends OrderAbstractController
         //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
 
         $redirectParams = array(
-            'filter[messageStatus]' => "All except deleted"
+            'filter[messageStatus]' => "All except deleted",
+            'filter[mrntype]' => $defaultMrnTypeId //$defaultMrnType->getName()
         );
         if ($calllogsearchtype == 'MRN or Last Name') {
             $searchFilter = $calllogsearch;
@@ -399,7 +399,7 @@ class CallEntryController extends OrderAbstractController
         }
         //echo "navbar: searchFilter=".$searchFilter."; entryBodySearchFilter=".$entryBodySearchFilter."<br>";
 
-        if ($route == "calllog_home_navbarsearch") {
+        if( $route == "calllog_home_navbarsearch" ) {
             $redirect = $this->redirect($this->generateUrl('calllog_home',
                 $redirectParams
             ));
