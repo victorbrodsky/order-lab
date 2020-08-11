@@ -1149,7 +1149,7 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
 
     patientsHtml +=
         '<td id="calllog-patientid-'+patient.id+'">'+
-        //patient.patientInfoStr +
+        //patient.patientInfoStr + //testing
         patient.mrn+' ('+patient.mrntypestr+')'+
         //hasMergedPatients +
         '</td>'+
