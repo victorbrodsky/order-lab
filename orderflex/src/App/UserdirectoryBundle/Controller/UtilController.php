@@ -428,11 +428,24 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
+        $cycle = $request->get('cycle');
+        //echo "cycle=".$cycle."<br>";
+        $newCycle = false;
+        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+            $newCycle = true;
+        }
+
         $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("user");
         $dql->select('user.id as id, infos.displayName as text');
         $dql->leftJoin("user.infos", "infos");
         $dql->where("user.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
+
+        if( $newCycle ) {
+            $dql->leftJoin("user.preferences", "preferences");
+            $dql->andWhere("preferences.hide IS NULL OR preferences.hide=false");
+        }
+
         $dql->orderBy("infos.displayName","ASC");
         //$dql->groupBy('user');
 
