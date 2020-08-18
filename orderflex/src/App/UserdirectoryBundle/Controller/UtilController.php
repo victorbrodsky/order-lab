@@ -437,8 +437,13 @@ class UtilController extends OrderAbstractController {
 
         $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("user");
-        $dql->select('user.id as id, infos.displayName as text');
         $dql->leftJoin("user.infos", "infos");
+
+        //$dql->select('user.id as id, infos.displayName as text');
+        $dql->leftJoin("user.keytype", "keytype");
+        $dql->select("user.id as id, CONCAT(infos.displayName,' (',keytype.name,')') as text"); //display user as "displayName (keytype)"
+        //$dql->select("user.id as id, CONCAT(infos.displayName,' ',user.primaryPublicUserId) as text");
+
         $dql->where("user.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
 
         if( $newCycle ) {
