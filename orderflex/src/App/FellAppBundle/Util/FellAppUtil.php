@@ -1813,11 +1813,42 @@ class FellAppUtil {
             $startDateStr = NULL;
         }
 
+        $directorsStr = $this->getProgramDirectorStr($fellapp,$str);
+
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
         $str = str_replace("[[INSTITUTION]]",$inst,$str);
+        $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
 
         return $str;
+    }
+    public function getProgramDirectorStr( $fellapp, $str=NULL ) {
+        $directorsStr = "Program Director";
+
+        if( strpos($str, "[[DIRECTOR]]") === false ) {
+            return $directorsStr;
+        }
+
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        if( $fellowshipSubspecialty ) {
+            $directors = $fellowshipSubspecialty->getDirectors();
+            $usernameArr = array();
+            foreach( $directors as $director ) {
+                $usernameArr[] = $director->getUsernameOptimal();
+            }
+
+            if( count($usernameArr) > 0 ) {
+                if( count($usernameArr) == 1 ) {
+                    $directorsStr = $usernameArr[0];
+                } elseif( count($usernameArr) == 2 ) {
+                    $directorsStr = $usernameArr[0] . " and " . $usernameArr[1];
+                } elseif( count($usernameArr) > 2 ) {
+                    $directorsStr = $usernameArr[0] . ", " . $usernameArr[1] . " and " . $usernameArr[2];
+                }
+            }
+        }
+
+        return $directorsStr;
     }
 } 

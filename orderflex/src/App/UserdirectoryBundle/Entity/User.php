@@ -1698,15 +1698,15 @@ class User extends UserBase {
 
         //get appended degrees
         $trainings = $this->getTrainings();
-        if( $trainings && is_array($trainings) ) {
-            foreach($trainings as $training) {
-                if ($training->getAppendDegreeToName() && $training->getDegree()) {
-                    $degrees[] = $training->getDegree();
-                }
-                if ($training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle()) {
-                    if ($training->getFellowshipTitle()->getAbbreviation()) {
-                        $titles[] = $training->getFellowshipTitle()->getAbbreviation();
-                    }
+        //echo "trainings=".count($trainings)."<br>";
+        foreach($trainings as $training) {
+            //echo "training=".$training."<br>";
+            if ($training->getAppendDegreeToName() && $training->getDegree()) {
+                $degrees[] = $training->getDegree();
+            }
+            if ($training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle()) {
+                if ($training->getFellowshipTitle()->getAbbreviation()) {
+                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
                 }
             }
         }
