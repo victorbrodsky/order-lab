@@ -626,9 +626,11 @@ class UserController extends OrderAbstractController
                 $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
 
                 //filter out users with excludeFromSearch set to true
-                if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-                    $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
-                }
+                //if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                //    $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+                //}
+
+                $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
             }
 
             if( $criteriastr ) {
