@@ -1201,6 +1201,15 @@
                     Email's Subject and Body ([[value]] will be replaced by the corresponding value from the fellowship application)
                 </h5>
 
+                <br>
+                <div class="well well-sm" align='center'>
+                {% for fellowshipTypeId,fellowshipTypeName in fellowshipTypes %}
+                    {% set fellowshipTypeEntity = fellapp_util.getFellappBySubspecialty(fellowshipTypeId) %}
+                    <p>{{ fellowshipTypeName }} currently directed by {{ fellapp_util.getProgramDirectorStr(fellowshipTypeEntity) }}</p>
+                {% endfor %}
+                </div>
+                <br>
+
                 {{ formmacros.simplefield("From:", user_security_utility.getSiteFromEmail("fellapp"), "input", "disabled") }}
 
                 {#<p>#}

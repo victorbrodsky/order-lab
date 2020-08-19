@@ -60,44 +60,6 @@ class FellAppController extends OrderAbstractController {
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
 
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('fellapp_login') );
-//        }
-
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('fellapp_login') );
-//        }
-
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
-//            exit('no permission as interviewer: FellowshipApplication');
-//            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") &&
-//            false == $this->get('security.authorization_checker')->isGranted("create","Interview")
-//        ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
-        //testing
-        //$memory_limit = ini_get('memory_limit');
-        //echo "before memory_limit=$memory_limit <br>";
-
-        //ini_set('memory_limit', '7168M');
-
-        //testing
-        //$memory_limit = ini_get('memory_limit');
-        //echo "before memory_limit=$memory_limit <br>";
-
-
         $route = $request->get('_route');
         //echo "route".$route."<br>";
         //exit();
@@ -633,7 +595,8 @@ class FellAppController extends OrderAbstractController {
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),
-            'route_path' => $route
+            'route_path' => $route,
+            'fellowshipTypes' => $fellowshipTypes
         );
     }
 

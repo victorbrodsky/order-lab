@@ -1813,7 +1813,7 @@ class FellAppUtil {
             $startDateStr = NULL;
         }
 
-        $directorsStr = $this->getProgramDirectorStr($fellapp,$str);
+        $directorsStr = $this->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(),$str);
 
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
@@ -1823,14 +1823,14 @@ class FellAppUtil {
 
         return $str;
     }
-    public function getProgramDirectorStr( $fellapp, $str=NULL ) {
+    public function getProgramDirectorStr( $fellowshipSubspecialty, $str=NULL ) {
         $directorsStr = "Program Director";
 
-        if( strpos($str, "[[DIRECTOR]]") === false ) {
+        if( $str && strpos($str, "[[DIRECTOR]]") === false ) {
             return $directorsStr;
         }
 
-        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        //$fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
         if( $fellowshipSubspecialty ) {
             $directors = $fellowshipSubspecialty->getDirectors();
             $usernameArr = array();
@@ -1852,19 +1852,35 @@ class FellAppUtil {
 
                 //for two FirstName1 LastName1, Degree(s) and FirstName2 LastName2, Degree(s)
                 //for three or more/: FirstName1 LastName1, Degree(s), FirstName2 LastName2, Degree(s), and FirstName3 LastName3, Degree(s)
-                if( count($usernameArr) == 1 ) {
-                    $directorsStr = $usernameArr[0];
-                } elseif( count($usernameArr) == 2 ) {
-                    $directorsStr = $usernameArr[0] . " and " . $usernameArr[1];
-                } elseif( count($usernameArr) > 2 ) {
-                    $directorsStr = $usernameArr[0] . ", " . $usernameArr[1] . " and " . $usernameArr[2];
-                } else {
-                    //do nothing
-                }
+//                if( count($usernameArr) == 1 ) {
+//                    $directorsStr = $usernameArr[0];
+//                } elseif( count($usernameArr) == 2 ) {
+//                    $directorsStr = $usernameArr[0] . " and " . $usernameArr[1];
+//                } elseif( count($usernameArr) == 3 ) {
+//                    $directorsStr = $usernameArr[0] . ", " . $usernameArr[1] . " and " . $usernameArr[2];
+//                } else {
+//                    //do nothing
+//                }
+
+                $directorsStr = $this->natural_language_join($usernameArr,'and');
 
             }
         }
 
         return $directorsStr;
+    }
+    /**
+     * Join a string with a natural language conjunction at the end.
+     * https://gist.github.com/angry-dan/e01b8712d6538510dd9c
+     */
+    public function natural_language_join(array $list, $conjunction = 'and') {
+        $last = array_pop($list);
+        if ($list) {
+            return implode(', ', $list) . ' ' . $conjunction . ' ' . $last;
+        }
+        return $last;
+    }
+    public function getFellappBySubspecialty($fellowshipTypeId) {
+        return $this->em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellowshipTypeId);
     }
 } 

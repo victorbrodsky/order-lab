@@ -68,7 +68,7 @@ class DefaultController extends OrderAbstractController
 //            if ($fellapp) {
 //                $str = $fellappUtil->siteSettingsConstantReplace($str,$fellapp);
 //                echo $fellappId.": str=" . $str . "<br>";
-//                $directorsStr = $fellappUtil->getProgramDirectorStr($fellapp, $str);
+//                $directorsStr = $fellappUtil->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(), $str);
 //                echo $fellappId.": directorsStr=" . $directorsStr . "<br>";
 //                echo "###########<br>";
 //            }
