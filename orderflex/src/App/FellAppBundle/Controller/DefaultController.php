@@ -59,20 +59,20 @@ class DefaultController extends OrderAbstractController
     public function aboutAction( Request $request ) {
 
         /////////// testing ///////////
-        $fellappUtil = $this->container->get('fellapp_util');
-        $em = $this->getDoctrine()->getManager();
-        $str = "[[DIRECTOR]] - program director";
-        $fellappIdArr = array(1574,1565,1576);
-        foreach( $fellappIdArr as $fellappId ) {
-            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
-            if ($fellapp) {
-                $str = $fellappUtil->siteSettingsConstantReplace($str,$fellapp);
-                echo $fellappId.": str=" . $str . "<br>";
-                $directorsStr = $fellappUtil->getProgramDirectorStr($fellapp, $str);
-                echo $fellappId.": directorsStr=" . $directorsStr . "<br>";
-                echo "###########<br>";
-            }
-        }
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $em = $this->getDoctrine()->getManager();
+//        $str = "[[DIRECTOR]] - program director";
+//        $fellappIdArr = array(1574,1565,1576);
+//        foreach( $fellappIdArr as $fellappId ) {
+//            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+//            if ($fellapp) {
+//                $str = $fellappUtil->siteSettingsConstantReplace($str,$fellapp);
+//                echo $fellappId.": str=" . $str . "<br>";
+//                $directorsStr = $fellappUtil->getProgramDirectorStr($fellapp, $str);
+//                echo $fellappId.": directorsStr=" . $directorsStr . "<br>";
+//                echo "###########<br>";
+//            }
+//        }
         /////////// EOF testing ///////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
