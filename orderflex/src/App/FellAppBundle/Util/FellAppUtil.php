@@ -1835,17 +1835,33 @@ class FellAppUtil {
             $directors = $fellowshipSubspecialty->getDirectors();
             $usernameArr = array();
             foreach( $directors as $director ) {
-                $usernameArr[] = $director->getUsernameOptimal();
+                //check if account is not inactivated/banned (ROLE_FELLAPP_BANNED, ROLE_FELLAPP_UNAPPROVED, ROLE_USERDIRECTORY_BANNED, ROLE_USERDIRECTORY_UNAPPROVED)
+                if (
+                    !$director->isEnabled() ||
+                    $this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_BANNED') ||
+                    $this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_UNAPPROVED')
+                ) {
+                    //user is locked, banned or unapproved
+                } else {
+                    //user is ok
+                    $usernameArr[] = $director->getUsernameOptimal();
+                }
             }
 
             if( count($usernameArr) > 0 ) {
+
+                //for two FirstName1 LastName1, Degree(s) and FirstName2 LastName2, Degree(s)
+                //for three or more/: FirstName1 LastName1, Degree(s), FirstName2 LastName2, Degree(s), and FirstName3 LastName3, Degree(s)
                 if( count($usernameArr) == 1 ) {
                     $directorsStr = $usernameArr[0];
                 } elseif( count($usernameArr) == 2 ) {
                     $directorsStr = $usernameArr[0] . " and " . $usernameArr[1];
                 } elseif( count($usernameArr) > 2 ) {
                     $directorsStr = $usernameArr[0] . ", " . $usernameArr[1] . " and " . $usernameArr[2];
+                } else {
+                    //do nothing
                 }
+
             }
         }
 
