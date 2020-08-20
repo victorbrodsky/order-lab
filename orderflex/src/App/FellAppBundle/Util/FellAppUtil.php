@@ -1758,7 +1758,7 @@ class FellAppUtil {
         return true;
     }
 
-    public function getRejectionEmailSent($fellapp) {
+    public function getFellappAcceptanceRejectionEmailSent($fellapp) {
         $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
@@ -1769,36 +1769,66 @@ class FellAppUtil {
         $dql->where("logger.entityName = 'FellowshipApplication' AND logger.entityId = '".$fellapp->getId()."'");
 
         //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
-        $dql->andWhere("eventType.name = :eventTypeStr");
+        $dql->andWhere("eventType.name = :eventTypeRejectionStr OR eventType.name = :eventTypeAcceptanceStr");
 
         $dql->orderBy("logger.id","DESC");
         $query = $this->em->createQuery($dql);
 
         //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
 
+        $rejectionEventType = "FellApp Rejected Notification Email Sent";
+        $acceptanceEventType = "FellApp Accepted Notification Email Sent";
         $query->setParameters(
             array(
-                'eventTypeStr' => "FellApp Rejected Notification Email Sent"
+                'eventTypeRejectionStr' => $rejectionEventType,
+                'eventTypeAcceptanceStr' => $acceptanceEventType
             )
         );
 
         $loggers = $query->getResult();
 
-        $sentDatesArr = array();
+        $sentRejectionDatesArr = array();
+        $sentAcceptanceDatesArr = array();
         foreach($loggers as $logger) {
             $creationDate = $logger->getCreationdate();
             if( $creationDate ) {
-                $sentDatesArr[] = $creationDate->format('m/d/Y');
+                if( $logger->getEventType() ) {
+                    $eventTypeName = $logger->getEventType()->getName();
+                    if( $eventTypeName == $rejectionEventType ) {
+                        $sentRejectionDatesArr[] = "<p style='color:red'>".$creationDate->format('m/d/Y'); // . "-rejected"."</p>";
+                    } elseif( $eventTypeName == $acceptanceEventType ) {
+                        $sentAcceptanceDatesArr[] = "<p style='color:green'>".$creationDate->format('m/d/Y'); // . "-accepted"."</p>";
+                    } else {
+                        $sentRejectionDatesArr[] = "<p style='color:grey'>".$creationDate->format('m/d/Y'); // . "-unknown"."</p>";
+                    }
+                }
             }
         }
 
-        if( count($sentDatesArr) > 0 ) {
-            $sentDates = implode("<br>",$sentDatesArr);
+        //$delimiter = "<br>";
+        $delimiter = "";
+        if( count($sentRejectionDatesArr) > 0 ) {
+            $sentRejectionDates = implode($delimiter,$sentRejectionDatesArr);
         } else {
-            $sentDates = null;
+            $sentRejectionDates = null;
         }
 
-        return $sentDates;
+        if( count($sentAcceptanceDatesArr) > 0 ) {
+            $sentAcceptanceDates = implode($delimiter,$sentAcceptanceDatesArr);
+        } else {
+            $sentAcceptanceDates = null;
+        }
+
+//        if( $sentRejectionDates && $sentAcceptanceDates ) {
+//            $sentAcceptanceDates = "<br>".$sentAcceptanceDates;
+//        }
+
+        $res = array(
+            'rejection' => $sentRejectionDates,
+            'acceptance' => $sentAcceptanceDates
+        );
+
+        return $res;
     }
 
     public function siteSettingsConstantReplace($str,$fellapp) {

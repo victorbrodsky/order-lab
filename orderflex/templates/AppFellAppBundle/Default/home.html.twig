@@ -357,7 +357,7 @@
 
                 {% if route_path == "fellapp_send_rejection_emails" %}
                     <th>Send Email</th>
-                    <th>Rejection Emailed?</th>
+                    <th>Notification Emailed?</th>
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
@@ -550,11 +550,19 @@
                             <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
                         </td>
                         <td>
+                            {#data-toggle="tooltip" title="rejection emails - red, acceptance emails - green"#}
+                            {#<span data-toggle="tooltip" title="rejection emails - red, acceptance emails - green"></span>#}
                             {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
-                            {% set sentRejectionEmail = fellapp_util.getRejectionEmailSent(entity) %}
+                            {% set sentAcceptanceRejectionEmail = fellapp_util.getFellappAcceptanceRejectionEmailSent(entity) %}
+                            {% set sentRejectionEmail = sentAcceptanceRejectionEmail['rejection'] %}
+                            {% set sentAcceptanceEmail = sentAcceptanceRejectionEmail['acceptance'] %}
                             {% if sentRejectionEmail %}
-                                {#{{ sentRejectionEmail|date('m/d/Y') }}#}
-                                {{ sentRejectionEmail|raw }}
+                                <div data-toggle="tooltip" title="rejection emails - red">{{ sentRejectionEmail|raw }}</div>
+                                {#{{ sentRejectionEmail|raw }}#}
+                            {% endif %}
+                            {% if sentAcceptanceEmail %}
+                                <div data-toggle="tooltip" title="acceptance emails - green">{{ sentAcceptanceEmail|raw }}</div>
+                                {#{{ sentAcceptanceEmail|raw }}#}
                             {% endif %}
                         </td>
                     {% endif %}
