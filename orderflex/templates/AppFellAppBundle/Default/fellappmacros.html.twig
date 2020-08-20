@@ -458,7 +458,12 @@
         {% if interviewsAwaitingArr|length > 0 %}
             {% set interviewerCounter = 1 %}
             <p>
-                Awaiting evaluations from
+                {% if interviewsAwaitingArr|length == 1 %}
+                    Awaiting evaluation from
+                {% else %}
+                    Awaiting evaluations from
+                {% endif %}
+
                 {% for interview in interviewsAwaitingArr %}
                     {% if reallinks %}
                         {% set sendEmail = ' (<a href="'~url('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">Resend Invitation Email</a>)' %}
