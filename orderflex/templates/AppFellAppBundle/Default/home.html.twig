@@ -945,6 +945,8 @@
 
                                         {% if entity.appStatus.name != 'accepted' %}
                                             <li>
+
+                                                {% if 1 %}
                                                 <a
                                                     fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
@@ -954,6 +956,18 @@
                                                     fellapp-data-callback="refreshpage"
                                                     href="#">Mark as Accepted
                                                 </a>
+                                                {% else %}
+                                                <a
+                                                    fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                    fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    fellapp-data-email-fellappid="{{ entity.id }}"
+                                                    fellapp-data-email-type="accepted"
+                                                    fellapp-data-callback="refreshpage"
+                                                    href="#">Mark as Accepted
+                                                </a>
+                                                {% endif %}
+
                                             </li>
                                         {% endif %}
                                         {% if entity.appStatus.name != 'acceptedandnotified' %}
