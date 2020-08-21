@@ -555,6 +555,12 @@ class Logger
         }
     }
 
+    public function getUsernameOptimal() {
+        if( $this->getUser() ) {
+            return $this->getUser()->getUsernameOptimal();
+        }
+        return null;
+    }
 
 
 //    public function addInstitution($institution)

@@ -4,7 +4,7 @@
 
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
-function callLogStatusNotificationConfirmAction() {
+function fellappStatusNotificationConfirmAction() {
 
     $('a[fellapp-data-confirm]').click(function(ev) {
 
@@ -38,8 +38,10 @@ function callLogStatusNotificationConfirmAction() {
         }
 
         var confirmText = "<p>"+$(this).attr('fellapp-data-confirm')+"</p>";
+        
         var emailSubject = $(this).attr('fellapp-data-email-subject');
         var emailBody = $(this).attr('fellapp-data-email-body');
+        
         if( emailSubject ) {
             confirmText = confirmText + "<p>Subject: " + emailSubject + "</p>";
         }

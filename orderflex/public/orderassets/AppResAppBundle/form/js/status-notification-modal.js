@@ -4,7 +4,7 @@
 
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
-function callLogStatusNotificationConfirmAction() {
+function resappStatusNotificationConfirmAction() {
 
     $('a[resapp-data-confirm]').click(function(ev) {
 
