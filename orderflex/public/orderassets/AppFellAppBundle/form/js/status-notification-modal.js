@@ -111,7 +111,12 @@ function fellappStatusNotificationConfirmActionDynamic() {
         //console.log("fellapp-data-confirm clicked");
 
         var modalEl = $(this);
-        //var lbtn = Ladda.create( btn );
+
+        //var btn = modalEl.closest(".btn-group").find("button").get(0);
+        var btn = modalEl.get(0);
+        //console.log(btn);
+        var lbtn = Ladda.create( btn );
+        lbtn.start();
 
         var fellappId = $(this).attr('fellapp-data-email-fellappid');
         var emailType = $(this).attr('fellapp-data-email-type');
@@ -144,7 +149,7 @@ function fellappStatusNotificationConfirmActionDynamic() {
         }).done(function() {
             //console.log("Finish getting subject and body");
             //calllogStopBtn(lbtn);
-            //lbtn.stop();
+            lbtn.stop();
             //$('button').prop('disabled',false);
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);

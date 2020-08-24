@@ -34,6 +34,9 @@
 {% if static is not defined %}
     {% set static = 0 %}
 {% endif %}
+{% if spinnerColor is not defined %}
+    {% set spinnerColor = "#428bca" %}
+{% endif %}
 
 <div id="fellapp-rank-modal"></div>
 
@@ -964,7 +967,7 @@
                                                     href="#">Mark as Accepted
                                                 </a>
                                                 {% else %}
-                                                <a
+                                                <a  data-spinner-color="{{ spinnerColor }}"
                                                     fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
                                                     fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
@@ -995,7 +998,7 @@
                                                         href="#">Mark as Accepted and Notify
                                                     </a>
                                                 {% else %}
-                                                    <a
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
                                                         fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
                                                         fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
                                                         fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
@@ -1027,7 +1030,7 @@
                                                     href="#">Mark as Rejected
                                                 </a>
                                             {% else %}
-                                                <a
+                                                <a  data-spinner-color="{{ spinnerColor }}"
                                                     fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                     fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
@@ -1058,7 +1061,7 @@
                                                         href="#">Mark as Rejected and Notify
                                                     </a>
                                                 {% else %}
-                                                    <a
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
                                                         fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                         fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                         fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
@@ -1104,7 +1107,7 @@
                                                 href="#">Send e-mail notification of acceptance
                                             </a>
                                             {% else %}
-                                            <a
+                                            <a  data-spinner-color="{{ spinnerColor }}"
                                                 fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
                                                 fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
                                                 fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
@@ -1126,7 +1129,7 @@
                                                 href="#">Send e-mail notification of rejection
                                             </a>
                                             {% else %}
-                                            <a
+                                            <a  data-spinner-color="{{ spinnerColor }}"
                                                 fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                 fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                 fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"

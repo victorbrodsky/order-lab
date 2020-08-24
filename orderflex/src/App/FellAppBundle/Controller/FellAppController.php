@@ -597,7 +597,8 @@ class FellAppController extends OrderAbstractController {
             'fellappids' => implode("-",$idsArr),
             'route_path' => $route,
             'fellowshipTypes' => $fellowshipTypes,
-            'static' => false
+            'static' => false,
+            'spinnerColor' => "#428bca"
         );
     }
 
