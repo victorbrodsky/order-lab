@@ -4,7 +4,7 @@
 
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
-function fellappStatusNotificationConfirmAction() {
+function fellappStatusNotificationConfirmAction_original() {
 
     $('a[fellapp-data-confirm]').click(function(ev) {
 
@@ -99,7 +99,8 @@ function fellappStatusNotificationConfirmAction() {
 
 }
 
-function fellappStatusNotificationConfirmAction_dynamic() {
+//dynamically get email subject, body, warning
+function fellappStatusNotificationConfirmAction() {
 
     $('a[fellapp-data-confirm]').click(function(ev) {
 
@@ -127,19 +128,25 @@ function fellappStatusNotificationConfirmAction_dynamic() {
             timeout: _ajaxTimeout,
             async: true,
             data: {id: fellappId, emailType: emailType},
+            dataType: 'json',
         }).success(function(data) {
-            //console.log("data="+data);
-
+            console.log("data:");
+            console.log(data);
             if( data == "NOTOK" ) {
                 fellappStatusNotificationConfirmModal($(this),null,emailSubject,emailBody);
             } else {
+                console.log("warning="+data.warning);
+                console.log("subject="+data.subject);
+                console.log("body="+data.body);
                 fellappStatusNotificationConfirmModal($(this),data.warning,data.subject,data.body);
             }
         }).done(function() {
-            console.log("Error getting subject and body");
+            //console.log("Finish getting subject and body");
             //calllogStopBtn(lbtn);
             //lbtn.stop();
             //$('button').prop('disabled',false);
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
         });
 
         // }
@@ -150,7 +157,21 @@ function fellappStatusNotificationConfirmAction_dynamic() {
 }
 function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject,emailBody) {
 
-    if( !$('#fellappDataConfirmModal').length ) {
+    var confirmText = "<p>"+modalEl.attr('fellapp-data-confirm')+"</p>";
+    console.log("1confirmText="+confirmText);
+
+    if( emailWarning ) {
+        confirmText = "<p>"+emailWarning + "</p>" + confirmText;
+    }
+    if( emailSubject ) {
+        confirmText = confirmText + "<p>Subject: " + emailSubject + "</p>";
+    }
+    if( emailBody ) {
+        confirmText = confirmText + "<p>Body: " + emailBody + "</p>";
+    }
+    console.log("2confirmText="+confirmText);
+
+    //if( !$('#fellappDataConfirmModal').length ) {
         var modalHtml =
             '<div id="fellappDataConfirmModal" class="modal fade fellapp-data-confirm-modal">' +
             '<div class="modal-dialog">' +
@@ -159,8 +180,7 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
             '<h3 id="dataConfirmLabel">Confirmation</h3>' +
             '</div>' +
-            '<div class="modal-body text-center">' +
-            '</div>' +
+            '<div class="modal-body text-center">' + confirmText + '</div>' +
             '<div class="modal-footer">' +
             '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
             '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
@@ -174,27 +194,27 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
             '</div>';
 
         $('body').append(modalHtml);
-    }
-
-    var confirmText = "<p>"+modalEl.attr('fellapp-data-confirm')+"</p>";
-
-    //var emailSubject = modalEl.attr('fellapp-data-email-subject');
-    //var emailBody = modalEl.attr('fellapp-data-email-body');
-
-    //if( emailSubject == 'acceptedEmailSubjectModified' && emailBody == 'acceptedEmailBodyModified' ) {
     //}
 
-    if( emailWarning ) {
-        confirmText = "<p>"+emailWarning + "</p>" + confirmText;
-    }
-    if( emailSubject ) {
-        confirmText = confirmText + "<p>Subject: " + emailSubject + "</p>";
-    }
-    if( emailBody ) {
-        confirmText = confirmText + "<p>Body: " + emailBody + "</p>";
-    }
-
-    $('#fellappDataConfirmModal').find('.modal-body').html( confirmText );
+    // var confirmText = "<p>"+modalEl.attr('fellapp-data-confirm')+"</p>";
+    //
+    // //var emailSubject = modalEl.attr('fellapp-data-email-subject');
+    // //var emailBody = modalEl.attr('fellapp-data-email-body');
+    //
+    // //if( emailSubject == 'acceptedEmailSubjectModified' && emailBody == 'acceptedEmailBodyModified' ) {
+    // //}
+    //
+    // if( emailWarning ) {
+    //     confirmText = "<p>"+emailWarning + "</p>" + confirmText;
+    // }
+    // if( emailSubject ) {
+    //     confirmText = confirmText + "<p>Subject: " + emailSubject + "</p>";
+    // }
+    // if( emailBody ) {
+    //     confirmText = confirmText + "<p>Body: " + emailBody + "</p>";
+    // }
+    //
+    // $('#fellappDataConfirmModal').find('.modal-body').html( confirmText );
 
 
     $('#fellappDataConfirmModal').modal({show:true});
@@ -222,6 +242,19 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
         //alert("on modal js: dataConfirmOK clicked");
         var footer = modalEl.closest('.modal-footer');
         footer.html('Please wait ...');
+    });
+
+    $('#fellappDataConfirmModal').on('hidden.bs.modal', function () {
+        console.log("hidden.bs.modal");
+        // $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+        // $( '.modal' ).remove();
+        // $( '.modal-backdrop' ).remove();
+        // $( 'body' ).removeClass( "modal-open" );
+
+        $(this).modal( 'hide' ).data( 'bs.modal', null );
+        $(this).remove();
+        $('.modal-backdrop').remove();
+        $('body').removeClass( "modal-open" );
     });
 
     return false;

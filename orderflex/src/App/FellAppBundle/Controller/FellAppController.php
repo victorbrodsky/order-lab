@@ -596,7 +596,8 @@ class FellAppController extends OrderAbstractController {
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),
             'route_path' => $route,
-            'fellowshipTypes' => $fellowshipTypes
+            'fellowshipTypes' => $fellowshipTypes,
+            'static' => false
         );
     }
 

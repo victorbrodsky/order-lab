@@ -78,7 +78,7 @@ class FellAppUtilController extends OrderAbstractController
         }
 
         $response = new Response();
-        $response->setContent($res);
+        $response->setContent(json_encode($res));
         return $response;
     }
 
