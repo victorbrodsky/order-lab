@@ -2,9 +2,13 @@
  * Created by ch3 on 5/15/2019.
  */
 
+function fellappStatusNotificationConfirmAction() {
+    //fellappStatusNotificationConfirmActionOriginal();
+    fellappStatusNotificationConfirmActionDynamic();
+}
 
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
-function fellappStatusNotificationConfirmAction_original() {
+function fellappStatusNotificationConfirmActionOriginal() {
 
     $('a[fellapp-data-confirm]').click(function(ev) {
 
@@ -98,16 +102,15 @@ function fellappStatusNotificationConfirmAction_original() {
     }); //fellapp-data-confirm click
 
 }
-
 //dynamically get email subject, body, warning
-function fellappStatusNotificationConfirmAction() {
+function fellappStatusNotificationConfirmActionDynamic() {
 
     $('a[fellapp-data-confirm]').click(function(ev) {
 
         //var href = $(this).attr('href');
-        console.log("fellapp-data-confirm clicked");
+        //console.log("fellapp-data-confirm clicked");
 
-        //var btn = $(this);
+        var modalEl = $(this);
         //var lbtn = Ladda.create( btn );
 
         var fellappId = $(this).attr('fellapp-data-email-fellappid');
@@ -119,8 +122,6 @@ function fellappStatusNotificationConfirmAction() {
         }
         //var emailBody = $(this).attr('fellapp-data-email-body');
 
-        // if( emailSubject == 'acceptedEmailSubjectModified' && emailBody == 'acceptedEmailBodyModified' ) {
-
         var url = Routing.generate('fellapp_get_notification_email_infos');
 
         $.ajax({
@@ -130,15 +131,15 @@ function fellappStatusNotificationConfirmAction() {
             data: {id: fellappId, emailType: emailType},
             dataType: 'json',
         }).success(function(data) {
-            console.log("data:");
-            console.log(data);
+            //console.log("data:");
+            //console.log(data);
             if( data == "NOTOK" ) {
-                fellappStatusNotificationConfirmModal($(this),null,emailSubject,emailBody);
+                fellappStatusNotificationConfirmModal(modalEl,null,emailSubject,emailBody);
             } else {
-                console.log("warning="+data.warning);
-                console.log("subject="+data.subject);
-                console.log("body="+data.body);
-                fellappStatusNotificationConfirmModal($(this),data.warning,data.subject,data.body);
+                //console.log("warning="+data.warning);
+                //console.log("subject="+data.subject);
+                //console.log("body="+data.body);
+                fellappStatusNotificationConfirmModal(modalEl,data.warning,data.subject,data.body);
             }
         }).done(function() {
             //console.log("Finish getting subject and body");
@@ -158,7 +159,7 @@ function fellappStatusNotificationConfirmAction() {
 function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject,emailBody) {
 
     var confirmText = "<p>"+modalEl.attr('fellapp-data-confirm')+"</p>";
-    console.log("1confirmText="+confirmText);
+    //console.log("1confirmText="+confirmText);
 
     if( emailWarning ) {
         confirmText = "<p>"+emailWarning + "</p>" + confirmText;
@@ -169,52 +170,30 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
     if( emailBody ) {
         confirmText = confirmText + "<p>Body: " + emailBody + "</p>";
     }
-    console.log("2confirmText="+confirmText);
+    //console.log("2confirmText="+confirmText);
 
-    //if( !$('#fellappDataConfirmModal').length ) {
-        var modalHtml =
-            '<div id="fellappDataConfirmModal" class="modal fade fellapp-data-confirm-modal">' +
-            '<div class="modal-dialog">' +
-            '<div class="modal-content">' +
-            '<div class="modal-header text-center">' +
-            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-            '<h3 id="dataConfirmLabel">Confirmation</h3>' +
-            '</div>' +
-            '<div class="modal-body text-center">' + confirmText + '</div>' +
-            '<div class="modal-footer">' +
-            '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
-            '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
-            //'<a class="btn btn-primary fellapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
-            //'<a class="btn btn-primary fellapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
-            //'<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
-            '<button class="btn btn-default fellapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+    var modalHtml =
+        '<div id="fellappDataConfirmModal" class="modal fade fellapp-data-confirm-modal">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header text-center">' +
+        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+        '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+        '</div>' +
+        '<div class="modal-body text-center">' + confirmText + '</div>' +
+        '<div class="modal-footer">' +
+        '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
+        '<a class="btn btn-primary fellapp-data-confirm-ok fellapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
+        //'<a class="btn btn-primary fellapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
+        //'<a class="btn btn-primary fellapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
+        //'<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
+        '<button class="btn btn-default fellapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
 
-        $('body').append(modalHtml);
-    //}
-
-    // var confirmText = "<p>"+modalEl.attr('fellapp-data-confirm')+"</p>";
-    //
-    // //var emailSubject = modalEl.attr('fellapp-data-email-subject');
-    // //var emailBody = modalEl.attr('fellapp-data-email-body');
-    //
-    // //if( emailSubject == 'acceptedEmailSubjectModified' && emailBody == 'acceptedEmailBodyModified' ) {
-    // //}
-    //
-    // if( emailWarning ) {
-    //     confirmText = "<p>"+emailWarning + "</p>" + confirmText;
-    // }
-    // if( emailSubject ) {
-    //     confirmText = confirmText + "<p>Subject: " + emailSubject + "</p>";
-    // }
-    // if( emailBody ) {
-    //     confirmText = confirmText + "<p>Body: " + emailBody + "</p>";
-    // }
-    //
-    // $('#fellappDataConfirmModal').find('.modal-body').html( confirmText );
+    $('body').append(modalHtml);
 
 
     $('#fellappDataConfirmModal').modal({show:true});
@@ -245,7 +224,7 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
     });
 
     $('#fellappDataConfirmModal').on('hidden.bs.modal', function () {
-        console.log("hidden.bs.modal");
+        //console.log("hidden.bs.modal");
         // $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
         // $( '.modal' ).remove();
         // $( '.modal-backdrop' ).remove();

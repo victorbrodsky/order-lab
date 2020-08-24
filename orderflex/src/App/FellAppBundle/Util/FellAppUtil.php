@@ -1759,6 +1759,8 @@ class FellAppUtil {
     }
 
     public function getFellappAcceptanceRejectionEmailSent( $fellapp, $fullNonHtmlInfo=false ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
@@ -1794,22 +1796,23 @@ class FellAppUtil {
         foreach($loggers as $logger) {
             $creationDate = $logger->getCreationdate();
             if( $creationDate ) {
+                $creationDate = $userServiceUtil->convertFromUtcToUserTimezone($creationDate);
                 if( $logger->getEventType() ) {
                     $eventTypeName = $logger->getEventType()->getName();
                     if( $eventTypeName == $rejectionEventType ) {
                         $sentRejectionDatesArr[] = "<p style='color:red'>".$creationDate->format('m/d/Y'); // . "-rejected"."</p>";
                         if( $fullNonHtmlInfo ) {
                             //on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender
-                            $fullRejectionNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i')." by ".$logger->getUsernameOptimal();
+                            $fullRejectionNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i:s')." by ".$logger->getUsernameOptimal();
                         }
                     } elseif( $eventTypeName == $acceptanceEventType ) {
-                        $sentAcceptanceDatesArr[] = "<p style='color:green'>".$creationDate->format('m/d/Y'); // . "-accepted"."</p>";
+                        $sentAcceptanceDatesArr[] = "<p style='color:darkgreen'>".$creationDate->format('m/d/Y'); // . "-accepted"."</p>";
                         if( $fullNonHtmlInfo ) {
-                            $fullAcceptanceNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i')." by ".$logger->getUsernameOptimal();
+                            $fullAcceptanceNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i:s')." by ".$logger->getUsernameOptimal();
                         }
                     } else {
                         //This case is not possible: if not acceptance or rejection => use rejection array
-                        $sentRejectionDatesArr[] = "<p style='color:grey'>".$creationDate->format('m/d/Y'); // . "-unknown"."</p>";
+                        $sentRejectionDatesArr[] = "<p style='color:grey'>".$creationDate->format('m/d/Y H:i:s'); // . "-unknown"."</p>";
                         //if( $fullNonHtmlInfo ) {
                         //    $fullRejectionNonHtmlInfoArr[] = $creationDate->format('m/d/Y')." by ".$logger->getUser()." (Unknown notification email)";
                         //}
@@ -1823,12 +1826,14 @@ class FellAppUtil {
 
         if( count($sentRejectionDatesArr) > 0 ) {
             $sentRejectionDates = implode($delimiter,$sentRejectionDatesArr);
+            //$sentRejectionDates = $this->natural_language_join($sentRejectionDatesArr,'and');
         } else {
             $sentRejectionDates = null;
         }
 
         if( count($sentAcceptanceDatesArr) > 0 ) {
             $sentAcceptanceDates = implode($delimiter,$sentAcceptanceDatesArr);
+            //$sentAcceptanceDates = $this->natural_language_join($sentAcceptanceDatesArr,'and');
         } else {
             $sentAcceptanceDates = null;
         }
@@ -1845,13 +1850,15 @@ class FellAppUtil {
         if( $fullNonHtmlInfo ) {
             $delimiter = ", ";
             if( count($fullRejectionNonHtmlInfoArr) > 0 ) {
-                $fullRejectionNonHtmlInfo = implode($delimiter,$fullRejectionNonHtmlInfoArr);
+                //$fullRejectionNonHtmlInfo = implode($delimiter,$fullRejectionNonHtmlInfoArr);
+                $fullRejectionNonHtmlInfo = $this->natural_language_join($fullRejectionNonHtmlInfoArr,'and');
             } else {
                 $fullRejectionNonHtmlInfo = null;
             }
 
             if( count($fullAcceptanceNonHtmlInfoArr) > 0 ) {
-                $fullAcceptanceNonHtmlInfo = implode($delimiter,$fullAcceptanceNonHtmlInfoArr);
+                //$fullAcceptanceNonHtmlInfo = implode($delimiter,$fullAcceptanceNonHtmlInfoArr);
+                $fullAcceptanceNonHtmlInfo = $this->natural_language_join($fullAcceptanceNonHtmlInfoArr,'and');
             } else {
                 $fullAcceptanceNonHtmlInfo = null;
             }
@@ -1906,9 +1913,9 @@ class FellAppUtil {
             // for the FellowshipType FellowshipYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender
             // and an acceptance email has already been sent to this applicant (FirstName Lastname)
             // for the FellowshipType FellowshipYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender.
-            if ($fullAcceptanceNonHtmlInfo && $fullRejectionNonHtmlInfo) {
+            if( $fullRejectionNonHtmlInfo && $fullAcceptanceNonHtmlInfo ) {
                 $warningArr[] = "A rejection email has already been sent to this applicant $applicantFullName 
-                for the $fellappType $startDateStr on $fullAcceptanceNonHtmlInfo 
+                for the $fellappType $startDateStr on $fullRejectionNonHtmlInfo 
                 and an acceptance email has already been sent to this applicant $applicantFullName 
                 for the $fellappType $startDateStr on $fullAcceptanceNonHtmlInfo.";
             }
@@ -1920,6 +1927,7 @@ class FellAppUtil {
             if ($html) {
                 $warningStr = "<p style='color:orange'>" . $warningStr . "</p>";
             }
+            //exit($warningStr); //testing
         }
 
         return $warningStr;

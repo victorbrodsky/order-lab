@@ -76,7 +76,7 @@ class UserServiceUtil {
         $user_tz = $user->getPreferences()->getTimezone();
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
-        $datetimeTz = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone($user_tz) );
+        $datetimeTz = new \DateTime($datetime->format('Y-m-d H:i:s'), new \DateTimeZone($user_tz) );
         $datetimeUTC = $datetimeTz->setTimeZone(new \DateTimeZone('UTC'));
         //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
 
@@ -101,7 +101,7 @@ class UserServiceUtil {
         }
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
-        $datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+        $datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i:s'), new \DateTimeZone('UTC') );
         $datetimeTz = $datetimeUTC->setTimeZone(new \DateTimeZone($user_tz));
 
         //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";

@@ -31,6 +31,10 @@
 {% block content %}
 
 
+{% if static is not defined %}
+    {% set static = 0 %}
+{% endif %}
+
 <div id="fellapp-rank-modal"></div>
 
 <p>
@@ -405,10 +409,8 @@
 
             {% for entity in entities %}
 
-                {% if static is not defined %}
-                    {% set static = 0 %}
-                {% endif %}
                 {% if static %}
+                    {#getEmailInfo<br>#}
                     {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$fellapp);#}
                     {% set acceptedEmailSubjectModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
                     {% set acceptedEmailBodyModified = fellapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
@@ -1026,7 +1028,7 @@
                                                 </a>
                                             {% else %}
                                                 <a
-                                                    fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                    fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                     fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                     fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
                                                     fellapp-data-email-fellappid="{{ entity.id }}"
@@ -1057,7 +1059,7 @@
                                                     </a>
                                                 {% else %}
                                                     <a
-                                                        fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                        fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                         fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                         fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
                                                         fellapp-data-email-fellappid="{{ entity.id }}"
@@ -1103,7 +1105,7 @@
                                             </a>
                                             {% else %}
                                             <a
-                                                fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
                                                 fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
                                                 fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
                                                 fellapp-data-email-fellappid="{{ entity.id }}"
@@ -1125,7 +1127,7 @@
                                             </a>
                                             {% else %}
                                             <a
-                                                fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                fellapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
                                                 fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
                                                 fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
                                                 fellapp-data-email-fellappid="{{ entity.id }}"
