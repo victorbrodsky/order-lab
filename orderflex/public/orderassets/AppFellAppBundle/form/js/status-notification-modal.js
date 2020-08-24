@@ -273,3 +273,18 @@ function fellappStatusNotificationConfirmModal(modalEl,emailWarning,emailSubject
 //     location.reload();
 // }
 
+function clearAllCheckboxBtn() {
+    //console.log('Clear all checkboxes');
+    var checkboxes = document.getElementsByClassName('filter-status-checkbox');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+        checkboxes[i].checked = false;
+    }
+
+}
+function checkAllCheckboxBtn() {
+    //console.log('Check all checkboxes');
+    var checkboxes = document.getElementsByClassName('filter-status-checkbox');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+        checkboxes[i].checked = true;
+    }
+}
