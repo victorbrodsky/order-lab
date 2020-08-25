@@ -288,3 +288,4 @@ function checkAllCheckboxBtn() {
         checkboxes[i].checked = true;
     }
 }
+
