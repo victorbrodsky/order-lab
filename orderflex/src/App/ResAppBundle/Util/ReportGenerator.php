@@ -1316,6 +1316,7 @@ class ReportGenerator {
         $pdftkArgumentsResApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsResApp);
 
         $cmd = $pdftkLocation . ' ' . $pdftkArgumentsResApp;
+        //$cmd = "1".$cmd; //testing
 
         $logger->notice("pdftk cmd: " . $cmd);
         //echo "cmd=".$cmd."<br>";
@@ -1325,22 +1326,20 @@ class ReportGenerator {
 
         if( $userServiceUtil->isWinOs() ) {
             //$shellout = exec( $cmd, $output, $return );
-            $output = shell_exec($cmd); //command "exec" caused no response at all => use shell_exec
-            //$output = exec( $cmd );
-            //$output = exec( 'ls -lart' );
-            //echo "<pre>$output</pre>";
-            $logger->error("shell_exec pdftk output: " . print_r($output));
+            $output = shell_exec($cmd); //in Windows command "exec" caused no response at all => use shell_exec
+            //$logger->error("shell_exec pdftk output: " . print_r($output));
         } else {
             $shellout = exec( $cmd, $output, $return );
             //$shellout = exec( $cmd );
         }
 
-        $logger->error("pdftk output: " . print_r($output));
-        $logger->error("pdftk return=[" . $return . "]");
+        //$logger->error("pdftk output: " . print_r($output));
+        //$logger->error("pdftk return=[" . $return . "]");
 
         $successCondition = false;
         if( $userServiceUtil->isWinOs() ) {
-            if( $return != 0 || !$return ) {
+            if( $return === 1 || !$return ) {
+                //in Windows return is always empty => to be safe, treat it as encrypted pdf
                 $successCondition = false;
             } else {
                 $successCondition = true;
@@ -1353,8 +1352,14 @@ class ReportGenerator {
             }
         }
 
+//        if( file_exists($filenameMerged) ) {
+//            $logger->error("pdftk return: OK!!!: file existed=".$filenameMerged);
+//        } else {
+//            $logger->error("pdftk return: ERROR!!!: file not existed=".$filenameMerged);
+//        }
+
         //return 0 => ok, return 1 (got 127 in centos on error) => failed
-        if( $successCondition ) {
+        if( !$successCondition ) {
 
             //$logger->error("pdftk return: " . implode("; ",$return));
             $logger->error("pdftk return=".$return."; output=".print_r($output));
@@ -1403,13 +1408,23 @@ class ReportGenerator {
 
             $output = null;
             $return = null;
-            $shellout = exec( $cmd, $output, $return );
+            //$shellout = exec( $cmd, $output, $return );
             //$shellout = exec( $cmd );
+
+            if( $userServiceUtil->isWinOs() ) {
+                //$output = shell_exec($cmd); //in Windows command "exec" caused no response at all => use shell_exec
+                $shellout = exec( $cmd, $output, $return );
+                //$logger->error("shell_exec pdftk output: " . print_r($output));
+            } else {
+                $shellout = exec( $cmd, $output, $return );
+                //$shellout = exec( $cmd );
+            }
 
             //$logger->error("pdftk 2 output: " . print_r($output));
             //$logger->error("pdftk 2 return: " . $return);
 
             if( $return == 1 ) { //error
+            //if( !$successCondition ) { //error
                 //event log
                 $subjectUser = $resapp->getUser();
                 $resappInfoStr = "ID #".$resapp->getId()." (".$subjectUser."): ";
