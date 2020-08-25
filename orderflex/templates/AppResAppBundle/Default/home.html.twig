@@ -372,7 +372,7 @@
 
                 {% if route_path == "resapp_send_rejection_emails" %}
                     <th>Send Email</th>
-                    <th>Rejection Emailed?</th>
+                    <th>Notification Emailed?</th>
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(entities, 'Residency Track', 'residencyTrack.name') }}</th>
@@ -568,12 +568,26 @@
                         <td class="rowlink-skip">
                             <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
                         </td>
-                        <td>
+                        {#<td>#}
                             {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
-                            {% set sentRejectionEmail = resapp_util.getRejectionEmailSent(entity) %}
-                            {% if sentRejectionEmail %}
+                            {#{% set sentRejectionEmail = resapp_util.getRejectionEmailSent(entity) %}#}
+                            {#{% if sentRejectionEmail %}#}
                                 {#{{ sentRejectionEmail|date('m/d/Y') }}#}
-                                {{ sentRejectionEmail|raw }}
+                                {#{{ sentRejectionEmail|raw }}#}
+                            {#{% endif %}#}
+                        {#</td>#}
+                        <td>
+                            {#data-toggle="tooltip" title="rejection emails - red, acceptance emails - green"#}
+                            {#<span data-toggle="tooltip" title="rejection emails - red, acceptance emails - green"></span>#}
+                            {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
+                            {% set sentAcceptanceRejectionEmail = resapp_util.getResappAcceptanceRejectionEmailSent(entity) %}
+                            {% set sentRejectionEmail = sentAcceptanceRejectionEmail['rejection'] %}
+                            {% set sentAcceptanceEmail = sentAcceptanceRejectionEmail['acceptance'] %}
+                            {% if sentRejectionEmail %}
+                                <div data-toggle="tooltip" title="rejection emails - red">{{ sentRejectionEmail|raw }}</div>
+                            {% endif %}
+                            {% if sentAcceptanceEmail %}
+                                <div data-toggle="tooltip" title="acceptance emails - green">{{ sentAcceptanceEmail|raw }}</div>
                             {% endif %}
                         </td>
                     {% endif %}

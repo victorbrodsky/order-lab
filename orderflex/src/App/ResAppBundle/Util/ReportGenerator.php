@@ -1322,14 +1322,38 @@ class ReportGenerator {
 
         $output = null;
         $return = null;
-        $shellout = exec( $cmd, $output, $return );
-        //$shellout = exec( $cmd );
+
+        if( $userServiceUtil->isWinOs() ) {
+            //$shellout = exec( $cmd, $output, $return );
+            $output = shell_exec($cmd);
+            //$output = exec( $cmd );
+            //$output = exec( 'ls -lart' );
+            //echo "<pre>$output</pre>";
+            $logger->error("shell_exec pdftk output: " . print_r($output));
+        } else {
+            $shellout = exec( $cmd, $output, $return );
+            //$shellout = exec( $cmd );
+        }
 
         //$logger->error("pdftk output: " . print_r($output));
-        //$logger->error("pdftk return: " . $return);
+        //$logger->error("pdftk return=[" . $return . "]");
+
+        if( $userServiceUtil->isWinOs() ) {
+            if( $return != 0 || !$return ) {
+                $okCondition = false;
+            } else {
+                $okCondition = true;
+            }
+        } else {
+            if( $return != 0 ) {
+                $okCondition = false;
+            } else {
+                $okCondition = true;
+            }
+        }
 
         //return 0 => ok, return 1 (got 127 in centos on error) => failed
-        if( $return != 0 ) {
+        if( $okCondition ) {
 
             //$logger->error("pdftk return: " . implode("; ",$return));
             $logger->error("pdftk return=".$return."; output=".print_r($output));
@@ -1402,6 +1426,7 @@ class ReportGenerator {
 
         }
 
+        //check merged file
 //        if( file_exists($filenameMerged) ) {
 //            echo "filenameMerged exists \n<br>";
 //            $logger->error("pdftk merge ok: filenameMerged exist=".$filenameMerged);
