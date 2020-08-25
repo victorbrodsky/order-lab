@@ -954,7 +954,9 @@
                                             </li>
                                         {% endif %}
 
-                                        {% set rejectionAcceptanceEmailWarning = fellapp_util.getRejectionAcceptanceEmailWarning(entity) %}
+                                        {% if static %}
+                                            {% set rejectionAcceptanceEmailWarning = fellapp_util.getRejectionAcceptanceEmailWarning(entity) %}
+                                        {% endif %}
 
                                         {% if entity.appStatus.name != 'accepted' %}
                                             <li>

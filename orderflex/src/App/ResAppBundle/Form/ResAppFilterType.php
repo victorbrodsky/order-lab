@@ -111,31 +111,37 @@ class ResAppFilterType extends AbstractType
         $builder->add('hidden', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Hidden',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('archived', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Archived',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('complete', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Complete',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('interviewee', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Interviewee',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('active', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Active',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('reject', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Rejected',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
 //        $builder->add('onhold', CheckboxType::class, array(
@@ -146,19 +152,23 @@ class ResAppFilterType extends AbstractType
         $builder->add('priority', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Priority',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('accepted', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Accepted',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
         $builder->add('acceptedandnotified', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Accepted and Notified',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
         $builder->add('rejectedandnotified', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Rejected and Notified',
+            'attr' => array('class' => 'filter-status-checkbox'),
         ));
         
     }

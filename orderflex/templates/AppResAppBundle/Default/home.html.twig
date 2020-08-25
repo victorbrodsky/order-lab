@@ -30,6 +30,12 @@
 
 {% block content %}
 
+{% if static is not defined %}
+    {% set static = 0 %}
+{% endif %}
+{% if spinnerColor is not defined %}
+    {% set spinnerColor = "#428bca" %}
+{% endif %}
 
 <div id="resapp-rank-modal"></div>
 
@@ -341,6 +347,9 @@
                     </div>
                     &nbsp;&nbsp;
 
+                    <button id="clear-all-checkbox-btn" class="btn btn-sm btn-default" type="button" onclick="clearAllCheckboxBtn()">Clear All Checkboxes</button>
+                    <button id="check-all-checkbox-btn" class="btn btn-sm btn-default" type="button" onclick="checkAllCheckboxBtn()">Check All Checkboxes</button>
+
                 </div>
             </div>
 
@@ -411,11 +420,13 @@
 
             {% for entity in entities %}
 
-                {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$resapp);#}
-                {% set acceptedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
-                {% set acceptedEmailBodyModified = resapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
-                {% set rejectedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(rejectedEmailSubject,entity) %}
-                {% set rejectedEmailBodyModified = resapp_util.siteSettingsConstantReplace(rejectedEmailBody,entity) %}
+                {% if static %}
+                    {#$rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$resapp);#}
+                    {% set acceptedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(acceptedEmailSubject,entity) %}
+                    {% set acceptedEmailBodyModified = resapp_util.siteSettingsConstantReplace(acceptedEmailBody,entity) %}
+                    {% set rejectedEmailSubjectModified = resapp_util.siteSettingsConstantReplace(rejectedEmailSubject,entity) %}
+                    {% set rejectedEmailBodyModified = resapp_util.siteSettingsConstantReplace(rejectedEmailBody,entity) %}
+                {% endif %}
 
                 {#Set row color#}
                 {% set trclassname = "" %}
@@ -893,15 +904,27 @@
 
                                         {% if entity.appStatus.name != 'accepted' %}
                                             <li>
-                                                <a
-                                                    resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
-                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
-                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
-                                                    resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
-                                                    resapp-data-email-body="{{ acceptedEmailBodyModified }}"
-                                                    resapp-data-callback="refreshpage"
-                                                    href="#">Mark as Accepted
-                                                </a>
+                                                {% if static %}
+                                                    <a
+                                                        resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                        resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                        resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Accepted
+                                                    </a>
+                                                {% else %}
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
+                                                        resapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                        resapp-data-email-resappid="{{ entity.id }}"
+                                                        resapp-data-email-type="accepted"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Accepted
+                                                    </a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
                                         {% if entity.appStatus.name != 'acceptedandnotified' %}
@@ -911,15 +934,27 @@
                                                         {#general-data-callback="refreshpage"#}
                                                         {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}">Mark as Accepted and Notify#}
                                                 {#</a>#}
-                                                <a
-                                                    resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
-                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
-                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
-                                                    resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
-                                                    resapp-data-email-body="{{ acceptedEmailBodyModified }}"
-                                                    resapp-data-callback="refreshpage"
-                                                    href="#">Mark as Accepted and Notify
-                                                </a>
+                                                {% if static %}
+                                                    <a
+                                                        resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
+                                                        resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                        resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Accepted and Notify
+                                                    </a>
+                                                {% else %}
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
+                                                        resapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified-noemail' }, true) }}"
+                                                        resapp-data-email-resappid="{{ entity.id }}"
+                                                        resapp-data-email-type="accepted"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Accepted and Notify
+                                                    </a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
 
@@ -930,15 +965,27 @@
                                                         {#general-data-callback="refreshpage"#}
                                                         {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}">Mark as Rejected#}
                                                 {#</a>#}
-                                                <a
-                                                    resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
-                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
-                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
-                                                    resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
-                                                    resapp-data-email-body="{{ rejectedEmailBodyModified }}"
-                                                    resapp-data-callback="refreshpage"
-                                                    href="#">Mark as Rejected
-                                                </a>
+                                                {% if static %}
+                                                    <a
+                                                        resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                        resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                        resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Rejected
+                                                    </a>
+                                                {% else %}
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
+                                                        resapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                        resapp-data-email-resappid="{{ entity.id }}"
+                                                        resapp-data-email-type="rejected"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Rejected
+                                                    </a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
                                         {% if entity.appStatus.name != 'rejectedandnotified' %}
@@ -948,15 +995,27 @@
                                                         {#general-data-callback="refreshpage"#}
                                                         {#href="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}">Mark as Rejected and Notify#}
                                                 {#</a>#}
-                                                <a
-                                                    resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
-                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
-                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
-                                                    resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
-                                                    resapp-data-email-body="{{ rejectedEmailBodyModified }}"
-                                                    resapp-data-callback="refreshpage"
-                                                    href="#">Mark as Rejected and Notify
-                                                </a>
+                                                {% if static %}
+                                                    <a
+                                                        resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
+                                                        resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                        resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Rejected and Notify
+                                                    </a>
+                                                {% else %}
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
+                                                        resapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                        resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                        resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified-noemail' }, true) }}"
+                                                        resapp-data-email-resappid="{{ entity.id }}"
+                                                        resapp-data-email-type="rejected"
+                                                        resapp-data-callback="refreshpage"
+                                                        href="#">Mark as Rejected and Notify
+                                                    </a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
 
@@ -982,25 +1041,49 @@
 
                                         {#Send e-mail notification#}
                                         <li>
-                                            <a
-                                                resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
-                                                resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
-                                                resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
-                                                resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
-                                                resapp-data-email-body="{{ acceptedEmailBodyModified }}"
-                                                resapp-data-callback="refreshpage"
-                                                href="#">Send e-mail notification of acceptance
-                                            </a>
+                                            {% if static %}
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following notification e-mail to the accepted applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    resapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Send e-mail notification of acceptance
+                                                </a>
+                                            {% else %}
+                                                <a  data-spinner-color="{{ spinnerColor }}"
+                                                    resapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'acceptedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'accepted' }, true) }}"
+                                                    resapp-data-email-resappid="{{ entity.id }}"
+                                                    resapp-data-email-type="accepted"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Send e-mail notification of acceptance
+                                                </a>
+                                            {% endif %}
                                         <li>
-                                            <a
-                                                resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
-                                                resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
-                                                resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
-                                                resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
-                                                resapp-data-email-body="{{ rejectedEmailBodyModified }}"
-                                                resapp-data-callback="refreshpage"
-                                                href="#">Send e-mail notification of rejection
-                                            </a>
+                                            {% if static %}
+                                                <a
+                                                    resapp-data-confirm="Would you like to send the following rejection notification e-mail to the rejected applicant?"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    resapp-data-email-subject="{{ rejectedEmailSubjectModified }}"
+                                                    resapp-data-email-body="{{ rejectedEmailBodyModified }}"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Send e-mail notification of rejection
+                                                </a>
+                                            {% else %}
+                                                <a  data-spinner-color="{{ spinnerColor }}"
+                                                    resapp-data-confirm="<p style='color:red'>Would you like to send the following rejection notification e-mail to the rejected applicant?</p>"
+                                                    resapp-data-href1="{{ path('resapp_status', { 'id': entity.id, 'status': 'rejectedandnotified' }, true) }}"
+                                                    resapp-data-href2="{{ path('resapp_status', { 'id': entity.id, 'status': 'reject' }, true) }}"
+                                                    resapp-data-email-resappid="{{ entity.id }}"
+                                                    resapp-data-email-type="rejected"
+                                                    resapp-data-callback="refreshpage"
+                                                    href="#">Send e-mail notification of rejection
+                                                </a>
+                                            {% endif %}
                                         </li>
 
                                         {#invite references#}
@@ -1158,6 +1241,15 @@
                 <h5>
                     Email's Subject and Body ([[value]] will be replaced by the corresponding value from the residency application)
                 </h5>
+
+                <br>
+                <div class="well well-sm" align='center'>
+                    {% for residencyTypeId,residencyTypeName in residencyTypes %}
+                        {% set residencyTypeEntity = resapp_util.getResappByResidencyTrack(residencyTypeId) %}
+                        <p>{{ residencyTypeName }} currently directed by {{ resapp_util.getProgramDirectorStr(residencyTypeEntity) }}</p>
+                    {% endfor %}
+                </div>
+                <br>
 
                 {{ formmacros.simplefield("From:", user_security_utility.getSiteFromEmail("resapp"), "input", "disabled") }}
 

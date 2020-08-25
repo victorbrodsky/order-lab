@@ -672,7 +672,10 @@ class ResAppController extends OrderAbstractController {
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'resappids' => implode("-",$idsArr),
-            'route_path' => $route
+            'route_path' => $route,
+            'residencyTypes' => $residencyTypes,
+            'static' => false, //static=true => dynamically load the email's warning, subject and body
+            'spinnerColor' => "#428bca"
         );
     }
 

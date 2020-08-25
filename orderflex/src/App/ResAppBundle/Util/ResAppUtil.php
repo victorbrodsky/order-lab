@@ -1948,6 +1948,178 @@ class ResAppUtil {
         return $sentDates;
     }
 
+    public function getResappAcceptanceRejectionEmailSent( $resapp, $fullNonHtmlInfo=false ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+        $dql->where("logger.entityName = 'ResidencyApplication' AND logger.entityId = '".$resapp->getId()."'");
+
+        //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+        $dql->andWhere("eventType.name = :eventTypeRejectionStr OR eventType.name = :eventTypeAcceptanceStr");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
+
+        $rejectionEventType = "ResApp Rejected Notification Email Sent";
+        $acceptanceEventType = "ResApp Accepted Notification Email Sent";
+        $query->setParameters(
+            array(
+                'eventTypeRejectionStr' => $rejectionEventType,
+                'eventTypeAcceptanceStr' => $acceptanceEventType
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        $sentRejectionDatesArr = array();
+        $fullRejectionNonHtmlInfoArr = array();
+        $sentAcceptanceDatesArr = array();
+        $fullAcceptanceNonHtmlInfoArr = array();
+        foreach($loggers as $logger) {
+            $creationDate = $logger->getCreationdate();
+            if( $creationDate ) {
+                $creationDate = $userServiceUtil->convertFromUtcToUserTimezone($creationDate);
+                if( $logger->getEventType() ) {
+                    $eventTypeName = $logger->getEventType()->getName();
+                    if( $eventTypeName == $rejectionEventType ) {
+                        $sentRejectionDatesArr[] = "<p style='color:red'>".$creationDate->format('m/d/Y'); // . "-rejected"."</p>";
+                        if( $fullNonHtmlInfo ) {
+                            //on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender
+                            $fullRejectionNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i:s')." by ".$logger->getUsernameOptimal();
+                        }
+                    } elseif( $eventTypeName == $acceptanceEventType ) {
+                        $sentAcceptanceDatesArr[] = "<p style='color:darkgreen'>".$creationDate->format('m/d/Y'); // . "-accepted"."</p>";
+                        if( $fullNonHtmlInfo ) {
+                            $fullAcceptanceNonHtmlInfoArr[] = $creationDate->format('m/d/Y \a\t H:i:s')." by ".$logger->getUsernameOptimal();
+                        }
+                    } else {
+                        //This case is not possible: if not acceptance or rejection => use rejection array
+                        $sentRejectionDatesArr[] = "<p style='color:grey'>".$creationDate->format('m/d/Y H:i:s'); // . "-unknown"."</p>";
+                        //if( $fullNonHtmlInfo ) {
+                        //    $fullRejectionNonHtmlInfoArr[] = $creationDate->format('m/d/Y')." by ".$logger->getUser()." (Unknown notification email)";
+                        //}
+                    }
+                }
+            }
+        }
+
+        //$delimiter = "<br>";
+        $delimiter = "";
+
+        if( count($sentRejectionDatesArr) > 0 ) {
+            $sentRejectionDates = implode($delimiter,$sentRejectionDatesArr);
+            //$sentRejectionDates = $this->natural_language_join($sentRejectionDatesArr,'and');
+        } else {
+            $sentRejectionDates = null;
+        }
+
+        if( count($sentAcceptanceDatesArr) > 0 ) {
+            $sentAcceptanceDates = implode($delimiter,$sentAcceptanceDatesArr);
+            //$sentAcceptanceDates = $this->natural_language_join($sentAcceptanceDatesArr,'and');
+        } else {
+            $sentAcceptanceDates = null;
+        }
+
+//        if( $sentRejectionDates && $sentAcceptanceDates ) {
+//            $sentAcceptanceDates = "<br>".$sentAcceptanceDates;
+//        }
+
+        $res = array(
+            'rejection' => $sentRejectionDates,
+            'acceptance' => $sentAcceptanceDates
+        );
+
+        if( $fullNonHtmlInfo ) {
+            $delimiter = ", ";
+            if( count($fullRejectionNonHtmlInfoArr) > 0 ) {
+                //$fullRejectionNonHtmlInfo = implode($delimiter,$fullRejectionNonHtmlInfoArr);
+                $fullRejectionNonHtmlInfo = $this->natural_language_join($fullRejectionNonHtmlInfoArr,'and');
+            } else {
+                $fullRejectionNonHtmlInfo = null;
+            }
+
+            if( count($fullAcceptanceNonHtmlInfoArr) > 0 ) {
+                //$fullAcceptanceNonHtmlInfo = implode($delimiter,$fullAcceptanceNonHtmlInfoArr);
+                $fullAcceptanceNonHtmlInfo = $this->natural_language_join($fullAcceptanceNonHtmlInfoArr,'and');
+            } else {
+                $fullAcceptanceNonHtmlInfo = null;
+            }
+
+            $res['fullRejectionNonHtmlInfo'] = $fullRejectionNonHtmlInfo;
+            $res['fullAcceptanceNonHtmlInfo'] = $fullAcceptanceNonHtmlInfo;
+        }
+
+        return $res;
+    }
+    public function getRejectionAcceptanceEmailWarning($resapp,$html=true) {
+        //$warningStr = "Warning";
+        $warningStr = "";
+
+        $rejectionAcceptanceEmailStr = $this->getResappAcceptanceRejectionEmailSent($resapp,true);
+
+        $fullRejectionNonHtmlInfo = $rejectionAcceptanceEmailStr['fullRejectionNonHtmlInfo'];
+        $fullAcceptanceNonHtmlInfo = $rejectionAcceptanceEmailStr['fullAcceptanceNonHtmlInfo'];
+
+        $warningArr = array();
+
+
+        if( $fullRejectionNonHtmlInfo || $fullAcceptanceNonHtmlInfo ) {
+            $applicantFullName = $resapp->getApplicantFullName();
+            $resappType = $resapp->getResidencyTrack() . "";
+            $startDate = $resapp->getStartDate();
+            if ($startDate) {
+                $startDateStr = $resapp->getStartDate()->format('Y');
+            } else {
+                $startDateStr = NULL;
+            }
+
+
+            // If one or more rejection notification email has been sent to the same applicant
+            // for the same residency and the same year, show:
+            // “A rejection email has already been sent to this applicant (FirstName LastName)
+            // for the ResidencyType ResidencyYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender.”
+            //  (show the timestamps for the latest rejection email if there is more than one)
+            if ($fullRejectionNonHtmlInfo && !$fullAcceptanceNonHtmlInfo) {
+                $warningArr[] = "A rejection email has already been sent to this applicant $applicantFullName 
+                                for the $resappType $startDateStr on $fullRejectionNonHtmlInfo.";
+            }
+
+            // An acceptance email has already been sent to this applicant (FirstName LastName)
+            // for the ResidencyType ResidencyYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender.
+            if ($fullAcceptanceNonHtmlInfo && !$fullRejectionNonHtmlInfo) {
+                $warningArr[] = "An acceptance email has already been sent to this applicant $applicantFullName 
+                                for the $resappType $startDateStr on $fullAcceptanceNonHtmlInfo.";
+            }
+
+            // A rejection email has already been sent to this applicant (FirstName LastName)
+            // for the ResidencyType ResidencyYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender
+            // and an acceptance email has already been sent to this applicant (FirstName Lastname)
+            // for the ResidencyType ResidencyYear on MM/DD/YYYY at HH:MM by FirstNameOfSender LastNameOfSender.
+            if( $fullRejectionNonHtmlInfo && $fullAcceptanceNonHtmlInfo ) {
+                $warningArr[] = "A rejection email has already been sent to this applicant $applicantFullName 
+                for the $resappType $startDateStr on $fullRejectionNonHtmlInfo 
+                and an acceptance email has already been sent to this applicant $applicantFullName 
+                for the $resappType $startDateStr on $fullAcceptanceNonHtmlInfo.";
+            }
+
+            if( count($warningArr) > 0 ) {
+                $warningStr = implode("<br>",$warningArr);
+            }
+
+            if ($html) {
+                $warningStr = "<p style='color:orange'>" . $warningStr . "</p>";
+            }
+            //exit($warningStr); //testing
+        }
+
+        return $warningStr;
+    }
+    
     public function siteSettingsConstantReplace($str,$resapp) {
 
         $applicantFullName = $resapp->getApplicantFullName();
@@ -1960,11 +2132,64 @@ class ResAppUtil {
             $startDateStr = NULL;
         }
 
+        $directorsStr = $this->getProgramDirectorStr($resapp->getResidencyTrack(),$str);
+
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[RESIDENCY TYPE]]",$resappType,$str);
         $str = str_replace("[[INSTITUTION]]",$inst,$str);
+        $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
 
         return $str;
+    }
+
+    public function getProgramDirectorStr( $residencyTrack, $str=NULL ) {
+        $directorsStr = "Program Director";
+
+        if( $str && strpos($str, "[[DIRECTOR]]") === false ) {
+            return $directorsStr;
+        }
+
+        if( $residencyTrack ) {
+            $directors = $residencyTrack->getDirectors();
+            $usernameArr = array();
+            foreach( $directors as $director ) {
+                //check if account is not inactivated/banned (ROLE_RESAPP_BANNED, ROLE_RESAPP_UNAPPROVED, ROLE_USERDIRECTORY_BANNED, ROLE_USERDIRECTORY_UNAPPROVED)
+                if (
+                    !$director->isEnabled() ||
+                    $this->container->get('security.authorization_checker')->isGranted('ROLE_RESAPP_BANNED') ||
+                    $this->container->get('security.authorization_checker')->isGranted('ROLE_RESAPP_UNAPPROVED')
+                ) {
+                    //user is locked, banned or unapproved
+                } else {
+                    //user is ok
+                    $usernameArr[] = $director->getUsernameOptimal();
+                }
+            }
+
+            if( count($usernameArr) > 0 ) {
+
+                //for two FirstName1 LastName1, Degree(s) and FirstName2 LastName2, Degree(s)
+                //for three or more/: FirstName1 LastName1, Degree(s), FirstName2 LastName2, Degree(s), and FirstName3 LastName3, Degree(s)
+                $directorsStr = $this->natural_language_join($usernameArr,'and');
+
+            }
+        }
+
+        return $directorsStr;
+    }
+    /**
+     * Join a string with a natural language conjunction at the end.
+     * https://gist.github.com/angry-dan/e01b8712d6538510dd9c
+     */
+    public function natural_language_join(array $list, $conjunction = 'and') {
+        $last = array_pop($list);
+        if ($list) {
+            return implode(', ', $list) . ' ' . $conjunction . ' ' . $last;
+        }
+        return $last;
+    }
+    public function getResappByResidencyTrack($residencyTypeId) {
+        return $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyTypeId);
     }
 } 
