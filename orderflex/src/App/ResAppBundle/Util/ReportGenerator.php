@@ -1325,7 +1325,7 @@ class ReportGenerator {
 
         if( $userServiceUtil->isWinOs() ) {
             //$shellout = exec( $cmd, $output, $return );
-            $output = shell_exec($cmd);
+            $output = shell_exec($cmd); //command "exec" caused no response at all => use shell_exec
             //$output = exec( $cmd );
             //$output = exec( 'ls -lart' );
             //echo "<pre>$output</pre>";
@@ -1335,25 +1335,26 @@ class ReportGenerator {
             //$shellout = exec( $cmd );
         }
 
-        //$logger->error("pdftk output: " . print_r($output));
-        //$logger->error("pdftk return=[" . $return . "]");
+        $logger->error("pdftk output: " . print_r($output));
+        $logger->error("pdftk return=[" . $return . "]");
 
+        $successCondition = false;
         if( $userServiceUtil->isWinOs() ) {
             if( $return != 0 || !$return ) {
-                $okCondition = false;
+                $successCondition = false;
             } else {
-                $okCondition = true;
+                $successCondition = true;
             }
         } else {
             if( $return != 0 ) {
-                $okCondition = false;
+                $successCondition = false;
             } else {
-                $okCondition = true;
+                $successCondition = true;
             }
         }
 
         //return 0 => ok, return 1 (got 127 in centos on error) => failed
-        if( $okCondition ) {
+        if( $successCondition ) {
 
             //$logger->error("pdftk return: " . implode("; ",$return));
             $logger->error("pdftk return=".$return."; output=".print_r($output));
