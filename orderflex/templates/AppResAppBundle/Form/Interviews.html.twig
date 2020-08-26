@@ -21,6 +21,18 @@
     {% set collapsein = "in" %}
 {% endif %}
 
+{#Open Interview section on anchor 'interviews'#}
+{% set collapseinInterviews = collapsein %}
+
+{% if sectionIdToOpen is not defined %}
+    {% set sectionIdToOpen = null %}
+{% endif %}
+
+{#sectionIdToOpen={{ sectionIdToOpen }}<br>#}
+{% if sectionIdToOpen == 'interviews' %}
+    {% set collapseinInterviews = 'in' %}
+{% endif %}
+
 <div class="panel panel-info">
 
     <div class="panel-heading">
@@ -53,7 +65,7 @@
     </div>
 
 
-    <div id="interviews" class="panel-collapse collapse {{ collapsein }}">
+    <div id="interviews" class="panel-collapse collapse {{ collapseinInterviews }}">
         <div class="panel-body">
 
             {#<div tooltip="test tooltip" data-toggle="tooltip">#}

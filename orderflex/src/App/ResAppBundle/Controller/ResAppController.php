@@ -696,10 +696,11 @@ class ResAppController extends OrderAbstractController {
     //@Route("/edit-with-default-interviewers/{id}", name="resapp_edit_default_interviewers")
     /**
      * @Route("/show/{id}", name="resapp_show")
+     * @Route("/show/{id}/{anchor}", name="resapp_show_anchor")
      * @Route("/download/{id}", name="resapp_download")
      * @Template("AppResAppBundle/Form/new.html.twig")
      */
-    public function showAction(Request $request, $id) {
+    public function showAction(Request $request, $id, $anchor=null) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
@@ -786,7 +787,7 @@ class ResAppController extends OrderAbstractController {
 //        }
 
         //$args = $this->getShowParameters($routeName,$id);
-        $args = $this->getShowParameters($routeName,$entity);
+        $args = $this->getShowParameters($routeName,$entity,$anchor); //show, edit, download
 
         if( $routeName == 'resapp_download' ) {
             return $this->render('AppResAppBundle/Form/download.html.twig', $args);
@@ -853,7 +854,7 @@ class ResAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity) {
+    public function getShowParameters($routeName, $entity, $anchor=null) {
              
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -894,11 +895,16 @@ class ResAppController extends OrderAbstractController {
 //            echo "training=".$training->getTrainingType()."<br>";
 //        }
 
-        if( $routeName == "resapp_show" ) {
+        if( $routeName == "resapp_show" || $routeName == "resapp_show_anchor" ) {
             $cycle = 'show';
             $disabled = true;
             $method = "GET";
             $action = $this->generateUrl('resapp_edit', array('id' => $entity->getId()));
+        }
+
+        $sectionIdToOpen = null;
+        if( $anchor ) {
+            $sectionIdToOpen = $anchor;
         }
 
         if( $routeName == "resapp_new" ) {
@@ -951,6 +957,8 @@ class ResAppController extends OrderAbstractController {
             $action = null; //$this->generateUrl('resapp_update', array('id' => $entity->getId()));
         }
 
+
+
         $fullForm = false;
 
         $params = array(
@@ -1001,7 +1009,8 @@ class ResAppController extends OrderAbstractController {
             'cycle' => $cycle,
             'sitename' => $this->getParameter('resapp.sitename'),
             'route' => $routeName,
-            'fullForm' => $fullForm
+            'fullForm' => $fullForm,
+            'sectionIdToOpen' => $sectionIdToOpen
         );
     }
 
