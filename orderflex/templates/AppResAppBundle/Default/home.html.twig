@@ -704,10 +704,7 @@
                         <div>
                             <div style="float:left; margin-right:5px;">
                         {% if entity.interviewScore %}                         
-                            {#<a data-toggle="tooltip" title="{{ tooltip }}" href="{{ path('resapp_show', { 'id': entity.id}) }}#interviews" target="_blank" style="color:black;">#}
-                                {#<div {{ scoreStyle }}>{{ entity.interviewScore }}</div>#}
-                            {#</a>#}
-                            <a data-toggle="tooltip" title="{{ tooltip }}" href="{{ path('resapp_show_anchor', { 'id': entity.id, 'anchor': 'interviews'}) }}#interviews" target="_blank" style="color:black;">
+                            <a data-toggle="tooltip" title="{{ tooltip }}" href="{{ path('resapp_show', { 'id': entity.id}) }}#interviews" target="_blank" style="color:black;">
                                 <div {{ scoreStyle }}>{{ entity.interviewScore }}</div>
                             </a>
                         {% endif %} 

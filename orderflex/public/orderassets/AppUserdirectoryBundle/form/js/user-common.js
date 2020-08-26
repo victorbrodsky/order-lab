@@ -896,10 +896,10 @@ function expandTextarea(holder) {
     var targetid = ".textarea";
 
     targetid = getElementTargetByHolder(holder,targetid);
-    //console.log("expandTextarea: targetid="+targetid);
+    console.log("expandTextarea: targetid="+targetid);
 
     if( $(targetid).length == 0 ) {
-        //console.log('no textarea => return');
+        console.log('no textarea => return');
         return;
     }
 
@@ -907,7 +907,7 @@ function expandTextarea(holder) {
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;
         var newH = domElement.scrollHeight + 10;
-        //console.log("event keyup: cur h="+domElement.style.height+", newH="+newH);
+        console.log("event keyup: cur h="+domElement.style.height+", newH="+newH);
         domElement.style.height = newH + 'px';
     };
 
@@ -923,10 +923,10 @@ function expandTextarea(holder) {
         if( full.indexOf("/event-log") !== -1 ) {
             resize = false;
         }
-        //console.log('resize='+resize);
+        console.log('resize='+resize);
 
         if( cycle != 'download' && resize ) {
-            //console.log('resize textarea');
+            console.log('resize textarea');
 
             //ver1
             //var height = $(element).prop('scrollHeight');

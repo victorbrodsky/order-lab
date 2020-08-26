@@ -54,6 +54,20 @@
 
 {% block additionaljs %}
     {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+            var hashValue = window.location.hash;
+            //console.log("hashValue="+hashValue);
+            if( hashValue == '#interviews' ) {
+                //console.log("open panel");
+                $('#interviews').collapse('show');
+            }
+        });
+
+    </script>
+
 {% endblock %}
 
 

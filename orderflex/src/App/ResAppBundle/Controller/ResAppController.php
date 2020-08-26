@@ -696,11 +696,10 @@ class ResAppController extends OrderAbstractController {
     //@Route("/edit-with-default-interviewers/{id}", name="resapp_edit_default_interviewers")
     /**
      * @Route("/show/{id}", name="resapp_show")
-     * @Route("/show/{id}/{anchor}", name="resapp_show_anchor")
      * @Route("/download/{id}", name="resapp_download")
      * @Template("AppResAppBundle/Form/new.html.twig")
      */
-    public function showAction(Request $request, $id, $anchor=null) {
+    public function showAction(Request $request, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
@@ -713,6 +712,9 @@ class ResAppController extends OrderAbstractController {
         //ini_set('memory_limit', '7168M');
 
         //error_reporting(E_ERROR | E_PARSE);
+
+        //$uri = $request->getUri();
+        //exit("echo=".$uri);
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -787,7 +789,7 @@ class ResAppController extends OrderAbstractController {
 //        }
 
         //$args = $this->getShowParameters($routeName,$id);
-        $args = $this->getShowParameters($routeName,$entity,$anchor); //show, edit, download
+        $args = $this->getShowParameters($routeName,$entity); //show, edit, download
 
         if( $routeName == 'resapp_download' ) {
             return $this->render('AppResAppBundle/Form/download.html.twig', $args);
@@ -854,7 +856,7 @@ class ResAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity, $anchor=null) {
+    public function getShowParameters($routeName, $entity) {
              
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -895,16 +897,11 @@ class ResAppController extends OrderAbstractController {
 //            echo "training=".$training->getTrainingType()."<br>";
 //        }
 
-        if( $routeName == "resapp_show" || $routeName == "resapp_show_anchor" ) {
+        if( $routeName == "resapp_show" ) {
             $cycle = 'show';
             $disabled = true;
             $method = "GET";
             $action = $this->generateUrl('resapp_edit', array('id' => $entity->getId()));
-        }
-
-        $sectionIdToOpen = null;
-        if( $anchor ) {
-            $sectionIdToOpen = $anchor;
         }
 
         if( $routeName == "resapp_new" ) {
@@ -1010,7 +1007,6 @@ class ResAppController extends OrderAbstractController {
             'sitename' => $this->getParameter('resapp.sitename'),
             'route' => $routeName,
             'fullForm' => $fullForm,
-            'sectionIdToOpen' => $sectionIdToOpen
         );
     }
 

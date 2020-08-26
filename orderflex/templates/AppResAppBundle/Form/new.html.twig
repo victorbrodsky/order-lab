@@ -64,6 +64,18 @@
 
 {% block additionaljs %}
     {% include 'AppResAppBundle/Form/applicant-content-js.html.twig' %}
-{% endblock %}
 
+    <script language="Javascript">
+
+        $(document).ready(function() {
+            var hashValue = window.location.hash;
+            //console.log("hashValue="+hashValue);
+            if( hashValue == '#interviews' ) {
+                //console.log("open panel");
+                $('#interviews').collapse('show');
+            }
+        });
+
+    </script>
+{% endblock %}
 
