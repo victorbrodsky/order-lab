@@ -49,32 +49,32 @@ class ResappSiteParameterType extends AbstractType
 
         $builder->add('acceptedEmailSubject', null, array(
             'label' => 'Subject of e-mail to the accepted applicant:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('acceptedEmailBody', null, array(
             'label' => 'Body of e-mail to the accepted applicant:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
 
         $builder->add('rejectedEmailSubject', null, array(
             'label' => 'Subject of e-mail to the rejected applicant:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('rejectedEmailBody', null, array(
             'label' => 'Body of e-mail to the rejected applicant:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
 
 
 
         $builder->add('confirmationSubjectResApp', null, array(
             'label' => 'Email subject for confirmation of application submission:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            'attr' => array('class'=>'form-control textarea form-control-modif', 'style'=>'margin:0')
         ));
 
         $builder->add('confirmationBodyResApp', null, array(
             'label'=>'Email body for confirmation of application submission:',
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            'attr' => array('class'=>'form-control textarea form-control-modif', 'style'=>'margin:0')
         ));
 
         $builder->add('confirmationEmailResApp',null,array(

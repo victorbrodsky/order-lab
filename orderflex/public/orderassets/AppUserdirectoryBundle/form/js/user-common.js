@@ -904,11 +904,47 @@ function expandTextarea(holder) {
     }
 
     var onchangeFunction = function(domElement) {
+        //var originalReadonly = domElement.readOnly;
+        //console.log("originalReadonly="+originalReadonly);
+        //domElement.readOnly = true; //to get correct height make it readonly
+
+        //expand if hidden (collapsed)
+        if(0) {
+            var originalHidden = false;
+            var panelEl = $(domElement).closest('.panel-collapse');
+            console.log("panelEl-Class=" + panelEl.attr('class') + "panelEl-ID=" + panelEl.attr('id'));
+            //console.log(panelEl);
+            if (panelEl) {
+                if (panelEl.hasClass("in")) {
+                    //opened
+                    console.log("panelEl has Class in=[" + panelEl.attr('class') + "], panelEl-ID=[" + panelEl.attr('id') + "]");
+                } else {
+                    //hidden
+                    console.log("show originalHidden=" + originalHidden);
+                    originalHidden = true;
+                    panelEl.collapse('show');
+                }
+            }
+            console.log("originalHidden=" + originalHidden);
+        }
+
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;
         var newH = domElement.scrollHeight + 10;
-        console.log("event keyup: cur h="+domElement.style.height+", newH="+newH);
+        console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
         domElement.style.height = newH + 'px';
+        //domElement.readOnly = originalReadonly; //to get correct height make it readonly
+
+        //close if panel was hidden
+        if(0) {
+            if (panelEl) {
+                if (originalHidden) {
+                    //console.log("hide originalHidden="+originalHidden);
+                    //panelEl.collapse('hide');
+                    //panelEl.removeClass('in');
+                }
+            }
+        }
     };
 
     //for (var i = 0; i < elements.length; ++i) {
@@ -948,8 +984,17 @@ function expandTextarea(holder) {
 
         $(element).on('input',function(e){
             //e.target.value
+            console.log("on input");
             onchangeFunction(this);
         });
+
+        $(element).on('keyup',function(e){
+            //e.target.value
+            console.log("on keyup");
+            onchangeFunction(this);
+        });
+
+        //$(element).keyup();
 
     });
 
