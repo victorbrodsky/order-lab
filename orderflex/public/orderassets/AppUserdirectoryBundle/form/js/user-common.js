@@ -959,10 +959,10 @@ function expandTextarea(holder) {
         if( full.indexOf("/event-log") !== -1 ) {
             resize = false;
         }
-        console.log('resize='+resize);
+        //console.log('resize='+resize);
 
         if( cycle != 'download' && resize ) {
-            console.log('resize textarea');
+            //console.log('resize textarea');
 
             //ver1
             //var height = $(element).prop('scrollHeight');
@@ -984,15 +984,53 @@ function expandTextarea(holder) {
 
         $(element).on('input',function(e){
             //e.target.value
-            console.log("on input");
+            //console.log("on input");
             onchangeFunction(this);
         });
 
-        $(element).on('keyup',function(e){
+        // $(element).on('keyup',function(e){
+        //     //e.target.value
+        //     console.log("on keyup");
+        //     onchangeFunction(this);
+        // });
+
+        // $(element).on('beforeShow',function(e){
+        //     //e.target.value
+        //     console.log("on beforeShow!!!!!!!!!!!!!!!!!!!!!");
+        //     onchangeFunction(this);
+        // });
+
+        $(element).on('mouseenter',function(e){
             //e.target.value
-            console.log("on keyup");
+            console.log("on mouseenter!!!!!!!!!!!!!!!!!!!!!");
             onchangeFunction(this);
         });
+
+        //https://stackoverflow.com/questions/1225102/jquery-event-to-trigger-action-when-a-div-is-made-visible
+        // $(element)
+        //     .bind('beforeShow', function() {
+        //         alert('beforeShow');
+        //     })
+        //     .bind('afterShow', function() {
+        //         alert('afterShow');
+        //     })
+        //     .show(1000, function() {
+        //         alert('in show callback');
+        //         onchangeFunction(this);
+        //     })
+        //     .show();
+
+
+        // $(element).on('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(){
+        //     console.log("on everything !!!!!!!!!!!!!!!!!!!!!");
+        //     onchangeFunction(this);
+        // });
+
+        // $(element).on('show.bs.collapse',function(e){
+        //     //e.target.value
+        //     console.log("on shown.bs.collapse #######");
+        //     onchangeFunction(this);
+        // });
 
         //$(element).keyup();
 
