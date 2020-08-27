@@ -896,10 +896,10 @@ function expandTextarea(holder) {
     var targetid = ".textarea";
 
     targetid = getElementTargetByHolder(holder,targetid);
-    console.log("expandTextarea: targetid="+targetid);
+    //console.log("expandTextarea: targetid="+targetid);
 
     if( $(targetid).length == 0 ) {
-        console.log('no textarea => return');
+        //console.log('no textarea => return');
         return;
     }
 
@@ -931,7 +931,7 @@ function expandTextarea(holder) {
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;
         var newH = domElement.scrollHeight + 10;
-        console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
+        //console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
         domElement.style.height = newH + 'px';
         //domElement.readOnly = originalReadonly; //to get correct height make it readonly
 
@@ -945,7 +945,7 @@ function expandTextarea(holder) {
                 }
             }
         }
-    };
+    }; //EOF onchangeFunction
 
     //for (var i = 0; i < elements.length; ++i) {
     //  var element = elements[i];
@@ -982,57 +982,23 @@ function expandTextarea(holder) {
         //    this.style.height = newH + 'px';
         //}, false);
 
-        $(element).on('input',function(e){
+        $(element).on('input mouseenter',function(e){
             //e.target.value
             //console.log("on input");
             onchangeFunction(this);
         });
 
-        // $(element).on('keyup',function(e){
+        // $(element).on('mouseenter',function(e){
         //     //e.target.value
-        //     console.log("on keyup");
+        //     console.log("on mouseenter!!!!!!!!!!!!!!!!!!!!!");
         //     onchangeFunction(this);
         // });
-
-        // $(element).on('beforeShow',function(e){
-        //     //e.target.value
-        //     console.log("on beforeShow!!!!!!!!!!!!!!!!!!!!!");
-        //     onchangeFunction(this);
-        // });
-
-        $(element).on('mouseenter',function(e){
-            //e.target.value
-            console.log("on mouseenter!!!!!!!!!!!!!!!!!!!!!");
-            onchangeFunction(this);
-        });
-
-        //https://stackoverflow.com/questions/1225102/jquery-event-to-trigger-action-when-a-div-is-made-visible
-        // $(element)
-        //     .bind('beforeShow', function() {
-        //         alert('beforeShow');
-        //     })
-        //     .bind('afterShow', function() {
-        //         alert('afterShow');
-        //     })
-        //     .show(1000, function() {
-        //         alert('in show callback');
-        //         onchangeFunction(this);
-        //     })
-        //     .show();
 
 
         // $(element).on('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(){
         //     console.log("on everything !!!!!!!!!!!!!!!!!!!!!");
         //     onchangeFunction(this);
         // });
-
-        // $(element).on('show.bs.collapse',function(e){
-        //     //e.target.value
-        //     console.log("on shown.bs.collapse #######");
-        //     onchangeFunction(this);
-        // });
-
-        //$(element).keyup();
 
     });
 
