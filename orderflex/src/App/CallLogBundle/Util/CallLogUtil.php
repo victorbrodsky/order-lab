@@ -2542,7 +2542,7 @@ class CallLogUtil
         if( count($messages) > 0 ) {
             $message = $messages[0];
             if( $message && $message->getOrderdate() ) {
-                $date = $message->getOrderdate()->format("m/d/Y");
+                $date = $message->getOrderdate()->format("m/d/Y H:i:s");
             }
         } else {
             $date = null;
@@ -2579,7 +2579,7 @@ class CallLogUtil
         if( count($messages) > 0 ) {
             $message = $messages[0];
             if( $message && $message->getOrderdate() ) {
-                $date = $message->getOrderdate()->format("m/d/Y");
+                $date = $message->getOrderdate()->format("m/d/Y H:i:s");
             }
         } else {
             $date = null;

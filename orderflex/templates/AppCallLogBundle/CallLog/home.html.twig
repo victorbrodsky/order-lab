@@ -295,6 +295,14 @@
             toggleBtnListener();
 
             //taskStatusBtnListener();
+
+            //remove accession mask by default when Accession type is not set
+//            var accessionType = $('#filter_accessionType').select2('data').text;
+//            if( !accessionType ) {
+//                $('#filter_accessionNumber').inputmask('remove');
+//            }
+            //setAccessiontypeMask($('#filter_accessionNumber'));
+            setAccessionMask();
         });
 
         function toggleBtnListener() {
