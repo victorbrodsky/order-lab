@@ -41,7 +41,8 @@
             <th>{{ knp_pagination_sortable(accessions, 'First Name', 'firstname.field') }}</th>
             <th>{{ knp_pagination_sortable(accessions, 'MRN', 'mrn.field') }}</th>
             <th>{{ knp_pagination_sortable(accessions, 'Accession', 'accessionaccession.field') }}</th>
-            <th>Date of Last Entry</th>
+            {#<th>Date of Last Entry</th>#}
+            <th>{{ knp_pagination_sortable(accessions, 'Date of Last Entry', 'message.orderdate') }}</th>
             <th>Actions</th>
         </tr>
         </thead>

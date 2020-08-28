@@ -2580,6 +2580,7 @@ class CallLogUtil
             $message = $messages[0];
             if( $message && $message->getOrderdate() ) {
                 $date = $message->getOrderdate()->format("m/d/Y H:i:s");
+                //convert to user timezone
             }
         } else {
             $date = null;
