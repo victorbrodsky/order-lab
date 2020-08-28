@@ -109,7 +109,11 @@ class UserServiceUtil {
         return $datetimeTz;
     }
 
-    public function convertToUserTimezone($datetime,$user) {
+    public function convertToUserTimezone($datetime,$user=null) {
+
+        if( !$user ) {
+            $user = $this->security->getUser();
+        }
 
         //$user_tz = 'America/New_York';
         $user_tz = $user->getPreferences()->getTimezone();

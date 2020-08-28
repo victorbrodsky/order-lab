@@ -2537,10 +2537,18 @@ class CrnUtil
 
         $messages = $query->getResult();
 
+        $date = null;
+
         if( count($messages) > 0 ) {
             $message = $messages[0];
             if( $message && $message->getOrderdate() ) {
-                $date = $message->getOrderdate()->format("m/d/Y H:i:s");
+                //$date = $message->getOrderdate()->format("m/d/Y H:i:s");
+                //convert to user timezone
+                $userServiceUtil = $this->container->get('user_service_utility');
+                $date = $userServiceUtil->convertToUserTimezone($message->getOrderdate());
+                if( $date ) {
+                    $date = $date->format("m/d/Y H:i:s");
+                }
             }
         } else {
             $date = null;
@@ -2574,11 +2582,18 @@ class CrnUtil
 
         $messages = $query->getResult();
 
+        $date = null;
+
         if( count($messages) > 0 ) {
             $message = $messages[0];
             if( $message && $message->getOrderdate() ) {
-                $date = $message->getOrderdate()->format("m/d/Y H:i:s");
+                //$date = $message->getOrderdate()->format("m/d/Y H:i:s");
                 //convert to user timezone
+                $userServiceUtil = $this->container->get('user_service_utility');
+                $date = $userServiceUtil->convertToUserTimezone($message->getOrderdate());
+                if( $date ) {
+                    $date = $date->format("m/d/Y H:i:s");
+                }
             }
         } else {
             $date = null;
