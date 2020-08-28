@@ -208,7 +208,8 @@ class CrnAccessionController extends OrderAbstractController {
             //$request->query->getInt('page', 1),
             $limit,      /*limit per page*/
             array(
-                'defaultSortFieldName' => 'accession.id',
+                //'defaultSortFieldName' => 'accession.id',
+                'defaultSortFieldName' => 'message.orderdate',
                 'defaultSortDirection' => 'DESC',
                 'wrap-queries'=>true
             )

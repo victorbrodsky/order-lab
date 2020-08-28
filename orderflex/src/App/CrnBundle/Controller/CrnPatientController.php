@@ -941,7 +941,8 @@ class CrnPatientController extends PatientController {
             //$request->query->getInt('page', 1),
             $limit,      /*limit per page*/
             array(
-                'defaultSortFieldName' => 'patient.id',
+                //'defaultSortFieldName' => 'patient.id',
+                'defaultSortFieldName' => 'message.orderdate',
                 'defaultSortDirection' => 'DESC',
                 'wrap-queries'=>true
             )
