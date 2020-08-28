@@ -1394,11 +1394,11 @@ class ScanAdminController extends AdminController
     public function generateAccessionType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:AccessionType')->findAll();
 
-        if( $entities ) {
-            return -1;
-        }
+//        $entities = $em->getRepository('AppOrderformBundle:AccessionType')->findAll();
+//        if( $entities ) {
+//            return -1;
+//        }
 
         $types = array(
             'NYH CoPath Anatomic Pathology Accession Number' => 'NYP CoPath',
@@ -1410,7 +1410,10 @@ class ScanAdminController extends AdminController
             'TMA Slide' => '',
             'Auto-generated Accession Number' => '',
             'Existing Auto-generated Accession Number' => '',
-            'Deidentifier ID' => ''
+            'Deidentifier ID' => '',
+            'Transfusion System Accession Number' => '',
+            'NYH Cerner Millennium Clinical Pathology Accession Number' => '',
+            'NYH Epic Beaker Accession Number' => '',
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -1418,8 +1421,13 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $types as $type => $abbreviation ) {
 
+            $entity = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($type);
+            if( $entity ) {
+                continue;
+            }
+
             $accType = new AccessionType();
-            $this->setDefaultList($accType,$count,$username,$type);
+            $this->setDefaultList($accType,null,$username,$type);
 
             if( $type == "TMA Slide" ) {
                 $accType->setType('TMA');
