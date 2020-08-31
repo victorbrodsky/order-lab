@@ -5978,10 +5978,15 @@ class TransResUtil
         }
 
         //$dql->where("logger.siteName = 'translationalresearch'");
-        $dql->where("logger.siteName = '".$site."'");
+        //$dql->where("logger.siteName = '".$site."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Successful Login";
+
+        if( $site ) {
+            $dql->andWhere("logger.siteName = :siteName");
+            $dqlParameters['siteName'] = $site;
+        }
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
         $dql->andWhere('logger.creationdate >= :startDate');
@@ -6005,6 +6010,7 @@ class TransResUtil
         return count($loggers);
     }
 
+    //NOT USED
     public function getLoginsUniqueUser( $startDate, $endDate, $unique=true, $site=null ) {
 
         $dqlParameters = array();

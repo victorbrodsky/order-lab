@@ -116,11 +116,11 @@ class DashboardUtil
             "40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
-            "42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects (linked)" => "compare-projectspecialty-pis",
-            "43. Total Number of AP/CP and Hematopathology Project Requests (linked)" => "compare-projectspecialty-projects",
-            "44. Total Number of AP/CP and Hematopathology Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
-            "45. Total Number of AP/CP and Hematopathology Work Requests By Month (linked)" => "compare-projectspecialty-requests",
-            "46. Total Number of AP/CP and Hematopathology Invoices By Month (linked)" => "compare-projectspecialty-invoices",
+            "42. Total Number of Individual PIs involved in AP/CP, Hematopathology and COVID-19 Projects (linked)" => "compare-projectspecialty-pis",
+            "43. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
+            "44. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
+            "45. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests",
+            "46. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
             "48. Total Fees per Project Request Type of Funded Projects (linked)" => "projects-funded-fees-per-type",
@@ -2953,6 +2953,7 @@ class DashboardUtil
             $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
+                //echo "startDateLabel=".$startDateLabel."<br>";
                 $thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
                 $thisEndDate->modify('last day of this month');
@@ -2967,11 +2968,16 @@ class DashboardUtil
 
                     $paidThisInvoiceFee = intval($invoice->getPaid());
 
+
                     if( isset($paidArr[$startDateLabel]) ) {
-                        $paidThisInvoiceFee = $paidArr[$startDateLabel] + $paidThisInvoiceFee;
+                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paidThisInvoiceFee;
+                    } else {
+                        $paidDateInvoiceFee = $paidThisInvoiceFee;
                     }
 
-                    $paidArr[$startDateLabel] = $paidThisInvoiceFee;
+                    $paidArr[$startDateLabel] = $paidDateInvoiceFee;
+                    //echo $startDateLabel.": paidThisInvoiceFee=".$paidThisInvoiceFee."<br>";
+                    //echo intval($invoice->getPaid())."<br>";
 
                     $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paidThisInvoiceFee;
                 }
@@ -2979,6 +2985,9 @@ class DashboardUtil
                 $descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
             } while( $startDate < $endDate );
+
+            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."<br>"; //7591754 7.591.754
+            //exit('111');
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
 
@@ -4464,13 +4473,16 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
 
             //$startDate,$endDate,$projectSpecialties,$states
             $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
             $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
 
             $apcpPisArr = array();
             $hemaPisArr = array();
+            $covidPisArr = array();
             foreach($apcpProjects as $project) {
                 foreach($project->getAllPrincipalInvestigators() as $pi) {
                     $apcpPisArr[] = $pi->getId();
@@ -4481,12 +4493,19 @@ class DashboardUtil
                     $hemaPisArr[] = $pi->getId();
                 }
             }
+            foreach($covidProjects as $project) {
+                foreach($project->getAllPrincipalInvestigators() as $pi) {
+                    $covidPisArr[] = $pi->getId();
+                }
+            }
 
             $apcpPisArr = array_unique($apcpPisArr);
             $hemaPisArr = array_unique($hemaPisArr);
+            $covidPisArr = array_unique($covidPisArr);
 
             $pisDataArr = array();
 
+            //APCP
             //array(value,link)
             $linkFilterArr = array(
                 'filter[state][0]' => 'final_approved',
@@ -4513,7 +4532,7 @@ class DashboardUtil
             //$pisDataArr['AP/CP PIs'] = count($apcpPisArr);
             $pisDataArr['AP/CP PIs'] = array('value'=>count($apcpPisArr),'link'=>$link);
 
-
+            //Hema
             $linkFilterArr = array(
                 'filter[state][0]' => 'final_approved',
                 'filter[state][1]' => 'closed',
@@ -4537,6 +4556,29 @@ class DashboardUtil
             //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
             $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
 
+            //COVID
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyCovidObject->getId()
+            );
+            $index = 0;
+            foreach($covidPisArr as $piId) {
+                $filterIndex = "filter[principalInvestigators][".$index."]";
+                $linkFilterArr[$filterIndex] = $piId;
+                $index++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $pisDataArr['COVID-19 PIs'] = array('value'=>count($covidPisArr),'link'=>$link);
+
             $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
@@ -4545,27 +4587,16 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
 
             //$startDate,$endDate,$projectSpecialties,$states
             $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
             $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
-
-//            $apcpPisArr = array();
-//            $hemaPisArr = array();
-//            foreach($apcpProjects as $project) {
-//                foreach($project->getPrincipalInvestigators() as $pi) {
-//                    $apcpPisArr[] = $pi->getId();
-//                }
-//            }
-//            foreach($hemaProjects as $project) {
-//                foreach($project->getPrincipalInvestigators() as $pi) {
-//                    $hemaPisArr[] = $pi->getId();
-//                }
-//            }
+            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
 
             $projectsDataArr = array();
 
-            //array(value,link)
+            //APCP
             $linkFilterArr = array(
                 'filter[state][0]' => 'final_approved',
                 'filter[state][1]' => 'closed',
@@ -4582,7 +4613,7 @@ class DashboardUtil
             //$projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
             $projectsDataArr['AP/CP Project Requests'] = array('value'=>count($apcpProjects),'link'=>$link);
 
-            //array(value,link)
+            //Hema
             $linkFilterArr = array(
                 'filter[state][0]' => 'final_approved',
                 'filter[state][1]' => 'closed',
@@ -4599,6 +4630,23 @@ class DashboardUtil
             //$projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
             $projectsDataArr['Hematopathology Project Requests'] = array('value'=>count($hemaProjects),'link'=>$link);
 
+            //Covid
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[searchProjectType]' => null,
+                'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
+            );
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$projectsDataArr['Covidtopathology Project Requests'] = count($covidProjects);
+            $projectsDataArr['COVID-19 Project Requests'] = array('value'=>count($covidProjects),'link'=>$link);
+
             $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
@@ -4607,9 +4655,11 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
 
             $apcpResultStatArr = array();
             $hemaResultStatArr = array();
+            $covidResultStatArr = array();
             $datesArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
@@ -4625,10 +4675,12 @@ class DashboardUtil
                 //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
                 $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
                 $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $covidProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyCovidObject),null,false);
                 $startDate->modify( 'first day of next month' );
 
                 $apcpResultStatArr[$startDateLabel] = count($apcpProjects);
                 $hemaResultStatArr[$startDateLabel] = count($hemaProjects);
+                $covidResultStatArr[$startDateLabel] = count($covidProjects);
             } while( $startDate < $endDate );
 
             //AP/CP
@@ -4673,10 +4725,32 @@ class DashboardUtil
                 $hemaProjectsData[$date] = array('value'=>$value,'link'=>$link);
             }
 
+            //Covid
+            $covidProjectsData = array();
+            foreach($covidResultStatArr as $date=>$value ) {
+                //$covidProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $covidProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
             //Projects
             $combinedProjectsData = array();
             $combinedProjectsData['AP/CP'] = $apcpProjectsData;
             $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
+            $combinedProjectsData['COVID-19'] = $covidProjectsData;
 
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
         }
@@ -5945,7 +6019,7 @@ class DashboardUtil
             $loginsCalllogArr = array();
             //$loginsScanArr = array();
 
-            $totalLoginCount = 0;
+            //$totalLoginCount = 0;
             $loginCountCalllog = 0;
             $loginCountVacreq = 0;
             $loginCountFellapp = 0;
@@ -5956,6 +6030,8 @@ class DashboardUtil
 
             $interval = new \DateInterval('P1M');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            $loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
 
             foreach( $dateRange as $startDate ) {
                 //+6 days
@@ -5969,27 +6045,27 @@ class DashboardUtil
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
-                $totalLoginCount += $loginEmployeesCount;
+                //$totalLoginCount += $loginEmployeesCount;
                 $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
 
                 $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch',true);
                 $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
-                $totalLoginCount += $loginTranslationalresearchCount;
+                //$totalLoginCount += $loginTranslationalresearchCount;
                 $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
 
                 $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp',true);
                 $loginsFellappArr[$startDateLabel] = $loginFellappCount;
-                $totalLoginCount += $loginFellappCount;
+                //$totalLoginCount += $loginFellappCount;
                 $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
 
                 $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq',true);
                 $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
-                $totalLoginCount += $loginVacreqCount;
+                //$totalLoginCount += $loginVacreqCount;
                 $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
 
                 $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog',true);
                 $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
-                $totalLoginCount += $loginCalllogCount;
+                //$totalLoginCount += $loginCalllogCount;
                 $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
             }
@@ -6001,7 +6077,8 @@ class DashboardUtil
             $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
-            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            $chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
@@ -6031,6 +6108,8 @@ class DashboardUtil
             $interval = new \DateInterval('P1W');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
 
+            $loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
+
             foreach( $dateRange as $startDate ) {
                 //+6 days
                 $thisEndDate = clone $startDate;
@@ -6043,27 +6122,27 @@ class DashboardUtil
 
                 $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
                 $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
-                $totalLoginCount += $loginEmployeesCount;
+                //$totalLoginCount += $loginEmployeesCount;
                 $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
 
                 $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch',true);
                 $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
-                $totalLoginCount += $loginTranslationalresearchCount;
+                //$totalLoginCount += $loginTranslationalresearchCount;
                 $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
 
                 $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp',true);
                 $loginsFellappArr[$startDateLabel] = $loginFellappCount;
-                $totalLoginCount += $loginFellappCount;
+                //$totalLoginCount += $loginFellappCount;
                 $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
 
                 $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq',true);
                 $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
-                $totalLoginCount += $loginVacreqCount;
+                //$totalLoginCount += $loginVacreqCount;
                 $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
 
                 $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog',true);
                 $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
-                $totalLoginCount += $loginCalllogCount;
+                //$totalLoginCount += $loginCalllogCount;
                 $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
             }
@@ -6075,7 +6154,8 @@ class DashboardUtil
             $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
-            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+//            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            $chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
