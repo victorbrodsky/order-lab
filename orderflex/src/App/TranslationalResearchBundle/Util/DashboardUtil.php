@@ -6242,7 +6242,7 @@ class DashboardUtil
             $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
             $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
             $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
-            $combinedData["Critical Result Notification Users ($loginCountResapp)"] = $loginsResappArr;
+            $combinedData["Critical Result Notification Users ($loginCountCrn)"] = $loginsCrnArr;
             $combinedData["Residency Applications Users ($loginCountResapp)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
