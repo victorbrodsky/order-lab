@@ -5934,6 +5934,8 @@ class DashboardUtil
             $loginsFellappArr = array();
             $loginsVacreqArr = array();
             $loginsCalllogArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
             //$loginsScanArr = array();
 
             $totalLoginCount = 0;
@@ -5942,6 +5944,8 @@ class DashboardUtil
             $loginCountFellapp = 0;
             $loginCountEmpl = 0;
             $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
 
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
@@ -5978,6 +5982,16 @@ class DashboardUtil
                 $totalLoginCount += $loginCalllogCount;
                 $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn');
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $totalLoginCount += $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp');
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $totalLoginCount += $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
                 //$loginScanCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'scan');
                 //$loginsScanArr[$startDateLabel] = $loginScanCount;
                 //$totalLoginCount += $loginScanCount;
@@ -5993,6 +6007,8 @@ class DashboardUtil
             $combinedData["Fellowship Applications log in events ($loginCountFellapp)"] = $loginsFellappArr;
             $combinedData["Vacation Request log in events ($loginCountVacreq)"] = $loginsVacreqArr;
             $combinedData["Call Log Book log in events ($loginCountCalllog)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification log in events ($loginCountCrn)"] = $loginsCrnArr;
+            $combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
@@ -6067,6 +6083,8 @@ class DashboardUtil
             $loginsFellappArr = array();
             $loginsVacreqArr = array();
             $loginsCalllogArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
             //$loginsScanArr = array();
 
             //$totalLoginCount = 0;
@@ -6075,6 +6093,8 @@ class DashboardUtil
             $loginCountFellapp = 0;
             $loginCountEmpl = 0;
             $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
 
             $startDate->modify( 'first day of last month' );
 
@@ -6118,6 +6138,13 @@ class DashboardUtil
                 //$totalLoginCount += $loginCalllogCount;
                 $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp',true);
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn',true);
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
             }
 
             $combinedData["Translational Research Users ($loginCountTrp)"] = $loginsTranslationalresearchArr;
@@ -6125,6 +6152,8 @@ class DashboardUtil
             $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
             $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
             $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountCrn)"] = $loginsCrnArr;
+            $combinedData["Residency Applications Users ($loginCountResapp)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
             //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
@@ -6145,6 +6174,8 @@ class DashboardUtil
             $loginsVacreqArr = array();
             $loginsCalllogArr = array();
             //$loginsScanArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
 
             $totalLoginCount = 0;
             $loginCountCalllog = 0;
@@ -6152,6 +6183,8 @@ class DashboardUtil
             $loginCountFellapp = 0;
             $loginCountEmpl = 0;
             $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
 
             $startDate->modify( 'first day of last month' );
 
@@ -6195,6 +6228,13 @@ class DashboardUtil
                 //$totalLoginCount += $loginCalllogCount;
                 $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
 
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn',true);
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp',true);
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
             }
 
             $combinedData["Translational Research Users ($loginCountTrp)"] = $loginsTranslationalresearchArr;
@@ -6202,6 +6242,8 @@ class DashboardUtil
             $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
             $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
             $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountResapp)"] = $loginsResappArr;
+            $combinedData["Residency Applications Users ($loginCountResapp)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
 //            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
@@ -6226,11 +6268,12 @@ class DashboardUtil
             $transresUtil = $this->container->get('transres_util');
 
             //get fellapp applications by year
-            
+            //TODO: implement
 
         }
         if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
             $transresUtil = $this->container->get('transres_util');
+            //TODO: implement
 
         }
         if( $chartType == "" ) {
