@@ -5240,8 +5240,8 @@ class DashboardUtil
 
                 foreach($specialtyObjects as $specialtyObject) {
                     //                                            $startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
-                    $specialtyProjects = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyObject));
-                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyProjects);
+                    $specialtyInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyInvoices);
                 }
 
                 $startDate->modify( 'first day of next month' );
