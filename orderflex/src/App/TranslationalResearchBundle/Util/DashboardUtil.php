@@ -1669,6 +1669,28 @@ class DashboardUtil
 
         return $pisDataArr;
     }
+    public function trpProjectsSingleSpecialty($dataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr) {
+        $projects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyObject));
+
+        //APCP
+        $linkFilterArr = array(
+            'filter[state][0]' => 'final_approved',
+            'filter[state][1]' => 'closed',
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[searchProjectType]' => null,
+            'filter[projectSpecialty][]' => $specialtyObject->getId(),
+        );
+        $link = $this->container->get('router')->generate(
+            'translationalresearch_project_index',
+            $linkFilterArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $specialtyName = $specialtyObject->getName();
+        $dataArr[$specialtyName.' Project Requests'] = array('value'=>count($projects),'link'=>$link);
+
+        return $dataArr;
+    }
 
     //Main function to get chart data called by controller singleChartAction ("/single-chart/")
     public function getDashboardChart($request) {
@@ -4512,119 +4534,119 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
-        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
-        if( $chartType == "compare-projectspecialty-pis_original" ) {
-            $transresUtil = $this->container->get('transres_util');
-            $specialtyApcpObject = $transresUtil->getTrpSpecialtyObjects("ap-cp");
-            $specialtyHemaObject = $transresUtil->getTrpSpecialtyObjects("hematopathology");
-            $specialtyCovidObject = $transresUtil->getTrpSpecialtyObjects("covid19");
-
-            //$startDate,$endDate,$projectSpecialties,$states
-            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
-            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
-            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
-
-            $apcpPisArr = array();
-            $hemaPisArr = array();
-            $covidPisArr = array();
-            foreach($apcpProjects as $project) {
-                foreach($project->getAllPrincipalInvestigators() as $pi) {
-                    $apcpPisArr[] = $pi->getId();
-                }
-            }
-            foreach($hemaProjects as $project) {
-                foreach($project->getAllPrincipalInvestigators() as $pi) {
-                    $hemaPisArr[] = $pi->getId();
-                }
-            }
-            foreach($covidProjects as $project) {
-                foreach($project->getAllPrincipalInvestigators() as $pi) {
-                    $covidPisArr[] = $pi->getId();
-                }
-            }
-
-            $apcpPisArr = array_unique($apcpPisArr);
-            $hemaPisArr = array_unique($hemaPisArr);
-            $covidPisArr = array_unique($covidPisArr);
-
-            $pisDataArr = array();
-
-            //APCP
-            //array(value,link)
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                //'filter[]' => $projectSpecialtyObjects,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
-                //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
-            );
-            $index = 0;
-            foreach($apcpPisArr as $piId) {
-                $filterIndex = "filter[principalInvestigators][".$index."]";
-                //echo "filterIndex=".$filterIndex."<br>";
-                $linkFilterArr[$filterIndex] = $piId;
-                $index++;
-            }
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$pisDataArr['AP/CP PIs'] = count($apcpPisArr);
-            $pisDataArr['AP/CP PIs'] = array('value'=>count($apcpPisArr),'link'=>$link);
-
-            //Hema
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                //'filter[]' => $projectSpecialtyObjects,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyHemaObject->getId()
-            );
-            $index = 0;
-            foreach($hemaPisArr as $piId) {
-                $filterIndex = "filter[principalInvestigators][".$index."]";
-                $linkFilterArr[$filterIndex] = $piId;
-                $index++;
-            }
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
-            $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
-
-            //COVID
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                //'filter[]' => $projectSpecialtyObjects,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyCovidObject->getId()
-            );
-            $index = 0;
-            foreach($covidPisArr as $piId) {
-                $filterIndex = "filter[principalInvestigators][".$index."]";
-                $linkFilterArr[$filterIndex] = $piId;
-                $index++;
-            }
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $pisDataArr['COVID-19 PIs'] = array('value'=>count($covidPisArr),'link'=>$link);
-
-            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
-        }
+//        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+//        if( $chartType == "compare-projectspecialty-pis_original" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $specialtyApcpObject = $transresUtil->getTrpSpecialtyObjects("ap-cp");
+//            $specialtyHemaObject = $transresUtil->getTrpSpecialtyObjects("hematopathology");
+//            $specialtyCovidObject = $transresUtil->getTrpSpecialtyObjects("covid19");
+//
+//            //$startDate,$endDate,$projectSpecialties,$states
+//            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+//            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+//            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
+//
+//            $apcpPisArr = array();
+//            $hemaPisArr = array();
+//            $covidPisArr = array();
+//            foreach($apcpProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $apcpPisArr[] = $pi->getId();
+//                }
+//            }
+//            foreach($hemaProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $hemaPisArr[] = $pi->getId();
+//                }
+//            }
+//            foreach($covidProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $covidPisArr[] = $pi->getId();
+//                }
+//            }
+//
+//            $apcpPisArr = array_unique($apcpPisArr);
+//            $hemaPisArr = array_unique($hemaPisArr);
+//            $covidPisArr = array_unique($covidPisArr);
+//
+//            $pisDataArr = array();
+//
+//            //APCP
+//            //array(value,link)
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+//                //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
+//            );
+//            $index = 0;
+//            foreach($apcpPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                //echo "filterIndex=".$filterIndex."<br>";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$pisDataArr['AP/CP PIs'] = count($apcpPisArr);
+//            $pisDataArr['AP/CP PIs'] = array('value'=>count($apcpPisArr),'link'=>$link);
+//
+//            //Hema
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyHemaObject->getId()
+//            );
+//            $index = 0;
+//            foreach($hemaPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
+//            $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
+//
+//            //COVID
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyCovidObject->getId()
+//            );
+//            $index = 0;
+//            foreach($covidPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            $pisDataArr['COVID-19 PIs'] = array('value'=>count($covidPisArr),'link'=>$link);
+//
+//            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+//        }
         //New function with dynamic specialty
         //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
         if( $chartType == "compare-projectspecialty-pis" ) {
@@ -4640,76 +4662,89 @@ class DashboardUtil
             $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
+//        //"43. Total Number of AP/CP and Hematopathology Project Requests" => "compare-projectspecialty-projects",
+//        if( $chartType == "compare-projectspecialty-projects" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+//            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+//
+//            //$startDate,$endDate,$projectSpecialties,$states
+//            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+//            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+//            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
+//
+//            $projectsDataArr = array();
+//
+//            //APCP
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
+//            $projectsDataArr['AP/CP Project Requests'] = array('value'=>count($apcpProjects),'link'=>$link);
+//
+//            //Hema
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
+//            $projectsDataArr['Hematopathology Project Requests'] = array('value'=>count($hemaProjects),'link'=>$link);
+//
+//            //Covid
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['Covidtopathology Project Requests'] = count($covidProjects);
+//            $projectsDataArr['COVID-19 Project Requests'] = array('value'=>count($covidProjects),'link'=>$link);
+//
+//            $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+//        }
         //"43. Total Number of AP/CP and Hematopathology Project Requests" => "compare-projectspecialty-projects",
         if( $chartType == "compare-projectspecialty-projects" ) {
             $transresUtil = $this->container->get('transres_util');
-            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
-            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
-
-            //$startDate,$endDate,$projectSpecialties,$states
-            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
-            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
-            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
 
             $projectsDataArr = array();
 
-            //APCP
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
-            );
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
-            $projectsDataArr['AP/CP Project Requests'] = array('value'=>count($apcpProjects),'link'=>$link);
-
-            //Hema
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
-            );
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
-            $projectsDataArr['Hematopathology Project Requests'] = array('value'=>count($hemaProjects),'link'=>$link);
-
-            //Covid
-            $linkFilterArr = array(
-                'filter[state][0]' => 'final_approved',
-                'filter[state][1]' => 'closed',
-                'filter[startDate]' => $startDateStr,
-                'filter[endDate]' => $endDateStr,
-                'filter[searchProjectType]' => null,
-                'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
-            );
-            $link = $this->container->get('router')->generate(
-                'translationalresearch_project_index',
-                $linkFilterArr,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$projectsDataArr['Covidtopathology Project Requests'] = count($covidProjects);
-            $projectsDataArr['COVID-19 Project Requests'] = array('value'=>count($covidProjects),'link'=>$link);
+            foreach( $specialtyObjects as $specialtyObject ) {
+                $projectsDataArr = $this->trpProjectsSingleSpecialty($projectsDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr);
+            }
 
             $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }
 
         //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
-        if( $chartType == "compare-projectspecialty-projects-stack" ) {
+        if( $chartType == "compare-projectspecialty-projects-stack_original" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -4812,6 +4847,70 @@ class DashboardUtil
 
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
         }
+        //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
+        if( $chartType == "compare-projectspecialty-projects-stack" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            //$specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            //$specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            //$specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            //$apcpResultStatArr = array();
+            //$hemaResultStatArr = array();
+            //$covidResultStatArr = array();
+            $datesArr = array();
+            //$specialtyProjects = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$specialtyProjects = array();
+                foreach($specialtyObjects as $specialtyObject) {
+                                                                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                    $specialtyProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyObject),null,false);
+                    $specialtyResultStatArr[$specialtyObject->getAbbreviation()][$startDateLabel] = count($specialtyProjects);
+                }
+                $startDate->modify( 'first day of next month' );
+
+            } while( $startDate < $endDate );
+
+            $combinedProjectsData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyProjectsData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getAbbreviation()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $dates['startDate'],
+                        'filter[endDate]' => $dates['endDate'],
+                        'filter[searchProjectType]' => null,
+                        //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $specialtyProjectsData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedProjectsData[$specialtyObject->getName()] = $specialtyProjectsData;
+            }
+
+            $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
+        }
+
 
         //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
         if( $chartType == "compare-projectspecialty-requests" ) {
