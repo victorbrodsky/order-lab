@@ -120,7 +120,9 @@ class DashboardUtil
             "43. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
             "44. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
             "45. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests",
+            //"45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
             "46. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
+            "46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
             "48. Total Fees per Project Request Type of Funded Projects (linked)" => "projects-funded-fees-per-type",
@@ -4850,18 +4852,10 @@ class DashboardUtil
         //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
         if( $chartType == "compare-projectspecialty-projects-stack" ) {
             $transresUtil = $this->container->get('transres_util');
-
-            //$specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
-            //$specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-            //$specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
-
             $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
 
-            //$apcpResultStatArr = array();
-            //$hemaResultStatArr = array();
-            //$covidResultStatArr = array();
             $datesArr = array();
-            //$specialtyProjects = array();
+            $specialtyResultStatArr = array();
 
             //get startDate and add 1 month until the date is less than endDate
             //$startDate->modify( 'first day of last month' );
@@ -4873,11 +4867,10 @@ class DashboardUtil
                 $thisEndDate->modify('last day of this month');
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
-                //$specialtyProjects = array();
                 foreach($specialtyObjects as $specialtyObject) {
-                                                                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                    //                                            $startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
                     $specialtyProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyObject),null,false);
-                    $specialtyResultStatArr[$specialtyObject->getAbbreviation()][$startDateLabel] = count($specialtyProjects);
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyProjects);
                 }
                 $startDate->modify( 'first day of next month' );
 
@@ -4887,7 +4880,7 @@ class DashboardUtil
 
             foreach($specialtyObjects as $specialtyObject) {
                 $specialtyProjectsData = array();
-                foreach($specialtyResultStatArr[$specialtyObject->getAbbreviation()] as $date=>$value ) {
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
                     $dates = $datesArr[$date];
                     $linkFilterArr = array(
                         'filter[state][0]' => 'final_approved',
@@ -4911,9 +4904,8 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
         }
 
-
         //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
-        if( $chartType == "compare-projectspecialty-requests" ) {
+        if( $chartType == "compare-projectspecialty-requests_original" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -5036,9 +5028,72 @@ class DashboardUtil
             $combinedRequestsData['COVID-19'] = $covidRequestsData;
             $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
         }
+        //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
+        if( $chartType == "compare-projectspecialty-requests" ) {
+            $transresUtil = $this->container->get('transres_util');
 
-        //"45. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
-        if( $chartType == "compare-projectspecialty-invoices" ) {
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                foreach($specialtyObjects as $specialtyObject) {
+                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyRequests);
+                }
+
+                $startDate->modify( 'first day of next month' );
+
+            } while( $startDate < $endDate );
+
+            $combinedRequestsData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyRequestsData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[progressState][0]' => 'active',
+                        'filter[progressState][1]' => 'completed',
+                        'filter[progressState][2]' => 'completedNotified',
+                        'filter[progressState][3]' => 'pendingInvestigatorInput',
+                        'filter[progressState][4]' => 'pendingHistology',
+                        'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                        'filter[progressState][6]' => 'pendingMolecular',
+                        'filter[progressState][7]' => 'pendingCaseRetrieval',
+                        'filter[progressState][8]' => 'pendingTissueMicroArray',
+                        'filter[progressState][9]' => 'pendingSlideScanning',
+                        'filter[startDate]' => $dates['startDate'],
+                        'filter[endDate]' => $dates['endDate'],
+                        'filter[searchProjectType]' => null,
+                        'filter[projectSpecialty]' => $specialtyObject->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_request_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $specialtyRequestsData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedRequestsData[$specialtyObject->getName()] = $specialtyRequestsData;
+            }
+
+            $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
+        }
+
+        //"46. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
+        if( $chartType == "compare-projectspecialty-invoices_original" ) {
             $transresUtil = $this->container->get('transres_util');
             $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -5149,6 +5204,82 @@ class DashboardUtil
             $combinedInvoicesData['AP/CP'] = $apcpInvoicesData;
             $combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
             $combinedInvoicesData['COVID-19'] = $covidInvoicesData;
+            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack"); //" getStackedChart("
+        }
+        //"46. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
+        if( $chartType == "compare-projectspecialty-invoices" ) {
+            $transresUtil = $this->container->get('transres_util');
+//            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+//            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+//
+//            $apcpResultStatArr = array();
+//            $hemaResultStatArr = array();
+//            $covidResultStatArr = array();
+
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+
+                //$apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
+                //$hemaInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyHemaObject));
+                //$covidInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyCovidObject));
+
+                foreach($specialtyObjects as $specialtyObject) {
+                    //                                            $startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                    $specialtyProjects = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyProjects);
+                }
+
+                $startDate->modify( 'first day of next month' );
+
+                //$apcpResultStatArr[$startDateLabel] = count($apcpInvoices);
+                //$hemaResultStatArr[$startDateLabel] = count($hemaInvoices);
+                //$covidResultStatArr[$startDateLabel] = count($covidInvoices);
+
+            } while( $startDate < $endDate );
+
+            $combinedInvoicesData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyInvoicesData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
+                        'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
+                        'filter[endCreateDate]' => $dates['endDate'],
+                        'filter[version]' => "Latest",
+                        //'filter[projectSpecialty]' => $specialtyObject->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $specialtyInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedInvoicesData[$specialtyObject->getName()] = $specialtyInvoicesData;
+            }
+
             $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack"); //" getStackedChart("
         }
 
