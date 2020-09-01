@@ -1625,6 +1625,50 @@ class DashboardUtil
         return $days;
     }
 
+    //function for "42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+    public function trpPisSingleSpecialty($pisDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr) {
+        $projects = $this->getProjectsByFilter($startDate, $endDate, array($specialtyObject));
+
+        $pisArr = array();
+        foreach ($projects as $project) {
+            foreach ($project->getAllPrincipalInvestigators() as $pi) {
+                $pisArr[] = $pi->getId();
+            }
+        }
+
+        $pisArr = array_unique($pisArr);
+
+        //APCP
+        //array(value,link)
+        $linkFilterArr = array(
+            'filter[state][0]' => 'final_approved',
+            'filter[state][1]' => 'closed',
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            //'filter[]' => $projectSpecialtyObjects,
+            'filter[searchProjectType]' => null,
+            'filter[projectSpecialty][]' => $specialtyObject->getId(),
+            //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
+        );
+        $index = 0;
+        foreach ($pisArr as $piId) {
+            $filterIndex = "filter[principalInvestigators][" . $index . "]";
+            //echo "filterIndex=".$filterIndex."<br>";
+            $linkFilterArr[$filterIndex] = $piId;
+            $index++;
+        }
+        $link = $this->container->get('router')->generate(
+            'translationalresearch_project_index',
+            $linkFilterArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $specialtyName = $specialtyObject->getName();
+
+        $pisDataArr[$specialtyName.' PIs'] = array('value' => count($pisArr), 'link' => $link);
+
+        return $pisDataArr;
+    }
 
     //Main function to get chart data called by controller singleChartAction ("/single-chart/")
     public function getDashboardChart($request) {
@@ -4469,11 +4513,11 @@ class DashboardUtil
         }
 
         //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
-        if( $chartType == "compare-projectspecialty-pis" ) {
+        if( $chartType == "compare-projectspecialty-pis_original" ) {
             $transresUtil = $this->container->get('transres_util');
-            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
-            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+            $specialtyApcpObject = $transresUtil->getTrpSpecialtyObjects("ap-cp");
+            $specialtyHemaObject = $transresUtil->getTrpSpecialtyObjects("hematopathology");
+            $specialtyCovidObject = $transresUtil->getTrpSpecialtyObjects("covid19");
 
             //$startDate,$endDate,$projectSpecialties,$states
             $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
@@ -4578,6 +4622,20 @@ class DashboardUtil
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
             $pisDataArr['COVID-19 PIs'] = array('value'=>count($covidPisArr),'link'=>$link);
+
+            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+        //New function with dynamic specialty
+        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+        if( $chartType == "compare-projectspecialty-pis" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $pisDataArr = array();
+
+            foreach( $specialtyObjects as $specialtyObject ) {
+                $pisDataArr = $this->trpPisSingleSpecialty($pisDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr);
+            }
 
             $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
         }

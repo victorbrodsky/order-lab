@@ -3434,11 +3434,48 @@ class TransResUtil
     public function getSpecialtyObject($specialtyAbbreviation) {
         //echo "specialtyStr=".$specialtyStr."<br>";
         $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+
         if( !$specialty ) {
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
         }
 
         return $specialty;
+    }
+
+    public function getTrpSpecialtyObjects($specialtyAbbreviation=null) {
+        //echo "specialtyStr=".$specialtyStr."<br>";
+        //$specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList');
+        $dql =  $repository->createQueryBuilder("specialty");
+
+        $dql->andWhere("specialty.type = :typedef OR specialty.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        );
+
+        if( $specialtyAbbreviation ) {
+            $dql->andWhere("specialty.abbreviation = :abbreviation");
+            $parameters['abbreviation'] = $specialtyAbbreviation;
+        }
+        
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $specialties = $query->getResult();
+
+        if( count($specialties) == 0 ) {
+            throw new \Exception( "Project specialty is not found. specialtyAbbreviation=".$specialtyAbbreviation );
+        }
+
+        if( $specialtyAbbreviation ) {
+            return $specialties[0];
+        }
+
+        return $specialties;
     }
 
     //NOT USED?
