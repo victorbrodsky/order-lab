@@ -119,8 +119,9 @@ class DashboardUtil
             "42. Total Number of Individual PIs involved in AP/CP, Hematopathology and COVID-19 Projects (linked)" => "compare-projectspecialty-pis",
             "43. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
             "44. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
+            "44original. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)"=>"compare-projectspecialty-projects-stack_original",
             "45. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests",
-            //"45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
+            "45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
             "46. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
             "46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
 
