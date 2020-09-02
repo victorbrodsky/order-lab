@@ -119,8 +119,9 @@ class DashboardUtil
             "42. Total Number of Individual PIs involved in AP/CP, Hematopathology and COVID-19 Projects (linked)" => "compare-projectspecialty-pis",
             "43. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
             "44. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
-            "44original. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)"=>"compare-projectspecialty-projects-stack_original",
+            //"44original. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)"=>"compare-projectspecialty-projects-stack_original",
             "45. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests",
+            "45new. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_new",
             "45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
             "46. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
             "46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
@@ -5030,7 +5031,8 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
         }
         //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
-        if( $chartType == "compare-projectspecialty-requests" ) {
+        //original 124 (correct), modified 126
+        if( $chartType == "compare-projectspecialty-requests_new" ) {
             $transresUtil = $this->container->get('transres_util');
 
             $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
@@ -5089,6 +5091,122 @@ class DashboardUtil
 
                 $combinedRequestsData[$specialtyObject->getName()] = $specialtyRequestsData;
             }
+
+            $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
+        }
+        //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
+        //original 124 (correct), modified 126
+        if( $chartType == "compare-projectspecialty-requests" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            $apcpResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $apcpRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyApcpObject));
+
+                foreach($specialtyObjects as $specialtyObject) {
+                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyRequests);
+                }
+
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr[$startDateLabel] = count($apcpRequests);
+
+            } while( $startDate < $endDate );
+
+            $combinedRequestsData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyRequestsData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[progressState][0]' => 'active',
+                        'filter[progressState][1]' => 'completed',
+                        'filter[progressState][2]' => 'completedNotified',
+                        'filter[progressState][3]' => 'pendingInvestigatorInput',
+                        'filter[progressState][4]' => 'pendingHistology',
+                        'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                        'filter[progressState][6]' => 'pendingMolecular',
+                        'filter[progressState][7]' => 'pendingCaseRetrieval',
+                        'filter[progressState][8]' => 'pendingTissueMicroArray',
+                        'filter[progressState][9]' => 'pendingSlideScanning',
+                        'filter[startDate]' => $dates['startDate'],
+                        'filter[endDate]' => $dates['endDate'],
+                        'filter[searchProjectType]' => null,
+                        'filter[projectSpecialty][]' => $specialtyObject->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_request_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    if( $specialtyObject->getName() == "AP/CP" ) {
+                        echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
+                        echo $specialtyObject->getName()."($date)".": value=$value<br>";
+                    }
+
+                    $specialtyRequestsData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                if( $specialtyObject->getName() == "AP/CP" ) {
+                    //exit();
+                }
+
+                $combinedRequestsData[$specialtyObject->getName()] = $specialtyRequestsData;
+            }
+
+            //AP/CP
+            echo "#############AP/CP#############<br>";
+            $apcpRequestsData = array();
+            foreach($apcpResultStatArr as $date=>$value ) {
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyApcpObject->getId()
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
+                echo $specialtyApcpObject->getName()."($date)".": value=$value<br>";
+
+                $apcpRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedRequestsData['AP/CP2'] = $apcpRequestsData;
+            exit();
 
             $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
         }
