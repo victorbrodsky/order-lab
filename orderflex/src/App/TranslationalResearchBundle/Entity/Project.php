@@ -1812,6 +1812,16 @@ class Project {
 //    }
 
     public function getAllPrincipalInvestigators() {
+        //$allPis = new ArrayCollection();
+        $pis = $this->getPrincipalInvestigators();
+        $irbPi = $this->getPrincipalIrbInvestigator();
+        if( $irbPi && !$pis->contains($irbPi) ) {
+            //if( $irbPi ) {
+            $pis->add($irbPi);
+        }
+        return $pis;
+    }
+    public function getAllPrincipalInvestigators_ORIG() {
         $pis = $this->getPrincipalInvestigators();
         $irbPi = $this->getPrincipalIrbInvestigator();
         if( $irbPi ) {

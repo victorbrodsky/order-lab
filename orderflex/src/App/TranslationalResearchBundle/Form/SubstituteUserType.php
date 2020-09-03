@@ -143,7 +143,7 @@ class SubstituteUserType extends AbstractType
             'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectPathologists', CheckboxType::class, array(
-            'label' => 'NYP/WCM Pathologist(s) Involved:',
+            'label' => $this->params['institutionName'].' Pathologist(s) Involved:', //NYP/WCM
             'required' => false,
             'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));

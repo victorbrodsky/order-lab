@@ -225,7 +225,7 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('institutionName', null, array(
-            'label' => "Institution Name (NYP/WCM):",
+            'label' => "Institution Name (i.e. NYP/WCM):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

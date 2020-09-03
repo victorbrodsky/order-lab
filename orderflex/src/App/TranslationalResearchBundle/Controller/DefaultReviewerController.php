@@ -392,10 +392,13 @@ class DefaultReviewerController extends OrderAbstractController
         //get state string: irb_review=>IRB Review
         //$stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
 
+        $institutionName = $transresUtil->getTransresSiteProjectParameter('institutionName'); //NYP/WCM
+
         //$form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
         $params = array(
             'showPrimaryReview'=>false,
-            'transresUtil' => $transresUtil
+            'transresUtil' => $transresUtil,
+            'institutionName' => $institutionName
         );
         $form = $this->createForm('App\TranslationalResearchBundle\Form\SubstituteUserType', null, array(
             'form_custom_value' => $params
