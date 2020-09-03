@@ -2858,18 +2858,18 @@ class DashboardUtil
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
 
-            $thisRequestsCount = 0;
-            foreach($requests as $transRequest) {
-                if( $transRequest->getFundedAccountNumber() ) {
-                    //do nothing
-                } else {
-                    $project = $transRequest->getProject();
-                    if( $project->getOid() == "APCP2287" ) {
-                        $thisRequestsCount++;
-                    }
-                }
-            }
-            echo $startDate->format('d-M-Y H:i:s').":request count=".$thisRequestsCount."<br>";
+//            $thisRequestsCount = 0;
+//            foreach($requests as $transRequest) {
+//                if( $transRequest->getFundedAccountNumber() ) {
+//                    //do nothing
+//                } else {
+//                    $project = $transRequest->getProject();
+//                    if( $project->getOid() == "APCP2287" ) {
+//                        $thisRequestsCount++;
+//                    }
+//                }
+//            }
+//            echo $startDate->format('d-M-Y H:i:s').":request count=".$thisRequestsCount."<br>";
 
             foreach($requests as $transRequest) {
 
@@ -2889,17 +2889,17 @@ class DashboardUtil
 
                 $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
                 //echo "projectIndex=[".$project->getOid()."] <br>";
-                if( $project->getOid() == "APCP2287" ) {
-                    echo $transRequest->getOid().": $subtotalFee <br>";
-                }
+//                if( $project->getOid() == "APCP2287" ) {
+//                    echo $transRequest->getOid().": $subtotalFee <br>";
+//                }
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 if( $transRequest->getFundedAccountNumber() ) {
                     //do nothing
                 } else {
-                    if( $project->getOid() == "APCP2287" ) {
-                        echo $transRequest->getOid().": (non funded) $subtotalFee <br>";
-                    }
+//                    if( $project->getOid() == "APCP2287" ) {
+//                        echo $transRequest->getOid().": (non funded) $subtotalFee <br>";
+//                    }
                     //14. Non-Funded Projects with the Highest Total Fees (Top 10)
                     if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
                         $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
@@ -2913,7 +2913,7 @@ class DashboardUtil
                 }
 
             }//foreach $requests
-            exit();
+            //exit();
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"projects");
