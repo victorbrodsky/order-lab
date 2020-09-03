@@ -1078,12 +1078,16 @@ class DashboardUtil
             $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
         }
         if( $endDate ) {
+            //$addOneEndDay=true;
+            //$thisEndDate = clone $endDate;
             if( $addOneEndDay ) {
+                //$thisEndDate->modify('+1 day');
                 $endDate->modify('+1 day');
             }
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('request.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+            //$dqlParameters['endDate'] = $thisEndDate->format('Y-m-d'); //H:i:s
         }
 
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
@@ -5051,7 +5055,7 @@ class DashboardUtil
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
                 foreach($specialtyObjects as $specialtyObject) {
-                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject));
+                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject),false);
                     $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyRequests);
                 }
 
@@ -5112,22 +5116,29 @@ class DashboardUtil
             $startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
-                $thisEndDate = clone $startDate;
-                //$thisEndDate->modify( 'first day of next month' );
-                $thisEndDate->modify('last day of this month');
-                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
-                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
-
-                $apcpRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyApcpObject));
 
                 foreach($specialtyObjects as $specialtyObject) {
-                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject));
+
+                    $thisEndDate = clone $startDate;
+                    //$thisEndDate->modify( 'first day of next month' );
+                    $thisEndDate->modify('last day of this month');
+                    $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                    //echo "1StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                    //$apcpRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),false);
+                    //echo "apcpRequests=".count($apcpRequests)."<br>";
+
+                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject),false);
+//                    if( $specialtyObject->getName() == 'AP/CP' ) {
+//                        echo "2StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+//                        echo $specialtyObject . ":specialtyRequests=" . count($specialtyRequests) . "<br>";
+//                    }
                     $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyRequests);
                 }
 
                 $startDate->modify( 'first day of next month' );
 
-                $apcpResultStatArr[$startDateLabel] = count($apcpRequests);
+                //$apcpResultStatArr[$startDateLabel] = count($apcpRequests);
 
             } while( $startDate < $endDate );
 
@@ -5159,8 +5170,8 @@ class DashboardUtil
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     if( $specialtyObject->getName() == "AP/CP" ) {
-                        echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
-                        echo $specialtyObject->getName()."($date)".": value=$value<br>";
+                        //echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
+                        //echo $specialtyObject->getName()."($date)".": value=$value<br>";
                     }
 
                     $specialtyRequestsData[$date] = array('value'=>$value,'link'=>$link);
@@ -5174,7 +5185,7 @@ class DashboardUtil
             }
 
             //AP/CP
-            echo "#############AP/CP#############<br>";
+            //echo "#############AP/CP#############<br>";
             $apcpRequestsData = array();
             foreach($apcpResultStatArr as $date=>$value ) {
                 $dates = $datesArr[$date];
@@ -5200,13 +5211,13 @@ class DashboardUtil
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
-                echo $specialtyApcpObject->getName()."($date)".": value=$value<br>";
+                //echo "StartDate=".$dates['startDate']."; EndDate=".$dates['endDate']."<br>";
+                //echo $specialtyApcpObject->getName()."($date)".": value=$value<br>";
 
                 $apcpRequestsData[$date] = array('value'=>$value,'link'=>$link);
             }
-            $combinedRequestsData['AP/CP2'] = $apcpRequestsData;
-            exit();
+            //$combinedRequestsData['AP/CP2'] = $apcpRequestsData;
+            //exit();
 
             $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
         }
