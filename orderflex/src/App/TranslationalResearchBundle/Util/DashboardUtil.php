@@ -5149,6 +5149,7 @@ class DashboardUtil
                     'filter[status][2]' => "Paid Partially",
                     'filter[status][3]' => 'Refunded Fully',
                     'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
                     'filter[endCreateDate]' => $dates['endDate'],
                     'filter[version]' => "Latest"
@@ -5172,6 +5173,7 @@ class DashboardUtil
                     'filter[status][2]' => "Paid Partially",
                     'filter[status][3]' => 'Refunded Fully',
                     'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'],
                     'filter[endCreateDate]' => $dates['endDate'],
                     'filter[version]' => "Latest"
@@ -5195,6 +5197,7 @@ class DashboardUtil
                     'filter[status][2]' => "Paid Partially",
                     'filter[status][3]' => 'Refunded Fully',
                     'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'],
                     'filter[endCreateDate]' => $dates['endDate'],
                     'filter[version]' => "Latest"
@@ -5254,6 +5257,7 @@ class DashboardUtil
 
             foreach($specialtyObjects as $specialtyObject) {
                 $specialtyInvoicesData = array();
+                $linkFilterArr = array();
                 foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
                     $dates = $datesArr[$date];
                     $linkFilterArr = array(
@@ -5262,10 +5266,11 @@ class DashboardUtil
                         'filter[status][2]' => "Paid Partially",
                         'filter[status][3]' => 'Refunded Fully',
                         'filter[status][4]' => 'Refunded Partially',
+                        'filter[status][5]' => 'Pending',
                         'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
                         'filter[endCreateDate]' => $dates['endDate'],
                         'filter[version]' => "Latest",
-                        //'filter[projectSpecialty]' => $specialtyObject->getId()
+                        //'filter[idSearch]' => $specialtyObject->getUppercaseShortName()
                     );
                     $link = $this->container->get('router')->generate(
                         'translationalresearch_invoice_index_filter',
