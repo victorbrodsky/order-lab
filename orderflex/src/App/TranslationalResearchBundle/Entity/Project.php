@@ -1812,14 +1812,20 @@ class Project {
 //    }
 
     public function getAllPrincipalInvestigators() {
-        //$allPis = new ArrayCollection();
+        $allPis = new ArrayCollection();
         $pis = $this->getPrincipalInvestigators();
-        $irbPi = $this->getPrincipalIrbInvestigator();
-        if( $irbPi && !$pis->contains($irbPi) ) {
-            //if( $irbPi ) {
-            $pis->add($irbPi);
+        foreach( $pis as $pi ) {
+            if( $pi && !$allPis->contains($pi) ) {
+                //if( $irbPi ) {
+                $allPis->add($pi);
+            }
         }
-        return $pis;
+        $irbPi = $this->getPrincipalIrbInvestigator();
+        if( $irbPi && !$allPis->contains($irbPi) ) {
+            //if( $irbPi ) {
+            $allPis->add($irbPi);
+        }
+        return $allPis;
     }
     public function getAllPrincipalInvestigators_ORIG() {
         $pis = $this->getPrincipalInvestigators();
