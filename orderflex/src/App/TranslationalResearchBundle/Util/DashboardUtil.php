@@ -5152,7 +5152,8 @@ class DashboardUtil
                     'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
                     'filter[endCreateDate]' => $dates['endDate'],
-                    'filter[version]' => "Latest"
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyApcpObject->getUppercaseShortName()
                 );
                 $link = $this->container->get('router')->generate(
                     'translationalresearch_invoice_index_filter',
@@ -5176,7 +5177,8 @@ class DashboardUtil
                     'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'],
                     'filter[endCreateDate]' => $dates['endDate'],
-                    'filter[version]' => "Latest"
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyHemaObject->getUppercaseShortName()
                 );
                 $link = $this->container->get('router')->generate(
                     'translationalresearch_invoice_index_filter',
@@ -5200,7 +5202,8 @@ class DashboardUtil
                     'filter[status][5]' => 'Pending',
                     'filter[startCreateDate]' => $dates['startDate'],
                     'filter[endCreateDate]' => $dates['endDate'],
-                    'filter[version]' => "Latest"
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyCovidObject->getUppercaseShortName()
                 );
                 $link = $this->container->get('router')->generate(
                     'translationalresearch_invoice_index_filter',
