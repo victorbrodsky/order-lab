@@ -56,7 +56,7 @@ class ResAppTrainingType extends AbstractType
         ));
 
         $builder->add('completionDate', DateType::class, array(
-            'label' => 'Graduation Date:',
+            'label' => 'Graduation/Departure Date:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -65,10 +65,10 @@ class ResAppTrainingType extends AbstractType
 
         if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
 
-            $builder->add('degree', null, array(
-                'label' => 'Degree:',
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-trainingdegree')
-            ));
+//            $builder->add('degree', null, array(
+//                'label' => 'Degree:',
+//                'attr' => array('class' => 'combobox combobox-width ajax-combobox-trainingdegree')
+//            ));
 //
 //            $builder->add('majors', CustomSelectorType::class, array(
 //                'label' => 'Major:',
@@ -115,10 +115,10 @@ class ResAppTrainingType extends AbstractType
 //                'classtype' => 'jobTitle'
 //            ));
         } else {
-            $builder->add('degree', null, array(
-                'label' => 'Degree:',
-                'attr' => array('class' => 'form-control')
-            ));
+//            $builder->add('degree', null, array(
+//                'label' => 'Degree:',
+//                'attr' => array('class' => 'form-control')
+//            ));
 
 //            $builder->add('majors', null, array(
 //                'label' => 'Major:',

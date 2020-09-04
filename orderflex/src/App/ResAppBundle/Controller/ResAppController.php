@@ -337,6 +337,7 @@ class ResAppController extends OrderAbstractController {
         $dql->leftJoin("resapp.examinations", "examinations");
         $dql->leftJoin("resapp.trainings", "trainings");
         $dql->leftJoin("resapp.rank", "rank");
+        $dql->leftJoin("resapp.postSoph", "postSoph");
 
         if( $search ) {
             //echo "<br>search=".$search."<br>";

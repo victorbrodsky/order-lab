@@ -71,7 +71,7 @@ class GoogleFormConfigType extends AbstractType
 
         $builder->add('residencySubspecialties', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
-            'label' => "Residency Application Types".$this->params['resappTypesListLink'].":",
+            'label' => "Residency Track".$this->params['resappTypesListLink'].":",
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['resTypes'],

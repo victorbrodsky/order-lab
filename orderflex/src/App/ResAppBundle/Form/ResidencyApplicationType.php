@@ -97,7 +97,7 @@ class ResidencyApplicationType extends AbstractType
 
         $builder->add('residencyTrack', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
-            'label' => "Residency Application Type:",
+            'label' => "Residency Track:",
             //'required' => true,
             'required' => false,
             'choices' => $resappChoices,   //$this->params['resappTypes'], //$resTypes,
@@ -131,7 +131,7 @@ class ResidencyApplicationType extends AbstractType
 
         $builder->add('startDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => "Start Date:", //"Residency Start Date:"
+            'label' => "Expected Residency Start Date:", //"Residency Start Date:"
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
             'attr' => array('class' => 'datepicker form-control resapp-startDate'),
             'required' => false,

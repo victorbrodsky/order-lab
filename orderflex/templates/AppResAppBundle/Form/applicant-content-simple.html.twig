@@ -213,7 +213,7 @@
 
                     {% set trainingLabel = "Training:" %}
                     {% set majorLabel = "Major:" %}
-                    {% set degreeLabel = "Degree:" %}
+                    {#{% set degreeLabel = "Degree:" %}#}
                     {#{% set showTraining = false %}#}
 
                     {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
@@ -226,7 +226,7 @@
                             {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
                             {{ formmacros.field(training.institution) }}
                             {#{{ form_row(training.institution) }}#}
-                            {{ formmacros.field(training.degree) }}
+                            {#{{ formmacros.field(training.degree) }}#}
                         </div>
 
                     {% endif %}
@@ -280,7 +280,7 @@
 
                     {% set trainingLabel = "Training:" %}
                     {% set majorLabel = "Major:" %}
-                    {% set degreeLabel = "Degree:" %}
+                    {#{% set degreeLabel = "Degree:" %}#}
                     {#{% set showTraining = false %}#}
 
                     {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
@@ -296,7 +296,7 @@
                                     {{ formmacros.fieldDateLabel_notempty(training.startDate,'show','allow-future-date') }}
                                     {{ formmacros.fieldDateLabel_notempty(training.completionDate,'show','allow-future-date') }}
                                     {{ formmacros.field_notempty(training.institution,'show') }}
-                                    {{ formmacros.field_notempty(training.degree,'show') }}
+                                    {#{{ formmacros.field_notempty(training.degree,'show') }}#}
 
                                     {{ formmacros.field_notempty(training.geoLocation.city,'show') }}
                                     {{ formmacros.field_notempty(training.geoLocation.state,'show') }}
@@ -311,7 +311,7 @@
                                 {{ formmacros.fieldDateLabel(training.startDate,'allow-future-date') }}
                                 {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
                                 {{ formmacros.field(training.institution) }}
-                                {{ formmacros.field(training.degree) }}
+                                {#{{ formmacros.field(training.degree) }}#}
 
                                 {{ formmacros.field(training.geoLocation.city) }}
                                 {{ formmacros.field(training.geoLocation.state) }}

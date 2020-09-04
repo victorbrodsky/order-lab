@@ -393,6 +393,11 @@
 
                 <th>Medical School</th>
                 <th>Previous Residency (if any)</th>
+
+                <th>{{ knp_pagination_sortable(entities, 'AOA', 'resapp.aoa') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Couple’s Match', 'resapp.couple') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Post-Sophomore Fellowship', 'postSoph.name') }}</th>
+
                 {#<th>Fellowsip</th>#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'resapp.interviewDate') }}</th>
@@ -648,6 +653,26 @@
                     </td>
                     <td>
                         {{ entity.getResidencyDescription()|raw }}
+                    </td>
+
+                    <td>
+                        {#{{ entity.aoa()|raw }}#}
+                        {% if entity.aoa() %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {#{{ entity.couple()|raw }}#}
+                        {% if entity.couple() %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ entity.postSoph()|raw }}
                     </td>
 
                     {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}

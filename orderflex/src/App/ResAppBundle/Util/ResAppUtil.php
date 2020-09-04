@@ -1477,7 +1477,7 @@ class ResAppUtil {
             $role = new Roles();
             $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
             $role->setAlias('Residency Program '.$roleTypeStr.' WCM ' . $subspecialtyType->getName());
-            $role->setDescription('Access to specific Residency Application type as '.$roleTypeStr);
+            $role->setDescription('Access to specific residency track as '.$roleTypeStr);
             $role->addSite($site);
             $role->setInstitution($institution);
             $role->setResidencyTrack($subspecialtyType);

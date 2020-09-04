@@ -56,8 +56,23 @@
 
 
                     {% if is_granted('ROLE_RESAPP_COORDINATOR') or is_granted('ROLE_RESAPP_DIRECTOR') %}
-                        <li id="nav-bar-resappnew" class="divider-vertical">
-                            <a href="{{ path('resapp_new') }}">Add Application</a>
+                        {#<li id="nav-bar-resappnew" class="divider-vertical">#}
+                            {#<a href="{{ path('resapp_new') }}">Add Application</a>#}
+                        {#</li>#}
+                        <li id="nav-bar-resappnew" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add Applications<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ path('resapp_new') }}">
+                                        Add Application
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('resapp_upload_multiple_applications') }}">
+                                        Upload Multiple Applications
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     {% endif %}
 

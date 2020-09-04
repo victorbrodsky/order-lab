@@ -234,9 +234,9 @@ class ResAppManagement extends OrderAbstractController {
 
             if( $count > 0 && !$testing ) {
                 //Event Log
-                $event = "New Residency Application Type " . $subspecialtyType->getName() . " has been created by " . $user . ". " . $msg;
+                $event = "New Residency Track " . $subspecialtyType->getName() . " has been created by " . $user . ". " . $msg;
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Application Type Created');
+                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Track Created');
 
                 //Flash
                 $this->get('session')->getFlashBag()->add(
@@ -303,10 +303,10 @@ class ResAppManagement extends OrderAbstractController {
 
         if( count($removedRoles) > 0 ) {
             //Event Log
-            $event = "Residency Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
+            $event = "Residency Track " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
                 " and disabling corresponding roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Application Type Removed');
+            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Track Removed');
 
             //Flash
             $this->get('session')->getFlashBag()->add(

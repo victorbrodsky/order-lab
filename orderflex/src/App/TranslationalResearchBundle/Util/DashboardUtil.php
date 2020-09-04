@@ -124,7 +124,7 @@ class DashboardUtil
             //"45new. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_new",
             //"45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
             "46. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
-            "46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
+            //"46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",
             "48. Total Fees per Project Request Type of Funded Projects (linked)" => "projects-funded-fees-per-type",

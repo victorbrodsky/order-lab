@@ -38,7 +38,7 @@ class ResAppExaminationType extends AbstractType
         ));
 
         $builder->add('USMLEStep2CKScore', null, array(
-            'label' => 'USMLE Scores Step 2:',
+            'label' => 'USMLE Scores Step 2 CK:',
             'attr' => array('class'=>'form-control digit-mask')
         ));
 

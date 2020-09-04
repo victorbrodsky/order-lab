@@ -74,7 +74,7 @@ class ResAppResidencyApplicationType extends AbstractType
 
         $builder->add('save', SubmitType::class,
             array(
-                'label' => 'Add a New Residency Application Type',
+                'label' => 'Add a New Residency Track',
                 'attr' => array('class'=>'btn btn-primary'),
             )
         );

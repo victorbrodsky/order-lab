@@ -82,7 +82,25 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * Upload Multiple Applications
+     *
+     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET"})
+     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
+     */
+    public function uploadMultipleApplicationsAction(Request $request)
+    {
 
+        if (
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
+        ) {
+            return $this->redirect($this->generateUrl('resapp-nopermission'));
+        }
+
+        exit("Upload Multiple Applications is under construction");
+
+    }
     
 
 }
