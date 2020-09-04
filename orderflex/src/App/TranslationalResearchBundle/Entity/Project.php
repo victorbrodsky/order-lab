@@ -1811,6 +1811,7 @@ class Project {
 //        $this->reminderEmails->removeElement($item);
 //    }
 
+    //Return only unique users
     public function getAllPrincipalInvestigators() {
         $allPis = new ArrayCollection();
         $pis = $this->getPrincipalInvestigators();
@@ -1827,6 +1828,7 @@ class Project {
         }
         return $allPis;
     }
+    //NOT USED (TO DELETE). Might return repeating users
     public function getAllPrincipalInvestigators_ORIG() {
         $pis = $this->getPrincipalInvestigators();
         $irbPi = $this->getPrincipalIrbInvestigator();

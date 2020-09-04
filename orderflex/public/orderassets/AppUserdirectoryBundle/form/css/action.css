@@ -106,14 +106,73 @@
 }
 
 .fell-app-status-legend-accepted {
-    background: #3c89bd;
+    /*background: #3c89bd;*/
+    background: #439AD4;
 }
 .fell-app-status-legend-acceptedandnotified {
-    background: #1971ad;
+    /*background: #1971ad;*/
+    background: #3c89bd;
 }
 .fell-app-status-legend-rejectedandnotified {
     background: #7C7C7C;
 }
+
+/*Resapp*/
+.res-app-status-legend {
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    width: auto;
+    display: inline;
+}
+
+.res-app-status-legend-active {
+    background: white;
+}
+
+.res-app-status-legend-reject {
+    background: #D0D0D0;
+}
+
+.res-app-status-legend-onhold {
+    background: #ffffe6;
+}
+
+.res-app-status-legend-hidden {
+    background: #ebcccc;
+}
+
+.res-app-status-legend-archived {
+    background: #BEBEBE;
+    /*background: #c4e3f3;*/
+}
+
+.res-app-status-legend-interviewee {
+    background: rgba(217, 247, 218, 0.38);
+}
+
+.res-app-status-legend-complete {
+    /*background: rgb(247, 247, 247);*/
+    background: #e6f2ff;
+}
+
+.res-app-status-legend-priority {
+    background: #c0e3fa;
+}
+
+.res-app-status-legend-accepted {
+    /*background: #3c89bd;*/
+    background: #439AD4;
+}
+.res-app-status-legend-acceptedandnotified {
+    /*background: #1971ad;*/
+    background: #3c89bd;
+}
+.res-app-status-legend-rejectedandnotified {
+    background: #7C7C7C;
+}
+/*EOF Resapp*/
 
 .table-row-separator-white {
     background: linear-gradient(to bottom,#FFFFFF 0,#FFFFFF 100%);

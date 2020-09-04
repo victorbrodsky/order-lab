@@ -2851,25 +2851,11 @@ class DashboardUtil
         }
 
         //18. Non-Funded Projects with the Highest Total Fees (Top 10)
-        //TODO: filtered ips correct sum for APCP2287=24696 (on test: $11656), show in chart=24296 (on test: $11256, $400 is missing)
         if( $chartType == "fees-by-requests-per-nonfunded-projects" ) {
             $transresRequestUtil = $this->container->get('transres_request_util');
             $unFundedTotalFeesByRequestArr = array();
 
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
-
-//            $thisRequestsCount = 0;
-//            foreach($requests as $transRequest) {
-//                if( $transRequest->getFundedAccountNumber() ) {
-//                    //do nothing
-//                } else {
-//                    $project = $transRequest->getProject();
-//                    if( $project->getOid() == "APCP2287" ) {
-//                        $thisRequestsCount++;
-//                    }
-//                }
-//            }
-//            echo $startDate->format('d-M-Y H:i:s').":request count=".$thisRequestsCount."<br>";
 
             foreach($requests as $transRequest) {
 
@@ -2889,18 +2875,11 @@ class DashboardUtil
 
                 $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
                 //echo "projectIndex=[".$project->getOid()."] <br>";
-//                if( $project->getOid() == "APCP2287" ) {
-//                    echo $transRequest->getOid().": $subtotalFee <br>";
-//                }
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 if( $transRequest->getFundedAccountNumber() ) {
                     //do nothing
                 } else {
-//                    if( $project->getOid() == "APCP2287" ) {
-//                        echo $transRequest->getOid().": (non funded) $subtotalFee <br>";
-//                    }
-                    //14. Non-Funded Projects with the Highest Total Fees (Top 10)
                     if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
                         $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
                     } else {
@@ -2913,7 +2892,6 @@ class DashboardUtil
                 }
 
             }//foreach $requests
-            //exit();
 
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
             $showOther = $this->getOtherStr($showLimited,"projects");
