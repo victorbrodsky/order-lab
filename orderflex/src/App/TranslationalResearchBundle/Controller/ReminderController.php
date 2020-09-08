@@ -78,7 +78,7 @@ class ReminderController extends OrderAbstractController
             }
 
             //The following invoices have remained unpaid for over X days:
-            $title = "The following $invoiceCounter invoices have remained unpaid.".$criterions;
+            //$title = "The following $invoiceCounter invoices have remained unpaid.".$criterions;
             //21 invoices have remained unpaid.
             $title = "$invoiceCounter invoices have remained unpaid. ".$criterions;
 

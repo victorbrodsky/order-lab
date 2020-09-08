@@ -51,10 +51,13 @@ class ReminderUtil
 
     public function sendReminderUnpaidInvoices($showSummary=false, $testing=false) {
         $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
 
         $resultArr = array();
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+        $logger->notice("Found ".count($projectSpecialties)." TRP project specialties");
+
         foreach($projectSpecialties as $projectSpecialty) {
             $results = $this->sendReminderUnpaidInvoicesBySpecialty($projectSpecialty,$showSummary,$testing);
             if( $results ) {
@@ -71,6 +74,7 @@ class ReminderUtil
         } else {
             $result = "There are no unpaid overdue invoices corresponding to the site setting parameters.";
         }
+        $logger->notice($result);
 
         return $result;
     }
@@ -106,6 +110,7 @@ class ReminderUtil
                 $maxReminderCount = $invoiceReminderScheduleArr[2];     //max reminder count (integer)
             }
         } else {
+            $logger->error("No invoiceReminderSchedule is set for ".$projectSpecialty);
             return "No invoiceReminderSchedule is set";
         }
         //testing
@@ -117,12 +122,15 @@ class ReminderUtil
         }
 
         if( !$invoiceDueDateMax ) {
+            $logger->error("invoiceDueDateMax is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "invoiceDueDateMax is not set. Invoice reminder emails are not sent.";
         }
         if( !$reminderInterval ) {
+            $logger->error("reminderInterval is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "reminderInterval is not set. Invoice reminder emails are not sent.";
         }
         if( !$maxReminderCount ) {
+            $logger->error("maxReminderCount is not set. Invoice reminder emails are not sent."." projectSpecialty=".$projectSpecialty);
             return "maxReminderCount is not set. Invoice reminder emails are not sent.";
         }
 

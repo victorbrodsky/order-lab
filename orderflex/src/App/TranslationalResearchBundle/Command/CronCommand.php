@@ -50,7 +50,7 @@ class CronCommand extends Command {
     //php bin/console cron:invoice-reminder-emails --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
         //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
         //$result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
         //$logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
@@ -58,8 +58,23 @@ class CronCommand extends Command {
 
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
+        $showSummary = false; //send email reminder
+        $showSummary = true; //testing: show unpaid invoices only
+
         ////////////// unpaid invoices //////////////
-        $results = $transresReminderUtil->sendReminderUnpaidInvoices();
+        $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary);
+        if( is_array($results) ) {
+            //$results = "Unpaid invoices=".count($results);
+            //echo "#########array#########";
+            //$results = implode(", ",$results);
+            $invoiceCounter = 0;
+            foreach($results as $result) {
+                if( is_array($result) ) {
+                    $invoiceCounter = $invoiceCounter + count($result);
+                }
+            }
+            $results = "Unpaid invoices=".$invoiceCounter;
+        }
         //$output->writeln($results); //testing
         //return true; //testing
         ////////////// EOF unpaid invoices //////////////
@@ -69,7 +84,10 @@ class CronCommand extends Command {
         $finalResults = array();
 
         foreach($states as $state) {
-            $projectResults = $transresReminderUtil->sendReminderReviewProjects($state);
+            $projectResults = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
+            if( is_array($projectResults) ) {
+                $projectResults = count($projectResults);
+            }
             $finalResults[$state] = $projectResults;
         }
 
@@ -96,7 +114,10 @@ class CronCommand extends Command {
         $finalResults = array();
 
         foreach($states as $state) {
-            $requestResults = $transresReminderUtil->sendReminderPendingRequests($state);
+            $requestResults = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
+            if( is_array($requestResults) ) {
+                $requestResults = count($requestResults);
+            }
             $finalResults[$state] = $requestResults;
         }
 
@@ -106,6 +127,8 @@ class CronCommand extends Command {
         }
         $results = $results . "; " . implode(", ",$requestResultsArr);
         ////////////// EOF delayed requests //////////////
+
+        $logger->notice("Cron invoice-reminder-emails result=".$results);
 
         $output->writeln($results);
 
