@@ -61,6 +61,8 @@ class CronCommand extends Command {
         $showSummary = false; //send email reminder
         $showSummary = true; //testing: show unpaid invoices only
 
+        $logger->notice("Cron invoice-reminder-emails with showSummary=".$showSummary);
+
         ////////////// unpaid invoices //////////////
         $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary);
         if( is_array($results) ) {
