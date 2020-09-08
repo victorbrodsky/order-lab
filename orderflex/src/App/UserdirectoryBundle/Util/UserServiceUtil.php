@@ -1861,6 +1861,7 @@ Pathology and Laboratory Medicine",
     //1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob))
     //2) importFellowshipApplications (every hour)
     //3) UnpaidInvoiceReminder (at 6 am every Monday)
+    //TODO: auto generation adds ^M at the end of new line
     public function createCronsLinux() {
         $logger = $this->container->get('logger');
         $logger->notice("Creating cron jobs for Linux");
@@ -1924,7 +1925,7 @@ Pathology and Laboratory Medicine",
         //$trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
         $trpCronJob = "0 6 * * 1" . " " . $trpCronJobCommand; //run every monday at 6am (https://stackoverflow.com/questions/25676475/run-every-monday-at-5am?rq=1)
         $trpCronJob = "41 16 * * 2" . " " . $trpCronJobCommand; //testing: run every tuesday at 17:32
-        $trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //testing: At minute 30
+        $trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //testing: At minute 10
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
             $this->addCronJobLinux($trpCronJob);
@@ -1966,6 +1967,29 @@ Pathology and Laboratory Medicine",
         $projectDir = $this->container->get('kernel')->getProjectDir();
 
         $cronJobName = "cron:status --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $statusFrequency = 30;
+        //$statusFrequency = 5; //testing
+        $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
+
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+            $this->addCronJobLinux($statusCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+    }
+    public function createTestStatusCronLinux( $statusFrequency = 30 ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating statustest cron job for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        $cronJobName = "cron:statustest --env=prod";
 
         $phpPath = $this->getPhpPath();
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";

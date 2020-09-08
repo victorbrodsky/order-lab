@@ -446,6 +446,7 @@ Cron (/var/spool/cron/ and /etc/crontab):
 Show for specific user:     crontab -u apache -l
 Edit crontab file, or create one if it doesn’t already exist: crontab -u apache -e
 Remove for specific user:   crontab -u apache -r
+Problem: ^M at the end of each line?
 
 //Server hanging on login
 ? https://www.howtoforge.com/community/threads/apache-hangs-without-traffic.52980/

@@ -8415,6 +8415,9 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->get('user_service_utility');
         $userServiceUtil->createStatusCronLinux();
 
+        //add test job
+        $userServiceUtil->createTestStatusCronLinux();
+
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Status cron job is generated (check for Maintenance).'
