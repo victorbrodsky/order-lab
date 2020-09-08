@@ -1867,7 +1867,7 @@ Pathology and Laboratory Medicine",
         $projectDir = $this->container->get('kernel')->getProjectDir();
 
         //////////////////// 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
-        $this->createEmailCronLinux();
+        //$this->createEmailCronLinux();
         //////////////////// EOF 1) swiftMailer (implemented on email util (EmailUtil->createEmailCronJob)) ////////////////////
 
         //////////////////// 2) ImportFellowshipApplications (every hour) ////////////////////
