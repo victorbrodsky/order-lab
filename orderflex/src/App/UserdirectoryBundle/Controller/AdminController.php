@@ -8416,7 +8416,7 @@ class AdminController extends OrderAbstractController
         $userServiceUtil->createStatusCronLinux();
 
         //add test job
-        $userServiceUtil->createTestStatusCronLinux();
+        //$userServiceUtil->createTestStatusCronLinux();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
