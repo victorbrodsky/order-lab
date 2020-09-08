@@ -17,8 +17,13 @@ class Crontab {
     // Legacy way to add a job:
     // $output = shell_exec('(crontab -l; echo "'.$job.'") | crontab -');
 
+    //New line:
+    //in Linux/Unix: \n
+    //in Windows: \r\n
+
     static private function stringToArray($jobs = '') {
-        $array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
+        //$array = explode("\r\n", trim($jobs)); // trim() gets rid of the last \r\n
+        $array = explode("\n", trim($jobs)); // trim() gets rid of the last \r\n
         foreach ($array as $key => $item) {
             if ($item == '') {
                 unset($array[$key]);
@@ -28,7 +33,8 @@ class Crontab {
     }
 
     static private function arrayToString($jobs = array()) {
-        $string = implode("\r\n", $jobs);
+        //$string = implode("\r\n", $jobs);
+        $string = implode("\n", $jobs);
         return $string;
     }
 
