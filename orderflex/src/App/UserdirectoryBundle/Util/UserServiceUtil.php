@@ -1922,10 +1922,10 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        //$trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
-        $trpCronJob = "0 6 * * 1" . " " . $trpCronJobCommand; //run every monday at 6am (https://stackoverflow.com/questions/25676475/run-every-monday-at-5am?rq=1)
-        $trpCronJob = "41 16 * * 2" . " " . $trpCronJobCommand; //testing: run every tuesday at 17:32
-        $trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //testing: At minute 10
+        $trpCronJob = "00 06 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+        //$trpCronJob = "0 6 * * 1" . " " . $trpCronJobCommand; //run every monday at 6am (https://stackoverflow.com/questions/25676475/run-every-monday-at-5am?rq=1)
+        //$trpCronJob = "41 16 * * 2" . " " . $trpCronJobCommand; //testing: run every tuesday at 17:32
+        //$trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //testing: At minute 10
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
             $this->addCronJobLinux($trpCronJob);
