@@ -59,7 +59,7 @@ class CronCommand extends Command {
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
         $showSummary = false; //send email reminder
-        $showSummary = true; //testing: show unpaid invoices only
+        //$showSummary = true; //testing: show unpaid invoices only
 
         $logger->notice("Cron invoice-reminder-emails with showSummary=".$showSummary);
 
