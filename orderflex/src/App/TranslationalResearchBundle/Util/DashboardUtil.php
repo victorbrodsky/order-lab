@@ -1704,6 +1704,7 @@ class DashboardUtil
     public function getDashboardChart($request) {
 
         //ini_set('memory_limit', '30000M');
+        ini_set('max_execution_time', 600); //600 seconds = 10 minutes; it will set back to original value after execution of this script
 
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
