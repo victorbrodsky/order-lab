@@ -46,6 +46,8 @@ function transresGetCharts() {
     var i;
     for (i = 0; i < chartTypes.length; i++) {
 
+        //l.start();
+
         var chartIndex = chartTypes[i];
         //console.log("chartType="+chartIndex);
 
@@ -56,12 +58,13 @@ function transresGetCharts() {
             data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, quantityLimit:quantityLimit, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
             async: false //use synchronous => wait for response.
+            //async: true
         }).success(function(chartData) {
             //console.log('chartData=');
             //console.log(chartData);
             transresAddChart(chartIndex,chartData);
         }).done(function() {
-            //
+            //l.stop();
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
             transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in or selected time period is too large for this graph. ",'error');
