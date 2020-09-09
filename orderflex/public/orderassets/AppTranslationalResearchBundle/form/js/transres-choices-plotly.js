@@ -53,7 +53,8 @@ function transresGetCharts() {
 
         $.ajax({
             url: url,
-            timeout: _ajaxTimeout,
+            //timeout: _ajaxTimeout,
+            timeout: 600000, //milliseconds, 600000 => 10 min, 3000 => 3 second timeout
             type: "GET",
             data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, quantityLimit:quantityLimit, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
