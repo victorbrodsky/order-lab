@@ -18,6 +18,7 @@
 namespace App\ResAppBundle\Controller;
 
 use App\ResAppBundle\Entity\ResidencyApplication;
+use App\ResAppBundle\Form\ResAppUploadType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,8 +99,31 @@ class ResAppUtilController extends OrderAbstractController
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
 
-        exit("Upload Multiple Applications is under construction");
+        //exit("Upload Multiple Applications is under construction");
 
+        $cycle = 'new';
+
+        //$form = $this->createUploadForm($cycle);
+        $params = array(
+            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
+            //'defaultStartDates' => $defaultStartDates
+        );
+        $form = $this->createForm(ResAppUploadType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() ) {
+
+
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+        );
     }
     
 

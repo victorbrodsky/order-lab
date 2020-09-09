@@ -16,6 +16,8 @@
 
 {% extends "AppResAppBundle/Default/base.html.twig" %}
 
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     Upload Multiple Applications
@@ -27,6 +29,15 @@
     {#https://bitbucket.org/victorbrodsky/trp/issues/182/bulk-application-upload#}
 
     {#DropZone: Please drag and drop ERAS application files here#}
+    <div class="well form-element-holder user-erasfiles">
+        <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
+        <div class="row withpaddingtop">
+            <div class="col-xs-12">
+                {{ usermacros.documentsContainer(null,form.erasfiles,cycle,'noprototype',100,'default','ERAS application files') }}
+            </div>
+        </div>
+    </div>
+
 
     {#button: Upload and Extract Data#}
 

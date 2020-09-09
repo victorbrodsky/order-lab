@@ -6391,6 +6391,7 @@ class DashboardUtil
             $loginCountTrp = 0;
             $loginCountCrn = 0;
             $loginCountResapp = 0;
+            //$counter = 0;
 
             $startDate->modify( 'first day of last month' );
 
@@ -6441,15 +6442,27 @@ class DashboardUtil
                 $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn',true);
                 $loginsCrnArr[$startDateLabel] = $loginCrnCount;
                 $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                //$counter++;
             }
 
-            $combinedData["Translational Research Users ($loginCountTrp)"] = $loginsTranslationalresearchArr;
-            $combinedData["Employee Directory Users ($loginCountEmpl)"] = $loginsEmployeesArr;
-            $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
-            $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
-            $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
-            $combinedData["Critical Result Notification Users ($loginCountCrn)"] = $loginsCrnArr;
-            $combinedData["Residency Applications Users ($loginCountResapp)"] = $loginsResappArr;
+//            if( $counter > 0 ) {
+//                $loginCountTrp = round($loginCountTrp/$counter);
+//                $loginCountEmpl = round($loginCountEmpl/$counter);
+//                $loginCountFellapp = round($loginCountFellapp/$counter);
+//                $loginCountVacreq = round($loginCountVacreq/$counter);
+//                $loginCountCalllog = round($loginCountCalllog/$counter);
+//                $loginCountCrn = round($loginCountCrn/$counter);
+//                $loginCountResapp = round($loginCountResapp/$counter);
+//            }
+
+            $combinedData["Translational Research Users ($loginCountTrp on average per month)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Users ($loginCountEmpl on average per month)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Users ($loginCountFellapp on average per month)"] = $loginsFellappArr;
+            $combinedData["Vacation Request Users ($loginCountVacreq on average per month)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Users ($loginCountCalllog on average per month)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountCrn on average per month)"] = $loginsCrnArr;
+            $combinedData["Residency Applications Users ($loginCountResapp on average per month)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
             //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
@@ -6533,13 +6546,13 @@ class DashboardUtil
                 $loginCountResapp = $loginCountResapp + $loginResappCount;
             }
 
-            $combinedData["Translational Research Users ($loginCountTrp)"] = $loginsTranslationalresearchArr;
-            $combinedData["Employee Directory Users ($loginCountEmpl)"] = $loginsEmployeesArr;
-            $combinedData["Fellowship Applications Users ($loginCountFellapp)"] = $loginsFellappArr;
-            $combinedData["Vacation Request Users ($loginCountVacreq)"] = $loginsVacreqArr;
-            $combinedData["Call Log Book Users ($loginCountCalllog)"] = $loginsCalllogArr;
-            $combinedData["Critical Result Notification Users ($loginCountCrn)"] = $loginsCrnArr;
-            $combinedData["Residency Applications Users ($loginCountResapp)"] = $loginsResappArr;
+            $combinedData["Translational Research Users ($loginCountTrp on average per week)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Users ($loginCountEmpl on average per week)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Users ($loginCountFellapp on average per week)"] = $loginsFellappArr;
+            $combinedData["Vacation Request Users ($loginCountVacreq on average per week)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Users ($loginCountCalllog on average per week)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountCrn on average per week)"] = $loginsCrnArr;
+            $combinedData["Residency Applications Users ($loginCountResapp on average per week)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
 //            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
