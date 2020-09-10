@@ -43,7 +43,7 @@ class ResAppUploadType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
 
-        $builder->add('erasfiles', CollectionType::class, array(
+        $builder->add('erasFiles', CollectionType::class, array(
             //'type' => new DocumentType($this->params),
             'entry_type' => DocumentType::class,
             'label' => 'ERAS application files:',
@@ -62,13 +62,14 @@ class ResAppUploadType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'csrf_protection' => false,
+            'data_class' => 'App\ResAppBundle\Entity\InputDataFile',
+            'csrf_protection' => true,
             'form_custom_value' => null
         ));
     }
 
     public function getBlockPrefix()
     {
-        return 'upload';
+        return 'oleg_resappbundle_eras';
     }
 }
