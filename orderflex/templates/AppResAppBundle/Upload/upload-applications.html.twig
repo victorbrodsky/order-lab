@@ -27,6 +27,11 @@
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
 
     {#https://bitbucket.org/victorbrodsky/trp/issues/182/bulk-application-upload#}
 
@@ -36,6 +41,7 @@
         <div class="row withpaddingtop">
             <div class="col-xs-12">
                 {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
             </div>
         </div>
     </div>
