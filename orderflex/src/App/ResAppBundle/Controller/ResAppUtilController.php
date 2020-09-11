@@ -17,9 +17,8 @@
 
 namespace App\ResAppBundle\Controller;
 
-use App\ResAppBundle\Entity\InputDataFile;
-use App\ResAppBundle\Entity\ResidencyApplication;
-use App\ResAppBundle\Form\ResAppUploadType;
+//use App\ResAppBundle\Entity\ResidencyApplication;
+//use App\ResAppBundle\Form\ResAppUploadType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,57 +82,5 @@ class ResAppUtilController extends OrderAbstractController
         $response->setContent(json_encode($res));
         return $response;
     }
-
-    /**
-     * Upload Multiple Applications
-     *
-     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET"})
-     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
-     */
-    public function uploadMultipleApplicationsAction(Request $request)
-    {
-
-        if (
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
-        ) {
-            return $this->redirect($this->generateUrl('resapp-nopermission'));
-        }
-
-        //exit("Upload Multiple Applications is under construction");
-
-        $cycle = 'new';
-        
-        $inputDataFile = new InputDataFile();
-
-        //$form = $this->createUploadForm($cycle);
-        $params = array(
-            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
-            //'defaultStartDates' => $defaultStartDates
-        );
-        $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
-            array(
-                'method' => 'GET',
-                'form_custom_value'=>$params
-            )
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() ) {
-
-            exit("form submitted");
-
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile); //Save new entry
-
-        }
-
-        return array(
-            'form' => $form->createView(),
-            'cycle' => $cycle,
-            'inputDataFile' => $inputDataFile,
-        );
-    }
-    
 
 }

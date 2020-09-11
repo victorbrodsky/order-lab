@@ -48,7 +48,9 @@
         "symfony/yaml": "^4.4",
         "tattali/calendar-bundle": "^1.1",
         "twig/extensions": "^1.5",
-        "twilio/sdk": "^6.4"
+        "twilio/sdk": "^6.4",
+        "setasign/fpdf": "1.8.*",
+        "setasign/fpdi": "^2.0"
     },
     "require-dev": {
         "symfony/debug-pack": "*",

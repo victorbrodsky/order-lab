@@ -285,6 +285,12 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "setasign/fpdf": {
+        "version": "1.8.2"
+    },
+    "setasign/fpdi": {
+        "version": "v2.3.4"
+    },
     "sinergi/browser-detector": {
         "version": "6.1.2"
     },

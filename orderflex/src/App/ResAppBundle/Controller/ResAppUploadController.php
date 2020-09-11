@@ -15,74 +15,180 @@
  *  limitations under the License.
  */
 
-/**
- * Created by PhpStorm.
- * User: oli2002
- * Date: 10/15/14
- * Time: 11:57 AM
- */
-
 namespace App\ResAppBundle\Controller;
 
-use App\UserdirectoryBundle\Util\LargeFileDownloader;
+use App\ResAppBundle\Entity\InputDataFile;
+use App\ResAppBundle\Entity\ResidencyApplication;
+use App\ResAppBundle\Form\ResAppUploadType;
+use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use setasign\Fpdi\Fpdi;
 use Symfony\Component\HttpFoundation\Request;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
-use App\UserdirectoryBundle\Controller\UploadController;
-use Symfony\Component\HttpFoundation\Response;
 
 
-class ResAppUploadController extends UploadController {
-
-    /**
-     * @Route("/file-delete", name="resapp_file_delete", methods={"GET", "POST", "DELETE"})
-     */
-    public function deleteFileAction(Request $request) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
-            //exit('no resapp permission');
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-        }
-
-        return $this->deleteFileMethod($request);
-    }
+class ResAppUploadController extends OrderAbstractController
+{
+    
 
     /**
-     * $id - document id
+     * Upload Multiple Applications
      *
-     * @Route("/file-download/{id}/{eventtype}", name="resapp_file_download", methods={"GET"}, requirements={"id" = "\d+"})
+     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET"})
+     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
      */
-    public function downloadFileAction(Request $request,$id,$eventtype=null) {
+    public function uploadMultipleApplicationsAction(Request $request)
+    {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+        if (
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
+        ) {
+            return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
 
-        //// quick fix for non-existing http://c.med.cornell.edu/order/residency-applications/file-download/7281
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $environment = $userSecUtil->getSiteSettingParameter('environment');
-//        if( $id == 7281 && $environment == "live" ) {
-//            $id = 7327;
-//        }
-        /////// EOF ///////
+        //exit("Upload Multiple Applications is under construction");
 
-        return $this->downloadFileMethod($request,$id,$this->getParameter('resapp.sitename'),$eventtype);
-    }
+        $em = $this->getDoctrine()->getManager();
 
+        $cycle = 'new';
+        
+        $inputDataFile = new InputDataFile();
 
-    /**
-     * $id - document id
-     *
-     * @Route("/file-view/{id}/{viewType}/{eventtype}", name="resapp_file_view", methods={"GET"}, requirements={"id" = "\d+"})
-     */
-    public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
+        //get Table $jsonData
+        $jsonData = array(); //$this->getTableData($inputDataFile);
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
-            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+        //$form = $this->createUploadForm($cycle);
+        $params = array(
+            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
+            //'defaultStartDates' => $defaultStartDates
+        );
+        $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
+            array(
+                'method' => 'GET',
+                'form_custom_value'=>$params
+            )
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form submitted");
+
+            //$em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile); //Save new entry
+
+            //Testing: get PDF C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf
+            //CrossReferenceException:
+            // This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI.
+            // (See https://www.setasign.com/fpdi-pdf-parser for more details)
+            $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+            //PackingSlip.pdf
+            //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
+            $res = $this->parsePdf($path);
+
+            exit("parsed res=$res");
+
+            //get Table $jsonData
+            $jsonData = $this->getTableData($inputDataFile);
         }
 
-        return $this->viewFileMethod($request,$id,$this->getParameter('resapp.sitename'),$eventtype,$viewType);
+        return array(
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'inputDataFile' => $inputDataFile,
+            'handsometableData' => $jsonData
+        );
     }
 
+    public function parsePdf($path) {
 
-} 
+        if (file_exists($path)) {
+            echo "The file $path exists";
+        } else {
+            echo "The file $path does not exist";
+        }
+
+        // initiate FPDI
+        $pdf = new Fpdi();
+        // add a page
+        $pdf->AddPage();
+        // set the source file
+        $pdf->setSourceFile($path); //"Fantastic-Speaker.pdf";
+        // import page 1
+        $tplId = $pdf->importPage(1);
+        dump($tplId);
+        // use the imported page and place it at point 10,10 with a width of 100 mm
+        $pdf->useTemplate($tplId, 10, 10, 100);
+
+        $pdf->Output();
+        dump($pdf);
+    }
+
+    public function getTableData($transresRequest) {
+        $jsonData = array();
+
+        foreach($transresRequest->getDataResults() as $dataResult) {
+            $rowArr = array();
+
+            //System
+            $system = $dataResult->getSystem();
+            if( $system ) {
+//                $systemStr = $system->getName();
+//                $abbreviation = $system->getAbbreviation();
+//                if( $abbreviation ) {
+//                    $systemStr = $abbreviation;
+//                }
+                $rowArr['Source']['id'] = $system->getId();
+                $rowArr['Source']['value'] = $system->getOptimalName(); //$systemStr;
+            }
+
+            //Accession ID
+            $rowArr['Accession ID']['id'] = $dataResult->getId();
+            $rowArr['Accession ID']['value'] = $dataResult->getAccessionId();
+
+            //Part ID
+            $rowArr['Part ID']['id'] = $dataResult->getId();
+            $rowArr['Part ID']['value'] = $dataResult->getPartId();
+
+            //Block ID
+            $rowArr['Block ID']['id'] = $dataResult->getId();
+            $rowArr['Block ID']['value'] = $dataResult->getBlockId();
+
+            //Slide ID
+            $rowArr['Slide ID']['id'] = $dataResult->getId();
+            $rowArr['Slide ID']['value'] = $dataResult->getSlideId();
+
+            //Stain Name
+            $rowArr['Stain Name']['id'] = $dataResult->getId();
+            $rowArr['Stain Name']['value'] = $dataResult->getStainName();
+
+            //Antibody
+            $antibody = $dataResult->getAntibody();
+            if( $antibody ) {
+                $rowArr['Antibody']['id'] = $antibody->getId();
+                $rowArr['Antibody']['value'] = $antibody."";
+            }
+
+            //Other ID
+            $rowArr['Other ID']['id'] = $dataResult->getId();
+            $rowArr['Other ID']['value'] = $dataResult->getOtherId();
+
+            //Barcode
+            $rowArr['Sample Name']['id'] = $dataResult->getId();
+            $rowArr['Sample Name']['value'] = $dataResult->getBarcode();
+
+            //Comment
+            $rowArr['Comment']['id'] = $dataResult->getId();
+            $rowArr['Comment']['value'] = $dataResult->getComment();
+
+
+            $jsonData[] = $rowArr;
+        }
+
+        return $jsonData;
+    }
+
+}

@@ -18,6 +18,7 @@
 
 {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Upload/upload-applications.html.twig" as reasappMacros %}
 
 {% block title %}
     Upload Multiple Applications
@@ -130,24 +131,76 @@
 
     {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
 
-
+    {{ reasappMacros.resappUploadHandsontable(form,inputDataFile,cycle) }}
 
 {% endblock %}
 
 
-{#{% block additionaljs %}#}
-    {#<script language="Javascript">#}
 
-        {#$(document).ready(function() {#}
-            {#var hashValue = window.location.hash;#}
-            {#//console.log("hashValue="+hashValue);#}
-            {#if( hashValue == '#interviews' ) {#}
-                {#//console.log("open panel");#}
-                {#$('#interviews').collapse('show');#}
-                {#expandTextarea($('#interviews'));#}
-            {#}#}
-        {#});#}
+{% block additionalcss %}
 
-    {#</script>#}
-{#{% endblock %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppResAppBundle/form/js/handsontable.js') }}" ></script>
+
+    <script language="Javascript">
+
+        var _handsometableDataArr = [];
+
+        $(document).ready(function() {
+            var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+
+            // Wait until idle (busy must be false)
+            var _TIMEOUT = 300; // waitfor test rate [msec]
+
+            //console.log('before wait for');
+            waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                //console.log('The show can resume !');
+                transresMakeColumnData();
+
+                handsonTableInit(_handsometableDataArr, tableFormCycle);
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% macro resappUploadHandsontable( form, inputDataFile, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        Uploaded Applications
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    {#{{ formmacros.field(form.antibodyReferences) }}#}
+                    <br>
+
+                    {% if cycle != "show" and cycle != "download" %}
+                        <h5>Please use "Simple Name" column to auto paste multiple, new line separated, barcodes.</h5>
+                    {% endif %}
+
+                    <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
