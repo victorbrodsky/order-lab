@@ -26,28 +26,39 @@
 
 {% block content %}
 
-    <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <div id="form-prototype-data"
-         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-         data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
-         data-userid = "{{ app.user.id }}"
-    ></div>
+    {{ form_start(form) }}
 
-    {#https://bitbucket.org/victorbrodsky/trp/issues/182/bulk-application-upload#}
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
 
-    {#DropZone: Please drag and drop ERAS application files here#}
-    <div class="well form-element-holder user-erasfiles">
-        <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
-        <div class="row withpaddingtop">
-            <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
-                {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+        {#https://bitbucket.org/victorbrodsky/trp/issues/182/bulk-application-upload#}
+
+        {#DropZone: Please drag and drop ERAS application files here#}
+        <div class="well form-element-holder user-erasfiles">
+            <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                    {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+                </div>
             </div>
         </div>
-    </div>
 
 
-    {#button: Upload and Extract Data#}
+        {#button: Upload and Extract Data#}
+        {% if form.upload is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.upload) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
 
     {#hidden accordion titled “Uploaded Applications” with the Handsontable with 1 row as well as “Add Listed Apllications” button. The table should have the following columns:#}
 

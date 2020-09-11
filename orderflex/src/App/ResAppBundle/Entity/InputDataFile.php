@@ -17,6 +17,7 @@
 
 namespace App\ResAppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -73,7 +74,7 @@ class InputDataFile {
     private $resapp;
 
     
-    public function __construct($document) {
+    public function __construct() {
         $this->setCreationdate(new \DateTime());
         $this->setStatus("active");
         //$this->setDocument($document);
