@@ -23,6 +23,7 @@ use App\ResAppBundle\Form\ResAppUploadType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
+use Smalot\PdfParser\Parser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -87,12 +88,26 @@ class ResAppUploadController extends OrderAbstractController
             $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
             //PackingSlip.pdf
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
-            $res = $this->parsePdf($path);
 
-            exit("parsed res=$res");
+            //https://packagist.org/packages/setasign/fpdi
+            //NOT WORKING: This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI. (See https://www.setasign.com/fpdi-pdf-parser for more details)
+            //Use GhostScript?
+            //$res = $this->parsePdfSetasign($path);
+
+            //Other PDF parsers:
+            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
+            //https://packagist.org/packages/wrseward/pdf-parser (MIT)
+            //https://packagist.org/packages/rafikhaceb/tcpdi (Apache-2.0 License)
+
+            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
+            //$res = $this->parsePdfSmalot($path);
+
+            //exit("parsed res=$res");
+
+            $dataArr = $this->getDataArray();
 
             //get Table $jsonData
-            $jsonData = $this->getTableData($inputDataFile);
+            $jsonData = $this->getTableData($dataArr);
         }
 
         return array(
@@ -103,7 +118,7 @@ class ResAppUploadController extends OrderAbstractController
         );
     }
 
-    public function parsePdf($path) {
+    public function parsePdfSetasign($path) {
 
         if (file_exists($path)) {
             echo "The file $path exists";
@@ -126,64 +141,225 @@ class ResAppUploadController extends OrderAbstractController
         $pdf->Output();
         dump($pdf);
     }
+    public function parsePdfSmalot($path) {
 
-    public function getTableData($transresRequest) {
+        if (file_exists($path)) {
+            echo "The file $path exists";
+        } else {
+            echo "The file $path does not exist";
+        }
+
+        // Parse pdf file and build necessary objects.
+        $parser = new Parser();
+        $pdf    = $parser->parseFile($path);
+
+        // Retrieve all pages from the pdf file.
+        $pages  = $pdf->getPages();
+
+        // Loop over each page to extract text.
+        $counter = 1;
+        foreach ($pages as $page) {
+            $pdfTextPage = $page->getText();
+
+            echo "Page $counter <br>";
+            dump($pdfTextPage);
+            $counter++;
+        }
+
+
+//        // Retrieve all details from the pdf file.
+//        $details  = $pdf->getDetails();
+//        // Loop over each property to extract values (string or array).
+//        foreach ($details as $property => $value) {
+//            if (is_array($value)) {
+//                $value = implode(', ', $value);
+//            }
+//            echo $property . ' => ' . $value . "\n";
+//        }
+    }
+
+    public function getDataArray() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $dataArr = array();
+
+        $applicationDatas = array(1,2,3); //test
+        $nowDate = new \DateTime();
+
+        $counter = 0;
+        foreach($applicationDatas as $applicationData) {
+
+            $counter++;
+            $pdfTextArray = array();
+
+            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($counter);
+            $pdfTextArray["Residency Track"] = $residencyTrack->getName();
+
+            //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $pdfTextArray["Application Season Start Date"] = $nowDate->format("m/d/Y H:i:s");
+
+            //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $pdfTextArray["Application Season End Date"] = $nowDate->format("m/d/Y H:i:s");
+
+            //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $pdfTextArray["Expected Residency Start Date"] = $nowDate->format("m/d/Y H:i:s");
+
+            //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $pdfTextArray["Expected Graduation Date"] = $nowDate->format("m/d/Y H:i:s");
+
+            //First Name
+            $pdfTextArray["First Name"] = "First Name".$counter;
+
+            //Last Name
+            $pdfTextArray["Last Name"] = "Last Name".$counter;
+
+            //Middle Name
+            $pdfTextArray["Middle Name"] = "Middle Name".$counter;
+
+            //Preferred Email
+            $pdfTextArray["Preferred Email"] = "PreferredTestEmail".$counter."@yahoo.com";
+
+            $dataArr[] = $pdfTextArray;
+        }
+
+
+        return $dataArr;
+    }
+
+
+    public function getTableData($pdfTextsArray) {
         $jsonData = array();
 
-        foreach($transresRequest->getDataResults() as $dataResult) {
+        foreach($pdfTextsArray as $pdfTextArray) {
             $rowArr = array();
 
-            //System
-            $system = $dataResult->getSystem();
-            if( $system ) {
-//                $systemStr = $system->getName();
-//                $abbreviation = $system->getAbbreviation();
-//                if( $abbreviation ) {
-//                    $systemStr = $abbreviation;
-//                }
-                $rowArr['Source']['id'] = $system->getId();
-                $rowArr['Source']['value'] = $system->getOptimalName(); //$systemStr;
+            $currentDate = new \DateTime();
+            $currentDateStr = $currentDate->format('m\d\Y H:i:s');
+
+            if(0) {
+                $rowArr["Application Receipt Date"] = $currentDateStr;
+
+                $rowArr["Residency Track"] = $pdfTextArray["Residency Track"];
+
+                //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Application Season Start Date"] = $pdfTextArray["Application Season Start Date"];
+
+                //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Application Season End Date"] = $pdfTextArray["Application Season End Date"];
+
+                //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Expected Residency Start Date"] = $pdfTextArray["Expected Residency Start Date"];
+
+                //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Expected Graduation Date"] = $pdfTextArray["Expected Graduation Date"];
+
+                //First Name
+                $rowArr["First Name"] = $pdfTextArray["First Name"];
+
+                //Last Name
+                $rowArr["Last Name"] = $pdfTextArray["Last Name"];
+
+                //Middle Name
+                $rowArr["Middle Name"] = $pdfTextArray["Middle Name"];
+
+                //Preferred Email
+                $rowArr["Preferred Email"] = $pdfTextArray["Preferred Email"];
+            } else {
+                $rowArr["Accession ID"] = "S11-1";
+
+                $rowArr["Part ID"] = "1";
+
+                //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Block ID"] = "2";
+
+                //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Slide ID"] = "Slide ID";
+
+                //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Stain Name"] = "Stain Name";
+
+                //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+                $rowArr["Other ID"] = "Other ID";
+
+                //First Name
+                $rowArr["Sample Name"] = "Sample Name";
+
             }
 
-            //Accession ID
-            $rowArr['Accession ID']['id'] = $dataResult->getId();
-            $rowArr['Accession ID']['value'] = $dataResult->getAccessionId();
+            if(0) {
+                //Medical School Graduation Date
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
 
-            //Part ID
-            $rowArr['Part ID']['id'] = $dataResult->getId();
-            $rowArr['Part ID']['value'] = $dataResult->getPartId();
+                //Medical School Name
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
 
-            //Block ID
-            $rowArr['Block ID']['id'] = $dataResult->getId();
-            $rowArr['Block ID']['value'] = $dataResult->getBlockId();
+                //Degree (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
 
-            //Slide ID
-            $rowArr['Slide ID']['id'] = $dataResult->getId();
-            $rowArr['Slide ID']['value'] = $dataResult->getSlideId();
+                //USMLE Step 1 Score
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
 
-            //Stain Name
-            $rowArr['Stain Name']['id'] = $dataResult->getId();
-            $rowArr['Stain Name']['value'] = $dataResult->getStainName();
+                //USMLE Step 2 CK Score
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
 
-            //Antibody
-            $antibody = $dataResult->getAntibody();
-            if( $antibody ) {
-                $rowArr['Antibody']['id'] = $antibody->getId();
-                $rowArr['Antibody']['value'] = $antibody."";
+                //USMLE Step 3 Score
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Country of Citizenship (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Visa Status (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Is the applicant a member of any of the following groups? (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Number of first author publications
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Number of all publications
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //AOA (show the same checkmark in the Handsontable cell as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Couple’s Match:
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Post-Sophomore Fellowship
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency Start Date
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency Graduation/Departure Date
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency Institution
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency City
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency State (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency Country (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Previous Residency Track (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //ERAS Application ID
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //ERAS Application (show the cells in this column as blank - this is where you will show the original ERAS file name of the PDF once it uploads)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
+
+                //Duplicate? (locked field, leave empty by default)
+                $rowArr["xxx"] = $pdfTextArray["xxx"];
             }
-
-            //Other ID
-            $rowArr['Other ID']['id'] = $dataResult->getId();
-            $rowArr['Other ID']['value'] = $dataResult->getOtherId();
-
-            //Barcode
-            $rowArr['Sample Name']['id'] = $dataResult->getId();
-            $rowArr['Sample Name']['value'] = $dataResult->getBarcode();
-
-            //Comment
-            $rowArr['Comment']['id'] = $dataResult->getId();
-            $rowArr['Comment']['value'] = $dataResult->getComment();
-
 
             $jsonData[] = $rowArr;
         }

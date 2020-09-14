@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a36c995973bc6e3c7cabf2e0112e1ddb",
+    "content-hash": "3600bc9a28567946783b82cd7f8f6979",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -4246,6 +4246,56 @@
                 "os"
             ],
             "time": "2016-12-28T16:31:30+00:00"
+        },
+        {
+            "name": "smalot/pdfparser",
+            "version": "v0.16.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smalot/pdfparser.git",
+                "reference": "5faf073f308b084496ed6bd512deabb680ca7128"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/5faf073f308b084496ed6bd512deabb680ca7128",
+                "reference": "5faf073f308b084496ed6bd512deabb680ca7128",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-zlib": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16.3",
+                "symfony/phpunit-bridge": "^4.2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Smalot\\PdfParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastien MALOT",
+                    "email": "sebastien@malot.fr"
+                }
+            ],
+            "description": "Pdf parser library. Can read and extract information from pdf file.",
+            "homepage": "https://www.pdfparser.org",
+            "keywords": [
+                "extract",
+                "parse",
+                "parser",
+                "pdf",
+                "text"
+            ],
+            "time": "2020-08-31T11:26:29+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
