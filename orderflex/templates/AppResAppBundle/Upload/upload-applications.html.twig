@@ -158,6 +158,7 @@
 
         $(document).ready(function() {
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            //console.log(_handsometableDataArr);
 
             // Wait until idle (busy must be false)
             var _TIMEOUT = 300; // waitfor test rate [msec]
@@ -165,9 +166,9 @@
             //console.log('before wait for');
             waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
                 //console.log('The show can resume !');
-                transresMakeColumnData();
+                resappMakeColumnData();
 
-                handsonTableInit(_handsometableDataArr, tableFormCycle);
+                handsonTableInit(_handsometableDataArr);
             });
         });
 

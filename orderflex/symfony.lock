@@ -294,9 +294,6 @@
     "sinergi/browser-detector": {
         "version": "6.1.2"
     },
-    "smalot/pdfparser": {
-        "version": "v0.16.2"
-    },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.3"
     },

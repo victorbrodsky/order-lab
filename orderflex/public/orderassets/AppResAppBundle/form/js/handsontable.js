@@ -149,6 +149,7 @@ function getAntobodies(holder,force) {
 function ajaxFinishedCondition() {
 
     //console.log('_accessiontype.length='+_accessiontype.length);
+    return true; //testing
 
     if( !(_accessiontype.length > 0) ) {
         //console.log('NULL _accessiontype.length='+_accessiontype.length);
@@ -187,58 +188,36 @@ function ajaxFinishedCondition() {
     }
 }
 
-function transresMakeColumnData() {
+function resappMakeColumnData() {
 
-    var defaultAccessionTypeIndex = 0;
-    var defaultAccessionType = $('#default-accession-type').val();
-    //console.log("defaultAccessionType="+defaultAccessionType);
-    if( defaultAccessionType ) {
-        for(var i = 0; i < _accessiontypes_simple.length; i++) {
-            //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
-            if( _accessiontypes_simple[i] == defaultAccessionType ) {
-                defaultAccessionTypeIndex = i;
-            }
-        }
-    }
+    // var defaultAccessionTypeIndex = 0;
+    // var defaultAccessionType = $('#default-accession-type').val();
+    // //console.log("defaultAccessionType="+defaultAccessionType);
+    // if( defaultAccessionType ) {
+    //     for(var i = 0; i < _accessiontypes_simple.length; i++) {
+    //         //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
+    //         if( _accessiontypes_simple[i] == defaultAccessionType ) {
+    //             defaultAccessionTypeIndex = i;
+    //         }
+    //     }
+    // }
 
-    var defaultAntibodyIndex = null;
-    var defaultAntibody = $('#default-antibody').val();
-    //console.log("defaultAccessionType="+defaultAccessionType);
-    if( defaultAccessionType ) {
-        for(var i = 0; i < _antibodies_simple.length; i++) {
-            //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
-            if( _antibodies_simple[i] == defaultAntibody ) {
-                defaultAntibodyIndex = i;
-            }
-        }
-    }
-
-    _columnData_scanorder = [
-        {
-            header:'Source',
-            default: defaultAccessionTypeIndex,
-            columns: {
-                type: 'autocomplete',
-                source: _accessiontypes_simple,
-                strict: true,
-                filter: false,
-            }
-        },
+    _columnData_scanorderTest = [
+        // {
+        //     header:'Source',
+        //     default: defaultAccessionTypeIndex,
+        //     columns: {
+        //         type: 'autocomplete',
+        //         source: _accessiontypes_simple,
+        //         strict: true,
+        //         filter: false,
+        //     }
+        // },
         { header:'Accession ID', columns:{} },
         { header:'Part ID', columns:{} },
         { header:'Block ID', columns:{} },
         { header:'Slide ID', columns:{} },
         { header:'Stain Name', columns:{} },
-        {
-            header:'Antibody',
-            default: defaultAntibodyIndex,
-            columns: {
-                type: 'autocomplete',
-                source: _antibodies_simple,
-                strict: true,
-                filter: false,
-            }
-        },
         { header:'Other ID', columns:{} },
         { header:'Sample Name', columns:{} },
         //{ header:'Barcode Image', columns:{renderer:imageRenderer} },
@@ -247,10 +226,57 @@ function transresMakeColumnData() {
         { header:'Comment', columns:{} }
     ];
 
+    _columnData_scanorder = [
+        // {
+        //     header:'Source',
+        //     default: defaultAccessionTypeIndex,
+        //     columns: {
+        //         type: 'autocomplete',
+        //         source: _accessiontypes_simple,
+        //         strict: true,
+        //         filter: false,
+        //     }
+        // },
+        { header:'Application Receipt Date', columns:{} },
+        { header:'Residency Track', columns:{} },
+        { header:'Application Season Start Date', columns:{} },
+        { header:'Application Season End Date', columns:{} },
+        { header:'Expected Residency Start Date', columns:{} },
+        { header:'Expected Graduation Date', columns:{} },
+        { header:'First Name', columns:{} },
+        { header:'Last Name', columns:{} },
+        { header:'Middle Name', columns:{} },
+        { header:'Preferred Email', columns:{} },
+        { header:'Medical School Graduation Date', columns:{} },
+        { header:'Medical School Name', columns:{} },
+        { header:'Degree', columns:{} },
+        { header:'USMLE Step 1 Score', columns:{} },
+        { header:'USMLE Step 2 CK Score', columns:{} },
+        { header:'USMLE Step 3 Score', columns:{} },
+        { header:'Country of Citizenship', columns:{} },
+        { header:'Visa Status', columns:{} },
+        { header:'Is the applicant a member of any of the following groups?', columns:{} },
+        { header:'Number of first author publications', columns:{} },
+        { header:'Number of all publications', columns:{} },
+        { header:'AOA', columns:{} },
+        { header:'Couple’s Match', columns:{} },
+        { header:'Post-Sophomore Fellowship', columns:{} },
+        { header:'Previous Residency Start Date', columns:{} },
+        { header:'Previous Residency Graduation/Departure Date', columns:{} },
+        { header:'Previous Residency Institution', columns:{} },
+        { header:'Previous Residency City', columns:{} },
+        { header:'Previous Residency State', columns:{} },
+        { header:'Previous Residency Country', columns:{} },
+        { header:'Previous Residency Track', columns:{} },
+        { header:'ERAS Application ID', columns:{} },
+        { header:'ERAS Application', columns:{} },
+        { header:'Duplicate?', columns:{} },
+    ];
+
     //_barcodeCol = 7;
 }
 
-function handsonTableInit(handsometableDataArr,tableFormCycle) {
+function handsonTableInit(handsometableDataArr) {
 
     var data = [];
     var columnsType = [];
@@ -260,8 +286,8 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length != 0 ) {
         rows = handsometableDataArr.length+1;
     }
-    //console.log('handsonTableInit rows='+rows+":");
-    //console.log(handsometableDataArr);
+    console.log('handsonTableInit rows='+rows+":");
+    console.log(handsometableDataArr);
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
@@ -361,9 +387,9 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         cells: function(r,c,prop) {
             var cellProperties = {};
 
-            if( tableFormCycle == 'show' ) {
-                cellProperties.readOnly = true;
-            }
+            // if( tableFormCycle == 'show' ) {
+            //     cellProperties.readOnly = true;
+            // }
 
             //console.log("c="+c+"; r="+r);                      //c=7
             //console.log(_columnData_scanorder[c]);    //_columnData_scanorder[c].header="Barcode"

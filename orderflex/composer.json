@@ -24,7 +24,6 @@
         "setasign/fpdf": "1.8.*",
         "setasign/fpdi": "^2.0",
         "sinergi/browser-detector": "^6.1",
-        "smalot/pdfparser": "^0.16.2",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "4.4.*",
         "symfony/console": "^4.4",
