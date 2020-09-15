@@ -23,7 +23,8 @@ use App\ResAppBundle\Form\ResAppUploadType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
-use Smalot\PdfParser\Parser;
+//use Smalot\PdfParser\Parser;
+//use Spatie\PdfToText\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -92,17 +93,21 @@ class ResAppUploadController extends OrderAbstractController
             //https://packagist.org/packages/setasign/fpdi
             //NOT WORKING: This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI. (See https://www.setasign.com/fpdi-pdf-parser for more details)
             //Use GhostScript?
-            //$res = $this->parsePdfSetasign($path);
+            $res = $this->parsePdfSetasign($path);
 
             //Other PDF parsers:
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
             //https://packagist.org/packages/wrseward/pdf-parser (MIT)
             //https://packagist.org/packages/rafikhaceb/tcpdi (Apache-2.0 License)
+            //pdftotext - open source library (GPL)
 
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
             //$res = $this->parsePdfSmalot($path);
 
-            //exit("parsed res=$res");
+            //https://github.com/spatie/pdf-to-text
+            //$res = $this->parsePdfSpatie($path);
+
+            exit("parsed res=$res");
 
             $dataArr = $this->getDataArray();
 
@@ -121,62 +126,100 @@ class ResAppUploadController extends OrderAbstractController
     public function parsePdfSetasign($path) {
 
         if (file_exists($path)) {
-            echo "The file $path exists";
+            echo "The file $path exists<br>";
         } else {
-            echo "The file $path does not exist";
+            echo "The file $path does not exist<br>";
         }
 
-        // initiate FPDI
-        $pdf = new Fpdi();
-        // add a page
-        $pdf->AddPage();
-        // set the source file
-        $pdf->setSourceFile($path); //"Fantastic-Speaker.pdf";
-        // import page 1
-        $tplId = $pdf->importPage(1);
-        dump($tplId);
-        // use the imported page and place it at point 10,10 with a width of 100 mm
-        $pdf->useTemplate($tplId, 10, 10, 100);
+        if(0) {
+            $resappRepGen = $this->container->get('resapp_reportgenerator');
+            $processedFiles = $resappRepGen->processFilesGostscript(array($path));
 
-        $pdf->Output();
-        dump($pdf);
+            if (count($processedFiles) > 0) {
+                $dir = dirname($path);
+                $path = $processedFiles[0];
+                $path = str_replace('"', '', $path);
+                //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                echo "path=" . $path . "<br>";
+            } else {
+                return null;
+            }
+        }
+
+        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+
+        // create a document instance
+        $document = SetaPDF_Core_Document::loadByFilename('Laboratory-Report.pdf');
+
+        // create an extractor instance
+        $extractor = new SetaPDF_Extractor($document);
+
+        // get the plain text from page 1
+        $result = $extractor->getResultByPageNumber(1);
+
+
+//        // initiate FPDI
+//        $pdf = new Fpdi();
+//        // add a page
+//        $pdf->AddPage();
+//        // set the source file
+//        $pdf->setSourceFile($path); //"Fantastic-Speaker.pdf";
+//        // import page 1
+//        $tplId = $pdf->importPage(1);
+//        //dump($tplId);
+//        //exit('111');
+//        // use the imported page and place it at point 10,10 with a width of 100 mm
+//        $pdf->useTemplate($tplId, 10, 10, 100);
+//
+//        //$pdf->Write();
+//        //$pdf->WriteHTML($html);
+//        $pdf->Output();
+//
+//        //dump($pdf->Output());
+//        //exit('111');
+//        //dump($pdf);
     }
-    public function parsePdfSmalot($path) {
-
-        if (file_exists($path)) {
-            echo "The file $path exists";
-        } else {
-            echo "The file $path does not exist";
-        }
-
-        // Parse pdf file and build necessary objects.
-        $parser = new Parser();
-        $pdf    = $parser->parseFile($path);
-
-        // Retrieve all pages from the pdf file.
-        $pages  = $pdf->getPages();
-
-        // Loop over each page to extract text.
-        $counter = 1;
-        foreach ($pages as $page) {
-            $pdfTextPage = $page->getText();
-
-            echo "Page $counter <br>";
-            dump($pdfTextPage);
-            $counter++;
-        }
-
-
-//        // Retrieve all details from the pdf file.
-//        $details  = $pdf->getDetails();
-//        // Loop over each property to extract values (string or array).
-//        foreach ($details as $property => $value) {
-//            if (is_array($value)) {
-//                $value = implode(', ', $value);
-//            }
-//            echo $property . ' => ' . $value . "\n";
+//    public function parsePdfSmalot($path) {
+//
+//        if (file_exists($path)) {
+//            echo "The file $path exists";
+//        } else {
+//            echo "The file $path does not exist";
 //        }
-    }
+//
+//        // Parse pdf file and build necessary objects.
+//        $parser = new Parser();
+//        $pdf    = $parser->parseFile($path);
+//
+//        // Retrieve all pages from the pdf file.
+//        $pages  = $pdf->getPages();
+//
+//        // Loop over each page to extract text.
+//        $counter = 1;
+//        foreach ($pages as $page) {
+//            $pdfTextPage = $page->getText();
+//
+//            echo "Page $counter <br>";
+//            dump($pdfTextPage);
+//            $counter++;
+//        }
+//
+//    }
+//    public function parsePdfSpatie($path) {
+//
+//        if (file_exists($path)) {
+//            echo "The file $path exists";
+//        } else {
+//            echo "The file $path does not exist";
+//        }
+//
+//        $text = (new Pdf())
+//            ->setPdf($path)
+//            ->text();
+//
+//        dump($text);
+//    }
 
     public function getDataArray() {
 
@@ -237,9 +280,10 @@ class ResAppUploadController extends OrderAbstractController
             $currentDate = new \DateTime();
             $currentDateStr = $currentDate->format('m\d\Y H:i:s');
 
-            if(0) {
+            if(1) {
                 $rowArr["Application Receipt Date"] = $currentDateStr;
 
+                echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
                 $rowArr["Residency Track"] = $pdfTextArray["Residency Track"];
 
                 //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )

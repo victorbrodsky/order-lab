@@ -292,16 +292,20 @@ function handsonTableInit(handsometableDataArr) {
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
+        console.log('row i='+i);
+
         var rowElement = [];
         //rowElement[0] = i;
         for( var ii=0; ii<_columnData_scanorder.length; ii++ ) {  //foreach column
 
+            console.log('row ii='+ii);
+
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
                 rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
-                //console.log('assign rowElement='+rowElement[ii]);
+                console.log('assign rowElement='+rowElement[ii]);
             } else {
-                //console.log('assign rowElement is null');
+                console.log('assign rowElement is null');
                 rowElement[ii] = null;
             }
 
