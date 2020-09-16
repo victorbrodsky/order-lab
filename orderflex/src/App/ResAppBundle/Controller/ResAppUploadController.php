@@ -94,8 +94,8 @@ class ResAppUploadController extends OrderAbstractController
             //https://packagist.org/packages/setasign/fpdi
             //NOT WORKING: This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI. (See https://www.setasign.com/fpdi-pdf-parser for more details)
             //Use GhostScript?
-            $res = $this->parsePdfSetasign($path);
-            exit();
+            //$res = $this->parsePdfSetasign($path);
+            //exit();
 
             //Other PDF parsers:
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
@@ -103,14 +103,14 @@ class ResAppUploadController extends OrderAbstractController
             //https://packagist.org/packages/rafikhaceb/tcpdi (Apache-2.0 License)
             //pdftotext - open source library (GPL)
 
-            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
+            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
             //$res = $this->parsePdfSmalot($path);
 
             //https://github.com/spatie/pdf-to-text
             //$res = $this->parsePdfSpatie($path);
 
             //https://gist.github.com/cirovargas (MIT)
-            //$res = $this->parsePdfCirovargas($path);
+            $res = $this->parsePdfCirovargas($path);
 
             exit("parsed res=$res");
 
@@ -209,17 +209,19 @@ class ResAppUploadController extends OrderAbstractController
             }
         }
 
-        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
 
         $pdfService = new PDFService();
         $text = $pdfService->pdf2text($path);
 
         if('' == trim($text)) {
+            echo "Use parseFile:<br>";
             $text = $pdfService->parseFile($path);
         }
 
-        dump($text);
-        exit();
+        //dump($text);
+        //exit();
         echo $text;
     }
 //    public function parsePdfSmalot($path) {
