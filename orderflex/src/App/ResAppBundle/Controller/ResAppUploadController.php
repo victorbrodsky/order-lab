@@ -20,6 +20,7 @@ namespace App\ResAppBundle\Controller;
 use App\ResAppBundle\Entity\InputDataFile;
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\ResAppBundle\Form\ResAppUploadType;
+use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
@@ -94,6 +95,7 @@ class ResAppUploadController extends OrderAbstractController
             //NOT WORKING: This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI. (See https://www.setasign.com/fpdi-pdf-parser for more details)
             //Use GhostScript?
             $res = $this->parsePdfSetasign($path);
+            exit();
 
             //Other PDF parsers:
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0)
@@ -106,6 +108,9 @@ class ResAppUploadController extends OrderAbstractController
 
             //https://github.com/spatie/pdf-to-text
             //$res = $this->parsePdfSpatie($path);
+
+            //https://gist.github.com/cirovargas (MIT)
+            //$res = $this->parsePdfCirovargas($path);
 
             exit("parsed res=$res");
 
@@ -124,6 +129,63 @@ class ResAppUploadController extends OrderAbstractController
     }
 
     public function parsePdfSetasign($path) {
+
+        if (file_exists($path)) {
+            //echo "The file $path exists<br>";
+        } else {
+            //==echo "The file $path does not exist<br>";
+        }
+
+        if(0) {
+            $resappRepGen = $this->container->get('resapp_reportgenerator');
+            $processedFiles = $resappRepGen->processFilesGostscript(array($path));
+
+            if (count($processedFiles) > 0) {
+                $dir = dirname($path);
+                $path = $processedFiles[0];
+                $path = str_replace('"', '', $path);
+                //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                echo "path=" . $path . "<br>";
+            } else {
+                return null;
+            }
+        }
+
+        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+
+        // create a document instance
+        //$document = SetaPDF_Core_Document::loadByFilename('Laboratory-Report.pdf');
+        // create an extractor instance
+        //$extractor = new SetaPDF_Extractor($document);
+        // get the plain text from page 1
+        //$result = $extractor->getResultByPageNumber(1);
+
+
+//        // initiate FPDI
+        $pdf = new Fpdi();
+//        // add a page
+        //$pdf->AddPage();
+//        // set the source file
+        $pdf->setSourceFile($path); //"Fantastic-Speaker.pdf";
+//        // import page 1
+        //$tplId = $pdf->importPage(1);
+        $tplId = $pdf->importPage(2);
+//        //dump($tplId);
+//        //exit('111');
+        $pdf->AddPage();
+//        // use the imported page and place it at point 10,10 with a width of 100 mm
+        $pdf->useTemplate($tplId, 10, 10, 100);
+//
+//        //$pdf->Write();
+//        //$pdf->WriteHTML($html);
+        $pdf->Output('I', 'generated.pdf');
+//
+//        //dump($pdf->Output());
+//        //exit('111');
+//        //dump($pdf);
+    }
+    public function parsePdfCirovargas($path) {
 
         if (file_exists($path)) {
             echo "The file $path exists<br>";
@@ -149,36 +211,16 @@ class ResAppUploadController extends OrderAbstractController
 
         $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
 
-        // create a document instance
-        $document = SetaPDF_Core_Document::loadByFilename('Laboratory-Report.pdf');
+        $pdfService = new PDFService();
+        $text = $pdfService->pdf2text($path);
 
-        // create an extractor instance
-        $extractor = new SetaPDF_Extractor($document);
+        if('' == trim($text)) {
+            $text = $pdfService->parseFile($path);
+        }
 
-        // get the plain text from page 1
-        $result = $extractor->getResultByPageNumber(1);
-
-
-//        // initiate FPDI
-//        $pdf = new Fpdi();
-//        // add a page
-//        $pdf->AddPage();
-//        // set the source file
-//        $pdf->setSourceFile($path); //"Fantastic-Speaker.pdf";
-//        // import page 1
-//        $tplId = $pdf->importPage(1);
-//        //dump($tplId);
-//        //exit('111');
-//        // use the imported page and place it at point 10,10 with a width of 100 mm
-//        $pdf->useTemplate($tplId, 10, 10, 100);
-//
-//        //$pdf->Write();
-//        //$pdf->WriteHTML($html);
-//        $pdf->Output();
-//
-//        //dump($pdf->Output());
-//        //exit('111');
-//        //dump($pdf);
+        dump($text);
+        exit();
+        echo $text;
     }
 //    public function parsePdfSmalot($path) {
 //
