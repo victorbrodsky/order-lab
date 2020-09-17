@@ -303,7 +303,7 @@ class ResAppUploadController extends OrderAbstractController
     public function parsePdfSpatie($path) {
 
         if (file_exists($path)) {
-            echo "The file $path exists <br>";
+            //echo "The file $path exists <br>";
         } else {
             echo "The file $path does not exist <br>";
         }
