@@ -89,7 +89,18 @@ class ResAppUploadController extends OrderAbstractController
             //CrossReferenceException:
             // This PDF document probably uses a compression technique which is not supported by the free parser shipped with FPDI.
             // (See https://www.setasign.com/fpdi-pdf-parser for more details)
+            //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+
+            $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+            echo "projectRoot=$projectRoot<br>";
+            //exit($projectRoot);
+            $parentRoot = str_replace('order-lab','',$projectRoot);
+            $parentRoot = str_replace('orderflex','',$projectRoot);
+            $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$projectRoot);
+            echo "parentRoot=$parentRoot<br>";
+            $path = $parentRoot.DIRECTORY_SEPARATOR."eras_gs.pdf";
             $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+
             //PackingSlip.pdf
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
 
@@ -216,7 +227,7 @@ class ResAppUploadController extends OrderAbstractController
             }
         }
 
-        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
         //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
 
         $pdfService = new PDFService();
@@ -314,7 +325,7 @@ class ResAppUploadController extends OrderAbstractController
         //$pdftotextPath = "pdftotext";
         $pdftotext = new Pdf($pdftotextPath);
 
-        $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
         //$path = '"'.$path.'"';
         //$path = "'".$path."'";
         $path = realpath($path);
@@ -322,7 +333,16 @@ class ResAppUploadController extends OrderAbstractController
 
         $text = $pdftotext->setPdf($path)->text();
 
-        dump($text);
+        $startStr = "Applicant ID:";
+        $endStr = "AAMC ID:";
+        $field = $this->getPdfField($text,$startStr,$endStr);
+        if( $field ) {
+            echo "Spatie: $startStr=[" . $field . "]<br>";
+        }
+
+        //dump($text);
+
+        return $field;
     }
 
     public function getDataArray() {
