@@ -294,6 +294,9 @@
     "sinergi/browser-detector": {
         "version": "6.1.2"
     },
+    "spatie/pdf-to-text": {
+        "version": "1.3.0"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.3"
     },

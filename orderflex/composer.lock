@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d5fc03bb3fb91628f98295ecb158ff0",
+    "content-hash": "221d4fa8861a5fdb31585de6b90be03b",
     "packages": [
         {
             "name": "antishov/doctrine-extensions-bundle",
@@ -4246,6 +4246,59 @@
                 "os"
             ],
             "time": "2016-12-28T16:31:30+00:00"
+        },
+        {
+            "name": "spatie/pdf-to-text",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/pdf-to-text.git",
+                "reference": "9c11b44c6469f6e1d9b097e30f0f1d44aa65a8e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/pdf-to-text/zipball/9c11b44c6469f6e1d9b097e30f0f1d44aa65a8e8",
+                "reference": "9c11b44c6469f6e1d9b097e30f0f1d44aa65a8e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "symfony/process": "^4.0|^5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\PdfToText\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extract text from a pdf",
+            "homepage": "https://github.com/spatie/pdf-to-text",
+            "keywords": [
+                "pdf-to-text",
+                "spatie"
+            ],
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                }
+            ],
+            "time": "2020-03-11T17:11:25+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -26,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
 //use Smalot\PdfParser\Parser;
 //use Spatie\PdfToText\Pdf;
+use Spatie\PdfToText\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -107,10 +108,10 @@ class ResAppUploadController extends OrderAbstractController
             //$res = $this->parsePdfSmalot($path);
 
             //https://github.com/spatie/pdf-to-text
-            //$res = $this->parsePdfSpatie($path);
+            $res = $this->parsePdfSpatie($path);
 
             //https://gist.github.com/cirovargas (MIT)
-            $res = $this->parsePdfCirovargas($path);
+            //$res = $this->parsePdfCirovargas($path);
 
             exit("parsed res=$res");
 
@@ -250,20 +251,32 @@ class ResAppUploadController extends OrderAbstractController
 //        }
 //
 //    }
-//    public function parsePdfSpatie($path) {
-//
-//        if (file_exists($path)) {
-//            echo "The file $path exists";
-//        } else {
-//            echo "The file $path does not exist";
-//        }
-//
-//        $text = (new Pdf())
-//            ->setPdf($path)
-//            ->text();
-//
-//        dump($text);
-//    }
+
+    //based on pdftotext. which pdftotext
+    public function parsePdfSpatie($path) {
+
+        if (file_exists($path)) {
+            echo "The file $path exists <br>";
+        } else {
+            echo "The file $path does not exist <br>";
+        }
+
+        // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
+
+        $pdftotextPath = '/mingw64/bin/pdftotext';
+        //$pdftotextPath = "pdftotext";
+        $pdftotext = new Pdf($pdftotextPath);
+
+        $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+        //$path = '"'.$path.'"';
+        //$path = "'".$path."'";
+        $path = realpath($path);
+        echo "path=".$path."<br>";
+
+        $text = $pdftotext->setPdf($path)->text();
+
+        dump($text);
+    }
 
     public function getDataArray() {
 
