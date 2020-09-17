@@ -26,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
 //use Smalot\PdfParser\Parser;
 //use Spatie\PdfToText\Pdf;
+use Smalot\PdfParser\Parser;
 use Spatie\PdfToText\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,10 +106,10 @@ class ResAppUploadController extends OrderAbstractController
             //pdftotext - open source library (GPL)
 
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
-            //$res = $this->parsePdfSmalot($path);
+            $res = $this->parsePdfSmalot($path);
 
             //https://github.com/spatie/pdf-to-text
-            $res = $this->parsePdfSpatie($path);
+            //$res = $this->parsePdfSpatie($path);
 
             //https://gist.github.com/cirovargas (MIT)
             //$res = $this->parsePdfCirovargas($path);
@@ -225,32 +226,56 @@ class ResAppUploadController extends OrderAbstractController
         //exit();
         echo $text;
     }
-//    public function parsePdfSmalot($path) {
-//
-//        if (file_exists($path)) {
-//            echo "The file $path exists";
-//        } else {
-//            echo "The file $path does not exist";
-//        }
-//
-//        // Parse pdf file and build necessary objects.
-//        $parser = new Parser();
-//        $pdf    = $parser->parseFile($path);
-//
-//        // Retrieve all pages from the pdf file.
-//        $pages  = $pdf->getPages();
-//
-//        // Loop over each page to extract text.
-//        $counter = 1;
-//        foreach ($pages as $page) {
-//            $pdfTextPage = $page->getText();
-//
-//            echo "Page $counter <br>";
-//            dump($pdfTextPage);
-//            $counter++;
-//        }
-//
-//    }
+    public function parsePdfSmalot($path) {
+
+        if (file_exists($path)) {
+            echo "The file $path exists <br>";
+        } else {
+            echo "The file $path does not exist <br>";
+        }
+
+        // Parse pdf file and build necessary objects.
+        $parser = new Parser();
+        $pdf    = $parser->parseFile($path);
+
+        // Retrieve all pages from the pdf file.
+        $pages  = $pdf->getPages();
+
+        // Loop over each page to extract text.
+        $counter = 1;
+        foreach ($pages as $page) {
+            $pdfTextPage = $page->getText();
+
+            if(1) {
+                //$str, $starting_word, $ending_word
+                $startStr = "Applicant ID:";
+                $endStr = "AAMC ID:";
+                $applicationId = $this->string_between_two_string2($pdfTextPage, $startStr, $endStr);
+                //echo "applicationId=[".$applicationId ."]<br>";
+                if ($applicationId) {
+                    $applicationId = trim($applicationId);
+                    //$applicationId = str_replace(" ","",$applicationId);
+                    //$applicationId = str_replace("\t","",$applicationId);
+                    //$applicationId = str_replace("\t\n","",$applicationId);
+                    $applicationId = str_replace("'", '', $applicationId);
+                    $applicationId = preg_replace('/(\v|\s)+/', ' ', $applicationId);
+                    echo "applicationId=[".$applicationId."]<br>";
+                    //echo "Page $counter: <br>";
+                    //dump($pdfTextPage);
+                    echo "Page $counter=[".$pdfTextPage."]<br>";
+                    exit("string found $startStr");
+                }
+            }
+
+            //echo "Page $counter: <br>";
+            //dump($pdfTextPage);
+
+            //echo "Page $counter=[".$pdfTextPage."]<br>";
+
+            $counter++;
+        }
+
+    }
 
     //based on pdftotext. which pdftotext
     public function parsePdfSpatie($path) {
@@ -466,6 +491,26 @@ class ResAppUploadController extends OrderAbstractController
         }
 
         return $jsonData;
+    }
+
+    public function string_between_two_string($str, $starting_word, $ending_word)
+    {
+        $subtring_start = strpos($str, $starting_word);
+        //Adding the strating index of the strating word to
+        //its length would give its ending index
+        $subtring_start += strlen($starting_word);
+        //Length of our required sub string
+        $size = strpos($str, $ending_word, $subtring_start) - $subtring_start;
+        // Return the substring from the index substring_start of length size
+        return substr($str, $subtring_start, $size);
+    }
+    public function string_between_two_string2($str, $starting_word, $ending_word){
+        $arr = explode($starting_word, $str);
+        if (isset($arr[1])){
+            $arr = explode($ending_word, $arr[1]);
+            return $arr[0];
+        }
+        return '';
     }
 
 }

@@ -294,6 +294,9 @@
     "sinergi/browser-detector": {
         "version": "6.1.2"
     },
+    "smalot/pdfparser": {
+        "version": "v0.16.2"
+    },
     "spatie/pdf-to-text": {
         "version": "1.3.0"
     },
