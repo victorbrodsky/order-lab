@@ -95,10 +95,10 @@ class ResAppUploadController extends OrderAbstractController
             echo "projectRoot=$projectRoot<br>";
             //exit($projectRoot);
             $parentRoot = str_replace('order-lab','',$projectRoot);
-            $parentRoot = str_replace('orderflex','',$projectRoot);
-            $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$projectRoot);
+            $parentRoot = str_replace('orderflex','',$parentRoot);
+            $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
             echo "parentRoot=$parentRoot<br>";
-            $path = $parentRoot.DIRECTORY_SEPARATOR."eras_gs.pdf";
+            $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR."eras_gs.pdf";
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
             echo "path=$path<br>";
 
