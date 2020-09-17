@@ -99,7 +99,8 @@ class ResAppUploadController extends OrderAbstractController
             $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$projectRoot);
             echo "parentRoot=$parentRoot<br>";
             $path = $parentRoot.DIRECTORY_SEPARATOR."eras_gs.pdf";
-            $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+            //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+            echo "path=$path<br>";
 
             //PackingSlip.pdf
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
