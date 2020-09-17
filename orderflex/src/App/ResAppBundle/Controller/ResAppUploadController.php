@@ -126,6 +126,7 @@ class ResAppUploadController extends OrderAbstractController
             $res[] = $this->parsePdfCirovargas($path);
 
             //https://github.com/spatie/pdf-to-text
+            //require pdftotext (which pdftotext): yum install poppler-utils
             $res[] = $this->parsePdfSpatie($path);
 
 
@@ -322,8 +323,8 @@ class ResAppUploadController extends OrderAbstractController
 
         // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
 
-        $pdftotextPath = '/mingw64/bin/pdftotext';
-        //$pdftotextPath = "pdftotext";
+        //$pdftotextPath = '/mingw64/bin/pdftotext';
+        $pdftotextPath = '/bin/pdftotext';
         $pdftotext = new Pdf($pdftotextPath);
 
         //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
