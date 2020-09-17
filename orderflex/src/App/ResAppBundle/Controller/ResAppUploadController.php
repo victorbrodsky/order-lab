@@ -105,16 +105,19 @@ class ResAppUploadController extends OrderAbstractController
             //https://packagist.org/packages/rafikhaceb/tcpdi (Apache-2.0 License)
             //pdftotext - open source library (GPL)
 
-            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
-            $res = $this->parsePdfSmalot($path);
+            $res = array();
 
-            //https://github.com/spatie/pdf-to-text
-            //$res = $this->parsePdfSpatie($path);
+            //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
+            $res[] = $this->parsePdfSmalot($path);
 
             //https://gist.github.com/cirovargas (MIT)
-            //$res = $this->parsePdfCirovargas($path);
+            $res[] = $this->parsePdfCirovargas($path);
 
-            exit("parsed res=$res");
+            //https://github.com/spatie/pdf-to-text
+            $res[] = $this->parsePdfSpatie($path);
+
+
+            exit("parsed res=".implode(";",$res));
 
             $dataArr = $this->getDataArray();
 
@@ -190,10 +193,12 @@ class ResAppUploadController extends OrderAbstractController
     public function parsePdfCirovargas($path) {
 
         if (file_exists($path)) {
-            echo "The file $path exists<br>";
+            //echo "The file $path exists<br>";
         } else {
             echo "The file $path does not exist<br>";
         }
+
+        $field = null;
 
         if(0) {
             $resappRepGen = $this->container->get('resapp_reportgenerator');
@@ -211,28 +216,36 @@ class ResAppUploadController extends OrderAbstractController
             }
         }
 
-        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
         //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
 
         $pdfService = new PDFService();
         $text = $pdfService->pdf2text($path);
 
         if('' == trim($text)) {
-            echo "Use parseFile:<br>";
+            //echo "Use parseFile:<br>";
             $text = $pdfService->parseFile($path);
         }
 
+        $startStr = "Applicant ID:";
+        $endStr = "AAMC ID:";
+        $field = $this->getPdfField($text,$startStr,$endStr);
+        echo "Cirovargas: $startStr=[".$field."]<br>";
+        //exit();
+
         //dump($text);
         //exit();
-        echo $text;
+        return $field;
     }
     public function parsePdfSmalot($path) {
 
         if (file_exists($path)) {
-            echo "The file $path exists <br>";
+            //echo "The file $path exists <br>";
         } else {
             echo "The file $path does not exist <br>";
         }
+
+        $field = null;
 
         // Parse pdf file and build necessary objects.
         $parser = new Parser();
@@ -246,26 +259,34 @@ class ResAppUploadController extends OrderAbstractController
         foreach ($pages as $page) {
             $pdfTextPage = $page->getText();
 
-            if(1) {
-                //$str, $starting_word, $ending_word
-                $startStr = "Applicant ID:";
-                $endStr = "AAMC ID:";
-                $applicationId = $this->string_between_two_string2($pdfTextPage, $startStr, $endStr);
-                //echo "applicationId=[".$applicationId ."]<br>";
-                if ($applicationId) {
-                    $applicationId = trim($applicationId);
-                    //$applicationId = str_replace(" ","",$applicationId);
-                    //$applicationId = str_replace("\t","",$applicationId);
-                    //$applicationId = str_replace("\t\n","",$applicationId);
-                    $applicationId = str_replace("'", '', $applicationId);
-                    $applicationId = preg_replace('/(\v|\s)+/', ' ', $applicationId);
-                    echo "applicationId=[".$applicationId."]<br>";
-                    //echo "Page $counter: <br>";
-                    //dump($pdfTextPage);
-                    echo "Page $counter=[".$pdfTextPage."]<br>";
-                    exit("string found $startStr");
-                }
+//            if(1) {
+//                //$str, $starting_word, $ending_word
+//                $startStr = "Applicant ID:";
+//                $endStr = "AAMC ID:";
+//                $applicationId = $this->string_between_two_string2($pdfTextPage, $startStr, $endStr);
+//                //echo "applicationId=[".$applicationId ."]<br>";
+//                if ($applicationId) {
+//                    $applicationId = trim($applicationId);
+//                    //$applicationId = str_replace(" ","",$applicationId);
+//                    //$applicationId = str_replace("\t","",$applicationId);
+//                    //$applicationId = str_replace("\t\n","",$applicationId);
+//                    $applicationId = str_replace("'", '', $applicationId);
+//                    $applicationId = preg_replace('/(\v|\s)+/', ' ', $applicationId);
+//                    echo "applicationId=[".$applicationId."]<br>";
+//                    //echo "Page $counter: <br>";
+//                    //dump($pdfTextPage);
+//                    echo "Page $counter=[".$pdfTextPage."]<br>";
+//                    exit("string found $startStr");
+//                }
+//            }
+            $startStr = "Applicant ID:";
+            $endStr = "AAMC ID:";
+            $field = $this->getPdfField($pdfTextPage,$startStr,$endStr);
+            if( $field ) {
+                echo "Smalot: $startStr=[" . $field . "]<br>";
+                break;
             }
+            //exit();
 
             //echo "Page $counter: <br>";
             //dump($pdfTextPage);
@@ -275,6 +296,7 @@ class ResAppUploadController extends OrderAbstractController
             $counter++;
         }
 
+        return $field;
     }
 
     //based on pdftotext. which pdftotext
@@ -493,6 +515,28 @@ class ResAppUploadController extends OrderAbstractController
         return $jsonData;
     }
 
+    public function getPdfField($str,$startStr,$endStr) {
+        //$startStr = "Applicant ID:";
+        //$endStr = "AAMC ID:";
+        $field = $this->string_between_two_string2($str, $startStr, $endStr);
+        //echo "field=[".$field ."]<br>";
+        if ($field) {
+            $field = trim($field);
+            //$field = str_replace(" ","",$field);
+            //$field = str_replace("\t","",$field);
+            //$field = str_replace("\t\n","",$field);
+            $field = str_replace("'", '', $field);
+            $field = preg_replace('/(\v|\s)+/', ' ', $field);
+            //echo "$startStr=[".$field."]<br>";
+            //echo "Page $counter: <br>";
+            //dump($str);
+            //echo "Page=[".$str."]<br>";
+            //exit("string found $startStr");
+            //exit();
+            return $field;
+        }
+        return null;
+    }
     public function string_between_two_string($str, $starting_word, $ending_word)
     {
         $subtring_start = strpos($str, $starting_word);
