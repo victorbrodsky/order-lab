@@ -98,7 +98,9 @@ class ResAppUploadController extends OrderAbstractController
             $parentRoot = str_replace('orderflex','',$parentRoot);
             $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
             echo "parentRoot=$parentRoot<br>";
-            $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR."eras_gs.pdf";
+            $filename = "eras_gs.pdf";
+            $filename = "eras.pdf";
+            $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
             echo "path=$path<br>";
 
@@ -120,10 +122,11 @@ class ResAppUploadController extends OrderAbstractController
             $res = array();
 
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
-            $res[] = $this->parsePdfSmalot($path);
+            //$res[] = $this->parsePdfSmalot($path);
 
             //https://gist.github.com/cirovargas (MIT)
-            $res[] = $this->parsePdfCirovargas($path);
+            //$res[] = $this->parsePdfCirovargas($path);
+            //exit();
 
             //https://github.com/spatie/pdf-to-text
             //require pdftotext (which pdftotext): yum install poppler-utils
@@ -246,7 +249,7 @@ class ResAppUploadController extends OrderAbstractController
         echo "Cirovargas: $startStr=[".$field."]<br>";
         //exit();
 
-        //dump($text);
+        dump($text);
         //exit();
         return $field;
     }
@@ -321,10 +324,19 @@ class ResAppUploadController extends OrderAbstractController
             echo "The file $path does not exist <br>";
         }
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
 
         //$pdftotextPath = '/mingw64/bin/pdftotext';
         $pdftotextPath = '/bin/pdftotext';
+
+        if( $userServiceUtil->isWinOs() ) {
+            $pdftotextPath = '/mingw64/bin/pdftotext';
+        } else {
+            $pdftotextPath = '/bin/pdftotext';
+        }
+
         $pdftotext = new Pdf($pdftotextPath);
 
         //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
@@ -335,16 +347,18 @@ class ResAppUploadController extends OrderAbstractController
 
         $text = $pdftotext->setPdf($path)->text();
 
-        $startStr = "Applicant ID:";
-        $endStr = "AAMC ID:";
-        $field = $this->getPdfField($text,$startStr,$endStr);
-        if( $field ) {
-            echo "Spatie: $startStr=[" . $field . "]<br>";
-        }
+//        $startStr = "Applicant ID:";
+//        $endStr = "AAMC ID:";
+//        $field = $this->getPdfField($text,$startStr,$endStr);
+//        if( $field ) {
+//            echo "Spatie: $startStr=[" . $field . "]<br>";
+//        }
 
-        //dump($text);
+        $keysArr = $this->getKeyFields($text);
 
-        return $field;
+        dump($keysArr);
+
+        //return $field;
     }
 
     public function getDataArray() {
@@ -537,10 +551,35 @@ class ResAppUploadController extends OrderAbstractController
         return $jsonData;
     }
 
-    public function getPdfField($str,$startStr,$endStr) {
+    public function getKeyFieldArr() {
+        $fieldsArr = array();
+        $fieldsArr["Applicant ID:"] = "AAMC ID:";
+        $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
+        $fieldsArr["Email:"] = "Gender:";
+        $fieldsArr["Name:"] = "Last Name:";
+        $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
+        $fieldsArr["USMLE ID:"] = "NBOME ID:";
+        $fieldsArr["NBOME ID:"] = "Email:";
+        $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
+    }
+
+    public function getKeyFields($text) {
+
+        $keysArr = array();
+
+        foreach( $this->getKeyFieldArr() as $key=>$endStr ) {
+            $field = $this->getPdfField($text,$key,$endStr);
+            if( $field ) {
+                echo "$key=[" . $field . "]<br>";
+                $keysArr[$key] = $field;
+            }
+        }
+        return $keysArr;
+    }
+    public function getPdfField($text,$startStr,$endStr) {
         //$startStr = "Applicant ID:";
         //$endStr = "AAMC ID:";
-        $field = $this->string_between_two_string2($str, $startStr, $endStr);
+        $field = $this->string_between_two_string2($text, $startStr, $endStr);
         //echo "field=[".$field ."]<br>";
         if ($field) {
             $field = trim($field);
@@ -551,8 +590,8 @@ class ResAppUploadController extends OrderAbstractController
             $field = preg_replace('/(\v|\s)+/', ' ', $field);
             //echo "$startStr=[".$field."]<br>";
             //echo "Page $counter: <br>";
-            //dump($str);
-            //echo "Page=[".$str."]<br>";
+            //dump($text);
+            //echo "Page=[".$text."]<br>";
             //exit("string found $startStr");
             //exit();
             return $field;
