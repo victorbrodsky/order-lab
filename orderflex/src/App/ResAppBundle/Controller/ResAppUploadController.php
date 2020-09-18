@@ -92,12 +92,12 @@ class ResAppUploadController extends OrderAbstractController
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
 
             $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-            echo "projectRoot=$projectRoot<br>";
+            //echo "projectRoot=$projectRoot<br>";
             //exit($projectRoot);
             $parentRoot = str_replace('order-lab','',$projectRoot);
             $parentRoot = str_replace('orderflex','',$parentRoot);
             $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
-            echo "parentRoot=$parentRoot<br>";
+            //echo "parentRoot=$parentRoot<br>";
             $filename = "eras_gs.pdf";
             //$filename = "eras.pdf";
             $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
@@ -343,7 +343,7 @@ class ResAppUploadController extends OrderAbstractController
         //$path = '"'.$path.'"';
         //$path = "'".$path."'";
         $path = realpath($path);
-        echo "path=".$path."<br>";
+        echo "Spatie source pdf path=".$path."<br>";
 
         $text = $pdftotext->setPdf($path)->text();
 
@@ -356,6 +356,7 @@ class ResAppUploadController extends OrderAbstractController
 
         $keysArr = $this->getKeyFields($text);
 
+        echo "keysArr=".count($keysArr)."<br>";
         dump($keysArr);
 
         //return $field;
@@ -553,6 +554,7 @@ class ResAppUploadController extends OrderAbstractController
 
     public function getKeyFieldArr() {
         $fieldsArr = array();
+
         $fieldsArr["Applicant ID:"] = "AAMC ID:";
         $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
         $fieldsArr["Email:"] = "Gender:";
@@ -561,6 +563,8 @@ class ResAppUploadController extends OrderAbstractController
         $fieldsArr["USMLE ID:"] = "NBOME ID:";
         $fieldsArr["NBOME ID:"] = "Email:";
         $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
+
+        return $fieldsArr;
     }
 
     public function getKeyFields($text) {
@@ -568,6 +572,7 @@ class ResAppUploadController extends OrderAbstractController
         $keysArr = array();
 
         foreach( $this->getKeyFieldArr() as $key=>$endStr ) {
+            echo "key=$key, endStr=$endStr<br>";
             $field = $this->getPdfField($text,$key,$endStr);
             if( $field ) {
                 echo "$key=[" . $field . "]<br>";
