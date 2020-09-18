@@ -558,7 +558,7 @@ class ResAppUploadController extends OrderAbstractController
         $fieldsArr["Applicant ID:"] = "AAMC ID:";
         $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
         $fieldsArr["Email:"] = "Gender:";
-        $fieldsArr["Name:"] = "Last Name:";
+        $fieldsArr["Name:"] = "Previous Last Name:";
         $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
         $fieldsArr["USMLE ID:"] = "NBOME ID:";
         $fieldsArr["NBOME ID:"] = "Email:";
@@ -575,6 +575,16 @@ class ResAppUploadController extends OrderAbstractController
             echo "key=$key, endStr=$endStr<br>";
             $field = $this->getPdfField($text,$key,$endStr);
             if( $field ) {
+                if( $key == "Email:" ) {
+                    $emailStrArr = explode(" ",$field);
+                    foreach($emailStrArr as $emailStr) {
+                        if (strpos($emailStr, '@') !== false) {
+                            //echo 'true';
+                            $field = $emailStr;
+                            break;
+                        }
+                    }
+                }
                 echo "$key=[" . $field . "]<br>";
                 $keysArr[$key] = $field;
             }
