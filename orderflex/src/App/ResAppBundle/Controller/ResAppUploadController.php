@@ -128,6 +128,7 @@ class ResAppUploadController extends OrderAbstractController
             $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
 
             dump($parsedDataArr);
+            exit("EOF $erasFile");
 
         }
 

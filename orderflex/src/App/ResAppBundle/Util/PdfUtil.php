@@ -27,6 +27,7 @@ namespace App\ResAppBundle\Util;
 
 //use Clegginabox\PDFMerger\PDFMerger;
 use Doctrine\ORM\EntityManagerInterface;
+use Spatie\PdfToText\Pdf;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use App\ResAppBundle\Controller\ResAppController;
@@ -127,6 +128,7 @@ class PdfUtil {
         $resappRepGen = $this->container->get('resapp_reportgenerator');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $tempdir = null;
         $processedGsFile = null;
 
         $pdfDocumentId = $pdfDocument->getId();
@@ -197,10 +199,15 @@ class PdfUtil {
         if( $processedGsFile ) {
             $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
             dump($parsedDataArr);
-            exit("GS processed");
+            //exit("GS processed");
         } else {
             $parsedDataArr = $this->parsePdfSpatie($pdfPath);
             dump($parsedDataArr);
+        }
+
+        if( $tempdir ) {
+            echo "Delete temp dir: $tempdir <br>";
+            $this->deleteDir($tempdir);
         }
 
         return $parsedDataArr;
