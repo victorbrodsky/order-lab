@@ -51,7 +51,8 @@ class ResAppUploadController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
         }
 
-        $resappRepGen = $this->container->get('resapp_reportgenerator');
+        //$resappRepGen = $this->container->get('resapp_reportgenerator');
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
         $em = $this->getDoctrine()->getManager();
 
         $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
@@ -81,43 +82,50 @@ class ResAppUploadController extends OrderAbstractController
                 continue;
             }
 
-            if( )
-
-            $erasFilePath = $erasFile->getAttachmentEmailPath();
-            echo "erasFilePath=$erasFilePath<br>";
-            if( $this->isPdfCompressed($erasFilePath) ) {
-                echo "Compressed <br>";
-
-                if(1) {
-
-                    $processedFiles = $resappRepGen->processFilesGostscript(array($erasFilePath));
-                    if (count($processedFiles) > 0) {
-                        //$dir = dirname($erasFilePath);
-                        $processedGsFile = $processedFiles[0];
-                        $processedGsFile = str_replace('"', '', $processedGsFile);
-                        //$path = $dir.DIRECTORY_SEPARATOR.$path;
-                        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
-                        echo "processedGsFile=" . $processedGsFile . "<br>";
-
-                    } else {
-                        return null;
-                    }
-                }
-
+            if( strpos($erasFile, '.pdf') !== false ) {
+                //PDF
             } else {
-                echo "Not Compressed (version < 1.4) <br>";
+                echo "Skip: File is not PDF <br>";
+                continue;
             }
+
+//            $erasFilePath = $erasFile->getAttachmentEmailPath();
+//            echo "erasFilePath=$erasFilePath<br>";
+//            if( $resappPdfUtil->isPdfCompressed($erasFilePath) ) {
+//                echo "Compressed <br>";
+//
+//                if(1) {
+//
+//                    $processedFiles = $resappRepGen->processFilesGostscript(array($erasFilePath));
+//                    if (count($processedFiles) > 0) {
+//                        //$dir = dirname($erasFilePath);
+//                        $processedGsFile = $processedFiles[0];
+//                        $processedGsFile = str_replace('"', '', $processedGsFile);
+//                        //$path = $dir.DIRECTORY_SEPARATOR.$path;
+//                        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+//                        echo "processedGsFile=" . $processedGsFile . "<br>";
+//
+//                    } else {
+//                        return null;
+//                    }
+//                }
+//
+//            } else {
+//                echo "Not Compressed (version < 1.4) <br>";
+//            }
 
             //get data from ERAS file
 
-            if( $processedGsFile ) {
-                $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
-                dump($parsedDataArr);
-                exit("GS processed");
-            } else {
-                $parsedDataArr = $this->parsePdfSpatie($erasFile);
-                dump($parsedDataArr);
-            }
+//            if( $processedGsFile ) {
+//                $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
+//                dump($parsedDataArr);
+//                exit("GS processed");
+//            } else {
+//                $parsedDataArr = $this->parsePdfSpatie($erasFile);
+//                dump($parsedDataArr);
+//            }
+
+            $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
 
             dump($parsedDataArr);
 
@@ -238,76 +246,7 @@ class ResAppUploadController extends OrderAbstractController
         );
     }
 
-    //Compressed PDF is version > 1.4
-    public function isPdfCompressed($pdfPath) {
-
-        $pdfversion = $this->getPdfVersion($pdfPath);
-
-        if( !$pdfversion ) {
-            return false;
-        }
-
-        if( $pdfversion > "1.4" ){
-            // proceed if PDF version greater than 1.4
-            // convert with ghostscript to version 1.4
-
-            return true;
-        }
-        else{
-            // proceed if PDF version upto 1.4
-            return false;
-        }
-
-//        // pdf version information
-//        $filepdf = fopen($pdfPath,"r");
-//        if ($filepdf) {
-//            $line_first = fgets($filepdf);
-//            fclose($filepdf);
-//
-//            // extract number such as 1.4 ,1.5 from first read line of pdf file
-//            preg_match_all('!\d+!', $line_first, $matches);
-//            // save that number in a variable
-//            $pdfversion = implode('.', $matches[0]);
-//            echo "pdfversion=$pdfversion <br>";
-//
-//            if( $pdfversion > "1.4" ){
-//                // proceed if PDF version greater than 1.4
-//                // convert with ghostscript to version 1.4
-//
-//                return true;
-//            }
-//            else{
-//                // proceed if PDF version upto 1.4
-//                return false;
-//            }
-//
-//        } else{
-//            echo "error opening the file.";
-//            exit();
-//        }
-    }
-    public function getPdfVersion($pdfPath) {
-        // pdf version information
-        $filepdf = fopen($pdfPath,"r");
-        if ($filepdf) {
-            $line_first = fgets($filepdf);
-            fclose($filepdf);
-
-            // extract number such as 1.4 ,1.5 from first read line of pdf file
-            preg_match_all('!\d+!', $line_first, $matches);
-            // save that number in a variable
-            $pdfversion = implode('.', $matches[0]);
-            echo "pdfversion=$pdfversion <br>";
-
-            return $pdfversion;
-
-        } else{
-            echo "error opening the file.";
-            exit();
-        }
-
-        return null;
-    }
+    
 
     public function parsePdfSetasign($path) {
 

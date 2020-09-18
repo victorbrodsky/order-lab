@@ -52,6 +52,13 @@ services:
           class: App\ResAppBundle\Util\ImportFromOldSystem
           arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    resapp_pdfutil:
+        autowire: true
+        autoconfigure: true
+        public: true
+        class: App\ResAppBundle\Util\PdfUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@session"]
+
 
     resapp_role_voter:
         class: App\ResAppBundle\Security\Voter\ResAppRoleVoter
