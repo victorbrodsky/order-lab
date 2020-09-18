@@ -36,7 +36,96 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResAppUploadController extends OrderAbstractController
 {
-    
+
+    /**
+     * Upload Multiple Applications
+     *
+     * @Route("/pdf-parser-test/", name="resapp_updf_parser_test", methods={"GET"})
+     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
+     */
+    public function pdfParserTestAction(Request $request)
+    {
+        //exit("not allowed. one time run method.");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        $resappRepGen = $this->container->get('resapp_reportgenerator');
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql =  $repository->createQueryBuilder("resapp");
+        $dql->select('resapp');
+        $dql->leftJoin('resapp.coverLetters','coverLetters');
+        $dql->where("coverLetters IS NOT NULL");
+        $dql->orderBy("resapp.id","DESC");
+        $query = $em->createQuery($dql);
+        $query->setMaxResults(3);
+        $resapps = $query->getResult();
+        echo "resapps count=".count($resapps)."<br>";
+
+
+        foreach($resapps as $resapp) {
+            $erasFiles = $resapp->getCoverLetters();
+            $erasFile = null;
+            $processedGsFile = null;
+
+            if( count($erasFiles) > 0 ) {
+                $erasFile = $erasFiles[0];
+            } else {
+                continue;
+            }
+
+            if( !$erasFile ) {
+                continue;
+            }
+
+            if( )
+
+            $erasFilePath = $erasFile->getAttachmentEmailPath();
+            echo "erasFilePath=$erasFilePath<br>";
+            if( $this->isPdfCompressed($erasFilePath) ) {
+                echo "Compressed <br>";
+
+                if(1) {
+
+                    $processedFiles = $resappRepGen->processFilesGostscript(array($erasFilePath));
+                    if (count($processedFiles) > 0) {
+                        //$dir = dirname($erasFilePath);
+                        $processedGsFile = $processedFiles[0];
+                        $processedGsFile = str_replace('"', '', $processedGsFile);
+                        //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                        echo "processedGsFile=" . $processedGsFile . "<br>";
+
+                    } else {
+                        return null;
+                    }
+                }
+
+            } else {
+                echo "Not Compressed (version < 1.4) <br>";
+            }
+
+            //get data from ERAS file
+
+            if( $processedGsFile ) {
+                $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
+                dump($parsedDataArr);
+                exit("GS processed");
+            } else {
+                $parsedDataArr = $this->parsePdfSpatie($erasFile);
+                dump($parsedDataArr);
+            }
+
+            dump($parsedDataArr);
+
+        }
+
+        exit('EOF pdfParserTestAction');
+    }
+
 
     /**
      * Upload Multiple Applications
@@ -147,6 +236,77 @@ class ResAppUploadController extends OrderAbstractController
             'inputDataFile' => $inputDataFile,
             'handsometableData' => $jsonData
         );
+    }
+
+    //Compressed PDF is version > 1.4
+    public function isPdfCompressed($pdfPath) {
+
+        $pdfversion = $this->getPdfVersion($pdfPath);
+
+        if( !$pdfversion ) {
+            return false;
+        }
+
+        if( $pdfversion > "1.4" ){
+            // proceed if PDF version greater than 1.4
+            // convert with ghostscript to version 1.4
+
+            return true;
+        }
+        else{
+            // proceed if PDF version upto 1.4
+            return false;
+        }
+
+//        // pdf version information
+//        $filepdf = fopen($pdfPath,"r");
+//        if ($filepdf) {
+//            $line_first = fgets($filepdf);
+//            fclose($filepdf);
+//
+//            // extract number such as 1.4 ,1.5 from first read line of pdf file
+//            preg_match_all('!\d+!', $line_first, $matches);
+//            // save that number in a variable
+//            $pdfversion = implode('.', $matches[0]);
+//            echo "pdfversion=$pdfversion <br>";
+//
+//            if( $pdfversion > "1.4" ){
+//                // proceed if PDF version greater than 1.4
+//                // convert with ghostscript to version 1.4
+//
+//                return true;
+//            }
+//            else{
+//                // proceed if PDF version upto 1.4
+//                return false;
+//            }
+//
+//        } else{
+//            echo "error opening the file.";
+//            exit();
+//        }
+    }
+    public function getPdfVersion($pdfPath) {
+        // pdf version information
+        $filepdf = fopen($pdfPath,"r");
+        if ($filepdf) {
+            $line_first = fgets($filepdf);
+            fclose($filepdf);
+
+            // extract number such as 1.4 ,1.5 from first read line of pdf file
+            preg_match_all('!\d+!', $line_first, $matches);
+            // save that number in a variable
+            $pdfversion = implode('.', $matches[0]);
+            echo "pdfversion=$pdfversion <br>";
+
+            return $pdfversion;
+
+        } else{
+            echo "error opening the file.";
+            exit();
+        }
+
+        return null;
     }
 
     public function parsePdfSetasign($path) {
@@ -359,7 +519,7 @@ class ResAppUploadController extends OrderAbstractController
         echo "keysArr=".count($keysArr)."<br>";
         dump($keysArr);
 
-        //return $field;
+        return $keysArr;
     }
 
     public function getDataArray() {
