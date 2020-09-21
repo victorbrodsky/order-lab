@@ -68,6 +68,7 @@ class ResAppUploadController extends OrderAbstractController
 
 
         foreach($resapps as $resapp) {
+            echo "get ERAS from ID=".$resapp->getId()."<br>";
             $erasFiles = $resapp->getCoverLetters();
             $erasFile = null;
             $processedGsFile = null;

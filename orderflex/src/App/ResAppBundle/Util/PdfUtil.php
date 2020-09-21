@@ -140,21 +140,21 @@ class PdfUtil {
             //process via GhostCript
             if(1) {
 
-                $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath');
+                //$resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath');
 
                 //1) create temp dir
                 //Uploaded\resapp\documents
                 $uploadedFolder = realpath($this->uploadPath);
                 //echo "destinationFolder=".$destinationFolder."<br>";
                 if( !file_exists($uploadedFolder) ) {
-                    //echo "Create destination folder <br>";
+                    echo "Create destination folder [$uploadedFolder]<br>";
                     mkdir($uploadedFolder, 0700, true);
                     chmod($uploadedFolder, 0700);
                 }
 
                 $tempdir = $uploadedFolder.DIRECTORY_SEPARATOR.'temp_'.$pdfDocumentId; //Uploaded\resapp\documents
                 if( !file_exists($tempdir) ) {
-                    //echo "Create destination folder <br>";
+                    echo "Create destination temp folder [$tempdir]<br>";
                     mkdir($tempdir, 0700, true);
                     chmod($tempdir, 0700);
                 }
@@ -165,7 +165,7 @@ class PdfUtil {
                 $tempPdfFile = $tempdir . DIRECTORY_SEPARATOR . pathinfo($pdfPath, PATHINFO_FILENAME) . ".pdf";
                 if( !file_exists($tempPdfFile) ) {
                     if( !copy($pdfPath, $tempPdfFile ) ) {
-                        //echo "failed to copy $filePath...\n<br>";
+                        echo "failed to copy $pdfPath...\n<br>";
                         $errorMsg = "Residency Application document $pdfPath - Failed to copy to destination folder; filePath=".$tempPdfFile;
                         exit($errorMsg);
                     }
@@ -231,7 +231,9 @@ class PdfUtil {
         $pdftotextPath = '/bin/pdftotext';
 
         if( $userServiceUtil->isWinOs() ) {
-            $pdftotextPath = '/mingw64/bin/pdftotext';
+            //$pdftotextPath = '/mingw64/bin/pdftotext';
+            //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
+            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
         } else {
             $pdftotextPath = '/bin/pdftotext';
         }
@@ -245,6 +247,7 @@ class PdfUtil {
         echo "Spatie source pdf path=".$path."<br>";
 
         $text = $pdftotext->setPdf($path)->text();
+        dump($text);
 
 //        $startStr = "Applicant ID:";
 //        $endStr = "AAMC ID:";
