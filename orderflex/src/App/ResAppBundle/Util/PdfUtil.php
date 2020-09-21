@@ -77,7 +77,128 @@ class PdfUtil {
     }
 
 
+    public function getHandsomtableDataArray($parsedDataArr) {
+        $tableDataArr = array();
 
+        foreach($parsedDataArr as $parsedData) {
+            $rowArr = array();
+
+            $currentDate = new \DateTime();
+            $currentDateStr = $currentDate->format('m\d\Y H:i:s');
+
+            $rowArr["Application Receipt Date"] = $currentDateStr;
+
+            //echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
+            $rowArr["Residency Track"] = NULL; //$parsedData["Residency Track"];
+
+            //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $rowArr["Application Season Start Date"] = NULL; //$parsedData["Application Season Start Date"];
+
+            //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $rowArr["Application Season End Date"] = NULL; //$parsedData["Application Season End Date"];
+
+            //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $rowArr["Expected Residency Start Date"] = NULL; //$parsedData["Expected Residency Start Date"];
+
+            //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+            $rowArr["Expected Graduation Date"] = NULL; //$parsedData["Expected Graduation Date"];
+
+            //// get last, first name ////
+            $fullName = $parsedData["Name:"];
+            $fullNameArr = explode(",",$fullName);
+            if( count($fullNameArr) > 1) {
+                $lastName = trim($fullNameArr[0]);
+                $firstName = trim($fullNameArr[1]);
+            } else {
+                $lastName = $fullName;
+                $firstName = NULL;
+            }
+            //// EOF get last, first name ////
+
+            //First Name
+            $rowArr["First Name"] = $firstName;
+
+            //Last Name
+            $rowArr["Last Name"] = $lastName;
+
+            //Middle Name
+            $rowArr["Middle Name"] = NULL;
+
+            //Preferred Email
+            $rowArr["Preferred Email"] = $parsedData["Email:"];
+
+            //Couple’s Match:
+            $rowArr["Couple’s Match"] = $parsedData["Participating as a Couple in NRMP:"];
+
+            //Preferred Email
+            $rowArr["ERAS Application ID"] = $parsedData["Applicant ID:"];
+
+            $tableDataArr[] = $rowArr;
+        }
+
+        return $tableDataArr;
+    }
+
+    public function getParsedDataArray($pdfArr) {
+
+        $parsedDataArr = array();
+        
+        foreach($pdfArr as $erasFile) {
+            $parsedDataArr[] = $this->extractDataPdf($erasFile);
+        }
+
+        return $parsedDataArr;
+    }
+
+    public function getTestApplications() {
+        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql = $repository->createQueryBuilder("resapp");
+        $dql->select('resapp');
+        $dql->leftJoin('resapp.coverLetters','coverLetters');
+        $dql->where("coverLetters IS NOT NULL");
+        $dql->orderBy("resapp.id","DESC");
+        $query = $this->em->createQuery($dql);
+        $query->setMaxResults(10);
+        $resapps = $query->getResult();
+        echo "resapps count=".count($resapps)."<br>";
+        
+        return $resapps;
+    }
+    public function getTestPdfApplications() {
+        $resapps = $this->getTestApplications();
+        echo "resapps count=".count($resapps)."<br>";
+
+        $resappPdfs = array();
+
+        foreach($resapps as $resapp) {
+            $erasFiles = $resapp->getCoverLetters();
+            $erasFile = null;
+            $processedGsFile = null;
+
+            if( count($erasFiles) > 0 ) {
+                $erasFile = $erasFiles[0];
+            } else {
+                continue;
+            }
+
+            if( !$erasFile ) {
+                continue;
+            }
+
+            if( strpos($erasFile, '.pdf') !== false ) {
+                //PDF
+            } else {
+                echo "Skip: File is not PDF <br>";
+                continue;
+            }
+
+            //echo "get ERAS from ID=".$resapp->getId()."<br>";
+            $resappPdfs[] = $erasFile;
+        }
+
+        return $resappPdfs;
+    }
+    
     //Compressed PDF is version > 1.4
     public function isPdfCompressed($pdfPath) {
 
@@ -135,7 +256,7 @@ class PdfUtil {
         $pdfPath = $pdfDocument->getAttachmentEmailPath();
 
         //testing
-        if(1) {
+        if(0) {
             $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
             $parentRoot = str_replace('order-lab', '', $projectRoot);
             $parentRoot = str_replace('orderflex', '', $parentRoot);
@@ -167,7 +288,7 @@ class PdfUtil {
 
                 $tempdir = $uploadedFolder.DIRECTORY_SEPARATOR.'temp_'.$pdfDocumentId; //Uploaded\resapp\documents
                 if( !file_exists($tempdir) ) {
-                    echo "Create destination temp folder [$tempdir]<br>";
+                    //echo "Create destination temp folder [$tempdir]<br>";
                     mkdir($tempdir, 0700, true);
                     chmod($tempdir, 0700);
                 }
@@ -199,7 +320,6 @@ class PdfUtil {
                     //$path = $dir.DIRECTORY_SEPARATOR.$path;
                     //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
                     echo "processedGsFile=" . $processedGsFile . "<br>";
-
                 } else {
                     return null;
                 }
@@ -219,7 +339,7 @@ class PdfUtil {
         }
 
         if( $tempdir ) {
-            echo "Delete temp dir: $tempdir <br>";
+            //echo "Delete temp dir: $tempdir <br>";
             $this->deleteDir($tempdir);
         }
 
@@ -340,6 +460,7 @@ class PdfUtil {
         $endArr[] = "Permanent Mailing Address:";
         $endArr[] = "Preferred Phone #:";
         $endArr[] = "Alternate Phone #:";
+        $endArr[] = "Self Identification:";
         /////// EOF endArr ///////
 
         $fieldsArr = array();

@@ -53,22 +53,23 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //$resappRepGen = $this->container->get('resapp_reportgenerator');
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
-        $dql =  $repository->createQueryBuilder("resapp");
-        $dql->select('resapp');
-        $dql->leftJoin('resapp.coverLetters','coverLetters');
-        $dql->where("coverLetters IS NOT NULL");
-        $dql->orderBy("resapp.id","DESC");
-        $query = $em->createQuery($dql);
-        $query->setMaxResults(3);
-        $resapps = $query->getResult();
-        echo "resapps count=".count($resapps)."<br>";
+//        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
+//        $dql =  $repository->createQueryBuilder("resapp");
+//        $dql->select('resapp');
+//        $dql->leftJoin('resapp.coverLetters','coverLetters');
+//        $dql->where("coverLetters IS NOT NULL");
+//        $dql->orderBy("resapp.id","DESC");
+//        $query = $em->createQuery($dql);
+//        $query->setMaxResults(10);
+//        $resapps = $query->getResult();
+//        echo "resapps count=".count($resapps)."<br>";
 
+        $resapps = $resappPdfUtil->getTestApplications();
 
         foreach($resapps as $resapp) {
-            echo "get ERAS from ID=".$resapp->getId()."<br>";
+            //echo "get ERAS from ID=".$resapp->getId()."<br>";
             $erasFiles = $resapp->getCoverLetters();
             $erasFile = null;
             $processedGsFile = null;
@@ -89,6 +90,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 echo "Skip: File is not PDF <br>";
                 continue;
             }
+
+            echo "get ERAS from ID=".$resapp->getId()."<br>";
 
 //            $erasFilePath = $erasFile->getAttachmentEmailPath();
 //            echo "erasFilePath=$erasFilePath<br>";
@@ -129,7 +132,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
 
             dump($parsedDataArr);
-            exit("EOF $erasFile");
+            //exit("EOF $erasFile");
 
         }
 
@@ -155,7 +158,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //exit("Upload Multiple Applications is under construction");
 
-        $em = $this->getDoctrine()->getManager();
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+        //$em = $this->getDoctrine()->getManager();
 
         $cycle = 'new';
         
@@ -190,18 +194,18 @@ class ResAppBulkUploadController extends OrderAbstractController
             // (See https://www.setasign.com/fpdi-pdf-parser for more details)
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
 
-            $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-            //echo "projectRoot=$projectRoot<br>";
-            //exit($projectRoot);
-            $parentRoot = str_replace('order-lab','',$projectRoot);
-            $parentRoot = str_replace('orderflex','',$parentRoot);
-            $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
-            //echo "parentRoot=$parentRoot<br>";
-            $filename = "eras_gs.pdf";
-            //$filename = "eras.pdf";
-            $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
-            //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
-            echo "path=$path<br>";
+//            $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+//            //echo "projectRoot=$projectRoot<br>";
+//            //exit($projectRoot);
+//            $parentRoot = str_replace('order-lab','',$projectRoot);
+//            $parentRoot = str_replace('orderflex','',$parentRoot);
+//            $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
+//            //echo "parentRoot=$parentRoot<br>";
+//            $filename = "eras_gs.pdf";
+//            //$filename = "eras.pdf";
+//            $path = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
+//            //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+//            echo "path=$path<br>";
 
             //PackingSlip.pdf
             //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
@@ -218,7 +222,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //https://packagist.org/packages/rafikhaceb/tcpdi (Apache-2.0 License)
             //pdftotext - open source library (GPL)
 
-            $res = array();
+            //$res = array();
 
             //https://packagist.org/packages/smalot/pdfparser (LGPL-3.0) (based on https://tcpdf.org/)
             //$res[] = $this->parsePdfSmalot($path);
@@ -229,22 +233,27 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             //https://github.com/spatie/pdf-to-text
             //require pdftotext (which pdftotext): yum install poppler-utils
-            $res[] = $this->parsePdfSpatie($path);
+            //$res[] = $this->parsePdfSpatie($path);
 
+            $pdfArr = $resappPdfUtil->getTestPdfApplications();
+            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
+            $dataHandsomtableArr = $resappPdfUtil->getHandsomtableDataArray($dataArr);
+            dump($dataHandsomtableArr);
+            //exit('111');
 
-            exit("parsed res=".implode(";",$res));
+            //exit("parsed res=".implode(";",$res));
 
-            $dataArr = $this->getDataArray();
+            //$dataArr = $this->getDataArray();
 
             //get Table $jsonData
-            $jsonData = $this->getTableData($dataArr);
+            //$jsonData = $this->getTableData($dataArr);
         }
 
         return array(
             'form' => $form->createView(),
             'cycle' => $cycle,
             'inputDataFile' => $inputDataFile,
-            'handsometableData' => $jsonData
+            'handsometableData' => $dataHandsomtableArr
         );
     }
 
@@ -653,85 +662,85 @@ class ResAppBulkUploadController extends OrderAbstractController
         return $jsonData;
     }
 
-    public function getKeyFieldArr() {
-        $fieldsArr = array();
+//    public function getKeyFieldArr() {
+//        $fieldsArr = array();
+//
+//        $fieldsArr["Applicant ID:"] = "AAMC ID:";
+//        $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
+//        $fieldsArr["Email:"] = "Gender:";
+//        $fieldsArr["Name:"] = "Previous Last Name:";
+//        $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
+//        $fieldsArr["USMLE ID:"] = "NBOME ID:";
+//        $fieldsArr["NBOME ID:"] = "Email:";
+//        $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
+//
+//        return $fieldsArr;
+//    }
 
-        $fieldsArr["Applicant ID:"] = "AAMC ID:";
-        $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
-        $fieldsArr["Email:"] = "Gender:";
-        $fieldsArr["Name:"] = "Previous Last Name:";
-        $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
-        $fieldsArr["USMLE ID:"] = "NBOME ID:";
-        $fieldsArr["NBOME ID:"] = "Email:";
-        $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
-
-        return $fieldsArr;
-    }
-
-    public function getKeyFields($text) {
-
-        $keysArr = array();
-
-        foreach( $this->getKeyFieldArr() as $key=>$endStr ) {
-            echo "key=$key, endStr=$endStr<br>";
-            $field = $this->getPdfField($text,$key,$endStr);
-            if( $field ) {
-                if( $key == "Email:" ) {
-                    $emailStrArr = explode(" ",$field);
-                    foreach($emailStrArr as $emailStr) {
-                        if (strpos($emailStr, '@') !== false) {
-                            //echo 'true';
-                            $field = $emailStr;
-                            break;
-                        }
-                    }
-                }
-                echo "$key=[" . $field . "]<br>";
-                $keysArr[$key] = $field;
-            }
-        }
-        return $keysArr;
-    }
-    public function getPdfField($text,$startStr,$endStr) {
-        //$startStr = "Applicant ID:";
-        //$endStr = "AAMC ID:";
-        $field = $this->string_between_two_string2($text, $startStr, $endStr);
-        //echo "field=[".$field ."]<br>";
-        if ($field) {
-            $field = trim($field);
-            //$field = str_replace(" ","",$field);
-            //$field = str_replace("\t","",$field);
-            //$field = str_replace("\t\n","",$field);
-            $field = str_replace("'", '', $field);
-            $field = preg_replace('/(\v|\s)+/', ' ', $field);
-            //echo "$startStr=[".$field."]<br>";
-            //echo "Page $counter: <br>";
-            //dump($text);
-            //echo "Page=[".$text."]<br>";
-            //exit("string found $startStr");
-            //exit();
-            return $field;
-        }
-        return null;
-    }
-    public function string_between_two_string($str, $starting_word, $ending_word)
-    {
-        $subtring_start = strpos($str, $starting_word);
-        //Adding the strating index of the strating word to
-        //its length would give its ending index
-        $subtring_start += strlen($starting_word);
-        //Length of our required sub string
-        $size = strpos($str, $ending_word, $subtring_start) - $subtring_start;
-        // Return the substring from the index substring_start of length size
-        return substr($str, $subtring_start, $size);
-    }
-    public function string_between_two_string2($str, $starting_word, $ending_word){
-        $arr = explode($starting_word, $str);
-        if (isset($arr[1])){
-            $arr = explode($ending_word, $arr[1]);
-            return $arr[0];
-        }
-        return '';
-    }
+//    public function getKeyFields($text) {
+//
+//        $keysArr = array();
+//
+//        foreach( $this->getKeyFieldArr() as $key=>$endStr ) {
+//            echo "key=$key, endStr=$endStr<br>";
+//            $field = $this->getPdfField($text,$key,$endStr);
+//            if( $field ) {
+//                if( $key == "Email:" ) {
+//                    $emailStrArr = explode(" ",$field);
+//                    foreach($emailStrArr as $emailStr) {
+//                        if (strpos($emailStr, '@') !== false) {
+//                            //echo 'true';
+//                            $field = $emailStr;
+//                            break;
+//                        }
+//                    }
+//                }
+//                echo "$key=[" . $field . "]<br>";
+//                $keysArr[$key] = $field;
+//            }
+//        }
+//        return $keysArr;
+//    }
+//    public function getPdfField($text,$startStr,$endStr) {
+//        //$startStr = "Applicant ID:";
+//        //$endStr = "AAMC ID:";
+//        $field = $this->string_between_two_string2($text, $startStr, $endStr);
+//        //echo "field=[".$field ."]<br>";
+//        if ($field) {
+//            $field = trim($field);
+//            //$field = str_replace(" ","",$field);
+//            //$field = str_replace("\t","",$field);
+//            //$field = str_replace("\t\n","",$field);
+//            $field = str_replace("'", '', $field);
+//            $field = preg_replace('/(\v|\s)+/', ' ', $field);
+//            //echo "$startStr=[".$field."]<br>";
+//            //echo "Page $counter: <br>";
+//            //dump($text);
+//            //echo "Page=[".$text."]<br>";
+//            //exit("string found $startStr");
+//            //exit();
+//            return $field;
+//        }
+//        return null;
+//    }
+//    public function string_between_two_string($str, $starting_word, $ending_word)
+//    {
+//        $subtring_start = strpos($str, $starting_word);
+//        //Adding the strating index of the strating word to
+//        //its length would give its ending index
+//        $subtring_start += strlen($starting_word);
+//        //Length of our required sub string
+//        $size = strpos($str, $ending_word, $subtring_start) - $subtring_start;
+//        // Return the substring from the index substring_start of length size
+//        return substr($str, $subtring_start, $size);
+//    }
+//    public function string_between_two_string2($str, $starting_word, $ending_word){
+//        $arr = explode($starting_word, $str);
+//        if (isset($arr[1])){
+//            $arr = explode($ending_word, $arr[1]);
+//            return $arr[0];
+//        }
+//        return '';
+//    }
 
 }
