@@ -133,6 +133,19 @@ class PdfUtil {
 
         $pdfDocumentId = $pdfDocument->getId();
         $pdfPath = $pdfDocument->getAttachmentEmailPath();
+
+        //testing
+        if(0) {
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+            $parentRoot = str_replace('order-lab', '', $projectRoot);
+            $parentRoot = str_replace('orderflex', '', $parentRoot);
+            $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+            $filename = "eras_gs.pdf";
+            //$filename = "eras.pdf";
+            $pdfPath = $parentRoot . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $filename;
+            //echo "pdfPath=$pdfPath<br>";
+        }
+
         echo "pdfPath=$pdfPath<br>";
         if( $this->isPdfCompressed($pdfPath) ) {
             echo "Compressed <br>";
@@ -198,11 +211,11 @@ class PdfUtil {
 
         if( $processedGsFile ) {
             $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
-            dump($parsedDataArr);
+            //dump($parsedDataArr);
             //exit("GS processed");
         } else {
             $parsedDataArr = $this->parsePdfSpatie($pdfPath);
-            dump($parsedDataArr);
+            //dump($parsedDataArr);
         }
 
         if( $tempdir ) {
@@ -258,21 +271,28 @@ class PdfUtil {
 
         $keysArr = $this->getKeyFields($text);
 
-        echo "keysArr=".count($keysArr)."<br>";
-        dump($keysArr);
+        //echo "keysArr=".count($keysArr)."<br>";
+        //dump($keysArr);
 
         return $keysArr;
     }
-
 
     public function getKeyFields($text) {
 
         $keysArr = array();
 
-        foreach( $this->getKeyFieldArr() as $key=>$endStr ) {
-            echo "key=$key, endStr=$endStr<br>";
-            $field = $this->getPdfField($text,$key,$endStr);
+        foreach( $this->getKeyFieldArr() as $key=>$endArr ) {
+            echo "key=$key<br>";
+
+
+//            foreach($endArr as $endStr) {
+//                $field = $this->getPdfField($text, $key, $endStr);
+//            }
+            $field = $this->getShortestField($text, $key, $endArr);
+
             if( $field ) {
+
+                //Exception
                 if( $key == "Email:" ) {
                     $emailStrArr = explode(" ",$field);
                     foreach($emailStrArr as $emailStr) {
@@ -283,6 +303,14 @@ class PdfUtil {
                         }
                     }
                 }
+                //Exception
+                if( $key == "Applicant ID:" ) {
+                    $applicationIdStrArr = explode(" ",$field);
+                    if( count($applicationIdStrArr) > 0 ) {
+                        $field = $applicationIdStrArr[0];
+                    }
+                }
+
                 echo "$key=[" . $field . "]<br>";
                 $keysArr[$key] = $field;
             }
@@ -290,6 +318,85 @@ class PdfUtil {
         return $keysArr;
     }
     public function getKeyFieldArr() {
+
+        /////// endArr ///////
+        $endArr = array();
+        $endArr[] = "AAMC ID:";
+        $endArr[] = "Email:";
+        $endArr[] = "Birth Date:";
+        $endArr[] = "USMLE ID:";
+        $endArr[] = "NBOME ID:";
+        $endArr[] = "NRMP ID:";
+
+        $endArr[] = "Most Recent Medical School:";
+        $endArr[] = "Gender:";
+        $endArr[] = "Previous Last Name:";
+        $endArr[] = "Authorized to Work in the US:";
+        $endArr[] = "Participating in the NRMP Match:";
+
+        $endArr[] = "Authorized to Work in the US:";
+        $endArr[] = "Current Work Authorization:";
+        /////// EOF endArr ///////
+
+        $fieldsArr = array();
+
+        $fieldsArr["Applicant ID:"] = $endArr;
+        $fieldsArr["AAMC ID:"] = $endArr;
+        $fieldsArr["Email:"] = $endArr;
+        $fieldsArr["Name:"] = $endArr;
+        $fieldsArr["Birth Date:"] = $endArr;
+        $fieldsArr["USMLE ID:"] = $endArr;
+        $fieldsArr["NBOME ID:"] = $endArr;
+        $fieldsArr["NRMP ID:"] = $endArr;
+
+        return $fieldsArr;
+    }
+    public function getShortestField($text, $key, $endArr) {
+        $field = NULL;
+
+        foreach($endArr as $endStr) {
+
+        }
+
+        return $field;
+    }
+
+    public function getKeyFields_Single($text) {
+
+        $keysArr = array();
+
+        foreach( $this->getKeyFieldArr_Single() as $key=>$endStr ) {
+            echo "key=$key, endStr=$endStr<br>";
+            $field = $this->getPdfField($text,$key,$endStr);
+            if( $field ) {
+
+                //Exception
+                if( $key == "Email:" ) {
+                    $emailStrArr = explode(" ",$field);
+                    foreach($emailStrArr as $emailStr) {
+                        if (strpos($emailStr, '@') !== false) {
+                            //echo 'true';
+                            $field = $emailStr;
+                            break;
+                        }
+                    }
+                }
+                //Exception
+                if( $key == "Applicant ID:" ) {
+                    $applicationIdStrArr = explode(" ",$field);
+                    if( count($applicationIdStrArr) > 0 ) {
+                        $field = $applicationIdStrArr[0];
+                    }
+                }
+
+                echo "$key=[" . $field . "]<br>";
+                $keysArr[$key] = $field;
+            }
+        }
+        return $keysArr;
+    }
+    public function getKeyFieldArr_Single() {
+
         $fieldsArr = array();
 
         $fieldsArr["Applicant ID:"] = "AAMC ID:";
