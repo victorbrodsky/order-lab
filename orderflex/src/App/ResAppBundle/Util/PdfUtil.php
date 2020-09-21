@@ -135,7 +135,7 @@ class PdfUtil {
         $pdfPath = $pdfDocument->getAttachmentEmailPath();
 
         //testing
-        if(0) {
+        if(1) {
             $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
             $parentRoot = str_replace('order-lab', '', $projectRoot);
             $parentRoot = str_replace('orderflex', '', $parentRoot);
@@ -257,10 +257,10 @@ class PdfUtil {
         //$path = '"'.$path.'"';
         //$path = "'".$path."'";
         $path = realpath($path);
-        echo "Spatie source pdf path=".$path."<br>";
+        //echo "Spatie source pdf path=".$path."<br>";
 
         $text = $pdftotext->setPdf($path)->text();
-        dump($text);
+        //dump($text);
 
 //        $startStr = "Applicant ID:";
 //        $endStr = "AAMC ID:";
@@ -282,8 +282,7 @@ class PdfUtil {
         $keysArr = array();
 
         foreach( $this->getKeyFieldArr() as $key=>$endArr ) {
-            echo "key=$key<br>";
-
+            //echo "key=$key<br>";
 
 //            foreach($endArr as $endStr) {
 //                $field = $this->getPdfField($text, $key, $endStr);
@@ -311,7 +310,7 @@ class PdfUtil {
                     }
                 }
 
-                echo "$key=[" . $field . "]<br>";
+                //echo "$key=[" . $field . "]<br>";
                 $keysArr[$key] = $field;
             }
         }
@@ -321,6 +320,7 @@ class PdfUtil {
 
         /////// endArr ///////
         $endArr = array();
+        $endArr[] = "Applicant ID:";
         $endArr[] = "AAMC ID:";
         $endArr[] = "Email:";
         $endArr[] = "Birth Date:";
@@ -330,12 +330,16 @@ class PdfUtil {
 
         $endArr[] = "Most Recent Medical School:";
         $endArr[] = "Gender:";
+        $endArr[] = "Previous Last";
         $endArr[] = "Previous Last Name:";
         $endArr[] = "Authorized to Work in the US:";
         $endArr[] = "Participating in the NRMP Match:";
 
         $endArr[] = "Authorized to Work in the US:";
         $endArr[] = "Current Work Authorization:";
+        $endArr[] = "Permanent Mailing Address:";
+        $endArr[] = "Preferred Phone #:";
+        $endArr[] = "Alternate Phone #:";
         /////// EOF endArr ///////
 
         $fieldsArr = array();
@@ -348,17 +352,27 @@ class PdfUtil {
         $fieldsArr["USMLE ID:"] = $endArr;
         $fieldsArr["NBOME ID:"] = $endArr;
         $fieldsArr["NRMP ID:"] = $endArr;
+        $fieldsArr["Gender:"] = $endArr;
+        $fieldsArr["Participating as a Couple in NRMP:"] = $endArr;
+        $fieldsArr["Present Mailing Address:"] = $endArr;
+        $fieldsArr["Preferred Phone #:"] = $endArr;
 
         return $fieldsArr;
     }
     public function getShortestField($text, $key, $endArr) {
-        $field = NULL;
+        $minLength = NULL;
+        $minField = NULL;
 
         foreach($endArr as $endStr) {
-
+            $field = $this->getPdfField($text,$key,$endStr);
+            $fieldLen = strlen($field);
+            if( $minLength === NULL || $fieldLen <= $minLength ) {
+                $minLength = $fieldLen;
+                $minField = $field;
+            }
         }
 
-        return $field;
+        return $minField;
     }
 
     public function getKeyFields_Single($text) {
