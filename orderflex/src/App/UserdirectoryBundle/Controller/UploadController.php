@@ -471,6 +471,7 @@ class UploadController extends OrderAbstractController {
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $inputFileName = $form['file']->getData();
+            //exit('inputFileName='.$inputFileName);
 
             //$ext = $inputFileName->guessExtension();
             //echo "ext=".$ext."<br>";

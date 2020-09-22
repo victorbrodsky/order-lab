@@ -26,6 +26,7 @@ namespace App\ResAppBundle\Util;
 
 
 //use Clegginabox\PDFMerger\PDFMerger;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Spatie\PdfToText\Pdf;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,6 +75,35 @@ class PdfUtil {
         $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
         $path = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
         $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
+    }
+
+
+    public function getCsvApplicationsData( $csvFileName ) {
+
+        echo "csvFileName=$csvFileName <br>";
+
+        if (file_exists($csvFileName)) {
+            //echo "The file $inputFileName exists";
+        } else {
+            //echo "The file $inputFileName does not exist";
+            return "The file $csvFileName does not exist";
+        }
+
+        //$reader = ReaderEntityFactory::createReaderFromFile($csvFileName);
+        $reader = ReaderEntityFactory::createCSVReader();
+
+        $reader->open($csvFileName);
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $row) {
+                // do stuff with the row
+                $cells = $row->getCells();
+                dump($cells);
+            }
+        }
+
+        $reader->close();
+        
     }
 
 

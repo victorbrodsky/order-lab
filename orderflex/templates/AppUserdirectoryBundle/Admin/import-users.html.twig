@@ -16,6 +16,8 @@
 
 {% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
 
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -46,7 +48,8 @@
 
         <br><br><br>
 
-        {{ formmacros.field(form.submit) }}
+        {#{{ formmacros.field(form.submit) }}#}
+        {{ form_widget(form.submit) }}
 
     {{ form_end(form) }}
 

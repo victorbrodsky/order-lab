@@ -1,0 +1,127 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Upload/upload-applications.html.twig" as reasappMacros %}
+
+{% block title %}
+    Upload Multiple Applications via CSV
+{% endblock %}
+
+
+{% block content %}
+
+    {{ form_start(form) }}
+
+        <div class="row">
+            <div class="col-xs-3"></div>
+            <div class="col-xs-6" align="center">
+                {{ form_row(form.file) }}
+            </div>
+            <div class="col-xs-3"></div>
+        </div>
+
+        <br><br><br>
+
+        {#button: Upload and Extract Data#}
+        {% if form.upload is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.upload) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+
+    {#hidden accordion titled “Uploaded Applications” with the Handsontable with 1 row as well as “Add Listed Apllications” button. The table should have the following columns:#}
+
+    {#Application Receipt Date (pre-populate with current date)#}
+
+    {#Residency Track#}
+
+    {#Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#First Name#}
+
+    {#Last Name#}
+
+    {#Middle Name#}
+
+    {#Preferred Email#}
+
+    {#Medical School Graduation Date#}
+
+    {#Medical School Name#}
+
+    {#Degree (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#USMLE Step 1 Score#}
+
+    {#USMLE Step 2 CK Score#}
+
+    {#USMLE Step 3 Score#}
+
+    {#Country of Citizenship (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Visa Status (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Is the applicant a member of any of the following groups? (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Number of 1st author publications#}
+
+    {#Number of all publications#}
+
+    {#AOA (show the same checkmark in the Handsontable cell as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Couple’s Match:#}
+
+    {#Post-Sophomore Fellowship#}
+
+    {#Previous Residency Start Date#}
+
+    {#Previous Residency Graduation/Departure Date#}
+
+    {#Previous Residency Institution:#}
+
+    {#Previous Residency City#}
+
+    {#Previous Residency State (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Previous Residency Country (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Previous Residency Track (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#ERAS Application ID#}
+
+    {#ERAS Application (show the cells in this column as blank - this is where you will show the file name of the PDF once it uploads)#}
+
+    {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
+
+    {#{{ reasappMacros.resappUploadHandsontable(form,inputDataFile,cycle) }}#}
+
+{% endblock %}
+
+

@@ -19,6 +19,7 @@ namespace App\ResAppBundle\Controller;
 
 use App\ResAppBundle\Entity\InputDataFile;
 use App\ResAppBundle\Entity\ResidencyApplication;
+use App\ResAppBundle\Form\ResAppUploadCsvType;
 use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -36,6 +37,87 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResAppBulkUploadController extends OrderAbstractController
 {
+
+    /**
+     * Upload Multiple Applications via CSV
+     *
+     * @Route("/upload-csv/", name="resapp_upload_csv_multiple_applications", methods={"GET","POST"})
+     * @Template("AppResAppBundle/Upload/upload-csv-applications.html.twig")
+     */
+    public function uploadCsvMultipleApplicationsAction(Request $request)
+    {
+
+        if (
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
+        ) {
+            return $this->redirect($this->generateUrl('resapp-nopermission'));
+        }
+
+        //exit("Upload Multiple Applications is under construction");
+
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+        //$em = $this->getDoctrine()->getManager();
+
+        $cycle = 'new';
+
+        //$inputDataFile = new InputDataFile();
+
+        //get Table $jsonData
+        $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
+
+        //$form = $this->createUploadForm($cycle);
+//        $params = array(
+//            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
+//            //'defaultStartDates' => $defaultStartDates
+//        );
+//        $form = $this->createForm(ResAppUploadCsvType::class, null,
+//            array(
+//                'method' => 'GET',
+//                'form_custom_value'=>$params
+//            )
+//        );
+
+        $form = $this->createForm(ResAppUploadCsvType::class,null);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() ) {
+
+            //exit("form submitted");
+
+            dump($form);
+
+            $inputFileName = $form['file']->getData();
+            //$inputFileName = $form->get('file')->getData();
+
+            echo "inputFileName=".$inputFileName."<br>";
+            
+            $res = $resappPdfUtil->getCsvApplicationsData($inputFileName);
+
+
+//            $pdfArr = $resappPdfUtil->getTestPdfApplications();
+//            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
+//            $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
+//            dump($handsomtableJsonData);
+            exit('111');
+
+            //exit("parsed res=".implode(";",$res));
+
+            //$dataArr = $this->getDataArray();
+
+            //get Table $jsonData
+            //$jsonData = $this->getTableData($dataArr);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            //'inputDataFile' => $inputDataFile,
+            //'handsometableData' => $handsomtableJsonData
+        );
+    }
+
 
     /**
      * Upload Multiple Applications
@@ -141,12 +223,12 @@ class ResAppBulkUploadController extends OrderAbstractController
 
 
     /**
-     * Upload Multiple Applications
+     * Upload Multiple Applications via PDF
      *
-     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET"})
+     * @Route("/upload-pdf/", name="resapp_upload_pdf_multiple_applications", methods={"GET"})
      * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
      */
-    public function uploadMultipleApplicationsAction(Request $request)
+    public function uploadPdfMultipleApplicationsAction(Request $request)
     {
 
         if (
