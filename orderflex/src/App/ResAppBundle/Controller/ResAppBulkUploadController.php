@@ -166,7 +166,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $inputDataFile = new InputDataFile();
 
         //get Table $jsonData
-        $jsonData = array(); //$this->getTableData($inputDataFile);
+        $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
 
         //$form = $this->createUploadForm($cycle);
         $params = array(
@@ -237,8 +237,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $pdfArr = $resappPdfUtil->getTestPdfApplications();
             $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
-            $dataHandsomtableArr = $resappPdfUtil->getHandsomtableDataArray($dataArr);
-            dump($dataHandsomtableArr);
+            $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
+            dump($handsomtableJsonData);
             //exit('111');
 
             //exit("parsed res=".implode(";",$res));
@@ -253,7 +253,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => $cycle,
             'inputDataFile' => $inputDataFile,
-            'handsometableData' => $dataHandsomtableArr
+            'handsometableData' => $handsomtableJsonData
         );
     }
 

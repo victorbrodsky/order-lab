@@ -86,7 +86,8 @@ class PdfUtil {
             $currentDate = new \DateTime();
             $currentDateStr = $currentDate->format('m\d\Y H:i:s');
 
-            $rowArr["Application Receipt Date"] = $currentDateStr;
+            $rowArr["Application Receipt Date"]['id'] = 1;
+            $rowArr["Application Receipt Date"]['value'] = $currentDateStr;
 
             //echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
             $rowArr["Residency Track"] = NULL; //$parsedData["Residency Track"];
@@ -116,22 +117,27 @@ class PdfUtil {
             //// EOF get last, first name ////
 
             //First Name
-            $rowArr["First Name"] = $firstName;
+            $rowArr["First Name"]['id'] = 1;
+            $rowArr["First Name"]['value'] = $firstName;
 
             //Last Name
-            $rowArr["Last Name"] = $lastName;
+            $rowArr["Last Name"]['id'] = 1;
+            $rowArr["Last Name"]['value'] = $lastName;
 
             //Middle Name
             $rowArr["Middle Name"] = NULL;
 
             //Preferred Email
-            $rowArr["Preferred Email"] = $parsedData["Email:"];
+            $rowArr["Preferred Email"]['id'] = 1;
+            $rowArr["Preferred Email"]['value'] = $parsedData["Email:"];
 
             //Couple’s Match:
-            $rowArr["Couple’s Match"] = $parsedData["Participating as a Couple in NRMP:"];
+            $rowArr["Couple’s Match"]['id'] = 1;
+            $rowArr["Couple’s Match"]['value'] = $parsedData["Participating as a Couple in NRMP:"];
 
             //Preferred Email
-            $rowArr["ERAS Application ID"] = $parsedData["Applicant ID:"];
+            $rowArr["ERAS Application ID"]['id'] = 1;
+            $rowArr["ERAS Application ID"]['value'] = $parsedData["Applicant ID:"];
 
             $tableDataArr[] = $rowArr;
         }
