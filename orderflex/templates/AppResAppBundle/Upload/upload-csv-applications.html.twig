@@ -29,6 +29,13 @@
 
     {{ form_start(form) }}
 
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
         <div class="row">
             <div class="col-xs-3"></div>
             <div class="col-xs-6" align="center">
@@ -120,8 +127,71 @@
 
     {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
 
-    {#{{ reasappMacros.resappUploadHandsontable(form,inputDataFile,cycle) }}#}
+    {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
 
 {% endblock %}
 
+{% block additionalcss %}
 
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppResAppBundle/form/js/handsontable.js') }}" ></script>
+
+    <script language="Javascript">
+
+        var _handsometableDataArr = [];
+
+        $(document).ready(function() {
+            var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            //console.log(_handsometableDataArr);
+
+            // Wait until idle (busy must be false)
+            var _TIMEOUT = 300; // waitfor test rate [msec]
+
+            //console.log('before wait for');
+            waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                //console.log('The show can resume !');
+                resappMakeColumnData();
+
+                handsonTableInit(_handsometableDataArr);
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% macro resappUploadHandsontable( form, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        Uploaded Applications
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    {#{{ formmacros.field(form.antibodyReferences) }}#}
+                    <br>
+
+                    <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}

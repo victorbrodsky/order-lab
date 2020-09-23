@@ -97,6 +97,34 @@ class PdfUtil {
         $reader->open($csvFileName);
 
         //around 3877 columns, 833 not empty columns
+        
+        //Get header->column index map
+        $header = array();
+        foreach ($reader->getSheetIterator() as $sheet) {
+            foreach ($sheet->getRowIterator() as $rowNumber => $row) {
+                if( $rowNumber > 1 ) {
+                    break;
+                }
+
+                $cells = $row->getCells();
+                for($column = 0; $column <= 10000; $column++) {
+                    //echo "The number is: $column <br>";
+
+                    if( !isset($cells[$column]) ) {
+                        break;
+                    }
+
+                    $thisCell = $cells[$column];
+                    $thisCellValue = $thisCell->getValue();
+                    if( $thisCellValue ) {
+                        $header[$thisCellValue] = $column;
+                    }
+                }
+
+            }
+        }
+        //dump($header);
+        //exit(111);
 
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $rowNumber => $row) {
@@ -105,21 +133,55 @@ class PdfUtil {
                     continue;
                 }
                 $cells = $row->getCells();
-                echo "rowNumber=$rowNumber <br>";
-                dump($cells);
+                //echo "rowNumber=$rowNumber <br>";
+                //dump($cells);
 
                 //get cell index by header
                 //$emailCell = $cells[4];
                 //$cell->getValue();
 
+                $rowArr = array();
+                foreach( $this->getHeaderMap() as $headerTitle => $handsomTitle ) {
+                    if( isset($header[$headerTitle]) ) {
+                        $column = $header[$headerTitle];
+
+                        if( isset($cells[$column]) ) {
+                            $cell = $cells[$column];
+                            $cellValue = $cell->getValue();
+
+                            $rowArr[$handsomTitle]['id'] = 1;
+                            $rowArr[$handsomTitle]['value'] = $cellValue;
+                        }
+                    }
+                }
+
+//                $rowArr = array();
+//                $rowArr["First Name"]['id'] = 1;
+//                $rowArr["First Name"]['value'] = "Test First Name";
+//
+//                //Last Name
+//                $rowArr["Last Name"]['id'] = 1;
+//                $rowArr["Last Name"]['value'] = "Test Last Name";
+//
+//                //Middle Name
+//                $rowArr["Middle Name"] = NULL;
+//
+//                //Preferred Email
+//                $rowArr["Preferred Email"]['id'] = 1;
+//                $rowArr["Preferred Email"]['value'] = "Test Email";
+
+                $handsomtableJsonData[] = $rowArr;
+                
             }
         }
+        //dump($handsomtableJsonData);
+        //exit(111);
 
         $reader->close();
 
         return $handsomtableJsonData;
     }
-    public function cvsHeaderMapper() {
+    public function getHeaderMap() {
 
         $map = array(
             "AAMC ID" => "AAMC ID",
@@ -132,7 +194,7 @@ class PdfUtil {
             "Applicant Applied Date" => "Expected Graduation Date",
 
             "First Name" => "First Name",
-            "Last Name" => "Last Name",
+            "Middle Name" => "Middle Name",
             "Last Name" => "Last Name",
 
             "E-mail" => "Preferred Email",

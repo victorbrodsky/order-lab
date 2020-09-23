@@ -100,7 +100,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
 //            $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
 //            dump($handsomtableJsonData);
-            exit('111');
+            //exit('111');
 
             //exit("parsed res=".implode(";",$res));
 

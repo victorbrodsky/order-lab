@@ -270,13 +270,13 @@ function handsonTableInit(handsometableDataArr) {
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
 
-        console.log('row i='+i);
+        //console.log('row i='+i);
 
         var rowElement = [];
         //rowElement[0] = i;
         for( var ii=0; ii<_columnData_scanorder.length; ii++ ) {  //foreach column
 
-            console.log('column ii='+ii);
+            //console.log('column ii='+ii);
 
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
@@ -292,8 +292,8 @@ function handsonTableInit(handsometableDataArr) {
             //if( typeof handsometableDataArr != 'undefined' ) {
             if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
-                console.log( handsometableDataArr[i-1] );
+                //console.log('headerTitle='+headerTitle);
+                //console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<handsometableDataArr.length) && headerTitle in handsometableDataArr[i-1]
                 ) {
@@ -302,13 +302,13 @@ function handsonTableInit(handsometableDataArr) {
                     //console.log(')');
                     if( handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = handsometableDataArr[i-1][headerTitle]["value"];
-                        console.log( "cellValue="+cellValue );
+                        //console.log( "cellValue="+cellValue );
                         //var cellId = handsometableDataArr[i-1][headerTitle]["id"];
                         //console.log('cellValue='+cellValue);
                         //var value = handsometableDataArr[i-1][headerTitle];
                         //console.log( "value="+value );
                         if( cellValue != null && cellValue != "" ) {
-                            console.log('set cellValue('+i+','+ii+')='+cellValue);
+                            console.log(headerTitle+': set cellValue('+i+','+ii+')='+cellValue);
                             rowElement[ii] = cellValue;
                         }
                     }
@@ -364,6 +364,7 @@ function handsonTableInit(handsometableDataArr) {
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
         stretchH: 'all',
+        overflow: 'auto',
         cells: function(r,c,prop) {
             var cellProperties = {};
 
@@ -441,7 +442,7 @@ function handsonTableInit(handsometableDataArr) {
 
 
 
-    //resizeTableHeight();
+    resizeTableHeight();
 
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
