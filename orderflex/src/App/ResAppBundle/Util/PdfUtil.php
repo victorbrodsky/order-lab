@@ -89,21 +89,73 @@ class PdfUtil {
             return "The file $csvFileName does not exist";
         }
 
+        $handsomtableJsonData = array();
+
         //$reader = ReaderEntityFactory::createReaderFromFile($csvFileName);
         $reader = ReaderEntityFactory::createCSVReader();
 
         $reader->open($csvFileName);
 
+        //around 3877 columns, 833 not empty columns
+
         foreach ($reader->getSheetIterator() as $sheet) {
-            foreach ($sheet->getRowIterator() as $row) {
+            foreach ($sheet->getRowIterator() as $rowNumber => $row) {
                 // do stuff with the row
+                if( $rowNumber == 1 ) {
+                    continue;
+                }
                 $cells = $row->getCells();
+                echo "rowNumber=$rowNumber <br>";
                 dump($cells);
+
+                //get cell index by header
+                //$emailCell = $cells[4];
+                //$cell->getValue();
+
             }
         }
 
         $reader->close();
-        
+
+        return $handsomtableJsonData;
+    }
+    public function cvsHeaderMapper() {
+
+        $map = array(
+            "AAMC ID" => "AAMC ID",
+            //"Applicant ID" => "ERAS Application ID"
+            "Residency Track" => "Residency Track", //?
+
+            "Applicant Applied Date" => "Application Season Start Date",
+            "Applicant Applied Date" => "Application Season End Date",
+            "Applicant Applied Date" => "Expected Residency Start Date",
+            "Applicant Applied Date" => "Expected Graduation Date",
+
+            "First Name" => "First Name",
+            "Last Name" => "Last Name",
+            "Last Name" => "Last Name",
+
+            "E-mail" => "Preferred Email",
+
+            "Most Recent Medical School" => "Medical School Name",
+            "Medical School Attendance Dates" => "Medical School Graduation Date", //8/2014 - 5/2019
+
+            "USMLE Step 1 Score" => "USMLE Step 1 Score",
+            "USMLE Step 2 CK Score" => "USMLE Step 2 CK Score",
+            "USMLE Step 3 Score" => "USMLE Step 3 Score",
+
+            "Citizenship" => "Country of Citizenship",
+            "Current Visa Status" => "Visa Status",
+
+            "Self Identify" => "Is the applicant a member of any of the following groups?",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+            "" => "",
+        );
+
+        return $map;
     }
 
 

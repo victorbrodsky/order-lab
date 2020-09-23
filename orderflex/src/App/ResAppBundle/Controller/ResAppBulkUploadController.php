@@ -92,8 +92,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$inputFileName = $form->get('file')->getData();
 
             echo "inputFileName=".$inputFileName."<br>";
-            
-            $res = $resappPdfUtil->getCsvApplicationsData($inputFileName);
+
+            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName);
 
 
 //            $pdfArr = $resappPdfUtil->getTestPdfApplications();
@@ -114,7 +114,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => $cycle,
             //'inputDataFile' => $inputDataFile,
-            //'handsometableData' => $handsomtableJsonData
+            'handsometableData' => $handsomtableJsonData
         );
     }
 

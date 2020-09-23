@@ -211,6 +211,9 @@ function resappMakeColumnData() {
         //         filter: false,
         //     }
         // },
+
+        { header:'AAMC ID', columns:{} },
+        // { header:'ERAS Application ID', columns:{} },
         { header:'Application Receipt Date', columns:{} },
         { header:'Residency Track', columns:{} },
         { header:'Application Season Start Date', columns:{} },
@@ -235,6 +238,7 @@ function resappMakeColumnData() {
         { header:'AOA', columns:{} },
         { header:'Couple’s Match', columns:{} },
         { header:'Post-Sophomore Fellowship', columns:{} },
+
         { header:'Previous Residency Start Date', columns:{} },
         { header:'Previous Residency Graduation/Departure Date', columns:{} },
         { header:'Previous Residency Institution', columns:{} },
@@ -242,7 +246,8 @@ function resappMakeColumnData() {
         { header:'Previous Residency State', columns:{} },
         { header:'Previous Residency Country', columns:{} },
         { header:'Previous Residency Track', columns:{} },
-        { header:'ERAS Application ID', columns:{} },
+        
+        // { header:'ERAS Application ID', columns:{} },
         { header:'ERAS Application', columns:{} },
         { header:'Duplicate?', columns:{} },
     ];
