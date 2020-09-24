@@ -36,6 +36,7 @@ var _antibodies = [];
 var _antibodies_simple = [];
 
 var _tdSize = 64;
+var _tdSize = 26;
 var _tdPadding = 5;
 var _rowHeight =  _tdSize + 2*_tdPadding;
 
@@ -308,7 +309,7 @@ function handsonTableInit(handsometableDataArr) {
                         //var value = handsometableDataArr[i-1][headerTitle];
                         //console.log( "value="+value );
                         if( cellValue != null && cellValue != "" ) {
-                            console.log(headerTitle+': set cellValue('+i+','+ii+')='+cellValue);
+                            //console.log(headerTitle+': set cellValue('+i+','+ii+')='+cellValue);
                             rowElement[ii] = cellValue;
                         }
                     }
@@ -355,16 +356,17 @@ function handsonTableInit(handsometableDataArr) {
         manualColumnMove: true,
         manualColumnResize: true,
         autoWrapRow: true,
-        //autoRowSize: {syncLimit: 300},
+        autoRowSize: {syncLimit: 300},
         // rowHeight: function(row) {
         //     return _rowHeight;
         // },
         // defaultRowHeight: _rowHeight,
+        //autoRowSize: true, //{syncLimit: 300},
         renderAllRows: true,
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
         stretchH: 'all',
-        overflow: 'auto',
+        //overflow: 'auto',
         cells: function(r,c,prop) {
             var cellProperties = {};
 
@@ -440,9 +442,7 @@ function handsonTableInit(handsometableDataArr) {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
-
-
-    resizeTableHeight();
+    //resizeTableHeight();
 
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
@@ -468,10 +468,26 @@ function handsonTableInit(handsometableDataArr) {
 function resizeTableHeight() {
     //console.log("Setting height");
     var countRow = _sotable.countRows();
-    var newHeight = countRow*(_tdSize + _tdPadding*4);
+    console.log("_tdSize="+_tdSize+", countRow="+countRow);
+    //var newHeight = countRow*(_tdSize + _tdPadding*4);
+    var newHeight = countRow*(_tdSize);
     _sotable.updateSettings({height: newHeight});
 }
+function resizeTableHeight_new() {
+    _sotable.recalculateAllRowsHeight();
+    return true;
 
+    //console.log("Setting height");
+    var countRow = _sotable.countRows();
+    //var heightRow = _sotable.getRowHeight(indexRow);
+    //var indexRow = _sotable.recalculateAllRowsHeight();
+    //var heightRow = _sotable.getColumnHeaderHeight();
+    //var heightRow = _sotable.getRowHeight(indexRow);
+    console.log("heightRow="+heightRow+", countRow="+countRow);
+    var newHeight = countRow*(_tdSize + _tdPadding*4);
+    //var newHeight = countRow*heightRow;
+    _sotable.updateSettings({height: newHeight});
+}
 
 
 

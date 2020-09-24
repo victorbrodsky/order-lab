@@ -183,10 +183,11 @@ class PdfUtil {
     }
     public function getHeaderMap() {
 
+        //CSV header title => Handsomtable header title
         $map = array(
             "AAMC ID" => "AAMC ID",
             //"Applicant ID" => "ERAS Application ID"
-            "Residency Track" => "Residency Track", //?
+            //"Residency Track" => "Residency Track", //?
 
             "Applicant Applied Date" => "Application Season Start Date",
             "Applicant Applied Date" => "Application Season End Date",
@@ -210,11 +211,28 @@ class PdfUtil {
             "Current Visa Status" => "Visa Status",
 
             "Self Identify" => "Is the applicant a member of any of the following groups?",
-            "" => "",
-            "" => "",
-            "" => "",
-            "" => "",
-            "" => "",
+
+            //"" => "Number of first author publications",
+            //"" => "Number of all publications",
+            
+            //"" => "AOA",
+            "Participating as a Couple in NRMP" => "Couple’s Match",
+            //"" => "Post-Sophomore Fellowship",
+
+//            "" => "Previous Residency Start Date",
+//            "" => "Previous Residency Graduation/Departure Date",
+//            "" => "Previous Residency Institution",
+//            "" => "Previous Residency City",
+//            "" => "Previous Residency State",
+//            "" => "Previous Residency Country",
+//            "" => "Previous Residency Track",
+//            "" => "ERAS Application",
+
+//            "" => "",
+//            "" => "",
+//            "" => "",
+//            "" => "",
+//            "" => "",
         );
 
         return $map;

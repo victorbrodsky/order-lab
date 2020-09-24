@@ -409,6 +409,20 @@ class ResidencyApplication extends BaseUserAttributes {
      */
     private $postSoph;
 
+    /**
+     * AAMC ID
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aamcId;
+
+    /**
+     * ERAS Applicant ID
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $erasApplicantId;
+
     //Residency types: AP/EXP CP/EXP +Experimental Pathology
 
 
@@ -1260,6 +1274,37 @@ class ResidencyApplication extends BaseUserAttributes {
         $this->postSoph = $postSoph;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAamcId()
+    {
+        return $this->aamcId;
+    }
+
+    /**
+     * @param mixed $aamcId
+     */
+    public function setAamcId($aamcId)
+    {
+        $this->aamcId = $aamcId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErasApplicantId()
+    {
+        return $this->erasApplicantId;
+    }
+
+    /**
+     * @param mixed $erasApplicantId
+     */
+    public function setErasApplicantId($erasApplicantId)
+    {
+        $this->erasApplicantId = $erasApplicantId;
+    }
 
 
     
