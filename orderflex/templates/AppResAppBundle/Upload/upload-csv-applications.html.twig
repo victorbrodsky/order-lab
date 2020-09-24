@@ -29,12 +29,12 @@
 
     {{ form_start(form) }}
 
-        <input type="hidden" id="formcycle" value="{{ cycle }}" />
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-        ></div>
+        {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+        {#<div id="form-prototype-data"#}
+             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+             {#data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"#}
+             {#data-userid = "{{ app.user.id }}"#}
+        {#></div>#}
 
         <div class="row">
             <div class="col-xs-3"></div>
@@ -56,6 +56,7 @@
 
     {{ form_end(form) }}
 
+    {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
 
     {#hidden accordion titled “Uploaded Applications” with the Handsontable with 1 row as well as “Add Listed Apllications” button. The table should have the following columns:#}
 
@@ -127,8 +128,6 @@
 
     {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
 
-    {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
-
 {% endblock %}
 
 {% block additionalcss %}
@@ -136,14 +135,14 @@
     {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-6/dist/handsontable.full.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
 {% endblock %}
 
 {% block additionaljs %}
 
-    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-6/dist/handsontable.full.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppResAppBundle/form/js/handsontable.js') }}" ></script>
 
     <script language="Javascript">
@@ -153,6 +152,8 @@
         $(document).ready(function() {
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
             //console.log(_handsometableDataArr);
+
+            getResidencytracks();
 
             // Wait until idle (busy must be false)
             var _TIMEOUT = 300; // waitfor test rate [msec]

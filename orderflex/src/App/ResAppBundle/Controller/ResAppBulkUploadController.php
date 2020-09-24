@@ -46,7 +46,7 @@ class ResAppBulkUploadController extends OrderAbstractController
      */
     public function uploadCsvMultipleApplicationsAction(Request $request)
     {
-
+//exit('test exit uploadCsvMultipleApplicationsAction');
         if (
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
@@ -73,8 +73,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        );
 //        $form = $this->createForm(ResAppUploadCsvType::class, null,
 //            array(
-//                'method' => 'GET',
-//                'form_custom_value'=>$params
+//                //'method' => 'GET',
+//                //'form_custom_value'=>$params
 //            )
 //        );
 
@@ -86,12 +86,12 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             //exit("form submitted");
 
-            dump($form);
+            //dump($form);
 
             $inputFileName = $form['file']->getData();
             //$inputFileName = $form->get('file')->getData();
 
-            echo "inputFileName=".$inputFileName."<br>";
+            //echo "inputFileName=".$inputFileName."<br>";
 
             $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName);
 
@@ -99,7 +99,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            $pdfArr = $resappPdfUtil->getTestPdfApplications();
 //            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
 //            $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
-//            dump($handsomtableJsonData);
+            //dump($handsomtableJsonData);
             //exit('111');
 
             //exit("parsed res=".implode(";",$res));

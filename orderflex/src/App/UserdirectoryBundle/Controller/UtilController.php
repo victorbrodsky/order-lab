@@ -1651,6 +1651,10 @@ class UtilController extends OrderAbstractController {
                 $bundleName = "TranslationalResearchBundle";
                 break;
 
+            case "residencytracks":
+                $className = "ResidencyTrackList";
+                break;
+
 //            case "patientLists":
 //                $bundleName = "OrderformBundle";
 //                $className = "PatientListHierarchy";

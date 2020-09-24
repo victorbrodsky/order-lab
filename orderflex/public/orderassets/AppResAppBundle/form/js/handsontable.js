@@ -29,11 +29,11 @@ var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, M
 var _colHeader = [];
 var _rowToProcessArr = [];
 
-var _accessiontype = [];
-var _accessiontypes_simple = [];
+//var _accessiontype = [];
+//var _accessiontypes_simple = [];
 
-var _antibodies = [];
-var _antibodies_simple = [];
+var _residencytracks = [];
+var _residencytracks_simple = [];
 
 var _tdSize = 64;
 var _tdSize = 26;
@@ -41,73 +41,73 @@ var _tdPadding = 5;
 var _rowHeight =  _tdSize + 2*_tdPadding;
 
 //from: http://past.handsontable.com/demo/renderers_html.html
-var imageRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    var escaped = Handsontable.helper.stringify(value),
-        img;
+// var imageRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+//     var escaped = Handsontable.helper.stringify(value),
+//         img;
+//
+//     if (escaped.indexOf('http') === 0) {
+//         img = document.createElement('IMG');
+//
+//         img.src = value;
+//         img.height = _tdSize;
+//         img.width = _tdSize;
+//         //img.margin = "5px 5px 5px 5px";
+//         //img.style.cssText = "margin: 5px;";
+//         img.style.marginTop = "5px";
+//         img.style.marginBottom = "5px";
+//
+//         // Handsontable.dom.addEvent(img, 'mousedown', function (e){
+//         //     e.preventDefault(); // prevent selection quirk
+//         // });
+//
+//         $(td).html(null);
+//         //$(td).text(null);
+//
+//         //Handsontable.dom.empty(td);
+//         td.appendChild(img);
+//     }
+//     else {
+//         // render as text
+//         Handsontable.renderers.TextRenderer.apply(this, arguments);
+//     }
+//
+//     return td;
+// };
 
-    if (escaped.indexOf('http') === 0) {
-        img = document.createElement('IMG');
-
-        img.src = value;
-        img.height = _tdSize;
-        img.width = _tdSize;
-        //img.margin = "5px 5px 5px 5px";
-        //img.style.cssText = "margin: 5px;";
-        img.style.marginTop = "5px";
-        img.style.marginBottom = "5px";
-
-        // Handsontable.dom.addEvent(img, 'mousedown', function (e){
-        //     e.preventDefault(); // prevent selection quirk
-        // });
-
-        $(td).html(null);
-        //$(td).text(null);
-
-        //Handsontable.dom.empty(td);
-        td.appendChild(img);
-    }
-    else {
-        // render as text
-        Handsontable.renderers.TextRenderer.apply(this, arguments);
-    }
-
-    return td;
-};
-
-var canvasRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    var escaped = Handsontable.helper.stringify(value),
-        canvas;
-
-    if (escaped.indexOf('http') === 0) {
-        canvas = document.createElement('CANVAS');
-
-        //canvas.src = value;
-        canvas.height = _tdSize;
-        canvas.width = _tdSize;
-        //img.margin = "5px 5px 5px 5px";
-        //img.style.cssText = "margin: 5px;";
-        //canvas.style.marginTop = "5px";
-        //canvas.style.marginBottom = "5px";
-
-        canvas.id = "canvas-"+row+"-"+col;
-
-        // Handsontable.dom.addEvent(img, 'mousedown', function (e){
-        //     e.preventDefault(); // prevent selection quirk
-        // });
-
-        $(td).html(null);
-        //$(td).text(null);
-
-        //Handsontable.dom.empty(td);
-        td.appendChild(canvas);
-    }
-    else {
-        // render as text
-        Handsontable.renderers.TextRenderer.apply(this, arguments);
-    }
-
-    return td;
-};
+// var canvasRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+//     var escaped = Handsontable.helper.stringify(value),
+//         canvas;
+//
+//     if (escaped.indexOf('http') === 0) {
+//         canvas = document.createElement('CANVAS');
+//
+//         //canvas.src = value;
+//         canvas.height = _tdSize;
+//         canvas.width = _tdSize;
+//         //img.margin = "5px 5px 5px 5px";
+//         //img.style.cssText = "margin: 5px;";
+//         //canvas.style.marginTop = "5px";
+//         //canvas.style.marginBottom = "5px";
+//
+//         canvas.id = "canvas-"+row+"-"+col;
+//
+//         // Handsontable.dom.addEvent(img, 'mousedown', function (e){
+//         //     e.preventDefault(); // prevent selection quirk
+//         // });
+//
+//         $(td).html(null);
+//         //$(td).text(null);
+//
+//         //Handsontable.dom.empty(td);
+//         td.appendChild(canvas);
+//     }
+//     else {
+//         // render as text
+//         Handsontable.renderers.TextRenderer.apply(this, arguments);
+//     }
+//
+//     return td;
+// };
 
 //total 33
 var _columnData_scanorder = [];
@@ -116,11 +116,11 @@ var _columnData_scanorder = [];
 //
 //});
 
-function getAntobodies(holder,force) {
+function getResidencytracks() {
 
-    var cycle = 'edit';
+    var cycle = 'new';
 
-    var url = getCommonBaseUrl("util/common/generic/"+"antibody","employees");
+    var url = getCommonBaseUrl("util/common/generic/"+"residencytracks","employees");
     //console.log("getAntobodies url="+url);
 
     if( typeof cycle === 'undefined' ) {
@@ -134,51 +134,41 @@ function getAntobodies(holder,force) {
 
     //console.log("run url="+url);
 
-    if( _antibodies.length == 0 ) {
+    if( _residencytracks.length == 0 ) {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: asyncflag
         }).done(function(data) {
-            _antibodies = data;
+            _residencytracks = data;
         });
     }
 }
 
 function ajaxFinishedCondition() {
 
-    //console.log('_accessiontype.length='+_accessiontype.length);
-    return true; //testing
+    console.log('_residencytracks.length='+_residencytracks.length);
+    //return true; //testing
 
-    if( !(_accessiontype.length > 0) ) {
-        //console.log('NULL _accessiontype.length='+_accessiontype.length);
-    }
+    // if( !(_residencytracks.length > 0) ) {
+    //     //console.log('NULL _residencytracks.length='+_residencytracks.length);
+    // }
 
-    if( _accessiontype.length > 0 ) {
+    if( _residencytracks.length > 0 ) {
 
         if(
-            _accessiontypes_simple.length == _accessiontype.length
-            && _antibodies_simple.length == _antibodies.length
+            _residencytracks_simple.length == _residencytracks.length
         ) {
             return true;
         }
 
-        for(var i = 0; i < _accessiontype.length; i++) {
-            var acctypeName = _accessiontype[i].text;
-            if(  _accessiontype[i].abbreviation ) {
-                acctypeName = _accessiontype[i].abbreviation;
+        for(var i = 0; i < _residencytracks.length; i++) {
+            var residencytrackName = _residencytracks[i].text;
+            if(  _residencytracks[i].abbreviation ) {
+                residencytrackName = _residencytracks[i].abbreviation;
             }
-            //console.log('acctypeName='+acctypeName);
-            _accessiontypes_simple.push(acctypeName);
-        }
-
-        for(var i = 0; i < _antibodies.length; i++) {
-            var antibodyName = _antibodies[i].text;
-            if(  _antibodies[i].abbreviation ) {
-                antibodyName = _antibodies[i].abbreviation;
-            }
-            //console.log('antibodyName='+antibodyName);
-            _antibodies_simple.push(antibodyName);
+            console.log('residencytrackName='+residencytrackName);
+            _residencytracks_simple.push(residencytrackName);
         }
 
         return true;
@@ -189,34 +179,36 @@ function ajaxFinishedCondition() {
 
 function resappMakeColumnData() {
 
-    // var defaultAccessionTypeIndex = 0;
-    // var defaultAccessionType = $('#default-accession-type').val();
-    // //console.log("defaultAccessionType="+defaultAccessionType);
-    // if( defaultAccessionType ) {
+    var defaultResidencytrackIndex = 1;
+    //var defaultResidencytrack = $('#default-accession-type').val();
+    //console.log("Residencytrack="+Residencytrack);
+    // if( Residencytrack ) {
     //     for(var i = 0; i < _accessiontypes_simple.length; i++) {
-    //         //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
-    //         if( _accessiontypes_simple[i] == defaultAccessionType ) {
-    //             defaultAccessionTypeIndex = i;
+    //         //console.log(_accessiontypes_simple[i]+"=?"+Residencytrack);
+    //         if( _accessiontypes_simple[i] == Residencytrack ) {
+    //             ResidencytrackIndex = i;
     //         }
     //     }
     // }
 
     _columnData_scanorder = [
-        // {
-        //     header:'Source',
-        //     default: defaultAccessionTypeIndex,
-        //     columns: {
-        //         type: 'autocomplete',
-        //         source: _accessiontypes_simple,
-        //         strict: true,
-        //         filter: false,
-        //     }
-        // },
 
         { header:'AAMC ID', columns:{} },
         // { header:'ERAS Application ID', columns:{} },
         { header:'Application Receipt Date', columns:{} },
-        { header:'Residency Track', columns:{} },
+
+        //{ header:'Residency Track', columns:{} },
+        {
+            header:'Residency Track',
+            //default: defaultResidencytrackIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _residencytracks_simple,
+                strict: true,
+                filter: false,
+            }
+        },
+
         { header:'Application Season Start Date', columns:{} },
         { header:'Application Season End Date', columns:{} },
         { header:'Expected Residency Start Date', columns:{} },
@@ -356,7 +348,7 @@ function handsonTableInit(handsometableDataArr) {
         manualColumnMove: true,
         manualColumnResize: true,
         autoWrapRow: true,
-        autoRowSize: {syncLimit: 300},
+        //autoRowSize: {syncLimit: 300},
         // rowHeight: function(row) {
         //     return _rowHeight;
         // },
@@ -366,6 +358,7 @@ function handsonTableInit(handsometableDataArr) {
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
         stretchH: 'all',
+        //stretchV: 'all',
         //overflow: 'auto',
         cells: function(r,c,prop) {
             var cellProperties = {};
@@ -442,7 +435,7 @@ function handsonTableInit(handsometableDataArr) {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
-    //resizeTableHeight();
+    resizeTableHeight();
 
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
@@ -468,14 +461,17 @@ function handsonTableInit(handsometableDataArr) {
 function resizeTableHeight() {
     //console.log("Setting height");
     var countRow = _sotable.countRows();
+    if( countRow < 3 ) {
+        countRow = 5;
+    }
     console.log("_tdSize="+_tdSize+", countRow="+countRow);
     //var newHeight = countRow*(_tdSize + _tdPadding*4);
     var newHeight = countRow*(_tdSize);
     _sotable.updateSettings({height: newHeight});
 }
 function resizeTableHeight_new() {
-    _sotable.recalculateAllRowsHeight();
-    return true;
+    //_sotable.recalculateAllRowsHeight();
+    //return true;
 
     //console.log("Setting height");
     var countRow = _sotable.countRows();
@@ -484,8 +480,8 @@ function resizeTableHeight_new() {
     //var heightRow = _sotable.getColumnHeaderHeight();
     //var heightRow = _sotable.getRowHeight(indexRow);
     console.log("heightRow="+heightRow+", countRow="+countRow);
-    var newHeight = countRow*(_tdSize + _tdPadding*4);
-    //var newHeight = countRow*heightRow;
+    //var newHeight = countRow*(_tdSize + _tdPadding*4);
+    var newHeight = countRow*heightRow;
     _sotable.updateSettings({height: newHeight});
 }
 

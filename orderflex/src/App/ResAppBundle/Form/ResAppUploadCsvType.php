@@ -33,16 +33,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ResAppUploadCsvType extends AbstractType
 {
 
-    private $params;
-
-    public function formConstructor( $params=null )
-    {
-        $this->params = $params;
-    }
+//    private $params;
+//
+//    public function formConstructor( $params=null )
+//    {
+//        $this->params = $params;
+//    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->formConstructor($options['form_custom_value']);
+        //$this->formConstructor($options['form_custom_value']);
 
 
         $builder->add('file', FileType::class, array(
@@ -75,7 +75,7 @@ class ResAppUploadCsvType extends AbstractType
         $resolver->setDefaults(array(
             //'data_class' => 'App\ResAppBundle\Entity\InputDataFile',
             'csrf_protection' => true,
-            'form_custom_value' => null
+            //'form_custom_value' => null
         ));
     }
 

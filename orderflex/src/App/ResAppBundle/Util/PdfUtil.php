@@ -80,7 +80,7 @@ class PdfUtil {
 
     public function getCsvApplicationsData( $csvFileName ) {
 
-        echo "csvFileName=$csvFileName <br>";
+        //echo "csvFileName=$csvFileName <br>";
 
         if (file_exists($csvFileName)) {
             //echo "The file $inputFileName exists";
