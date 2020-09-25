@@ -573,6 +573,10 @@ function setResappNavBar() {
     if( full.indexOf("/residency-applications/new") !== -1 ) {
         id = 'resappnew';
     }
+    if( full.indexOf("/residency-applications/upload") !== -1 ) {
+        id = 'resappnew';
+    }
+
     if( full.indexOf("/residency-applications/show") !== -1 ) {
         id = null;
     }

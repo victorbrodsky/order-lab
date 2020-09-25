@@ -35,6 +35,8 @@ var _rowToProcessArr = [];
 var _residencytracks = [];
 var _residencytracks_simple = [];
 
+var _actions_simple = [];
+
 var _tdSize = 64;
 var _tdSize = 26;
 var _tdPadding = 5;
@@ -147,29 +149,39 @@ function getResidencytracks() {
 
 function ajaxFinishedCondition() {
 
-    console.log('_residencytracks.length='+_residencytracks.length);
+    //console.log('_residencytracks.length='+_residencytracks.length+" =? _residencytracks_simple.length="+_residencytracks_simple.length);
     //return true; //testing
 
     // if( !(_residencytracks.length > 0) ) {
     //     //console.log('NULL _residencytracks.length='+_residencytracks.length);
     // }
 
+    if( _actions_simple.length == 0 ) {
+        _actions_simple.push("Add");
+        //_actions_simple.push("Do not add");
+        _actions_simple.push("");
+    }
+
+
     if( _residencytracks.length > 0 ) {
 
         if(
-            _residencytracks_simple.length == _residencytracks.length
+            _residencytracks_simple.length >= _residencytracks.length
         ) {
             return true;
         }
 
+        _residencytracks_simple.push(""); //add default empty residency track
         for(var i = 0; i < _residencytracks.length; i++) {
             var residencytrackName = _residencytracks[i].text;
             if(  _residencytracks[i].abbreviation ) {
                 residencytrackName = _residencytracks[i].abbreviation;
             }
-            console.log('residencytrackName='+residencytrackName);
+            //console.log('residencytrackName='+residencytrackName);
             _residencytracks_simple.push(residencytrackName);
         }
+        //console.log("_residencytracks_simple:");
+        //console.log(_residencytracks_simple);
 
         return true;
     } else {
@@ -179,7 +191,9 @@ function ajaxFinishedCondition() {
 
 function resappMakeColumnData() {
 
-    var defaultResidencytrackIndex = 1;
+    var defaultActionIndex = 0;
+
+    var defaultResidencytrackIndex = 0;
     //var defaultResidencytrack = $('#default-accession-type').val();
     //console.log("Residencytrack="+Residencytrack);
     // if( Residencytrack ) {
@@ -193,6 +207,17 @@ function resappMakeColumnData() {
 
     _columnData_scanorder = [
 
+        {
+            header:'Action',
+            default: defaultActionIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _actions_simple,
+                strict: true,
+                filter: false,
+            }
+        },
+
         { header:'AAMC ID', columns:{} },
         // { header:'ERAS Application ID', columns:{} },
         { header:'Application Receipt Date', columns:{} },
@@ -200,7 +225,7 @@ function resappMakeColumnData() {
         //{ header:'Residency Track', columns:{} },
         {
             header:'Residency Track',
-            //default: defaultResidencytrackIndex,
+            default: defaultResidencytrackIndex,
             columns: {
                 type: 'autocomplete',
                 source: _residencytracks_simple,
@@ -463,6 +488,9 @@ function resizeTableHeight() {
     var countRow = _sotable.countRows();
     if( countRow < 3 ) {
         countRow = 5;
+    }
+    if( countRow > 20 ) {
+        countRow = 20;
     }
     console.log("_tdSize="+_tdSize+", countRow="+countRow);
     //var newHeight = countRow*(_tdSize + _tdPadding*4);

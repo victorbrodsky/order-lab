@@ -65,7 +65,8 @@ class ResAppUploadCsvType extends AbstractType
 
         $builder->add('upload', SubmitType::class, array(
             'label' => "Upload and Extract Data",
-            'attr' => array('class' => 'btn btn-default')
+            'disabled' => true,
+            'attr' => array('class' => 'btn btn-default', "onClick=disableUploadBtn();")
         ));
         
     }

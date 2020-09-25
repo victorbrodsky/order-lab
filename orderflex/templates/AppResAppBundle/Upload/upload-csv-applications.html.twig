@@ -36,6 +36,7 @@
              {#data-userid = "{{ app.user.id }}"#}
         {#></div>#}
 
+
         <div class="row">
             <div class="col-xs-3"></div>
             <div class="col-xs-6" align="center">
@@ -43,8 +44,7 @@
             </div>
             <div class="col-xs-3"></div>
         </div>
-
-        <br><br><br>
+        <br>
 
         {#button: Upload and Extract Data#}
         {% if form.upload is defined %}
@@ -150,8 +150,16 @@
         var _handsometableDataArr = [];
 
         $(document).ready(function() {
+
+            //document.getElementById("oleg_resappbundle_csv_upload").disabled = true;
+
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
             //console.log(_handsometableDataArr);
+
+            var uploadLaddaBtn = null;
+            if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
+                uploadLaddaBtn = startLaddaBtn();
+            }
 
             getResidencytracks();
 
@@ -164,8 +172,35 @@
                 resappMakeColumnData();
 
                 handsonTableInit(_handsometableDataArr);
+
+                stopLaddaBtn(uploadLaddaBtn);
             });
         });
+
+        function startLaddaBtn() {
+            var uploadBtn = document.getElementById("oleg_resappbundle_csv_upload");
+            console.log("startLaddaBtn:");
+            console.log(uploadBtn);
+            var uploadLaddaBtn = Ladda.create( uploadBtn );
+            uploadLaddaBtn.start();
+            return uploadLaddaBtn;
+        }
+        function stopLaddaBtn(uploadLaddaBtn) {
+            if( uploadLaddaBtn ) {
+                //var uploadBtn = document.getElementById("oleg_resappbundle_csv_upload");
+                console.log("stopLaddaBtn:");
+                //console.log(uploadBtn);
+                //var uploadLaddaBtn = Ladda.create( uploadBtn );
+                uploadLaddaBtn.stop();
+            }
+            document.getElementById("oleg_resappbundle_csv_upload").disabled = false;
+        }
+        function disableUploadBtn() {
+            var file = document.getElementById("oleg_resappbundle_csv_file");
+            if( file.files.length > 0 ) {
+                document.getElementById("oleg_resappbundle_csv_upload").disabled = true;
+            }
+        }
 
     </script>
 {% endblock %}

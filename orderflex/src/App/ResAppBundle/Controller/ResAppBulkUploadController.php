@@ -41,7 +41,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     /**
      * Upload Multiple Applications via CSV
      *
-     * @Route("/upload-csv/", name="resapp_upload_csv_multiple_applications", methods={"GET","POST"})
+     * @Route("/upload/", name="resapp_upload_multiple_applications", methods={"GET","POST"})
      * @Template("AppResAppBundle/Upload/upload-csv-applications.html.twig")
      */
     public function uploadCsvMultipleApplicationsAction(Request $request)
@@ -63,6 +63,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //$inputDataFile = new InputDataFile();
 
+        $showUploadButton = true;
         //get Table $jsonData
         $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
 
@@ -83,6 +84,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() ) {
+
+            $showUploadButton = false;
 
             //exit("form submitted");
 
@@ -114,7 +117,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => $cycle,
             //'inputDataFile' => $inputDataFile,
-            'handsometableData' => $handsomtableJsonData
+            'handsometableData' => $handsomtableJsonData,
+            'showUploadButton' => $showUploadButton
         );
     }
 

@@ -141,13 +141,50 @@ class PdfUtil {
                 //$cell->getValue();
 
                 $rowArr = array();
-                foreach( $this->getHeaderMap() as $headerTitle => $handsomTitle ) {
+                foreach( $this->getHeaderMap() as $handsomTitle => $headerTitle ) {
+                    //echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
+
+                    if( $handsomTitle == "Application Receipt Date" ) {
+                        //pre-populate with current date
+                        $rowArr[$handsomTitle]['id'] = 1;
+                        $rowArr[$handsomTitle]['value'] = date("m/d/Y");
+                        continue;
+                    }
+
                     if( isset($header[$headerTitle]) ) {
                         $column = $header[$headerTitle];
 
                         if( isset($cells[$column]) ) {
                             $cell = $cells[$column];
                             $cellValue = $cell->getValue();
+
+                            if( $cellValue ) {
+                                if ($handsomTitle == "Application Season Start Date") {
+                                    //get year 9/29/2018 m/d/Y
+                                    $year = $this->getYear($cellValue);
+                                    $cellValue = "07/01/".$year;
+                                    //$cellValue = $year."-12-31";
+                                }
+                                if ($handsomTitle == "Application Season End Date") {
+                                    //get year 9/29/2018 m/d/Y
+                                    $year = $this->getYear($cellValue);
+                                    $year = $year + 1;
+                                    $cellValue = "06/30/".$year;
+                                }
+                                if ($handsomTitle == "Expected Residency Start Date") {
+                                    //get year 9/29/2018 m/d/Y
+                                    $year = $this->getYear($cellValue);
+                                    //$year->modify('+1 year');
+                                    $year = $year + 1;
+                                    $cellValue = "07/01/".$year;
+                                }
+                                if ($handsomTitle == "Expected Graduation Date") {
+                                    //get year 9/29/2018 m/d/Y
+                                    $year = $this->getYear($cellValue);
+                                    $year = $year + 2;
+                                    $cellValue = "06/30/".$year;
+                                }
+                            }
 
                             $rowArr[$handsomTitle]['id'] = 1;
                             $rowArr[$handsomTitle]['value'] = $cellValue;
@@ -183,40 +220,96 @@ class PdfUtil {
     }
     public function getHeaderMap() {
 
-        //CSV header title => Handsomtable header title
+        if(0) {
+            //CSV header title => Handsomtable header title
+            $map = array(
+                "AAMC ID" => "AAMC ID",
+                //"Applicant ID" => "ERAS Application ID"
+                //"Residency Track" => "Residency Track", //?
+
+                "Applicant Applied Date" => "Application Season Start Date",
+                "Applicant Applied Date" => "Application Season End Date",
+                "Applicant Applied Date" => "Expected Residency Start Date",
+                "Applicant Applied Date" => "Expected Graduation Date",
+
+                "First Name" => "First Name",
+                "Middle Name" => "Middle Name",
+                "Last Name" => "Last Name",
+
+                "E-mail" => "Preferred Email",
+
+                "Most Recent Medical School" => "Medical School Name",
+                "Medical School Attendance Dates" => "Medical School Graduation Date", //8/2014 - 5/2019
+
+                "USMLE Step 1 Score" => "USMLE Step 1 Score",
+                "USMLE Step 2 CK Score" => "USMLE Step 2 CK Score",
+                "USMLE Step 3 Score" => "USMLE Step 3 Score",
+
+                "Citizenship" => "Country of Citizenship",
+                "Current Visa Status" => "Visa Status",
+
+                "Self Identify" => "Is the applicant a member of any of the following groups?",
+
+                //"" => "Number of first author publications",
+                //"" => "Number of all publications",
+
+                //"" => "AOA",
+                "Participating as a Couple in NRMP" => "Couple’s Match",
+                //"" => "Post-Sophomore Fellowship",
+
+//            "" => "Previous Residency Start Date",
+//            "" => "Previous Residency Graduation/Departure Date",
+//            "" => "Previous Residency Institution",
+//            "" => "Previous Residency City",
+//            "" => "Previous Residency State",
+//            "" => "Previous Residency Country",
+//            "" => "Previous Residency Track",
+//            "" => "ERAS Application",
+
+//            "" => "",
+//            "" => "",
+//            "" => "",
+//            "" => "",
+//            "" => "",
+            );
+        }
+
+        //Handsomtable header title => CSV header title
         $map = array(
             "AAMC ID" => "AAMC ID",
             //"Applicant ID" => "ERAS Application ID"
             //"Residency Track" => "Residency Track", //?
 
-            "Applicant Applied Date" => "Application Season Start Date",
-            "Applicant Applied Date" => "Application Season End Date",
-            "Applicant Applied Date" => "Expected Residency Start Date",
-            "Applicant Applied Date" => "Expected Graduation Date",
+            "Application Receipt Date" => "Application Receipt Date",
+            "Application Season Start Date" => "Applicant Applied Date",
+            "Application Season End Date" => "Applicant Applied Date",
+            "Expected Residency Start Date" => "Applicant Applied Date",
+            "Expected Graduation Date" => "Applicant Applied Date",
 
             "First Name" => "First Name",
             "Middle Name" => "Middle Name",
             "Last Name" => "Last Name",
 
-            "E-mail" => "Preferred Email",
+            "Preferred Email" => "E-mail",
 
-            "Most Recent Medical School" => "Medical School Name",
-            "Medical School Attendance Dates" => "Medical School Graduation Date", //8/2014 - 5/2019
+            "Medical School Name" => "Most Recent Medical School",
+            "Medical School Graduation Date" => "Medical School Attendance Dates", //8/2014 - 5/2019
+            "Degree" => "Medical Degree",
 
             "USMLE Step 1 Score" => "USMLE Step 1 Score",
             "USMLE Step 2 CK Score" => "USMLE Step 2 CK Score",
             "USMLE Step 3 Score" => "USMLE Step 3 Score",
 
-            "Citizenship" => "Country of Citizenship",
-            "Current Visa Status" => "Visa Status",
+            "Country of Citizenship" => "Citizenship",
+            "Visa Status" => "Current Visa Status",
 
-            "Self Identify" => "Is the applicant a member of any of the following groups?",
+            "Is the applicant a member of any of the following groups?" => "Self Identify",
 
             //"" => "Number of first author publications",
             //"" => "Number of all publications",
-            
+
             //"" => "AOA",
-            "Participating as a Couple in NRMP" => "Couple’s Match",
+            "Couple’s Match" => "Participating as a Couple in NRMP",
             //"" => "Post-Sophomore Fellowship",
 
 //            "" => "Previous Residency Start Date",
@@ -238,6 +331,16 @@ class PdfUtil {
         return $map;
     }
 
+    //get year 9/29/2018 m/d/Y
+    public function getYear( $cellValue ) {
+        //list($month, $day, $year) = explode("/", $cellValue);
+        //echo "$cellValue: year=$year <br>";
+        //return $year;
+        $datetime = strtotime($cellValue);
+        $year = date("Y", $datetime);
+        //echo "$cellValue: year=$year <br>";
+        return $year;
+    }
 
     public function getHandsomtableDataArray($parsedDataArr) {
         $tableDataArr = array();
