@@ -37,8 +37,9 @@ var _residencytracks_simple = [];
 
 var _actions_simple = [];
 
-var _tdSize = 64;
-var _tdSize = 26;
+//var _tdSize = 64;
+//var _tdSize = 26;
+var _tdSize = 36;
 var _tdPadding = 5;
 var _rowHeight =  _tdSize + 2*_tdPadding;
 
@@ -450,6 +451,33 @@ function handsonTableInit(handsometableDataArr) {
 
                 
             }
+        },
+        afterCreateRow: function (index, amount) {
+
+            //testing
+            //return; //TODO: testing
+            //console.log('testing after CreateRow: return');
+
+            if( !_sotable || typeof _sotable === 'undefined' ) {
+                return;
+            }
+
+            //pre-populate cells
+            for( var col=0; col<_columnData_scanorder.length; col++ ) {  //foreach column
+                var value = null;
+                if( 'default' in _columnData_scanorder[col] ) {
+                    var indexSource = _columnData_scanorder[col]['default'];
+                    value = _columnData_scanorder[col]['columns']['source'][indexSource];
+                }
+
+                //var row = this.countRows()-2;
+                //console.log('row='+row);
+                //console.log('amount='+amount+', index='+index+',col='+col+', value='+value);
+                this.setDataAtCell(index-1,col,value);
+
+            }//foreach column
+
+            resizeTableHeight();
         }
     });
 
@@ -486,13 +514,13 @@ function handsonTableInit(handsometableDataArr) {
 function resizeTableHeight() {
     //console.log("Setting height");
     var countRow = _sotable.countRows();
-    if( countRow < 3 ) {
+    if( countRow < 5 ) {
         countRow = 5;
     }
     if( countRow > 20 ) {
         countRow = 20;
     }
-    console.log("_tdSize="+_tdSize+", countRow="+countRow);
+    //console.log("_tdSize="+_tdSize+", countRow="+countRow);
     //var newHeight = countRow*(_tdSize + _tdPadding*4);
     var newHeight = countRow*(_tdSize);
     _sotable.updateSettings({height: newHeight});

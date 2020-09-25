@@ -21,7 +21,7 @@
 {% import "AppResAppBundle/Upload/upload-applications.html.twig" as reasappMacros %}
 
 {% block title %}
-    Upload Multiple Applications via CSV
+    Upload Multiple Applications
 {% endblock %}
 
 
@@ -29,12 +29,12 @@
 
     {{ form_start(form) }}
 
-        {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
-        {#<div id="form-prototype-data"#}
-             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-             {#data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"#}
-             {#data-userid = "{{ app.user.id }}"#}
-        {#></div>#}
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
 
 
         <div class="row">
@@ -45,6 +45,17 @@
             <div class="col-xs-3"></div>
         </div>
         <br>
+
+        {#DropZone: Please drag and drop ERAS application files here#}
+        <div class="well form-element-holder user-erasfiles">
+            <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                    {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+                </div>
+            </div>
+        </div>
 
         {#button: Upload and Extract Data#}
         {% if form.upload is defined %}
@@ -57,76 +68,6 @@
     {{ form_end(form) }}
 
     {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
-
-    {#hidden accordion titled “Uploaded Applications” with the Handsontable with 1 row as well as “Add Listed Apllications” button. The table should have the following columns:#}
-
-    {#Application Receipt Date (pre-populate with current date)#}
-
-    {#Residency Track#}
-
-    {#Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
-
-    {#Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
-
-    {#Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
-
-    {#Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
-
-    {#First Name#}
-
-    {#Last Name#}
-
-    {#Middle Name#}
-
-    {#Preferred Email#}
-
-    {#Medical School Graduation Date#}
-
-    {#Medical School Name#}
-
-    {#Degree (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#USMLE Step 1 Score#}
-
-    {#USMLE Step 2 CK Score#}
-
-    {#USMLE Step 3 Score#}
-
-    {#Country of Citizenship (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Visa Status (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Is the applicant a member of any of the following groups? (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Number of 1st author publications#}
-
-    {#Number of all publications#}
-
-    {#AOA (show the same checkmark in the Handsontable cell as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Couple’s Match:#}
-
-    {#Post-Sophomore Fellowship#}
-
-    {#Previous Residency Start Date#}
-
-    {#Previous Residency Graduation/Departure Date#}
-
-    {#Previous Residency Institution:#}
-
-    {#Previous Residency City#}
-
-    {#Previous Residency State (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Previous Residency Country (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#Previous Residency Track (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
-
-    {#ERAS Application ID#}
-
-    {#ERAS Application (show the cells in this column as blank - this is where you will show the file name of the PDF once it uploads)#}
-
-    {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
 
 {% endblock %}
 
@@ -151,7 +92,7 @@
 
         $(document).ready(function() {
 
-            //document.getElementById("oleg_resappbundle_csv_upload").disabled = true;
+            //document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
 
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
             //console.log(_handsometableDataArr);
@@ -178,7 +119,7 @@
         });
 
         function startLaddaBtn() {
-            var uploadBtn = document.getElementById("oleg_resappbundle_csv_upload");
+            var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
             console.log("startLaddaBtn:");
             console.log(uploadBtn);
             var uploadLaddaBtn = Ladda.create( uploadBtn );
@@ -187,18 +128,18 @@
         }
         function stopLaddaBtn(uploadLaddaBtn) {
             if( uploadLaddaBtn ) {
-                //var uploadBtn = document.getElementById("oleg_resappbundle_csv_upload");
+                //var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
                 console.log("stopLaddaBtn:");
                 //console.log(uploadBtn);
                 //var uploadLaddaBtn = Ladda.create( uploadBtn );
                 uploadLaddaBtn.stop();
             }
-            document.getElementById("oleg_resappbundle_csv_upload").disabled = false;
+            document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = false;
         }
         function disableUploadBtn() {
-            var file = document.getElementById("oleg_resappbundle_csv_file");
+            var file = document.getElementById("oleg_resappbundle_bulkupload_file");
             if( file.files.length > 0 ) {
-                document.getElementById("oleg_resappbundle_csv_upload").disabled = true;
+                document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
             }
         }
 

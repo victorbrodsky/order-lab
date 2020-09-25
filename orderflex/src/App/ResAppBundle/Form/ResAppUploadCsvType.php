@@ -82,6 +82,6 @@ class ResAppUploadCsvType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'oleg_resappbundle_csv';
+        return 'oleg_resappbundle_bulkupload';
     }
 }

@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,6 +44,11 @@ class ResAppUploadType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $builder->add('file', FileType::class, array(
+            'label' => 'CSV file:',
+            'mapped' => false,
+            //'attr' => array('class'=>'form-control')
+        ));
 
         $builder->add('erasFiles', CollectionType::class, array(
             //'type' => new DocumentType($this->params),
@@ -58,7 +64,8 @@ class ResAppUploadType extends AbstractType
 
         $builder->add('upload', SubmitType::class, array(
             'label' => "Upload and Extract Data",
-            'attr' => array('class' => 'btn btn-default')
+            'disabled' => true,
+            'attr' => array('class' => 'btn btn-default', "onClick=disableUploadBtn();")
         ));
         
     }
@@ -74,6 +81,6 @@ class ResAppUploadType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'oleg_resappbundle_eras';
+        return 'oleg_resappbundle_bulkupload';
     }
 }

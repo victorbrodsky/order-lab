@@ -46,7 +46,7 @@ class ResAppBulkUploadController extends OrderAbstractController
      */
     public function uploadCsvMultipleApplicationsAction(Request $request)
     {
-//exit('test exit uploadCsvMultipleApplicationsAction');
+        //exit('test exit uploadCsvMultipleApplicationsAction');
         if (
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
@@ -61,9 +61,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $cycle = 'new';
 
-        //$inputDataFile = new InputDataFile();
+        $inputDataFile = new InputDataFile();
 
-        $showUploadButton = true;
         //get Table $jsonData
         $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
 
@@ -79,13 +78,21 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            )
 //        );
 
-        $form = $this->createForm(ResAppUploadCsvType::class,null);
+        //$form = $this->createForm(ResAppUploadCsvType::class,null);
+        $params = array(
+            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
+            //'defaultStartDates' => $defaultStartDates
+        );
+        $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
+            array(
+                'method' => 'GET',
+                'form_custom_value'=>$params
+            )
+        );
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() ) {
-
-            $showUploadButton = false;
 
             //exit("form submitted");
 
@@ -116,115 +123,10 @@ class ResAppBulkUploadController extends OrderAbstractController
         return array(
             'form' => $form->createView(),
             'cycle' => $cycle,
-            //'inputDataFile' => $inputDataFile,
-            'handsometableData' => $handsomtableJsonData,
-            'showUploadButton' => $showUploadButton
+            'inputDataFile' => $inputDataFile,
+            'handsometableData' => $handsomtableJsonData
         );
     }
-
-
-    /**
-     * Upload Multiple Applications
-     *
-     * @Route("/pdf-parser-test/", name="resapp_updf_parser_test", methods={"GET"})
-     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
-     */
-    public function pdfParserTestAction(Request $request)
-    {
-        //exit("not allowed. one time run method.");
-
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
-        }
-
-        //$resappRepGen = $this->container->get('resapp_reportgenerator');
-        $resappPdfUtil = $this->container->get('resapp_pdfutil');
-        //$em = $this->getDoctrine()->getManager();
-
-//        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
-//        $dql =  $repository->createQueryBuilder("resapp");
-//        $dql->select('resapp');
-//        $dql->leftJoin('resapp.coverLetters','coverLetters');
-//        $dql->where("coverLetters IS NOT NULL");
-//        $dql->orderBy("resapp.id","DESC");
-//        $query = $em->createQuery($dql);
-//        $query->setMaxResults(10);
-//        $resapps = $query->getResult();
-//        echo "resapps count=".count($resapps)."<br>";
-
-        $resapps = $resappPdfUtil->getTestApplications();
-
-        foreach($resapps as $resapp) {
-            //echo "get ERAS from ID=".$resapp->getId()."<br>";
-            $erasFiles = $resapp->getCoverLetters();
-            $erasFile = null;
-            $processedGsFile = null;
-
-            if( count($erasFiles) > 0 ) {
-                $erasFile = $erasFiles[0];
-            } else {
-                continue;
-            }
-
-            if( !$erasFile ) {
-                continue;
-            }
-
-            if( strpos($erasFile, '.pdf') !== false ) {
-                //PDF
-            } else {
-                echo "Skip: File is not PDF <br>";
-                continue;
-            }
-
-            echo "get ERAS from ID=".$resapp->getId()."<br>";
-
-//            $erasFilePath = $erasFile->getAttachmentEmailPath();
-//            echo "erasFilePath=$erasFilePath<br>";
-//            if( $resappPdfUtil->isPdfCompressed($erasFilePath) ) {
-//                echo "Compressed <br>";
-//
-//                if(1) {
-//
-//                    $processedFiles = $resappRepGen->processFilesGostscript(array($erasFilePath));
-//                    if (count($processedFiles) > 0) {
-//                        //$dir = dirname($erasFilePath);
-//                        $processedGsFile = $processedFiles[0];
-//                        $processedGsFile = str_replace('"', '', $processedGsFile);
-//                        //$path = $dir.DIRECTORY_SEPARATOR.$path;
-//                        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
-//                        echo "processedGsFile=" . $processedGsFile . "<br>";
-//
-//                    } else {
-//                        return null;
-//                    }
-//                }
-//
-//            } else {
-//                echo "Not Compressed (version < 1.4) <br>";
-//            }
-
-            //get data from ERAS file
-
-//            if( $processedGsFile ) {
-//                $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
-//                dump($parsedDataArr);
-//                exit("GS processed");
-//            } else {
-//                $parsedDataArr = $this->parsePdfSpatie($erasFile);
-//                dump($parsedDataArr);
-//            }
-
-            $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
-
-            dump($parsedDataArr);
-            //exit("EOF $erasFile");
-
-        }
-
-        exit('EOF pdfParserTestAction');
-    }
-
 
     /**
      * Upload Multiple Applications via PDF
@@ -341,6 +243,108 @@ class ResAppBulkUploadController extends OrderAbstractController
             'inputDataFile' => $inputDataFile,
             'handsometableData' => $handsomtableJsonData
         );
+    }
+
+    /**
+     * Upload Multiple Applications
+     *
+     * @Route("/pdf-parser-test/", name="resapp_updf_parser_test", methods={"GET"})
+     * @Template("AppResAppBundle/Upload/upload-applications.html.twig")
+     */
+    public function pdfParserTestAction(Request $request)
+    {
+        //exit("not allowed. one time run method.");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
+        }
+
+        //$resappRepGen = $this->container->get('resapp_reportgenerator');
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+        //$em = $this->getDoctrine()->getManager();
+
+//        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
+//        $dql =  $repository->createQueryBuilder("resapp");
+//        $dql->select('resapp');
+//        $dql->leftJoin('resapp.coverLetters','coverLetters');
+//        $dql->where("coverLetters IS NOT NULL");
+//        $dql->orderBy("resapp.id","DESC");
+//        $query = $em->createQuery($dql);
+//        $query->setMaxResults(10);
+//        $resapps = $query->getResult();
+//        echo "resapps count=".count($resapps)."<br>";
+
+        $resapps = $resappPdfUtil->getTestApplications();
+
+        foreach($resapps as $resapp) {
+            //echo "get ERAS from ID=".$resapp->getId()."<br>";
+            $erasFiles = $resapp->getCoverLetters();
+            $erasFile = null;
+            $processedGsFile = null;
+
+            if( count($erasFiles) > 0 ) {
+                $erasFile = $erasFiles[0];
+            } else {
+                continue;
+            }
+
+            if( !$erasFile ) {
+                continue;
+            }
+
+            if( strpos($erasFile, '.pdf') !== false ) {
+                //PDF
+            } else {
+                echo "Skip: File is not PDF <br>";
+                continue;
+            }
+
+            echo "get ERAS from ID=".$resapp->getId()."<br>";
+
+//            $erasFilePath = $erasFile->getAttachmentEmailPath();
+//            echo "erasFilePath=$erasFilePath<br>";
+//            if( $resappPdfUtil->isPdfCompressed($erasFilePath) ) {
+//                echo "Compressed <br>";
+//
+//                if(1) {
+//
+//                    $processedFiles = $resappRepGen->processFilesGostscript(array($erasFilePath));
+//                    if (count($processedFiles) > 0) {
+//                        //$dir = dirname($erasFilePath);
+//                        $processedGsFile = $processedFiles[0];
+//                        $processedGsFile = str_replace('"', '', $processedGsFile);
+//                        //$path = $dir.DIRECTORY_SEPARATOR.$path;
+//                        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+//                        echo "processedGsFile=" . $processedGsFile . "<br>";
+//
+//                    } else {
+//                        return null;
+//                    }
+//                }
+//
+//            } else {
+//                echo "Not Compressed (version < 1.4) <br>";
+//            }
+
+            //get data from ERAS file
+
+//            if( $processedGsFile ) {
+//                $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
+//                dump($parsedDataArr);
+//                exit("GS processed");
+//            } else {
+//                $parsedDataArr = $this->parsePdfSpatie($erasFile);
+//                dump($parsedDataArr);
+//            }
+
+            $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
+
+            dump($parsedDataArr);
+            //exit("EOF $erasFile");
+
+        }
+
+        exit('EOF pdfParserTestAction');
     }
 
     
