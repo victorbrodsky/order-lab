@@ -311,8 +311,8 @@ function handsonTableInit(handsometableDataArr) {
             //if( typeof handsometableDataArr != 'undefined' ) {
             if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                //console.log('headerTitle='+headerTitle);
-                //console.log( handsometableDataArr[i-1] );
+                console.log('headerTitle='+headerTitle);
+                console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<handsometableDataArr.length) && headerTitle in handsometableDataArr[i-1]
                 ) {
@@ -455,7 +455,7 @@ function handsonTableInit(handsometableDataArr) {
         afterCreateRow: function (index, amount) {
 
             //testing
-            //return; //TODO: testing
+            return; //TODO: testing
             //console.log('testing after CreateRow: return');
 
             if( !_sotable || typeof _sotable === 'undefined' ) {
