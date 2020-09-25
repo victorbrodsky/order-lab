@@ -315,7 +315,8 @@ function handsonTableInit(handsometableDataArr) {
                 console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<handsometableDataArr.length) &&
-                    handsometableDataArr[i-1].constructor === Array &&
+                    //handsometableDataArr[i-1].constructor === Array &&
+                    //handsometableDataArr[i-1].hasOwnProperty(headerTitle) &&
                     headerTitle in handsometableDataArr[i-1]
                 ) {
                     //console.log('handsometableDataArr[i-1]:(');
