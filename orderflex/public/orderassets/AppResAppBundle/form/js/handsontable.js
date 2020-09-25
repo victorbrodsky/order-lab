@@ -314,7 +314,9 @@ function handsonTableInit(handsometableDataArr) {
                 console.log('headerTitle='+headerTitle);
                 console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
-                    headerTitle != '' && (i-1<handsometableDataArr.length) && headerTitle in handsometableDataArr[i-1]
+                    headerTitle != '' && (i-1<handsometableDataArr.length) &&
+                    handsometableDataArr[i-1].length > 0 &&
+                    headerTitle in handsometableDataArr[i-1]
                 ) {
                     //console.log('handsometableDataArr[i-1]:(');
                     //console.log(handsometableDataArr[i-1]);
@@ -455,7 +457,7 @@ function handsonTableInit(handsometableDataArr) {
         afterCreateRow: function (index, amount) {
 
             //testing
-            return; //TODO: testing
+            //return; //TODO: testing
             //console.log('testing after CreateRow: return');
 
             if( !_sotable || typeof _sotable === 'undefined' ) {
