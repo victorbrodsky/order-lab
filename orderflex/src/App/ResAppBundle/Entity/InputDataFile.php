@@ -79,7 +79,7 @@ class InputDataFile {
         $this->setStatus("active");
         //$this->setDocument($document);
 
-        $this->coverLetters = new ArrayCollection();
+        $this->erasFiles = new ArrayCollection();
     }
 
     /**
@@ -163,6 +163,13 @@ class InputDataFile {
     public function getErasFiles()
     {
         return $this->erasFiles;
+    }
+    public function cleanErasFiles()
+    {
+        foreach( $this->erasFiles as $file ) {
+            $this->erasFiles->removeElement($file);
+            $file->clearUseObject();
+        }
     }
 
     /**

@@ -46,6 +46,7 @@ class ResAppUploadType extends AbstractType
 
         $builder->add('file', FileType::class, array(
             'label' => 'CSV file:',
+            'required' => false,
             'mapped' => false,
             //'attr' => array('class'=>'form-control')
         ));

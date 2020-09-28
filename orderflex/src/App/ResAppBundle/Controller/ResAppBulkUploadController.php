@@ -57,7 +57,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         //exit("Upload Multiple Applications is under construction");
 
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         $cycle = 'new';
 
@@ -95,23 +95,50 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() && $form->isValid() ) {
 
             //dump($form);
             //exit("form submitted");
 
-            $inputFileName = $form['file']->getData();
-            echo "inputFileName1=".$inputFileName."<br>";
-            //$inputFileName = $form->get('file')->getData();
-            //echo "inputFileName2=".$inputFileName."<br>";
+            if(0) {
+                $inputFileName = $form['file']->getData();
+                echo "inputFileName1=" . $inputFileName . "<br>";
+                //$inputFileName = $form->get('file')->getData();
+                //echo "inputFileName2=".$inputFileName."<br>";
 
-//            $pathParts = pathinfo($inputFileName);
-//            $folderPath = $pathParts['dirname'];
-//            $files = scandir($folderPath);
-            $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
-            echo "pdfFilePaths count=".count($pdfFilePaths)."<br>";
+                $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
+
+            } else {
+                $pdfFilePaths = array();
+                $inputFileName = NULL;
+
+                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $inputDataFile, 'erasFile' );
+                $em->persist($inputDataFile);
+                $em->flush();
+
+                $files = $inputDataFile->getErasFiles();
+                foreach( $files as $file ) {
+                    $ext = $file->getExtension();
+                    if( $ext == 'csv' ) {
+                        $inputFileName = $file->getFullServerPath();
+                    } elseif ($ext == 'pdf') {
+                        $pdfFilePaths[] = $file->getFullServerPath();
+                    }
+                }
+            }
+            echo "inputFileName=" . $inputFileName . "<br>";
+            echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
             dump($pdfFilePaths);
-            exit(111);
+
+//            //remove all documents
+//            foreach( $inputDataFile->getErasFiles() as $file ) {
+//                $inputFileName->removeElement($file);
+//                $em->remove($file);
+//            }
+//            $em->remove($inputFileName);
+//            $em->flush();
+//
+//            exit(111);
 
             $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName,$pdfFilePaths);
 
@@ -124,6 +151,16 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 $handsomtableJsonData = array();
             }
+
+            //remove all documents
+            foreach( $inputDataFile->getErasFiles() as $file ) {
+                $inputDataFile->removeErasFile($file);
+                $em->remove($file);
+            }
+            $em->remove($inputDataFile);
+            $em->flush();
+
+            //exit(111);
 
 //            $pdfArr = $resappPdfUtil->getTestPdfApplications();
 //            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);

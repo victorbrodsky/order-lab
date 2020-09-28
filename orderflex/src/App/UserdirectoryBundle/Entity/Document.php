@@ -747,6 +747,18 @@ class Document {
         return $filename;
     }
 
+    public function getExtension()
+    {
+        $ext = NULL;
+
+        $originalFilename = $this->getOriginalname();
+        if( $originalFilename ) {
+            $ext = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        }
+        
+        return $ext;
+    }
+
     public function getDescriptiveFilename()
     {
         if( $this->getTitle() ) {
