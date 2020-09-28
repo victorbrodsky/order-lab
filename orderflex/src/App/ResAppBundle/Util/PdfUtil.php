@@ -78,7 +78,7 @@ class PdfUtil {
     }
 
 
-    public function getCsvApplicationsData( $csvFileName ) {
+    public function getCsvApplicationsData( $csvFileName, $pdfFilePaths ) {
 
         //echo "csvFileName=$csvFileName <br>";
 
@@ -351,6 +351,23 @@ class PdfUtil {
         $year = date("Y", $datetime);
         //echo "$cellValue: year=$year <br>";
         return $year;
+    }
+
+    public function getPdfFilesInSameFolder($inputFileName) {
+        $pathParts = pathinfo($inputFileName);
+        $folderPath = $pathParts['dirname'];
+        $files = scandir($folderPath);
+
+        $pdfFilePaths = array();
+        foreach($files as $file) {
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            echo "filePath ext=".$ext."<br>";
+            if( $ext == 'pdf' ) {
+                $pdfFilePaths[] = $file;
+            }
+        }
+
+        return $pdfFilePaths;
     }
 
     public function getHandsomtableDataArray($parsedDataArr) {

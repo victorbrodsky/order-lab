@@ -101,11 +101,19 @@ class ResAppBulkUploadController extends OrderAbstractController
             //exit("form submitted");
 
             $inputFileName = $form['file']->getData();
-            //echo "inputFileName1=".$inputFileName."<br>";
+            echo "inputFileName1=".$inputFileName."<br>";
             //$inputFileName = $form->get('file')->getData();
             //echo "inputFileName2=".$inputFileName."<br>";
 
-            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName);
+//            $pathParts = pathinfo($inputFileName);
+//            $folderPath = $pathParts['dirname'];
+//            $files = scandir($folderPath);
+            $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
+            echo "pdfFilePaths count=".count($pdfFilePaths)."<br>";
+            dump($pdfFilePaths);
+            exit(111);
+
+            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName,$pdfFilePaths);
 
             if( !is_array($handsomtableJsonData) ) {
 

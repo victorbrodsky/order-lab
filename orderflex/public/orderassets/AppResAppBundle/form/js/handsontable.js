@@ -220,6 +220,11 @@ function resappMakeColumnData() {
         },
 
         { header:'AAMC ID', columns:{} },
+
+        { header:'Duplicate?', columns:{} },
+
+        { header:'ERAS Application', columns:{} },
+
         // { header:'ERAS Application ID', columns:{} },
         { header:'Application Receipt Date', columns:{} },
 
@@ -267,8 +272,8 @@ function resappMakeColumnData() {
         { header:'Previous Residency Track', columns:{} },
         
         // { header:'ERAS Application ID', columns:{} },
-        { header:'ERAS Application', columns:{} },
-        { header:'Duplicate?', columns:{} },
+        //{ header:'ERAS Application', columns:{} },
+        //{ header:'Duplicate?', columns:{} },
     ];
 
 }
