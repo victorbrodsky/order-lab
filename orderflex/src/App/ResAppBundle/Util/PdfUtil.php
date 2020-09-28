@@ -82,14 +82,15 @@ class PdfUtil {
 
         //echo "csvFileName=$csvFileName <br>";
 
+        $handsomtableJsonData = array();
+
         if (file_exists($csvFileName)) {
             //echo "The file $inputFileName exists";
         } else {
             //echo "The file $inputFileName does not exist";
             return "The file $csvFileName does not exist";
+            //return $handsomtableJsonData;
         }
-
-        $handsomtableJsonData = array();
 
         //$reader = ReaderEntityFactory::createReaderFromFile($csvFileName);
         $reader = ReaderEntityFactory::createCSVReader();
@@ -144,12 +145,13 @@ class PdfUtil {
                 foreach( $this->getHeaderMap() as $handsomTitle => $headerTitle ) {
                     //echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
 
-                    if( $handsomTitle == "Application Receipt Date" ) {
-                        //pre-populate with current date
-                        $rowArr[$handsomTitle]['id'] = 1;
-                        $rowArr[$handsomTitle]['value'] = date("m/d/Y");
-                        continue;
-                    }
+//                    if( $handsomTitle == "Application Receipt Date" ) {
+//                        //Applicant Applied Date
+//                        //pre-populate with current date
+//                        $rowArr[$handsomTitle]['id'] = 1;
+//                        $rowArr[$handsomTitle]['value'] = date("m/d/Y");
+//                        continue;
+//                    }
 
                     if( isset($header[$headerTitle]) ) {
                         $column = $header[$headerTitle];
@@ -157,6 +159,15 @@ class PdfUtil {
                         if( isset($cells[$column]) ) {
                             $cell = $cells[$column];
                             $cellValue = $cell->getValue();
+
+                            if ($handsomTitle == "Application Receipt Date") {
+                                if( $cellValue ) {
+                                    //use $cellValue "Applicant Applied Date"
+                                } else {
+                                    //pre-populate with current date
+                                    $cellValue = date("m/d/Y");
+                                }
+                            }
 
                             if( $cellValue ) {
                                 if ($handsomTitle == "Application Season Start Date") {
@@ -280,7 +291,7 @@ class PdfUtil {
             //"Applicant ID" => "ERAS Application ID"
             //"Residency Track" => "Residency Track", //?
 
-            "Application Receipt Date" => "Application Receipt Date",
+            "Application Receipt Date" => "Applicant Applied Date",
             "Application Season Start Date" => "Applicant Applied Date",
             "Application Season End Date" => "Applicant Applied Date",
             "Expected Residency Start Date" => "Applicant Applied Date",

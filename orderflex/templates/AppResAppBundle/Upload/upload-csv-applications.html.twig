@@ -29,33 +29,36 @@
 
     {{ form_start(form) }}
 
-        <input type="hidden" id="formcycle" value="{{ cycle }}" />
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-        ></div>
-
-
-        <div class="row">
-            <div class="col-xs-3"></div>
-            <div class="col-xs-6" align="center">
-                {{ form_row(form.file) }}
+        {% if form.file is defined %}
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6" align="center">
+                    {{ form_row(form.file) }}
+                </div>
+                <div class="col-xs-3"></div>
             </div>
-            <div class="col-xs-3"></div>
-        </div>
-        <br>
+            <br>
+        {% endif %}
 
-        {#DropZone: Please drag and drop ERAS application files here#}
-        <div class="well form-element-holder user-erasfiles">
-            <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
-            <div class="row withpaddingtop">
-                <div class="col-xs-12">
-                    {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
-                    {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+        {% if form.erasFiles is defined %}
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            {#DropZone: Please drag and drop ERAS application files here#}
+            <div class="well form-element-holder user-erasfiles">
+                <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                        {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
         {#button: Upload and Extract Data#}
         {% if form.upload is defined %}
@@ -120,8 +123,8 @@
 
         function startLaddaBtn() {
             var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
-            console.log("startLaddaBtn:");
-            console.log(uploadBtn);
+            //console.log("startLaddaBtn:");
+            //console.log(uploadBtn);
             var uploadLaddaBtn = Ladda.create( uploadBtn );
             uploadLaddaBtn.start();
             return uploadLaddaBtn;
@@ -129,7 +132,7 @@
         function stopLaddaBtn(uploadLaddaBtn) {
             if( uploadLaddaBtn ) {
                 //var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
-                console.log("stopLaddaBtn:");
+                //console.log("stopLaddaBtn:");
                 //console.log(uploadBtn);
                 //var uploadLaddaBtn = Ladda.create( uploadBtn );
                 uploadLaddaBtn.stop();

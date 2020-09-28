@@ -78,33 +78,44 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            )
 //        );
 
-        //$form = $this->createForm(ResAppUploadCsvType::class,null);
-        $params = array(
-            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
-            //'defaultStartDates' => $defaultStartDates
-        );
-        $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
-            array(
-                'method' => 'GET',
-                'form_custom_value'=>$params
-            )
-        );
+        if(0) {
+            $form = $this->createForm(ResAppUploadCsvType::class,null);
+        } else {
+//            $form = $this->createForm(ResAppUploadType::class,null);
+            $params = array(
+//                //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
+//                //'defaultStartDates' => $defaultStartDates
+            );
+            $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
+                array(
+                    'form_custom_value' => $params
+                )
+            );
+        }
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() ) {
 
+            //dump($form);
             //exit("form submitted");
 
-            //dump($form);
-
             $inputFileName = $form['file']->getData();
+            //echo "inputFileName1=".$inputFileName."<br>";
             //$inputFileName = $form->get('file')->getData();
-
-            //echo "inputFileName=".$inputFileName."<br>";
+            //echo "inputFileName2=".$inputFileName."<br>";
 
             $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName);
 
+            if( !is_array($handsomtableJsonData) ) {
+
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $handsomtableJsonData
+                );
+
+                $handsomtableJsonData = array();
+            }
 
 //            $pdfArr = $resappPdfUtil->getTestPdfApplications();
 //            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);

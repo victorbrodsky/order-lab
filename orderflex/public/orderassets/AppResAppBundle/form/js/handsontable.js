@@ -160,7 +160,7 @@ function ajaxFinishedCondition() {
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Add");
         //_actions_simple.push("Do not add");
-        _actions_simple.push("");
+        _actions_simple.push(null);
     }
 
 
@@ -309,14 +309,16 @@ function handsonTableInit(handsometableDataArr) {
             //load data
             //console.log('load data for row='+i);
             //if( typeof handsometableDataArr != 'undefined' ) {
-            if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length > 0 ) {
+            if( handsometableDataArr &&
+                typeof handsometableDataArr != 'undefined' &&
+                handsometableDataArr.length > 0
+            ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
-                console.log( handsometableDataArr[i-1] );
-                if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
+                //console.log('headerTitle='+headerTitle);
+                //console.log( handsometableDataArr[i-1] );
+                if( typeof headerTitle != 'undefined' &&
+                    typeof handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<handsometableDataArr.length) &&
-                    //handsometableDataArr[i-1].constructor === Array &&
-                    //handsometableDataArr[i-1].hasOwnProperty(headerTitle) &&
                     headerTitle in handsometableDataArr[i-1]
                 ) {
                     //console.log('handsometableDataArr[i-1]:(');
