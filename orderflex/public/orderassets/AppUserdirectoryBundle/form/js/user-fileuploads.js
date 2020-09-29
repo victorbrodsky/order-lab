@@ -79,6 +79,16 @@ function initFileUpload( holder, data, addRemoveLinks ) {
     var userid = dataElement.getAttribute('data-userid');
     //console.log('userid='+userid);
 
+    //show upload success confirmation alert
+    // var dropzoneConfirmationDisable = dataElement.getAttribute('data-dropzoneconfirmation-disable');
+    // //console.log('dropzoneConfirmationDisable='+dropzoneConfirmationDisable);
+    // if( dropzoneConfirmationDisable ) {
+    //     dropzoneConfirmationDisable = true;
+    // } else {
+    //     dropzoneConfirmationDisable = false;
+    // }
+    //console.log('dropzoneConfirmationDisable='+dropzoneConfirmationDisable);
+
     var clickable = true;
     if( showFlag ) {
         clickable = false;
@@ -185,7 +195,14 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
                 //parent function
                 if( file.previewElement ) {
-                    alert("You must press the submit button on the bottom of this page to save your uploaded file.");
+                    // if( !dropzoneConfirmationDisable ) {
+                    //     alert("You must press the submit button on the bottom of this page to save your uploaded file.");
+                    // }
+                    if( commentHolder.hasClass('dropzoneconfirmation-disable') ) {
+                        //don't show alert
+                    } else {
+                        alert("You must press the submit button on the bottom of this page to save your uploaded file.");
+                    }
                     return file.previewElement.classList.add("dz-success");
                 }
             },
@@ -352,47 +369,54 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
     //if commenttype is not defined (i.e. scanorder form) don't delete from DB. Just remove from form
     //if( commenttype != null ) {
 
-        var url = getCommonBaseUrl("file-delete","employees");
-        //console.log('url='+url);
-        //use comment id and documentid
-        $.ajax({
-            type: "POST",   //"DELETE",
-            url: url,
-            timeout: _ajaxTimeout,
-            async: true,
-            data: { documentid: documentid, commentid: commentid, commenttype: commenttype, sitename: _sitename }
-        }).success(function(data) {
-            //if( parseInt(data) > 0 ) {
-            //console.log('remove ok, data='+data);
-            //parent function
-            var _ref;
-            if( previewElement ) {
-                if( (_ref = previewElement) != null ) {
-                    _ref.parentNode.removeChild(previewElement);
-                }
+    // var dataElement = document.getElementById("form-prototype-data");
+    // //show upload success confirmation alert
+    // var dropzoneConfirmationDisable = dataElement.getAttribute('data-dropzoneconfirmation-disable');
+    // //console.log('dropzoneConfirmationDisable='+dropzoneConfirmationDisable);
+    // if( dropzoneConfirmationDisable ) {
+    //     dropzoneConfirmationDisable = true;
+    // } else {
+    //     dropzoneConfirmationDisable = false;
+    // }
+
+    var url = getCommonBaseUrl("file-delete","employees");
+    //console.log('url='+url);
+    //use comment id and documentid
+    $.ajax({
+        type: "POST",   //"DELETE",
+        url: url,
+        timeout: _ajaxTimeout,
+        async: true,
+        data: { documentid: documentid, commentid: commentid, commenttype: commenttype, sitename: _sitename }
+    }).success(function(data) {
+        //if( parseInt(data) > 0 ) {
+        //console.log('remove ok, data='+data);
+        //parent function
+        var _ref;
+        if( previewElement ) {
+            if( (_ref = previewElement) != null ) {
+                _ref.parentNode.removeChild(previewElement);
             }
+        }
 
-            adjustHolderHeight(holderTop);
+        adjustHolderHeight(holderTop);
 
+        // if( !dropzoneConfirmationDisable ) {
+        //     alert("You must press the 'Update' or 'Save' button to save your changes.");
+        // }
+        if( holderTop.hasClass('dropzoneconfirmation-disable') ) {
+            //don't show alert
+        } else {
             alert("You must press the 'Update' or 'Save' button to save your changes.");
-            //update form
-            //$('#fellapp-applicant-form').submit();
+        }
+        //update form
+        //$('#fellapp-applicant-form').submit();
 
-            //}
-        }).fail(function(data) {
-            //console.log('remove failed, data='+data);
-            throw new Error('remove failed, data='+data);
-        }) ;
-
-    //}
-//    else {
-//        var _ref;
-//        if( previewElement ) {
-//            if( (_ref = previewElement) != null ) {
-//                _ref.parentNode.removeChild(previewElement);
-//            }
-//        }
-//    }
+        //}
+    }).fail(function(data) {
+        //console.log('remove failed, data='+data);
+        throw new Error('remove failed, data='+data);
+    }) ;
 
     return dropzone._updateMaxFilesReachedClass();
 }

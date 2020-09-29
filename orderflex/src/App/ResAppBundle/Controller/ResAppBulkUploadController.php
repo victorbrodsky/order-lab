@@ -110,6 +110,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             } else {
                 $pdfFilePaths = array();
+                $pdfFiles = array();
                 $inputFileName = NULL;
 
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $inputDataFile, 'erasFile' );
@@ -123,6 +124,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $inputFileName = $file->getFullServerPath();
                     } elseif ($ext == 'pdf') {
                         $pdfFilePaths[] = $file->getFullServerPath();
+                        $pdfFiles[] = $file;
                     }
                 }
             }
@@ -140,7 +142,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //
 //            exit(111);
 
-            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName,$pdfFilePaths);
+            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName,$pdfFiles);
 
             if( !is_array($handsomtableJsonData) ) {
 

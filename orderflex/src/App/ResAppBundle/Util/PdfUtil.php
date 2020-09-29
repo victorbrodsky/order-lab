@@ -79,7 +79,7 @@ class PdfUtil {
     }
 
 
-    public function getCsvApplicationsData( $csvFileName, $pdfFilePaths ) {
+    public function getCsvApplicationsData( $csvFileName, $pdfFiles ) {
 
         //echo "csvFileName=$csvFileName <br>";
 
@@ -127,6 +127,8 @@ class PdfUtil {
         }
         //dump($header);
         //exit(111);
+
+        $pdfInfoArr = $this->getPdfTextArr($pdfFiles);
 
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $rowNumber => $row) {
@@ -219,8 +221,6 @@ class PdfUtil {
 //                $rowArr["Preferred Email"]['id'] = 1;
 //                $rowArr["Preferred Email"]['value'] = "Test Email";
 
-                $handsomtableJsonData[] = $rowArr;
-
                 //keys to identify matched PDF
                 $keysArr = array(
                     $rowArr["AAMC ID"]['value'],
@@ -230,11 +230,19 @@ class PdfUtil {
                     //$rowArr["NBOME ID"]['value'],
                     //$rowArr["NRMP ID"]['value'],
                 );
-                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
-                if( $pdfPath ) {
-                    $rowArr['ERAS Application']['id'] = 1;
-                    $rowArr['ERAS Application']['value'] = $pdfPath;
+//                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
+//                if( $pdfPath ) {
+//                    $rowArr['ERAS Application']['id'] = 1;
+//                    $rowArr['ERAS Application']['value'] = $pdfPath;
+//                }
+
+                $pdfFile = $this->findPdfByInfoArr($pdfInfoArr,$keysArr);
+                if( $pdfFile ) {
+                    $rowArr['ERAS Application']['id'] = $pdfFile->getId();
+                    $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 }
+
+                $handsomtableJsonData[] = $rowArr;
                 
             }//foreach row
         }
@@ -309,18 +317,59 @@ class PdfUtil {
         return $map;
     }
 
-    public function findPdf( $pdfFilePaths, $keysArr ) {
-        foreach( $pdfFilePaths as $pdfFilePath ) {
-            $pdfText = $this->extractPdfText($pdfFilePath);
+    public function getPdfTextArr( $pdfFiles ) {
+        $pdfInfoArr = array();
+        foreach( $pdfFiles as $pdfFile ) {
+            $pdfFilePath = $pdfFile->getFullServerPath();
+            if ($pdfFilePath) {
+                $pdfText = $this->extractPdfText($pdfFilePath);
+                if ($pdfText) {
+                    $pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
+                }
+            }
+        }
+
+        return $pdfInfoArr;
+    }
+    public function findPdfByInfoArr( $pdfInfoArr, $keysArr ) {
+        foreach( $pdfInfoArr as $fileId=>$pdfFileArr ) {
+            $pdfFile = $pdfFileArr['file'];
+            $pdfOriginalName = $pdfFileArr['originalName'];
+            $pdfText = $pdfFileArr['text'];
+            //echo "<br>##############".$pdfOriginalName."#############<br>".$pdfText."<br><br>";
             $keyExistCount = 0;
             $totalCount = 0;
             foreach($keysArr as $keyStr) {
                 if( $pdfText && $keyStr ) {
                     if( strpos($pdfText, $keyStr) !== false ) {
-                        echo $keyStr." found<br>";
+                        //echo $pdfOriginalName. ": " . $keyStr." found<br>";
                         $keyExistCount++;
                     } else {
-                        echo $keyStr." not found<br>";
+                        //echo $pdfOriginalName. ": " . $keyStr." not found<br>";
+                    }
+                }
+                $totalCount++;
+            }
+            if( $keyExistCount == $totalCount ) {
+                return $pdfFile;
+            }
+        }
+
+        return NULL;
+    }
+    public function findPdf( $pdfFilePaths, $keysArr ) {
+        foreach( $pdfFilePaths as $pdfFilePath ) {
+            $pdfText = $this->extractPdfText($pdfFilePath);
+            //echo "<br>##############".$pdfFilePath."#############<br>".$pdfText."<br><br>";
+            $keyExistCount = 0;
+            $totalCount = 0;
+            foreach($keysArr as $keyStr) {
+                if( $pdfText && $keyStr ) {
+                    if( strpos($pdfText, $keyStr) !== false ) {
+                        echo $pdfFilePath. ": " . $keyStr." found<br>";
+                        $keyExistCount++;
+                    } else {
+                        echo $pdfFilePath. ": " . $keyStr." not found<br>";
                     }
                 }
                 $totalCount++;
@@ -638,8 +687,8 @@ class PdfUtil {
     }
 
     public function extractPdfText($path) {
-        //return $this->extractPdfTextSpatie($path);
-        return $this->parsePdfCirovargas($path);
+        return $this->extractPdfTextSpatie($path, true);
+        //return $this->parsePdfCirovargas($path);
     }
 
     public function parsePdfCirovargas($path) {
@@ -692,7 +741,7 @@ class PdfUtil {
     }
 
     //based on pdftotext. which pdftotext
-    public function extractPdfTextSpatie($path) {
+    public function extractPdfTextSpatie($path, $asText=false) {
 
         if (file_exists($path)) {
             //echo "The file $path exists <br>";
@@ -725,6 +774,10 @@ class PdfUtil {
 
         $text = $pdftotext->setPdf($path)->text();
         //dump($text);
+
+        if( $asText ) {
+            return $text;
+        }
 
 //        $startStr = "Applicant ID:";
 //        $endStr = "AAMC ID:";

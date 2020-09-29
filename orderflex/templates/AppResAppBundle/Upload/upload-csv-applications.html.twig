@@ -47,9 +47,11 @@
                  data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
                  data-userid = "{{ app.user.id }}"
             ></div>
+            {#data-dropzoneconfirmation-disable = "1"#}
 
             {#DropZone: Please drag and drop ERAS application files here#}
-            <div class="well form-element-holder user-erasfiles">
+            {#dropzoneconfirmation-disable - disable alert when upload or remove#}
+            <div class="well form-element-holder user-erasfiles dropzoneconfirmation-disable">
                 <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
                 <div class="row withpaddingtop">
                     <div class="col-xs-12">
