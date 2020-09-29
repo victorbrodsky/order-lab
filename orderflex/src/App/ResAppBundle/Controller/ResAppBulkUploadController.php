@@ -393,9 +393,14 @@ class ResAppBulkUploadController extends OrderAbstractController
 //                dump($parsedDataArr);
 //            }
 
-            $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
+            $erasFilePath = $erasFile->getAttachmentEmailPath();
+            $extractedText = $resappPdfUtil->parsePdfCirovargas($erasFilePath);
+            echo $extractedText."<br><br>";
+            //dump($extractedText);
 
+            $parsedDataArr = $resappPdfUtil->extractDataPdf($erasFile);
             dump($parsedDataArr);
+
             //exit("EOF $erasFile");
 
         }

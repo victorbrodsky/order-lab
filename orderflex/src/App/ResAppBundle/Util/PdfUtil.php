@@ -26,6 +26,7 @@ namespace App\ResAppBundle\Util;
 
 
 //use Clegginabox\PDFMerger\PDFMerger;
+use App\ResAppBundle\PdfParser\PDFService;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Spatie\PdfToText\Pdf;
@@ -201,7 +202,7 @@ class PdfUtil {
                             $rowArr[$handsomTitle]['value'] = $cellValue;
                         }
                     }
-                }
+                }//foreach title
 
 //                $rowArr = array();
 //                $rowArr["First Name"]['id'] = 1;
@@ -219,8 +220,23 @@ class PdfUtil {
 //                $rowArr["Preferred Email"]['value'] = "Test Email";
 
                 $handsomtableJsonData[] = $rowArr;
+
+                //keys to identify matched PDF
+                $keysArr = array(
+                    $rowArr["AAMC ID"]['value'],
+                    $rowArr["Preferred Email"]['value'],
+                    //$rowArr["Birth Date"]['value'],
+                    //$rowArr["USMLE ID"]['value'],
+                    //$rowArr["NBOME ID"]['value'],
+                    //$rowArr["NRMP ID"]['value'],
+                );
+                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
+                if( $pdfPath ) {
+                    $rowArr['ERAS Application']['id'] = 1;
+                    $rowArr['ERAS Application']['value'] = $pdfPath;
+                }
                 
-            }
+            }//foreach row
         }
         //dump($handsomtableJsonData);
         //exit(111);
@@ -230,61 +246,6 @@ class PdfUtil {
         return $handsomtableJsonData;
     }
     public function getHeaderMap() {
-
-        if(0) {
-            //CSV header title => Handsomtable header title
-            $map = array(
-                "AAMC ID" => "AAMC ID",
-                //"Applicant ID" => "ERAS Application ID"
-                //"Residency Track" => "Residency Track", //?
-
-                "Applicant Applied Date" => "Application Season Start Date",
-                "Applicant Applied Date" => "Application Season End Date",
-                "Applicant Applied Date" => "Expected Residency Start Date",
-                "Applicant Applied Date" => "Expected Graduation Date",
-
-                "First Name" => "First Name",
-                "Middle Name" => "Middle Name",
-                "Last Name" => "Last Name",
-
-                "E-mail" => "Preferred Email",
-
-                "Most Recent Medical School" => "Medical School Name",
-                "Medical School Attendance Dates" => "Medical School Graduation Date", //8/2014 - 5/2019
-
-                "USMLE Step 1 Score" => "USMLE Step 1 Score",
-                "USMLE Step 2 CK Score" => "USMLE Step 2 CK Score",
-                "USMLE Step 3 Score" => "USMLE Step 3 Score",
-
-                "Citizenship" => "Country of Citizenship",
-                "Current Visa Status" => "Visa Status",
-
-                "Self Identify" => "Is the applicant a member of any of the following groups?",
-
-                //"" => "Number of first author publications",
-                //"" => "Number of all publications",
-
-                //"" => "AOA",
-                "Participating as a Couple in NRMP" => "Couple’s Match",
-                //"" => "Post-Sophomore Fellowship",
-
-//            "" => "Previous Residency Start Date",
-//            "" => "Previous Residency Graduation/Departure Date",
-//            "" => "Previous Residency Institution",
-//            "" => "Previous Residency City",
-//            "" => "Previous Residency State",
-//            "" => "Previous Residency Country",
-//            "" => "Previous Residency Track",
-//            "" => "ERAS Application",
-
-//            "" => "",
-//            "" => "",
-//            "" => "",
-//            "" => "",
-//            "" => "",
-            );
-        }
-
         //Handsomtable header title => CSV header title
         $map = array(
             "AAMC ID" => "AAMC ID",
@@ -337,9 +298,39 @@ class PdfUtil {
 //            "" => "",
 //            "" => "",
 //            "" => "",
+
+            //Extra fields to identify matched PDF
+            "Birth Date" => "Date of Birth",
+            "USMLE ID" => "USMLE ID",
+            "NBOME ID" => "NBOME ID",
+            "NRMP ID" => "NRMP ID"
         );
 
         return $map;
+    }
+
+    public function findPdf( $pdfFilePaths, $keysArr ) {
+        foreach( $pdfFilePaths as $pdfFilePath ) {
+            $pdfText = $this->extractPdfText($pdfFilePath);
+            $keyExistCount = 0;
+            $totalCount = 0;
+            foreach($keysArr as $keyStr) {
+                if( $pdfText && $keyStr ) {
+                    if( strpos($pdfText, $keyStr) !== false ) {
+                        echo $keyStr." found<br>";
+                        $keyExistCount++;
+                    } else {
+                        echo $keyStr." not found<br>";
+                    }
+                }
+                $totalCount++;
+            }
+            if( $keyExistCount == $totalCount ) {
+                return $pdfFilePath;
+            }
+        }
+
+        return NULL;
     }
 
     //get year 9/29/2018 m/d/Y
@@ -353,6 +344,7 @@ class PdfUtil {
         return $year;
     }
 
+    //NOT USED
     public function getPdfFilesInSameFolder($inputFileName) {
         $pathParts = pathinfo($inputFileName);
         $folderPath = $pathParts['dirname'];
@@ -645,6 +637,109 @@ class PdfUtil {
         return $parsedDataArr;
     }
 
+    public function extractPdfText($path) {
+        //return $this->extractPdfTextSpatie($path);
+        return $this->parsePdfCirovargas($path);
+    }
+
+    public function parsePdfCirovargas($path) {
+
+        if (file_exists($path)) {
+            //echo "The file $path exists<br>";
+        } else {
+            echo "The file $path does not exist<br>";
+        }
+
+        $field = null;
+
+        if(0) {
+            $resappRepGen = $this->container->get('resapp_reportgenerator');
+            $processedFiles = $resappRepGen->processFilesGostscript(array($path));
+
+            if (count($processedFiles) > 0) {
+                $dir = dirname($path);
+                $path = $processedFiles[0];
+                $path = str_replace('"', '', $path);
+                //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                echo "path=" . $path . "<br>";
+            } else {
+                return null;
+            }
+        }
+
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
+
+        $pdfService = new PDFService();
+        $text = $pdfService->pdf2text($path);
+
+        if('' == trim($text)) {
+            //echo "Use parseFile:<br>";
+            $text = $pdfService->parseFile($path);
+        }
+
+//        $startStr = "Applicant ID:";
+//        $endStr = "AAMC ID:";
+//        $field = $this->getPdfField($text,$startStr,$endStr);
+//        echo "Cirovargas: $startStr=[".$field."]<br>";
+        //exit();
+
+        //dump($text);
+        //exit();
+
+        return $text;
+    }
+
+    //based on pdftotext. which pdftotext
+    public function extractPdfTextSpatie($path) {
+
+        if (file_exists($path)) {
+            //echo "The file $path exists <br>";
+        } else {
+            echo "The file $path does not exist <br>";
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
+
+        //$pdftotextPath = '/mingw64/bin/pdftotext';
+        $pdftotextPath = '/bin/pdftotext';
+
+        if( $userServiceUtil->isWinOs() ) {
+            //$pdftotextPath = '/mingw64/bin/pdftotext';
+            //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
+            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+        } else {
+            $pdftotextPath = '/bin/pdftotext';
+        }
+
+        $pdftotext = new Pdf($pdftotextPath);
+
+        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+        //$path = '"'.$path.'"';
+        //$path = "'".$path."'";
+        $path = realpath($path);
+        //echo "Spatie source pdf path=".$path."<br>";
+
+        $text = $pdftotext->setPdf($path)->text();
+        //dump($text);
+
+//        $startStr = "Applicant ID:";
+//        $endStr = "AAMC ID:";
+//        $field = $this->getPdfField($text,$startStr,$endStr);
+//        if( $field ) {
+//            echo "Spatie: $startStr=[" . $field . "]<br>";
+//        }
+
+        $keysArr = $this->getKeyFields($text);
+
+        //echo "keysArr=".count($keysArr)."<br>";
+        //dump($keysArr);
+
+        return $keysArr;
+    }
 
     //based on pdftotext. which pdftotext
     public function parsePdfSpatie($path) {
