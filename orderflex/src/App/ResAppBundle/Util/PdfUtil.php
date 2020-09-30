@@ -85,6 +85,10 @@ class PdfUtil {
 
         $handsomtableJsonData = array();
 
+        if( !$csvFileName ) {
+            return "CSV file is missing";
+        }
+
         if (file_exists($csvFileName)) {
             //echo "The file $inputFileName exists";
         } else {
@@ -109,7 +113,7 @@ class PdfUtil {
                 }
 
                 $cells = $row->getCells();
-                for($column = 0; $column <= 10000; $column++) {
+                for($column = 0; $column <= 100000; $column++) {
                     //echo "The number is: $column <br>";
 
                     if( !isset($cells[$column]) ) {
@@ -119,7 +123,9 @@ class PdfUtil {
                     $thisCell = $cells[$column];
                     $thisCellValue = $thisCell->getValue();
                     if( $thisCellValue ) {
-                        $header[$thisCellValue] = $column;
+                        if( !isset($header[$thisCellValue]) ) {
+                            $header[$thisCellValue] = $column;
+                        }
                     }
                 }
 
@@ -146,7 +152,7 @@ class PdfUtil {
 
                 $rowArr = array();
                 foreach( $this->getHeaderMap() as $handsomTitle => $headerTitle ) {
-                    //echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
+                    echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
 
 //                    if( $handsomTitle == "Application Receipt Date" ) {
 //                        //Applicant Applied Date
@@ -162,6 +168,8 @@ class PdfUtil {
                         if( isset($cells[$column]) ) {
                             $cell = $cells[$column];
                             $cellValue = $cell->getValue();
+
+                            echo $headerTitle."( col=".$column."): cellValue=".$cellValue."<br>";
 
                             if ($handsomTitle == "Application Receipt Date") {
                                 if( $cellValue ) {
@@ -225,10 +233,10 @@ class PdfUtil {
                 $keysArr = array(
                     $rowArr["AAMC ID"]['value'],
                     $rowArr["Preferred Email"]['value'],
-                    //$rowArr["Birth Date"]['value'],
-                    //$rowArr["USMLE ID"]['value'],
-                    //$rowArr["NBOME ID"]['value'],
-                    //$rowArr["NRMP ID"]['value'],
+                    $rowArr["Birth Date"]['value'],
+                    $rowArr["USMLE ID"]['value'],
+                    //$rowArr["NBOME ID"]['value'], //might be null
+                    $rowArr["NRMP ID"]['value'],
                 );
 //                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
 //                if( $pdfPath ) {
@@ -238,6 +246,7 @@ class PdfUtil {
 
                 $pdfFile = $this->findPdfByInfoArr($pdfInfoArr,$keysArr);
                 if( $pdfFile ) {
+                    echo "!!!! found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                     $rowArr['ERAS Application']['id'] = $pdfFile->getId();
                     $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 }

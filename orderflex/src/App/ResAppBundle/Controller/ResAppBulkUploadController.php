@@ -128,9 +128,9 @@ class ResAppBulkUploadController extends OrderAbstractController
                     }
                 }
             }
-            echo "inputFileName=" . $inputFileName . "<br>";
-            echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
-            dump($pdfFilePaths);
+            //echo "inputFileName=" . $inputFileName . "<br>";
+            //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
+            //dump($pdfFilePaths);
 
 //            //remove all documents
 //            foreach( $inputDataFile->getErasFiles() as $file ) {

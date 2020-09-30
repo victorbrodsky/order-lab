@@ -44,26 +44,26 @@ class ResAppUploadType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('file', FileType::class, array(
-            'label' => 'CSV file:',
-            'required' => false,
-            'mapped' => false,
-            //'attr' => array('class'=>'form-control')
-        ));
-
-        if(1) {
-            $builder->add('erasFiles', CollectionType::class, array(
-                //'type' => new DocumentType($this->params),
-                'entry_type' => DocumentType::class,
-                'label' => 'ERAS application files:',
-                'allow_add' => true,
-                'allow_delete' => true,
+        if(0) {
+            $builder->add('file', FileType::class, array(
+                'label' => 'CSV file:',
                 'required' => false,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__documentsid__',
+                'mapped' => false,
+                //'attr' => array('class'=>'form-control')
             ));
         }
+
+        $builder->add('erasFiles', CollectionType::class, array(
+            //'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
+            'label' => 'ERAS application files:',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
 
         $builder->add('upload', SubmitType::class, array(
             'label' => "Upload and Extract Data",

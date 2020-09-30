@@ -72,9 +72,13 @@ class UploadController extends OrderAbstractController {
 
         //find document with id
         $em = $this->getDoctrine()->getManager();
-        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentid);
-        //echo "document=".$document." => ";
-        //$logger->notice("deleteFileMethod: documentDob=".$document);
+        $document = NULL;
+
+        if( $documentid ) {
+            $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentid);
+            //echo "document=".$document." => ";
+            //$logger->notice("deleteFileMethod: documentDob=".$document);
+        }
 
         $count = 0;
 
