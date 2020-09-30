@@ -249,6 +249,14 @@ class PdfUtil {
                     echo "!!!! found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                     $rowArr['ERAS Application']['id'] = $pdfFile->getId();
                     $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+
+                    //TODO: get "ERAS Application ID" from PDF
+                    $pdfText = $pdfInfoArr[$pdfFile->getId()]['text'];
+                    $erasApplicantID = $this->getSingleKeyField($pdfText,'Applicant ID');
+                    if( $erasApplicantID ) {
+                        $rowArr['Applicant ID']['id'] = null;
+                        $rowArr['Applicant ID']['value'] = $erasApplicantID;
+                    }
                 }
 
                 //TODO: check for duplicate in $handsomtableJsonData and in DB
@@ -256,6 +264,9 @@ class PdfUtil {
                 if( count($duplicateDbResApps) > 0  ) {
                     $rowArr['Duplicate?']['id'] = implode(",",$duplicateDbResApps);
                     $rowArr['Duplicate?']['value'] = "Previously Imported";
+                } else {
+                    $rowArr['Duplicate?']['id'] = null;
+                    $rowArr['Duplicate?']['value'] = "Not Imported";
                 }
 
                 $handsomtableJsonData[] = $rowArr;
@@ -273,7 +284,7 @@ class PdfUtil {
         //Handsomtable header title => CSV header title
         $map = array(
             "AAMC ID" => "AAMC ID",
-            //"Applicant ID" => "ERAS Application ID"
+            "Applicant ID" => "ERAS Application ID",
             //"Residency Track" => "Residency Track", //?
 
             "Application Receipt Date" => "Applicant Applied Date",
@@ -399,16 +410,32 @@ class PdfUtil {
     }
 
     public function getDuplicateDbResApps($rowArr) {
+        //A- By ERAS Application ID, then separately
+        //B- By Preferred e-mail + Expected Residency Start Date, and lastly, separately
+        //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
         $aamcId = $rowArr['AAMC ID']['value'];
+        $erasApplicantId = $rowArr['Applicant ID']['value'];
+        $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
+        $email = $rowArr['Preferred Email']['value'];
+        $lastName = $rowArr['Last Name']['value'];
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
-        //$dql->leftJoin('resapp.coverLetters','coverLetters');
+        $dql->leftJoin('resapp.user','user');
+        $dql->leftJoin('user.infos','infos');
         $dql->where("resapp.aamcId = :aamcId");
+        $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
+        $dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
+        $dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
+        $dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
         $dql->orderBy("resapp.id","DESC");
         $query = $this->em->createQuery($dql);
         //$query->setMaxResults(10);
         $query->setParameter('aamcId', $aamcId);
+        $query->setParameter('erasApplicantId', $erasApplicantId);
+        $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
+        $query->setParameter('userInfoEmail', "'".$email."'");
+        $query->setParameter('userInfoLastName', "'".$lastName."'");
         $resapps = $query->getResult();
         echo "resapps count=".count($resapps)."<br>";
 
@@ -875,6 +902,14 @@ class PdfUtil {
         //dump($keysArr);
 
         return $keysArr;
+    }
+
+    //$key = 'Applicant ID'
+    public function getSingleKeyField($text,$key) {
+        $keyFields = $this->getKeyFieldArr();
+        $endArr = $keyFields[$key];
+        $field = $this->getShortestField($text, $key, $endArr);
+        return $field;
     }
 
     public function getKeyFields($text) {
