@@ -251,6 +251,13 @@ class PdfUtil {
                     $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 }
 
+                //TODO: check for duplicate in $handsomtableJsonData and in DB
+                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+                if( count($duplicateDbResApps) > 0  ) {
+                    $rowArr['Duplicate?']['id'] = implode(",",$duplicateDbResApps);
+                    $rowArr['Duplicate?']['value'] = "Previously Imported";
+                }
+
                 $handsomtableJsonData[] = $rowArr;
                 
             }//foreach row
@@ -389,6 +396,23 @@ class PdfUtil {
         }
 
         return NULL;
+    }
+
+    public function getDuplicateDbResApps($rowArr) {
+        $aamcId = $rowArr['AAMC ID']['value'];
+        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql = $repository->createQueryBuilder("resapp");
+        $dql->select('resapp');
+        //$dql->leftJoin('resapp.coverLetters','coverLetters');
+        $dql->where("resapp.aamcId = :aamcId");
+        $dql->orderBy("resapp.id","DESC");
+        $query = $this->em->createQuery($dql);
+        //$query->setMaxResults(10);
+        $query->setParameter('aamcId', $aamcId);
+        $resapps = $query->getResult();
+        echo "resapps count=".count($resapps)."<br>";
+
+        return $resapps;
     }
 
     //get year 9/29/2018 m/d/Y
