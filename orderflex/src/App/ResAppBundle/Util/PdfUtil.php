@@ -254,8 +254,8 @@ class PdfUtil {
                     $pdfText = $pdfInfoArr[$pdfFile->getId()]['text'];
                     $erasApplicantID = $this->getSingleKeyField($pdfText,'Applicant ID');
                     if( $erasApplicantID ) {
-                        $rowArr['Applicant ID']['id'] = null;
-                        $rowArr['Applicant ID']['value'] = $erasApplicantID;
+                        $rowArr['ERAS Application ID']['id'] = null;
+                        $rowArr['ERAS Application ID']['value'] = $erasApplicantID;
                     }
                 }
 
@@ -284,7 +284,7 @@ class PdfUtil {
         //Handsomtable header title => CSV header title
         $map = array(
             "AAMC ID" => "AAMC ID",
-            "Applicant ID" => "ERAS Application ID",
+            "ERAS Application ID" => "ERAS Application ID",
             //"Residency Track" => "Residency Track", //?
 
             "Application Receipt Date" => "Applicant Applied Date",
@@ -414,25 +414,35 @@ class PdfUtil {
         //B- By Preferred e-mail + Expected Residency Start Date, and lastly, separately
         //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
         $aamcId = $rowArr['AAMC ID']['value'];
-        $erasApplicantId = $rowArr['Applicant ID']['value'];
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
         $lastName = $rowArr['Last Name']['value'];
+
+        $erasApplicantId = NULL;
+        if( isset($rowArr['ERAS Application ID']) ) {
+            $erasApplicantId = $rowArr['ERAS Application ID']['value'];
+        }
+
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin('resapp.user','user');
         $dql->leftJoin('user.infos','infos');
         $dql->where("resapp.aamcId = :aamcId");
-        $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
+        if( $erasApplicantId ) {
+            $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
+        }
         $dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
         $dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
         $dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
         $dql->orderBy("resapp.id","DESC");
+
         $query = $this->em->createQuery($dql);
         //$query->setMaxResults(10);
         $query->setParameter('aamcId', $aamcId);
-        $query->setParameter('erasApplicantId', $erasApplicantId);
+        if( $erasApplicantId ) {
+            $query->setParameter('erasApplicantId', $erasApplicantId);
+        }
         $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
         $query->setParameter('userInfoEmail', "'".$email."'");
         $query->setParameter('userInfoLastName', "'".$lastName."'");

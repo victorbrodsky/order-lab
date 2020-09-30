@@ -225,7 +225,7 @@ function resappMakeColumnData() {
 
         { header:'ERAS Application', columns:{} },
 
-        // { header:'ERAS Application ID', columns:{} },
+        { header:'ERAS Application ID', columns:{} },
         { header:'Application Receipt Date', columns:{} },
 
         //{ header:'Residency Track', columns:{} },
