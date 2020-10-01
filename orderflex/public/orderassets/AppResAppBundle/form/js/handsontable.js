@@ -159,8 +159,8 @@ function ajaxFinishedCondition() {
 
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Add");
-        //_actions_simple.push("Do not add");
-        _actions_simple.push(null);
+        _actions_simple.push("Do not add");
+        //_actions_simple.push(null);
     }
 
 
@@ -221,7 +221,7 @@ function resappMakeColumnData() {
 
         { header:'AAMC ID', columns:{} },
 
-        { header:'Duplicate?', columns:{} },
+        { header:'Issue', columns:{} },
 
         { header:'ERAS Application', columns:{} },
 
@@ -273,7 +273,7 @@ function resappMakeColumnData() {
         
         // { header:'ERAS Application ID', columns:{} },
         //{ header:'ERAS Application', columns:{} },
-        //{ header:'Duplicate?', columns:{} },
+        //{ header:'Issue', columns:{} },
     ];
 
 }

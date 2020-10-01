@@ -244,7 +244,7 @@ class PdfUtil {
                     //$rowArr["NBOME ID"]['value'], //might be null
                     $rowArr["NRMP ID"]['value'],
                 );
-                echo $rowArr["Preferred Email"]['value'].": Birth Date=".$rowArr["Birth Date"]['value']."<br>";
+                //echo $rowArr["Preferred Email"]['value'].": Birth Date=".$rowArr["Birth Date"]['value']."<br>";
 //                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
 //                if( $pdfPath ) {
 //                    $rowArr['ERAS Application']['id'] = 1;
@@ -276,29 +276,33 @@ class PdfUtil {
                 //TODO: check for duplicate in $handsomtableJsonData
                 $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
                 if( $duplicateTableResApps  ) {
-                    //$rowArr['Duplicate?']['id'] = null;
-                    //$rowArr['Duplicate?']['value'] = "Duplicate in batch";
+                    //$rowArr['Issue']['id'] = null;
+                    //$rowArr['Issue']['value'] = "Duplicate in batch";
                     $duplicateArr[] = "Duplicate in batch";
                 } else {
-                    //$rowArr['Duplicate?']['id'] = null;
-                    //$rowArr['Duplicate?']['value'] = "Not Duplicated";
+                    //$rowArr['Issue']['id'] = null;
+                    //$rowArr['Issue']['value'] = "Not Duplicated";
                 }
                 //TODO: check for duplicate in DB
                 $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
-                    //$rowArr['Duplicate?']['id'] = implode(",",$duplicateDbResApps);
-                    //$rowArr['Duplicate?']['value'] = "Previously Imported";
+                    //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
+                    //$rowArr['Issue']['value'] = "Previously Imported";
                     foreach($duplicateDbResApps as $duplicateDbResApp) {
                         $duplicateIds[] = $duplicateDbResApp->getId();
                     }
                     $duplicateArr[] = "Previously Imported";
                 } else {
-                    //$rowArr['Duplicate?']['id'] = null;
-                    //$rowArr['Duplicate?']['value'] = "Not Imported";
+                    //$rowArr['Issue']['id'] = null;
+                    //$rowArr['Issue']['value'] = "Not Imported";
                 }
                 if( count($duplicateArr) > 0 ) {
-                    $rowArr['Duplicate?']['id'] = implode(",",$duplicateIds);
-                    $rowArr['Duplicate?']['value'] = implode(", ",$duplicateArr);
+                    $rowArr['Issue']['id'] = implode(",",$duplicateIds);
+                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+
+                    //change the value in the “Action” column to “Do not add”
+                    $rowArr['Action']['id'] = null;
+                    $rowArr['Action']['value'] = "Do not add";
                 }
                 ////////////// EOF check for duplicate //////////////////
 
@@ -525,7 +529,7 @@ class PdfUtil {
         $query->setParameter('userInfoEmail', "'".$email."'");
         $query->setParameter('userInfoLastName', "'".$lastName."'");
         $resapps = $query->getResult();
-        echo "resapps count=".count($resapps)."<br>";
+        //echo "resapps count=".count($resapps)."<br>";
 
         return $resapps;
     }
@@ -566,24 +570,24 @@ class PdfUtil {
                 }
             }
 
-            echo     "[$aamcId]=[$thisAamcId],"
-                    ."[$email]=[$thisEmail],"
-                    ."[$lastName=$thisLastName],"
-                    ."[$expectedResidencyStartDate]=[$thisExpectedResidencyStartDate],"
-                    ."[$erasApplicantId]=[$thisErasApplicantId]"
-                    ."<br>";
+//            echo     "[$aamcId]=[$thisAamcId],"
+//                    ."[$email]=[$thisEmail],"
+//                    ."[$lastName=$thisLastName],"
+//                    ."[$expectedResidencyStartDate]=[$thisExpectedResidencyStartDate],"
+//                    ."[$erasApplicantId]=[$thisErasApplicantId]"
+//                    ."<br>";
 
             if(
                 $aamcId == $thisAamcId
-                //&& $expectedResidencyStartDate == $thisExpectedResidencyStartDate
+                && $expectedResidencyStartDate == $thisExpectedResidencyStartDate
                 && $email == $thisEmail
                 && $lastName == $thisLastName
-                //&& $erasApplicantIdSame
+                && $erasApplicantIdSame
             ) {
-                echo "Duplicate!!!<br>";
+                //echo "Duplicate!!!<br>";
                 return $thisRowArr;
             } else {
-                echo "NoDuplicate<br>";
+                //echo "NoDuplicate<br>";
             }
 
         }
@@ -611,7 +615,7 @@ class PdfUtil {
         $pdfFilePaths = array();
         foreach($files as $file) {
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-            echo "filePath ext=".$ext."<br>";
+            //echo "filePath ext=".$ext."<br>";
             if( $ext == 'pdf' ) {
                 $pdfFilePaths[] = $file;
             }
