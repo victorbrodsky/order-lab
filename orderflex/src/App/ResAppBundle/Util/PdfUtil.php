@@ -152,7 +152,7 @@ class PdfUtil {
 
                 $rowArr = array();
                 foreach( $this->getHeaderMap() as $handsomTitle => $headerTitle ) {
-                    echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
+                    //echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
 
 //                    if( $handsomTitle == "Application Receipt Date" ) {
 //                        //Applicant Applied Date
@@ -168,8 +168,9 @@ class PdfUtil {
                         if( isset($cells[$column]) ) {
                             $cell = $cells[$column];
                             $cellValue = $cell->getValue();
+                            $cellValue = trim($cellValue);
 
-                            echo $headerTitle."( col=".$column."): cellValue=".$cellValue."<br>";
+                            //echo $headerTitle."( col=".$column."): cellValue=".$cellValue."<br>";
 
                             if ($handsomTitle == "Application Receipt Date") {
                                 if( $cellValue ) {
@@ -206,6 +207,11 @@ class PdfUtil {
                                     $year = $year + 2;
                                     $cellValue = "06/30/".$year;
                                 }
+
+                                if ($handsomTitle == "Birth Date") {
+                                    //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
+                                    $cellValue = date("m/d/Y", strtotime($cellValue));
+                                }
                             }
 
                             $rowArr[$handsomTitle]['id'] = 1;
@@ -238,35 +244,90 @@ class PdfUtil {
                     //$rowArr["NBOME ID"]['value'], //might be null
                     $rowArr["NRMP ID"]['value'],
                 );
+                echo $rowArr["Preferred Email"]['value'].": Birth Date=".$rowArr["Birth Date"]['value']."<br>";
 //                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
 //                if( $pdfPath ) {
 //                    $rowArr['ERAS Application']['id'] = 1;
 //                    $rowArr['ERAS Application']['value'] = $pdfPath;
 //                }
 
+                ////////////// Try to get ERAS Application ID //////////////////
                 $pdfFile = $this->findPdfByInfoArr($pdfInfoArr,$keysArr);
                 if( $pdfFile ) {
-                    echo "!!!! found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
+                    //echo "!!!! found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                     $rowArr['ERAS Application']['id'] = $pdfFile->getId();
                     $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
 
                     //TODO: get "ERAS Application ID" from PDF
                     $pdfText = $pdfInfoArr[$pdfFile->getId()]['text'];
-                    $erasApplicantID = $this->getSingleKeyField($pdfText,'Applicant ID');
+                    $erasApplicantID = $this->getSingleKeyField($pdfText,'Applicant ID:');
                     if( $erasApplicantID ) {
                         $rowArr['ERAS Application ID']['id'] = null;
                         $rowArr['ERAS Application ID']['value'] = $erasApplicantID;
                     }
+                } else {
+                    //echo "Not found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                 }
+                ////////////// EOF Try to get ERAS Application ID //////////////////
 
-                //TODO: check for duplicate in $handsomtableJsonData and in DB
+                ////////////// check for duplicate //////////////////
+                $duplicateIds = array();
+                $duplicateArr = array();
+                //TODO: check for duplicate in $handsomtableJsonData
+                $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
+                if( $duplicateTableResApps  ) {
+                    //$rowArr['Duplicate?']['id'] = null;
+                    //$rowArr['Duplicate?']['value'] = "Duplicate in batch";
+                    $duplicateArr[] = "Duplicate in batch";
+                } else {
+                    //$rowArr['Duplicate?']['id'] = null;
+                    //$rowArr['Duplicate?']['value'] = "Not Duplicated";
+                }
+                //TODO: check for duplicate in DB
                 $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
-                    $rowArr['Duplicate?']['id'] = implode(",",$duplicateDbResApps);
-                    $rowArr['Duplicate?']['value'] = "Previously Imported";
+                    //$rowArr['Duplicate?']['id'] = implode(",",$duplicateDbResApps);
+                    //$rowArr['Duplicate?']['value'] = "Previously Imported";
+                    foreach($duplicateDbResApps as $duplicateDbResApp) {
+                        $duplicateIds[] = $duplicateDbResApp->getId();
+                    }
+                    $duplicateArr[] = "Previously Imported";
                 } else {
-                    $rowArr['Duplicate?']['id'] = null;
-                    $rowArr['Duplicate?']['value'] = "Not Imported";
+                    //$rowArr['Duplicate?']['id'] = null;
+                    //$rowArr['Duplicate?']['value'] = "Not Imported";
+                }
+                if( count($duplicateArr) > 0 ) {
+                    $rowArr['Duplicate?']['id'] = implode(",",$duplicateIds);
+                    $rowArr['Duplicate?']['value'] = implode(", ",$duplicateArr);
+                }
+                ////////////// EOF check for duplicate //////////////////
+
+                //TODO:
+                //"" => "Number of first author publications",
+                //"Count of Peer Reviewed Book Chapter" => "Count of Peer Reviewed Book Chapter",
+                //"Count of Peer Reviewed Journal Articles/Abstracts" => "Count of Peer Reviewed Journal Articles/Abstracts",
+                //"Count of Peer Reviewed Online Publication" => "Count of Peer Reviewed Online Publication",
+                //"Count of Scientific Monograph" => "Count of Scientific Monograph",
+                $numberFirstAuthorPublications =
+                    (int)$rowArr['Count of Peer Reviewed Book Chapter']['value']
+                + (int)$rowArr['Count of Peer Reviewed Journal Articles/Abstracts']['value']
+                + (int)$rowArr['Count of Peer Reviewed Online Publication']['value']
+                + (int)$rowArr['Count of Scientific Monograph']['value'];
+                if( $numberFirstAuthorPublications ) {
+                    $rowArr['Number of first author publications']['id'] = null;
+                    $rowArr['Number of first author publications']['value'] = $numberFirstAuthorPublications;
+                }
+
+                //"" => "Number of all publications",
+                //"Count of Non Peer Reviewed Online Publication" => "Count of Non Peer Reviewed Online Publication",
+                //"Count of Other Articles" => "Count of Other Articles",
+                $numberAllPublications =
+                    $numberFirstAuthorPublications
+                    + (int)$rowArr['Count of Non Peer Reviewed Online Publication']['value']
+                    + (int)$rowArr['Count of Other Articles']['value'];
+                if( $numberAllPublications ) {
+                    $rowArr['Number of all publications']['id'] = null;
+                    $rowArr['Number of all publications']['value'] = $numberAllPublications;
                 }
 
                 $handsomtableJsonData[] = $rowArr;
@@ -312,8 +373,25 @@ class PdfUtil {
 
             "Is the applicant a member of any of the following groups?" => "Self Identify",
 
-            //"" => "Number of first author publications",
-            //"" => "Number of all publications",
+            //1            Count of Non Peer Reviewed Online Publication
+            //0            Count of Oral Presentation
+            //1            Count of Other Articles
+            //1            Count of Peer Reviewed Book Chapter
+            //1            Count of Peer Reviewed Journal Articles/Abstracts
+            //0            Count of Peer Reviewed Journal Articles/Abstracts(Other than Published)
+            //1            Count of Peer Reviewed Online Publication
+            //0            Count of Poster Presentation
+            //1            Count of Scientific Monograph
+            "Number of first author publications" => "Number of first author publications",
+            "Count of Peer Reviewed Book Chapter" => "Count of Peer Reviewed Book Chapter",
+            "Count of Peer Reviewed Journal Articles/Abstracts" => "Count of Peer Reviewed Journal Articles/Abstracts",
+            "Count of Peer Reviewed Online Publication" => "Count of Peer Reviewed Online Publication",
+            "Count of Scientific Monograph" => "Count of Scientific Monograph",
+
+            "Number of all publications" => "Number of all publications",
+            "Count of Non Peer Reviewed Online Publication" => "Count of Non Peer Reviewed Online Publication",
+            "Count of Other Articles" => "Count of Other Articles",
+
 
             //"" => "AOA",
             "Couple’s Match" => "Participating as a Couple in NRMP",
@@ -450,6 +528,67 @@ class PdfUtil {
         echo "resapps count=".count($resapps)."<br>";
 
         return $resapps;
+    }
+
+    public function getDuplicateTableResApps( $rowArr, $handsomtableJsonData ) {
+        if( count($handsomtableJsonData) == 0 ) {
+            return NULL;
+        }
+
+        $aamcId = $rowArr['AAMC ID']['value'];
+        $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
+        $email = $rowArr['Preferred Email']['value'];
+        $lastName = $rowArr['Last Name']['value'];
+
+        $erasApplicantId = NULL;
+        if( isset($rowArr['ERAS Application ID']) ) {
+            $erasApplicantId = $rowArr['ERAS Application ID']['value'];
+        }
+
+        foreach($handsomtableJsonData as $thisRowArr) {
+
+            $thisAamcId = $thisRowArr['AAMC ID']['value'];
+            $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
+            $thisEmail = $thisRowArr['Preferred Email']['value'];
+            $thisLastName = $thisRowArr['Last Name']['value'];
+
+            $thisErasApplicantId = NULL;
+            if( isset($rowArr['ERAS Application ID']) ) {
+                $thisErasApplicantId = $rowArr['ERAS Application ID']['value'];
+            }
+
+            $erasApplicantIdSame = true; //ignore by default
+            if( $erasApplicantId && $thisErasApplicantId ) {
+                if( $erasApplicantId == $thisErasApplicantId ) {
+                    $erasApplicantIdSame = true;
+                } else {
+                    $erasApplicantIdSame = false;
+                }
+            }
+
+            echo     "[$aamcId]=[$thisAamcId],"
+                    ."[$email]=[$thisEmail],"
+                    ."[$lastName=$thisLastName],"
+                    ."[$expectedResidencyStartDate]=[$thisExpectedResidencyStartDate],"
+                    ."[$erasApplicantId]=[$thisErasApplicantId]"
+                    ."<br>";
+
+            if(
+                $aamcId == $thisAamcId
+                //&& $expectedResidencyStartDate == $thisExpectedResidencyStartDate
+                && $email == $thisEmail
+                && $lastName == $thisLastName
+                //&& $erasApplicantIdSame
+            ) {
+                echo "Duplicate!!!<br>";
+                return $thisRowArr;
+            } else {
+                echo "NoDuplicate<br>";
+            }
+
+        }
+
+        return NULL;
     }
 
     //get year 9/29/2018 m/d/Y
@@ -1008,6 +1147,9 @@ class PdfUtil {
     public function getShortestField($text, $key, $endArr) {
         $minLength = NULL;
         $minField = NULL;
+
+        //echo "key=[$key] <br>";
+        //echo "$text <br><br>";
 
         foreach($endArr as $endStr) {
             $field = $this->getPdfField($text,$key,$endStr);
