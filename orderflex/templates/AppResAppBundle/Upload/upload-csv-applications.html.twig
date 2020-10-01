@@ -27,7 +27,8 @@
 
 {% block content %}
 
-    {{ form_start(form) }}
+    {#{{ form_start(form) }}#}
+    {{ form_start(form,{'attr':{'onsubmit':'return validateUploadForm();'}}) }}
 
         {% if form.file is defined %}
             <div class="row">
@@ -66,7 +67,28 @@
         {% if form.upload is defined %}
             <br>
             <p>
-                {{ form_widget(form.upload) }}
+                {% if withdata %}
+                    {% set showBtnStyle = 'display: none;' %}
+                    {% set showMsgStyle = '' %}
+                {% else %}
+                    {% set showBtnStyle = '' %}
+                    {% set showMsgStyle = 'display: none;' %}
+                {% endif %}
+                <div id="upload-extract-button" style="{{ showBtnStyle }}">
+                    {{ form_widget(form.upload) }}
+                </div>
+                {#<div id="uploading-extracting-message" style="display: none;">Uploading and extracting data…</div>#}
+                <div id="uploading-extracting-message" style="{{ showMsgStyle }}">Uploading and extracting data…</div>
+            </p>
+        {% endif %}
+
+        {% if form.addbtn is defined %}
+            <br>
+            <p>
+            <div id="add-listed-button" style="display: none;">
+                {{ form_widget(form.addbtn) }}
+            </div>
+            <div id="add-listed-message" style="display: none;">Adding Applications...</div>
             </p>
         {% endif %}
 
@@ -102,10 +124,12 @@
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
             //console.log(_handsometableDataArr);
 
-            var uploadLaddaBtn = null;
-            if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
-                uploadLaddaBtn = startLaddaBtn();
-            }
+//            var uploadLaddaBtn = null;
+//            if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
+//                $("#upload-extract-button").hide();
+//                $("#uploading-extracting-message").show();
+//                //uploadLaddaBtn = startLaddaBtn();
+//            }
 
             getResidencytracks();
 
@@ -119,7 +143,14 @@
 
                 handsonTableInit(_handsometableDataArr);
 
-                stopLaddaBtn(uploadLaddaBtn);
+                //stopLaddaBtn(uploadLaddaBtn);
+                if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
+                    $("#upload-extract-button").hide();
+                    $("#uploading-extracting-message").hide();
+
+                    //enable "Add Listed Applications" button
+                    $("#add-listed-button").show();
+                }
             });
         });
 
@@ -142,10 +173,24 @@
             document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = false;
         }
         function disableUploadBtn() {
+            $("#upload-extract-button").hide();
+            $("#uploading-extracting-message").show();
+            return;
+
             var file = document.getElementById("oleg_resappbundle_bulkupload_file");
             if( file.files.length > 0 ) {
                 document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
             }
+        }
+
+        function validateUploadForm() {
+            //alert("form submit");
+            $("#upload-extract-button").hide();
+            $("#uploading-extracting-message").show();
+
+            $("#add-listed-button").hide();
+            $("#add-listed-message").show();
+            //return false;
         }
 
     </script>

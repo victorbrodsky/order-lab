@@ -500,6 +500,9 @@ function handsonTableInit(handsometableDataArr) {
 
     resizeTableHeight();
 
+    //$("#upload-extract-button").hide();
+    //$("#uploading-extracting-message").hide();
+
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
     //     //_sotable.render();

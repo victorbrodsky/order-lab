@@ -67,8 +67,14 @@ class ResAppUploadType extends AbstractType
 
         $builder->add('upload', SubmitType::class, array(
             'label' => "Upload and Extract Data",
-            'disabled' => true,
-            'attr' => array('class' => 'btn btn-default', "onClick=disableUploadBtn();")
+            //'disabled' => true,
+//            'attr' => array('class' => 'btn btn-default', "onClick=disableUploadBtn();")
+            'attr' => array('class' => 'btn btn-default')
+        ));
+
+        $builder->add('addbtn', SubmitType::class, array(
+            'label' => "Add Listed Applications",
+            'attr' => array('class' => 'btn btn-primary')
         ));
         
     }

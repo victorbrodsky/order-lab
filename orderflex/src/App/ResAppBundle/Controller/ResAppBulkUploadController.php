@@ -178,11 +178,17 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$jsonData = $this->getTableData($dataArr);
         }
 
+        $withdata = false;
+        if( count($handsomtableJsonData) > 0 ) {
+            $withdata = true;
+        }
+
         return array(
             'form' => $form->createView(),
             'cycle' => $cycle,
             'inputDataFile' => $inputDataFile,
-            'handsometableData' => $handsomtableJsonData
+            'handsometableData' => $handsomtableJsonData,
+            'withdata' => $withdata
         );
     }
 
