@@ -1864,6 +1864,7 @@ class CallLogPatientController extends PatientController {
                 'Last Name',       //2 - C
                 'First Name',      //3 - D
                 'Date of Birth',   //4 - E
+                'Created Date',   //5
                 //'Full Name',       //5
             ],
             $headerStyle
@@ -1918,6 +1919,14 @@ class CallLogPatientController extends PatientController {
 
             //$fullPatientName = $patient->getFullPatientName(false);
             //$data[5] = $fullPatientName;
+
+            $created = $patient->getCreationdate();
+            if( $created ) {
+                $createdStr = $created->format('m/d/Y');
+            } else {
+                $createdStr = NULL;
+            }
+            $data[5] = $createdStr;
 
             $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
             $writer->addRow($spoutRow);
