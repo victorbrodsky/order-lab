@@ -78,7 +78,7 @@
                     {{ form_widget(form.upload) }}
                 </div>
                 {#<div id="uploading-extracting-message" style="display: none;">Uploading and extracting data…</div>#}
-                <div id="uploading-extracting-message" style="{{ showMsgStyle }}">Uploading and extracting data…</div>
+                {#<div id="uploading-extracting-message" style="{{ showMsgStyle }}">Uploading and extracting data…</div>#}
             </p>
         {% endif %}
 
@@ -91,6 +91,8 @@
             <div id="add-listed-message" style="display: none;">Adding Applications...</div>
             </p>
         {% endif %}
+
+        <p><div id="wait-message" style="{{ showMsgStyle }}">Processing...</div></p>
 
     {{ form_end(form) }}
 
@@ -146,7 +148,8 @@
                 //stopLaddaBtn(uploadLaddaBtn);
                 if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
                     $("#upload-extract-button").hide();
-                    $("#uploading-extracting-message").hide();
+                    //$("#uploading-extracting-message").hide();
+                    $("#wait-message").hide();
 
                     //enable "Add Listed Applications" button
                     $("#add-listed-button").show();
@@ -174,7 +177,8 @@
         }
         function disableUploadBtn() {
             $("#upload-extract-button").hide();
-            $("#uploading-extracting-message").show();
+            //$("#uploading-extracting-message").show();
+            $("#wait-message").show();
             return;
 
             var file = document.getElementById("oleg_resappbundle_bulkupload_file");
@@ -186,10 +190,13 @@
         function validateUploadForm() {
             //alert("form submit");
             $("#upload-extract-button").hide();
-            $("#uploading-extracting-message").show();
+            //$("#uploading-extracting-message").show();
 
             $("#add-listed-button").hide();
-            $("#add-listed-message").show();
+            //$("#add-listed-message").show();
+
+            $("#wait-message").show();
+
             //return false;
         }
 

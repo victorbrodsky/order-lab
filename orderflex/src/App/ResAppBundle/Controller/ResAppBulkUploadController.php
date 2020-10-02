@@ -100,67 +100,67 @@ class ResAppBulkUploadController extends OrderAbstractController
             //dump($form);
             //exit("form submitted");
 
-            if(0) {
-                $inputFileName = $form['file']->getData();
-                echo "inputFileName1=" . $inputFileName . "<br>";
-                //$inputFileName = $form->get('file')->getData();
-                //echo "inputFileName2=".$inputFileName."<br>";
+            if( $form->getClickedButton() === $form->get('upload') ) {
+                //exit("Extracting applications from CSV");
 
-                $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
-
-            } else {
                 $pdfFilePaths = array();
                 $pdfFiles = array();
                 $inputFileName = NULL;
 
-                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $inputDataFile, 'erasFile' );
+                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
                 $em->persist($inputDataFile);
                 $em->flush();
 
                 $files = $inputDataFile->getErasFiles();
-                foreach( $files as $file ) {
+                foreach ($files as $file) {
                     $ext = $file->getExtension();
-                    if( $ext == 'csv' ) {
+                    if ($ext == 'csv') {
                         $inputFileName = $file->getFullServerPath();
                     } elseif ($ext == 'pdf') {
                         $pdfFilePaths[] = $file->getFullServerPath();
                         $pdfFiles[] = $file;
                     }
                 }
-            }
-            //echo "inputFileName=" . $inputFileName . "<br>";
-            //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
-            //dump($pdfFilePaths);
 
-//            //remove all documents
-//            foreach( $inputDataFile->getErasFiles() as $file ) {
-//                $inputFileName->removeElement($file);
-//                $em->remove($file);
-//            }
-//            $em->remove($inputFileName);
-//            $em->flush();
+                //echo "inputFileName=" . $inputFileName . "<br>";
+                //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
+                //dump($pdfFilePaths);
+
+                $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName, $pdfFiles);
+
+                if (!is_array($handsomtableJsonData)) {
+
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $handsomtableJsonData
+                    );
+
+                    $handsomtableJsonData = array();
+                }
+
+                //remove all documents
+                foreach ($inputDataFile->getErasFiles() as $file) {
+                    $inputDataFile->removeErasFile($file);
+                    $em->remove($file);
+                }
+                $em->remove($inputDataFile);
+                $em->flush();
+            }
+            elseif( $form->getClickedButton() === $form->get('addbtn') ) {
+                exit("Adding Application to be implemented");
+            }
+            else {
+                exit("Unknown button clicked");
+            }
+
+//                $inputFileName = $form['file']->getData();
+//                echo "inputFileName1=" . $inputFileName . "<br>";
+//                //$inputFileName = $form->get('file')->getData();
+//                //echo "inputFileName2=".$inputFileName."<br>";
 //
-//            exit(111);
+//                $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
 
-            $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName,$pdfFiles);
 
-            if( !is_array($handsomtableJsonData) ) {
-
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $handsomtableJsonData
-                );
-
-                $handsomtableJsonData = array();
-            }
-
-            //remove all documents
-            foreach( $inputDataFile->getErasFiles() as $file ) {
-                $inputDataFile->removeErasFile($file);
-                $em->remove($file);
-            }
-            $em->remove($inputDataFile);
-            $em->flush();
 
             //exit(111);
 
@@ -176,7 +176,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             //get Table $jsonData
             //$jsonData = $this->getTableData($dataArr);
-        }
+
+        }//form submit
 
         $withdata = false;
         if( count($handsomtableJsonData) > 0 ) {
