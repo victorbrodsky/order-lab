@@ -4750,15 +4750,15 @@ class CallLogUtil
                     $statusStrLastname = "(lastname.status = :statusValid OR lastname.status = :statusAlias)";
                     //$searchCriterionArr[] = "lastname.field LIKE :lastname AND $statusStr";
                     //$parameters['lastname'] = '%'.$lastname.'%';
-                    $searchCriterionArr[] = "lastname.field = :lastname AND $statusStrLastname";
-                    $parameters['lastname'] = $lastname;
+                    $searchCriterionArr[] = "LOWER(lastname.field) LIKE LOWER(:lastname) AND $statusStrLastname";
+                    $parameters['lastname'] = "%".$lastname."%";
 
                     //first name: status
                     $statusStrFirstname = "(firstname.status = :statusValid OR firstname.status = :statusAlias)";
                     //$searchCriterionArr[] = "firstname.field LIKE :firstname AND $statusStr";
                     //$parameters['firstname'] = '%'.$firstname.'%';
-                    $searchCriterionArr[] = "firstname.field = :firstname AND $statusStrFirstname";
-                    $parameters['firstname'] = $firstname;
+                    $searchCriterionArr[] = "LOWER(firstname.field) LIKE LOWER(:firstname) AND $statusStrFirstname";
+                    $parameters['firstname'] = "%".$firstname."%";
 
                     $parameters['statusValid'] = 'valid';
                     $parameters['statusAlias'] = 'alias';
