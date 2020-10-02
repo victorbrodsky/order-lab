@@ -1768,8 +1768,10 @@ class CallLogPatientController extends PatientController {
         //$userName = str_replace("--", "-", $userName);
         //exit("userName=".$userName);
 
-        $fileName = "Patients-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName;//.".csv";//".xlsx";
+        //$fileName = "Patients-".date('m/d/Y')."-".date('H:i')."-by-".$userName;//.".csv";//".xlsx";
+        $fileName = "Patients-".date('m-d-Y')."-by-".$user;//.".csv";//".xlsx";
         //$fileName = $fileName . ".xlsx";
+        //$fileName = str_replace("/", "-", $fileName);
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);
@@ -1794,6 +1796,8 @@ class CallLogPatientController extends PatientController {
         //$dql->leftJoin("encounter.procedure", "procedure");
 
         //$dql->where("calllogEntryMessage.id IS NOT NULL");
+
+        $dql->orderBy("patient.id","DESC");
 
         $query = $em->createQuery($dql);
         //$query->setMaxResults(100);
