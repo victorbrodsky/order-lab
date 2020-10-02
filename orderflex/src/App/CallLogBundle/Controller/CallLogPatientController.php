@@ -38,6 +38,11 @@ use App\OrderformBundle\Entity\PatientMiddleName;
 use App\OrderformBundle\Entity\PatientMrn;
 use App\OrderformBundle\Entity\PatientSex;
 use App\OrderformBundle\Entity\PatientSuffix;
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -1731,6 +1736,190 @@ class CallLogPatientController extends PatientController {
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($result));
         return $response;
+    }
+
+
+
+    /**
+     * @Route("/export_patients_csv/", name="calllog_export_patients_csv")
+     * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
+     */
+    public function exportPatientsCsvAction(Request $request)
+    {
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        set_time_limit(600); //600 seconds => 10 mins
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
+        //$logger = $this->container->get('logger');
+
+        //$all = $request->get('all');
+        //echo "all=".$all."<br>";
+
+        $limit = null;
+
+        //filename: The title of the file should be "Call-Log-Book-Entries-exported-on-[Timestamp]-by-[Logged-In-User-FirstName-LastName-(cwid)].csv .
+        $userName = $user."";//->getUsernameOptimal();
+        $userName = str_replace(",", "-", $userName);
+        //$userName = str_replace("--", "-", $userName);
+        //exit("userName=".$userName);
+
+        $fileName = "Patients-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName;//.".csv";//".xlsx";
+        //$fileName = $fileName . ".xlsx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
+
+        $ext = "XLSX";
+        $ext = "CSV";
+
+        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+
+        //$dql->leftJoin("patient.message", "message");
+        //$dql->leftJoin("message.editorInfos", "editorInfos");
+        //$dql->leftJoin("message.calllogEntryMessage", "calllogEntryMessage");
+        //$dql->leftJoin("calllogEntryMessage.calllogTasks", "calllogTasks");
+
+        //$dql->leftJoin("patient.lastname", "lastname");
+        //$dql->leftJoin("patient.firstname", "firstname");
+        //$dql->leftJoin("patient.mrn", "mrn");
+
+        //$dql->leftJoin("patient.encounter", "encounter");
+        //$dql->leftJoin("encounter.procedure", "procedure");
+
+        //$dql->where("calllogEntryMessage.id IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setMaxResults(100);
+
+        $patients = $query->getResult();
+        //echo "patients=".count($patients)."<br>";
+        //exit('111');
+
+        $this->createCalllogPatientsExcelSpout($patients,$fileName,$user,$ext);
+        //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        exit();
+    }
+    public function createCalllogPatientsExcelSpout($patients,$fileName,$user,$ext) {
+        set_time_limit(600); //6 min
+
+        //$em = $this->getDoctrine()->getManager();
+
+        if( $ext == "XLSX" ) {
+            $fileName = $fileName . ".xlsx";
+            //$writer = WriterFactory::create(Type::XLSX);
+            $writer = WriterEntityFactory::createXLSXWriter();
+        } else {
+            $fileName = $fileName . ".csv";
+            //$writer = WriterFactory::create(Type::CSV);
+            $writer = WriterEntityFactory::createCSVWriter();
+        }
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+
+        $rowStyle = (new StyleBuilder())
+            //->setFontBold()
+            //->setFontItalic()
+            //->setFontSize(12)
+            //->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            //->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+
+        //A. NYH MRN
+        //B. NYH EMPI (this column will be empty - new MRN type...)
+        //C. Last Name
+        //D. First Name
+        //E. Date of Birth
+
+        $spoutRow = WriterEntityFactory::createRowFromArray(
+            [
+                'NYH MRN',         //0 - A
+                'NYH EMPI',        //1 - B
+                'Last Name',       //2 - C
+                'First Name',      //3 - D
+                'Date of Birth',   //4 - E
+                //'Full Name',       //5
+            ],
+            $headerStyle
+        );
+        $writer->addRow($spoutRow);
+
+        $status = 'valid';
+        $status = NULL;
+        $count = 0;
+        //$rowCount = 2;
+        foreach( $patients as $patient ) {
+            //foreach( $entryIds as $entryId ) {
+
+            $count++;
+
+            $data = array();
+
+            //'NYH MRN',         //0 - A
+            //$mrnStr = $patient->obtainFullValidKeyName();
+            $mrn = $patient->obtainValidField('mrn');
+            $mrnStr = $mrn->getField();
+            if( $mrn->getKeytype() ) {
+                $mrntypeStr = $mrn->getKeytype()->getOptimalName()."";
+            } else {
+                $mrntypeStr = "";
+            }
+            if( $mrntypeStr != "NYH MRN" ) {
+                $mrnStr = $mrntypeStr.": ".$mrnStr;
+            }
+            $data[0] = $mrnStr;
+
+            //'NYH EMPI',        //1 - B
+            $data[1] = "";
+
+            //'Last Name',       //2 - C
+            $lastname = $patient->obtainValidField('lastname');
+//            $lastNameArr = $patient->obtainStatusFieldArray('lastname', $status);
+//            $lastnameFullArr = array();
+//            foreach($lastNameArr as $lastName) {
+//                $lastnameFullArr[] = $lastName." (".$lastName->getStatus().")";
+//            }
+//            $lastname = implode(", ",$lastnameFullArr)." lastname=$lastname";
+            $data[2] = $lastname."";
+
+            //'First Name',      //3 - D
+            $firstname = $patient->obtainValidField('firstname');
+            $data[3] = $firstname."";
+
+            //'Date of Birth',   //4 - E
+            $dob = $patient->obtainValidField('dob');
+            $data[4] = $dob."";
+
+            //$fullPatientName = $patient->getFullPatientName(false);
+            //$data[5] = $fullPatientName;
+
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
+            $writer->addRow($spoutRow);
+        }
+
+        $writer->close();
     }
 
 }
