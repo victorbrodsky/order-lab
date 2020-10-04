@@ -1290,11 +1290,11 @@ class CallLogPatientController extends PatientController {
 
         if( count($messages) > $limit ) {
             $mrnRes = $patient->obtainStatusField('mrn', "valid");
-            if( $mrnRes->getKeytype() ) {
+            //if( $mrnRes->getKeytype() ) {
                 $mrntype = $mrnRes->getKeytype()->getId();
-            } else {
-                $mrntype = NULL;
-            }
+            //} else {
+            //    $mrntype = NULL;
+            //}
             $mrn = $mrnRes->getField();
             $linkUrl = $this->generateUrl(
                 "calllog_home",
