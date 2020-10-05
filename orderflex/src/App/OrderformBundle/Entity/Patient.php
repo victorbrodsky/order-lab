@@ -38,6 +38,7 @@ class Patient extends ObjectAbstract
 
     /**
      * @ORM\OneToMany(targetEntity="PatientMrn", mappedBy="patient", cascade={"persist"})
+     * @ORM\OrderBy({"creationdate" = "DESC"})
      */
     private $mrn;
 
@@ -1678,6 +1679,36 @@ class Patient extends ObjectAbstract
         }
 
         return parent::obtainStatusField( $fieldname, $status, $orderid );
+    }
+
+    public function obtainAllMrnStr() {
+        $resArr = $this->obtainStatusFieldArray('mrn',null);
+
+        //show only multiple MRNs
+        if( count($resArr) == 1 ) {
+            return NULL;
+        }
+
+        $infoArr = array();
+        foreach($resArr as $mrn) {
+            //$infoArr[] = $mrn->obtainOptimalName()."";
+            //$infoArr[] = $mrn->getField().",".$mrn->getKeytype()."(".$mrn->getStatus().")";
+
+            $creationDateStr = null;
+            $creationDate = $mrn->getCreationdate();
+            if( $creationDate ) {
+                $creationDateStr = ", created on ".$creationDate->format('m/d/Y H:i:s');
+            }
+
+            $updateDateStr = null;
+            $updateDate = $mrn->getUpdateDate();
+            if( $updateDate ) {
+                $updateDateStr = ", updateed on ".$updateDate->format('m/d/Y H:i:s');
+            }
+
+            $infoArr[] = $mrn->getField()." (".$mrn->getKeytype().")".$creationDateStr.$updateDateStr.", ".$mrn->getStatus()."";
+        }
+        return implode("<br>",$infoArr);
     }
 
     //11/29/1980 | F | 36 y.o. | New York Hospital MRN: 1?

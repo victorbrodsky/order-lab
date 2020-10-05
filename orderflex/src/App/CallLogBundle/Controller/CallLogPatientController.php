@@ -357,7 +357,7 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit patient info only (not encounters)
      *
-     * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit", methods={"GET","POST"})
+     * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit", methods={"GET","POST"}, options={"expose"=true})
      * @Template("AppCallLogBundle/DataQuality/single-patient-edit.html.twig")
      */
     public function patientSingleEditAction(Request $request, Patient $patient)

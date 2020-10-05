@@ -4639,9 +4639,10 @@ class CallLogUtil
                 $parameters['mrn'] = '%' . $mrn . '%';
             }
 
-            $dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
-            $parameters['statusValid'] = 'valid';
-            $parameters['statusAlias'] = 'alias';
+            //search by only valid, alias status
+            //$dql->andWhere("mrn.status = :statusValid OR mrn.status = :statusAlias");
+            //$parameters['statusValid'] = 'valid';
+            //$parameters['statusAlias'] = 'alias';
 
             $where = true;
             $searchArr[] = "MRN Type: ".$mrntype."; MRN: ".$mrn;

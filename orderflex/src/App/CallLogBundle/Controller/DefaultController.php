@@ -20,6 +20,7 @@ namespace App\CallLogBundle\Controller;
 use App\CallLogBundle\Form\CalllogMessageCacheType;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\MessageTagsList;
+use App\OrderformBundle\Entity\PatientMrn;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -775,7 +776,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updatePatientMrnAction(Request $request)
     {
-        exit("updatePatientMrnAction");
+        //exit("updatePatientMrnAction");
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -787,6 +788,16 @@ class DefaultController extends OrderAbstractController
         //Copy entry tags from CalllogEntryMessage->entryTags => Message->entryTags
 
         $em = $this->getDoctrine()->getManager();
+
+        $oldMrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        if( !$oldMrnType ) {
+            exit("oldMrnType not found");
+        }
+
+        $newMrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName("NYH EMPI");
+        if( !$newMrnType ) {
+            exit("newMrnType not found");
+        }
 
 //        $repository = $em->getRepository('AppOrderformBundle:Patient');
 //        $dql = $repository->createQueryBuilder("patient");
@@ -809,15 +820,97 @@ class DefaultController extends OrderAbstractController
 //        $patients = $query->getResult();
 //        echo "patients=".count($patients)."<br>";
 
-        foreach($mrns as $mrn) {
+        //$inputFileName = __DIR__ . '/../Util/Cities.xlsx';
+        //$inputFileName = "C:\Users\ch3\Documents\MyDocs\WCMC\CallLog";
 
-            $res = $this->findAndupdateSinglePatient($mrnType,$mrnValue );
+        $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        //echo "projectRoot=$projectRoot<br>";
+        //exit($projectRoot);
+        $parentRoot = str_replace('order-lab','',$projectRoot);
+        $parentRoot = str_replace('orderflex','',$parentRoot);
+        $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
+        //echo "parentRoot=$parentRoot<br>";
+        $filename = "updateData.xlsx";
+        $filename = "updateDataTest.xlsx";
+        $inputFileName = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
+        echo "inputFileName=$inputFileName<br>";
+
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
-        exit("EOF updatePatientMrnAction. Res=" . $res);
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        //$batchSize = 20;
+        $count = 0;
+
+        //for each row in excel
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            $res = NULL;
+
+            if( $row > 10 ) {
+                break;
+            }
+
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray(
+                'A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE
+            );
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+//            $oldMrnValue = trim($rowData[0][0]);
+//            $newMrnValue = trim($rowData[0][1]);
+//
+//            $lastName = trim($rowData[0][2]);
+//            $firstName = trim($rowData[0][3]);
+//            $dob = trim($rowData[0][4]);
+
+            //$res = $this->findAndupdateSinglePatient($oldMrnValue,$oldMrnType,$newMrnValue,$newMrnType);
+            $res = $this->findAndUpdateSinglePatient($rowData,$oldMrnType,$newMrnType);
+
+            if( $res ) {
+                $count++;
+            }
+        }
+
+        exit("EOF updatePatientMrnAction. updated patients=" . $count);
     }
-    public function findAndupdateSinglePatient( $mrnType, $mrnValue ) {
+    public function findAndUpdateSinglePatient( $rowData, $oldMrnType, $newMrnType ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $invalidStatus = 'invalid';
+
+        $oldMrnNumber = trim($rowData[0][0]);
+        $newMrnNumber = trim($rowData[0][1]);
+
+        $lastName = trim($rowData[0][2]);
+        $firstName = trim($rowData[0][3]);
+        $dob = trim($rowData[0][4]);
+
+        if ( filter_var($oldMrnNumber, FILTER_VALIDATE_INT) === false ) {
+            //echo "$oldMrnNumber is not an integer <br>";
+            return NULL;
+        }
+
+        //echo "MRN=".$oldMrnNumber.": ";
+        //print_r($rowData);
+        //dump($rowData);
+
         $repository = $em->getRepository('AppOrderformBundle:Patient');
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
@@ -828,11 +921,12 @@ class DefaultController extends OrderAbstractController
         //$dql->leftJoin("encounter.patlastname", "encounterLastname");
         //$dql->leftJoin("encounter.patfirstname", "encounterFirstname");
 
-        $dql->andWhere("mrn.keytype = :keytype");
-        $parameters['keytype'] = $mrnType->getId();
+        $dql->where("mrn.field = :mrn");
+        $parameters['mrn'] = $oldMrnNumber;
 
-        $dql->andWhere("mrn.field = :mrn");
-        $parameters['mrn'] = $mrnValue;
+        //$dql->andWhere("mrn.keytype = :keytype");
+        //$parameters['keytype'] = $oldMrnType->getId();
+
 
         $query = $em->createQuery($dql);
 
@@ -840,15 +934,110 @@ class DefaultController extends OrderAbstractController
 
         $patients = $query->getResult();
 
-        echo "patients=".count($patients)."<br>";
+        //echo $oldMrnNumber.": patients=".count($patients)."<br>";
 
         if( count($patients) == 1 ) {
             $patient = $patients[0];
-            $patientId = $patient->getId();
         } else {
-            exit("Error: found patients=".count($patients)." by mrnValue=".$mrnValue);
+            exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber);
         }
 
-        return $patientId;
+        echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
+
+        $update = true;
+        //$update = false; //testing
+        /////////// update MRN ///////////
+        if( $update && $newMrnType && $newMrnNumber ) {
+
+            $patientDb = $this->findPatientByMrn($newMrnNumber,$newMrnType);
+            if( $patientDb ) {
+                exit("Error: Patient with $newMrnNumber $newMrnType already exists");
+            }
+
+            $mrnEntity = $patient->obtainValidField('mrn');
+            if( $mrnEntity ) {
+                $mrnNumber = $mrnEntity->getField();
+                if( $mrnEntity->getKeytype() ) {
+                    $mrnTypeId = $mrnEntity->getKeytype()->getId();
+                } else {
+                    $mrnTypeId = null;
+                }
+            } else {
+                $mrnNumber = null;
+                $mrnTypeId = null;
+            }
+
+            //check mrn number
+            if( $newMrnNumber ) {
+                if( $newMrnNumber != $mrnNumber ) {
+                    $createNewMrn = true;
+                }
+            }
+
+            if( $createNewMrn ) {
+                echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
+                //echo "create new mrn <br>";
+                $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
+                $newMrnObject = new PatientMrn('valid',$user,null);
+                if( $newMrnType ) {
+                    $newMrnObject->setKeytype($newMrnType);
+                }
+                if( $newMrnNumber ) {
+                    $newMrnObject->setField($newMrnNumber);
+                }
+                $patient->addMrn($newMrnObject);
+
+                //$em->flush();
+
+            }
+        } else {
+            $patient = NULL;
+        }
+        /////////// EOF update MRN ///////////
+
+
+        return $patient;
+    }
+    public function findPatientByMrn( $mrnNumber, $nmrnType ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
+        $em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$invalidStatus = 'invalid';
+        $patient = NULL;
+
+        if ( filter_var($mrnNumber, FILTER_VALIDATE_INT) === false ) {
+            exit("$mrnNumber is not an integer");
+        }
+
+        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+        $dql->leftJoin("patient.mrn", "mrn");
+        $dql->leftJoin("patient.dob", "dob");
+        //$dql->leftJoin("patient.lastname", "lastname");
+        //$dql->leftJoin("patient.firstname", "firstname");
+        //$dql->leftJoin("patient.encounter", "encounter");
+        //$dql->leftJoin("encounter.patlastname", "encounterLastname");
+        //$dql->leftJoin("encounter.patfirstname", "encounterFirstname");
+
+        $dql->where("mrn.field = :mrn");
+        $parameters['mrn'] = $mrnNumber;
+
+        $dql->andWhere("mrn.keytype = :keytype");
+        $parameters['keytype'] = $nmrnType->getId();
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $patients = $query->getResult();
+
+        //echo $mrnNumber.": patients=".count($patients)."<br>";
+
+        if( count($patients) > 1 ) {
+            $patient = $patients[0];
+        } else {
+            //exit("Error: found patients=".count($patients)." by mrnValue=".$mrnNumber);
+        }
+
+        return $patient;
     }
 }

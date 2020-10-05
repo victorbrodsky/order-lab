@@ -1708,7 +1708,12 @@ function editPatientBtn(holderId) {
     //console.log("id="+"#calllog-patient-id-"+holderId);
     var patientId = holder.find("#calllog-patient-id-"+holderId).val();
     //console.log("patientId="+patientId);
-    var url = Routing.generate('calllog_patient_edit',{'id':patientId});
+
+    //var url = Routing.generate('calllog_patient_edit',{'id':patientId});
+
+    //use patient-demographics
+    var url = Routing.generate('calllog_single_patient_edit',{'id':patientId});
+
     //alert("url="+url);
     window.location.href = url;
 }
