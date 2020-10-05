@@ -46,7 +46,9 @@
                 {#{% endif %}#}
                 {{ formmacros.field(form.messageCategory) }}
 
-                {{ formmacros.field(form.keytypemrn) }}
+                {% if form.keytypemrn is defined %}
+                    {{ formmacros.field(form.keytypemrn) }}
+                {% endif %}
 
                 {{ formmacros.field(form.defaultAccessionType) }}
 

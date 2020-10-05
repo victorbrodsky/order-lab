@@ -2804,6 +2804,20 @@ class CrnUtil
     }
 
     public function getDefaultMrnType() {
+        //retrieving the MRN Type with the lowest “Display Order” value instead of the “default MRN Type”…
+        // So Default MRN Type = MRN Type with the lowest Display order value...
+        $myLimit = 1;
+        $keytypemrns = $this->em->getRepository('AppOrderformBundle:MrnType')->findBy(
+            array(),                        //All
+            array('orderinlist' => 'ASC'),  //ASC - lowest firts
+            $myLimit                        //limit
+        );
+        if( count($keytypemrns) > 0 ) {
+            $keytypemrn = $keytypemrns[0];
+        }
+        return $keytypemrn;
+
+        //Below is not used
         $sitename = $this->container->getParameter('crn.sitename');
         $userSecUtil = $this->container->get('user_security_utility');
 

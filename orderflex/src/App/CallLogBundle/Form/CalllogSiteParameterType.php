@@ -59,24 +59,27 @@ class CalllogSiteParameterType extends AbstractType
             },
         ));
 
-        //keytypemrn
-        $builder->add('keytypemrn', EntityType::class, array(
-            'class' => 'AppOrderformBundle:MrnType',
-            'choice_label' => 'name',
-            'label' => 'MRN Type:',
-            'required'=> false,
-            //'multiple' => false,
-            'attr' => array('class'=>'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        //NOT USED: retrieving the MRN Type with the lowest “Display Order” value instead of the “default MRN Type”
+        if(0) {
+            //keytypemrn
+            $builder->add('keytypemrn', EntityType::class, array(
+                'class' => 'AppOrderformBundle:MrnType',
+                'choice_label' => 'name',
+                'label' => 'MRN Type:',
+                'required' => false,
+                //'multiple' => false,
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         $builder->add('defaultAccessionType', EntityType::class, array(
             'class' => 'AppOrderformBundle:AccessionType',
