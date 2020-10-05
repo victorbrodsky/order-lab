@@ -768,4 +768,87 @@ class DefaultController extends OrderAbstractController
 
     }
 
+    /**
+     * 127.0.0.1/order/call-log-book/update-patient-mrn
+     *
+     * @Route("/update-patient-mrn", name="calllog_update_patient_mrn")
+     */
+    public function updatePatientMrnAction(Request $request)
+    {
+        exit("updatePatientMrnAction");
+
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //$calllogUtil = $this->get('calllog_util');
+        $res = null;
+
+        //Copy entry tags from CalllogEntryMessage->entryTags => Message->entryTags
+
+        $em = $this->getDoctrine()->getManager();
+
+//        $repository = $em->getRepository('AppOrderformBundle:Patient');
+//        $dql = $repository->createQueryBuilder("patient");
+//        $dql->leftJoin("patient.mrn", "mrn");
+//        $dql->leftJoin("patient.dob", "dob");
+//        $dql->leftJoin("patient.lastname", "lastname");
+//        $dql->leftJoin("patient.firstname", "firstname");
+//        //$dql->leftJoin("patient.encounter", "encounter");
+//        //$dql->leftJoin("encounter.patlastname", "encounterLastname");
+//        //$dql->leftJoin("encounter.patfirstname", "encounterFirstname");
+//
+//        $dql->andWhere("mrn.keytype = :keytype");
+//        $parameters['keytype'] = $mrntype->getId();
+//
+//        $dql->andWhere("mrn.field = :mrn");
+//        $parameters['mrn'] = $mrn;
+//
+//        $query = $em->createQuery($dql);
+//        $query->setParameters($parameters);
+//        $patients = $query->getResult();
+//        echo "patients=".count($patients)."<br>";
+
+        foreach($mrns as $mrn) {
+
+            $res = $this->findAndupdateSinglePatient($mrnType,$mrnValue );
+        }
+
+        exit("EOF updatePatientMrnAction. Res=" . $res);
+    }
+    public function findAndupdateSinglePatient( $mrnType, $mrnValue ) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        $dql = $repository->createQueryBuilder("patient");
+        $dql->leftJoin("patient.mrn", "mrn");
+        $dql->leftJoin("patient.dob", "dob");
+        $dql->leftJoin("patient.lastname", "lastname");
+        $dql->leftJoin("patient.firstname", "firstname");
+        //$dql->leftJoin("patient.encounter", "encounter");
+        //$dql->leftJoin("encounter.patlastname", "encounterLastname");
+        //$dql->leftJoin("encounter.patfirstname", "encounterFirstname");
+
+        $dql->andWhere("mrn.keytype = :keytype");
+        $parameters['keytype'] = $mrnType->getId();
+
+        $dql->andWhere("mrn.field = :mrn");
+        $parameters['mrn'] = $mrnValue;
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($parameters);
+
+        $patients = $query->getResult();
+
+        echo "patients=".count($patients)."<br>";
+
+        if( count($patients) == 1 ) {
+            $patient = $patients[0];
+            $patientId = $patient->getId();
+        } else {
+            exit("Error: found patients=".count($patients)." by mrnValue=".$mrnValue);
+        }
+
+        return $patientId;
+    }
 }

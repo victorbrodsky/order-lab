@@ -778,6 +778,7 @@ abstract class ObjectAbstract
             }
         }
         unset($merged["mergeWithParent"]);
+
         return $merged;
     }
     /**
@@ -890,6 +891,10 @@ abstract class ObjectAbstract
         $field = $addedObject->getField();
         if( $field instanceof \DateTime ) {
             $field = $addedObject->formatDataToString($field);
+        }
+        //add keytype if exists using obtainOptimalName
+        if( method_exists($addedObject,'obtainOptimalName') ){
+            $field = $addedObject->obtainOptimalName();
         }
         $addedObjectId = $addedObject->getId();
         if( !$addedObjectId ) {

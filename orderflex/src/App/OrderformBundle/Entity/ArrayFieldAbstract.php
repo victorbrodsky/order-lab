@@ -297,7 +297,13 @@ abstract class ArrayFieldAbstract {
                 $changeFieldArr = array();
 
                 if( $fieldName == "status" ) {
-                    $fieldStr = $this->formatDataToString($this->getField());
+                    if( method_exists($this,'obtainOptimalName') ){
+                        $field = $this->obtainOptimalName();
+                    } else {
+                        $field = $this->getField();
+                    }
+                    //$fieldStr = $this->formatDataToString($this->getField());
+                    $fieldStr = $this->formatDataToString($field);
                     $changeFieldArr[$className][$this->getId()][$fieldName]['old'] = $oldValue . " (" . $fieldStr . ")";
                     $changeFieldArr[$className][$this->getId()][$fieldName]['new'] = $newValue . " (" . $fieldStr . ")";
                     //$holder->addChangeObjectArr($changeFieldArr);
