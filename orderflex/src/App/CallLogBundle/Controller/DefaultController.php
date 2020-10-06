@@ -893,8 +893,8 @@ class DefaultController extends OrderAbstractController
             if( $res ) {
                 $count++;
 
-                //$mrnEntity = $res->obtainValidField('mrn')->obtainOptimalName();
-                //exit("Updated patient with ID=".$res->getId().", MRN=".$mrnEntity);
+                $mrnEntity = $res->obtainValidField('mrn')->obtainOptimalName();
+                exit("Updated patient with ID=".$res->getId().", MRN=".$mrnEntity);
             }
         }
 
