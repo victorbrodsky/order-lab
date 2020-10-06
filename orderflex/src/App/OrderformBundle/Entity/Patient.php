@@ -1210,7 +1210,7 @@ class Patient extends ObjectAbstract
         return $fullName;
     }
 
-    //soShow MRN type "shortest name" (abbreviation, if not available, then short, if empty, then full name)
+    //Show MRN type "shortest name" (abbreviation, if not available, then short, if empty, then full name)
     //before each MRN value, separated by a colon and a space (example: NYH MRN: 123456)
     public function obtainFullValidKeyName() {
         $keyStr = "";
@@ -1681,32 +1681,44 @@ class Patient extends ObjectAbstract
         return parent::obtainStatusField( $fieldname, $status, $orderid );
     }
 
-    public function obtainAllMrnStr() {
+    public function obtainAllMrnStr($exceptValid=false) {
         $resArr = $this->obtainStatusFieldArray('mrn',null);
 
-        //show only multiple MRNs
-        if( count($resArr) == 1 ) {
-            return NULL;
-        }
+//        //show only multiple MRNs
+//        if( count($resArr) == 1 ) {
+//            return NULL;
+//        }
 
         $infoArr = array();
         foreach($resArr as $mrn) {
             //$infoArr[] = $mrn->obtainOptimalName()."";
             //$infoArr[] = $mrn->getField().",".$mrn->getKeytype()."(".$mrn->getStatus().")";
 
+            if( $exceptValid ) {
+                if( $mrn->getStatus() == 'valid' ) {
+                    continue;
+                }
+            }
+
             $creationDateStr = null;
             $creationDate = $mrn->getCreationdate();
             if( $creationDate ) {
-                $creationDateStr = ", created on ".$creationDate->format('m/d/Y H:i:s');
+                //$creationDateStr = ", created on ".$creationDate->format('m/d/Y H:i');
+                $creationDateStr = $creationDate->format('m/d/Y H:i:s');
             }
 
-            $updateDateStr = null;
-            $updateDate = $mrn->getUpdateDate();
-            if( $updateDate ) {
-                $updateDateStr = ", updateed on ".$updateDate->format('m/d/Y H:i:s');
-            }
+//            $updateDateStr = null;
+//            $updateDate = $mrn->getUpdateDate();
+//            if( $updateDate ) {
+//                $updateDateStr = ", updated ".$updateDate->format('m/d/Y H:i:s');
+//            }
 
-            $infoArr[] = $mrn->getField()." (".$mrn->getKeytype().")".$creationDateStr.$updateDateStr.", ".$mrn->getStatus()."";
+            //$info = $mrn->getField()." (".$mrn->getKeytype().")".$creationDateStr.$updateDateStr.", ".$mrn->getStatus()."";
+            //$info = $mrn->getKeytype().": ".$mrn->getField()." ("."created ".$creationDateStr.$updateDateStr.", ".$mrn->getStatus().")";
+            //$info = $mrn->getField()." (".$mrn->getKeytype().")".$creationDateStr.$updateDateStr;
+            $info = $mrn->getKeytype().": ".$mrn->getField()." ("."created ".$creationDateStr.", ".$mrn->getStatus().")";
+
+            $infoArr[] = $info;
         }
         return implode("<br>",$infoArr);
     }

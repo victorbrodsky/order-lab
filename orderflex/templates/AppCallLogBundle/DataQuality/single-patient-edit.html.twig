@@ -46,11 +46,11 @@
             {{ patient.obtainMergeInfo()|raw }}
         </div>
     {% endif %}
-    {% set allMrnStr = patient.obtainAllMrnStr() %}
+    {% set allMrnStr = patient.obtainAllMrnStr(true) %}
     {% if allMrnStr %}
         <div class="well well-sm">
-            <b>All MRN(s):</b><br>
-            {{ patient.obtainAllMrnStr()|raw }}
+            <b>Previous MRN(s):</b><br>
+            {{ allMrnStr|raw }}
         </div>
     {% endif %}
 

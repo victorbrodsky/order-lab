@@ -1570,7 +1570,8 @@
                 <td class="rowlink-skip">
                     {% for thisPatient in message.patient %}
                         {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
-                        {% set hrefLabel = thisPatient.obtainFullValidKeyName %}
+                        {#{% set hrefLabel = thisPatient.obtainFullValidKeyName %}#}
+                        {% set hrefLabel = calllog_util.getPatientMrn(thisPatient) %}
                         {{ calllogmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
                     {% endfor %}
                 </td>
@@ -1724,7 +1725,8 @@
 {% macro getHrefHomePageFilteredByPatient( patientEntity, hrefLabel ) %}
     {% set mrn = patientEntity.obtainValidField('mrn') %}
     {% if mrn and mrn.field and mrn.keytype %}
-        <a href="{{ path('calllog_home', { 'filter[search]': mrn.field, 'filter[mrntype]': mrn.keytype.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ hrefLabel|raw }}</a>
+        <a href="{{ path('calllog_home', { 'filter[search]': mrn.field, 'filter[mrntype]': mrn.keytype.id, 'filter[messageStatus]': "All except deleted" }) }}"
+           target="_blank">{{ hrefLabel|raw }}</a>
     {% else %}
         {{ hrefLabel|raw }}
     {% endif %}

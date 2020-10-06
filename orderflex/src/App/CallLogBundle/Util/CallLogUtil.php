@@ -5078,4 +5078,46 @@ class CallLogUtil
         //exit("phoneCanonical=".$phoneCanonical);
         return $phoneCanonical;
     }
+
+    public function getPatientMrn( $patient ) {
+
+        $numberOfMRNTypesToDisplay = 0; //show one valid
+        $numberOfMRNTypesToDisplay = 2;
+        //$numberOfMRNTypesToDisplay = 500;
+
+        if( $numberOfMRNTypesToDisplay > 0 ) {
+            $resArr = $patient->obtainStatusFieldArray('mrn',null);
+            //dump($resArr);
+            //exit('111');
+
+            $mrnArr = array();
+            for( $x = 0; $x < $numberOfMRNTypesToDisplay; $x++ ) {
+                //echo "The number is: $x <br>";
+                //exit('eee');
+                if( isset($resArr[$x]) ) {
+                    $mrn = $resArr[$x];
+                } else {
+                    break;
+                }
+
+                if( $mrn ) {
+                    $mrnStr = $mrn->obtainOptimalName();
+                    if( $mrn->getStatus() == 'invalid' ) {
+                        $mrnStr = $mrnStr." (old)";
+                    }
+                    $mrnArr[] = $mrnStr;
+                }
+            }
+
+            if( count($mrnArr) > 0 ) {
+                $mrnRes = implode("<br>",$mrnArr);
+            } else {
+                $mrnRes = $patient->obtainFullValidKeyName();
+            }
+
+            return $mrnRes;
+        }
+
+        return $patient->obtainFullValidKeyName();
+    }
 }
