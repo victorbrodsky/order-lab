@@ -938,8 +938,10 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("mrn.keytype = :keytype");
         $parameters['keytype'] = $oldMrnType->getId();
 
-        $dql->andWhere("LOWER(lastname.field) = LOWER(:lastname)");
-        $parameters['lastname'] = $lastName;
+        if( $lastName ) {
+            $dql->andWhere("LOWER(lastname.field) = LOWER(:lastname)");
+            $parameters['lastname'] = $lastName;
+        }
 
         if( $firstName ) {
             $dql->andWhere("LOWER(firstname.field) = LOWER(:firstname)");
