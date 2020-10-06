@@ -941,8 +941,10 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("LOWER(lastname.field) = LOWER(:lastname)");
         $parameters['lastname'] = $lastName;
 
-        $dql->andWhere("LOWER(firstname.field) = LOWER(:firstname)");
-        $parameters['firstname'] = $firstName;
+        if( $firstName ) {
+            $dql->andWhere("LOWER(firstname.field) = LOWER(:firstname)");
+            $parameters['firstname'] = $firstName;
+        }
 
         $query = $em->createQuery($dql);
 
