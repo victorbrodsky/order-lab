@@ -901,6 +901,7 @@ class DefaultController extends OrderAbstractController
         exit("EOF updatePatientMrnAction. updated patients=" . $count);
     }
     public function findAndUpdateSinglePatient( $rowData, $oldMrnType, $newMrnType, $count ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $invalidStatus = 'invalid';
@@ -955,6 +956,7 @@ class DefaultController extends OrderAbstractController
             $patient = $patients[0];
         } else {
             //exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber);
+            $logger->warning("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber."; lastname=".$lastName."; firstname=".$firstName);
             exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber."; lastname=".$lastName."; firstname=".$firstName);
         }
 
@@ -968,6 +970,7 @@ class DefaultController extends OrderAbstractController
             //Check if mrn number and type already exists
             $patientDb = $this->findPatientByMrn($newMrnNumber,$newMrnType);
             if( $patientDb ) {
+                $logger->warning("Error: Patient with $newMrnNumber $newMrnType already exists");
                 exit("Error: Patient with $newMrnNumber $newMrnType already exists");
             }
 
@@ -983,16 +986,21 @@ class DefaultController extends OrderAbstractController
             }
             if( $existingMrnNumber && $existingMrnTypeId ) {
                 if( $existingMrnNumber == $newMrnNumber && $existingMrnTypeId == $newMrnType->getId() ) {
-                    echo "MRN already exists: ".$newMrnNumber." ".$newMrnType."<br>";
+                    $updatemsg = "MRN already exists: ".$newMrnNumber." ".$newMrnType;
+                    echo $updatemsg."<br>";
+                    $logger->notice($updatemsg);
                     //exit("MRN already exists: ".$newMrnNumber." ".$newMrnType);
                     return NULL;
                 }
             } else {
+                $logger->warning("Existing valid MRN does not exist");
                 exit("Existing valid MRN does not exist");
             }
 
             //Create new valid MRN entity
-            echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
+            $updatemsg = "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)]";
+            echo $updatemsg."<br>";
+            $logger->notice($updatemsg);
             //echo "create new mrn <br>";
             //1) set all existing MRN to invalid
             $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
