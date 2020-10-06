@@ -5085,6 +5085,8 @@ class CallLogUtil
         $numberOfMRNTypesToDisplay = 2;
         //$numberOfMRNTypesToDisplay = 500;
 
+        //TODO: get $numberOfMRNTypesToDisplay from sitesettings
+
         if( $numberOfMRNTypesToDisplay > 0 ) {
             $resArr = $patient->obtainStatusFieldArray('mrn',null);
             //dump($resArr);
