@@ -716,6 +716,10 @@ class CallEntryController extends OrderAbstractController
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
+
+                //$dql->andWhere("mrn.field LIKE :search");
+                //$queryParameters['search'] = "%".$searchFilter."%";
+
                 $mergeMrn = $searchFilter;
 
                 if( $mrntypeFilter ) {

@@ -831,7 +831,8 @@ class DefaultController extends OrderAbstractController
         $parentRoot = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR,'',$parentRoot);
         //echo "parentRoot=$parentRoot<br>";
         $filename = "updateData.xlsx";
-        $filename = "updateDataTest.xlsx";
+        //$filename = "updateDataDev.xlsx";
+        $filename = "updateDataTest.csv";
         $inputFileName = $parentRoot.DIRECTORY_SEPARATOR."temp".DIRECTORY_SEPARATOR.$filename;
         //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras.pdf";
         echo "inputFileName=$inputFileName<br>";
@@ -857,7 +858,7 @@ class DefaultController extends OrderAbstractController
 
             $res = NULL;
 
-            if( $row > 10 ) {
+            if( $row > 550 ) {
                 break;
             }
 
@@ -868,6 +869,12 @@ class DefaultController extends OrderAbstractController
                 TRUE,
                 FALSE
             );
+
+//            $newMrnNumber = trim($rowData[0][1]);
+//            if( !$newMrnNumber ) {
+//                echo "New MRN is empty => exit <br>";
+//                break;
+//            }
 
             //echo $row.": ";
             //var_dump($rowData);
@@ -881,16 +888,19 @@ class DefaultController extends OrderAbstractController
 //            $dob = trim($rowData[0][4]);
 
             //$res = $this->findAndupdateSinglePatient($oldMrnValue,$oldMrnType,$newMrnValue,$newMrnType);
-            $res = $this->findAndUpdateSinglePatient($rowData,$oldMrnType,$newMrnType);
+            $res = $this->findAndUpdateSinglePatient($rowData,$oldMrnType,$newMrnType,$row);
 
             if( $res ) {
                 $count++;
+
+                $mrnEntity = $res->obtainValidField('mrn')->obtainOptimalName();
+                exit("Updated patient with ID=".$res->getId().", MRN=".$mrnEntity);
             }
         }
 
         exit("EOF updatePatientMrnAction. updated patients=" . $count);
     }
-    public function findAndUpdateSinglePatient( $rowData, $oldMrnType, $newMrnType ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
+    public function findAndUpdateSinglePatient( $rowData, $oldMrnType, $newMrnType, $count ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $invalidStatus = 'invalid';
@@ -924,9 +934,14 @@ class DefaultController extends OrderAbstractController
         $dql->where("mrn.field = :mrn");
         $parameters['mrn'] = $oldMrnNumber;
 
-        //$dql->andWhere("mrn.keytype = :keytype");
-        //$parameters['keytype'] = $oldMrnType->getId();
+        $dql->andWhere("mrn.keytype = :keytype");
+        $parameters['keytype'] = $oldMrnType->getId();
 
+        $dql->andWhere("LOWER(lastname.field) = LOWER(:lastname)");
+        $parameters['lastname'] = $lastName;
+
+        $dql->andWhere("LOWER(firstname.field) = LOWER(:firstname)");
+        $parameters['firstname'] = $firstName;
 
         $query = $em->createQuery($dql);
 
@@ -939,57 +954,60 @@ class DefaultController extends OrderAbstractController
         if( count($patients) == 1 ) {
             $patient = $patients[0];
         } else {
-            exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber);
+            //exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber);
+            exit("Error: found patients=".count($patients)." by mrnValue=".$oldMrnNumber."; lastname=".$lastName."; firstname=".$firstName);
         }
 
-        echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
+        echo $count.": Ready to update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
 
         $update = true;
         //$update = false; //testing
         /////////// update MRN ///////////
         if( $update && $newMrnType && $newMrnNumber ) {
 
+            //Check if mrn number and type already exists
             $patientDb = $this->findPatientByMrn($newMrnNumber,$newMrnType);
             if( $patientDb ) {
                 exit("Error: Patient with $newMrnNumber $newMrnType already exists");
             }
 
+            //Check if existing valid mrn number and type are the same as new mrn number and type
+            $existingMrnNumber = null;
+            $existingMrnTypeId = null;
             $mrnEntity = $patient->obtainValidField('mrn');
             if( $mrnEntity ) {
-                $mrnNumber = $mrnEntity->getField();
+                $existingMrnNumber = $mrnEntity->getField();
                 if( $mrnEntity->getKeytype() ) {
-                    $mrnTypeId = $mrnEntity->getKeytype()->getId();
-                } else {
-                    $mrnTypeId = null;
+                    $existingMrnTypeId = $mrnEntity->getKeytype()->getId();
+                }
+            }
+            if( $existingMrnNumber && $existingMrnTypeId ) {
+                if( $existingMrnNumber == $newMrnNumber && $existingMrnTypeId == $newMrnType->getId() ) {
+                    echo "MRN already exists: ".$newMrnNumber." ".$newMrnType."<br>";
+                    //exit("MRN already exists: ".$newMrnNumber." ".$newMrnType);
+                    return NULL;
                 }
             } else {
-                $mrnNumber = null;
-                $mrnTypeId = null;
+                exit("Existing valid MRN does not exist");
             }
 
-            //check mrn number
+            //Create new valid MRN entity
+            echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
+            //echo "create new mrn <br>";
+            //1) set all existing MRN to invalid
+            $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
+            //2) create new valid MRN
+            $newMrnObject = new PatientMrn('valid',$user,null);
+            if( $newMrnType ) {
+                $newMrnObject->setKeytype($newMrnType);
+            }
             if( $newMrnNumber ) {
-                if( $newMrnNumber != $mrnNumber ) {
-                    $createNewMrn = true;
-                }
+                $newMrnObject->setField($newMrnNumber);
             }
+            $patient->addMrn($newMrnObject);
 
-            if( $createNewMrn ) {
-                echo "Update MRN: [$oldMrnNumber($oldMrnType)] => [$newMrnNumber($newMrnType)] <br>";
-                //echo "create new mrn <br>";
-                $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
-                $newMrnObject = new PatientMrn('valid',$user,null);
-                if( $newMrnType ) {
-                    $newMrnObject->setKeytype($newMrnType);
-                }
-                if( $newMrnNumber ) {
-                    $newMrnObject->setField($newMrnNumber);
-                }
-                $patient->addMrn($newMrnObject);
-
-                //$em->flush();
-
-            }
+            $em->flush();
+            
         } else {
             $patient = NULL;
         }
