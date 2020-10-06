@@ -971,7 +971,8 @@ class DefaultController extends OrderAbstractController
             $patientDb = $this->findPatientByMrn($newMrnNumber,$newMrnType);
             if( $patientDb ) {
                 $logger->warning("Error: Patient with $newMrnNumber $newMrnType already exists");
-                exit("Error: Patient with $newMrnNumber $newMrnType already exists");
+                return NULL;
+                //exit("Error: Patient with $newMrnNumber $newMrnType already exists");
             }
 
             //Check if existing valid mrn number and type are the same as new mrn number and type
