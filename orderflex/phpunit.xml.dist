@@ -15,7 +15,7 @@
         <server name="SYMFONY_PHPUNIT_VERSION" value="7.5" />
         <server name='REQUEST_URI' value='' />
         <server name='HTTP_USER_AGENT' value='none' />
-        <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />-->
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
         <!--<env name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=999999"/>-->
     </php>
 

@@ -305,7 +305,7 @@ class ResappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Residency Application Type")')->count()
+            $crawler->filter('html:contains("Residency Track")')->count()
         );
         $this->assertGreaterThan(
             0,
