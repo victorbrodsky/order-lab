@@ -1747,7 +1747,7 @@ class CallLogPatientController extends PatientController {
 
 
     /**
-     * @Route("/export_patients_csv/", name="calllog_export_patients_csv")
+     * @Route("/export-patients-csv/", name="calllog_export_patients_csv")
      * @Template("AppCallLogBundle/Export/call-entry-export-csv.html.twig")
      */
     public function exportPatientsCsvAction(Request $request)
@@ -1820,7 +1820,7 @@ class CallLogPatientController extends PatientController {
     public function createCalllogPatientsExcelSpout($patients,$fileName,$user,$ext) {
         set_time_limit(600); //6 min
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
         if( $ext == "XLSX" ) {
             $fileName = $fileName . ".xlsx";
@@ -1856,17 +1856,30 @@ class CallLogPatientController extends PatientController {
             ->setBorder($border)
             ->build();
 
+        //'NYH EMPI' - 1st orderinlist
+        //'NYH MRN' - 2nd orderinlist
+        $myLimit = 2;
+        $keytypemrns = $em->getRepository('AppOrderformBundle:MrnType')->findBy(
+            array(),                        //All
+            array('orderinlist' => 'ASC'),  //ASC - lowest firts
+            $myLimit                        //Limit
+        );
+        if( count($keytypemrns) > 0 ) {
+            $keytypemrn2 = $keytypemrns[0]."";
+        } else {
+            $keytypemrn2 = 'NYH EMPI';
+        }
+        if( count($keytypemrns) > 1 ) {
+            $keytypemrn1 = $keytypemrns[1]."";
+        } else {
+            $keytypemrn1 = 'NYH MRN';
+        }
 
-        //A. NYH MRN
-        //B. NYH EMPI (this column will be empty - new MRN type...)
-        //C. Last Name
-        //D. First Name
-        //E. Date of Birth
 
         $spoutRow = WriterEntityFactory::createRowFromArray(
             [
-                'NYH MRN',         //0 - A
-                'NYH EMPI',        //1 - B
+                $keytypemrn1,       //'NYH MRN',         //0 - A
+                $keytypemrn2,       //'NYH EMPI',        //1 - B
                 'Last Name',       //2 - C
                 'First Name',      //3 - D
                 'Date of Birth',   //4 - E
@@ -1895,9 +1908,12 @@ class CallLogPatientController extends PatientController {
             if( $mrn->getKeytype() ) {
                 $mrntypeStr = $mrn->getKeytype()->getOptimalName()."";
             } else {
-                $mrntypeStr = "";
+                $mrntypeStr = "Unknown MRN Type";
             }
-            if( $mrntypeStr != "NYH MRN" ) {
+//            if( $mrntypeStr != "NYH MRN" ) {
+//                $mrnStr = $mrntypeStr.": ".$mrnStr;
+//            }
+            if( $mrntypeStr != $keytypemrn1 ) {
                 $mrnStr = $mrntypeStr.": ".$mrnStr;
             }
             $data[0] = $mrnStr;
