@@ -5090,4 +5090,54 @@ class CrnUtil
         //exit("phoneCanonical=".$phoneCanonical);
         return $phoneCanonical;
     }
+    
+    public function getPatientMrn( $patient ) {
+
+        $numberOfMrnToDisplay = 0; //0 or NULL - show only one valid MRN
+        $numberOfMrnToDisplay = 2;
+        //$numberOfMrnToDisplay = 500;
+
+        //Get $numberOfMrnToDisplay from site settings
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('crn.sitename');
+        $numberOfMrnToDisplay = $userSecUtil->getSiteSettingParameter('numberOfMrnToDisplay',$sitename);
+        if( !$numberOfMrnToDisplay ) {
+            $numberOfMrnToDisplay = 0;
+        }
+
+        if( $numberOfMrnToDisplay && $numberOfMrnToDisplay > 0 ) {
+            $resArr = $patient->obtainStatusFieldArray('mrn',null);
+            //dump($resArr);
+            //exit('111');
+
+            $mrnArr = array();
+            for( $x = 0; $x < $numberOfMrnToDisplay; $x++ ) {
+                //echo "The number is: $x <br>";
+                //exit('eee');
+                if( isset($resArr[$x]) ) {
+                    $mrn = $resArr[$x];
+                } else {
+                    break;
+                }
+
+                if( $mrn ) {
+                    $mrnStr = $mrn->obtainOptimalName();
+                    if( $mrn->getStatus() == 'invalid' ) {
+                        $mrnStr = $mrnStr." (old)";
+                    }
+                    $mrnArr[] = $mrnStr;
+                }
+            }
+
+            if( count($mrnArr) > 0 ) {
+                $mrnRes = implode("<br>",$mrnArr);
+            } else {
+                $mrnRes = $patient->obtainFullValidKeyName();
+            }
+
+            return $mrnRes;
+        }
+
+        return $patient->obtainFullValidKeyName();
+    }
 }

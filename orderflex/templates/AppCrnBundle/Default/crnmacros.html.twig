@@ -1579,7 +1579,8 @@
                 <td class="rowlink-skip">
                     {% for thisPatient in message.patient %}
                         {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
-                        {% set hrefLabel = thisPatient.obtainFullValidKeyName %}
+                        {#{% set hrefLabel = thisPatient.obtainFullValidKeyName %}#}
+                        {% set hrefLabel = crn_util.getPatientMrn(thisPatient) %}
                         {{ crnmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
                     {% endfor %}
                 </td>

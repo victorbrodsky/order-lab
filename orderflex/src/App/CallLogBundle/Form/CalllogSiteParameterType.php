@@ -81,6 +81,11 @@ class CalllogSiteParameterType extends AbstractType
             ));
         }
 
+        $builder->add('numberOfMrnToDisplay', null, array(
+            'label' => 'Number of MRN Types to display:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('defaultAccessionType', EntityType::class, array(
             'class' => 'AppOrderformBundle:AccessionType',
             'choice_label' => 'name',

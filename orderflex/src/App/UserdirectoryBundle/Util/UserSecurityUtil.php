@@ -1377,8 +1377,14 @@ class UserSecurityUtil {
         if( $sitename ) {
             //Convention name: CalllogSiteParameter
             $getterSiteParameter = "get".$sitename."SiteParameter"; //getCallogSiteParameter
+
             $specificSiteSettingParameter = $param->$getterSiteParameter();
             if( $specificSiteSettingParameter ) {
+
+                if( !method_exists($specificSiteSettingParameter, $getSettingMethod) ){
+                    return null;
+                }
+
                 $res = $specificSiteSettingParameter->$getSettingMethod();
             } else {
                 return null;

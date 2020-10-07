@@ -166,7 +166,14 @@ class CrnSiteParameter
      * @ORM\ManyToOne(targetEntity="App\OrderformBundle\Entity\MessageTagTypesList", cascade={"persist"})
      */
     private $defaultTagType;
-    
+
+    /**
+     * Number of MRN Types to display, if present (0, 1, 2, 3, 4 ...)
+     * 
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOfMrnToDisplay;
+
 
     public function __construct() {
         $this->setEnableDocumentUpload(true);
@@ -508,6 +515,22 @@ class CrnSiteParameter
     public function setDefaultTagType($defaultTagType)
     {
         $this->defaultTagType = $defaultTagType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberOfMrnToDisplay()
+    {
+        return $this->numberOfMrnToDisplay;
+    }
+
+    /**
+     * @param mixed $numberOfMrnToDisplay
+     */
+    public function setNumberOfMrnToDisplay($numberOfMrnToDisplay)
+    {
+        $this->numberOfMrnToDisplay = $numberOfMrnToDisplay;
     }
 
     

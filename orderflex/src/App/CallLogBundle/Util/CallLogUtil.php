@@ -5081,19 +5081,25 @@ class CallLogUtil
 
     public function getPatientMrn( $patient ) {
 
-        $numberOfMRNTypesToDisplay = 0; //show one valid
-        $numberOfMRNTypesToDisplay = 2;
-        //$numberOfMRNTypesToDisplay = 500;
+        $numberOfMrnToDisplay = 0; //0 or NULL - show only one valid MRN
+        $numberOfMrnToDisplay = 2;
+        //$numberOfMrnToDisplay = 500;
 
-        //TODO: get $numberOfMRNTypesToDisplay from sitesettings
+        //Get $numberOfMrnToDisplay from site settings
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $numberOfMrnToDisplay = $userSecUtil->getSiteSettingParameter('numberOfMrnToDisplay',$sitename);
+        if( !$numberOfMrnToDisplay ) {
+            $numberOfMrnToDisplay = 0;
+        }
 
-        if( $numberOfMRNTypesToDisplay > 0 ) {
+        if( $numberOfMrnToDisplay && $numberOfMrnToDisplay > 0 ) {
             $resArr = $patient->obtainStatusFieldArray('mrn',null);
             //dump($resArr);
             //exit('111');
 
             $mrnArr = array();
-            for( $x = 0; $x < $numberOfMRNTypesToDisplay; $x++ ) {
+            for( $x = 0; $x < $numberOfMrnToDisplay; $x++ ) {
                 //echo "The number is: $x <br>";
                 //exit('eee');
                 if( isset($resArr[$x]) ) {

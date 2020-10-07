@@ -38,6 +38,22 @@
     {#<input type="hidden" id="mrntype" value="{{ mrntype }}" />#}
     {#<input type="hidden" id="mrn" value="{{ mrn }}" />#}
 
+    {{ patient.obtainPatientInfoTitle()|raw }}
+    {% set mergeInfo = patient.obtainMergeInfo() %}
+    {% if mergeInfo %}
+        <div class="well well-sm">
+            Merge Info: <br>
+            {{ patient.obtainMergeInfo()|raw }}
+        </div>
+    {% endif %}
+    {% set allMrnStr = patient.obtainAllMrnStr(true) %}
+    {% if allMrnStr %}
+        <div class="well well-sm">
+            <b>Previous MRN(s):</b><br>
+            {{ allMrnStr|raw }}
+        </div>
+    {% endif %}
+
     {{ form_start(form) }}
         {#{{ form_widget(form) }}#}
 
