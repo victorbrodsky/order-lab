@@ -881,7 +881,8 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
 
             if( formtype == "edit-patient" ) {
                 //console.log("patient.id="+patient.id);
-                var url = Routing.generate('calllog_patient_edit',{'id':patient.id});
+                //var url = Routing.generate('calllog_patient_edit',{'id':patient.id});
+                var url = Routing.generate('calllog_single_patient_edit',{'id':patient.id});
                 //alert("url="+url);
                 window.location.href = url;
             }

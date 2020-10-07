@@ -24,7 +24,8 @@ var matchingPatientForEditBtnClick = function(holderId,formtype) {
 
     var patientToPopulate = getCalllogPatientToPopulate(holderId);
 
-    var url = Routing.generate('calllog_patient_edit',{'id':patientToPopulate.id});
+    //var url = Routing.generate('calllog_patient_edit',{'id':patientToPopulate.id});
+    var url = Routing.generate('calllog_single_patient_edit',{'id':patientToPopulate.id});
     //alert("url="+url);
     window.location.href = url;
 }

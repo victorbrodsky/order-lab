@@ -64,7 +64,9 @@
                                 <a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrn.field, 'mrntype': mrn.keytype.id}) }}"
                                   target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>
                             {% else %}
-                                <a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}"
+                                {#<a href="{{ path('calllog_patient_edit',{'id':patient.id}) }}"#}
+                                   {#target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>#}
+                                <a href="{{ path('calllog_single_patient_edit',{'id':patient.id}) }}"
                                    target="_blank">{{ patient.obtainPatientInfoSimple|raw }}</a>
                             {% endif %}
 
