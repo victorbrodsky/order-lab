@@ -1865,12 +1865,12 @@ class CallLogPatientController extends PatientController {
             $myLimit                        //Limit
         );
         if( count($keytypemrns) > 0 ) {
-            $keytypemrn2 = $keytypemrns[0]."";
+            $keytypemrn2 = $keytypemrns[0]->getOptimalName()."";
         } else {
             $keytypemrn2 = 'NYH EMPI';
         }
         if( count($keytypemrns) > 1 ) {
-            $keytypemrn1 = $keytypemrns[1]."";
+            $keytypemrn1 = $keytypemrns[1]->getOptimalName()."";
         } else {
             $keytypemrn1 = 'NYH MRN';
         }
@@ -1904,9 +1904,10 @@ class CallLogPatientController extends PatientController {
             //'NYH MRN',         //0 - A
             //$mrnStr = $patient->obtainFullValidKeyName();
             $mrn = $patient->obtainValidField('mrn');
-            $mrnStr = $mrn->getField();
-            if( $mrn->getKeytype() ) {
-                $mrntypeStr = $mrn->getKeytype()->getOptimalName()."";
+            $mrnNumber = $mrn->getField();
+            $mrnType = $mrn->getKeytype();
+            if( $mrnType ) {
+                $mrntypeStr = $mrnType->getOptimalName()."";
             } else {
                 $mrntypeStr = "Unknown MRN Type";
             }
@@ -1914,12 +1915,18 @@ class CallLogPatientController extends PatientController {
 //                $mrnStr = $mrntypeStr.": ".$mrnStr;
 //            }
             if( $mrntypeStr != $keytypemrn1 ) {
-                $mrnStr = $mrntypeStr.": ".$mrnStr;
+                $mrnStr = $mrntypeStr.": ".$mrnNumber;
+            } else {
+                $mrnStr = $mrnNumber;
             }
             $data[0] = $mrnStr;
 
             //'NYH EMPI',        //1 - B
-            $data[1] = "";
+            if( $mrntypeStr == $keytypemrn2 ) {
+                $data[1] = $mrnNumber;
+            } else {
+                $data[1] = "";
+            }
 
             //'Last Name',       //2 - C
             $lastname = $patient->obtainValidField('lastname');
