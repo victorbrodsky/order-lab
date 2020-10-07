@@ -84,7 +84,8 @@ class CallLogPatientController extends PatientController {
             'sitename' => $this->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
-            'editpath' => 'calllog_patient_edit',
+            //'editpath' => 'calllog_patient_edit',
+            'editpath' => 'calllog_single_patient_edit',
             'show-tree-depth' => $showtreedepth
         );
 
@@ -168,7 +169,8 @@ class CallLogPatientController extends PatientController {
             'datastructure' => 'datastructure-patient',
             //'datastructure' => 'datastructure', //images are shown only if the 'datastructure' parameters is set to 'datastructure'
             'tracker' => 'tracker',
-            'editpath' => 'calllog_patient_edit',
+            //'editpath' => 'calllog_patient_edit',
+            'editpath' => 'calllog_single_patient_edit',
             'show-tree-depth' => $showtreedepth
         );
 
