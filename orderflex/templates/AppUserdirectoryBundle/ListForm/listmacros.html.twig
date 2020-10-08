@@ -125,6 +125,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Specialty', 'ent.projectSpecialties') }}</th>
             {% endif %}
 
             {% if entities|first.url is defined %}
@@ -359,6 +360,12 @@
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
                     <td>{{ entity.feeUnit }}</td>
+                    <td>
+                        {% for specialty in entity.projectSpecialties %}
+                            {{ specialty.getUppercaseShortName() }}<br>
+                        {% endfor %}
+                        {#{{ entity.projectSpecialties }}#}
+                    </td>
                 {% endif %}
 
                 {% if entity.url is defined %}
@@ -987,6 +994,9 @@
     {% endif %}
     {% if form.feeUnit is defined %}
         {{ formmacros.field(form.feeUnit) }}
+    {% endif %}
+    {% if form.projectSpecialties is defined %}
+        {{ formmacros.field(form.projectSpecialties) }}
     {% endif %}
 
     {% if form.showLinkHomePage is defined %}

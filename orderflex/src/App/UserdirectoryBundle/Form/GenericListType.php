@@ -636,6 +636,24 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
+            $builder->add( 'projectSpecialties', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+                //'choice_label' => 'FullName',
+                'label'=>'Project Specialty(s):',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        //->where($this->where)
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
         }
 
         if( strtolower($this->mapper['className']) == strtolower("SiteList") ) {
