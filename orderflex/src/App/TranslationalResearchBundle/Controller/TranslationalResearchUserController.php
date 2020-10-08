@@ -83,36 +83,61 @@ class TranslationalResearchUserController extends UserController
 
         return $this->addNewUserAjax($request); //$this->getParameter('employees.sitename')
     }
+    //Used to add users via ajax on the new project page (employees_add_new_user_ajax)
     public function processOtherUserParam($user,$otherUserParam) {
-        if( $otherUserParam == "hematopathology" ) {
-            //$user->addRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
-        }
-        if( $otherUserParam == "ap-cp" ) {
-            //$user->addRole("ROLE_TRANSRES_APCP");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
-        }
-        if( $otherUserParam == "covid19" ) {
-            //$user->addRole("ROLE_TRANSRES_APCP");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
-        }
-        if( $otherUserParam == "hematopathology_ap-cp" ) {
-            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
-        }
 
-        if( $otherUserParam == "hematopathology_ap-cp_covid19" ) {
+//        if( $otherUserParam == "hematopathology" ) {
+//            //$user->addRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+//        }
+//        if( $otherUserParam == "ap-cp" ) {
+//            //$user->addRole("ROLE_TRANSRES_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+//        }
+//        if( $otherUserParam == "covid19" ) {
+//            //$user->addRole("ROLE_TRANSRES_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+//        }
+//        if( $otherUserParam == "misi" ) {
+//            //$user->addRole("ROLE_TRANSRES_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_MISI");
+//        }
+//        if( $otherUserParam == "hematopathology_ap-cp" ) {
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+//        }
+//
+//        if( $otherUserParam == "hematopathology_ap-cp_covid19" ) {
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+//        }
+//        if( $otherUserParam == "hematopathology_covid19" ) {
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+//        }
+//        if( $otherUserParam == "ap-cp_covid19" ) {
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+//        }
+//        if( $otherUserParam == "hematopathology_ap-cp_covid19_misi" ) {
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+//            $user->addRole("ROLE_TRANSRES_REQUESTER_MISI");
+//        }
+
+        if( strpos($otherUserParam, 'hematopathology') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
+        }
+        if( strpos($otherUserParam, 'ap-cp') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
+        }
+        if( strpos($otherUserParam, 'covid19') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
         }
-        if( $otherUserParam == "hematopathology_covid19" ) {
-            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
-        }
-        if( $otherUserParam == "ap-cp_covid19" ) {
-            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
-            $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
+        if( strpos($otherUserParam, 'misi') !== false ) {
+            $user->addRole("ROLE_TRANSRES_REQUESTER_MISI");
         }
 
         //$user->addRole("ROLE_TRANSRES_REQUESTER");

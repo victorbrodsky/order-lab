@@ -2482,7 +2482,8 @@ class TransResRequestUtil
             $transresUtil->isAdminOrPrimaryReviewer() ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19')
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
         ) {
             //Show all invoices filter
             $filterTypes = array(
@@ -2550,6 +2551,7 @@ class TransResRequestUtil
         $allowHema = false;
         $allowAPCP = false;
         $allowCovid19 = false;
+        $allowMisi = false;
 
         $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
         if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
@@ -2564,6 +2566,11 @@ class TransResRequestUtil
         $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
         if( $transresUtil->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
             $allowCovid19 = true;
+        }
+
+        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyMisiObject, $user) ) {
+            $allowMisi = true;
         }
 
         $filterTypes = array(
@@ -2595,6 +2602,9 @@ class TransResRequestUtil
         if( $allowCovid19 ) {
             $filterTypes[] = 'All COVID-19 Requests';
         }
+        if( $allowMisi ) {
+            $filterTypes[] = 'All MISI Requests';
+        }
         $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
 
@@ -2608,6 +2618,9 @@ class TransResRequestUtil
         if( $allowCovid19 ) {
             $filterTypes[] = 'All COVID-19 Pending Requests';
         }
+        if( $allowMisi ) {
+            $filterTypes[] = 'All MISI Pending Requests';
+        }
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Active Requests';
@@ -2619,6 +2632,9 @@ class TransResRequestUtil
         }
         if( $allowCovid19 ) {
             $filterTypes[] = 'All COVID-19 Active Requests';
+        }
+        if( $allowMisi ) {
+            $filterTypes[] = 'All MISI Active Requests';
         }
         $filterTypes[] = '[[hr]]';
 
@@ -2632,6 +2648,9 @@ class TransResRequestUtil
         if( $allowCovid19 ) {
             $filterTypes[] = 'All COVID-19 Completed Requests';
         }
+        if( $allowMisi ) {
+            $filterTypes[] = 'All MISI Completed Requests';
+        }
         $filterTypes[] = '[[hr]]';
 
 
@@ -2644,6 +2663,9 @@ class TransResRequestUtil
         }
         if( $allowCovid19 ) {
             $filterTypes[] = 'All COVID-19 Completed and Notified Requests';
+        }
+        if( $allowMisi ) {
+            $filterTypes[] = 'All MISI Completed and Notified Requests';
         }
         //$filterTypes[] = '[[hr]]';
 

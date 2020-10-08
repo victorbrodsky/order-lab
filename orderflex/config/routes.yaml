@@ -115,6 +115,11 @@ logout:
 login:
     path:   /directory/login
 
+platform_login:
+    path:   /directory/login
+platform_logout:
+    path:   /directory/logout
+
 scan_login_check:
     path:   /scan/login_check
 scan_logout:

@@ -68,7 +68,8 @@ class SubstituteUserType extends AbstractType
 
         //Preloaded (must test a user generation with roles according to the selected project specialty)
         $sitename = "'translationalresearch'";
-        $otherUserParam = "'hematopathology_ap-cp'";
+        //$otherUserParam = "'hematopathology_ap-cp'";
+        $otherUserParam = "'hematopathology_ap-cp_covid19_misi'";
         $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         $builder->add( 'replaceUser', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',

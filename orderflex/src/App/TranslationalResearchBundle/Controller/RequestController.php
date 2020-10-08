@@ -1473,6 +1473,17 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
+            if ($filterTypeLowerCase == strtolower("All MISI Requests") ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("misi");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
+                        'title' => $filterType,
+                    )
+                );
+            }
 
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
             if ($filterTypeLowerCase == strtolower("All Pending Requests") ) {
@@ -1530,6 +1541,17 @@ class RequestController extends OrderAbstractController
                     $pendingRequestArr
                 );
             }
+            if ($filterTypeLowerCase == strtolower("All MISI Pending Requests") ) {
+                $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
+
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("misi");
+                $pendingRequestArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    $pendingRequestArr
+                );
+            }
 
             if ($filterTypeLowerCase == strtolower("All Active Requests") ) {
                 return $this->redirectToRoute(
@@ -1564,6 +1586,17 @@ class RequestController extends OrderAbstractController
             }
             if ($filterTypeLowerCase == strtolower("All COVID-19 Active Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("covid19");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "active",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if ($filterTypeLowerCase == strtolower("All MISI Active Requests") ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("misi");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1616,6 +1649,17 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
+            if ($filterTypeLowerCase == strtolower("All MISI Completed Requests") ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("misi");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completed",
+                        'title' => $filterType,
+                    )
+                );
+            }
 
             if ($filterTypeLowerCase == strtolower("All Completed and Notified Requests") ) {
                 return $this->redirectToRoute(
@@ -1650,6 +1694,17 @@ class RequestController extends OrderAbstractController
             }
             if ($filterTypeLowerCase == strtolower("All COVID-19 Completed and Notified Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("covid19");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completedNotified",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if ($filterTypeLowerCase == strtolower("All MISI Completed and Notified Requests") ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("misi");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(

@@ -51,12 +51,11 @@ class SpecialtyList extends ListAbstract
             return "APCP";
         }
         if( $this->getAbbreviation() == "covid19" ) {
-//            $name = "COVID-19";
-//            if( $clean ) {
-//                $name = "COVID19"; //$clean is used for roles "_COVID19"
-//            }
             $name = "COVID19"; //clean name is used for roles "_COVID19"
             return $name;
+        }
+        if( $this->getAbbreviation() == "misi" ) {
+            return "MISI";
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
     }
@@ -70,6 +69,9 @@ class SpecialtyList extends ListAbstract
         }
         if( $this->getAbbreviation() == "covid19" ) {
             return "COVID-19";
+        }
+        if( $this->getAbbreviation() == "misi" ) {
+            return "MISI";
         }
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
     }

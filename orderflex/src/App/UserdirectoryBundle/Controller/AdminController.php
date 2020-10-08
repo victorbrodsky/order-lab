@@ -1906,6 +1906,12 @@ class AdminController extends OrderAbstractController
                 90,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_ADMIN_MISI" => array(
+                "Translational Research MISI Admin",
+                "Full Access for Translational Research MISI site",
+                90,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
                 "Translational Research AP/CP Final Reviewer",
@@ -1922,6 +1928,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19" => array(
                 "Translational Research COVID-19 Final Reviewer",
                 "Review for all states for COVID-19",
+                80,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_MISI" => array(
+                "Translational Research MISI Final Reviewer",
+                "Review for all states for MISI",
                 80,
                 "translational-research"
             ),
@@ -1944,6 +1956,12 @@ class AdminController extends OrderAbstractController
                 70,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_EXECUTIVE_MISI" => array(
+                "Translational Research MISI Executive Committee",
+                "Full View Access for MISI Translational Research site",
+                70,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_IRB_REVIEWER_APCP" => array(
                 "Translational Research AP/CP IRB Reviewer",
@@ -1960,6 +1978,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_IRB_REVIEWER_COVID19" => array(
                 "Translational Research COVID-19 IRB Reviewer",
                 "COVID-19 IRB Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_IRB_REVIEWER_MISI" => array(
+                "Translational Research MISI IRB Reviewer",
+                "MISI IRB Review",
                 50,
                 "translational-research"
             ),
@@ -1982,6 +2006,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER_MISI" => array(
+                "Translational Research MISI Committee Reviewer",
+                "MISI Committee Review",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP" => array(
                 "Translational Research AP/CP Primary Committee Reviewer",
@@ -1998,6 +2028,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_COVID19" => array(
                 "Translational Research COVID-19 Primary Committee Reviewer",
                 "COVID-19 Committee Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_MISI" => array(
+                "Translational Research MISI Primary Committee Reviewer",
+                "MISI Committee Review",
                 50,
                 "translational-research"
             ),
@@ -2020,6 +2056,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_BILLING_ADMIN_MISI" => array(
+                "Translational Research MISI Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research MISI Project",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_TECHNICIAN_APCP" => array(
                 "Translational Research AP/CP Technician",
@@ -2039,6 +2081,12 @@ class AdminController extends OrderAbstractController
                 50,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_TECHNICIAN_MISI" => array(
+                "Translational Research MISI Technician",
+                "View and Edit a Translational Research MISI Request",
+                50,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_REQUESTER_APCP" => array(
                 "Translational Research AP/CP Project Requester",
@@ -2055,6 +2103,12 @@ class AdminController extends OrderAbstractController
             "ROLE_TRANSRES_REQUESTER_COVID19" => array(
                 "Translational Research COVID-19 Project Requester",
                 "Submit, View and Edit a Translational Research COVID-19 Project",
+                30,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_REQUESTER_MISI" => array(
+                "Translational Research MISI Project Requester",
+                "Submit, View and Edit a Translational Research MISI Project",
                 30,
                 "translational-research"
             ),
@@ -9246,7 +9300,8 @@ class AdminController extends OrderAbstractController
         $types = array(
             "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp",
-            "COVID-19" => "covid19"
+            "COVID-19" => "covid19",
+            "Multiparametric In Situ Imaging" => "misi" //Multiparametric In Situ Imaging (MISI)
         );
 
         $count = 10;
