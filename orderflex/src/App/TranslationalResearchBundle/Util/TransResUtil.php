@@ -3442,6 +3442,12 @@ class TransResUtil
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
         }
 
+        if( $specialty->getType() == 'default' || $specialty->getType() == 'user-added' ) {
+            //OK
+        } else {
+            return NULL;
+        }
+
         return $specialty;
     }
 
