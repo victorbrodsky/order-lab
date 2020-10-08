@@ -17,6 +17,7 @@
 
 namespace App\TranslationalResearchBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -41,6 +42,48 @@ class SpecialtyList extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RequestCategoryTypeList", mappedBy="projectSpecialties")
+     */
+    private $requestCategories;
+
+
+
+    public function __construct($author=null) {
+
+        parent::__construct($author);
+
+        $this->requestCategories = new ArrayCollection();
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getRequestCategories()
+    {
+        return $this->requestCategories;
+    }
+    public function addRequestCategory( $item )
+    {
+        if( !$this->requestCategories->contains($item) ) {
+            $this->requestCategories->add($item);
+            $item->addProjectSpecialty($this);
+        }
+
+        return $this;
+    }
+    public function removeRequestCategory($item)
+    {
+        if( $this->requestCategories->contains($item) ) {
+            $this->requestCategories->removeElement($item);
+            $item->removeProjectSpecialty($this);
+        }
+
+        return $this;
+    }
 
 
     public function getUppercaseName() {

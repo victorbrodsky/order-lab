@@ -17,6 +17,7 @@
 
 namespace App\TranslationalResearchBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -68,6 +69,30 @@ class RequestCategoryTypeList extends ListAbstract
      * @ORM\Column(type="string", nullable=true)
      */
     private $productId;
+
+//    /**
+//     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList")
+//     * @ORM\JoinTable(name="transres_requestcategory_specialty",
+//     *      joinColumns={@ORM\JoinColumn(name="requestcategory_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="specialty_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    private $projectSpecialties;
+    /**
+     * @ORM\ManyToMany(targetEntity="SpecialtyList", inversedBy="requestCategories")
+     * @ORM\JoinTable(name="transres_requestcategory_specialty")
+     */
+    private $projectSpecialties;
+
+
+
+
+    public function __construct($author=null) {
+
+        parent::__construct($author);
+
+        $this->projectSpecialties = new ArrayCollection();
+    }
 
 
     /**
@@ -133,6 +158,33 @@ class RequestCategoryTypeList extends ListAbstract
     {
         $this->productId = $productId;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectSpecialties()
+    {
+        return $this->projectSpecialties;
+    }
+    public function addProjectSpecialty( $item )
+    {
+        if( !$this->projectSpecialties->contains($item) ) {
+            $this->projectSpecialties->add($item);
+            //$item->addRequestCategory($this);
+        }
+
+        return $this;
+    }
+    public function removeProjectSpecialty($item)
+    {
+        if( $this->projectSpecialties->contains($item) ) {
+            $this->projectSpecialties->removeElement($item);
+            //$item->removeRequestCategory($this);
+        }
+
+        return $this;
+    }
+
 
     public function getFeeUnitStr() {
         if( $this->getFeeUnit() == "Project-specific" ) {
