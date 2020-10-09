@@ -7,6 +7,8 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -562,22 +564,10 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateFeesAction: Not allowed");
+        exit("updateFeesAction: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-
-        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
-        $dql =  $repository->createQueryBuilder("list");
-        $dql->select('list');
-        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
-
-        $dql->andWhere("projectSpecialties.id IS NULL");
-
-        $query = $em->createQuery($dql);
-
-        $fees = $query->getResult();
-        echo "fees count=".count($fees)."<br>";
 
         //SpecialtyList
         $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -603,10 +593,49 @@ class DefaultController extends OrderAbstractController
 
             $count++;
         }
-        //$em->flush(); //Persist objects that did not make up an entire batch
-        //$em->clear();
 
-        exit("End of update fees: ".$count);
+
+        exit("End add new fees: ".$count);
+    }
+
+    /**
+     * http://127.0.0.1/order/translational-research/add-misi-fees
+     *
+     * @Route("/add-misi-fees", name="translationalresearch_add_misi_fees")
+     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
+     */
+    public function addMisiFeesAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("addMisiFeesAction: Not allowed");
+
+        //$em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+        $importUtil = $this->get('transres_import');
+
+        $form = $this->createFormBuilder()
+            ->add('file', FileType::class)
+            ->add('upload', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $inputFileName = $form['file']->getData();
+            echo "inputFileName1=" . $inputFileName . "<br>";
+            //exit('111');
+
+            $importUtil->addNewFees($inputFileName);
+
+            //exit("End addMisiFeesAction");
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
     }
 
 }

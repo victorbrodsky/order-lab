@@ -3034,5 +3034,72 @@ class TransResImportData
     }
 
 
+    public function addNewFees($inputFileName) {
+
+        $logger = $this->container->get('logger');
+
+        $mapper = array();
+
+        //$inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $inputFileName =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+
+        $count = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $code = $this->getValueByHeaderName('CODE', $rowData, $headers);
+            $serviceCategory = $this->getValueByHeaderName('SERVICE CATEGORY', $rowData, $headers);
+            $price = $this->getValueByHeaderName('PRICE', $rowData, $headers);
+            $unit = $this->getValueByHeaderName('UNIT', $rowData, $headers);
+
+            //Section:
+            //Vectra Polaris
+            //Starts with MISI-1XXX
+            //
+            //CODEX
+            //Starts with MISI-2XXX
+            //
+            //GeoMX
+            //Starts with MISI-3XXX
+
+            //Check if already exists by $code
+            $feeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
+            if( $feeDb ) {
+                echo "Fee already exists $feeDb <br>";
+                continue;
+            }
+
+            $count++;
+        }
+
+        exit("Added $count fees");
+    }
 
 }

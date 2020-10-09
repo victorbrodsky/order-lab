@@ -1,0 +1,52 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+
+{% block title %}
+    Get File
+{% endblock %}
+
+
+{% block content %}
+
+    {{ form_start(form) }}
+
+        {% if form.file is defined %}
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6" align="center">
+                    {{ form_row(form.file) }}
+                </div>
+                <div class="col-xs-3"></div>
+            </div>
+            <br>
+        {% endif %}
+
+        {#button: Upload and Extract Data#}
+        {% if form.upload is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.upload) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
