@@ -310,6 +310,8 @@ class ListController extends OrderAbstractController
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
 
+        $useWalker = false;
+
         //$dql->leftJoin("ent.objectType", "objectType");
 
 //        if( method_exists($entityClass,'getResearchlab') ) {
@@ -372,6 +374,15 @@ class ListController extends OrderAbstractController
             $dql->addGroupBy('fellowshipSubspecialty.name');
         }
 
+        if( method_exists($entityClass,'getProjectSpecialties') ) {
+            //exit('123');
+            $useWalker = true;
+            $dql->leftJoin("ent.projectSpecialties", "projectSpecialties");
+            //$dql->addGroupBy('ent.projectSpecialties');
+            //$dql->addGroupBy('projectSpecialties');
+            $dql->addGroupBy('projectSpecialties.name');
+        }
+
 //        if( method_exists($entityClass,'getPatients') ) {
 //            $dql->leftJoin("ent.patients", "patients");
 //            //$dql->addGroupBy('patients.name');
@@ -380,14 +391,14 @@ class ListController extends OrderAbstractController
         //$dql->orderBy("ent.createdate","DESC");
 		
 		//Pass sorting parameters directly to query; Somehow, knp_paginator does not sort correctly according to sorting parameters
-		$postData = $request->query->all();
-		if( isset($postData['sort']) ) {
+        $postData = $request->query->all();
+        if (isset($postData['sort'])) {
             //$dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
             //$dql->orderBy("ent.createdate","DESC");
-            $dql->orderBy($postData['sort'],$postData['direction']);
+            $dql->orderBy($postData['sort'], $postData['direction']);
         } else {
             //$dql = $dql . " ORDER BY ent.orderinlist ASC";
-            $dql->orderBy("ent.orderinlist","ASC");
+            $dql->orderBy("ent.orderinlist", "ASC");
         }
 
         $dqlParameters = array();
@@ -500,12 +511,18 @@ class ListController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
+        if( $useWalker ) {
+            $walker = array('wrap-queries'=>true);
+        } else {
+            $walker = array();
+        }
+
         $paginator = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
             $limit                          /*limit per page*/
-            //,array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
+            ,$walker//,array('wrap-queries'=>true)   //this cause sorting impossible, but without it "site" sorting does not work (mssql: "There is no component aliased by [sites] in the given Query" )
             //,array('distinct'=>true)
             //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
             //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)

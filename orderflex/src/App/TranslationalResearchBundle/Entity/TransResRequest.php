@@ -899,7 +899,10 @@ class TransResRequest {
 
     public function getProjectSpecialty() {
         $project = $this->getProject();
-        return $project->getProjectSpecialty();
+        if( $project ) {
+            return $project->getProjectSpecialty();
+        }
+        return NULL;
     }
 
     /**

@@ -37,7 +37,31 @@ class ProductType extends AbstractType
 
         $builder->add('id', HiddenType::class);
 
+//        $workRequest = NULL;
+//        if( isset($this->params['transresRequest']) ) {
+//            $workRequest = $this->params['transresRequest'];
+//            if ($workRequest) {
+//
+//            }
+//        }
 
+//        $builder->add('category', EntityType::class, array(
+//            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+//            'choice_label' => 'getOptimalAbbreviationName',
+//            'label'=>"Product or Service".$this->params['categoryListLink'].":",
+//            'required'=> false,
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
         $builder->add('category', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
             'choice_label' => 'getOptimalAbbreviationName',
@@ -46,13 +70,7 @@ class ProductType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $this->getRequestCategoryQueryBuilder($er);
             },
         ));
 
@@ -95,7 +113,51 @@ class ProductType extends AbstractType
         }
 
     }
-    
+
+    public function getRequestCategoryQueryBuilder(EntityRepository $er) {
+
+        //'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        $workRequest = NULL;
+        $projectSpecialtyIdsArr = array();
+        if( isset($this->params['transresRequest']) ) {
+            $workRequest = $this->params['transresRequest'];
+            //echo "workRequest=".$workRequest->getId()."<br>";
+            if( $workRequest ) {
+                $projectSpecialty = $workRequest->getProjectSpecialty();
+                if( $projectSpecialty ) {
+                    $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                }
+            }
+        }
+        //dump($projectSpecialtyIdsArr);
+        //exit('111');
+
+        if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
+            //AppTranslationalResearchBundle:RequestCategoryTypeList
+            $queryBuilder = $er->createQueryBuilder('list')
+                ->leftJoin('list.projectSpecialties','projectSpecialties')
+                ->where("list.type = :typedef OR list.type = :typeadd")
+                ->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
+                //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr) OR projectSpecialties.id IS NULL") //show categories with this specialty only OR categories without specialty
+                ->orderBy("list.orderinlist","ASC")
+                ->setParameters( array(
+                    'typedef' => 'default',
+                    'typeadd' => 'user-added',
+                    'projectSpecialtyIdsArr' => $projectSpecialtyIdsArr
+                ));
+        } else {
+            $queryBuilder = $er->createQueryBuilder('list')
+                ->where("list.type = :typedef OR list.type = :typeadd")
+                ->orderBy("list.orderinlist","ASC")
+                ->setParameters( array(
+                    'typedef' => 'default',
+                    'typeadd' => 'user-added',
+                ));
+        }
+
+        return $queryBuilder;
+    }
+
     /**
      * {@inheritdoc}
      */

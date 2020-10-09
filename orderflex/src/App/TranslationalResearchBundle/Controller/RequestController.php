@@ -2613,6 +2613,7 @@ class RequestController extends OrderAbstractController
         $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
 
         $dqlParameters = array();
 

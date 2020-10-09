@@ -125,7 +125,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Specialty', 'ent.projectSpecialties') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Specialty', 'projectSpecialties.name') }}</th>
             {% endif %}
 
             {% if entities|first.url is defined %}
@@ -363,8 +363,8 @@
                     <td>
                         {% for specialty in entity.projectSpecialties %}
                             {{ specialty.getUppercaseShortName() }}<br>
+                            {#{{ specialty.name }}<br>#}
                         {% endfor %}
-                        {#{{ entity.projectSpecialties }}#}
                     </td>
                 {% endif %}
 

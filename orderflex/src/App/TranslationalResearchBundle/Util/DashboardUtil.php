@@ -70,9 +70,6 @@ class DashboardUtil
         $projectSpecialtiesStr = "AP/CP, Hematopathology, MISI and COVID-19";
         if( 1 ) {
             $transresUtil = $this->container->get('transres_util');
-            //$user = $this->secTokenStorage->getToken()->getUser();
-            //$projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
-            //$projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
             $projectSpecialtyAllowedArr = $transresUtil->getTransResProjectSpecialties();
             $projectSpecialtiesStr = "";
             foreach($projectSpecialtyAllowedArr as $projectSpecialty) {
@@ -134,13 +131,13 @@ class DashboardUtil
             "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
             "42. Total Number of Individual PIs involved in $projectSpecialtiesStr Projects (linked)" => "compare-projectspecialty-pis",
-            "43. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
-            "44. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
+            "43. Total Number of $projectSpecialtiesStr Project Requests (linked)" => "compare-projectspecialty-projects",
+            "44. Total Number of $projectSpecialtiesStr Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
             //"44original. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)"=>"compare-projectspecialty-projects-stack_original",
-            "45. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests",
+            "45. Total Number of $projectSpecialtiesStr Work Requests By Month (linked)" => "compare-projectspecialty-requests",
             //"45new. Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_new",
             //"45original. original Total Number of AP/CP, Hematopathology and COVID-19 Work Requests By Month (linked)" => "compare-projectspecialty-requests_original",
-            "46. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Invoices By Month (linked)" => "compare-projectspecialty-invoices",
+            "46. Total Number of $projectSpecialtiesStr Invoices By Month (linked)" => "compare-projectspecialty-invoices",
             //"46original. Total Number of AP/CP, Hematopathology and COVID-19 Invoices By Month (linked)"=>"compare-projectspecialty-invoices_original",
 
             "47. Total Fees per Project Request Type (linked)" => "projects-fees-per-type",

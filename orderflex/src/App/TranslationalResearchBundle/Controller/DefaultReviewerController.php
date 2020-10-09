@@ -160,9 +160,12 @@ class DefaultReviewerController extends OrderAbstractController
 
             //Event Log
             $eventType = "Default Reviewer Created";
+            $reviewerDelegate = NULL;
             $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
             $reviewer = $reviewersArr['reviewer'];
-            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            if( isset($reviewersArr['reviewerDelegate']) ) {
+                $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            }
             $msg = "Default Reviewer Object ($stateStr, $specialtyStr) has been created with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
             $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
 

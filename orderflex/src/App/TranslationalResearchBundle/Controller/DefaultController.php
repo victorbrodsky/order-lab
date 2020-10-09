@@ -551,4 +551,62 @@ class DefaultController extends OrderAbstractController
     }
 
 
+    //update fees
+    /**
+     * http://127.0.0.1/order/translational-research/update-fees
+     *
+     * @Route("/update-fees", name="translationalresearch_update_fees")
+     */
+    public function updateFeesAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateFeesAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+
+        $dql->andWhere("projectSpecialties.id IS NULL");
+
+        $query = $em->createQuery($dql);
+
+        $fees = $query->getResult();
+        echo "fees count=".count($fees)."<br>";
+
+        //SpecialtyList
+        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
+        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+
+        $count = 0;
+
+        foreach($fees as $fee) {
+
+            if( count($fee->getProjectSpecialties()) > 0 ) {
+                echo "Skip $fee <br>";
+                continue;
+            }
+
+            echo $count.": Update fee ID=".$fee->getId().": $fee <br>";
+            $fee->addProjectSpecialty($specialtyHemaObject);
+            $fee->addProjectSpecialty($specialtyAPCPObject);
+            $fee->addProjectSpecialty($specialtyCovid19Object);
+
+            $em->flush();
+
+            $count++;
+        }
+        //$em->flush(); //Persist objects that did not make up an entire batch
+        //$em->clear();
+
+        exit("End of update fees: ".$count);
+    }
+
 }
