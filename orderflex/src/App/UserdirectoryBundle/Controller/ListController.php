@@ -511,6 +511,7 @@ class ListController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
+        //TODO: check why showing 201 matching fees when only 67 is in DB
         if( $useWalker ) {
             $walker = array('wrap-queries'=>true);
         } else {
