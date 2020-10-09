@@ -3442,11 +3442,11 @@ class TransResUtil
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
         }
 
-        if( $specialty->getType() == 'default' || $specialty->getType() == 'user-added' ) {
-            //OK
-        } else {
-            return NULL;
-        }
+//        if( $specialty->getType() == 'default' || $specialty->getType() == 'user-added' ) {
+//            //OK
+//        } else {
+//            return NULL;
+//        }
 
         return $specialty;
     }
@@ -5165,39 +5165,68 @@ class TransResUtil
         };
     }
 
+//    public function getAllowedProjectSpecialty_ORIG( $user )
+//    {
+//        $projectSpecialtyAllowedArr = new ArrayCollection();
+//        $projectSpecialtyDeniedArr = new ArrayCollection();
+//
+//        //check is user is hematopathology user
+//        $specialtyHemaObject = $this->getSpecialtyObject("hematopathology");
+//        if( $this->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+//            $projectSpecialtyAllowedArr->add($specialtyHemaObject);
+//        } else {
+//            $projectSpecialtyDeniedArr->add($specialtyHemaObject);
+//        }
+//
+//        //check is user is ap-cp user
+//        $specialtyAPCPObject = $this->getSpecialtyObject("ap-cp");
+//        if( $this->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+//            $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
+//        } else {
+//            $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
+//        }
+//
+//        $specialtyCovid19Object = $this->getSpecialtyObject("covid19");
+//        if( $this->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
+//            $projectSpecialtyAllowedArr->add($specialtyCovid19Object);
+//        } else {
+//            $projectSpecialtyDeniedArr->add($specialtyCovid19Object);
+//        }
+//
+//        $specialtyMisiObject = $this->getSpecialtyObject("misi");
+//        if( $this->isUserAllowedSpecialtyObject($specialtyMisiObject, $user) ) {
+//            $projectSpecialtyAllowedArr->add($specialtyMisiObject);
+//        } else {
+//            $projectSpecialtyDeniedArr->add($specialtyMisiObject);
+//        }
+//
+//        $res = array(
+//            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
+//            'projectSpecialtyDeniedArr' => $projectSpecialtyDeniedArr
+//        );
+//
+//        return $res;
+//    }
+    //Similar to getTransResProjectSpecialties but this method returns allowed and denied arrays
     public function getAllowedProjectSpecialty( $user )
     {
         $projectSpecialtyAllowedArr = new ArrayCollection();
         $projectSpecialtyDeniedArr = new ArrayCollection();
 
-        //check is user is hematopathology user
-        $specialtyHemaObject = $this->getSpecialtyObject("hematopathology");
-        if( $this->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
-            $projectSpecialtyAllowedArr->add($specialtyHemaObject);
-        } else {
-            $projectSpecialtyDeniedArr->add($specialtyHemaObject);
-        }
+        //get all enabled project specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
 
-        //check is user is ap-cp user
-        $specialtyAPCPObject = $this->getSpecialtyObject("ap-cp");
-        if( $this->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
-            $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
-        } else {
-            $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
-        }
-
-        $specialtyCovid19Object = $this->getSpecialtyObject("covid19");
-        if( $this->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
-            $projectSpecialtyAllowedArr->add($specialtyCovid19Object);
-        } else {
-            $projectSpecialtyDeniedArr->add($specialtyCovid19Object);
-        }
-
-        $specialtyMisiObject = $this->getSpecialtyObject("misi");
-        if( $this->isUserAllowedSpecialtyObject($specialtyMisiObject, $user) ) {
-            $projectSpecialtyAllowedArr->add($specialtyMisiObject);
-        } else {
-            $projectSpecialtyDeniedArr->add($specialtyMisiObject);
+        foreach($specialties as $specialtyObject) {
+            if( $this->isUserAllowedSpecialtyObject($specialtyObject, $user) ) {
+                $projectSpecialtyAllowedArr->add($specialtyObject);
+            } else {
+                $projectSpecialtyDeniedArr->add($specialtyObject);
+            }
         }
 
         $res = array(
@@ -5207,6 +5236,7 @@ class TransResUtil
 
         return $res;
     }
+
     public function getObjectDiff($first_array,$second_array) {
         $diff = array_udiff($first_array, $second_array,
             function ($obj_a, $obj_b) {

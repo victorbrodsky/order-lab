@@ -2544,33 +2544,149 @@ class TransResRequestUtil
         }
     }
 
+//    //get allowed filter request types for logged in user
+//    public function getRequestFilterPresetType_ORIG() {
+//        $transresUtil = $this->container->get('transres_util');
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $allowHema = false;
+//        $allowAPCP = false;
+//        $allowCovid19 = false;
+//        $allowMisi = false;
+//
+//        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+//            $allowHema = true;
+//        }
+//
+//        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+//        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+//            $allowAPCP = true;
+//        }
+//
+//        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
+//        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
+//            $allowCovid19 = true;
+//        }
+//
+//        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+//        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyMisiObject, $user) ) {
+//            $allowMisi = true;
+//        }
+//
+//        $filterTypes = array(
+//            'My Submitted Requests',
+//            "My Draft Requests",
+//            'Submitted Requests for My Projects',
+//            'Draft Requests for My Projects',
+//            //'Requests I Completed',
+//            //'[[hr]]'
+//        );
+//
+//        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
+//            $filterTypes[] = 'Requests I Completed';
+//        }
+//
+//        $filterTypes[] = '[[hr]]';
+//
+//        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+//            return $filterTypes;
+//        }
+//
+//        $filterTypes[] = 'All Requests';
+//        if( $allowHema ) {
+//            $filterTypes[] = 'All Hematopathology Requests';
+//        }
+//        if( $allowAPCP ) {
+//            $filterTypes[] = 'All AP/CP Requests';
+//        }
+//        if( $allowCovid19 ) {
+//            $filterTypes[] = 'All COVID-19 Requests';
+//        }
+//        if( $allowMisi ) {
+//            $filterTypes[] = 'All MISI Requests';
+//        }
+//        $filterTypes[] = 'All Requests (including Drafts)';
+//        $filterTypes[] = '[[hr]]';
+//
+//        $filterTypes[] = 'All Pending Requests';
+//        if( $allowHema ) {
+//            $filterTypes[] = 'All Hematopathology Pending Requests';
+//        }
+//        if( $allowAPCP ) {
+//            $filterTypes[] = 'All AP/CP Pending Requests';
+//        }
+//        if( $allowCovid19 ) {
+//            $filterTypes[] = 'All COVID-19 Pending Requests';
+//        }
+//        if( $allowMisi ) {
+//            $filterTypes[] = 'All MISI Pending Requests';
+//        }
+//        $filterTypes[] = '[[hr]]';
+//
+//        $filterTypes[] = 'All Active Requests';
+//        if( $allowHema ) {
+//            $filterTypes[] = 'All Hematopathology Active Requests';
+//        }
+//        if( $allowAPCP ) {
+//            $filterTypes[] = 'All AP/CP Active Requests';
+//        }
+//        if( $allowCovid19 ) {
+//            $filterTypes[] = 'All COVID-19 Active Requests';
+//        }
+//        if( $allowMisi ) {
+//            $filterTypes[] = 'All MISI Active Requests';
+//        }
+//        $filterTypes[] = '[[hr]]';
+//
+//        $filterTypes[] = 'All Completed Requests';
+//        if( $allowHema ) {
+//            $filterTypes[] = 'All Hematopathology Completed Requests';
+//        }
+//        if( $allowAPCP ) {
+//            $filterTypes[] = 'All AP/CP Completed Requests';
+//        }
+//        if( $allowCovid19 ) {
+//            $filterTypes[] = 'All COVID-19 Completed Requests';
+//        }
+//        if( $allowMisi ) {
+//            $filterTypes[] = 'All MISI Completed Requests';
+//        }
+//        $filterTypes[] = '[[hr]]';
+//
+//
+//        $filterTypes[] = 'All Completed and Notified Requests';
+//        if( $allowHema ) {
+//            $filterTypes[] = 'All Hematopathology Completed and Notified Requests';
+//        }
+//        if( $allowAPCP ) {
+//            $filterTypes[] = 'All AP/CP Completed and Notified Requests';
+//        }
+//        if( $allowCovid19 ) {
+//            $filterTypes[] = 'All COVID-19 Completed and Notified Requests';
+//        }
+//        if( $allowMisi ) {
+//            $filterTypes[] = 'All MISI Completed and Notified Requests';
+//        }
+//        //$filterTypes[] = '[[hr]]';
+//
+//        return $filterTypes;
+//    }
     //get allowed filter request types for logged in user
     public function getRequestFilterPresetType() {
         $transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
-        $allowHema = false;
-        $allowAPCP = false;
-        $allowCovid19 = false;
-        $allowMisi = false;
 
-        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
-            $allowHema = true;
-        }
+        //get all enabled project specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
 
-        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
-            $allowAPCP = true;
-        }
-
-        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
-        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyCovid19Object, $user) ) {
-            $allowCovid19 = true;
-        }
-
-        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
-        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyMisiObject, $user) ) {
-            $allowMisi = true;
+        $allowSpecialties = array();
+        foreach($specialties as $projectSpecialty) {
+            $allowSpecialties[] = $projectSpecialty->getUppercaseFullName();
         }
 
         $filterTypes = array(
@@ -2593,79 +2709,35 @@ class TransResRequestUtil
         }
 
         $filterTypes[] = 'All Requests';
-        if( $allowHema ) {
-            $filterTypes[] = 'All Hematopathology Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $filterTypes[] = "All $allowSpecialty Requests";
         }
-        if( $allowAPCP ) {
-            $filterTypes[] = 'All AP/CP Requests';
-        }
-        if( $allowCovid19 ) {
-            $filterTypes[] = 'All COVID-19 Requests';
-        }
-        if( $allowMisi ) {
-            $filterTypes[] = 'All MISI Requests';
-        }
+
         $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Pending Requests';
-        if( $allowHema ) {
-            $filterTypes[] = 'All Hematopathology Pending Requests';
-        }
-        if( $allowAPCP ) {
-            $filterTypes[] = 'All AP/CP Pending Requests';
-        }
-        if( $allowCovid19 ) {
-            $filterTypes[] = 'All COVID-19 Pending Requests';
-        }
-        if( $allowMisi ) {
-            $filterTypes[] = 'All MISI Pending Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $filterTypes[] = "All $allowSpecialty Pending Requests";
         }
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Active Requests';
-        if( $allowHema ) {
-            $filterTypes[] = 'All Hematopathology Active Requests';
-        }
-        if( $allowAPCP ) {
-            $filterTypes[] = 'All AP/CP Active Requests';
-        }
-        if( $allowCovid19 ) {
-            $filterTypes[] = 'All COVID-19 Active Requests';
-        }
-        if( $allowMisi ) {
-            $filterTypes[] = 'All MISI Active Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $filterTypes[] = "All $allowSpecialty Active Requests";
         }
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Completed Requests';
-        if( $allowHema ) {
-            $filterTypes[] = 'All Hematopathology Completed Requests';
-        }
-        if( $allowAPCP ) {
-            $filterTypes[] = 'All AP/CP Completed Requests';
-        }
-        if( $allowCovid19 ) {
-            $filterTypes[] = 'All COVID-19 Completed Requests';
-        }
-        if( $allowMisi ) {
-            $filterTypes[] = 'All MISI Completed Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $filterTypes[] = "All $allowSpecialty Completed Requests";
         }
         $filterTypes[] = '[[hr]]';
 
 
         $filterTypes[] = 'All Completed and Notified Requests';
-        if( $allowHema ) {
-            $filterTypes[] = 'All Hematopathology Completed and Notified Requests';
-        }
-        if( $allowAPCP ) {
-            $filterTypes[] = 'All AP/CP Completed and Notified Requests';
-        }
-        if( $allowCovid19 ) {
-            $filterTypes[] = 'All COVID-19 Completed and Notified Requests';
-        }
-        if( $allowMisi ) {
-            $filterTypes[] = 'All MISI Completed and Notified Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $filterTypes[] = "All $allowSpecialty Completed and Notified Requests";
         }
         //$filterTypes[] = '[[hr]]';
 

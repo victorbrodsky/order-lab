@@ -119,6 +119,23 @@ class SpecialtyList extends ListAbstract
         throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
     }
 
+    public function getUppercaseFullName() {
+        if( $this->getAbbreviation() == "hematopathology" ) {
+            return "Hematopathology";
+        }
+        if( $this->getAbbreviation() == "ap-cp" ) {
+            return "AP/CP";
+        }
+        if( $this->getAbbreviation() == "covid19" ) {
+            $name = "COVID-19";
+            return $name;
+        }
+        if( $this->getAbbreviation() == "misi" ) {
+            return "MISI";
+        }
+        throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+    }
+
     //new-ap-cp-project
 //    public function getNewProjectUrlPrefix() {
 //        if( $this->getAbbreviation() ) {

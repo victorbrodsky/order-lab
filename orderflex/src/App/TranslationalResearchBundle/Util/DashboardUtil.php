@@ -64,6 +64,23 @@ class DashboardUtil
     }
     
     public function getChartTypes() {
+
+        //Add project specialty types according to the enabled specialties.
+        //Replace [[projectSpecialties]] by $transresUtil->getAllowedProjectSpecialty($user)
+        $projectSpecialtiesStr = "AP/CP, Hematopathology, MISI and COVID-19";
+        if( 1 ) {
+            $transresUtil = $this->container->get('transres_util');
+            //$user = $this->secTokenStorage->getToken()->getUser();
+            //$projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+            //$projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+            $projectSpecialtyAllowedArr = $transresUtil->getTransResProjectSpecialties();
+            $projectSpecialtiesStr = "";
+            foreach($projectSpecialtyAllowedArr as $projectSpecialty) {
+                $projectSpecialtiesStr != "" && $projectSpecialtiesStr .= ", ";
+                $projectSpecialtiesStr .= $projectSpecialty->getUppercaseFullName();
+            }
+        }
+
         $chartTypes = array(
             //PI/Project statistics
             "1. Principle Investigators by Affiliation (linked)" =>                   "pi-by-affiliation",
@@ -116,7 +133,7 @@ class DashboardUtil
             "40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
             "41. Turn-around Statistics: Top PIs by index (delay in months * invoiced amount) for unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
 
-            "42. Total Number of Individual PIs involved in AP/CP, Hematopathology, MISI and COVID-19 Projects (linked)" => "compare-projectspecialty-pis",
+            "42. Total Number of Individual PIs involved in $projectSpecialtiesStr Projects (linked)" => "compare-projectspecialty-pis",
             "43. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Project Requests (linked)" => "compare-projectspecialty-projects",
             "44. Total Number of AP/CP, Hematopathology, MISI and COVID-19 Project Requests By Month (linked)" => "compare-projectspecialty-projects-stack",
             //"44original. Total Number of AP/CP, Hematopathology and COVID-19 Project Requests By Month (linked)"=>"compare-projectspecialty-projects-stack_original",
@@ -159,7 +176,7 @@ class DashboardUtil
         return $chartTypes;
     }
     public function getChartTypeByValue($value) {
-        $this->getChartTypes();
+        //$this->getChartTypes();
         $key = array_search($value, $this->getChartTypes());
         return $key;
     }
@@ -1782,6 +1799,17 @@ class DashboardUtil
 
         $titleCount = 0;
         $chartName = $this->getChartTypeByValue($chartType);
+
+//        //TODO: add project specialty types according to the enabled specialties.
+//        // Replace [[projectSpecialties]] by $transresUtil->getAllowedProjectSpecialty($user)
+//        if( strpos($chartName, "[[projectSpecialties]]") !== false ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty();
+//            $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+//            //$projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+//            $projectSpecialtyAllowedStr = implode(", ", $projectSpecialtyAllowedArr);
+//            $chartName = str_replace("[[projectSpecialties]]", $projectSpecialtyAllowedStr);
+//        }
 
         $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
 
