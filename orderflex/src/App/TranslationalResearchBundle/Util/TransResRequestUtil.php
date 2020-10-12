@@ -4546,7 +4546,54 @@ class TransResRequestUtil
 
         $writer->close();
     }
-    
+
+
+    public function getProductServiceByProjectSpecialty($projectSpecialty,$asCombobox=true) {
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $dqlParameters = array();
+        
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+
+        if( $projectSpecialty ) {
+            $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+            $dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $query->setMaxResults(3);
+
+        $products = $query->getResult();
+
+        if( !$asCombobox ) {
+            return $products;
+        }
+
+        $productsCombobox = array();
+        foreach($products as $product) {
+            if( $asCombobox ) {
+                $productsCombobox[] = array('id'=>$product->getId(),'text'=>$product->getOptimalAbbreviationName());
+            }
+        }
+
+        return $productsCombobox;
+    }
+
 }
 
 

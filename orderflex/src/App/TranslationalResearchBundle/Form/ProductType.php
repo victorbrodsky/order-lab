@@ -68,7 +68,7 @@ class ProductType extends AbstractType
             'label'=>"Product or Service".$this->params['categoryListLink'].":",
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width product-category-combobox'),
             'query_builder' => function(EntityRepository $er) {
                 return $this->getRequestCategoryQueryBuilder($er);
             },

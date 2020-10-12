@@ -2270,7 +2270,7 @@ class RequestController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $routeName = $request->get('_route');
 
         $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
@@ -2763,6 +2763,44 @@ class RequestController extends OrderAbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($availableProjects));
+        return $response;
+    }
+
+    /**
+     * Finds and displays filtered product/service according to the project specialty
+     *
+     * @Route("/productservice/ajax/{id}", name="translationalresearch_get_productservice_ajax", methods={"GET"}, options={"expose"=true})
+     */
+    public function getProductServiceByProjectAction(Request $request, Project $project)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $specialty = $project->getProjectSpecialty();
+
+        $products = $transresRequestUtil->getProductServiceByProjectSpecialty($specialty);
+        
+        $output = array(
+            "products" => $products,
+            "projectSpecialty" => $specialty.""
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
         return $response;
     }
 

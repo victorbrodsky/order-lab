@@ -320,6 +320,8 @@
 
         var _handsometableDataArr = [];
 
+        var _productServices = [];
+
         $(document).ready(function() {
 
             fieldInputMask();
@@ -333,6 +335,7 @@
                     //console.log("project changed: change");
                     //var projectId = $(this).val();
                     transresPrepopulateProjectDetails( $(this) );
+                    transresPrepopulateProductServices( $(this) );
                 });
             //}
 
@@ -563,6 +566,132 @@
             }
         }
 
+        function transresPrepopulateProductServices( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            //_productServices
+            if( _productServices.length == 0 ) {
+
+            }
+
+            //console.log("projectId="+projectId);
+            if( projectId ) {
+                //console.log("get project account number");
+
+                var url = Routing.generate('translationalresearch_get_productservice_ajax');
+                url = url + "/" + projectId;
+
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "GET",
+                    //data: {id: projectId },
+                    dataType: 'json',
+                    async: asyncflag
+                }).success(function(response) {
+                    console.log(response);
+
+                    var productServices = response.products;
+                    console.log(productServices);
+                    console.log("productServices len="+productServices.length);
+
+                    if( productServices && productServices.length > 0 ) {
+                        console.log("set products");
+                        //$('.product-category-combobox').val(null).trigger('change');
+                        //$(".product-category-combobox").trigger('change');
+
+                        //$("select.product-category-combobox").select2('data', null);
+                        $('select.product-category-combobox').empty().trigger("change");
+
+                        trpUpdateProducts(productServices);
+
+//                        for( var i = 0, len = productServices.length; i < len; i++ ){
+//                            console.log("set product name="+productServices[i]['text']+"; id="+productServices[i]['id']);
+//                            //if( fieldId == $(this).attr('id') ) {
+//                                //console.log("set this user fieldId="+fieldId);
+//                                //var newOption = new Option(products['text'], products['id'], true, true);
+//                            //} else {
+//                                //console.log("just add this user fieldId="+fieldId);
+//                                //var newOption = new Option(products['text'], products['id'], false, false);
+//                            //}
+//
+//                            var newOption = new Option(products['text'], products['id'], true, true);
+//                            $('.product-category-combobox').append(newOption).trigger('change');
+//                        }
+
+                    }
+
+
+                    $("#panel-title-products").show();
+                    $("#panel-title-products").html(response.projectSpecialty);
+                }).done(function() {
+                    //
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    //console.log('Error : ' + errorThrown);
+                    $("#panel-title-products").show();
+                    $("#panel-title-products").html(errorThrown);
+                });
+
+            } else {
+                $("#panel-title-products").html(null);
+            }
+        }
+
+        function trpUpdateProducts(products,comboboxEl) {
+            products.forEach(function(item){
+
+                if( $(this).find("option[value='" + userId + "']").length ) {
+
+                } else {
+
+                }
+
+                var thisEncounterId = item['id'];
+                var thisEncounterText = item['text'];
+                console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+                //text += thisEncounterText;
+                if( thisEncounterText ) {
+                    var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                    //var newOption = new Option(thisEncounterId, thisEncounterText, false, false);
+                    $("select.product-category-combobox").append(newOption).trigger('change');
+                    //$("select.combobox-previous-encounters").append(newOption);
+                }
+            });
+        }
+        function updateUserComboboxes(response,fieldId) {
+            //console.log("update user comboboxes; response:");
+            //console.log(response);
+
+            var userId = response.userId;
+            var userName = response.userName;
+            //console.log("userId="+userId+"; userName="+userName);
+
+            $("select.add-new-user-on-enter").each(function(){
+
+                if( $(this).find("option[value='" + userId + "']").length ) {
+                    //$("#state").val(userId).trigger("change");
+                } else {
+
+                    //console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
+                    if( fieldId == $(this).attr('id') ) {
+                        //console.log("set this user fieldId="+fieldId);
+                        var newOption = new Option(userName, userId, true, true);
+                    } else {
+                        //console.log("just add this user fieldId="+fieldId);
+                        var newOption = new Option(userName, userId, false, false);
+                    }
+                    $(this).append(newOption).trigger('change');
+
+                }
+
+            });
+
+        }
 
 
 //        function transresTableBarcodeGeneration( barcodeField ) {
