@@ -374,13 +374,14 @@ class ListController extends OrderAbstractController
             $dql->addGroupBy('fellowshipSubspecialty.name');
         }
 
-        if( method_exists($entityClass,'getProjectSpecialties') ) {
+        if( 0 && method_exists($entityClass,'getProjectSpecialties') ) {
             //exit('123');
             $useWalker = true;
             $dql->leftJoin("ent.projectSpecialties", "projectSpecialties");
             //$dql->addGroupBy('ent.projectSpecialties');
             //$dql->addGroupBy('projectSpecialties');
-            $dql->addGroupBy('projectSpecialties.name');
+            $dql->addGroupBy('projectSpecialties.name'); //This causes 201 matching items in RequestCategoryTypeList, however it has only 67 items
+            //$dql->addGroupBy('projectSpecialties.id');
         }
 
 //        if( method_exists($entityClass,'getPatients') ) {
