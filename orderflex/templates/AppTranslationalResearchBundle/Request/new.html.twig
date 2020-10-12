@@ -321,6 +321,7 @@
         var _handsometableDataArr = [];
 
         var _productServices = [];
+        var _projectSpecialtyId = null;
 
         $(document).ready(function() {
 
@@ -574,82 +575,132 @@
                 return;
             }
 
+            if( _projectSpecialtyId == projectId && _productServices.length > 0 ) {
+                console.log(_projectSpecialtyId+": _productServices already exists:");
+                console.log(_productServices);
+                return;
+            }
+
             //_productServices
             if( _productServices.length == 0 ) {
+                //console.log("projectId="+projectId);
+                if( projectId ) {
+                    //console.log("get project account number");
 
-            }
+                    var url = Routing.generate('translationalresearch_get_productservice_ajax');
+                    url = url + "/" + projectId;
 
-            //console.log("projectId="+projectId);
-            if( projectId ) {
-                //console.log("get project account number");
+                    $.ajax({
+                        url: url,
+                        timeout: _ajaxTimeout,
+                        type: "GET",
+                        //data: {id: projectId },
+                        dataType: 'json',
+                        async: false //asyncflag
+                    }).success(function(response) {
+                        console.log(response);
 
-                var url = Routing.generate('translationalresearch_get_productservice_ajax');
-                url = url + "/" + projectId;
+                        _productServices = response.products;
 
-                $.ajax({
-                    url: url,
-                    timeout: _ajaxTimeout,
-                    type: "GET",
-                    //data: {id: projectId },
-                    dataType: 'json',
-                    async: asyncflag
-                }).success(function(response) {
-                    console.log(response);
-
-                    var productServices = response.products;
-                    console.log(productServices);
-                    console.log("productServices len="+productServices.length);
-
-                    if( productServices && productServices.length > 0 ) {
-                        console.log("set products");
-                        //$('.product-category-combobox').val(null).trigger('change');
-                        //$(".product-category-combobox").trigger('change');
-
-                        //$("select.product-category-combobox").select2('data', null);
-                        $('select.product-category-combobox').empty().trigger("change");
-
-                        trpUpdateProducts(productServices);
-
-//                        for( var i = 0, len = productServices.length; i < len; i++ ){
-//                            console.log("set product name="+productServices[i]['text']+"; id="+productServices[i]['id']);
-//                            //if( fieldId == $(this).attr('id') ) {
-//                                //console.log("set this user fieldId="+fieldId);
-//                                //var newOption = new Option(products['text'], products['id'], true, true);
-//                            //} else {
-//                                //console.log("just add this user fieldId="+fieldId);
-//                                //var newOption = new Option(products['text'], products['id'], false, false);
-//                            //}
+//                        var productServices = response.products;
+//                        console.log(productServices);
+//                        console.log("productServices len="+productServices.length);
 //
-//                            var newOption = new Option(products['text'], products['id'], true, true);
-//                            $('.product-category-combobox').append(newOption).trigger('change');
+//                        if( productServices && productServices.length > 0 ) {
+//                            console.log("set products");
+//                            //$('.product-category-combobox').val(null).trigger('change');
+//                            //$(".product-category-combobox").trigger('change');
+//
+//                            //$("select.product-category-combobox").select2('data', null);
+//                            $('select.product-category-combobox').empty().trigger("change");
+//
+//                            trpUpdateProducts(productServices);
 //                        }
+//
+//                        $("#panel-title-products").show();
+//                        $("#panel-title-products").html(response.projectSpecialty);
+                    }).done(function() {
+                        //
+                    }).error(function(jqXHR, textStatus, errorThrown) {
+                        //console.log('Error : ' + errorThrown);
+                        _productServices = [];
+                        _projectSpecialtyId = null;
+                        $("#panel-title-products").show();
+                        $("#panel-title-products").html(errorThrown);
+                    });
 
-                    }
+                } else {
+                    $("#panel-title-products").html(null);
+                }
+            }//_productServices.length == 0
 
+            if( _productServices.length > 0 ) {
+                console.log("set products");
+                //$('.product-category-combobox').val(null).trigger('change');
+                //$(".product-category-combobox").trigger('change');
 
-                    $("#panel-title-products").show();
-                    $("#panel-title-products").html(response.projectSpecialty);
-                }).done(function() {
-                    //
-                }).error(function(jqXHR, textStatus, errorThrown) {
-                    //console.log('Error : ' + errorThrown);
-                    $("#panel-title-products").show();
-                    $("#panel-title-products").html(errorThrown);
-                });
+                //$("select.product-category-combobox").select2('data', null);
+                $('select.product-category-combobox').empty().trigger("change");
 
-            } else {
-                $("#panel-title-products").html(null);
+                trpUpdateProducts(_productServices);
             }
+
+//            //console.log("projectId="+projectId);
+//            if( projectId ) {
+//                //console.log("get project account number");
+//
+//                var url = Routing.generate('translationalresearch_get_productservice_ajax');
+//                url = url + "/" + projectId;
+//
+//                $.ajax({
+//                    url: url,
+//                    timeout: _ajaxTimeout,
+//                    type: "GET",
+//                    //data: {id: projectId },
+//                    dataType: 'json',
+//                    async: asyncflag
+//                }).success(function(response) {
+//                    console.log(response);
+//
+//                    var productServices = response.products;
+//                    console.log(productServices);
+//                    console.log("productServices len="+productServices.length);
+//
+//                    if( productServices && productServices.length > 0 ) {
+//                        console.log("set products");
+//                        //$('.product-category-combobox').val(null).trigger('change');
+//                        //$(".product-category-combobox").trigger('change');
+//
+//                        //$("select.product-category-combobox").select2('data', null);
+//                        $('select.product-category-combobox').empty().trigger("change");
+//
+//                        trpUpdateProducts(productServices);
+//                    }
+//
+//
+//                    $("#panel-title-products").show();
+//                    $("#panel-title-products").html(response.projectSpecialty);
+//                }).done(function() {
+//                    //
+//                }).error(function(jqXHR, textStatus, errorThrown) {
+//                    //console.log('Error : ' + errorThrown);
+//                    $("#panel-title-products").show();
+//                    $("#panel-title-products").html(errorThrown);
+//                });
+//
+//            } else {
+//                $("#panel-title-products").html(null);
+//            }
         }
 
         function trpUpdateProducts(products,comboboxEl) {
             products.forEach(function(item){
 
-                if( $(this).find("option[value='" + userId + "']").length ) {
-
-                } else {
-
-                }
+//                if( $(this).find("option[value='" + userId + "']").length ) {
+//
+//                } else {
+//
+//                }
 
                 var thisEncounterId = item['id'];
                 var thisEncounterText = item['text'];
