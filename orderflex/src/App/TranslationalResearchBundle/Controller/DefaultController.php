@@ -609,7 +609,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("addMisiFeesAction: Not allowed");
+        exit("addMisiFeesAction: Not allowed");
 
         //$em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
