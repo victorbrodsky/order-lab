@@ -24,6 +24,7 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\TranslationalResearchBundle\Entity\AntibodyList;
@@ -2277,6 +2278,10 @@ class TransResImportData
             $res = null;
         }
 
+        if( $res ) {
+            $res = trim($res);
+        }
+
         //echo "res=".$res."<br>";
         return $res;
     }
@@ -3037,8 +3042,14 @@ class TransResImportData
     public function addNewFees($inputFileName) {
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
 
-        $mapper = array();
+        $systemuser = $userSecUtil->findSystemUser();
+        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+        if( !$specialtyMisiObject ) {
+            exit("specialtyMisiObject misi is not found");
+        }
 
         //$inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
         echo "==================== Processing $inputFileName =====================<br>";
@@ -3079,15 +3090,10 @@ class TransResImportData
             $price = $this->getValueByHeaderName('PRICE', $rowData, $headers);
             $unit = $this->getValueByHeaderName('UNIT', $rowData, $headers);
 
-            //Section:
-            //Vectra Polaris
-            //Starts with MISI-1XXX
-            //
-            //CODEX
-            //Starts with MISI-2XXX
-            //
-            //GeoMX
-            //Starts with MISI-3XXX
+            echo $count.": Code=[$code]";
+            echo "; serviceCategory=[$serviceCategory]";
+            echo "; price=[$price]";
+            echo "; unit=[$unit] <br>";
 
             //Check if already exists by $code
             $feeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
@@ -3096,7 +3102,82 @@ class TransResImportData
                 continue;
             }
 
-            $count++;
+            $fee = new RequestCategoryTypeList($systemuser);
+
+            $fee->setType('default');
+
+            //Get orderinlist
+            $classNamespaceShort = "AppTranslationalResearchBundle";
+            $className = "RequestCategoryTypeList";
+            $classFullName = $classNamespaceShort . ":" . $className;
+            $orderinlist = $userSecUtil->getMaxField($classFullName);
+            echo "Create a new orderinlist=$orderinlist<br>";
+
+            if( $orderinlist ) {
+                $fee->setOrderinlist($orderinlist);
+            }
+
+            //Name $serviceCategory
+            if( $fee->getName() != $serviceCategory ) {
+                $fee->setName($serviceCategory);
+                $update = true;
+            }
+
+            //Section:
+            //Vectra Polaris
+            //Starts with MISI-1XXX
+            if( strpos($code, 'MISI-1') !== false ) {
+                $section = 'Vectra Polaris';
+            }
+            //CODEX
+            //Starts with MISI-2XXX
+            if( strpos($code, 'MISI-2') !== false ) {
+                $section = 'CODEX';
+            }
+            //GeoMX
+            //Starts with MISI-3XXX
+            if( strpos($code, 'MISI-3') !== false ) {
+                $section = 'GeoMX';
+            }
+            if( $section ) {
+                echo "Section=$section <br>";
+                if( $fee->getSection() != $section ) {
+                    $fee->setSection($section);
+                    $update = true;
+                }
+            }
+
+            //Product ID
+            if( $fee->getProductId() != $code ) {
+                $fee->setProductId($code);
+                $update = true;
+            }
+
+            //Fee
+            if( $fee->getFee() != $price ) {
+                $fee->setFee($price);
+                $update = true;
+            }
+
+            //Fee Unit
+            if( $fee->getFeeUnit() != $unit ) {
+                $fee->setFeeUnit($unit);
+                $update = true;
+            }
+
+            //Project Specialty
+            $fee->addProjectSpecialty($specialtyMisiObject);
+
+
+            if( $update ) {
+                //echo "<br>########## fee=" . $fee . "#############<br>";
+                echo "### Create Fee: ".$fee->getOptimalAbbreviationName()." <br><br>";
+                $count++;
+                $this->em->persist($fee);
+                $this->em->flush();
+            } else {
+                //echo "*** Not created <br>";
+            }
         }
 
         exit("Added $count fees");
