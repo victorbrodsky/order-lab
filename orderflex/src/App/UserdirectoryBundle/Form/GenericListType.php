@@ -1021,7 +1021,13 @@ class GenericListType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        $prefix = strtolower($this->mapper['className']);
+        $prefix = NULL;
+
+        if( isset($this->mapper['className']) ) {
+            //echo "className=".$this->mapper['className']."<br>";
+            $prefix = strtolower($this->mapper['className']);
+        }
+
         if( !$prefix ) {
             $prefix = 'genericlist';
         }

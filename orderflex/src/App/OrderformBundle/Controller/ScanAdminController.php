@@ -473,7 +473,8 @@ class ScanAdminController extends AdminController
                 'Created '.$count. ' mrn type records'
             );
 
-            return $this->redirect($this->generateUrl('mrntype'));
+            //return $this->redirect($this->generateUrl('mrntype'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
 
         } else {
 
@@ -1042,6 +1043,7 @@ class ScanAdminController extends AdminController
         return round($count/10);
     }
 
+    //admin/genmrntype
     public function generateMrnType() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -1053,33 +1055,41 @@ class ScanAdminController extends AdminController
 //        }
 
         $types = array(
-            'New York Hospital MRN',
-            'Epic Ambulatory Enterprise ID Number',
-            'Weill Medical College IDX System MRN',
-            'Enterprise Master Patient Index',
-            'Uptown Hospital ID',
-            'NYH Health Quest Corporate Person Index',
-            'New York Downtown Hospital',
-            'De-Identified NYH Tissue Bank Research Patient ID',
-            'De-Identified Personal Educational Slide Set Patient ID',
-            'De-Identified Personal Research Project Patient ID',
-            'California Tumor Registry Patient ID',
-            'Specify Another Patient ID Issuer',
-            'Auto-generated MRN',
-            'Existing Auto-generated MRN',
-            'Merge ID'
+            'NYH EMPI'=>'NYH EMPI',
+            'New York Hospital MRN'=>'NYH MRN',
+            'Lower Manhattan Hospital MRN'=>'LMH MRN',
+            'Epic Ambulatory Enterprise ID Number'=>NULL,
+            'Weill Medical College IDX System MRN'=>NULL,
+            'Enterprise Master Patient Index'=>NULL,
+            'Uptown Hospital ID'=>NULL,
+            'NYH Health Quest Corporate Person Index'=>NULL,
+            'New York Downtown Hospital'=>NULL,
+            'De-Identified NYH Tissue Bank Research Patient ID'=>NULL,
+            'De-Identified Personal Educational Slide Set Patient ID'=>NULL,
+            'De-Identified Personal Research Project Patient ID'=>NULL,
+            'California Tumor Registry Patient ID'=>NULL,
+            'Specify Another Patient ID Issuer'=>NULL,
+            'Auto-generated MRN'=>NULL,
+            'Existing Auto-generated MRN'=>NULL,
+            'Merge ID'=>NULL
         );
 
         $count = 10;
-        foreach( $types as $type ) {
+        foreach( $types as $name=>$abbreviation ) {
 
-            $mrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName($type);
+            //echo "name=".$name."; abbreviation=".$abbreviation."<br>";
+
+            $mrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName($name);
             if( $mrnType ) {
                 continue;
             }
 
             $mrnType = new MrnType();
-            $this->setDefaultList($mrnType,$count,$username,$type);
+            $this->setDefaultList($mrnType,$count,$username,$name);
+
+            if( $abbreviation ) {
+                $mrnType->setAbbreviation($abbreviation);
+            }
 
             $em->persist($mrnType);
             $em->flush();
@@ -1087,6 +1097,7 @@ class ScanAdminController extends AdminController
             $count = $count + 10;
         }
 
+        //exit('count='.$count);
         return round($count/10);
     }
 
