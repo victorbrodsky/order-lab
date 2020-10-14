@@ -288,7 +288,30 @@ fi
 
 echo "Trying to open a web browser... You can try to open a web browser manually and go to $DROPLETIPWEB"
 
-xdg-open "$DROPLETIPWEB"
+#xdg-open "$DROPLETIPWEB"
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        # ...
+		xdg-open "$DROPLETIPWEB"
+elif [[ "$OSTYPE" == "darwin" ]]; then
+        # Mac OSX
+		echo "open a web browser manually and go to $DROPLETIPWEB"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+        # POSIX compatibility layer and Linux environment emulation for Windows
+		xdg-open "$DROPLETIPWEB"
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+		start "$DROPLETIPWEB";
+elif [[ "$OSTYPE" == "win32" ]]; then
+        # Windows
+		start "$DROPLETIPWEB";
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        # ...
+		xdg-open "$DROPLETIPWEB"
+else
+        # Unknown.
+		echo "open a web browser manually and go to $DROPLETIPWEB"
+fi
+
 
 
 
