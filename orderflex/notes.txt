@@ -584,5 +584,9 @@ The new eSlide Manager/SQL 2017 server, below:
 Host: wPATH-ESMP01.med.cornell.edu
 IP: 10.63.37.33
 
-
+DigitalOcean packer:
+1) create new folder "Test"
+2) git clone https://github.com/victorbrodsky/order-lab.git
+3) cd order-lab/packer/
+4) bash deploy-order-digital-ocean.sh --token xxx -os centos --protocol https
 
