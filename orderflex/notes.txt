@@ -588,5 +588,5 @@ DigitalOcean packer:
 1) create new folder "Test"
 2) git clone https://github.com/victorbrodsky/order-lab.git
 3) cd order-lab/packer/
-4) bash deploy-order-digital-ocean.sh --token xxx -os centos --protocol https
+4) bash deploy-order-digital-ocean.sh --token xxx --os centos --protocol https
 
