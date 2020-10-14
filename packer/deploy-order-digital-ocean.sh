@@ -3,7 +3,7 @@
 
 #bash deploy-order-digital-ocean.sh 
 #--token API-TOKEN-FROM-STEP-1 
-#--os operational system: centos or ubuntu (default)
+#--os operational system: centos (default) or ubuntu
 #-p parameters.yml 
 #-dbuser - optional (default symfony)
 #-dbpass - optional (default symfony)
@@ -93,7 +93,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -z "$os" ]
   then 	
-    os='ubuntu'
+    os='centos'
 fi
 
 if [ -z "$dbuser" ]
