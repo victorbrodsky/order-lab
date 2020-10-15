@@ -167,7 +167,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $userSecUtil = $this->container->get('user_security_utility');
         $initialConfigurationCompleted = $userSecUtil->getSiteSettingParameter('initialConfigurationCompleted');
         if( !$initialConfigurationCompleted ) {
-            if( $user->getPrimaryPublicUserId() == "Administrator" ) {
+            if( strtolower($user->getPrimaryPublicUserId()) == "administrator" ) {
                 return new RedirectResponse($this->router->generate('employees_initial_configuration'));
             }
         }

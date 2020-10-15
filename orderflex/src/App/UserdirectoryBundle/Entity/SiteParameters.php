@@ -1228,6 +1228,7 @@ class SiteParameters {
         $this->setMaintenance(false);
         $this->setShowCopyrightOnFooter(true);
         $this->setLdapAll(true);
+        $this->setInitialConfigurationCompleted(false);
     }
 
 
