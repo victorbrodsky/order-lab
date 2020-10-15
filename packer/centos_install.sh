@@ -193,7 +193,8 @@ f_install_util () {
 	yum install -y xorg-x11-fonts-Type1
 	yum install xz
 	echo -e ${COLOR} Install wkhtmltopdf ${NC}
-	wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	#old url: wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 	sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
 	
 	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
