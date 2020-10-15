@@ -231,7 +231,7 @@ class AdminController extends OrderAbstractController
             }
 
             $adminRes = $this->generateAdministratorAction(true);
-            $logger->notice('Finished generateAdministratorAction. adminRes='.$adminRes);
+            $logger->notice('Finished generate AdministratorAction. adminRes='.$adminRes);
             //exit($adminRes);
 
             //TODO: $channel
@@ -353,7 +353,7 @@ class AdminController extends OrderAbstractController
 
     public function updateApplication() {
         set_time_limit(0);
-        ini_set('memory_limit', '512M');
+        //ini_set('memory_limit', '512M');
         if( 1 ) {
             $this->runDeployScript(false,false,true);
         } else {
@@ -937,7 +937,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateVacReqRequestTypeList");
 
         $adminRes = $this->generateAdministratorAction();
-        $logger->notice("Finished generateAdministratorAction");
+        $logger->notice("Finished generate AdministratorAction");
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
         $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
@@ -8296,7 +8296,7 @@ class AdminController extends OrderAbstractController
                 'keytype' => $localUserType->getId()
             )
         );
-        $logger->notice("generateAdministratorAction: count=".count($administrators));
+        $logger->notice("generate AdministratorAction: count=".count($administrators));
 
         if( count($administrators) > 1 ) {
             throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
@@ -8312,7 +8312,7 @@ class AdminController extends OrderAbstractController
 
         if( $administrator ) {
 
-            $logger->notice("generateAdministratorAction: Existed administrator=".$administrator);
+            $logger->notice("generate AdministratorAction: Existed administrator=".$administrator);
 
             $flush = false;
             $res = "$primaryPublicUserId user already exists.";
@@ -8334,11 +8334,11 @@ class AdminController extends OrderAbstractController
             }
 
             if( $flush ) {
-                $logger->notice("generateAdministratorAction: before flush administrator=".$administrator);
+                $logger->notice("generate AdministratorAction: before flush administrator=".$administrator);
                 $em->persist($administrator);
                 //$em->flush($administrator);
                 $em->flush();
-                $logger->notice("generateAdministratorAction: after flush administrator=".$administrator);
+                $logger->notice("generate AdministratorAction: after flush administrator=".$administrator);
                 //echo "flash ";
             } else {
                 //echo "no flash ";
@@ -8346,7 +8346,7 @@ class AdminController extends OrderAbstractController
 
         } else {
 
-            $logger->notice("generateAdministratorAction: create new administrator.");
+            $logger->notice("generate AdministratorAction: create new administrator.");
 
             $userSecUtil = $this->container->get('user_security_utility');
             $administrator = $userSecUtil->constractNewUser($primaryPublicUserId.'_@_local-user');
@@ -8367,15 +8367,21 @@ class AdminController extends OrderAbstractController
             $administrator->getPreferences()->setTimezone($default_time_zone);
 
             $res = "New $primaryPublicUserId account has been created";
+            //Congratulations! You have successfully installed the system. Please select ‘Local User' from the menu below and enter the user name ‘Administrator' and the password '1234567890’ to log in. Then visit [/order/vacation-request/settings/] and run the initialization scripts 1 through 7 in the listed order (skipping 4a and 4b) in the Miscellaneous section. After that, change the Administrator password!
+            $res = "Congratulations! You have successfully installed the system.".
+                " Please select 'Local User' from the menu below and enter the user name 'Administrator' and the password '1234567890' to log in.".
+                " Then visit [/order/vacation-request/settings/] and run the initialization scripts 1 through 7".
+                " in the listed order (skipping 4a and 4b) in the Miscellaneous section.".
+                " After that, change the Administrator password!";
 
-            $logger->notice("generateAdministratorAction: before flush new administrator=".$administrator);
+            $logger->notice("generate AdministratorAction: before flush new administrator=".$administrator);
             $em->persist($administrator);
             //$em->flush($administrator);
             $em->flush();
-            $logger->notice("generateAdministratorAction: after flush new administrator=".$administrator);
+            $logger->notice("generate AdministratorAction: after flush new administrator=".$administrator);
         }
 
-        $logger->notice("Finished generateAdministratorAction: res=".$res);
+        $logger->notice("Finished generate AdministratorAction: res=".$res);
         return $res;
     }
 

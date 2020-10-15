@@ -207,6 +207,7 @@ packer build "$ORDERPACKERJSON"
 
 
 echo "*** Getting image ID ***"
+echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
 echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
 
 LASTLINE=$(doctl compute image list | tail -1)
