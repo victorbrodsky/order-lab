@@ -8366,13 +8366,13 @@ class AdminController extends OrderAbstractController
             $default_time_zone = $this->getParameter('default_time_zone');
             $administrator->getPreferences()->setTimezone($default_time_zone);
 
-            $res = "New $primaryPublicUserId account has been created";
+            //$res = "New $primaryPublicUserId account has been created";
             //Congratulations! You have successfully installed the system. Please select ‘Local User' from the menu below and enter the user name ‘Administrator' and the password '1234567890’ to log in. Then visit [/order/vacation-request/settings/] and run the initialization scripts 1 through 7 in the listed order (skipping 4a and 4b) in the Miscellaneous section. After that, change the Administrator password!
             $res = "Congratulations! You have successfully installed the system.".
-                " Please select 'Local User' from the menu below and enter the user name 'Administrator' and the password '1234567890' to log in.".
-                " Then visit [/order/vacation-request/settings/] and run the initialization scripts 1 through 7".
+                " Please select 'Local User' from the menu below and enter the user name 'administrator' and the password '1234567890' to log in.".
+                " Then visit [/order/directory/settings/] and run the initialization scripts 1 through 7".
                 " in the listed order (skipping 4a and 4b) in the Miscellaneous section.".
-                " After that, change the Administrator password!";
+                " After that, change the administrator password!";
 
             $logger->notice("generate AdministratorAction: before flush new administrator=".$administrator);
             $em->persist($administrator);

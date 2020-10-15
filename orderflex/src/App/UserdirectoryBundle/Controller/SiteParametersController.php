@@ -586,10 +586,10 @@ class SiteParametersController extends OrderAbstractController
         //$routeName = $request->get('_route');
 
         $administratorUser = $this->get('security.token_storage')->getToken()->getUser();
-        if( $administratorUser->getPrimaryPublicUserId() != "Administrator" ) {
-            $administratorUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("Administrator");
+        if( strtolower($administratorUser->getPrimaryPublicUserId()) != "administrator" ) {
+            $administratorUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("administrator");
             if( !$administratorUser ) {
-                throw new \Exception('Initial Configuration: Administrator user not found.');
+                throw new \Exception('Initial Configuration: administrator user not found.');
             }
         }
 
