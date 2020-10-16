@@ -417,7 +417,7 @@ class ResidencyApplication extends BaseUserAttributes {
     private $aamcId;
 
     /**
-     * ERAS Applicant ID
+     * ERAS Applicant ID (Unique application ID)
      *
      * @ORM\Column(type="string", nullable=true)
      */

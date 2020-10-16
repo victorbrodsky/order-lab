@@ -682,7 +682,7 @@ class PdfUtil {
             $rowArr["Couple’s Match"]['id'] = 1;
             $rowArr["Couple’s Match"]['value'] = $parsedData["Participating as a Couple in NRMP:"];
 
-            //Preferred Email
+            //ERAS Application ID
             $rowArr["ERAS Application ID"]['id'] = 1;
             $rowArr["ERAS Application ID"]['value'] = $parsedData["Applicant ID:"];
 

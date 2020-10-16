@@ -173,20 +173,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
-//        echo "<br>datajson:<br>";
-//        var_dump($datajson);
-//        echo "<br>";
-//        echo 'datajson:<pre>';
-//        print_r($datajson);
-//        echo  '</pre>';
 
         $data = json_decode($datajson, true);
-        dump($data);
-        //exit();
-        //$data = $datajson;
-//        echo 'data:<pre>';
-//        print_r($data);
-//        echo  '</pre>';
 
         $updatedDataResults = new ArrayCollection();
 
@@ -204,33 +192,33 @@ class ResAppBulkUploadController extends OrderAbstractController
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
 
+        $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
+        if( !$activeStatus ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+
+        $count = 0;
+
         foreach( $data["row"] as $row ) {
-//            echo "<br>row:<br>";
+
+            $count++;
+
+            echo "<br><br>row=$count:<br>";
 //            var_dump($row);
 //            echo "<br>";
             //exit();
 
             $actionArr = $this->getValueByHeaderName('Action',$row,$headers);
-//            echo "<br>systemArr:<br>";
-//            var_dump($systemArr);
-//            echo "<br>";
-
             $actionValue = $actionArr['val'];
+            $actionId = $actionArr['id'];
 
-            if( isset($actionArr['id']) ) {
-                $actionId = $actionArr['id'];
-            } else {
-                $actionId = NULL;
-            }
-
-            echo "actionId=".$actionId." <br>";
-            echo "actionValue=".$actionValue." <br>";
-            //TODO: get AccessionType Entity
+            //echo "actionId=".$actionId." <br>";
+            //echo "actionValue=".$actionValue." <br>";
 
             $aamcIdArr = $this->getValueByHeaderName('AAMC ID',$row,$headers);
             $aamcIdValue = $aamcIdArr['val'];
             $aamcIdId = $aamcIdArr['id'];
-            echo "aamcIdValue=".$aamcIdValue." <br>";
+            //echo "aamcIdValue=".$aamcIdValue." <br>";
             //exit('111');
 
             $issueArr = $this->getValueByHeaderName('Issue',$row,$headers);
@@ -240,23 +228,73 @@ class ResAppBulkUploadController extends OrderAbstractController
             $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);
             $erasFileValue = $erasFileArr['val'];
             $erasFileId = $erasFileArr['id'];
+            $erasDocument = NULL;
+            if( $erasFileId ) {
+                $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->find($erasFileId);
+                echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
+            }
+            if( !$erasDocument ) {
+                if( $erasFileValue ) {
+                    $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByOriginalname($erasFileValue);
+                    echo "Found eras name id=$erasFileValue: ".$erasDocument." <br>";
+                }
+            }
 
             $erasIdArr = $this->getValueByHeaderName('ERAS Application ID',$row,$headers);
             $erasIdValue = $erasIdArr['val'];
             $erasIdId = $erasIdArr['id'];
 
+            $residencyApplicationDb = NULL;
+            if( $erasIdValue ) {
+                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+            }
+
+            if( $actionValue != "Add" || $residencyApplicationDb ) {
+                echo "Do not add row=$count <br>";
+
+                //Remove eras application PDF document file
+                if( $erasDocument ) {
+                    $inputDataFile->removeErasFile($erasDocument);
+                    $em->remove($erasDocument);
+                    //$em->flush();
+                }
+
+                continue;
+            }
+
+            $residencyApplication = new ResidencyApplication($user);
+            $residencyApplication->setAppStatus($activeStatus);
+            //$residencyApplication->setGoogleFormId($googleFormId);
+
+            if( $erasDocument ) {
+                $residencyApplication->addCoverLetter($erasDocument);
+            }
+
             $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
             $receiptDateValue = $receiptDateArr['val'];
-            $receiptDateId = $receiptDateArr['id'];
+            //$receiptDateId = $receiptDateArr['id'];
+            if( $receiptDateValue ) {
+                //Convert $receiptDateValue 9/15/2018
+                //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
+                //$cellValue = date("m/d/Y", strtotime($cellValue));
+                $timestampDate = $this->getDatetimeFromStr($receiptDateValue);
+                $residencyApplication->setTimestamp($timestampDate);
+            }
 
             $resTrackArr = $this->getValueByHeaderName('Residency Track',$row,$headers);
             $resTrackValue = $resTrackArr['val'];
             $resTrackId = $resTrackArr['id'];
+            if( $resTrackValue ) {
+                $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
+                echo "residencyTrack found=".$residencyTrack."<br>";
+                if( $residencyTrack ) {
+                    $residencyApplication->setResidencyTrack($residencyTrack);
+                }
+            }
 
             $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
             $seasonStartDateValue = $seasonStartDateArr['val'];
             $seasonStartDateId = $seasonStartDateArr['id'];
-
 
             $seasonEndDateArr = $this->getValueByHeaderName('Application Season End Date',$row,$headers);
             $seasonEndDateValue = $seasonEndDateArr['val'];
@@ -278,86 +316,117 @@ class ResAppBulkUploadController extends OrderAbstractController
             $lastNameValue = $lastNameArr['val'];
             $lastNameId = $lastNameArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $middleNameArr = $this->getValueByHeaderName('Middle Name',$row,$headers);
+            $middleNameValue = $middleNameArr['val'];
+            $middleNameId = $middleNameArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $emailArr = $this->getValueByHeaderName('Preferred Email',$row,$headers);
+            $emailValue = $emailArr['val'];
+            $emailId = $emailArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $medSchoolGradDateArr = $this->getValueByHeaderName('Medical School Graduation Date',$row,$headers);
+            $medSchoolGradDateValue = $medSchoolGradDateArr['val'];
+            $medSchoolGradDateId = $medSchoolGradDateArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $medSchoolNameArr = $this->getValueByHeaderName('Medical School Name',$row,$headers);
+            $medSchoolNameValue = $medSchoolNameArr['val'];
+            $medSchoolNameId = $medSchoolNameArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $degreeArr = $this->getValueByHeaderName('Degree',$row,$headers);
+            $degreeValue = $degreeArr['val'];
+            $degreeId = $degreeArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $usmle1Arr = $this->getValueByHeaderName('USMLE Step 1 Score',$row,$headers);
+            $usmle1Value = $usmle1Arr['val'];
+            $usmle1Id = $usmle1Arr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $usmle2Arr = $this->getValueByHeaderName('USMLE Step 2 CK Score',$row,$headers);
+            $usmle2Value = $usmle2Arr['val'];
+            $usmle2Id = $usmle2Arr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $usmle3Arr = $this->getValueByHeaderName('USMLE Step 3 Score',$row,$headers);
+            $usmle3Value = $usmle3Arr['val'];
+            $usmle3Id = $usmle3Arr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
+            $countryCitizenshipValue = $countryCitizenshipArr['val'];
+            $countryCitizenshipId = $countryCitizenshipArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $visaStatusArr = $this->getValueByHeaderName('Visa Status',$row,$headers);
+            $visaStatusValue = $visaStatusArr['val'];
+            $visaStatusId = $visaStatusArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $ethnicGroupArr = $this->getValueByHeaderName('Is the applicant a member of any of the following groups?',$row,$headers);
+            $ethnicGroupValue = $ethnicGroupArr['val'];
+            $ethnicGroupId = $ethnicGroupArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $numberFirstAuthorPublicationsArr = $this->getValueByHeaderName('Number of first author publications',$row,$headers);
+            $numberFirstAuthorPublicationsValue = $numberFirstAuthorPublicationsArr['val'];
+            $numberFirstAuthorPublicationsId = $numberFirstAuthorPublicationsArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $numberAllPublicationsArr = $this->getValueByHeaderName('Number of all publications',$row,$headers);
+            $numberAllPublicationsValue = $numberAllPublicationsArr['val'];
+            $numberAllPublicationsId = $numberAllPublicationsArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $aoaArr = $this->getValueByHeaderName('AOA',$row,$headers);
+            $aoaValue = $aoaArr['val'];
+            $aoaId = $aoaArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $coupleArr = $this->getValueByHeaderName('Couple’s Match',$row,$headers);
+            $coupleValue = $coupleArr['val'];
+            $coupleId = $coupleArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $postSophomoreArr = $this->getValueByHeaderName('Post-Sophomore Fellowship',$row,$headers);
+            $postSophomoreValue = $postSophomoreArr['val'];
+            $postSophomoreId = $postSophomoreArr['id'];
+            
+            $previousResidencyStartDateArr = $this->getValueByHeaderName('Previous Residency Start Date',$row,$headers);
+            $previousResidencyStartDateValue = $previousResidencyStartDateArr['val'];
+            $previousResidencyStartDateId = $previousResidencyStartDateArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $previousResidencyGradDateArr = $this->getValueByHeaderName('Previous Residency Graduation/Departure Date',$row,$headers);
+            $previousResidencyGradDateValue = $previousResidencyGradDateArr['val'];
+            $previousResidencyGradDateId = $previousResidencyGradDateArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $previousResidencyInstitutionArr = $this->getValueByHeaderName('Previous Residency Institution',$row,$headers);
+            $previousResidencyInstitutionValue = $previousResidencyInstitutionArr['val'];
+            $previousResidencyInstitutionId = $previousResidencyInstitutionArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $previousResidencyCityArr = $this->getValueByHeaderName('Previous Residency City',$row,$headers);
+            $previousResidencyCityValue = $previousResidencyCityArr['val'];
+            $previousResidencyCityId = $previousResidencyCityArr['id'];
 
-            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-            $zzzValue = $zzzArr['val'];
-            $zzzId = $zzzArr['id'];
+            $previousResidencyStateArr = $this->getValueByHeaderName('Previous Residency State',$row,$headers);
+            $previousResidencyStateValue = $previousResidencyStateArr['val'];
+            $previousResidencyStateId = $previousResidencyStateArr['id'];
 
+            $previousResidencyCountryArr = $this->getValueByHeaderName('Previous Residency Country',$row,$headers);
+            $previousResidencyCountryValue = $previousResidencyCountryArr['val'];
+            $previousResidencyCountryId = $previousResidencyCountryArr['id'];
+
+            $previousResidencyTrackArr = $this->getValueByHeaderName('Previous Residency Track',$row,$headers);
+            $previousResidencyTrackValue = $previousResidencyTrackArr['val'];
+            $previousResidencyTrackId = $previousResidencyTrackArr['id'];
+
+//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+//            $zzzValue = $zzzArr['val'];
+//            $zzzId = $zzzArr['id'];
+//
+//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+//            $zzzValue = $zzzArr['val'];
+//            $zzzId = $zzzArr['id'];
+//
+//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+//            $zzzValue = $zzzArr['val'];
+//            $zzzId = $zzzArr['id'];
+//
+//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+//            $zzzValue = $zzzArr['val'];
+//            $zzzId = $zzzArr['id'];
+//
+//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+//            $zzzValue = $zzzArr['val'];
+//            $zzzId = $zzzArr['id'];
 
 
 
@@ -400,7 +469,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //$res['val'] = $row[$key]['value'];
         if( array_key_exists('value',$row[$key]) ) {
-            $res['val'] = $row[$key]['value'];
+            $res['val'] = trim($row[$key]['value']);
         } else {
             $res['val'] = null;
         }
@@ -408,16 +477,21 @@ class ResAppBulkUploadController extends OrderAbstractController
         $id = null;
 
         if( array_key_exists('id', $row[$key]) ) {
-            $id = $row[$key]['id'];
+            $id = trim($row[$key]['id']);
             //echo "id=".$id.", val=".$res['val']."<br>";
         }
 
         $res['id'] = $id;
 
-        //echo "key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
+        echo $header.": key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
         return $res;
     }
 
+    public function getDatetimeFromStr( $datetimeStr ) {
+        $datetime = strtotime($datetimeStr);
+        //echo "$cellValue: year=$year <br>";
+        return $datetime;
+    }
 
 
 
