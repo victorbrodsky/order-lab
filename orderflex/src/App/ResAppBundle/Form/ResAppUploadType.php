@@ -25,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -65,6 +66,11 @@ class ResAppUploadType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
+        $builder->add('datalocker',HiddenType::class, array(
+            "mapped" => false,
+            'attr' => array('class' => 'resapp-datalocker-field')
+        ));
+
         $builder->add('upload', SubmitType::class, array(
             'label' => "Upload and Extract Data",
             //'disabled' => true,
@@ -75,6 +81,10 @@ class ResAppUploadType extends AbstractType
         $builder->add('addbtn', SubmitType::class, array(
             'label' => "Add Listed Applications",
             'attr' => array('class' => 'btn btn-primary')
+        ));
+        $builder->add('addbtn', SubmitType::class, array(
+            'label' => 'Add Listed Applications',
+            'attr' => array('class'=>'btn btn-primary resapp-addbtn', 'onclick'=>'return resappValidateRequest(true);')
         ));
         
     }

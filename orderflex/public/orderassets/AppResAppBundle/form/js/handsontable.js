@@ -634,14 +634,14 @@ function resizeTableHeight_new() {
 //     }
 // }
 
-function transresValidateHandsonTable() {
-    console.log("validateHandsonTable");
+function resappValidateHandsonTable() {
+    console.log("resapp validateHandsonTable");
 
     if( !_sotable ) {
         return true;
     }
 
-    transresHideBtn();
+    //resHideBtn();
 
     var countRow = _sotable.countRows();
     //console.log("countRow="+countRow);
@@ -651,9 +651,9 @@ function transresValidateHandsonTable() {
     } //for each row
 
     //get rows data from _rowToProcessArr
-    transresAssignDataToDatalocker();
+    resappAssignDataToDatalocker();
 
-    //transresShowBtn();
+    //resShowBtn();
 
     //console.log("END !!!!!!!!!!!");
     //return true;
@@ -662,7 +662,7 @@ function transresValidateHandsonTable() {
 }
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
-function transresAssignDataToDatalocker() {
+function resappAssignDataToDatalocker() {
 
     var headers = _sotable.getColHeader();
 
@@ -710,7 +710,7 @@ function transresAssignDataToDatalocker() {
     //var jsonstr = data;
     //console.log("jsonstr:");
     //console.log(jsonstr);
-    $("#oleg_translationalresearchbundle_request_datalocker").val( jsonstr );
+    $("#oleg_resappbundle_bulkupload_datalocker").val( jsonstr );
 }
 
 

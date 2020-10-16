@@ -23,6 +23,7 @@ use App\ResAppBundle\Form\ResAppUploadCsvType;
 use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
 //use Smalot\PdfParser\Parser;
@@ -65,18 +66,6 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //get Table $jsonData
         $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
-
-        //$form = $this->createUploadForm($cycle);
-//        $params = array(
-//            //'resTypes' => $userServiceUtil->flipArrayLabelValue($residencyTypes), //flipped
-//            //'defaultStartDates' => $defaultStartDates
-//        );
-//        $form = $this->createForm(ResAppUploadCsvType::class, null,
-//            array(
-//                //'method' => 'GET',
-//                //'form_custom_value'=>$params
-//            )
-//        );
 
         if(0) {
             $form = $this->createForm(ResAppUploadCsvType::class,null);
@@ -147,35 +136,20 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $em->flush();
             }
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
+                //exit("Adding Application to be implemented");
+
+                $user = $this->get('security.token_storage')->getToken()->getUser();
+
+                $this->processTableData($inputDataFile,$form); //new
+                //$datajson = $form->get('datalocker')->getData();
+                //dump($datajson);
+
+
                 exit("Adding Application to be implemented");
             }
             else {
                 exit("Unknown button clicked");
             }
-
-//                $inputFileName = $form['file']->getData();
-//                echo "inputFileName1=" . $inputFileName . "<br>";
-//                //$inputFileName = $form->get('file')->getData();
-//                //echo "inputFileName2=".$inputFileName."<br>";
-//
-//                $pdfFilePaths = $resappPdfUtil->getPdfFilesInSameFolder($inputFileName);
-
-
-
-            //exit(111);
-
-//            $pdfArr = $resappPdfUtil->getTestPdfApplications();
-//            $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
-//            $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
-            //dump($handsomtableJsonData);
-            //exit('111');
-
-            //exit("parsed res=".implode(";",$res));
-
-            //$dataArr = $this->getDataArray();
-
-            //get Table $jsonData
-            //$jsonData = $this->getTableData($dataArr);
 
         }//form submit
 
@@ -192,6 +166,261 @@ class ResAppBulkUploadController extends OrderAbstractController
             'withdata' => $withdata
         );
     }
+
+    //return created/updated array of DataResult objects existing in the Request
+    public function processTableData( $inputDataFile, $form ) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //////////////// process handsontable rows ////////////////
+        $datajson = $form->get('datalocker')->getData();
+//        echo "<br>datajson:<br>";
+//        var_dump($datajson);
+//        echo "<br>";
+//        echo 'datajson:<pre>';
+//        print_r($datajson);
+//        echo  '</pre>';
+
+        $data = json_decode($datajson, true);
+        dump($data);
+        //exit();
+        //$data = $datajson;
+//        echo 'data:<pre>';
+//        print_r($data);
+//        echo  '</pre>';
+
+        $updatedDataResults = new ArrayCollection();
+
+        if( $data == null ) {
+            //exit('Table order data is null.');
+            //throw new \Exception( 'Table order data is null.' );
+            return $updatedDataResults;
+        }
+
+        //$headers = array_shift($data);
+        $headers = $data["header"];
+        //var_dump($headers);
+        //echo "<br><br>";
+
+        //echo "entity inst=".$entity->getInstitution()."<br>";
+        //exit();
+
+        foreach( $data["row"] as $row ) {
+//            echo "<br>row:<br>";
+//            var_dump($row);
+//            echo "<br>";
+            //exit();
+
+            $actionArr = $this->getValueByHeaderName('Action',$row,$headers);
+//            echo "<br>systemArr:<br>";
+//            var_dump($systemArr);
+//            echo "<br>";
+
+            $actionValue = $actionArr['val'];
+
+            if( isset($actionArr['id']) ) {
+                $actionId = $actionArr['id'];
+            } else {
+                $actionId = NULL;
+            }
+
+            echo "actionId=".$actionId." <br>";
+            echo "actionValue=".$actionValue." <br>";
+            //TODO: get AccessionType Entity
+
+            $aamcIdArr = $this->getValueByHeaderName('AAMC ID',$row,$headers);
+            $aamcIdValue = $aamcIdArr['val'];
+            $aamcIdId = $aamcIdArr['id'];
+            echo "aamcIdValue=".$aamcIdValue." <br>";
+            //exit('111');
+
+            $issueArr = $this->getValueByHeaderName('Issue',$row,$headers);
+            $issueValue = $issueArr['val'];
+            $issueId = $issueArr['id'];
+
+            $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);
+            $erasFileValue = $erasFileArr['val'];
+            $erasFileId = $erasFileArr['id'];
+
+            $erasIdArr = $this->getValueByHeaderName('ERAS Application ID',$row,$headers);
+            $erasIdValue = $erasIdArr['val'];
+            $erasIdId = $erasIdArr['id'];
+
+            $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
+            $receiptDateValue = $receiptDateArr['val'];
+            $receiptDateId = $receiptDateArr['id'];
+
+            $resTrackArr = $this->getValueByHeaderName('Residency Track',$row,$headers);
+            $resTrackValue = $resTrackArr['val'];
+            $resTrackId = $resTrackArr['id'];
+
+            $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
+            $seasonStartDateValue = $seasonStartDateArr['val'];
+            $seasonStartDateId = $seasonStartDateArr['id'];
+
+
+            $seasonEndDateArr = $this->getValueByHeaderName('Application Season End Date',$row,$headers);
+            $seasonEndDateValue = $seasonEndDateArr['val'];
+            $seasonEndDateId = $seasonEndDateArr['id'];
+
+            $residencyStartDateArr = $this->getValueByHeaderName('Expected Residency Start Date',$row,$headers);
+            $residencyStartDateValue = $residencyStartDateArr['val'];
+            $residencyStartDateId = $residencyStartDateArr['id'];
+
+            $expectedGradDateArr = $this->getValueByHeaderName('Expected Graduation Date',$row,$headers);
+            $expectedGradDateValue = $expectedGradDateArr['val'];
+            $expectedGradDateId = $expectedGradDateArr['id'];
+
+            $firstNameArr = $this->getValueByHeaderName('First Name',$row,$headers);
+            $firstNameValue = $firstNameArr['val'];
+            $firstNameId = $firstNameArr['id'];
+
+            $lastNameArr = $this->getValueByHeaderName('Last Name',$row,$headers);
+            $lastNameValue = $lastNameArr['val'];
+            $lastNameId = $lastNameArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
+            $zzzValue = $zzzArr['val'];
+            $zzzId = $zzzArr['id'];
+
+
+
+
+//            if( $objectId ) {
+//                $dataResult = $em->getRepository('AppTranslationalResearchBundle:DataResult')->find($objectId);
+//                //echo "dataResult found=".$dataResult->getSystem()."<br>";
+//            }
+//            //exit();
+//
+//            if( $dataResult ) {
+//                $updatedDataResults->add($dataResult);
+//            } else {
+//                $dataResult = new DataResult($user);
+//            }
+//
+//
+//            $dataResult->setAccessionId($accValue);
+//            $dataResult->setPartId($partValue);
+//            $dataResult->setBlockId($blockValue);
+//            $dataResult->setSlideId($slideValue);
+//            $dataResult->setStainName($stainValue);
+//            $dataResult->setOtherId($otherValue);
+//
+//            $dataResult->setBarcode($barcodeValue);
+//            //$dataResult->setBarcodeImage($barcodeImageValue);
+//
+//            $dataResult->setComment($commentValue);
+//
+//            $transresRequest->addDataResult($dataResult);
+
+        }//foreach row
+
+        return $updatedDataResults;
+    }
+    public function getValueByHeaderName($header, $row, $headers) {
+
+        $res = array();
+
+        $key = array_search($header, $headers);
+
+        //$res['val'] = $row[$key]['value'];
+        if( array_key_exists('value',$row[$key]) ) {
+            $res['val'] = $row[$key]['value'];
+        } else {
+            $res['val'] = null;
+        }
+
+        $id = null;
+
+        if( array_key_exists('id', $row[$key]) ) {
+            $id = $row[$key]['id'];
+            //echo "id=".$id.", val=".$res['val']."<br>";
+        }
+
+        $res['id'] = $id;
+
+        //echo "key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
+        return $res;
+    }
+
+
+
+
 
     /**
      * Upload Multiple Applications via PDF
@@ -682,6 +911,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     }
 
 
+    //NOT USED
     public function getTableData($pdfTextsArray) {
         $jsonData = array();
 
