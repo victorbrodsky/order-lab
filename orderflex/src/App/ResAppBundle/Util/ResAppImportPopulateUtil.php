@@ -1961,4 +1961,47 @@ class ResAppImportPopulateUtil {
 
 
 
+
+    //Bulk residency applications population
+    function createNewResappUser($username,$userkeytype) {
+
+        //check if the user already exists in DB by $googleFormId
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+
+        if( $user ) {
+            return $user;
+        }
+            //create excel user
+        $addobjects = false;
+        $user = new User($addobjects);
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($username);
+
+            //set unique username
+        $usernameUnique = $user->createUniqueUsername();
+        $user->setUsername($usernameUnique);
+        $user->setUsernameCanonical($usernameUnique);
+
+
+        $user->setEmail($email);
+        $user->setEmailCanonical($email);
+
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setMiddleName($middleName);
+        $user->setDisplayName($displayName);
+        $user->setPassword("");
+        $user->setCreatedby('googleapi');
+        $user->getPreferences()->setTimezone($default_time_zone);
+        $user->setLocked(true);
+
+            //Pathology Residency Applicant in EmploymentStatus
+        $employmentStatus = new EmploymentStatus($systemUser);
+        $employmentStatus->setEmploymentType($employmentType);
+        $user->addEmploymentStatus($employmentStatus);
+
+        return $user;
+    }
+
+
 } 
