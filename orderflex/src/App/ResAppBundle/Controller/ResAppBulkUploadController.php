@@ -174,6 +174,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $logger = $this->container->get('logger');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //////////////// process handsontable rows ////////////////
@@ -213,6 +214,44 @@ class ResAppBulkUploadController extends OrderAbstractController
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
+
+        //////////////////////// assign local institution from SiteParameters ////////////////////////
+        $instPathologyResidencyProgram = null;
+        $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp',$this->container->getParameter('resapp.sitename'));
+
+        if( strpos($localInstitutionResApp, " (") !== false ) {
+            //Case 1: get string from SiteParameters - "Pathology Residency Programs (WCMC)"
+            $localInstitutionResAppArr = explode(" (", $localInstitutionResApp);
+            if (count($localInstitutionResAppArr) == 2 && $localInstitutionResAppArr[0] != "" && $localInstitutionResAppArr[1] != "") {
+                $localInst = trim($localInstitutionResAppArr[0]); //"Pathology Residency Programs"
+                $rootInst = trim($localInstitutionResAppArr[1]);  //"(WCMC)"
+                $rootInst = str_replace("(", "", $rootInst);
+                $rootInst = str_replace(")", "", $rootInst);
+                //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
+                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+                if( !$wcmc ) {
+                    $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($rootInst);
+                    if( !$wcmc ) {
+                        throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
+                    }
+                }
+                $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+                if( !$instPathologyResidencyProgram ) {
+                    throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
+                }
+            }
+        } else {
+            //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
+            $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionResApp);
+            if( !$instPathologyResidencyProgram ) {
+                $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($localInstitutionResApp);
+            }
+        }
+
+        if( !$instPathologyResidencyProgram ) {
+            $logger->warning('Local Institution for Bulk Upload Application is not set or invalid; localInstitutionResApp='.$localInstitutionResApp);
+        }
+        //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
 
         $count = 0;
 
@@ -459,6 +498,10 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( $residencyTrack ) {
                     $residencyApplication->setResidencyTrack($residencyTrack);
                 }
+            }
+
+            if( $instPathologyResidencyProgram ) {
+                $residencyApplication->setInstitution($instPathologyResidencyProgram);
             }
             
 
