@@ -23,6 +23,8 @@ use App\ResAppBundle\Form\ResAppUploadCsvType;
 use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
@@ -170,7 +172,10 @@ class ResAppBulkUploadController extends OrderAbstractController
     //return created/updated array of DataResult objects existing in the Request
     public function processTableData( $inputDataFile, $form ) {
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
+
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
 
@@ -191,6 +196,18 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
+
+        //$systemUser = $userSecUtil->findSystemUser();
+
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$userkeytype ) {
+            throw new EntityNotFoundException('Unable to find local user keytype');
+        }
+
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
+        }
 
         $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
         if( !$activeStatus ) {
@@ -261,36 +278,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 continue;
             }
-
-            $residencyApplication = new ResidencyApplication($user);
-            $residencyApplication->setAppStatus($activeStatus);
-            //$residencyApplication->setGoogleFormId($googleFormId);
-
-            if( $erasDocument ) {
-                $residencyApplication->addCoverLetter($erasDocument);
-            }
-
-            $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
-            $receiptDateValue = $receiptDateArr['val'];
-            //$receiptDateId = $receiptDateArr['id'];
-            if( $receiptDateValue ) {
-                //Convert $receiptDateValue 9/15/2018
-                //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
-                //$cellValue = date("m/d/Y", strtotime($cellValue));
-                $timestampDate = $this->getDatetimeFromStr($receiptDateValue);
-                $residencyApplication->setTimestamp($timestampDate);
-            }
-
-            $resTrackArr = $this->getValueByHeaderName('Residency Track',$row,$headers);
-            $resTrackValue = $resTrackArr['val'];
-            $resTrackId = $resTrackArr['id'];
-            if( $resTrackValue ) {
-                $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
-                echo "residencyTrack found=".$residencyTrack."<br>";
-                if( $residencyTrack ) {
-                    $residencyApplication->setResidencyTrack($residencyTrack);
-                }
-            }
+            
 
             $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
             $seasonStartDateValue = $seasonStartDateArr['val'];
@@ -322,6 +310,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $emailArr = $this->getValueByHeaderName('Preferred Email',$row,$headers);
             $emailValue = $emailArr['val'];
+            $emailValue = strtolower($emailValue);
             $emailId = $emailArr['id'];
 
             $medSchoolGradDateArr = $this->getValueByHeaderName('Medical School Graduation Date',$row,$headers);
@@ -428,34 +417,50 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            $zzzValue = $zzzArr['val'];
 //            $zzzId = $zzzArr['id'];
 
+            $userArr = array(
+                'creator' => $user, //$systemUser,
+                'employmenttype' => $employmentType,
+                'userkeytype' => $userkeytype,
+                'email' => $emailValue,
+                'firstname' => $firstNameValue,
+                'lastname' => $lastNameValue,
+                'middlename' => $middleNameValue,
+                //'displayname' => $displayName
+            );
+            $resappUser = $this->createNewResappUser($userArr);
 
+            $residencyApplication = new ResidencyApplication($user);
+            $resappUser->addResidencyApplication($residencyApplication);
 
-//            if( $objectId ) {
-//                $dataResult = $em->getRepository('AppTranslationalResearchBundle:DataResult')->find($objectId);
-//                //echo "dataResult found=".$dataResult->getSystem()."<br>";
-//            }
-//            //exit();
-//
-//            if( $dataResult ) {
-//                $updatedDataResults->add($dataResult);
-//            } else {
-//                $dataResult = new DataResult($user);
-//            }
-//
-//
-//            $dataResult->setAccessionId($accValue);
-//            $dataResult->setPartId($partValue);
-//            $dataResult->setBlockId($blockValue);
-//            $dataResult->setSlideId($slideValue);
-//            $dataResult->setStainName($stainValue);
-//            $dataResult->setOtherId($otherValue);
-//
-//            $dataResult->setBarcode($barcodeValue);
-//            //$dataResult->setBarcodeImage($barcodeImageValue);
-//
-//            $dataResult->setComment($commentValue);
-//
-//            $transresRequest->addDataResult($dataResult);
+            $residencyApplication->setAppStatus($activeStatus);
+            //$residencyApplication->setGoogleFormId($googleFormId);
+
+            if( $erasDocument ) {
+                $residencyApplication->addCoverLetter($erasDocument);
+            }
+
+            $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
+            $receiptDateValue = $receiptDateArr['val'];
+            //$receiptDateId = $receiptDateArr['id'];
+            if( $receiptDateValue ) {
+                //Convert $receiptDateValue 9/15/2018
+                //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
+                //$cellValue = date("m/d/Y", strtotime($cellValue));
+                $timestampDate = $this->getDatetimeFromStr($receiptDateValue);
+                $residencyApplication->setTimestamp($timestampDate);
+            }
+
+            $resTrackArr = $this->getValueByHeaderName('Residency Track',$row,$headers);
+            $resTrackValue = $resTrackArr['val'];
+            $resTrackId = $resTrackArr['id'];
+            if( $resTrackValue ) {
+                $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
+                echo "residencyTrack found=".$residencyTrack."<br>";
+                if( $residencyTrack ) {
+                    $residencyApplication->setResidencyTrack($residencyTrack);
+                }
+            }
+            
 
         }//foreach row
 
@@ -491,6 +496,107 @@ class ResAppBulkUploadController extends OrderAbstractController
         $datetime = strtotime($datetimeStr);
         //echo "$cellValue: year=$year <br>";
         return $datetime;
+    }
+
+    //Create resapp user
+    function createNewResappUser( $userArr ) {
+        $em = $this->getDoctrine()->getManager();
+
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $creatorUser = $userArr['creator'];
+        $employmentType = $userArr['employmenttype'];
+        $userkeytype = $userArr['userkeytype'];
+        $email = $userArr['email'];
+        $firstName = $userArr['firstname'];
+        $lastName = $userArr['lastname'];
+        $middleName = $userArr['middlename'];
+
+        /////////////// Create unique username (PrimaryPublicUserId aka cwid) ///////////////
+        $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
+        $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
+        //$middleNameCap = $this->capitalizeIfNotAllCapital($middleName);
+
+        $lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
+        $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
+
+        //Last Name + First Name + Email
+        $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
+
+        $displayName = $firstName . " " . $lastName;
+        if ($middleName) {
+            $displayName = $firstName . " " . $middleName . " " . $lastName;
+        }
+        /////////////// EOF Create unique username ///////////////
+
+        //check if the user already exists in DB by $googleFormId
+        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+
+        //Try to find by email
+        if( !$user ) {
+            if( $email ) {
+                $email = strtolower($email);
+                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                if( count($users) == 1 ) {
+                    $user = $users[0];
+                }
+                if( count($userArr) > 1 ) {
+                    exit("Multiple users found by email ".$email);
+                }
+            }
+        }
+
+        if( $user ) {
+            return $user;
+        }
+        //create excel user
+        $addobjects = false;
+        $user = new User($addobjects);
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($username);
+
+        //set unique username
+        $usernameUnique = $user->createUniqueUsername();
+        $user->setUsername($usernameUnique);
+        $user->setUsernameCanonical($usernameUnique);
+
+
+        $user->setEmail($email);
+        $user->setEmailCanonical($email);
+
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setMiddleName($middleName);
+        $user->setDisplayName($displayName);
+        $user->setPassword("");
+        $user->setCreatedby('csv-eras');
+        $user->getPreferences()->setTimezone($default_time_zone);
+        $user->setLocked(true);
+
+        //Pathology Residency Applicant in EmploymentStatus
+        $employmentStatus = new EmploymentStatus($creatorUser);
+        $employmentStatus->setEmploymentType($employmentType);
+        $user->addEmploymentStatus($employmentStatus);
+
+        return $user;
+    }
+    public function capitalizeIfNotAllCapital($s) {
+        if( !$s ) {
+            return $s;
+        }
+        $convert = false;
+        //check if all UPPER
+        if( strtoupper($s) == $s ) {
+            $convert = true;
+        }
+        //check if all lower
+        if( strtolower($s) == $s ) {
+            $convert = true;
+        }
+        if( $convert ) {
+            return ucwords( strtolower($s) );
+        }
+        return $s;
     }
 
 
