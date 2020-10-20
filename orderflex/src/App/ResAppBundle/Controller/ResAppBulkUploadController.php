@@ -503,7 +503,46 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $instPathologyResidencyProgram ) {
                 $residencyApplication->setInstitution($instPathologyResidencyProgram);
             }
-            
+
+            //trainingPeriodStart
+            $residencyApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
+
+            //trainingPeriodEnd
+            $residencyApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers)));
+
+            //$residencyApplication->setStartDate($startDate);
+            //$residencyApplication->setEndDate($endDate);
+            //$residencyApplication->setResidencyTrack($residencyTypeEntity);
+
+            //uploadedPhotoUrl
+
+            //add ERAS file
+
+            //$examination = new Examination($systemUser);
+            //$residencyApplication->addExamination($examination);
+
+//            if( $createDate ) {
+//                $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
+//            }
+
+            //$residencyApplication->setAoa($aoa);
+            //$residencyApplication->setCouple($couples);
+
+            //Post-Sophomore Fellowship in Pathology/No
+//            if( $postSoph ) {
+//                $residencyApplication->setPostSoph($postSophPathologyEntity);
+//            } else {
+//                $residencyApplication->setPostSoph($postSophNoneEntity);
+//            }
+
+            //$citizenship = new Citizenship($systemUser);
+            //$residencyApplication->addCitizenship($citizenship);
+
+            //undergraduate
+
+            //graduate
+
+            //medical
 
         }//foreach row
 
