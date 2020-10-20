@@ -24,6 +24,7 @@ use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -173,6 +174,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     public function processTableData( $inputDataFile, $form ) {
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
+        $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
 
         $logger = $this->container->get('logger');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -213,6 +215,11 @@ class ResAppBulkUploadController extends OrderAbstractController
         $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+
+        $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        if( !$trainingType ) {
+            throw new EntityNotFoundException("TrainingTypeList not found by name=Medical");
         }
 
         //////////////////////// assign local institution from SiteParameters ////////////////////////
@@ -266,24 +273,24 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $actionArr = $this->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
-            $actionId = $actionArr['id'];
+            //$actionId = $actionArr['id'];
 
             //echo "actionId=".$actionId." <br>";
             //echo "actionValue=".$actionValue." <br>";
 
             $aamcIdArr = $this->getValueByHeaderName('AAMC ID',$row,$headers);
             $aamcIdValue = $aamcIdArr['val'];
-            $aamcIdId = $aamcIdArr['id'];
+            //$aamcIdId = $aamcIdArr['id'];
             //echo "aamcIdValue=".$aamcIdValue." <br>";
             //exit('111');
 
             $issueArr = $this->getValueByHeaderName('Issue',$row,$headers);
-            $issueValue = $issueArr['val'];
-            $issueId = $issueArr['id'];
+            $issueValue = $issueArr['val']; //i.e. "Dupliacte in batch"
+            //$issueId = $issueArr['id'];
 
             $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);
             $erasFileValue = $erasFileArr['val'];
-            $erasFileId = $erasFileArr['id'];
+            $erasFileId = $erasFileArr['id']; //ERAS document ID
             $erasDocument = NULL;
             if( $erasFileId ) {
                 $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->find($erasFileId);
@@ -298,7 +305,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $erasIdArr = $this->getValueByHeaderName('ERAS Application ID',$row,$headers);
             $erasIdValue = $erasIdArr['val'];
-            $erasIdId = $erasIdArr['id'];
+            //$erasIdId = $erasIdArr['id'];
 
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
@@ -321,48 +328,48 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
             $seasonStartDateValue = $seasonStartDateArr['val'];
-            $seasonStartDateId = $seasonStartDateArr['id'];
+            //$seasonStartDateId = $seasonStartDateArr['id'];
 
             $seasonEndDateArr = $this->getValueByHeaderName('Application Season End Date',$row,$headers);
             $seasonEndDateValue = $seasonEndDateArr['val'];
-            $seasonEndDateId = $seasonEndDateArr['id'];
+            //$seasonEndDateId = $seasonEndDateArr['id'];
 
             $residencyStartDateArr = $this->getValueByHeaderName('Expected Residency Start Date',$row,$headers);
             $residencyStartDateValue = $residencyStartDateArr['val'];
-            $residencyStartDateId = $residencyStartDateArr['id'];
+            //$residencyStartDateId = $residencyStartDateArr['id'];
 
             $expectedGradDateArr = $this->getValueByHeaderName('Expected Graduation Date',$row,$headers);
             $expectedGradDateValue = $expectedGradDateArr['val'];
-            $expectedGradDateId = $expectedGradDateArr['id'];
+            //$expectedGradDateId = $expectedGradDateArr['id'];
 
             $firstNameArr = $this->getValueByHeaderName('First Name',$row,$headers);
             $firstNameValue = $firstNameArr['val'];
-            $firstNameId = $firstNameArr['id'];
+            //$firstNameId = $firstNameArr['id'];
 
             $lastNameArr = $this->getValueByHeaderName('Last Name',$row,$headers);
             $lastNameValue = $lastNameArr['val'];
-            $lastNameId = $lastNameArr['id'];
+            //$lastNameId = $lastNameArr['id'];
 
             $middleNameArr = $this->getValueByHeaderName('Middle Name',$row,$headers);
             $middleNameValue = $middleNameArr['val'];
-            $middleNameId = $middleNameArr['id'];
+            //$middleNameId = $middleNameArr['id'];
 
             $emailArr = $this->getValueByHeaderName('Preferred Email',$row,$headers);
             $emailValue = $emailArr['val'];
             $emailValue = strtolower($emailValue);
-            $emailId = $emailArr['id'];
+            //$emailId = $emailArr['id'];
 
             $medSchoolGradDateArr = $this->getValueByHeaderName('Medical School Graduation Date',$row,$headers);
             $medSchoolGradDateValue = $medSchoolGradDateArr['val'];
-            $medSchoolGradDateId = $medSchoolGradDateArr['id'];
+            //$medSchoolGradDateId = $medSchoolGradDateArr['id'];
 
             $medSchoolNameArr = $this->getValueByHeaderName('Medical School Name',$row,$headers);
             $medSchoolNameValue = $medSchoolNameArr['val'];
-            $medSchoolNameId = $medSchoolNameArr['id'];
+            //$medSchoolNameId = $medSchoolNameArr['id'];
 
             $degreeArr = $this->getValueByHeaderName('Degree',$row,$headers);
             $degreeValue = $degreeArr['val'];
-            $degreeId = $degreeArr['id'];
+            //$degreeId = $degreeArr['id'];
 
             $usmle1Arr = $this->getValueByHeaderName('USMLE Step 1 Score',$row,$headers);
             $usmle1Value = $usmle1Arr['val'];
@@ -474,9 +481,63 @@ class ResAppBulkUploadController extends OrderAbstractController
             $residencyApplication->setAppStatus($activeStatus);
             //$residencyApplication->setGoogleFormId($googleFormId);
 
+            $residencyApplication->setAamcId($aamcIdValue);
+            $residencyApplication->setErasApplicantId($erasIdValue);
+
             if( $erasDocument ) {
                 $residencyApplication->addCoverLetter($erasDocument);
             }
+
+            if( $seasonStartDateValue ) {
+                $seasonStartDateTime = date("m/d/Y", strtotime($seasonStartDateValue));
+                $residencyApplication->setApplicationSeasonStartDate($seasonStartDateTime);
+            }
+            if( $seasonEndDateValue ) {
+                $seasonEndDateTime = date("m/d/Y", strtotime($seasonEndDateValue));
+                $residencyApplication->setApplicationSeasonEndDate($seasonEndDateTime);
+            }
+
+            if( $residencyStartDateValue ) {
+                $residencyStartDateTime = date("m/d/Y", strtotime($residencyStartDateValue));
+                $residencyApplication->setApplicationStartDate($residencyStartDateTime);
+            }
+            if( $expectedGradDateValue ) {
+                $expectedGradDateTime = date("m/d/Y", strtotime($expectedGradDateValue));
+                $residencyApplication->setApplicationEndDate($expectedGradDateTime);
+            }
+
+            //$medSchoolGradDateValue, $medSchoolNameValue, $degreeValue
+            if( $medSchoolGradDateValue || $medSchoolNameValue || $degreeValue ) {
+                $training = new Training($user);
+                $training->setOrderinlist(1);
+                $training->setTrainingType($trainingType);
+
+                $residencyApplication->addTraining($training);
+                $resappUser->addTraining($training);
+
+                $schoolDegree = NULL;
+                if( $degreeValue == "M.D./Ph.D." ) {
+                    $schoolDegree = "MD/PhD";
+                }
+                if ( $degreeValue == "D.O." ) {
+                    $schoolDegree = "DO";
+                }
+                if ( $degreeValue == "M.D." ) {
+                    $schoolDegree = "MD";
+                }
+                if ( $degreeValue == "B.MED" ) {
+                    $schoolDegree = "BMed";
+                }
+                if( $schoolDegree ) {
+                    $resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
+                } else {
+                    exit("Uknown degreeValue=[$degreeValue]");
+                }
+
+                $medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
+                $residencyApplication->setApplicationEndDate($expectedGradDateTime);
+            }
+
 
             $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
             $receiptDateValue = $receiptDateArr['val'];
@@ -505,10 +566,10 @@ class ResAppBulkUploadController extends OrderAbstractController
             }
 
             //trainingPeriodStart
-            $residencyApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart',$rowData,$headers)));
+            //$residencyApplication->setStartDate($this->transformDatestrToDate($seasonStartDateValue));
 
             //trainingPeriodEnd
-            $residencyApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers)));
+            //$residencyApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers)));
 
             //$residencyApplication->setStartDate($startDate);
             //$residencyApplication->setEndDate($endDate);
