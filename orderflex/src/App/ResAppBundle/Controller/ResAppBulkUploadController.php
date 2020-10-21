@@ -23,6 +23,7 @@ use App\ResAppBundle\Form\ResAppUploadCsvType;
 use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\Citizenship;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\Examination;
 use App\UserdirectoryBundle\Entity\Training;
@@ -398,7 +399,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $visaStatusArr = $this->getValueByHeaderName('Visa Status',$row,$headers);
             $visaStatusValue = $visaStatusArr['val'];
-            $visaStatusId = $visaStatusArr['id'];
+            //$visaStatusId = $visaStatusArr['id'];
 
             $ethnicGroupArr = $this->getValueByHeaderName('Is the applicant a member of any of the following groups?',$row,$headers);
             $ethnicGroupValue = $ethnicGroupArr['val'];
@@ -499,25 +500,25 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             if( $seasonStartDateValue ) {
                 //$seasonStartDateTime = date("m/d/Y", strtotime($seasonStartDateValue));
-                echo "seasonStartDateValue=$seasonStartDateValue <br>";
+                //echo "seasonStartDateValue=$seasonStartDateValue <br>";
                 $seasonStartDateTime = $this->getDatetimeFromStr($seasonStartDateValue);
                 $residencyApplication->setApplicationSeasonStartDate($seasonStartDateTime);
             }
             if( $seasonEndDateValue ) {
-                echo "seasonEndDateValue=$seasonEndDateValue <br>";
+                //echo "seasonEndDateValue=$seasonEndDateValue <br>";
                 //$seasonEndDateTime = date("m/d/Y", strtotime($seasonEndDateValue));
                 $seasonEndDateTime = $this->getDatetimeFromStr($seasonEndDateValue);
                 $residencyApplication->setApplicationSeasonEndDate($seasonEndDateTime);
             }
 
             if( $residencyStartDateValue ) {
-                echo "residencyStartDateValue=$residencyStartDateValue <br>";
+                //echo "residencyStartDateValue=$residencyStartDateValue <br>";
                 //$residencyStartDateTime = date("m/d/Y", strtotime($residencyStartDateValue));
                 $residencyStartDateTime = $this->getDatetimeFromStr($residencyStartDateValue);
                 $residencyApplication->setStartDate($residencyStartDateTime);
             }
             if( $expectedGradDateValue ) {
-                echo "expectedGradDateValue=$expectedGradDateValue <br>";
+                //echo "expectedGradDateValue=$expectedGradDateValue <br>";
                 //$expectedGradDateTime = date("m/d/Y", strtotime($expectedGradDateValue));
                 $expectedGradDateTime = $this->getDatetimeFromStr($expectedGradDateValue);
                 $residencyApplication->setEndDate($expectedGradDateTime);
@@ -543,15 +544,32 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 //$medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
-                echo "medSchoolGradDateValue=$medSchoolGradDateValue <br>"; // 8/2014 - 5/2019
+                echo "medSchoolGradDateValue=$medSchoolGradDateValue => "; // 8/2014 - 5/2019
+                $medSchoolGradDateFull = NULL;
                 $medSchoolGradDateValueArr = explode("-",$medSchoolGradDateValue);
                 if( count($medSchoolGradDateValueArr) == 2 ) {
-                    $medSchoolGradDateValue = $medSchoolGradDateValueArr[0];
-                    $medSchoolGradDateValue = trim($medSchoolGradDateValue);
-                    $medSchoolGradDateValue = "01/".$medSchoolGradDateValue;
+                    $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
+                    $medSchoolGradDateMY = trim($medSchoolGradDateMY);
+                    //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
+                    $splitGradDate=explode('/',$medSchoolGradDateMY);
+                    if( count($splitGradDate) == 2 ) {
+                        $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
+                    }
                 }
-                $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
-                $training->setCompletionDate($medSchoolGradDateTime);
+                if( $medSchoolGradDateFull ) {
+                    //$medSchoolGradDateFull = date("d/m/Y", strtotime($medSchoolGradDateFull));
+                    //echo " 1medSchoolGradDateFull=$medSchoolGradDateFull => ";
+                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateFull);
+                    echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
+                    $training->setCompletionDate($medSchoolGradDateTime);
+                }
+                if (strpos($medSchoolGradDateValue, '-') !== false) {
+                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
+                    echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
+                    $training->setCompletionDate($medSchoolGradDateTime);
+                } else {
+                    exit("Invalid grad date " . $medSchoolGradDateValue);
+                }
 
                 if( $medSchoolNameValue ) {
                     $params = array('type'=>'Educational');
@@ -572,7 +590,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //Convert $receiptDateValue 9/15/2018
                 //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
                 //$cellValue = date("m/d/Y", strtotime($cellValue));
-                echo "Converting Application Receipt Date $receiptDateValue: ";
+                //echo "Converting Application Receipt Date $receiptDateValue: ";
                 $timestampDate = $this->getDatetimeFromStr($receiptDateValue);
                 $residencyApplication->setTimestamp($timestampDate);
             }
@@ -606,6 +624,22 @@ class ResAppBulkUploadController extends OrderAbstractController
             $residencyApplication->addExamination($examination);
 
             //$countryCitizenshipValue: U.S. Citizen, Foreign National Currently in the U.S. with Valid Visa Status
+            if( $countryCitizenshipValue || $visaStatusValue ) {
+                $citizenship = new Citizenship($user);
+                $residencyApplication->addCitizenship($citizenship);
+
+                if( $countryCitizenshipValue ) {
+                    $countryCitizenshipStr = $resappImportFromOldSystemUtil->getCitizenshipMapping($countryCitizenshipValue);
+                    $countryCitizenshipStr = trim($countryCitizenshipStr);
+                    $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+                    if( !$testing ) {
+                        $citizenshipCountryEntity = $transformer->reverseTransform($countryCitizenshipStr);
+                        $citizenship->setCountry($citizenshipCountryEntity);
+                    }
+                }
+
+
+            }
 
             //trainingPeriodStart
             //$residencyApplication->setStartDate($this->transformDatestrToDate($seasonStartDateValue));
@@ -649,6 +683,10 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         }//foreach row
 
+        if( $testing ) {
+            exit("End of process handsontable. Count=$count");
+        }
+
         return $updatedDataResults;
     }
     public function getValueByHeaderName($header, $row, $headers) {
@@ -678,17 +716,17 @@ class ResAppBulkUploadController extends OrderAbstractController
     }
 
     public function getDatetimeFromStr( $datetimeStr ) {
-        echo "getting $datetimeStr <br>";
+        //echo "getting $datetimeStr <br>";
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
         $datetime = $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
-        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
+        //echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
         return $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
 
         //$datetime = strtotime($datetimeStr);
-        $datetime = date("m/d/Y", strtotime($datetimeStr));  //string
-        echo "datetime=$datetime <br>";
-        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
-        return $datetime;
+//        $datetime = date("m/d/Y", strtotime($datetimeStr));  //string
+//        echo "datetime=$datetime <br>";
+//        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
+//        return $datetime;
     }
 
     //Create resapp user

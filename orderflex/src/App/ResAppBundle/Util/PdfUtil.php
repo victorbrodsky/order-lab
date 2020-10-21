@@ -82,6 +82,7 @@ class PdfUtil {
     public function getCsvApplicationsData( $csvFileName, $pdfFiles ) {
 
         //echo "csvFileName=$csvFileName <br>";
+        $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
 
         $handsomtableJsonData = array();
 
@@ -211,6 +212,32 @@ class PdfUtil {
                                 if ($handsomTitle == "Birth Date") {
                                     //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
                                     $cellValue = date("m/d/Y", strtotime($cellValue));
+                                }
+
+                                //Map degree to the existing notations in DB
+                                if( $handsomTitle == "Degree" ) {
+                                    $cellValue = $resappImportFromOldSystemUtil->getDegreeMapping($cellValue);
+                                }
+                                if( $handsomTitle == "Medical School Graduation Date" ) {
+                                    //echo "medSchoolGradDateValue=$cellValue => "; // 8/2014 - 5/2019
+                                    $medSchoolGradDateFull = NULL;
+                                    $medSchoolGradDateValueArr = explode("-",$cellValue);
+                                    if( count($medSchoolGradDateValueArr) == 2 ) {
+                                        $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
+                                        $medSchoolGradDateMY = trim($medSchoolGradDateMY);
+                                        //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
+                                        $splitGradDate=explode('/',$medSchoolGradDateMY);
+                                        if( count($splitGradDate) == 2 ) {
+                                            $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
+                                        }
+                                    }
+                                    $cellValue = $medSchoolGradDateFull;
+                                }
+                                if( $handsomTitle == "Country of Citizenship" ) {
+                                    $cellValue = $resappImportFromOldSystemUtil->getCitizenshipMapping($cellValue);
+                                }
+                                if( $handsomTitle == "Visa Status" ) {
+                                    $cellValue = $resappImportFromOldSystemUtil->getVisaMapping($cellValue);
                                 }
                             }
 
