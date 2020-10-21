@@ -224,13 +224,13 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //////////////////////// assign local institution from SiteParameters ////////////////////////
         $instPathologyResidencyProgram = null;
-        $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp',$this->container->getParameter('resapp.sitename'));
+        $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp',$this->getParameter('resapp.sitename'));
 
         if( strpos($localInstitutionResApp, " (") !== false ) {
-            //Case 1: get string from SiteParameters - "Pathology Residency Programs (WCMC)"
+            //Case 1: get string from SiteParameters - "Pathology and Laboratory Medicine (WCM)" "Pathology Residency Programs (WCMC)"
             $localInstitutionResAppArr = explode(" (", $localInstitutionResApp);
             if (count($localInstitutionResAppArr) == 2 && $localInstitutionResAppArr[0] != "" && $localInstitutionResAppArr[1] != "") {
-                $localInst = trim($localInstitutionResAppArr[0]); //"Pathology Residency Programs"
+                $localInst = trim($localInstitutionResAppArr[0]); //"Pathology and Laboratory Medicine" "Pathology Residency Programs"
                 $rootInst = trim($localInstitutionResAppArr[1]);  //"(WCMC)"
                 $rootInst = str_replace("(", "", $rootInst);
                 $rootInst = str_replace(")", "", $rootInst);
@@ -370,6 +370,9 @@ class ResAppBulkUploadController extends OrderAbstractController
             $degreeArr = $this->getValueByHeaderName('Degree',$row,$headers);
             $degreeValue = $degreeArr['val'];
             //$degreeId = $degreeArr['id'];
+
+            $schoolDegree = $resappImportFromOldSystemUtil->getDegreeStr($degreeValue);
+            continue;
 
             $usmle1Arr = $this->getValueByHeaderName('USMLE Step 1 Score',$row,$headers);
             $usmle1Value = $usmle1Arr['val'];
@@ -515,24 +518,25 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $residencyApplication->addTraining($training);
                 $resappUser->addTraining($training);
 
-                $schoolDegree = NULL;
-                if( $degreeValue == "M.D./Ph.D." ) {
-                    $schoolDegree = "MD/PhD";
-                }
-                if ( $degreeValue == "D.O." ) {
-                    $schoolDegree = "DO";
-                }
-                if ( $degreeValue == "M.D." ) {
-                    $schoolDegree = "MD";
-                }
-                if ( $degreeValue == "B.MED" ) {
-                    $schoolDegree = "BMed";
-                }
-                if( $schoolDegree ) {
-                    $resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
-                } else {
-                    exit("Uknown degreeValue=[$degreeValue]");
-                }
+//                $schoolDegree = NULL;
+//                if( $degreeValue == "M.D./Ph.D." ) {
+//                    $schoolDegree = "MD/PhD";
+//                }
+//                if ( $degreeValue == "D.O." ) {
+//                    $schoolDegree = "DO";
+//                }
+//                if ( $degreeValue == "M.D." ) {
+//                    $schoolDegree = "MD";
+//                }
+//                if ( $degreeValue == "B.MED" ) {
+//                    $schoolDegree = "BMed";
+//                }
+//                if( $schoolDegree ) {
+//                    $resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
+//                } else {
+//                    exit("Uknown degreeValue=[$degreeValue]");
+//                }
+                $schoolDegree = $resappImportFromOldSystemUtil->getDegreeStr($degreeValue);
 
                 $medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
                 $residencyApplication->setApplicationEndDate($expectedGradDateTime);
@@ -631,7 +635,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $res['id'] = $id;
 
-        echo $header.": key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
+        //echo $header.": key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
         return $res;
     }
 
@@ -645,7 +649,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     function createNewResappUser( $userArr ) {
         $em = $this->getDoctrine()->getManager();
 
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        $default_time_zone = $this->getParameter('default_time_zone');
 
         $creatorUser = $userArr['creator'];
         $employmentType = $userArr['employmenttype'];

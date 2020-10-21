@@ -8183,7 +8183,11 @@ class AdminController extends OrderAbstractController
         $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
         $formname = $filterform->getName();
         $formData = $request->query->get($formname);
-        $types = $formData['types'];
+        if( isset($formData['types']) ) {
+            $types = $formData['types'];
+        } else {
+            $types = NULL;
+        }
         //print_r($types);
 //        if( !$types ) {
 //            $types = array(

@@ -1108,6 +1108,52 @@ class ImportFromOldSystem {
         $training->setDegree($schoolDegreeEntity);
     }
 
+    public function getDegreeStr( $degreeValue ) {
+        $schoolDegree = $this->getDegreeStrByAbbreviation($degreeValue);
+        if( !$schoolDegree ) {
+            //Most of the time our internal degree does not have '.'
+            $degreeValue = str_replace('.','',$degreeValue);
+            $schoolDegree = $this->getDegreeStrByAbbreviation($degreeValue);
+        }
+
+        if( $schoolDegree ) {
+            echo "Found: [$degreeValue] => [$schoolDegree] <br>";
+            //$resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
+        } else {
+            exit("Uknown degreeValue=[$degreeValue]");
+        }
+
+        return $schoolDegree;
+    }
+    public function getDegreeStrByAbbreviation( $degreeValue ) {
+        
+        $schoolDegree = NULL;
+
+        if( $degreeValue == "M.D./Ph.D." ) {
+            $schoolDegree = "MD/PhD";
+        }
+        if ( $degreeValue == "D.O." ) {
+            $schoolDegree = "DO";
+        }
+        if ( $degreeValue == "M.D." ) {
+            $schoolDegree = "MD";
+        }
+        if ( $degreeValue == "B.MED" ) {
+            $schoolDegree = "BMed";
+        }
+        if ( $degreeValue == "M.B.B.Ch." ) {
+            $schoolDegree = "MBBch";
+        }
+        if ( $degreeValue == "M.B." ) {
+            $schoolDegree = "MB";
+        }
+        if ( $degreeValue == "M.B.,B.S." ) {
+            $schoolDegree = "MB";
+        }
+
+        return $schoolDegree;
+    }
+
     public function transformDatestrToDate($datestr) {
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr,$this->container->getParameter('resapp.sitename'));

@@ -20,6 +20,7 @@ use App\FellAppBundle\Util\RecLetterUtil;
 use App\FellAppBundle\Util\ReportGenerator;
 use App\OrderformBundle\Util\SearchUtil;
 use App\OrderformBundle\Util\OrderUtil;
+use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\ResAppBundle\Util\PdfUtil;
 use App\ResAppBundle\Util\ResAppUtil;
 use App\TranslationalResearchBundle\Util\DashboardUtil;
@@ -99,6 +100,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;
         $subscribedServices['resapp_reportgenerator'] = '?'.\App\ResAppBundle\Util\ReportGenerator::class;
         $subscribedServices['resapp_pdfutil'] = '?'.PdfUtil::class;
+        $subscribedServices['resapp_import_from_old_system_util'] = '?'.ImportFromOldSystem::class;
 
         $subscribedServices['transres_util'] = '?'.TransResUtil::class;
         $subscribedServices['transres_request_util'] = '?'.TransResRequestUtil::class;
