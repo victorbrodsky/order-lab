@@ -986,7 +986,9 @@ class PdfUtil {
         //echo "Spatie source pdf path=".$path."<br>";
 
         $text = $pdftotext->setPdf($path)->text();
+        //echo $text."<br><br>";
         //dump($text);
+        //exit(111);
 
         if( $asText ) {
             return $text;

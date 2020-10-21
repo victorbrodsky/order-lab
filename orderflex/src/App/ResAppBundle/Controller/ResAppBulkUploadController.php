@@ -24,8 +24,10 @@ use App\ResAppBundle\Form\ResAppUploadType;
 use App\ResAppBundle\PdfParser\PDFService;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\Examination;
 use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use setasign\Fpdi\Fpdi;
@@ -260,6 +262,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         }
         //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
 
+        $testing = false;
+        $testing = true;
         $count = 0;
 
         foreach( $data["row"] as $row ) {
@@ -319,7 +323,9 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( $erasDocument ) {
                     $inputDataFile->removeErasFile($erasDocument);
                     $em->remove($erasDocument);
-                    //$em->flush();
+                    if( !$testing ) {
+                        $em->flush();
+                    }
                 }
 
                 continue;
@@ -371,24 +377,24 @@ class ResAppBulkUploadController extends OrderAbstractController
             $degreeValue = $degreeArr['val'];
             //$degreeId = $degreeArr['id'];
 
-            $schoolDegree = $resappImportFromOldSystemUtil->getDegreeStr($degreeValue);
-            continue;
+            //$schoolDegree = $resappImportFromOldSystemUtil->getDegreeMapping($degreeValue); //testing
+            //continue;
 
             $usmle1Arr = $this->getValueByHeaderName('USMLE Step 1 Score',$row,$headers);
             $usmle1Value = $usmle1Arr['val'];
-            $usmle1Id = $usmle1Arr['id'];
+            //$usmle1Id = $usmle1Arr['id'];
 
             $usmle2Arr = $this->getValueByHeaderName('USMLE Step 2 CK Score',$row,$headers);
             $usmle2Value = $usmle2Arr['val'];
-            $usmle2Id = $usmle2Arr['id'];
+            //$usmle2Id = $usmle2Arr['id'];
 
             $usmle3Arr = $this->getValueByHeaderName('USMLE Step 3 Score',$row,$headers);
             $usmle3Value = $usmle3Arr['val'];
-            $usmle3Id = $usmle3Arr['id'];
+            //$usmle3Id = $usmle3Arr['id'];
 
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
             $countryCitizenshipValue = $countryCitizenshipArr['val'];
-            $countryCitizenshipId = $countryCitizenshipArr['id'];
+            //$countryCitizenshipId = $countryCitizenshipArr['id'];
 
             $visaStatusArr = $this->getValueByHeaderName('Visa Status',$row,$headers);
             $visaStatusValue = $visaStatusArr['val'];
@@ -492,21 +498,29 @@ class ResAppBulkUploadController extends OrderAbstractController
             }
 
             if( $seasonStartDateValue ) {
-                $seasonStartDateTime = date("m/d/Y", strtotime($seasonStartDateValue));
+                //$seasonStartDateTime = date("m/d/Y", strtotime($seasonStartDateValue));
+                echo "seasonStartDateValue=$seasonStartDateValue <br>";
+                $seasonStartDateTime = $this->getDatetimeFromStr($seasonStartDateValue);
                 $residencyApplication->setApplicationSeasonStartDate($seasonStartDateTime);
             }
             if( $seasonEndDateValue ) {
-                $seasonEndDateTime = date("m/d/Y", strtotime($seasonEndDateValue));
+                echo "seasonEndDateValue=$seasonEndDateValue <br>";
+                //$seasonEndDateTime = date("m/d/Y", strtotime($seasonEndDateValue));
+                $seasonEndDateTime = $this->getDatetimeFromStr($seasonEndDateValue);
                 $residencyApplication->setApplicationSeasonEndDate($seasonEndDateTime);
             }
 
             if( $residencyStartDateValue ) {
-                $residencyStartDateTime = date("m/d/Y", strtotime($residencyStartDateValue));
-                $residencyApplication->setApplicationStartDate($residencyStartDateTime);
+                echo "residencyStartDateValue=$residencyStartDateValue <br>";
+                //$residencyStartDateTime = date("m/d/Y", strtotime($residencyStartDateValue));
+                $residencyStartDateTime = $this->getDatetimeFromStr($residencyStartDateValue);
+                $residencyApplication->setStartDate($residencyStartDateTime);
             }
             if( $expectedGradDateValue ) {
-                $expectedGradDateTime = date("m/d/Y", strtotime($expectedGradDateValue));
-                $residencyApplication->setApplicationEndDate($expectedGradDateTime);
+                echo "expectedGradDateValue=$expectedGradDateValue <br>";
+                //$expectedGradDateTime = date("m/d/Y", strtotime($expectedGradDateValue));
+                $expectedGradDateTime = $this->getDatetimeFromStr($expectedGradDateValue);
+                $residencyApplication->setEndDate($expectedGradDateTime);
             }
 
             //$medSchoolGradDateValue, $medSchoolNameValue, $degreeValue
@@ -518,30 +532,38 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $residencyApplication->addTraining($training);
                 $resappUser->addTraining($training);
 
-//                $schoolDegree = NULL;
-//                if( $degreeValue == "M.D./Ph.D." ) {
-//                    $schoolDegree = "MD/PhD";
-//                }
-//                if ( $degreeValue == "D.O." ) {
-//                    $schoolDegree = "DO";
-//                }
-//                if ( $degreeValue == "M.D." ) {
-//                    $schoolDegree = "MD";
-//                }
-//                if ( $degreeValue == "B.MED" ) {
-//                    $schoolDegree = "BMed";
-//                }
-//                if( $schoolDegree ) {
-//                    $resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
-//                } else {
-//                    exit("Uknown degreeValue=[$degreeValue]");
-//                }
-                $schoolDegree = $resappImportFromOldSystemUtil->getDegreeStr($degreeValue);
+                $schoolDegree = $resappImportFromOldSystemUtil->getDegreeMapping($degreeValue);
+                
+                if( $schoolDegree ) {
+                    if( !$testing ) {
+                        $this->setTrainingDegree($training, $schoolDegree, $user);
+                    }
+                } else {
+                    exit("Uknown degreeValue=[$degreeValue]");
+                }
 
-                $medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
-                $residencyApplication->setApplicationEndDate($expectedGradDateTime);
-            }
+                //$medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
+                echo "medSchoolGradDateValue=$medSchoolGradDateValue <br>"; // 8/2014 - 5/2019
+                $medSchoolGradDateValueArr = explode("-",$medSchoolGradDateValue);
+                if( count($medSchoolGradDateValueArr) == 2 ) {
+                    $medSchoolGradDateValue = $medSchoolGradDateValueArr[0];
+                    $medSchoolGradDateValue = trim($medSchoolGradDateValue);
+                    $medSchoolGradDateValue = "01/".$medSchoolGradDateValue;
+                }
+                $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
+                $training->setCompletionDate($medSchoolGradDateTime);
 
+                if( $medSchoolNameValue ) {
+                    $params = array('type'=>'Educational');
+                    $medSchool = trim($medSchoolNameValue);
+                    //$medSchool = $this->capitalizeIfNotAllCapital($medSchool);
+                    if( !$testing ) {
+                        $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+                        $schoolNameEntity = $transformer->reverseTransform($medSchool);
+                        $training->setInstitution($schoolNameEntity);
+                    }
+                }
+            } //if $medSchoolGradDateValue, $medSchoolNameValue, $degreeValue
 
             $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
             $receiptDateValue = $receiptDateArr['val'];
@@ -550,13 +572,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //Convert $receiptDateValue 9/15/2018
                 //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987
                 //$cellValue = date("m/d/Y", strtotime($cellValue));
+                echo "Converting Application Receipt Date $receiptDateValue: ";
                 $timestampDate = $this->getDatetimeFromStr($receiptDateValue);
                 $residencyApplication->setTimestamp($timestampDate);
             }
 
             $resTrackArr = $this->getValueByHeaderName('Residency Track',$row,$headers);
             $resTrackValue = $resTrackArr['val'];
-            $resTrackId = $resTrackArr['id'];
+            //$resTrackId = $resTrackArr['id'];
             if( $resTrackValue ) {
                 $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
                 echo "residencyTrack found=".$residencyTrack."<br>";
@@ -568,6 +591,21 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $instPathologyResidencyProgram ) {
                 $residencyApplication->setInstitution($instPathologyResidencyProgram);
             }
+
+            //USMLE scores: $usmleStep1, $usmleStep2, $usmleStep3
+            $examination = new Examination($user);
+            if( $usmle1Value ) {
+                $examination->setUSMLEStep1Score($usmle1Value);
+            }
+            if( $usmle2Value ) {
+                $examination->setUSMLEStep2CKScore($usmle2Value);
+            }
+            if( $usmle3Value ) {
+                $examination->setUSMLEStep3Score($usmle3Value);
+            }
+            $residencyApplication->addExamination($examination);
+
+            //$countryCitizenshipValue: U.S. Citizen, Foreign National Currently in the U.S. with Valid Visa Status
 
             //trainingPeriodStart
             //$residencyApplication->setStartDate($this->transformDatestrToDate($seasonStartDateValue));
@@ -640,8 +678,16 @@ class ResAppBulkUploadController extends OrderAbstractController
     }
 
     public function getDatetimeFromStr( $datetimeStr ) {
-        $datetime = strtotime($datetimeStr);
-        //echo "$cellValue: year=$year <br>";
+        echo "getting $datetimeStr <br>";
+        $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
+        $datetime = $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
+        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
+        return $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
+
+        //$datetime = strtotime($datetimeStr);
+        $datetime = date("m/d/Y", strtotime($datetimeStr));  //string
+        echo "datetime=$datetime <br>";
+        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
         return $datetime;
     }
 
@@ -687,8 +733,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( count($users) == 1 ) {
                     $user = $users[0];
                 }
-                if( count($userArr) > 1 ) {
-                    exit("Multiple users found by email ".$email);
+                if( count($users) > 1 ) {
+                    exit("Multiple users found count=".count($users)." by email ".$email);
                 }
             }
         }

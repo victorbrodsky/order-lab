@@ -1107,26 +1107,13 @@ class ImportFromOldSystem {
         $schoolDegreeEntity = $transformer->reverseTransform($schoolDegree);
         $training->setDegree($schoolDegreeEntity);
     }
+    
+    public function getDegreeMapping( $degreeValue ) {
 
-    public function getDegreeStr( $degreeValue ) {
-        $schoolDegree = $this->getDegreeStrByAbbreviation($degreeValue);
-        if( !$schoolDegree ) {
-            //Most of the time our internal degree does not have '.'
-            $degreeValue = str_replace('.','',$degreeValue);
-            $schoolDegree = $this->getDegreeStrByAbbreviation($degreeValue);
+        if( !$degreeValue ) {
+            return $degreeValue;
         }
 
-        if( $schoolDegree ) {
-            echo "Found: [$degreeValue] => [$schoolDegree] <br>";
-            //$resappImportFromOldSystemUtil->setTrainingDegree($training,$schoolDegree,$user);
-        } else {
-            exit("Uknown degreeValue=[$degreeValue]");
-        }
-
-        return $schoolDegree;
-    }
-    public function getDegreeStrByAbbreviation( $degreeValue ) {
-        
         $schoolDegree = NULL;
 
         if( $degreeValue == "M.D./Ph.D." ) {
@@ -1148,7 +1135,60 @@ class ImportFromOldSystem {
             $schoolDegree = "MB";
         }
         if ( $degreeValue == "M.B.,B.S." ) {
-            $schoolDegree = "MB";
+            $schoolDegree = "MBBS";
+        }
+        if ( $degreeValue == "M.B.Ch.B." ) {
+            $schoolDegree = "MBChB";
+        }
+        if ( $degreeValue == "M.B.Ch.B." ) {
+            $schoolDegree = "MBChB";
+        }
+        if ( $degreeValue == "M.C." ) {
+            $schoolDegree = "MC";
+        }
+        if ( $degreeValue == "M.CH.ORTHO" ) {
+            $schoolDegree = "MCH/ORTHO";
+        }
+        if ( $degreeValue == "M.D./M.P.H." ) {
+            $schoolDegree = "MD/MPH";
+        }
+        if ( $degreeValue == "F.P.C." ) {
+            $schoolDegree = $degreeValue;
+        }
+        if ( $degreeValue == "M.D./Other" ) {
+            $schoolDegree = "MD/Other";
+        }
+        if ( $degreeValue == "M.D./M.B.A." ) {
+            $schoolDegree = "MD/MBA";
+        }
+        if ( $degreeValue == "M.B.B.Ch.B" ) {
+            $schoolDegree = "MBBChB";
+        }
+        if ( $degreeValue == "M.D.,C.M." ) {
+            $schoolDegree = "MD/CM";
+        }
+        if ( $degreeValue == "M.Med." ) {
+            $schoolDegree = "MMed";
+        }
+        if ( $degreeValue == "M.S./M.D." ) {
+            $schoolDegree = "MS/MD";
+        }
+        if ( $degreeValue == "DO/PhD" ) {
+            $schoolDegree = "DO/PhD";
+        }
+        if ( $degreeValue == "D.M.D." ) {
+            $schoolDegree = "DMD";
+        }
+        if ( $degreeValue == "M.Surg." ) {
+            $schoolDegree = "M/Surg";
+        }
+
+        if( $schoolDegree ) {
+            echo "Found: [$degreeValue] => [$schoolDegree] <br>";
+        } else {
+            //Most of the time our internal degree does not have '.'
+            //$schoolDegree = str_replace('.','',$schoolDegree);
+            exit("Uknown degreeValue=[$degreeValue]");
         }
 
         return $schoolDegree;
