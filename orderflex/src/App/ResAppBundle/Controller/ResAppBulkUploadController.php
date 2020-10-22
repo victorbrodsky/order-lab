@@ -135,12 +135,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 //remove all documents
-                foreach ($inputDataFile->getErasFiles() as $file) {
-                    $inputDataFile->removeErasFile($file);
-                    $em->remove($file);
+                if(0) {
+                    foreach ($inputDataFile->getErasFiles() as $file) {
+                        $inputDataFile->removeErasFile($file);
+                        $em->remove($file);
+                    }
+                    $em->remove($inputDataFile);
+                    $em->flush();
                 }
-                $em->remove($inputDataFile);
-                $em->flush();
             }
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
                 //exit("Adding Application to be implemented");
@@ -270,7 +272,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $count = 0;
 
         foreach( $data["row"] as $row ) {
@@ -526,39 +528,12 @@ class ResAppBulkUploadController extends OrderAbstractController
                 
                 if( $degreeValue ) {
                     if( !$testing ) {
-                        $this->setTrainingDegree($training, $degreeValue, $user);
+                        $resappImportFromOldSystemUtil->setTrainingDegree($training, $degreeValue, $user);
                     }
                 } else {
                     exit("Uknown degreeValue=[$degreeValue]");
                 }
 
-                //$medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
-//                echo "1medSchoolGradDateValue=$medSchoolGradDateValue => "; // 8/2014 - 5/2019
-//                $medSchoolGradDateFull = NULL;
-//                $medSchoolGradDateValueArr = explode("-",$medSchoolGradDateValue);
-//                if( count($medSchoolGradDateValueArr) == 2 ) {
-//                    $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
-//                    $medSchoolGradDateMY = trim($medSchoolGradDateMY);
-//                    //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
-//                    $splitGradDate=explode('/',$medSchoolGradDateMY);
-//                    if( count($splitGradDate) == 2 ) {
-//                        $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
-//                    }
-//                }
-//                if( $medSchoolGradDateFull ) {
-//                    //$medSchoolGradDateFull = date("d/m/Y", strtotime($medSchoolGradDateFull));
-//                    //echo " 1medSchoolGradDateFull=$medSchoolGradDateFull => ";
-//                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateFull);
-//                    echo "2medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
-//                    $training->setCompletionDate($medSchoolGradDateTime);
-//                }
-//                if( strpos($medSchoolGradDateValue, '-') !== false ) {
-//                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
-//                    echo "3medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
-//                    $training->setCompletionDate($medSchoolGradDateTime);
-//                } else {
-//                    exit("Invalid grad date " . $medSchoolGradDateValue);
-//                }
                 if( $medSchoolGradDateValue ) {
                     $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
                     //echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
@@ -741,6 +716,11 @@ class ResAppBulkUploadController extends OrderAbstractController
             ///////////////// EOF Create new ResidencyApplication //////////////////////
             //uploadedPhotoUrl
 
+            if( !$testing ) {
+                $em->flush();
+                echo "Added residency application ID=".$residencyApplication->getId()." <br>";
+            }
+
             exit("End of process handsontable. Count=$count");
 
         }//foreach row
@@ -842,10 +822,16 @@ class ResAppBulkUploadController extends OrderAbstractController
             }
         }
 
+        //TODO: Applicant might exist in DB from the old system without email.
+        //Try to find by First Name, Family Name and then in ERAS pdf find matching AAMC ID
+
         if( $user ) {
+            echo "Found user in DB $user <br>";
             return $user;
         }
+
         //create excel user
+        echo "Create new user $username<br>";
         $addobjects = false;
         $user = new User($addobjects);
         $user->setKeytype($userkeytype);
@@ -873,6 +859,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         $employmentStatus = new EmploymentStatus($creatorUser);
         $employmentStatus->setEmploymentType($employmentType);
         $user->addEmploymentStatus($employmentStatus);
+
+        $em->persist($user);
 
         return $user;
     }
