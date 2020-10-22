@@ -403,76 +403,57 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $ethnicGroupArr = $this->getValueByHeaderName('Is the applicant a member of any of the following groups?',$row,$headers);
             $ethnicGroupValue = $ethnicGroupArr['val'];
-            $ethnicGroupId = $ethnicGroupArr['id'];
+            //$ethnicGroupId = $ethnicGroupArr['id'];
 
             $numberFirstAuthorPublicationsArr = $this->getValueByHeaderName('Number of first author publications',$row,$headers);
             $numberFirstAuthorPublicationsValue = $numberFirstAuthorPublicationsArr['val'];
-            $numberFirstAuthorPublicationsId = $numberFirstAuthorPublicationsArr['id'];
+            //$numberFirstAuthorPublicationsId = $numberFirstAuthorPublicationsArr['id'];
 
             $numberAllPublicationsArr = $this->getValueByHeaderName('Number of all publications',$row,$headers);
             $numberAllPublicationsValue = $numberAllPublicationsArr['val'];
-            $numberAllPublicationsId = $numberAllPublicationsArr['id'];
+            //$numberAllPublicationsId = $numberAllPublicationsArr['id'];
 
             $aoaArr = $this->getValueByHeaderName('AOA',$row,$headers);
             $aoaValue = $aoaArr['val'];
-            $aoaId = $aoaArr['id'];
+            //$aoaId = $aoaArr['id'];
 
             $coupleArr = $this->getValueByHeaderName('Couple’s Match',$row,$headers);
             $coupleValue = $coupleArr['val'];
-            $coupleId = $coupleArr['id'];
+            //$coupleId = $coupleArr['id'];
 
             $postSophomoreArr = $this->getValueByHeaderName('Post-Sophomore Fellowship',$row,$headers);
             $postSophomoreValue = $postSophomoreArr['val'];
-            $postSophomoreId = $postSophomoreArr['id'];
+            //$postSophomoreId = $postSophomoreArr['id'];
             
             $previousResidencyStartDateArr = $this->getValueByHeaderName('Previous Residency Start Date',$row,$headers);
             $previousResidencyStartDateValue = $previousResidencyStartDateArr['val'];
-            $previousResidencyStartDateId = $previousResidencyStartDateArr['id'];
+            //$previousResidencyStartDateId = $previousResidencyStartDateArr['id'];
 
             $previousResidencyGradDateArr = $this->getValueByHeaderName('Previous Residency Graduation/Departure Date',$row,$headers);
             $previousResidencyGradDateValue = $previousResidencyGradDateArr['val'];
-            $previousResidencyGradDateId = $previousResidencyGradDateArr['id'];
+            //$previousResidencyGradDateId = $previousResidencyGradDateArr['id'];
 
             $previousResidencyInstitutionArr = $this->getValueByHeaderName('Previous Residency Institution',$row,$headers);
             $previousResidencyInstitutionValue = $previousResidencyInstitutionArr['val'];
-            $previousResidencyInstitutionId = $previousResidencyInstitutionArr['id'];
+            //$previousResidencyInstitutionId = $previousResidencyInstitutionArr['id'];
 
             $previousResidencyCityArr = $this->getValueByHeaderName('Previous Residency City',$row,$headers);
             $previousResidencyCityValue = $previousResidencyCityArr['val'];
-            $previousResidencyCityId = $previousResidencyCityArr['id'];
+            //$previousResidencyCityId = $previousResidencyCityArr['id'];
 
             $previousResidencyStateArr = $this->getValueByHeaderName('Previous Residency State',$row,$headers);
             $previousResidencyStateValue = $previousResidencyStateArr['val'];
-            $previousResidencyStateId = $previousResidencyStateArr['id'];
+            //$previousResidencyStateId = $previousResidencyStateArr['id'];
 
             $previousResidencyCountryArr = $this->getValueByHeaderName('Previous Residency Country',$row,$headers);
             $previousResidencyCountryValue = $previousResidencyCountryArr['val'];
-            $previousResidencyCountryId = $previousResidencyCountryArr['id'];
+            //$previousResidencyCountryId = $previousResidencyCountryArr['id'];
 
             $previousResidencyTrackArr = $this->getValueByHeaderName('Previous Residency Track',$row,$headers);
             $previousResidencyTrackValue = $previousResidencyTrackArr['val'];
-            $previousResidencyTrackId = $previousResidencyTrackArr['id'];
+            //$previousResidencyTrackId = $previousResidencyTrackArr['id'];
 
-//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-//            $zzzValue = $zzzArr['val'];
-//            $zzzId = $zzzArr['id'];
-//
-//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-//            $zzzValue = $zzzArr['val'];
-//            $zzzId = $zzzArr['id'];
-//
-//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-//            $zzzValue = $zzzArr['val'];
-//            $zzzId = $zzzArr['id'];
-//
-//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-//            $zzzValue = $zzzArr['val'];
-//            $zzzId = $zzzArr['id'];
-//
-//            $zzzArr = $this->getValueByHeaderName('zzz',$row,$headers);
-//            $zzzValue = $zzzArr['val'];
-//            $zzzId = $zzzArr['id'];
-
+            ///////////////// Create new user or get the existed user //////////////////////
             $userArr = array(
                 'creator' => $user, //$systemUser,
                 'employmenttype' => $employmentType,
@@ -484,7 +465,9 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //'displayname' => $displayName
             );
             $resappUser = $this->createNewResappUser($userArr);
+            ///////////////// EOF Create new user or get the existed user //////////////////////
 
+            ///////////////// Create new ResidencyApplication //////////////////////
             $residencyApplication = new ResidencyApplication($user);
             $resappUser->addResidencyApplication($residencyApplication);
 
@@ -527,17 +510,17 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$medSchoolGradDateValue, $medSchoolNameValue, $degreeValue
             if( $medSchoolGradDateValue || $medSchoolNameValue || $degreeValue ) {
                 $training = new Training($user);
-                $training->setOrderinlist(1);
+                $training->setOrderinlist(10);
                 $training->setTrainingType($trainingType);
 
                 $residencyApplication->addTraining($training);
                 $resappUser->addTraining($training);
 
-                $schoolDegree = $resappImportFromOldSystemUtil->getDegreeMapping($degreeValue);
+                //$schoolDegree = $resappImportFromOldSystemUtil->getDegreeMapping($degreeValue);
                 
-                if( $schoolDegree ) {
+                if( $degreeValue ) {
                     if( !$testing ) {
-                        $this->setTrainingDegree($training, $schoolDegree, $user);
+                        $this->setTrainingDegree($training, $degreeValue, $user);
                     }
                 } else {
                     exit("Uknown degreeValue=[$degreeValue]");
@@ -629,51 +612,74 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $residencyApplication->addCitizenship($citizenship);
 
                 if( $countryCitizenshipValue ) {
-                    $countryCitizenshipStr = $resappImportFromOldSystemUtil->getCitizenshipMapping($countryCitizenshipValue);
-                    $countryCitizenshipStr = trim($countryCitizenshipStr);
+                    //$countryCitizenshipStr = $resappImportFromOldSystemUtil->getCitizenshipMapping($countryCitizenshipValue);
+                    $countryCitizenshipValue = trim($countryCitizenshipValue);
                     $transformer = new GenericTreeTransformer($em, $user, 'Countries');
                     if( !$testing ) {
-                        $citizenshipCountryEntity = $transformer->reverseTransform($countryCitizenshipStr);
+                        $citizenshipCountryEntity = $transformer->reverseTransform($countryCitizenshipValue);
                         $citizenship->setCountry($citizenshipCountryEntity);
                     }
                 }
 
+                if( $visaStatusValue ) {
+                    $citizenship->setVisa($visaStatusValue);
+                }
+            }
+
+            if( $ethnicGroupValue ) {
+                $residencyApplication->setEthnicity($ethnicGroupValue);
+            }
+
+            if( $numberFirstAuthorPublicationsValue ) {
+                $residencyApplication->setFirstPublications($numberFirstAuthorPublicationsValue);
+            }
+
+            if( $numberAllPublicationsValue ) {
+                $residencyApplication->setAllPublications($numberAllPublicationsValue);
+            }
+
+            if( $aoaValue ) {
+                if( strtolower($aoaValue) != "no" ) {
+                    $residencyApplication->setAoa(true);
+                }
+            }
+
+            if( $coupleValue ) {
+                if( strtolower($coupleValue) != "no" ) {
+                    $residencyApplication->setCouple(true);
+                }
+            }
+
+            //Not available in ERAS CSV
+            if( $postSophomoreValue ) {
+                //PostSophList
+                $transformer = new GenericTreeTransformer($em, $user, 'PostSophList', 'ResAppBundle');
+                if( !$testing ) {
+                    $postSophomoreEntity = $transformer->reverseTransform($postSophomoreValue);
+                    $residencyApplication->setPostSoph($postSophomoreEntity);
+                }
+            }
+
+            if( $previousResidencyStartDateValue ||
+                $previousResidencyGradDateValue ||
+                $previousResidencyInstitutionValue ||
+                $previousResidencyCityValue ||
+                $previousResidencyStateValue ||
+                $previousResidencyCountryValue ||
+                $previousResidencyTrackValue
+            ) {
+                $training = new Training($user);
+                $training->setOrderinlist(20);
+                $residencyApplication->addTraining($training);
+                $residencyApplication->getUser()->addTraining($training);
+
 
             }
 
-            //trainingPeriodStart
-            //$residencyApplication->setStartDate($this->transformDatestrToDate($seasonStartDateValue));
 
-            //trainingPeriodEnd
-            //$residencyApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd',$rowData,$headers)));
-
-            //$residencyApplication->setStartDate($startDate);
-            //$residencyApplication->setEndDate($endDate);
-            //$residencyApplication->setResidencyTrack($residencyTypeEntity);
+            ///////////////// EOF Create new ResidencyApplication //////////////////////
 
             //uploadedPhotoUrl
-
-            //add ERAS file
-
-            //$examination = new Examination($systemUser);
-            //$residencyApplication->addExamination($examination);
-
-//            if( $createDate ) {
-//                $residencyApplication->setTimestamp($this->transformDatestrToDate($createDate));
-//            }
-
-            //$residencyApplication->setAoa($aoa);
-            //$residencyApplication->setCouple($couples);
-
-            //Post-Sophomore Fellowship in Pathology/No
-//            if( $postSoph ) {
-//                $residencyApplication->setPostSoph($postSophPathologyEntity);
-//            } else {
-//                $residencyApplication->setPostSoph($postSophNoneEntity);
-//            }
-
-            //$citizenship = new Citizenship($systemUser);
-            //$residencyApplication->addCitizenship($citizenship);
 
             //undergraduate
 
@@ -719,8 +725,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         //echo "getting $datetimeStr <br>";
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
         $datetime = $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
-        //echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
-        return $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
+        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
+        return $datetime;
 
         //$datetime = strtotime($datetimeStr);
 //        $datetime = date("m/d/Y", strtotime($datetimeStr));  //string

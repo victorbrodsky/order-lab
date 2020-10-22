@@ -240,10 +240,6 @@ function resappMakeColumnData() {
             }
         },
 
-        { header:'Application Season Start Date', columns:{} },
-        { header:'Application Season End Date', columns:{} },
-        { header:'Expected Residency Start Date', columns:{} },
-        { header:'Expected Graduation Date', columns:{} },
         { header:'First Name', columns:{} },
         { header:'Last Name', columns:{} },
         { header:'Middle Name', columns:{} },
@@ -262,6 +258,11 @@ function resappMakeColumnData() {
         { header:'AOA', columns:{} },
         { header:'Couple’s Match', columns:{} },
         { header:'Post-Sophomore Fellowship', columns:{} },
+
+        { header:'Application Season Start Date', columns:{} },
+        { header:'Application Season End Date', columns:{} },
+        { header:'Expected Residency Start Date', columns:{} },
+        { header:'Expected Graduation Date', columns:{} },
 
         { header:'Previous Residency Start Date', columns:{} },
         { header:'Previous Residency Graduation/Departure Date', columns:{} },
@@ -530,8 +531,8 @@ function resizeTableHeight() {
     if( countRow < 5 ) {
         countRow = 5;
     }
-    if( countRow > 20 ) {
-        countRow = 20;
+    if( countRow > 15 ) {
+        countRow = 15;
     }
     //console.log("_tdSize="+_tdSize+", countRow="+countRow);
     //var newHeight = countRow*(_tdSize + _tdPadding*4);

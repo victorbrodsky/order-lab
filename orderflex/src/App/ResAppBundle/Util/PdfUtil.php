@@ -428,12 +428,24 @@ class PdfUtil {
             "Couple’s Match" => "Participating as a Couple in NRMP",
             //"" => "Post-Sophomore Fellowship",
 
-//            "" => "Previous Residency Start Date",
-//            "" => "Previous Residency Graduation/Departure Date",
-//            "" => "Previous Residency Institution",
-//            "" => "Previous Residency City",
-//            "" => "Previous Residency State",
-//            "" => "Previous Residency Country",
+            //CSV fields:
+            //Most Recent Medical School
+            //Most Recent Medical Training City
+            //Most Recent Medical Training Country
+            //Most Recent Medical Training Director
+            //Most Recent Medical Training Discipline
+            //Most Recent Medical Training End Date
+            //Most Recent Medical Training Program
+            //Most Recent Medical Training Start Date
+            //Most Recent Medical Training State
+            //Most Recent Medical Training Supervisor
+            //Handsomtable field => CSV field
+            "Previous Residency Start Date" => "Most Recent Medical Training Start Date",
+            "Previous Residency Graduation/Departure Date" => "Most Recent Medical Training End Date",
+            "Previous Residency Institution" => "Most Recent Medical School",
+            "Previous Residency City" => "Most Recent Medical Training City",
+            "Previous Residency State" => "Previous Residency State",
+            "Previous Residency Country" => "Previous Residency Country",
 //            "" => "Previous Residency Track",
 //            "" => "ERAS Application",
 

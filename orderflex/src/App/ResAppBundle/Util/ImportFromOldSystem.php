@@ -1208,110 +1208,120 @@ class ImportFromOldSystem {
         if( $countryCitizenshipValue == "U.S. Citizen" ) {
             $countryCitizenshipStr = "United States";
         }
-        if( strpos($countryCitizenshipValue, 'Foreign') !== false ) {
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-        if ( $countryCitizenshipValue == "Foreign National Currently in the U.S. with Valid Visa Status" ) {
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-        if ( $countryCitizenshipValue == "Permanent Resident (Green Card Holder)" ) {
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-        if ( $countryCitizenshipValue == "Pending Application for Permanent Resident" ) {
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-        if ( $countryCitizenshipValue == "Refugee/Asylum/Displaced Person" ) {
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-        if ( $countryCitizenshipValue == "Conditional Permanent Resident" ) {
+
+        if( !$countryCitizenshipStr ) {
             $countryCitizenshipStr = $countryCitizenshipValue;
         }
 
-        if( $countryCitizenshipStr ) {
-            //echo "Found: [$countryCitizenshipValue] => [$countryCitizenshipStr] <br>";
-        } else {
-            //echo "Not Found: [$countryCitizenshipValue] <br>";
-            //exit("Unknown countryCitizenshipValue=[$countryCitizenshipValue]");
-            $countryCitizenshipStr = $countryCitizenshipValue;
-        }
-
+        //don’t lose data
         return $countryCitizenshipStr;
+        
+//        if( strpos($countryCitizenshipValue, 'Foreign') !== false ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//        if ( $countryCitizenshipValue == "Foreign National Currently in the U.S. with Valid Visa Status" ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//        if ( $countryCitizenshipValue == "Permanent Resident (Green Card Holder)" ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//        if ( $countryCitizenshipValue == "Pending Application for Permanent Resident" ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//        if ( $countryCitizenshipValue == "Refugee/Asylum/Displaced Person" ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//        if ( $countryCitizenshipValue == "Conditional Permanent Resident" ) {
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//
+//        if( $countryCitizenshipStr ) {
+//            //echo "Found: [$countryCitizenshipValue] => [$countryCitizenshipStr] <br>";
+//        } else {
+//            //echo "Not Found: [$countryCitizenshipValue] <br>";
+//            //exit("Unknown countryCitizenshipValue=[$countryCitizenshipValue]");
+//            $countryCitizenshipStr = $countryCitizenshipValue;
+//        }
+//
+//        return $countryCitizenshipStr;
     }
     public function getVisaMapping( $visaValue ) {
 
-        if( !$visaValue ) {
-            return $visaValue;
-        }
+        //don’t lose data
+        return $visaValue;
 
-        $defaultVisaStr = "Other-please contact the program coordinator";
-        $visaStr = NULL;
-
-        if( $visaValue == "J-1 - Visa for exchange visitor" ) {
-            $visaStr = "J-1 visa";
-        }
-        if( $visaValue == "H-1B - Specialty occupation, DoD worker, etcetera" ) {
-            $visaStr = "H-1B visa";
-        }
-        if( $visaValue == "Employment Authorization Document (EAD)" ) {
-            $visaStr = "EAD";
-        }
-        if( $visaValue == "Citizen, Legal Permanent Resident, Refugee, Asylee" ) {
-            $visaStr = "N/A (US Citizenship)";
-        }
-
-        if( $visaValue == "E-2 - Treaty investor, spouse and children (Employment Authorization Document - EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "F-1 - Academic Student (Employment Authorization Document - Optional Practical Training - OPT)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "J-2 - Spouse or child of J-1 (Employment Authorization Document - EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "TN - NAFTA trade visa for Canadians and Mexicans" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "H-4 - Spouse or child of H-1, H-2, H-3" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "Other" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "O-1 - Extraordinary ability in sciences, arts, education, business or athletics" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "L2- Dependent of Intra-Company Transferee (Employment Authorization Document - EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "Adjustment of Status applicant (Green Card application) (EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "J-2 - Spouse or child of J-1 (EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "L-2 - Dependent of Intra-Company Transferee (EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "F-1 - Academic Student (EAD, OPT)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "H-4 - Spouse or child of H-1, H-2, H-3 (EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-        if( $visaValue == "E-2 - Treaty investor, spouse and children (EAD)" ) {
-            $visaStr = $defaultVisaStr;
-        }
-
-        if( $visaStr ) {
-            echo "Found: [$visaValue] => [$visaStr] <br>";
-        } else {
-            //$visaStr = "Other-please contact the program coordinator";
-            //echo "Not Found: [$visaValue] <br>";
-            exit("Unknown visaValue=[$visaValue]");
-            $visaStr = $visaValue;
-        }
-
-        return $visaStr;
+//        if( !$visaValue ) {
+//            return $visaValue;
+//        }
+//        $defaultVisaStr = "Other-please contact the program coordinator";
+//        $visaStr = NULL;
+//
+//        if( $visaValue == "J-1 - Visa for exchange visitor" ) {
+//            $visaStr = "J-1 visa";
+//        }
+//        if( $visaValue == "H-1B - Specialty occupation, DoD worker, etcetera" ) {
+//            $visaStr = "H-1B visa";
+//        }
+//        if( $visaValue == "Employment Authorization Document (EAD)" ) {
+//            $visaStr = "EAD";
+//        }
+//        if( $visaValue == "Citizen, Legal Permanent Resident, Refugee, Asylee" ) {
+//            $visaStr = "N/A (US Citizenship)";
+//        }
+//
+//        if( $visaValue == "E-2 - Treaty investor, spouse and children (Employment Authorization Document - EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "F-1 - Academic Student (Employment Authorization Document - Optional Practical Training - OPT)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "J-2 - Spouse or child of J-1 (Employment Authorization Document - EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "TN - NAFTA trade visa for Canadians and Mexicans" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "H-4 - Spouse or child of H-1, H-2, H-3" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "Other" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "O-1 - Extraordinary ability in sciences, arts, education, business or athletics" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "L2- Dependent of Intra-Company Transferee (Employment Authorization Document - EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "Adjustment of Status applicant (Green Card application) (EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "J-2 - Spouse or child of J-1 (EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "L-2 - Dependent of Intra-Company Transferee (EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "F-1 - Academic Student (EAD, OPT)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "H-4 - Spouse or child of H-1, H-2, H-3 (EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//        if( $visaValue == "E-2 - Treaty investor, spouse and children (EAD)" ) {
+//            $visaStr = $defaultVisaStr;
+//        }
+//
+//        if( $visaStr ) {
+//            echo "Found: [$visaValue] => [$visaStr] <br>";
+//        } else {
+//            //$visaStr = "Other-please contact the program coordinator";
+//            //echo "Not Found: [$visaValue] <br>";
+//            exit("Unknown visaValue=[$visaValue]");
+//            $visaStr = $visaValue;
+//        }
+//
+//        return $visaStr;
     }
 
     public function transformDatestrToDate($datestr) {
