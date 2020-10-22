@@ -83,6 +83,7 @@ class PdfUtil {
 
         //echo "csvFileName=$csvFileName <br>";
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $handsomtableJsonData = array();
 
@@ -238,6 +239,36 @@ class PdfUtil {
                                 }
                                 if( $handsomTitle == "Visa Status" ) {
                                     $cellValue = $resappImportFromOldSystemUtil->getVisaMapping($cellValue);
+                                }
+
+                                if( $handsomTitle == "Previous Residency Country" ) {
+                                    $cellValue = $userServiceUtil->findCountryByIsoAlpha3($cellValue);
+                                }
+
+                                //Previous Residency Start Date 16-Jun (day-month) => 06/01/2016 (mm/dd/Y)
+                                if( $handsomTitle == "Previous Residency Start Date" ) {
+                                    $resStartDateFull = NULL;
+                                    $splitResStartDate=explode('-',$cellValue);
+                                    if( count($splitResStartDate) == 2 ) {
+                                        $resStartDateYear = trim($splitResStartDate[0]);
+                                        $resStartDateMonth = trim($splitResStartDate[1]);
+                                        $nmonth = date("m", strtotime($resStartDateMonth));
+                                        $resStartDateFull = $nmonth . "/01/" . $resStartDateYear;
+                                    }
+                                    $cellValue = $resStartDateFull;
+                                }
+
+                                //Previous Residency Graduation/Departure Date 11-Mar
+                                if( $handsomTitle == "Previous Residency Graduation/Departure Date" ) {
+                                    $resEndDateFull = NULL;
+                                    $splitResEndDate=explode('-',$cellValue);
+                                    if( count($splitResEndDate) == 2 ) {
+                                        $resEndDateYear = trim($splitResEndDate[0]);
+                                        $resEndDateMonth = trim($splitResEndDate[1]);
+                                        $nmonth = date("m", strtotime($resEndDateMonth));
+                                        $resEndDateFull = $nmonth . "/01/" . $resEndDateYear;
+                                    }
+                                    $cellValue = $resEndDateFull;
                                 }
                             }
 
@@ -444,8 +475,8 @@ class PdfUtil {
             "Previous Residency Graduation/Departure Date" => "Most Recent Medical Training End Date",
             "Previous Residency Institution" => "Most Recent Medical School",
             "Previous Residency City" => "Most Recent Medical Training City",
-            "Previous Residency State" => "Previous Residency State",
-            "Previous Residency Country" => "Previous Residency Country",
+            "Previous Residency State" => "Most Recent Medical Training State",
+            "Previous Residency Country" => "Most Recent Medical Training Country",
 //            "" => "Previous Residency Track",
 //            "" => "ERAS Application",
 
@@ -1321,4 +1352,7 @@ class PdfUtil {
         }
         rmdir($dirPath);
     }
+
+
+
 } 

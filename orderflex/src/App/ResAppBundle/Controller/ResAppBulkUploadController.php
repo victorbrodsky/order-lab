@@ -26,6 +26,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\Citizenship;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\Examination;
+use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -223,6 +224,11 @@ class ResAppBulkUploadController extends OrderAbstractController
         $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
         if( !$trainingType ) {
             throw new EntityNotFoundException("TrainingTypeList not found by name=Medical");
+        }
+
+        $residencyTrainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+        if( !$residencyTrainingType ) {
+            throw new EntityNotFoundException("TrainingTypeList not found by name=Residency");
         }
 
         //////////////////////// assign local institution from SiteParameters ////////////////////////
@@ -450,7 +456,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$previousResidencyCountryId = $previousResidencyCountryArr['id'];
 
             $previousResidencyTrackArr = $this->getValueByHeaderName('Previous Residency Track',$row,$headers);
-            $previousResidencyTrackValue = $previousResidencyTrackArr['val'];
+            $previousResidencyTrackValue = $previousResidencyTrackArr['val']; //Not in CSV file
             //$previousResidencyTrackId = $previousResidencyTrackArr['id'];
 
             ///////////////// Create new user or get the existed user //////////////////////
@@ -527,31 +533,36 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 //$medSchoolGradDateTime = date("m/d/Y", strtotime($medSchoolGradDateValue));
-                echo "medSchoolGradDateValue=$medSchoolGradDateValue => "; // 8/2014 - 5/2019
-                $medSchoolGradDateFull = NULL;
-                $medSchoolGradDateValueArr = explode("-",$medSchoolGradDateValue);
-                if( count($medSchoolGradDateValueArr) == 2 ) {
-                    $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
-                    $medSchoolGradDateMY = trim($medSchoolGradDateMY);
-                    //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
-                    $splitGradDate=explode('/',$medSchoolGradDateMY);
-                    if( count($splitGradDate) == 2 ) {
-                        $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
-                    }
-                }
-                if( $medSchoolGradDateFull ) {
-                    //$medSchoolGradDateFull = date("d/m/Y", strtotime($medSchoolGradDateFull));
-                    //echo " 1medSchoolGradDateFull=$medSchoolGradDateFull => ";
-                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateFull);
-                    echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
-                    $training->setCompletionDate($medSchoolGradDateTime);
-                }
-                if (strpos($medSchoolGradDateValue, '-') !== false) {
+//                echo "1medSchoolGradDateValue=$medSchoolGradDateValue => "; // 8/2014 - 5/2019
+//                $medSchoolGradDateFull = NULL;
+//                $medSchoolGradDateValueArr = explode("-",$medSchoolGradDateValue);
+//                if( count($medSchoolGradDateValueArr) == 2 ) {
+//                    $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
+//                    $medSchoolGradDateMY = trim($medSchoolGradDateMY);
+//                    //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
+//                    $splitGradDate=explode('/',$medSchoolGradDateMY);
+//                    if( count($splitGradDate) == 2 ) {
+//                        $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
+//                    }
+//                }
+//                if( $medSchoolGradDateFull ) {
+//                    //$medSchoolGradDateFull = date("d/m/Y", strtotime($medSchoolGradDateFull));
+//                    //echo " 1medSchoolGradDateFull=$medSchoolGradDateFull => ";
+//                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateFull);
+//                    echo "2medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
+//                    $training->setCompletionDate($medSchoolGradDateTime);
+//                }
+//                if( strpos($medSchoolGradDateValue, '-') !== false ) {
+//                    $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
+//                    echo "3medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
+//                    $training->setCompletionDate($medSchoolGradDateTime);
+//                } else {
+//                    exit("Invalid grad date " . $medSchoolGradDateValue);
+//                }
+                if( $medSchoolGradDateValue ) {
                     $medSchoolGradDateTime = $this->getDatetimeFromStr($medSchoolGradDateValue);
-                    echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
+                    //echo "medSchoolGradDateValue: $medSchoolGradDateValue => " . $medSchoolGradDateTime->format('d-m-Y') . "<br>";
                     $training->setCompletionDate($medSchoolGradDateTime);
-                } else {
-                    exit("Invalid grad date " . $medSchoolGradDateValue);
                 }
 
                 if( $medSchoolNameValue ) {
@@ -583,7 +594,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$resTrackId = $resTrackArr['id'];
             if( $resTrackValue ) {
                 $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
-                echo "residencyTrack found=".$residencyTrack."<br>";
+                //echo "residencyTrack found=".$residencyTrack."<br>";
                 if( $residencyTrack ) {
                     $residencyApplication->setResidencyTrack($residencyTrack);
                 }
@@ -665,27 +676,72 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $previousResidencyInstitutionValue ||
                 $previousResidencyCityValue ||
                 $previousResidencyStateValue ||
-                $previousResidencyCountryValue ||
-                $previousResidencyTrackValue
+                $previousResidencyCountryValue
+                //|| $previousResidencyTrackValue
             ) {
                 $training = new Training($user);
                 $training->setOrderinlist(20);
                 $residencyApplication->addTraining($training);
                 $residencyApplication->getUser()->addTraining($training);
 
+                $training->setTrainingType($residencyTrainingType);
 
+                $params = array('type'=>'Medical');
+                $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
+                $previousResidencyInstitutionEntity = $transformer->reverseTransform($previousResidencyInstitutionValue);
+                $training->setInstitution($previousResidencyInstitutionEntity);
+
+                //echo "Converting previousResidencyStartDate [$previousResidencyStartDateValue]: ";
+                $previousResidencyStartDate = $this->getDatetimeFromStr($previousResidencyStartDateValue);
+                if( $previousResidencyStartDate ) {
+                    //echo "$previousResidencyStartDateValue =>" . $previousResidencyStartDate->format('dd-mm-Y') . "<br>";
+                    $training->setStartDate($previousResidencyStartDate);
+                }
+
+                //echo "Converting previousResidencyGradDate [$previousResidencyGradDateValue]: ";
+                $previousResidencyGradDate = $this->getDatetimeFromStr($previousResidencyGradDateValue);
+                if( $previousResidencyGradDate ) {
+                    //echo "$previousResidencyStartDateValue =>" . $previousResidencyStartDate->format('dd-mm-Y') . "<br>";
+                    $training->setCompletionDate($previousResidencyGradDate);
+                }
+
+                //GeoLocation
+                if( $previousResidencyCityValue ||
+                    $previousResidencyStateValue ||
+                    $previousResidencyCountryValue
+                ) {
+                    $previousGeoLocation = new GeoLocation();
+                    $training->setGeoLocation($previousGeoLocation);
+
+                    //CityList
+                    $transformer = new GenericTreeTransformer($em, $user, 'CityList');
+                    if( !$testing ) {
+                        $previousResidencyCityEntity = $transformer->reverseTransform($previousResidencyCityValue);
+                        $previousGeoLocation->setCity($previousResidencyCityEntity);
+                    }
+
+                    //States
+                    $transformer = new GenericTreeTransformer($em, $user, 'States');
+                    if( !$testing ) {
+                        $previousResidencyStateEntity = $transformer->reverseTransform($previousResidencyStateValue);
+                        $previousGeoLocation->setState($previousResidencyStateEntity);
+                    }
+
+                    //$previousResidencyCountryValue Countries
+                    $transformer = new GenericTreeTransformer($em, $user, 'Countries');
+                    if( !$testing ) {
+                        $previousResidencyCountryEntity = $transformer->reverseTransform($previousResidencyCountryValue);
+                        $previousGeoLocation->setCountry($previousResidencyCountryEntity);
+                    }
+
+                }
             }
 
 
             ///////////////// EOF Create new ResidencyApplication //////////////////////
-
             //uploadedPhotoUrl
 
-            //undergraduate
-
-            //graduate
-
-            //medical
+            exit("End of process handsontable. Count=$count");
 
         }//foreach row
 
@@ -723,9 +779,12 @@ class ResAppBulkUploadController extends OrderAbstractController
 
     public function getDatetimeFromStr( $datetimeStr ) {
         //echo "getting $datetimeStr <br>";
+        if( !$datetimeStr ) {
+            return $datetimeStr;
+        }
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
         $datetime = $resappImportFromOldSystemUtil->transformDatestrToDate($datetimeStr);
-        echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
+        //echo "$datetimeStr => ".$datetime->format('d-m-Y')."<br>";
         return $datetime;
 
         //$datetime = strtotime($datetimeStr);
