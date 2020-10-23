@@ -172,7 +172,7 @@ class PdfUtil {
                             $cellValue = $cell->getValue();
                             $cellValue = trim($cellValue);
 
-                            //echo $headerTitle."( col=".$column."): cellValue=".$cellValue."<br>";
+                            //echo $headerTitle." ($handsomTitle)"."( col=".$column."): cellValue=".$cellValue."<br>";
 
                             if ($handsomTitle == "Application Receipt Date") {
                                 if( $cellValue ) {
@@ -246,29 +246,55 @@ class PdfUtil {
                                 }
 
                                 //Previous Residency Start Date 16-Jun (day-month) => 06/01/2016 (mm/dd/Y)
+                                //2020: Jan-06
                                 if( $handsomTitle == "Previous Residency Start Date" ) {
                                     $resStartDateFull = NULL;
-                                    $splitResStartDate=explode('-',$cellValue);
+                                    if( strpos($cellValue, '-') !== false ) {
+                                        $splitResStartDate=explode('-',$cellValue);
+                                    } else {
+                                        $splitResStartDate=explode('/',$cellValue);
+                                    }
                                     if( count($splitResStartDate) == 2 ) {
-                                        $resStartDateYear = trim($splitResStartDate[0]);
-                                        $resStartDateMonth = trim($splitResStartDate[1]);
-                                        $nmonth = date("m", strtotime($resStartDateMonth));
+                                        //$resStartDateYear = trim($splitResStartDate[0]);
+                                        //$resStartDateMonth = trim($splitResStartDate[1]);
+                                        $resStartDateYear = trim($splitResStartDate[1]);
+                                        $resStartDateMonth = trim($splitResStartDate[0]);
+                                        if (is_numeric($resStartDateMonth)) {
+                                            $nmonth = $resStartDateMonth;
+                                        } else {
+                                            $nmonth = date("m", strtotime($resStartDateMonth));
+                                        }
                                         $resStartDateFull = $nmonth . "/01/" . $resStartDateYear;
                                     }
+                                    //echo $handsomTitle.": Previous Residency Start Date: $resStartDateFull <br>";
                                     $cellValue = $resStartDateFull;
                                 }
 
                                 //Previous Residency Graduation/Departure Date 11-Mar
+                                //2020: Jan-06
                                 if( $handsomTitle == "Previous Residency Graduation/Departure Date" ) {
                                     $resEndDateFull = NULL;
-                                    $splitResEndDate=explode('-',$cellValue);
+                                    //$splitResEndDate=explode('-',$cellValue);
+                                    if( strpos($cellValue, '-') !== false ) {
+                                        $splitResEndDate=explode('-',$cellValue);
+                                    } else {
+                                        $splitResEndDate=explode('/',$cellValue);
+                                    }
                                     if( count($splitResEndDate) == 2 ) {
-                                        $resEndDateYear = trim($splitResEndDate[0]);
-                                        $resEndDateMonth = trim($splitResEndDate[1]);
-                                        $nmonth = date("m", strtotime($resEndDateMonth));
+                                        //$resEndDateYear = trim($splitResEndDate[0]);
+                                        //$resEndDateMonth = trim($splitResEndDate[1]);
+                                        $resEndDateYear = trim($splitResEndDate[1]);
+                                        $resEndDateMonth = trim($splitResEndDate[0]);
+                                        if (is_numeric($resEndDateMonth)) {
+                                            $nmonth = $resEndDateMonth;
+                                        } else {
+                                            $nmonth = date("m", strtotime($resEndDateMonth));
+                                        }
                                         $resEndDateFull = $nmonth . "/01/" . $resEndDateYear;
                                     }
+                                    //echo $handsomTitle.": Previous Residency Graduation/Departure Date: $resEndDateFull <br>";
                                     $cellValue = $resEndDateFull;
+                                    //exit("test exit after date");
                                 }
 
                                 //TODO: Is the applicant a member of any of the following groups?
@@ -295,26 +321,26 @@ class PdfUtil {
 //                $rowArr["Preferred Email"]['id'] = 1;
 //                $rowArr["Preferred Email"]['value'] = "Test Email";
 
-                //keys to identify matched PDF
-                $keysArr = array(
-                    $rowArr["AAMC ID"]['value'],
-                    $rowArr["Preferred Email"]['value'],
-                    $rowArr["Birth Date"]['value'],
-                    $rowArr["USMLE ID"]['value'],
-                    //$rowArr["NBOME ID"]['value'], //might be null
-                    //$rowArr["NRMP ID"]['value'],
-                );
-
-                if( isset($rowArr["NRMP ID"]) && isset($rowArr["NRMP ID"]['value']) ) {
-                    $keysArr[] = $rowArr["NRMP ID"]['value'];
+                if(1) {
+                    //Relax keys to identify matched PDF
+                    $keysArr = array(
+                        $rowArr["AAMC ID"]['value'],
+                        //$rowArr["Preferred Email"]['value']
+                    );
+                } else {
+                    //Strict keys to identify matched PDF
+                    $keysArr = array(
+                        $rowArr["AAMC ID"]['value'],
+                        $rowArr["Preferred Email"]['value'],
+                        $rowArr["Birth Date"]['value'],
+                        $rowArr["USMLE ID"]['value'],
+                        //$rowArr["NBOME ID"]['value'], //might be null
+                        //$rowArr["NRMP ID"]['value'],
+                    );
+                    if (isset($rowArr["NRMP ID"]) && isset($rowArr["NRMP ID"]['value'])) {
+                        $keysArr[] = $rowArr["NRMP ID"]['value'];
+                    }
                 }
-
-                //echo $rowArr["Preferred Email"]['value'].": Birth Date=".$rowArr["Birth Date"]['value']."<br>";
-//                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
-//                if( $pdfPath ) {
-//                    $rowArr['ERAS Application']['id'] = 1;
-//                    $rowArr['ERAS Application']['value'] = $pdfPath;
-//                }
 
                 ////////////// Try to get ERAS Application ID //////////////////
                 $pdfFile = $this->findPdfByInfoArr($pdfInfoArr,$keysArr);
@@ -522,7 +548,7 @@ class PdfUtil {
     public function findPdfByInfoArr( $pdfInfoArr, $keysArr ) {
         foreach( $pdfInfoArr as $fileId=>$pdfFileArr ) {
             $pdfFile = $pdfFileArr['file'];
-            $pdfOriginalName = $pdfFileArr['originalName'];
+            //$pdfOriginalName = $pdfFileArr['originalName'];
             $pdfText = $pdfFileArr['text'];
             //echo "<br>##############".$pdfOriginalName."#############<br>".$pdfText."<br><br>";
             $keyExistCount = 0;
