@@ -147,14 +147,23 @@ class ResAppBulkUploadController extends OrderAbstractController
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
                 //exit("Adding Application to be implemented");
 
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-                $this->processTableData($inputDataFile,$form); //new
+                $updatedDataResultsStr = $this->processTableData($inputDataFile,$form); //new
                 //$datajson = $form->get('datalocker')->getData();
                 //dump($datajson);
 
+                //exit("Adding Application to be implemented: ".$updatedDataResultsStr);
 
-                exit("Adding Application to be implemented");
+                if( count($updatedDataResultsStr) > 0 ) {
+                    $updatedDataResultsStr = implode("<br>",$updatedDataResultsStr);
+                    $this->get('session')->getFlashBag()->add(
+                        'notice',
+                        $updatedDataResultsStr
+                    );
+                }
+
+                return $this->redirect($this->generateUrl('resapp_home'));
             }
             else {
                 exit("Unknown button clicked");
@@ -190,7 +199,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $data = json_decode($datajson, true);
 
-        $updatedDataResults = new ArrayCollection();
+        $updatedDataResults = array();
 
         if( $data == null ) {
             //exit('Table order data is null.');
@@ -272,7 +281,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
         $count = 0;
 
         foreach( $data["row"] as $row ) {
@@ -300,6 +309,10 @@ class ResAppBulkUploadController extends OrderAbstractController
             $issueArr = $this->getValueByHeaderName('Issue',$row,$headers);
             $issueValue = $issueArr['val']; //i.e. "Dupliacte in batch"
             //$issueId = $issueArr['id'];
+            $issueStr = "";
+            if( $issueValue ) {
+                $issueStr = ", with issue $issueValue";
+            }
 
             $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);
             $erasFileValue = $erasFileArr['val'];
@@ -320,27 +333,6 @@ class ResAppBulkUploadController extends OrderAbstractController
             $erasIdValue = $erasIdArr['val'];
             //$erasIdId = $erasIdArr['id'];
 
-            $residencyApplicationDb = NULL;
-            if( $erasIdValue ) {
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
-            }
-
-            if( $actionValue != "Add" || $residencyApplicationDb ) {
-                echo "Do not add row=$count <br>";
-
-                //Remove eras application PDF document file
-                if( $erasDocument ) {
-                    $inputDataFile->removeErasFile($erasDocument);
-                    $em->remove($erasDocument);
-                    if( !$testing ) {
-                        $em->flush();
-                    }
-                }
-
-                continue;
-            }
-            
-
             $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
             $seasonStartDateValue = $seasonStartDateArr['val'];
             //$seasonStartDateId = $seasonStartDateArr['id'];
@@ -357,6 +349,10 @@ class ResAppBulkUploadController extends OrderAbstractController
             $expectedGradDateValue = $expectedGradDateArr['val'];
             //$expectedGradDateId = $expectedGradDateArr['id'];
 
+            $middleNameArr = $this->getValueByHeaderName('Middle Name',$row,$headers);
+            $middleNameValue = $middleNameArr['val'];
+            //$middleNameId = $middleNameArr['id'];
+
             $firstNameArr = $this->getValueByHeaderName('First Name',$row,$headers);
             $firstNameValue = $firstNameArr['val'];
             //$firstNameId = $firstNameArr['id'];
@@ -365,14 +361,55 @@ class ResAppBulkUploadController extends OrderAbstractController
             $lastNameValue = $lastNameArr['val'];
             //$lastNameId = $lastNameArr['id'];
 
-            $middleNameArr = $this->getValueByHeaderName('Middle Name',$row,$headers);
-            $middleNameValue = $middleNameArr['val'];
-            //$middleNameId = $middleNameArr['id'];
-
             $emailArr = $this->getValueByHeaderName('Preferred Email',$row,$headers);
             $emailValue = $emailArr['val'];
             $emailValue = strtolower($emailValue);
             //$emailId = $emailArr['id'];
+
+            $residencyApplicationDb = NULL;
+            if( $erasIdValue ) {
+                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+            }
+
+            if( !$residencyApplicationDb ) {
+                //Try to find by aamcId and startDate ("Expected Residency Start Date")
+                $rowArr = array();
+                $rowArr['AAMC ID']['value'] = $erasIdValue;
+                $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
+                $rowArr['Preferred Email']['value'] = $emailValue;
+                $rowArr['Last Name']['value'] = $lastNameValue;
+
+                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+                if( count($duplicateDbResApps) > 0  ) {
+                    $residencyApplicationDb = $duplicateDbResApps[0];
+                }
+            }
+
+            if( $actionValue != "Add" || $residencyApplicationDb ) {
+                echo "Do not add row=$count <br>";
+
+                //Remove eras application PDF document file
+                if( $erasDocument ) {
+                    $inputDataFile->removeErasFile($erasDocument);
+                    $em->remove($erasDocument);
+                    if( !$testing ) {
+                        $em->flush();
+                    }
+                }
+
+                if( $actionValue != "Add" && $residencyApplicationDb ) {
+                    $updatedDataResults[] = "Skip existing residency application (marked as '$actionValue') for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+                }
+                elseif( $residencyApplicationDb ) {
+                    $updatedDataResults[] = "Skip existing residency application for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+
+                }
+                elseif( $actionValue ) {
+                    $updatedDataResults[] = "Skip residency application (marked as '$actionValue') for $firstNameValue $lastNameValue".$issueStr;
+                }
+
+                continue;
+            }
 
             $medSchoolGradDateArr = $this->getValueByHeaderName('Medical School Graduation Date',$row,$headers);
             $medSchoolGradDateValue = $medSchoolGradDateArr['val'];
@@ -613,7 +650,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             }
 
             if( $ethnicGroupValue ) {
-                $residencyApplication->setEthnicity($ethnicGroupValue);
+                $residencyApplication->setEthnicity($ethnicGroupValue); //string
             }
 
             if( $numberFirstAuthorPublicationsValue ) {
@@ -718,15 +755,18 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             if( !$testing ) {
                 $em->flush();
-                echo "Added residency application ID=".$residencyApplication->getId()." <br>";
+
+                $updateInfo = "Added residency application for ".$firstNameValue." ".$lastNameValue." with ID=".$residencyApplication->getId().$issueStr;
+                $updatedDataResults[] = $updateInfo;
+                echo $updateInfo."<br>";
             }
 
-            exit("End of process handsontable. Count=$count");
+            //exit("End of process handsontable. Count=$count");
 
         }//foreach row
 
         if( $testing ) {
-            exit("End of process handsontable. Count=$count");
+            exit("<br><br>End of process handsontable. Count=$count. updatedDataResults=".implode("<br>",$updatedDataResults));
         }
 
         return $updatedDataResults;

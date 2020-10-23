@@ -955,7 +955,7 @@ class ResAppController extends OrderAbstractController {
             $action = null; //$this->generateUrl('resapp_update', array('id' => $entity->getId()));
         }
 
-
+        $ethnicities = $resappUtil->getEthnicities($entity,$cycle); //show
 
         $fullForm = false;
 
@@ -969,7 +969,8 @@ class ResAppController extends OrderAbstractController {
             'resappTypes' => $resTypes,
             'resappVisas' => $resappVisas,
             'fullForm' => $fullForm,
-            'entity' => $entity
+            'entity' => $entity,
+            'ethnicities' => $ethnicities
         );
 
         //echo "routeName=$routeName;  action=$action; method=$method<br>";
@@ -1421,6 +1422,8 @@ class ResAppController extends OrderAbstractController {
 
         $resappVisas = $resappUtil->getResidencyVisaStatuses(false,false);
 
+        $ethnicities = $resappUtil->getEthnicities($entity,$cycle); //Edit
+
         $fullForm = false;
 
         $params = array(
@@ -1433,7 +1436,8 @@ class ResAppController extends OrderAbstractController {
             'cycle_type' => "update",
             'resappTypes' => $resTypes,
             'resappVisas' => $resappVisas,
-            'fullForm' => $fullForm
+            'fullForm' => $fullForm,
+            'ethnicities' => $ethnicities
         );
         //Edit Form
         $form = $this->createForm( ResidencyApplicationType::class, $entity, array(
@@ -1631,6 +1635,8 @@ class ResAppController extends OrderAbstractController {
             return array();
         }
 
+        $ethnicities = $resappUtil->getEthnicities($residencyApplication,'new');
+
         $params = array(
             'cycle' => 'new',
             'em' => $this->getDoctrine()->getManager(),
@@ -1639,7 +1645,8 @@ class ResAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'resappTypes' => $resTypes,
-            'resappVisas' => $resappVisas
+            'resappVisas' => $resappVisas,
+            'ethnicities' => $ethnicities
 
         );
         //$form = $this->createForm( new ResidencyApplicationType($params), $residencyApplication );

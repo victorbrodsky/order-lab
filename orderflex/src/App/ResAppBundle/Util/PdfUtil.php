@@ -270,6 +270,8 @@ class PdfUtil {
                                     }
                                     $cellValue = $resEndDateFull;
                                 }
+
+                                //TODO: Is the applicant a member of any of the following groups?
                             }
 
                             $rowArr[$handsomTitle]['id'] = 1;

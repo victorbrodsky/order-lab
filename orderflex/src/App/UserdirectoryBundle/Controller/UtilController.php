@@ -1539,8 +1539,7 @@ class UtilController extends OrderAbstractController {
         $response->setContent(json_encode($output));
         return $response;
     }
-
-
+    
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
         //$filterType = array('default'); //change to array('default','user-added')

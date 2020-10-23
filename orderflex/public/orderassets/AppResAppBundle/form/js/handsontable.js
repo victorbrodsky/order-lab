@@ -35,6 +35,9 @@ var _rowToProcessArr = [];
 var _residencytracks = [];
 var _residencytracks_simple = [];
 
+var _ethnicities = [];
+var _ethnicities_simple = [];
+
 var _actions_simple = [];
 
 //var _tdSize = 64;
@@ -43,81 +46,8 @@ var _tdSize = 36;
 var _tdPadding = 5;
 var _rowHeight =  _tdSize + 2*_tdPadding;
 
-//from: http://past.handsontable.com/demo/renderers_html.html
-// var imageRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-//     var escaped = Handsontable.helper.stringify(value),
-//         img;
-//
-//     if (escaped.indexOf('http') === 0) {
-//         img = document.createElement('IMG');
-//
-//         img.src = value;
-//         img.height = _tdSize;
-//         img.width = _tdSize;
-//         //img.margin = "5px 5px 5px 5px";
-//         //img.style.cssText = "margin: 5px;";
-//         img.style.marginTop = "5px";
-//         img.style.marginBottom = "5px";
-//
-//         // Handsontable.dom.addEvent(img, 'mousedown', function (e){
-//         //     e.preventDefault(); // prevent selection quirk
-//         // });
-//
-//         $(td).html(null);
-//         //$(td).text(null);
-//
-//         //Handsontable.dom.empty(td);
-//         td.appendChild(img);
-//     }
-//     else {
-//         // render as text
-//         Handsontable.renderers.TextRenderer.apply(this, arguments);
-//     }
-//
-//     return td;
-// };
-
-// var canvasRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-//     var escaped = Handsontable.helper.stringify(value),
-//         canvas;
-//
-//     if (escaped.indexOf('http') === 0) {
-//         canvas = document.createElement('CANVAS');
-//
-//         //canvas.src = value;
-//         canvas.height = _tdSize;
-//         canvas.width = _tdSize;
-//         //img.margin = "5px 5px 5px 5px";
-//         //img.style.cssText = "margin: 5px;";
-//         //canvas.style.marginTop = "5px";
-//         //canvas.style.marginBottom = "5px";
-//
-//         canvas.id = "canvas-"+row+"-"+col;
-//
-//         // Handsontable.dom.addEvent(img, 'mousedown', function (e){
-//         //     e.preventDefault(); // prevent selection quirk
-//         // });
-//
-//         $(td).html(null);
-//         //$(td).text(null);
-//
-//         //Handsontable.dom.empty(td);
-//         td.appendChild(canvas);
-//     }
-//     else {
-//         // render as text
-//         Handsontable.renderers.TextRenderer.apply(this, arguments);
-//     }
-//
-//     return td;
-// };
-
 //total 33
 var _columnData_scanorder = [];
-
-//$(document).ready(function() {
-//
-//});
 
 function getResidencytracks() {
 
@@ -141,9 +71,23 @@ function getResidencytracks() {
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
-            async: asyncflag
+            async: false //asyncflag
         }).done(function(data) {
             _residencytracks = data;
+        });
+    }
+}
+function getResidencyEthnicities() {
+    var url = Routing.generate('resapp_get_ethnicities');
+    //console.log("run url="+url);
+
+    if( _ethnicities.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: false //asyncflag
+        }).done(function(data) {
+            _ethnicities = data;
         });
     }
 }
@@ -157,44 +101,81 @@ function ajaxFinishedCondition() {
     //     //console.log('NULL _residencytracks.length='+_residencytracks.length);
     // }
 
+    var done = 0;
+
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Add");
         _actions_simple.push("Do not add");
         //_actions_simple.push(null);
-    }
 
+        done++;
+    }
 
     if( _residencytracks.length > 0 ) {
 
         if(
             _residencytracks_simple.length >= _residencytracks.length
         ) {
-            return true;
-        }
-
-        _residencytracks_simple.push(""); //add default empty residency track
-        for(var i = 0; i < _residencytracks.length; i++) {
-            var residencytrackName = _residencytracks[i].text;
-            if(  _residencytracks[i].abbreviation ) {
-                residencytrackName = _residencytracks[i].abbreviation;
+            //return true;
+            done++;
+        } else {
+            _residencytracks_simple.push(""); //add default empty residency track
+            for(var i = 0; i < _residencytracks.length; i++) {
+                var residencytrackName = _residencytracks[i].text;
+                if(  _residencytracks[i].abbreviation ) {
+                    residencytrackName = _residencytracks[i].abbreviation;
+                }
+                //console.log('residencytrackName='+residencytrackName);
+                _residencytracks_simple.push(residencytrackName);
             }
-            //console.log('residencytrackName='+residencytrackName);
-            _residencytracks_simple.push(residencytrackName);
-        }
-        //console.log("_residencytracks_simple:");
-        //console.log(_residencytracks_simple);
+            //console.log("_residencytracks_simple:");
+            //console.log(_residencytracks_simple);
 
-        return true;
+            //return true;
+            done++;
+        }
+
     } else {
-        return false;
+        //return false;
     }
+
+
+    if( _ethnicities.length > 0 ) {
+
+        if(
+            _ethnicities_simple.length >= _ethnicities.length
+        ) {
+            //return true;
+            done++;
+        } else {
+            _ethnicities_simple.push(""); //add default empty _ethnicities
+            for(var i = 0; i < _ethnicities.length; i++) {
+                var ethnicityName = _ethnicities[i];
+                //console.log('ethnicityName='+ethnicityName);
+                _ethnicities_simple.push(ethnicityName);
+            }
+            //console.log("_ethnicities_simple:");
+            //console.log(_ethnicities_simple);
+
+            //return true;
+            done++;
+        }
+    } else {
+        //return false;
+    }
+
+    if( done >= 3 ) {
+        return true;
+    }
+
+    return false;
 }
 
 function resappMakeColumnData() {
 
     var defaultActionIndex = 0;
-
-    var defaultResidencytrackIndex = 0;
+    var defaultResidencytrackIndex = 1;
+    var defaultEthnicityIndex = 0;
     //var defaultResidencytrack = $('#default-accession-type').val();
     //console.log("Residencytrack="+Residencytrack);
     // if( Residencytrack ) {
@@ -252,7 +233,19 @@ function resappMakeColumnData() {
         { header:'USMLE Step 3 Score', columns:{} },
         { header:'Country of Citizenship', columns:{} },
         { header:'Visa Status', columns:{} },
-        { header:'Is the applicant a member of any of the following groups?', columns:{} },
+
+        // { header:'Is the applicant a member of any of the following groups?', columns:{} },
+        {
+            header:'Is the applicant a member of any of the following groups?',
+            default: defaultEthnicityIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _ethnicities_simple,
+                strict: false,
+                filter: false,
+            }
+        },
+
         { header:'Number of first author publications', columns:{} },
         { header:'Number of all publications', columns:{} },
         { header:'AOA', columns:{} },

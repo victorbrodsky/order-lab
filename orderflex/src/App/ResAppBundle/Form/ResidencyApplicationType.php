@@ -53,6 +53,17 @@ class ResidencyApplicationType extends AbstractType
 //            }
 //        }
         //exit();
+
+        if( !isset($this->params['ethnicities']) ) {
+            $this->params['ethnicities'] = array(
+                "Black or African American" => "Black or African American",
+                "Hispanic or Latino" => "Hispanic or Latino",
+                "American Indian or Alaska Native" => "American Indian or Alaska Native",
+                "Native Hawaiian and other Pacific Islander" => "Native Hawaiian and other Pacific Islander",
+                "Unknown" => "Unknown",
+                "None" => "None"
+            );
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -478,18 +489,10 @@ class ResidencyApplicationType extends AbstractType
 //            "Unknown" => "Unknown"
 //        );
         //Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
-        $ethnicities = array(
-            "Black or African American" => "Black or African American",
-            "Hispanic or Latino" => "Hispanic or Latino",
-            "American Indian or Alaska Native" => "American Indian or Alaska Native",
-            "Native Hawaiian and other Pacific Islander" => "Native Hawaiian and other Pacific Islander",
-            "Unknown" => "Unknown",
-            "None" => "None"
-        );
         $builder->add('ethnicity', ChoiceType::class, array(
             'label' => 'Is the applicant a member of any of the following groups?:',
             'required' => false,
-            'choices' => $ethnicities,
+            'choices' => $this->params['ethnicities'],
             'attr' => array('class' => 'combobox'),
         ));
 

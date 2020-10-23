@@ -2192,4 +2192,39 @@ class ResAppUtil {
     public function getResappByResidencyTrack($residencyTypeId) {
         return $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyTypeId);
     }
+
+    public function getEthnicities( $entity=NULL, $cycle=NULL ) {
+//        $ethnicities = array(
+//            "Black or African American" => "Black or African American",
+//            "Hispanic or Latino" => "Hispanic or Latino",
+//            "American Indian or Alaska Native" => "American Indian or Alaska Native",
+//            "Native Hawaiian and other Pacific Islander" => "Native Hawaiian and other Pacific Islander",
+//            "Unknown" => "Unknown",
+//            "None" => "None"
+//        );
+        $ethnicities = array();
+        foreach( $this->getDefaultEthnicitiesArray() as $ethnicity ) {
+            $ethnicities[] = array($ethnicity => $ethnicity);
+        }
+
+        //add from $entity
+        $ethnicityStr = $entity->getEthnicity();
+        if( $ethnicityStr ) {
+            $ethnicities[] = array($ethnicityStr => $ethnicityStr);
+        }
+
+        return $ethnicities;
+    }
+    public function getDefaultEthnicitiesArray() {
+        $ethnicities = array(
+            "Black or African American",
+            "Hispanic or Latino",
+            "American Indian or Alaska Native",
+            "Native Hawaiian and other Pacific Islander",
+            "Unknown",
+            "None"
+        );
+
+        return $ethnicities;
+    }
 } 

@@ -83,4 +83,18 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/ethnicities", name="resapp_get_ethnicities", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getEthnicitiesAction(Request $request) {
+
+        $resappUtil = $this->container->get('resapp_util');
+        $ethnicities = $resappUtil->getDefaultEthnicitiesArray();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($ethnicities));
+        return $response;
+    }
+
 }
