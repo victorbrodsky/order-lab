@@ -438,7 +438,9 @@ class PdfUtil {
             "USMLE Step 3 Score" => "USMLE Step 3 Score",
 
             "Country of Citizenship" => "Citizenship",
-            "Visa Status" => "Current Visa Status",
+            //"Visa Status" => "Current Visa Status",
+            "Visa Status" => "Current Work Authorization",
+
 
             "Is the applicant a member of any of the following groups?" => "Self Identify",
 
