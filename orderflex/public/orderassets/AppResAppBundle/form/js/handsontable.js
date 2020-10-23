@@ -106,6 +106,7 @@ function ajaxFinishedCondition() {
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Do not add");
         _actions_simple.push("Add");
+        _actions_simple.push("Update PDF");
         //_actions_simple.push(null);
 
         done++;

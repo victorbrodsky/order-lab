@@ -78,6 +78,139 @@ class PdfUtil {
         $this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
     }
 
+    public function getExistingApplicationsByPdf( $pdfFiles ) {
+        $handsomtableJsonData = array();
+
+        foreach($pdfFiles as $pdfFile) {
+
+            $residencyApplicationDb = NULL;
+            $erasApplicantId = NULL;
+
+            $originalFileName = $pdfFile->getOriginalname();
+            //echo "originalFileName=$originalFileName <br>";
+            if( $originalFileName ) {
+                //Correct file name notation "...aid=12345678.pdf"
+                if(
+                    //strpos($originalFileName, 'ApplicantID=') !== false ||
+                    //strpos($originalFileName, 'AID=') !== false ||
+                    strpos($originalFileName, 'aid') !== false
+                ) {
+                    $originalFileNameSplit = explode('aid',$originalFileName);
+                    if( count($originalFileNameSplit) > 0 ) {
+                        $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
+                        $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
+                        //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
+//                        $aidSplit = explode('_',$aidPart);
+//                        if( count($aidSplit) > 0 ) {
+//                            $erasApplicantId = $aidSplit[0];
+//                        } else {
+//                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
+//                            if( count($aidSplit) > 0 ) {
+//                                $erasApplicantId = $aidSplit[0];
+//                            }
+//                        }
+                        //echo "filename erasApplicantId=$erasApplicantId <br>";
+                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
+                    }
+                }
+            }
+
+            if( !$residencyApplicationDb ) {
+                $pdfText = NULL;
+                $pdfFilePath = $pdfFile->getFullServerPath();
+                if ($pdfFilePath) {
+                    $pdfText = $this->extractPdfText($pdfFilePath);
+                    //if ($pdfText) {
+                    //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
+                    //}
+                }
+
+                if ($pdfText) {
+                    $keyExistCount = 0;
+                    $totalCount = 0;
+
+                    $extractedErasApplicantID = $this->getSingleKeyField($pdfText, 'Applicant ID:');
+                    //echo "erasApplicantID=$extractedErasApplicantID <br>";
+                    if ($extractedErasApplicantID) {
+                        //find resapp by Applicant ID
+                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
+                    }
+
+                    $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
+                    //echo "aamcID=$aamcID <br>";
+                    if ($aamcID) {
+                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
+                    }
+
+                }
+            }
+
+            if( $residencyApplicationDb ) {
+                //Construct $handsomtableJsonData
+
+//                "Application Receipt Date" => "Applicant Applied Date",
+//                "Application Season Start Date" => "Applicant Applied Date",
+//                "Application Season End Date" => "Applicant Applied Date",
+//                "Expected Residency Start Date" => "Applicant Applied Date",
+//                "Expected Graduation Date" => "Applicant Applied Date",
+//
+//                "First Name" => "First Name",
+//                "Middle Name" => "Middle Name",
+//                "Last Name" => "Last Name",
+//
+//                "Preferred Email" => "E-mail",
+
+                $rowArr = array();
+
+                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
+                if( !$thisErasApplicantId ) {
+                    $thisErasApplicantId = $erasApplicantId;
+                }
+
+                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
+
+                $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
+                $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
+
+                $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+                $rowArr['ERAS Application']['id'] = $pdfFile->getId();
+
+                //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
+                //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
+
+                $applicantUser = $residencyApplicationDb->getUser();
+
+                $rowArr["Preferred Email"]['value'] = $applicantUser->getEmail();
+                $rowArr["Preferred Email"]['id'] = $applicantUser->getId();
+
+                $rowArr["First Name"]['value'] = $applicantUser->getFirstName();
+                $rowArr["First Name"]['id'] = $applicantUser->getId();
+
+                $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
+                $rowArr["Last Name"]['id'] = $applicantUser->getId();
+
+                $rowArr['Issue']['value'] = "Update PDF only, CSV is not provided";
+                $rowArr['Issue']['id'] = $residencyApplicationDb->getId();
+                
+                //change the value in the “Action” column to “Do not add”
+                $rowArr['Action']['value'] = "Update PDF";
+                $rowArr['Action']['id'] = $residencyApplicationDb->getId();
+
+                $handsomtableJsonData[] = $rowArr;
+            }
+        }
+
+        if( count($handsomtableJsonData) == 0 ) {
+            $handsomtableJsonData = "No match of existing residency applications and provided PDF files are found";
+        }
+
+        //dump($handsomtableJsonData);
+        //exit('111');
+
+        return $handsomtableJsonData;
+    }
+
 
     public function getCsvApplicationsData( $csvFileName, $pdfFiles ) {
 
@@ -601,9 +734,13 @@ class PdfUtil {
         //B- By Preferred e-mail + Expected Residency Start Date, and lastly, separately
         //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
         $aamcId = $rowArr['AAMC ID']['value'];
-        $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
         $lastName = $rowArr['Last Name']['value'];
+
+        $expectedResidencyStartDate = NULL;
+        if( isset($rowArr['Expected Residency Start Date']) ) {
+            $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
+        }
 
         $erasApplicantId = NULL;
         if( isset($rowArr['ERAS Application ID']) ) {
@@ -616,21 +753,29 @@ class PdfUtil {
         $dql->leftJoin('resapp.user','user');
         $dql->leftJoin('user.infos','infos');
         $dql->where("resapp.aamcId = :aamcId");
-        if( $erasApplicantId ) {
-            $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
-        }
-        $dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
         $dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
         $dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
         $dql->orderBy("resapp.id","DESC");
 
+        if( $erasApplicantId ) {
+            $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
+        }
+        if( $expectedResidencyStartDate) {
+            $dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
+        }
+
         $query = $this->em->createQuery($dql);
         //$query->setMaxResults(10);
-        $query->setParameter('aamcId', $aamcId);
+        
         if( $erasApplicantId ) {
             $query->setParameter('erasApplicantId', $erasApplicantId);
         }
-        $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
+
+        if( $expectedResidencyStartDate) {
+            $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
+        }
+
+        $query->setParameter('aamcId', $aamcId);
         $query->setParameter('userInfoEmail', "'".$email."'");
         $query->setParameter('userInfoLastName', "'".$lastName."'");
         $resapps = $query->getResult();

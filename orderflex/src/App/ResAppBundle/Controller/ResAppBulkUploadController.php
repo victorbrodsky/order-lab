@@ -122,7 +122,20 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
                 //dump($pdfFilePaths);
 
-                $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName, $pdfFiles);
+                if( $inputFileName || count($pdfFiles) > 0 ) {
+                    if ($inputFileName) {
+                        $handsomtableJsonData = $resappPdfUtil->getCsvApplicationsData($inputFileName, $pdfFiles);
+                    } else {
+                        if (count($pdfFiles) > 0) {
+                            //Link existed applications in DB with provided PDF files
+                            $handsomtableJsonData = $resappPdfUtil->getExistingApplicationsByPdf($pdfFiles);
+                        } else {
+                            $handsomtableJsonData = "PDF file(s) missing";
+                        }
+                    }
+                } else {
+                    $handsomtableJsonData = "CSV or PDF file(s) are missing";
+                }
 
                 if (!is_array($handsomtableJsonData)) {
 
@@ -367,51 +380,6 @@ class ResAppBulkUploadController extends OrderAbstractController
             $emailValue = strtolower($emailValue);
             //$emailId = $emailArr['id'];
 
-            $residencyApplicationDb = NULL;
-            if( $erasIdValue ) {
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
-            }
-
-            if( !$residencyApplicationDb ) {
-                //Try to find by aamcId and startDate ("Expected Residency Start Date")
-                $rowArr = array();
-                $rowArr['AAMC ID']['value'] = $erasIdValue;
-                $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
-                $rowArr['Preferred Email']['value'] = $emailValue;
-                $rowArr['Last Name']['value'] = $lastNameValue;
-
-                $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
-                if( count($duplicateDbResApps) > 0  ) {
-                    $residencyApplicationDb = $duplicateDbResApps[0];
-                }
-            }
-
-            if( $actionValue != "Add" || $residencyApplicationDb ) {
-                echo "Do not add row=$count <br>";
-
-                //Remove eras application PDF document file
-                if( $erasDocument ) {
-                    $inputDataFile->removeErasFile($erasDocument);
-                    $em->remove($erasDocument);
-                    if( !$testing ) {
-                        $em->flush();
-                    }
-                }
-
-                if( $actionValue != "Add" && $residencyApplicationDb ) {
-                    $updatedDataResults[] = "Skip existing residency application (marked as '$actionValue') for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
-                }
-                elseif( $residencyApplicationDb ) {
-                    $updatedDataResults[] = "Skip existing residency application for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
-
-                }
-                elseif( $actionValue ) {
-                    $updatedDataResults[] = "Skip residency application (marked as '$actionValue') for $firstNameValue $lastNameValue".$issueStr;
-                }
-
-                continue;
-            }
-
             $medSchoolGradDateArr = $this->getValueByHeaderName('Medical School Graduation Date',$row,$headers);
             $medSchoolGradDateValue = $medSchoolGradDateArr['val'];
             //$medSchoolGradDateId = $medSchoolGradDateArr['id'];
@@ -438,6 +406,87 @@ class ResAppBulkUploadController extends OrderAbstractController
             $usmle3Arr = $this->getValueByHeaderName('USMLE Step 3 Score',$row,$headers);
             $usmle3Value = $usmle3Arr['val'];
             //$usmle3Id = $usmle3Arr['id'];
+
+            $residencyApplicationDb = NULL;
+            if( $erasIdValue ) {
+                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+            }
+
+            if( !$residencyApplicationDb ) {
+                //Try to find by aamcId and startDate ("Expected Residency Start Date")
+                $rowArr = array();
+                $rowArr['AAMC ID']['value'] = $erasIdValue;
+                $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
+                $rowArr['Preferred Email']['value'] = $emailValue;
+                $rowArr['Last Name']['value'] = $lastNameValue;
+
+                $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
+                if( count($duplicateDbResApps) > 0  ) {
+                    $residencyApplicationDb = $duplicateDbResApps[0];
+                }
+            }
+
+            if( $actionValue == "Update PDF" ) {
+
+                if( !$residencyApplicationDb ) {
+                    $updateInfo = "Skip updating existing residency application (ERAS Applicant ID $erasIdValue) PDF for " .
+                        $firstNameValue . " " . $lastNameValue . " with odrer ID=" . $residencyApplicationDb->getId() . $issueStr.
+                    ". ERROR: Existing application not found.";
+                    $updatedDataResults[] = $updateInfo;
+                    continue;
+                }
+
+                $reasppUpdated = false;
+                //Update PDF only
+                if ($erasDocument) {
+                    $residencyApplicationDb->addCoverLetter($erasDocument);
+                    $reasppUpdated = true;
+                }
+                //update $erasIdValue if null
+                if ($erasIdValue && !$residencyApplicationDb->getErasApplicantId()) {
+                    $residencyApplicationDb->setErasApplicantId($erasIdValue);
+                    $reasppUpdated = true;
+                }
+
+                if ($reasppUpdated) {
+                    if (!$testing) {
+                        $em->flush();
+
+                        $updateInfo = "Updated existing residency application (ERAS Applicant ID $erasIdValue) PDF for " .
+                            $firstNameValue . " " . $lastNameValue . " with odrer ID=" . $residencyApplicationDb->getId() . $issueStr;
+                        $updatedDataResults[] = $updateInfo;
+                        echo $updateInfo . "<br>";
+                    }
+                }
+
+                continue;
+            }
+
+            if( $actionValue == "Do not add" || $residencyApplicationDb ) {
+                echo "Do not add row=$count <br>";
+
+                //Remove eras application PDF document file
+                if( $erasDocument ) {
+                    $inputDataFile->removeErasFile($erasDocument);
+                    $em->remove($erasDocument);
+                    if( !$testing ) {
+                        $em->flush();
+                    }
+                }
+
+                if( $actionValue == "Do not add" && $residencyApplicationDb ) {
+                    $updatedDataResults[] = "Skip existing residency application (marked as '$actionValue') for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+                }
+                elseif( $residencyApplicationDb ) {
+                    $updatedDataResults[] = "Skip existing residency application for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+
+                }
+                elseif( $actionValue ) {
+                    $updatedDataResults[] = "Skip residency application (marked as '$actionValue') for $firstNameValue $lastNameValue".$issueStr;
+                }
+
+                continue;
+            } //action != Add
 
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
             $countryCitizenshipValue = $countryCitizenshipArr['val'];
@@ -498,6 +547,22 @@ class ResAppBulkUploadController extends OrderAbstractController
             $previousResidencyTrackArr = $this->getValueByHeaderName('Previous Residency Track',$row,$headers);
             $previousResidencyTrackValue = $previousResidencyTrackArr['val']; //Not in CSV file
             //$previousResidencyTrackId = $previousResidencyTrackArr['id'];
+
+            //Do no create if some key fields are missing
+            if( !$medSchoolNameValue ) {
+                $updateInfo = "Skip adding existing residency application PDF for " .
+                    $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing Medical School.";
+                $updatedDataResults[] = $updateInfo;
+                continue;
+            }
+            if( !$usmle1Value ) {
+                $updateInfo = "Skip adding existing residency application PDF for " .
+                    $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing USMLE Score Step 1.";
+                $updatedDataResults[] = $updateInfo;
+                continue;
+            }
 
             ///////////////// Create new user or get the existed user //////////////////////
             $userArr = array(
