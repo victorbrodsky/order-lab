@@ -104,8 +104,8 @@ function ajaxFinishedCondition() {
     var done = 0;
 
     if( _actions_simple.length == 0 ) {
-        _actions_simple.push("Add");
         _actions_simple.push("Do not add");
+        _actions_simple.push("Add");
         //_actions_simple.push(null);
 
         done++;

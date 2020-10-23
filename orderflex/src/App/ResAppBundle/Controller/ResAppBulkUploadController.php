@@ -190,6 +190,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
 
         $logger = $this->container->get('logger');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -281,7 +282,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $count = 0;
 
         foreach( $data["row"] as $row ) {
@@ -379,7 +380,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $rowArr['Preferred Email']['value'] = $emailValue;
                 $rowArr['Last Name']['value'] = $lastNameValue;
 
-                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+                $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
                     $residencyApplicationDb = $duplicateDbResApps[0];
                 }

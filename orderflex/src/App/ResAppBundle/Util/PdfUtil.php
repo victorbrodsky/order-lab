@@ -302,8 +302,13 @@ class PdfUtil {
                     $rowArr["Birth Date"]['value'],
                     $rowArr["USMLE ID"]['value'],
                     //$rowArr["NBOME ID"]['value'], //might be null
-                    $rowArr["NRMP ID"]['value'],
+                    //$rowArr["NRMP ID"]['value'],
                 );
+
+                if( isset($rowArr["NRMP ID"]) && isset($rowArr["NRMP ID"]['value']) ) {
+                    $keysArr[] = $rowArr["NRMP ID"]['value'];
+                }
+
                 //echo $rowArr["Preferred Email"]['value'].": Birth Date=".$rowArr["Birth Date"]['value']."<br>";
 //                $pdfPath = $this->findPdf($pdfFilePaths,$keysArr);
 //                if( $pdfPath ) {
