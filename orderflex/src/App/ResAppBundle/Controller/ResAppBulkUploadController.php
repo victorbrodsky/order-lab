@@ -831,6 +831,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         }//foreach row
 
+        //TODO: add generate application in PDF
+
         if( $testing ) {
             exit("<br><br>End of process handsontable. Count=$count. updatedDataResults=".implode("<br>",$updatedDataResults));
         }

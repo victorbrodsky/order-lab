@@ -204,22 +204,40 @@
 
                     {{ formmacros.field(form.fundedAccountNumber) }}
 
-                    {{ formmacros.field(form.description) }}
+                    {{ formmacros.field(form.description)|raw }}
 
-                    {{ formmacros.field(form.budgetSummary) }}
+                    {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
+                    {% if form.budgetSummary is defined %}
+                        {{ formmacros.field(form.budgetSummary) }}
 
-                    {{ formmacros.field(form.hypothesis) }}
-                    {{ formmacros.field(form.objective) }}
-                    {{ formmacros.field(form.expectedResults) }}
+                        {{ formmacros.field(form.hypothesis) }}
+                        {{ formmacros.field(form.objective) }}
+                        {{ formmacros.field(form.expectedResults) }}
 
-                    {{ formmacros.field(form.numberOfCases) }}
-                    {{ formmacros.field(form.numberOfCohorts) }}
+                        {{ formmacros.field(form.numberOfCases) }}
+                        {{ formmacros.field(form.numberOfCohorts) }}
 
-                    {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
+                        {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
+                    {% endif %}
+                    {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
 
                     {{ formmacros.field(form.totalCost) }}
 
+                    {{ transres.projectDocument(form,project,cycle) }}
 
+                    {% if cycle != "new" %}
+                        {% set projectMergeInfo = project.mergeHiddenFields() %}
+                        {% if projectMergeInfo %}
+                            {{ formmacros.simplefield( "Previously used in the project fields (currently hidden):", projectMergeInfo, "", "disabled" ) }}
+                        {% endif %}
+
+                        {% if project.expectedCompletionDate %}
+                            <p>
+                                {#{{ project.expectedCompletionDate|date('m/d/Y') }}#}
+                                {{ formmacros.simplefield( "Expected Completion Date:", project.expectedCompletionDate|date('m/d/Y'), "", "disabled" ) }}
+                            </p>
+                        {% endif %}
+                    {% endif %}
 
                 </div>
             </div>
@@ -227,8 +245,6 @@
     </div>
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
-
-    {{ transres.projectDocument(form,project,cycle) }}
 
 {% endmacro %}
 

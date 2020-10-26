@@ -638,4 +638,58 @@ class DefaultController extends OrderAbstractController
         );
     }
 
+    /**
+     * NOT USED: use project->getDescription() to add mergeInfo
+     * http://127.0.0.1/order/translational-research/merge-project-info
+     *
+     * @Route("/merge-project-info", name="translationalresearch_merge-project-info")
+     */
+    public function mergeProjectInfoAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        exit("mergeProjectInfoAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $logger = $this->container->get('logger');
+
+        $projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        echo "projects=".count($projects)."<br>";
+
+        $newline = "\n";
+        $count = 0;
+        $countUpdated = 0;
+
+        foreach($projects as $project) {
+            $count++;
+
+            if( $count > 10 ) {
+                break;
+            }
+
+            $mergeInfo = $project->mergeHiddenFields();
+            if($mergeInfo) {
+                $description = $project->getDescription();
+
+                //$description = $description . "<br><br>" . "Previously used in the project fields (currently hidden):<br>" . $mergeInfo;
+                $description = $description . $newline.$newline.
+                    "-------------------------------------------------- " .
+                    $newline .
+                    "Previously used in the project fields (currently hidden):" .
+                    $newline . $mergeInfo;
+
+                $project->setDescription($description);
+                echo $project->getId().": Desciption: ".$description."<br>";
+
+                $msg = $project->getId().": updated mergeInfo=" . $mergeInfo . "<br>";
+                echo "<br>".$msg."<br>";
+                //$logger->notice($msg);
+                //$em->flush();
+                $countUpdated++;
+            }
+        }
+
+        exit("mergeProjectInfoAction: processed projects=$count, updated projects=".$countUpdated);
+    }
 }

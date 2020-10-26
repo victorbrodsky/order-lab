@@ -308,11 +308,6 @@ class Project {
     private $description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $budgetSummary;
-
-    /**
      * integer only
      *
      * @ORM\Column(type="string", nullable=true)
@@ -349,6 +344,16 @@ class Project {
      */
     private $iacucNumber;
 
+    ///////////////// Hide 7 fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
+    //Hide fields: $budgetSummary, $hypothesis, $hypothesis, $objective, $numberOfCases, $numberOfCohorts, $expectedResults, $expectedCompletionDate
+    //These fields will be replaced by a PDF form included to the project to the Project Documents section
+    //$expectedCompletionDate will be set automatically to 1 year after project approval date, after that date the project will change the status to "closed"
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $budgetSummary;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -378,6 +383,7 @@ class Project {
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $expectedCompletionDate;
+    ///////////////// EOF Hide the fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
 
 
     //Tissue Request Details
@@ -786,6 +792,21 @@ class Project {
     public function getDescription()
     {
         return $this->description;
+
+//        $description = $this->description;
+//        if( strpos($description, 'Previously used in the project fields (currently hidden)') === false ) {
+//            $mergeInfo = $this->mergeHiddenFields();
+//            if( $mergeInfo ) {
+//                $newline = "\n";
+//                //$newline = "<br>";
+//                $description = $description . $newline.$newline.
+//                    "-------------------------------------------------- " .
+//                    $newline .
+//                    "Previously used in the project fields (currently hidden):" .
+//                    $newline . $mergeInfo;
+//            }
+//        }
+//        return $description;
     }
 
     /**
@@ -2035,6 +2056,64 @@ class Project {
         }
 
         return $info;
+    }
+
+    public function mergeHiddenFields() {
+
+        $mergeInfo = NULL;
+        $separator = "\n";
+        //$separator = "<br>";
+
+        if( $this->getBudgetSummary() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Budget Summary: " . $this->getBudgetSummary();
+        }
+
+        if( $this->getHypothesis() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Hypothesis: " . $this->getHypothesis();
+        }
+
+        if( $this->getObjective() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Objective: " . $this->getObjective();
+        }
+
+        if( $this->getExpectedResults() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Expected Results: " . $this->getExpectedResults();
+        }
+
+        if( $this->getNumberOfCases() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Number of Cases: " . $this->getNumberOfCases();
+        }
+
+        if( $this->getNumberOfCohorts() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Number of Cohorts: " . $this->getNumberOfCohorts();
+        }
+
+        if( $this->getExpectedCompletionDate() ) {
+            if( $mergeInfo ) {
+                $mergeInfo = $mergeInfo . $separator;
+            }
+            $mergeInfo = $mergeInfo . "Expected Completion Date: " . $this->getExpectedCompletionDate()->format('m/d/Y');;
+        }
+
+        return $mergeInfo;
     }
 
     public function getEntityName() {
