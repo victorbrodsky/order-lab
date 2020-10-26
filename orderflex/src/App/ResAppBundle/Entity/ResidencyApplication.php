@@ -369,6 +369,7 @@ class ResidencyApplication extends BaseUserAttributes {
     /**
      * Ethnicity: yes/no or Yes/No/Unknown
      * Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
+     * Visible only to Admin and Coordinator
      *
      * @ORM\Column(type="string", nullable=true)
      */

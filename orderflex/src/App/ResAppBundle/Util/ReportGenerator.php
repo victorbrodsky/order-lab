@@ -209,62 +209,6 @@ class ReportGenerator {
 
     }
 
-//    //http://www.somacon.com/p395.php
-//    //previously windowsCmdRunAsync
-//    //TODO: can be replaced directly by execInBackground
-//    public function cmdRunAsync($cmd) {
-//
-//        $userServiceUtil = $this->container->get('user_service_utility');
-//        $oExec = $userServiceUtil->execInBackground($cmd);
-//        return $oExec;
-//
-////        $userServiceUtil = $this->container->get('user_service_utility');
-////
-////        if( $userServiceUtil->isWinOs() ) {
-////            //Windows
-////            $oExec = $this->windowsOsCmdRunAsync($cmd);
-////        } else {
-////            //Linux
-////            $oExec = $this->linuxOsCmdRunAsync($cmd);
-////        }
-////
-////        return $oExec;
-//    }
-//    //http://www.somacon.com/p395.php
-//    public function windowsOsCmdRunAsync($cmd) {
-//
-//        //TESTING
-//        //$this->tryRun();
-//        //return;
-//
-//        if( !$cmd ) {
-//            $logger = $this->container->get('logger');
-//            $logger->error("Command to generate PDF report is NULL");
-//            throw new \InvalidArgumentException('Command to generate PDF report is NULL');
-//        }
-//
-//        $oExec = null;
-//        //$WshShell = new \COM("WScript.Shell");
-//        //$oExec = $WshShell->Run($cmd, 0, false);
-//
-//        //$oExec = pclose(popen("start ". $cmd, "r"));
-//        //$oExec = pclose(popen("start /B ". $cmd, "r"));
-//        //$oExec = exec($cmd);
-//
-//        $userServiceUtil = $this->container->get('user_service_utility');
-//        $oExec = $userServiceUtil->execInBackground($cmd);
-//
-//        //$logger = $this->container->get('logger');
-//        //$logger->notice("Windows Cmd Run Sync: oExec=".$oExec);
-//
-//        return $oExec;
-//    }
-//    public function linuxOsCmdRunAsync($cmd) {
-//        $oExec = exec($cmd);
-//        return $oExec;
-//    }
-
-
     
     public function tryRun() {
 

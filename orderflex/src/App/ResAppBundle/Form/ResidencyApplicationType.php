@@ -482,19 +482,16 @@ class ResidencyApplicationType extends AbstractType
         //////////////////////////////////////////////////////////////
 
         //Additional fields
-        //Blacks or African Americans, Hispanics or Latinos, American Indians or Alaska Natives, and Native Hawaiians and other Pacific Islanders
-//        $ethnicities = array(
-//            "Yes" => "Yes",
-//            "No" => "No",
-//            "Unknown" => "Unknown"
-//        );
         //Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
-        $builder->add('ethnicity', ChoiceType::class, array(
-            'label' => 'Is the applicant a member of any of the following groups?:',
-            'required' => false,
-            'choices' => $this->params['ethnicities'],
-            'attr' => array('class' => 'combobox'),
-        ));
+        //Visible only to Admin and Coordinator
+        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+            $builder->add('ethnicity', ChoiceType::class, array(
+                'label' => 'Is the applicant a member of any of the following groups?:',
+                'required' => false,
+                'choices' => $this->params['ethnicities'],
+                'attr' => array('class' => 'combobox'),
+            ));
+        }
 
         $builder->add('firstPublications', null, array(
             'label' => 'Number of 1st author publications:',

@@ -188,7 +188,10 @@ class ResAppApplicantController extends OrderAbstractController {
      */
     public function inviteInterviewersToRateAction(Request $request, $id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR')
+        ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

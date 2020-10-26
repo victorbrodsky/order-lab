@@ -656,7 +656,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * NOT USED: use project->getDescription() to add mergeInfo
+     * NOT USED: use a separate field to show mergeInfo
      * http://127.0.0.1/order/translational-research/merge-project-info
      *
      * @Route("/merge-project-info", name="translationalresearch_merge-project-info")

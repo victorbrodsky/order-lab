@@ -318,7 +318,9 @@
                 {#<label class="col-xs-12 control-label">Other:</label>#}
                 <div class="row withpaddingtop">
                     <div class="col-xs-4">
-                        {{ form_row(form.ethnicity) }}
+                        {% if form.ethnicity is defined %}
+                            {{ form_row(form.ethnicity) }}
+                        {% endif %}
                     </div>
                     <div class="col-xs-4">
                         {{ form_row(form.firstPublications) }}

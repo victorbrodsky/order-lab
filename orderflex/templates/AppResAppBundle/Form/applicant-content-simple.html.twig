@@ -264,7 +264,12 @@
                     {% endfor %}
                 {% endif %}
 
-                {{ formmacros.field(form.ethnicity) }}
+                {% if cycle != "download" %}
+                    {% if form.ethnicity is defined %}
+                        {{ formmacros.field(form.ethnicity) }}
+                    {% endif %}
+                {% endif %}
+
                 {{ formmacros.field(form.firstPublications) }}
                 {{ formmacros.field(form.allPublications) }}
                 {{ formmacros.checkbox(form.aoa) }}
