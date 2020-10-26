@@ -2061,8 +2061,8 @@ class Project {
     public function mergeHiddenFields() {
 
         $mergeInfo = NULL;
-        $separator = "\n";
-        //$separator = "<br>";
+        //$separator = "\n";
+        $separator = "<br>";
 
         if( $this->getBudgetSummary() ) {
             if( $mergeInfo ) {

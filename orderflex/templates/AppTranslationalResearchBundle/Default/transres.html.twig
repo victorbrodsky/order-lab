@@ -228,7 +228,7 @@
                     {% if cycle != "new" %}
                         {% set projectMergeInfo = project.mergeHiddenFields() %}
                         {% if projectMergeInfo %}
-                            {{ formmacros.simplefield( "Previously used in the project fields (currently hidden):", projectMergeInfo, "", "disabled" ) }}
+                            {{ formmacros.simplefield( "Previously used in the project fields (currently hidden):", projectMergeInfo|raw, "", "disabled" ) }}
                         {% endif %}
 
                         {% if project.expectedCompletionDate %}
@@ -434,7 +434,8 @@
     {#</div>#}
 
     <div class="well form-element-holder user-documents">
-        <label class="col-xs-12 control-label">Project Documents</label>
+        <label class="col-xs-12 control-label">Project Documents (TRP New Study intake Form)</label>
+        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form') }}" target="_blank">download the blank form here.</a></p>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
                 {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}

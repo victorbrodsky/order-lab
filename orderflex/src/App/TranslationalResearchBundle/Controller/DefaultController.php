@@ -92,6 +92,23 @@ class DefaultController extends OrderAbstractController
         exit;
     }
 
+    /**
+     * @Route("/download/new-study-intake-form", name="translationalresearch_download_new_study_intake_form")
+     */
+    public function downloadNewStudyIntakeFormAction( Request $request ) {
+
+        $originalname = "trp_new_study_intake_form.pdf";
+
+        //orderassets\AppTranslationalResearchBundle\downloads
+        $abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;
+
+        $size = null;//$document->getSize();
+
+        $downloader = new LargeFileDownloader();
+        $downloader->downloadLargeFile($abspath, $originalname, $size);
+
+        exit;
+    }
 
     /**
      * http://localhost/order/translational-research/import-old-data/0
