@@ -512,14 +512,26 @@ class TrpTest extends WebTestBase
             $crawler->filter('html:contains("Save Draft Project Request")')->count()
         );
     }
-    public function testNewCovid19ProjectAction() {
+//    public function testNewCovid19ProjectAction() {
+//        $this->logIn();
+//        $crawler = $this->client->request('GET', '/translational-research/project/new/covid19');
+//        //$content = $this->client->getResponse()->getContent();
+//        //exit("content=$content");
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("COVID-19 Project Request")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Save Draft Project Request")')->count()
+//        );
+//    }
+    public function testNewMisiProjectAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/project/new/covid19');
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $crawler = $this->client->request('GET', '/translational-research/project/new/misi');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("COVID-19 Project Request")')->count()
+            $crawler->filter('html:contains("MISI Project Request")')->count()
         );
         $this->assertGreaterThan(
             0,
