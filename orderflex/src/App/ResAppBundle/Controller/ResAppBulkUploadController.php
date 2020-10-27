@@ -66,10 +66,14 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
         $resappRepGen = $this->container->get('resapp_reportgenerator');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
         $cycle = 'new';
+        $errorMsg = '';
 
         $inputDataFile = new InputDataFile();
 
@@ -103,6 +107,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 $pdfFilePaths = array();
                 $pdfFiles = array();
+                $pdfFileNames = array();
                 $inputFileName = NULL;
 
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
@@ -117,6 +122,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                     } elseif ($ext == 'pdf') {
                         $pdfFilePaths[] = $file->getFullServerPath();
                         $pdfFiles[] = $file;
+                        $pdfFileNames[] = $file->getOriginalname();
                     }
                 }
 
@@ -141,7 +147,9 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if (!is_array($handsomtableJsonData)) {
 
-                    $this->get('session')->getFlashBag()->add(
+                    $errorMsg = $handsomtableJsonData;
+
+                        $this->get('session')->getFlashBag()->add(
                         'warning',
                         $handsomtableJsonData
                     );
@@ -150,7 +158,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 //remove all documents
-                if(0) {
+                if( count($handsomtableJsonData) == 0 ) {
                     foreach ($inputDataFile->getErasFiles() as $file) {
                         $inputDataFile->removeErasFile($file);
                         $em->remove($file);
@@ -158,6 +166,13 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $em->remove($inputDataFile);
                     $em->flush();
                 }
+
+                //Event Log
+                $eventType = 'Residency Application Bulk Upload';
+                $msg = "Upload and Extract Data: inputFileName=$inputFileName; " .
+                    "pdfFiles=".implode(", ",$pdfFileNames) .
+                    ". Extracted data rows=".count($handsomtableJsonData).". $errorMsg";
+                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
             }
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
                 //exit("Adding Application to be implemented");
@@ -173,22 +188,39 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 //exit("Adding Application to be implemented: ".$updatedStrArr);
 
+                $updatedStr = NULL;
+
                 if( count($updatedStrArr) > 0 ) {
-                    $updatedStr = implode("<br>",$updatedStrArr);
+                    foreach($updatedStrArr as $key=>$valueArr) {
+                        $updatedStr = $updatedStr . $key . ":<br>" . implode(", ",$valueArr) . "<br><br>";
+                    }
+                   //$updatedStr = implode("<br>",$updatedStrArr);
                     $this->get('session')->getFlashBag()->add(
                         'notice',
                         $updatedStr
                     );
                 }
 
-                //async generation
+                //async PDF generation
                 foreach($updatedReasapps as $updatedReasapp) {
                     $resappRepGen->addResAppReportToQueue( $updatedReasapp->getId(), 'overwrite' );
                 }
 
+                //Event Log
+                $eventType = 'Residency Application Bulk Upload';
+                //$updatedStr = implode(", ",$updatedStrArr);
+                $msg = "Added/Upload residency application: $updatedStr";
+                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
+
                 return $this->redirect($this->generateUrl('resapp_home'));
             }
             else {
+
+                //Event Log
+                $eventType = 'Residency Application Bulk Upload';
+                $msg = "Unknown button clicked";
+                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
+
                 exit("Unknown button clicked");
             }
 
@@ -443,10 +475,10 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $actionValue == "Update PDF" ) {
 
                 if( !$residencyApplicationDb ) {
-                    $updateInfo = "Skip updating existing residency application (ERAS Applicant ID $erasIdValue) PDF for " .
-                        $firstNameValue . " " . $lastNameValue . " with odrer ID=" . $residencyApplicationDb->getId() . $issueStr.
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
+                        $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr.
                     ". ERROR: Existing application not found.";
-                    $updatedStrArr[] = $updateInfo;
+                    $updatedStrArr["Skip updating PDF for existing residency application. ERROR: Existing application not found"][] = $updateInfo;
                     continue;
                 }
 
@@ -467,9 +499,9 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $em->flush();
                         $updatedReasapps[] = $residencyApplicationDb;
 
-                        $updateInfo = "Updated existing residency application (ERAS Applicant ID $erasIdValue) PDF for " .
-                            $firstNameValue . " " . $lastNameValue . " with odrer ID=" . $residencyApplicationDb->getId() . $issueStr;
-                        $updatedStrArr[] = $updateInfo;
+                        $updateInfo = "ERAS Applicant ID $erasIdValue for " .
+                            $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr;
+                        $updatedStrArr["Updated PDF for existing residency application"][] = $updateInfo;
                         echo $updateInfo . "<br>";
                     }
                 }
@@ -490,14 +522,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 if( $actionValue == "Do not add" && $residencyApplicationDb ) {
-                    $updatedStrArr[] = "Skip existing residency application (marked as '$actionValue') for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+                    $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
                 }
                 elseif( $residencyApplicationDb ) {
-                    $updatedStrArr[] = "Skip existing residency application for $firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId() . $issueStr;
+                    $updatedStrArr["Skip existing residency application$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
 
                 }
                 elseif( $actionValue ) {
-                    $updatedStrArr[] = "Skip residency application (marked as '$actionValue') for $firstNameValue $lastNameValue".$issueStr;
+                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue";
                 }
 
                 continue;
@@ -565,17 +597,15 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             //Do no create if some key fields are missing
             if( !$medSchoolNameValue ) {
-                $updateInfo = "Skip adding existing residency application PDF for " .
-                    $firstNameValue . " " . $lastNameValue . $issueStr.
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing Medical School.";
-                $updatedStrArr[] = $updateInfo;
+                $updatedStrArr["Skip adding residency application. ERROR: Missing Medical School"][] = $updateInfo;
                 continue;
             }
             if( !$usmle1Value ) {
-                $updateInfo = "Skip adding existing residency application PDF for " .
-                    $firstNameValue . " " . $lastNameValue . $issueStr.
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing USMLE Score Step 1.";
-                $updatedStrArr[] = $updateInfo;
+                $updatedStrArr["Skip adding residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
                 continue;
             }
 
@@ -838,8 +868,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $em->flush();
                 $updatedReasapps[] = $residencyApplication;
 
-                $updateInfo = "Added residency application for ".$firstNameValue." ".$lastNameValue." with ID=".$residencyApplication->getId().$issueStr;
-                $updatedStrArr[] = $updateInfo;
+                $updateInfo = $firstNameValue." ".$lastNameValue." with ID ".$residencyApplication->getId().$issueStr;
+                $updatedStrArr["Added residency application"][] = $updateInfo;
                 echo $updateInfo."<br>";
             }
 
@@ -850,7 +880,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         //TODO: add generate application in PDF
 
         if( $testing ) {
-            exit("<br><br>End of process handsontable. Count=$count. updatedDataResults=".implode("<br>",$updatedStrArr));
+            dump($updatedStrArr);
+            exit("<br><br>End of process handsontable. Count=$count");
         }
 
         $resultArr = array(
