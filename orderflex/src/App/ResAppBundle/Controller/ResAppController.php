@@ -223,7 +223,7 @@ class ResAppController extends OrderAbstractController {
         //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
         $filterform->handleRequest($request);
 
-        $filter = $filterform['filter']->getData();
+        $filter = $filterform['filter']->getData(); //Residency Track
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData();
         $applicationSeasonStartDates = $filterform['applicationSeasonStartDates']->getData();
@@ -318,8 +318,9 @@ class ResAppController extends OrderAbstractController {
         }
 
         //force check: check user role. Change filter according to the user roles
+        echo "filter=".$filter."<br>";
         if( $filter && $resappUtil->hasSameResidencyTypeId($user,$filter) == false ) {
-            //exit('no permission');
+            exit('no permission');
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

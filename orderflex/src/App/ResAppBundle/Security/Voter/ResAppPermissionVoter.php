@@ -77,6 +77,7 @@ class ResAppPermissionVoter extends BasePermissionVoter
     //additional check for resapp permission to access this object: user is Observers/Interviewers or hasSameResidencyTypeId
     public function resappAdditionalCheck($subject,$token) {
         if( is_object($subject) ) {
+            //exit('is_object($subject)');
             $user = $token->getUser();
             $resappUtil = $this->container->get('resapp_util');
             if ($resappUtil->hasResappPermission($user, $subject)) {
@@ -85,6 +86,7 @@ class ResAppPermissionVoter extends BasePermissionVoter
                 return false;
             }
         }
+        //exit('no is_object($subject)');
 
         return true;
     }

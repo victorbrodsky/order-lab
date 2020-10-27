@@ -2145,8 +2145,10 @@ class AdminController extends OrderAbstractController
                     $em->flush();
                 }
 
-                //testing
-                //$this->setInstitutionResidency($entity,$role);
+                //testing or update residency track if not set
+                //if( !$entity->getResidencyTrack() ) {
+                //    $this->setInstitutionResidency($entity, $role);
+                //}
 
                 $resResidencyTrack = $this->resetResidencyTrack($entity,$role);
                 if( $resResidencyTrack ) {
@@ -2320,9 +2322,6 @@ class AdminController extends OrderAbstractController
         $entity->setInstitution($wcmc);
 
         if( strpos($role,'AP') !== false ) {
-            //$AP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP");
-            //$entity->setResidencySubspecialty($AP);
-
             $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
             $entity->setResidencyTrack($residencyAP);
 
@@ -2331,9 +2330,6 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos($role,'CP') !== false ) {
-            //$CP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("CP");
-            //$entity->setResidencySubspecialty($CP);
-
             $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
             $entity->setResidencyTrack($residencyCP);
 
@@ -2342,9 +2338,6 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos($role,'APCP') !== false ) {
-            //$APCP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("AP/CP");
-            //$entity->setResidencySubspecialty($APCP);
-
             $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
             $entity->setResidencyTrack($residencyAPCP);
 
@@ -2353,9 +2346,6 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos($role,'APEXP') !== false ) {
-            //$APEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology AP/EXP");
-            //$entity->setResidencySubspecialty($APEXP);
-
             $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
             $entity->setResidencyTrack($residencyAPEXP);
 
@@ -2364,9 +2354,6 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos($role,'CPEXP') !== false ) {
-            //$CPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName("Pathology CP/EXP");
-            //$entity->setResidencySubspecialty($CPEXP);
-
             $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
             $entity->setResidencyTrack($residencyCPEXP);
 

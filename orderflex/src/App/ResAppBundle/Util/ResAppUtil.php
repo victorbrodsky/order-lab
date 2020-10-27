@@ -461,10 +461,20 @@ class ResAppUtil {
             return true;
         }
 
-        //echo "restypeid=".$restypeid."<br>";
+        echo "restypeid=".$restypeid."<br>";
 
-        foreach( $user->getRoles() as $rolename ) {
+        $userRoles = $user->getRoles();
+        //$userRoles = $this->findUserRolesBySiteAndPartialRoleName($user, 'resapp', 'ROLE_RESAPP_');
+
+        foreach( $userRoles as $rolename ) {
+
+            if (strpos($rolename, 'ROLE_RESAPP_') === false) {
+                //Skip other, not related to resapp roles
+                continue;
+            }
+
             $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
+            echo "roleObject=".$roleObject."<br>";
             if( $roleObject ) {
                 $residencyTrack = $roleObject->getResidencyTrack();
                 if( $residencyTrack ) {
