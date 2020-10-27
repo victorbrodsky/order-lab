@@ -461,7 +461,7 @@ class ResAppUtil {
             return true;
         }
 
-        echo "restypeid=".$restypeid."<br>";
+        //echo "restypeid=".$restypeid."<br>";
 
         $userRoles = $user->getRoles();
         //$userRoles = $this->findUserRolesBySiteAndPartialRoleName($user, 'resapp', 'ROLE_RESAPP_');
@@ -474,11 +474,14 @@ class ResAppUtil {
             }
 
             $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
-            echo "roleObject=".$roleObject."<br>";
+            //echo "roleObject=".$roleObject."<br>";
             if( $roleObject ) {
                 $residencyTrack = $roleObject->getResidencyTrack();
+                //echo "roleObject ResidencyTrack=".$residencyTrack.", ID=".$residencyTrack->getId()."<br>";
                 if( $residencyTrack ) {
                     if( $restypeid == $residencyTrack->getId() ) {
+                        return true;
+                        //Residency track does not required institution
                         //it is safer to check also for residencyTrack's institution is under roleObject's institution
                         if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $residencyTrack->getInstitution() ) ) {
                             return true;

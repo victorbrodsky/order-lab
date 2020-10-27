@@ -60,44 +60,6 @@ class ResAppController extends OrderAbstractController {
     public function indexAction(Request $request) {
         //echo "resapp home <br>";
 
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('resapp_login') );
-//        }
-
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER')    // authenticated (NON anonymous)
-//        ){
-//            return $this->redirect( $this->generateUrl('resapp_login') );
-//        }
-
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
-//            exit('no permission as interviewer: ResidencyApplication');
-//            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") &&
-//            false == $this->get('security.authorization_checker')->isGranted("create","Interview")
-//        ){
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
-
-        //testing
-        //$memory_limit = ini_get('memory_limit');
-        //echo "before memory_limit=$memory_limit <br>";
-
-        //ini_set('memory_limit', '7168M');
-
-        //testing
-        //$memory_limit = ini_get('memory_limit');
-        //echo "before memory_limit=$memory_limit <br>";
-
-
         $route = $request->get('_route');
         //echo "route".$route."<br>";
         //exit();
@@ -318,9 +280,9 @@ class ResAppController extends OrderAbstractController {
         }
 
         //force check: check user role. Change filter according to the user roles
-        echo "filter=".$filter."<br>";
+        //echo "filter=".$filter."<br>";
         if( $filter && $resappUtil->hasSameResidencyTypeId($user,$filter) == false ) {
-            exit('no permission');
+            //exit('no permission');
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

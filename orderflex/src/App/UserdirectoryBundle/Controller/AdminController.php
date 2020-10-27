@@ -2145,11 +2145,10 @@ class AdminController extends OrderAbstractController
                     $em->flush();
                 }
 
-                //testing or update residency track if not set
-                //if( !$entity->getResidencyTrack() ) {
-                //    $this->setInstitutionResidency($entity, $role);
-                //}
+                //testing
+                //$this->setInstitutionResidency($entity, $role);
 
+                //update residency track if not set
                 $resResidencyTrack = $this->resetResidencyTrack($entity,$role);
                 if( $resResidencyTrack ) {
                     $em->flush();
@@ -2366,6 +2365,10 @@ class AdminController extends OrderAbstractController
     public function resetResidencyTrack($entity,$role) {
         //return NULL; //testing
 
+//        if( $role == "ROLE_RESAPP_COORDINATOR_WCM_APCP" ) {
+//            exit("Role $entity has residency track: " . $entity->getResidencyTrack());
+//        }
+
         if( $entity->getResidencyTrack() ) {
             return NULL;
         }
@@ -2382,12 +2385,15 @@ class AdminController extends OrderAbstractController
 
         //$wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         //$entity->setInstitution($wcmc);
+        //echo "role=$role<br>";
+        //exit('111');
 
         if( strpos($role,'_APCP') !== false ) {
             $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
             if( !$residencyAPCP ) {
                 exit("ResidencyTrackList not found: AP/CP");
             }
+            //exit("ResidencyTrackList found: $residencyAPCP");
             $entity->setResidencyTrack($residencyAPCP);
             return $entity;
         }
@@ -5254,121 +5260,6 @@ class AdminController extends OrderAbstractController
 
             $count = $count + 10;
         }
-
-        return round($count/10);
-
-//        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
-//        if( $entities ) {
-        //return -1;
-//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
-//            $query->execute();
-//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
-//            $query->execute();
-//        }
-
-        $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
-
-        try {
-            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
-            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
-        }
-
-        $sheet = $objPHPExcel->getSheet(0);
-        $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
-
-        $lastResidencySpecialtyEntity = null;
-
-        $count = 10;
-        $subcount = 1;
-
-        //for each row in excel
-        for ($row = 2; $row <= $highestRow; $row++){
-            //  Read a row of data into an array
-            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
-                NULL,
-                TRUE,
-                FALSE);
-
-            //echo $row.": ";
-            //var_dump($rowData);
-            //echo "<br>";
-
-            //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
-            $residencySpecialty = $rowData[0][0];
-            $fellowshipSubspecialty = $rowData[0][1];
-            $boardCertificationAvailable = $rowData[0][2];
-            //echo "residencySpecialty=".$residencySpecialty."<br>";
-            //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
-            //echo "boardCertificationAvailable=".$boardCertificationAvailable."<br>";
-
-            $residencySpecialtyEntity = null;
-
-            if( $residencySpecialty ) {
-
-                $residencySpecialty = trim($residencySpecialty);
-                //echo "residencySpecialty=".$residencySpecialty."<br>";
-
-                $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
-
-                //if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
-                //    continue;
-                //}
-
-                if( !$residencySpecialtyEntity ) {
-                    $residencySpecialtyEntity = new ResidencySpecialty();
-                    $this->setDefaultList($residencySpecialtyEntity,$count,$username,$residencySpecialty);
-                }
-
-                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
-                    $residencySpecialtyEntity->setBoardCertificateAvailable(true);
-                }
-
-                $em->persist($residencySpecialtyEntity);
-                $em->flush();
-
-                $lastResidencySpecialtyEntity = $residencySpecialtyEntity;
-
-                $count = $count + 10;
-            }
-
-            if( $fellowshipSubspecialty ) {
-
-                $fellowshipSubspecialty = trim($fellowshipSubspecialty);
-                //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
-                $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
-
-                //if( $fellowshipSubspecialtyEntity ) {
-                //    continue;
-                //}
-
-                if( !$fellowshipSubspecialtyEntity ) {
-                    $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
-                    $this->setDefaultList($fellowshipSubspecialtyEntity,$subcount,$username,$fellowshipSubspecialty);
-                }
-
-
-                if( $boardCertificationAvailable && $boardCertificationAvailable == "Yes" ) {
-                    $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
-                }
-
-                if( $lastResidencySpecialtyEntity ) {
-                    $lastResidencySpecialtyEntity->addChild($fellowshipSubspecialtyEntity);
-                }
-
-                $em->persist($lastResidencySpecialtyEntity);
-                $em->persist($fellowshipSubspecialtyEntity);
-                $em->flush();
-
-                $subcount = $subcount + 10;
-            }
-
-        }
-
-        $em->clear();
 
         return round($count/10);
     }

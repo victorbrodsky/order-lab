@@ -64,6 +64,10 @@ class ResidencyApplicationType extends AbstractType
                 "None" => "None"
             );
         }
+
+        if( !isset($this->params['cycle']) ) {
+            $this->params['cycle'] = 'new';
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -484,13 +488,15 @@ class ResidencyApplicationType extends AbstractType
         //Additional fields
         //Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
         //Visible only to Admin and Coordinator
-        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
-            $builder->add('ethnicity', ChoiceType::class, array(
-                'label' => 'Is the applicant a member of any of the following groups?:',
-                'required' => false,
-                'choices' => $this->params['ethnicities'],
-                'attr' => array('class' => 'combobox'),
-            ));
+        if( $this->params['cycle'] != 'download' ) {
+            if ( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+                $builder->add('ethnicity', ChoiceType::class, array(
+                    'label' => 'Is the applicant a member of any of the following groups?:',
+                    'required' => false,
+                    'choices' => $this->params['ethnicities'],
+                    'attr' => array('class' => 'combobox'),
+                ));
+            }
         }
 
         $builder->add('firstPublications', null, array(
