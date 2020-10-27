@@ -531,7 +531,7 @@ class TrpTest extends WebTestBase
         $crawler = $this->client->request('GET', '/translational-research/project/new/misi');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("MISI Project Request")')->count()
+            $crawler->filter('html:contains("Multiparametric In Situ Imaging Project Request")')->count()
         );
         $this->assertGreaterThan(
             0,
