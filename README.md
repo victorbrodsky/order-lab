@@ -726,7 +726,8 @@ c) Run command:
 1. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/vacation-request
    Add to <VirtualHost *:80> section:
 	<IfModule mod_rewrite.c>
-		RewriteEngine On		
+		RewriteEngine On
+		RewriteCond %{REQUEST_URI} /order/		
 		RewriteRule "^/order/(.+)"  "https://view.med.cornell.edu/$1"  [R,L]
 	</IfModule>
 
