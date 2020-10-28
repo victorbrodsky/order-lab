@@ -720,3 +720,22 @@ c) Run command:
 1. run   [/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
 
 2. The resulting log and screen shots are in order/test folder)
+
+
+### Redirect to a new server keeping the same url parameters
+1. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/vacation-request
+   Add to <VirtualHost *:80> section:
+	<IfModule mod_rewrite.c>
+		RewriteEngine On		
+		RewriteRule "^/order/(.+)"  "https://view.med.cornell.edu/$1"  [R,L]
+	</IfModule>
+
+2. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/order/vacation-request
+	Add to <VirtualHost *:80> section:
+	<IfModule mod_rewrite.c>
+		RewriteEngine On
+		RewriteCond %{REQUEST_URI} /order/
+		RewriteRule (.*) https://view.med.cornell.edu$1 [R=301,L]		
+	</IfModule>	
+
+
