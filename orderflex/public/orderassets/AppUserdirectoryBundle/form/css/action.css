@@ -55,6 +55,10 @@
     background: #ffffe6;
 }
 
+.order-declined-status {
+    background: #b08800;
+}
+
 /*.order-delete-status {*/
     /*background: white;*/
     /*background-image: linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 50%, darkgray 50%, gray 75%, transparent 75%, transparent);*/
@@ -159,6 +163,10 @@
 
 .res-app-status-legend-priority {
     background: #c0e3fa;
+}
+
+.res-app-status-legend-declined {
+    background: #b08800;
 }
 
 .res-app-status-legend-accepted {

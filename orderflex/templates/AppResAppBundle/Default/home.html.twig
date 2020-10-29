@@ -285,6 +285,22 @@
                     &nbsp;&nbsp;
 
                     <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(resappfilter.declined) }}   {{ form_label(resappfilter.declined) }}
+                        {#{{ resappmacros.addBadge( filter, seasonStartYear, declined, declinedTotal, 'declined' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[declined]':1,'filter[filter]':filter,'filter[applicationSeasonStartDates]':seasonStartYear}) }}">
+                        {{ declined }}
+                    </a>
+                    </span>
+                        {{ resappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('resapp_home',{'filter[declined]':1,'filter[filter]':filter}) }}">{{ declinedTotal }}</a>
+                    </span>
+                        {{ resappmacros.addLegend('declined') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(resappfilter.reject) }}   {{ form_label(resappfilter.reject) }}
                         {#{{ resappmacros.addBadge( filter, seasonStartYear, reject, rejectTotal, 'reject' ) }}#}
                         <span class="badge" {{ tooltipBadge }} title="for {{ seasonStartYear }}">
@@ -485,6 +501,10 @@
                 {% endif %}
                 {% if entity.appStatus.name == 'rejectedandnotified' %}
                     {% set trclassname = "res-app-status-legend-rejectedandnotified" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'declined' %}
+                    {% set trclassname = "res-app-status-legend-declined" %}
                 {% endif %}
                 {#EOF Set row color#}
 
@@ -965,6 +985,16 @@
                                                         href="#">Mark as Accepted and Notify
                                                     </a>
                                                 {% endif %}
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'declined' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Declined'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('resapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}">Decline
+                                                </a>
                                             </li>
                                         {% endif %}
 

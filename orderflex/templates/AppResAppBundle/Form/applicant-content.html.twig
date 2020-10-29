@@ -58,6 +58,9 @@
         {% if entity.appStatus.name == 'rejectedandnotified' %}
             {% set trclassname = "order-reject-status" %}
         {% endif %}
+        {% if entity.appStatus.name == 'declined' %}
+            {% set trclassname = "order-declined-status" %}
+        {% endif %}
     {% endif %}
 {% endif %}
 

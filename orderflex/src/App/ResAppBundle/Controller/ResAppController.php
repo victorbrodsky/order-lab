@@ -195,6 +195,7 @@ class ResAppController extends OrderAbstractController {
         $interviewee = $filterform['interviewee']->getData();
         $active = $filterform['active']->getData();
         $reject = $filterform['reject']->getData();
+        $declined = $filterform['declined']->getData();
         //$onhold = $filterform['onhold']->getData();
         $priority = $filterform['priority']->getData();
 
@@ -367,6 +368,11 @@ class ResAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
+        if( $declined ) {
+            $orWhere[] = "appStatus.name = 'declined'";
+            $searchFlag = true;
+        }
+
 //        if( $onhold ) {
 //            $orWhere[] = "appStatus.name = 'onhold'";
 //            $searchFlag = true;
@@ -517,6 +523,9 @@ class ResAppController extends OrderAbstractController {
         $reject = $resappUtil->getResAppByStatusAndYear('reject',$resSubspecId,$seasonStartYearStr);
         $rejectTotal = $resappUtil->getResAppByStatusAndYear('reject',$resSubspecId);
 
+        $declined = $resappUtil->getResAppByStatusAndYear('declined',$resSubspecId,$seasonStartYearStr);
+        $declinedTotal = $resappUtil->getResAppByStatusAndYear('declined',$resSubspecId);
+
         //$onhold = $resappUtil->getResAppByStatusAndYear('onhold',$resSubspecId,$seasonStartYearStr);
         //$onholdTotal = $resappUtil->getResAppByStatusAndYear('onhold',$resSubspecId);
 
@@ -610,6 +619,8 @@ class ResAppController extends OrderAbstractController {
             'activeTotal' => count($activeTotal),
             'reject' => count($reject),
             'rejectTotal' => count($rejectTotal),
+            'declined' => count($declined),
+            'declinedTotal' => count($declinedTotal),
             //'onhold' => count($onhold),
             //'onholdTotal' => count($onholdTotal),
             'priority' => count($priority),

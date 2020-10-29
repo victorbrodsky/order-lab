@@ -120,6 +120,12 @@ class ResAppFilterType extends AbstractType
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
+        $builder->add('declined', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Declined',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
+
         $builder->add('complete', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Complete',
