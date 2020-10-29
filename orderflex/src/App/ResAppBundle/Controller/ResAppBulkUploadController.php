@@ -380,14 +380,16 @@ class ResAppBulkUploadController extends OrderAbstractController
             $erasDocument = NULL;
             if( $erasFileId ) {
                 $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->find($erasFileId);
-                echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
+                //echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
             }
-            if( !$erasDocument ) {
-                if( $erasFileValue ) {
-                    $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByOriginalname($erasFileValue);
-                    echo "Found eras name id=$erasFileValue: ".$erasDocument." <br>";
-                }
-            }
+            echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
+//            if( !$erasDocument ) {
+//                //Do not attempt to find document by filename, because if the is deleted but filename can be the same as previos PDF file existing in DB.
+//                if( $erasFileValue ) {
+//                    $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByOriginalname($erasFileValue);
+//                    echo "Found eras name id=$erasFileValue: ".$erasDocument." <br>";
+//                }
+//            }
 
             $erasIdArr = $this->getValueByHeaderName('ERAS Application ID',$row,$headers);
             $erasIdValue = $erasIdArr['val'];
@@ -489,10 +491,11 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if ($erasDocument) {
                     $residencyApplicationDb->addCoverLetter($erasDocument);
                     $reasppUpdated = true;
-                    $updateInfo = "; PDF file updated";
+                    $updateInfo = "; PDF file updated ".$erasDocument->getOriginalname();
                 } else {
                     $updateInfo = "; ERROR: PDF file not found";
                 }
+                //echo "updateInfo=$updateInfo; ID=".$erasDocument->getId()." <br>";
                 //update $erasIdValue if null
                 if ($erasIdValue && !$residencyApplicationDb->getErasApplicantId()) {
                     $residencyApplicationDb->setErasApplicantId($erasIdValue);
@@ -516,6 +519,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $updatedStrArr["Skip updating PDF for existing residency application"][] = $updateInfo;
                 }
 
+                //dump($updatedStrArr);
+                //exit('exit update pdf');
                 continue;
             }
 
@@ -692,7 +697,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $resappImportFromOldSystemUtil->setTrainingDegree($training, $degreeValue, $user);
                     }
                 } else {
-                    exit("Uknown degreeValue=[$degreeValue]");
+                    exit("Unknown degreeValue=[$degreeValue]");
                 }
 
                 if( $medSchoolGradDateValue ) {

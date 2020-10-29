@@ -5947,7 +5947,7 @@ class AdminController extends OrderAbstractController
             'interviewee'=>'Interviewee',
             'onhold'=>'On Hold',
             'reject'=>'Rejected',
-            //'hide'=>'Hidden',
+            'hide'=>'Hidden',
             'priority'=>'Priority',
             'archive'=>'Archived',
             'accepted'=>'Accepted',
