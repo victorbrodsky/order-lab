@@ -64,37 +64,45 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     var addClass = 'ht-validation-add';
     var updateClass = 'ht-validation-update';
     var dontaddClass = 'ht-validation-dontadd';
-
-    var parentTr = $(td).closest('tr');
+    
+    var parentTr = $(td).parent('tr');
+    console.log("parentTr:");
+    console.log(parentTr);
+    // var parentTr = parent.find('tr');
+    // console.log("parentTr:");
+    // console.log(parentTr);
+    // var parentTr2 = parent[0];
+    // console.log("parentTr2:");
+    // console.log(parentTr2);
 
     if( value+"" == "Do not add" ) {
         //var cellBackgroundColor = "#ffcccc";
         //var cellClass = 'ht-validation-dontadd';
 
         console.log(value+"!");
-        parentTr.css( "background-color", "red" );
-        //$(parentTd).removeClass(addClass);
-        //$(parentTd).removeClass(updateClass);
-        //$(parentTd).addClass(dontaddClass);
+        $(parentTr).css( "background-color", "red" );
+        // $(parentTr).removeClass(addClass);
+        // $(parentTr).removeClass(updateClass);
+        // $(parentTr).addClass(dontaddClass);
     }
     if( value+"" == "Update PDF" ) {
         //var cellClass = "ht-validation-update";
 
         console.log(value+"!");
-        parentTr.css( "background-color", "blue" );
-        //$(parentTd).removeClass(addClass);
-        //$(parentTd).removeClass(dontaddClass);
-        //$(parentTd).addClass(updateClass);
+        $(parentTr).css( "background-color", "blue" );
+        // $(parentTr).removeClass(addClass);
+        // $(parentTr).removeClass(dontaddClass);
+        // $(parentTr).addClass(updateClass);
     }
     if( value+"" == "Add" ) {
         //return false;
         //var cellClass = "ht-validation-add";
 
         console.log(value+"!");
-        parentTr.css( "background-color", "green" );
-        //$(parentTd).removeClass(updateClass);
-        //$(parentTd).removeClass(dontaddClass);
-        //$(parentTd).addClass(addClass);
+        $(parentTr).css( "background-color", "green" );
+        // $(parentTr).removeClass(updateClass);
+        // $(parentTr).removeClass(dontaddClass);
+        // $(parentTr).addClass(addClass);
     }
 
     //if( col != 0 ) {
