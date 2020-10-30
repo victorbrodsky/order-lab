@@ -443,18 +443,74 @@ function handsonTableInit(handsometableDataArr) {
 
             if (change != null) {
                 var changeData = change[0];
-                //console.log("changeData:");
-                //console.log(changeData);
+                console.log("changeData:");
+                console.log(changeData);
 
                 var rowNumber = changeData[0];
                 var columnNumber = changeData[1];
                 var oldValue = changeData[2];
                 var newValue = changeData[3];
                 //console.log("prop="+prop);
-                //console.log("columnNumber="+columnNumber+", rowNumber="+rowNumber+": oldValue="+oldValue+"; newValue="+newValue);
-                
+                console.log("columnNumber="+columnNumber+", rowNumber="+rowNumber+": oldValue="+oldValue+"; newValue="+newValue);
+                var columns = this.getSettings().columns;
+                var columnsLen = columns.length;
+                console.log("columnsLen="+columnsLen);
 
-                
+                if( newValue == "Do not add" ) {
+                    var cellBackgroundColor = "#ffcccc";
+                    for( var j = 0; j < columnsLen; j++ ) {
+                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                        thiscell.style.backgroundColor = cellBackgroundColor;
+                    }
+                    // var cellBackgroundColor = "#ffcccc";
+                    // //rowNumber = 0;
+                    // var j = 2;
+                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                    // thiscell.style.backgroundColor = cellBackgroundColor;
+                }
+                if( newValue == "Update PDF" ) {
+                    var cellBackgroundColor = "lightblue";
+                    for( var j = 0; j < columnsLencolumnsLen; j++ ) {
+                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                        thiscell.style.backgroundColor = cellBackgroundColor;
+                    }
+                    //var thiscell = $(_htableid).handsontable("getCell", columnNumber, rowNumber);
+                    //checkcell.style.color = "red";
+                    //checkcell.style.backgroundColor = "red"; //'#F2DEDE';
+                    //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-priority');
+                    // for( var j = 0; j < columns.length; j++ ) {
+                    //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'blue');
+                    //     rowNumber = 2;
+                    //     j = 2;
+                    //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                    //     thiscell.style.backgroundColor = "lightblue";
+                    // }
+                    // var cellBackgroundColor = "lightblue";
+                    // //rowNumber = 0;
+                    // var j = 2;
+                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                    // thiscell.style.backgroundColor = cellBackgroundColor;
+                }
+                if( newValue == "Add" ) {
+                    var cellBackgroundColor = "lightgreen";
+                    for( var j = 0; j < columnsLencolumnsLen; j++ ) {
+                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                        thiscell.style.backgroundColor = cellBackgroundColor;
+                    }
+                    // //rowNumber = 0;
+                    // var j = 2;
+                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                    // thiscell.style.backgroundColor = cellBackgroundColor;
+
+                    //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-add');
+                    // for( var j = 0; j < columns.length; j++ ) {
+                    //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'lightgreen');
+                    //     rowNumber = 2;
+                    //     j = 2;
+                    //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+                    //     thiscell.style.backgroundColor = "lightgreen";
+                    // }
+                }
             }
         },
         afterCreateRow: function (index, amount) {
