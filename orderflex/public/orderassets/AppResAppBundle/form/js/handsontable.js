@@ -49,6 +49,105 @@ var _rowHeight =  _tdSize + 2*_tdPadding;
 //total 33
 var _columnData_scanorder = [];
 
+
+var actionRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    console.log("row="+row+", col="+col+",value="+value);
+
+    // if( !validateActionCell(row,col,value) ) {
+    //     console.log('add error');
+    //     $(td).addClass('ht-validation-error');
+    // } else {
+    //     console.log('remove error');
+    //     $(td).removeClass('ht-validation-error');
+    // }
+    var addClass = 'ht-validation-add';
+    var updateClass = 'ht-validation-update';
+    var dontaddClass = 'ht-validation-dontadd';
+
+    var parentTr = $(td).closest('tr');
+
+    if( value+"" == "Do not add" ) {
+        //var cellBackgroundColor = "#ffcccc";
+        //var cellClass = 'ht-validation-dontadd';
+
+        console.log(value+"!");
+        parentTr.css( "background-color", "red" );
+        //$(parentTd).removeClass(addClass);
+        //$(parentTd).removeClass(updateClass);
+        //$(parentTd).addClass(dontaddClass);
+    }
+    if( value+"" == "Update PDF" ) {
+        //var cellClass = "ht-validation-update";
+
+        console.log(value+"!");
+        parentTr.css( "background-color", "blue" );
+        //$(parentTd).removeClass(addClass);
+        //$(parentTd).removeClass(dontaddClass);
+        //$(parentTd).addClass(updateClass);
+    }
+    if( value+"" == "Add" ) {
+        //return false;
+        //var cellClass = "ht-validation-add";
+
+        console.log(value+"!");
+        parentTr.css( "background-color", "green" );
+        //$(parentTd).removeClass(updateClass);
+        //$(parentTd).removeClass(dontaddClass);
+        //$(parentTd).addClass(addClass);
+    }
+
+    //if( col != 0 ) {
+        //instance.getCellMeta(row, col).readOnly = true;
+    //}
+    //var thiscell = instance.getCell(row,col);
+    //thiscell.style.backgroundColor = cellBackgroundColor;
+
+    // var columnsLen = _columnData_scanorder.length;
+    // for( var j = 0; j <= columnsLen; j++ ) {
+    //     console.log("columns j="+j);
+    //
+    //     if( j+1 <= columnsLen) {
+    //         instance.getCellMeta(row, j + 1).readOnly = true;
+    //     }
+    //
+    //     //var thiscell = instance.getCell(row,j); //handsontable("getCell", row, j);
+    //     //thiscell.style.backgroundColor = cellBackgroundColor;
+    // }
+};
+
+function validateActionCell( row, col, value ) {
+    if( _sotable == null ) {
+        _sotable = $(_htableid).handsontable('getInstance');
+    }
+
+    console.log("row="+row+", col="+col+",value="+value);
+
+    //var columnsLen = _columnData_scanorder.length;
+    //console.log("columnsLen="+columnsLen);
+    //var columnsLen = 22;
+    //console.log("columnsLen="+columnsLen);
+    if( value == "Do not add" ) {
+        var cellBackgroundColor = "#ffcccc";
+    }
+    if( value == "Update PDF" ) {
+        var cellBackgroundColor = "lightblue";
+        // for( var j = 0; j <= columnsLen; j++ ) {
+        //     console.log("columns j="+j);
+        //     _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
+        // }
+    }
+    if( value == "Add" ) {
+        return false;
+        var cellBackgroundColor = "lightgreen";
+    }
+    //var thiscell = $(_htableid).handsontable("getCell", rowNumber, columnNumber);
+    //thiscell.style.backgroundColor = cellBackgroundColor;
+
+    return true;
+}
+
+
 function getResidencytracks() {
 
     var cycle = 'new';
@@ -198,6 +297,7 @@ function resappMakeColumnData() {
                 source: _actions_simple,
                 strict: true,
                 filter: false,
+                renderer: actionRenderer
             }
         },
 
@@ -414,6 +514,22 @@ function handsonTableInit(handsometableDataArr) {
                     //console.log(cellProperties);
                 }
             }
+
+            //var columns = this.getSettings().columns;
+            //var columnsLen = columns.length;
+            // var columnsLen = 22;
+            // console.log("columnsLen="+columnsLen);
+            // var newValue = $(_htableid).handsontable("getCell", r, 0);
+            // if( newValue == "Do not add" ) {
+            //     var cellBackgroundColor = "#ffcccc";
+            // }
+            // if( newValue == "Update PDF" ) {
+            //     var cellBackgroundColor = "lightblue";
+            // }
+            // if( newValue == "Add" ) {
+            //     var cellBackgroundColor = "lightgreen";
+            // }
+            // cellProperties.style = 'style="backgroundColor: red"';
             
             return cellProperties;
         },
@@ -436,81 +552,111 @@ function handsonTableInit(handsometableDataArr) {
 
         },
         afterChange: function (change, source) {
+            return; //don't save this change
+
+            //console.log("source="+source);
             if (source === 'loadData') {
                 //console.log("ignore source="+source);
                 return; //don't save this change
             }
 
             if (change != null) {
-                var changeData = change[0];
-                console.log("changeData:");
-                console.log(changeData);
+                //var changeData = change[0];
+                //console.log("changeData:");
+                //console.log(changeData);
 
-                var rowNumber = changeData[0];
-                var columnNumber = changeData[1];
-                var oldValue = changeData[2];
-                var newValue = changeData[3];
+                // var rowNumber = changeData[0];
+                // var columnNumber = changeData[1];
+                // var oldValue = changeData[2];
+                // var newValue = changeData[3];
                 //console.log("prop="+prop);
-                console.log("columnNumber="+columnNumber+", rowNumber="+rowNumber+": oldValue="+oldValue+"; newValue="+newValue);
-                var columns = this.getSettings().columns;
-                var columnsLen = columns.length;
-                console.log("columnsLen="+columnsLen);
+                //console.log("columnNumber="+columnNumber+", rowNumber="+rowNumber+": oldValue="+oldValue+"; newValue="+newValue);
 
-                if( newValue == "Do not add" ) {
-                    var cellBackgroundColor = "#ffcccc";
-                    for( var j = 0; j < columnsLen; j++ ) {
-                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                        thiscell.style.backgroundColor = cellBackgroundColor;
-                    }
-                    // var cellBackgroundColor = "#ffcccc";
-                    // //rowNumber = 0;
-                    // var j = 2;
-                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                    // thiscell.style.backgroundColor = cellBackgroundColor;
-                }
-                if( newValue == "Update PDF" ) {
-                    var cellBackgroundColor = "lightblue";
-                    for( var j = 0; j < columnsLencolumnsLen; j++ ) {
-                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                        thiscell.style.backgroundColor = cellBackgroundColor;
-                    }
-                    //var thiscell = $(_htableid).handsontable("getCell", columnNumber, rowNumber);
-                    //checkcell.style.color = "red";
-                    //checkcell.style.backgroundColor = "red"; //'#F2DEDE';
-                    //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-priority');
-                    // for( var j = 0; j < columns.length; j++ ) {
-                    //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'blue');
-                    //     rowNumber = 2;
-                    //     j = 2;
-                    //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                    //     thiscell.style.backgroundColor = "lightblue";
-                    // }
-                    // var cellBackgroundColor = "lightblue";
-                    // //rowNumber = 0;
-                    // var j = 2;
-                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                    // thiscell.style.backgroundColor = cellBackgroundColor;
-                }
-                if( newValue == "Add" ) {
-                    var cellBackgroundColor = "lightgreen";
-                    for( var j = 0; j < columnsLencolumnsLen; j++ ) {
-                        var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                        thiscell.style.backgroundColor = cellBackgroundColor;
-                    }
-                    // //rowNumber = 0;
-                    // var j = 2;
-                    // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                    // thiscell.style.backgroundColor = cellBackgroundColor;
+                //var columns = this.getSettings().columns;
+                //var columnsLen = columns.length;
+                // var columnsLen = _columnData_scanorder.length;
+                // console.log("columnsLen="+columnsLen);
+                // //var columnsLen = 22;
+                // //console.log("columnsLen="+columnsLen);
+                // if( newValue == "Do not add" ) {
+                //     var cellBackgroundColor = "#ffcccc";
+                // }
+                // if( newValue == "Update PDF" ) {
+                //     var cellBackgroundColor = "lightblue";
+                //     for( var j = 0; j <= columnsLen; j++ ) {
+                //         console.log("columns j="+j);
+                //         _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
+                //     }
+                // }
+                // if( newValue == "Add" ) {
+                //     var cellBackgroundColor = "lightgreen";
+                // }
+                // var thiscell = $(_htableid).handsontable("getCell", rowNumber, columnNumber);
+                // thiscell.style.backgroundColor = cellBackgroundColor;
 
-                    //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-add');
-                    // for( var j = 0; j < columns.length; j++ ) {
-                    //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'lightgreen');
-                    //     rowNumber = 2;
-                    //     j = 2;
-                    //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
-                    //     thiscell.style.backgroundColor = "lightgreen";
-                    // }
-                }
+            //     //var columns = this.getSettings().columns;
+            //     //var columnsLen = columns.length;
+            //     var columnsLen = 22;
+            //     console.log("columnsLen="+columnsLen);
+            //     if( newValue == "Do not add" ) {
+            //         var cellBackgroundColor = "#ffcccc";
+            //         for( var j = 0; j < columnsLen; j++ ) {
+            //             console.log("columns j="+j);
+            //             var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //             thiscell.style.backgroundColor = cellBackgroundColor;
+            //         }
+            //         // var cellBackgroundColor = "#ffcccc";
+            //         // //rowNumber = 0;
+            //         // var j = 2;
+            //         // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //         // thiscell.style.backgroundColor = cellBackgroundColor;
+            //     }
+            //     if( newValue == "Update PDF" ) {
+            //         var cellBackgroundColor = "lightblue";
+            //         for( var j = 0; j < columnsLen; j++ ) {
+            //             console.log("columns j="+j);
+            //             var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //             thiscell.style.backgroundColor = cellBackgroundColor;
+            //         }
+            //         //var thiscell = $(_htableid).handsontable("getCell", columnNumber, rowNumber);
+            //         //checkcell.style.color = "red";
+            //         //checkcell.style.backgroundColor = "red"; //'#F2DEDE';
+            //         //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-priority');
+            //         // for( var j = 0; j < columns.length; j++ ) {
+            //         //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'blue');
+            //         //     rowNumber = 2;
+            //         //     j = 2;
+            //         //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //         //     thiscell.style.backgroundColor = "lightblue";
+            //         // }
+            //         // var cellBackgroundColor = "lightblue";
+            //         // //rowNumber = 0;
+            //         // var j = 2;
+            //         // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //         // thiscell.style.backgroundColor = cellBackgroundColor;
+            //     }
+            //     if( newValue == "Add" ) {
+            //         var cellBackgroundColor = "lightgreen";
+            //         for( var j = 0; j < columnsLen; j++ ) {
+            //             console.log("columns j="+j);
+            //             var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //             thiscell.style.backgroundColor = cellBackgroundColor;
+            //         }
+            //         // //rowNumber = 0;
+            //         // var j = 2;
+            //         // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //         // thiscell.style.backgroundColor = cellBackgroundColor;
+            //
+            //         //$(_htableid).setCellMeta(rowNumber, columnNumber, 'className', 'res-app-status-legend-add');
+            //         // for( var j = 0; j < columns.length; j++ ) {
+            //         //     //this.handsontable("getCell", columnNumber, rowNumber).css('background', 'lightgreen');
+            //         //     rowNumber = 2;
+            //         //     j = 2;
+            //         //     var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
+            //         //     thiscell.style.backgroundColor = "lightgreen";
+            //         // }
+            //     }
+
             }
         },
         afterCreateRow: function (index, amount) {

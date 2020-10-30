@@ -205,3 +205,12 @@
 .res-app-status-legend-add {
     background: lightgreen;
 }
+.handsontable .ht-validation-add {
+    background-color: lightgreen;
+}
+.handsontable .ht-validation-update {
+    background-color: lightblue;
+}
+.handsontable .ht-validation-dontadd {
+    background-color: #F2DEDE;
+}
