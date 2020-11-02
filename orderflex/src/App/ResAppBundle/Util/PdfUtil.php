@@ -497,7 +497,7 @@ class PdfUtil {
                 ////////////// check for duplicate //////////////////
                 $duplicateIds = array();
                 $duplicateArr = array();
-                //TODO: check for duplicate in $handsomtableJsonData
+                //check for duplicate in $handsomtableJsonData
                 $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
                 if( $duplicateTableResApps  ) {
                     //$rowArr['Issue']['id'] = null;
@@ -507,7 +507,7 @@ class PdfUtil {
                     //$rowArr['Issue']['id'] = null;
                     //$rowArr['Issue']['value'] = "Not Duplicated";
                 }
-                //TODO: check for duplicate in DB
+                //check for duplicate in DB
                 $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
                     //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
@@ -823,7 +823,7 @@ class PdfUtil {
         $aamcId = $rowArr['AAMC ID']['value'];
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
-        $lastName = $rowArr['Last Name']['value'];
+        //$lastName = $rowArr['Last Name']['value'];
 
         $erasApplicantId = NULL;
         if( isset($rowArr['ERAS Application ID']) ) {
@@ -835,7 +835,7 @@ class PdfUtil {
             $thisAamcId = $thisRowArr['AAMC ID']['value'];
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
             $thisEmail = $thisRowArr['Preferred Email']['value'];
-            $thisLastName = $thisRowArr['Last Name']['value'];
+            //$thisLastName = $thisRowArr['Last Name']['value'];
 
             $thisErasApplicantId = NULL;
             if( isset($rowArr['ERAS Application ID']) ) {
@@ -862,7 +862,7 @@ class PdfUtil {
                 $aamcId == $thisAamcId
                 && $expectedResidencyStartDate == $thisExpectedResidencyStartDate
                 && $email == $thisEmail
-                && $lastName == $thisLastName
+                //&& $lastName == $thisLastName
                 && $erasApplicantIdSame
             ) {
                 //echo "Duplicate!!!<br>";
