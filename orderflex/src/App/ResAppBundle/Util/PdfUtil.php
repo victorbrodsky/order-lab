@@ -739,12 +739,12 @@ class PdfUtil {
 
         $expectedResidencyStartDate = NULL;
         if( isset($rowArr['Expected Residency Start Date']) ) {
-            $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value']; //07/01/2021
+            //$expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value']; //07/01/2021
         }
 
         $applicationReceiptDate = NULL;
         if( isset($rowArr['Application Receipt Date']) ) {
-            $applicationReceiptDate = $rowArr['Application Receipt Date']['value']; //10/21/2020
+            //$applicationReceiptDate = $rowArr['Application Receipt Date']['value']; //10/21/2020
         }
 
         $erasApplicantId = NULL;
@@ -752,17 +752,17 @@ class PdfUtil {
             $erasApplicantId = $rowArr['ERAS Application ID']['value'];
         }
 
+        //echo "aamcId=[$aamcId], email=[$email], expectedResidencyStartDate=[$expectedResidencyStartDate],
+        //    applicationReceiptDate=[$applicationReceiptDate], erasApplicantId=[$erasApplicantId] <br>";
+
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin('resapp.user','user');
         $dql->leftJoin('user.infos','infos');
 
-        //$dql->where("resapp.aamcId = :aamcId");
-        //$dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
-        //$dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
-
         $dql->where("(resapp.aamcId = :aamcId OR LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail))");
+
         $dql->orderBy("resapp.id","DESC");
 
         if( $erasApplicantId ) {
@@ -781,7 +781,7 @@ class PdfUtil {
                 $dateStr = implode(" OR ",$dateStrArr);
                 if( $dateStr ) {
                     $dateStr = "(".$dateStr.")";
-                    //echo "[$expectedResidencyStartDate], [$applicationReceiptDate]: dateStr=[$dateStr] <br>";
+                    echo "[$expectedResidencyStartDate], [$applicationReceiptDate]: dateStr=[$dateStr] <br>";
                     $dql->andWhere($dateStr);
                 }
             }
@@ -802,7 +802,7 @@ class PdfUtil {
         }
 
         $query->setParameter('aamcId', $aamcId);
-        $query->setParameter('userInfoEmail', "'".$email."'");
+        $query->setParameter('userInfoEmail', $email);
         //$query->setParameter('userInfoLastName', "'".$lastName."'");
 
 

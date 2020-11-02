@@ -371,7 +371,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$issueId = $issueArr['id'];
             $issueStr = "";
             if( $issueValue ) {
-                $issueStr = ", with issue $issueValue";
+                $issueStr = " (with issue '$issueValue')";
             }
 
             $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);
@@ -462,6 +462,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
                 $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+                //echo "1Found resapp?: $residencyApplicationDb <br>";
             }
 
             if( !$residencyApplicationDb ) {
@@ -477,6 +478,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( count($duplicateDbResApps) > 0  ) {
                     $residencyApplicationDb = $duplicateDbResApps[0];
                 }
+                //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
 
             if( $actionValue == "Update PDF" ) {
@@ -530,7 +532,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             }
 
             if( $actionValue == "Do not add" || $residencyApplicationDb ) {
-                echo "Do not add row=$count <br>";
+                //echo "Do not add row=$count <br>";
 
                 //Remove eras application PDF document file
                 if( $erasDocument ) {
@@ -546,7 +548,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
                 elseif( $residencyApplicationDb ) {
                     $updatedStrArr["Skip existing residency application$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
-
+                    //exit("Skip existing residency application $actionValue !!!");
                 }
                 elseif( $actionValue ) {
                     $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue";
@@ -554,6 +556,25 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 continue;
             } //action != Add
+
+            //Previous condition should catch this too ("Add" + $residencyApplicationDb)
+            if( $actionValue == "Add" ) {
+                //exit("$actionValue !!!");
+                if( $residencyApplicationDb ) {
+
+                    //Remove eras application PDF document file
+                    if( $erasDocument ) {
+                        $inputDataFile->removeErasFile($erasDocument);
+                        $em->remove($erasDocument);
+                        if( !$testing ) {
+                            $em->flush();
+                        }
+                    }
+
+                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
+                    continue;
+                }
+            }
 
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
             $countryCitizenshipValue = $countryCitizenshipArr['val'];
