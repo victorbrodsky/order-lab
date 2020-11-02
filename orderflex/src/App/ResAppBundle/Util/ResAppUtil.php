@@ -1016,7 +1016,8 @@ class ResAppUtil {
         $ews->setCellValue('N1', 'Potential Score');
         $ews->setCellValue('O1', 'Overall Potential Score');
         $ews->setCellValue('P1', 'Language Proficiency');
-        $ews->setCellValue('Q1', 'Comments');
+        $ews->setCellValue('Q1', 'Fit for Program');
+        $ews->setCellValue('R1', 'Comments');
         
 
         
@@ -1095,9 +1096,14 @@ class ResAppUtil {
                 if( $interview->getLanguageProficiency() ) {
                     $ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
                 }
-                
+
+                //fitForProgram
+                if( $interview->getFitForProgram() ) {
+                    $ews->setCellValue('Q'.$row, $interview->getFitForProgram()->getName());
+                }
+
                 //Comments
-                $ews->setCellValue('Q'.$row, $interview->getComment());   
+                $ews->setCellValue('R'.$row, $interview->getComment());
                 
                 $row++;
             
@@ -1237,7 +1243,8 @@ class ResAppUtil {
                 'Potential Score',               //14 - O
                 'Overall Potential Score',      //15 - P
                 'Language Proficiency',         //16 - Q
-                'Comments',                     //17 - R
+                'Fit for Program',             //17 - R
+                'Comments',                     //18 - S
             ],
             $headerStyle
         );
@@ -1372,9 +1379,16 @@ class ResAppUtil {
                     $data[16] = null;
                 }
 
+                //fitForProgram
+                if( $interview->getFitForProgram() ) {
+                    $data[17] = $interview->getFitForProgram()->getName();
+                } else {
+                    $data[17] = null;
+                }
+
                 //Comments
                 //$ews->setCellValue('Q'.$row, $interview->getComment());
-                $data[17] = $interview->getComment();
+                $data[18] = $interview->getComment();
 
                 //$writer->addRowWithStyle($data,$requestStyle);
                 $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);

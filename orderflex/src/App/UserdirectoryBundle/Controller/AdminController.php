@@ -24,7 +24,9 @@ use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
 use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
+use App\ResAppBundle\Entity\FitForProgram;
 use App\ResAppBundle\Entity\PostSophList;
+use App\ResAppBundle\Entity\ResAppFitForProgram;
 use App\ResAppBundle\Entity\ResAppRank;
 use App\ResAppBundle\Entity\ResAppStatus;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
@@ -921,6 +923,7 @@ class AdminController extends OrderAbstractController
         $count_ResAppVisaStatus = $this->generateResAppVisaStatus();
         $count_PostSophList = $this->generatePostSophList();
         $count_ResAppLanguageProficiency = $this->generateResAppLanguageProficiency();
+        $count_ResAppFitForProgram = $this->generateResAppFitForProgram();
 
         $logger->notice("Finished generateLanguageProficiency");
 
@@ -1048,6 +1051,7 @@ class AdminController extends OrderAbstractController
             'ResApp Ranks='.$count_ResAppRank.', '.
             'ResAppVisaStatus='.$count_ResAppVisaStatus.', '.
             'PostSophList='.$count_PostSophList.', '.
+            'count_ResAppFitForProgram='.$count_ResAppFitForProgram.', '.
             'ResAppLanguageProficiency='.$count_ResAppLanguageProficiency.', '.
 
             'Permissions ='.$count_Permissions.', '.
@@ -6282,6 +6286,40 @@ class AdminController extends OrderAbstractController
         return round($count/10);
 
     }
+
+    public function generateResAppFitForProgram() {
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppResAppBundle:ResAppFitForProgram')->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "A",
+            "B",
+            "C",
+            "N/A"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new ResAppFitForProgram();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
     ////////////////////// EOF ResApp //////////////////////////////////////
 
 
@@ -7268,6 +7306,7 @@ class AdminController extends OrderAbstractController
             "resapplanguageproficiency" => array('LanguageProficiency','resapplanguageproficiency-list','Residency Language Proficiency'),
             "resappvisastatus" => array('VisaStatus','resappvisastatus-list','Residency Visa Status'),
             "postsoph" => array('PostSophList','postsoph-list','Post Soph List'),
+            "resappfitforprogram" => array('ResAppFitForProgram','resappfitforprogram-list','Residency Fit For Program'),
         );
 
         if( $withcustom ) {

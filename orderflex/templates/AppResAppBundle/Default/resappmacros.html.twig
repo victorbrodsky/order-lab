@@ -54,17 +54,6 @@
         {{ formmacros.field(forminterview.startTime) }}
         {{ formmacros.field(forminterview.endTime) }}
 
-        {#{{ formmacros.field(forminterview.academicRank) }}#}
-
-        {#{{ formmacros.field(forminterview.personalityRank) }}#}
-
-        {#{{ formmacros.field(forminterview.potentialRank) }}#}
-
-        {#{{ formmacros.field(forminterview.totalRank) }}#}
-
-        {#{{ formmacros.field(forminterview.comment) }}#}
-
-        {#{{ formmacros.field(forminterview.languageProficiency) }}#}
         {{ resappmacros.interviewMainForm( forminterview ) }}
 
     </div>
@@ -82,6 +71,8 @@
     {{ formmacros.field(forminterview.potentialRank) }}
 
     {{ formmacros.field(forminterview.totalRank) }}
+
+    {{ formmacros.field(forminterview.fitForProgram) }}
 
     {{ formmacros.field(forminterview.comment) }}
 
@@ -409,6 +400,7 @@
             "<br>Potential Score - "~interview.potentialRank~
             "<br>Language Proficiency - "~interview.languageProficiency~
             "<br>Overall Potential Score - "~interview.totalRank~
+            "<br>Fit to Program - "~interview.fitForProgram~
             "<br>Comment: "~interview.comment|e %}
             {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
         {% endif %}

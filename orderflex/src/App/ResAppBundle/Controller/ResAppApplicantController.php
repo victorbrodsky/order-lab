@@ -347,7 +347,7 @@ class ResAppApplicantController extends OrderAbstractController {
         $text = "Dear " . $interviewer->getUsernameOptimal().",".$break.$break;
         $text .= "Please review the RESIDENCY INTERVIEW SCHEDULE for the candidate ".$applicant->getUsernameOptimal()." and submit your evaluation after the interview.".$break.$break;
 
-        $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
+        //$text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
 
         //$text .= "The ONLINE EVALUATION FORM URL personalize link:" . $break . $interviewFormLink . $break.$break;
         $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $applicationFormLink . $break.$break;
@@ -492,13 +492,11 @@ class ResAppApplicantController extends OrderAbstractController {
             $pdfLink = $this->convertToHref($pdfLink);
 
             //resapp_file_download
-            $scheduleLink = null;
-            if( $entity->getRecentItinerary() ) {
-                //$scheduleDocumentId = $entity->getRecentItinerary()->getId();
-                //$scheduleLink = $this->generateUrl( 'resapp_file_download', array("id"=>$scheduleDocumentId), true );
-                $scheduleLink = $this->generateUrl( 'resapp_download_itinerary_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
-                $scheduleLink = $this->convertToHref($scheduleLink);
-            }
+//            $scheduleLink = null;
+//            if( $entity->getRecentItinerary() ) {
+//                $scheduleLink = $this->generateUrl( 'resapp_download_itinerary_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+//                $scheduleLink = $this->convertToHref($scheduleLink);
+//            }
 
             //get email
             $email = $observer->getEmail();
@@ -514,9 +512,9 @@ class ResAppApplicantController extends OrderAbstractController {
 
             $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
 
-            if( $scheduleLink ) {
-                $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
-            }
+//            if( $scheduleLink ) {
+//                $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
+//            }
 
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 

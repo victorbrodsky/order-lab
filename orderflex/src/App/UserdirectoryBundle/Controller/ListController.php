@@ -265,6 +265,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/", name="resappstatuses-list", methods={"GET"})
      * @Route("/list/resappranks/", name="resappranks-list", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency-list", methods={"GET"})
+     * @Route("/list/resappfitforprogram/", name="resappfitforprogram-list", methods={"GET"})
      * @Route("/list/resappvisastatus/", name="resappvisastatus-list", methods={"GET"})
      * @Route("/list/postsoph/", name="postsoph-list", methods={"GET"})
      *
@@ -867,6 +868,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/", name="resappstatuses_create", methods={"POST"})
      * @Route("/list/resappranks/", name="resappranks_create", methods={"POST"})
      * @Route("/list/resapplanguageproficiency/", name="resapplanguageproficiency_create", methods={"POST"})
+     * @Route("/list/resappfitforprogram/", name="resappfitforprogram_create", methods={"POST"})
      * @Route("/list/resappvisastatus/", name="resappvisastatus_create", methods={"POST"})
      * @Route("/list/postsoph/", name="postsoph_create", methods={"POST"})
      *
@@ -1191,6 +1193,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/new", name="resappstatuses_new", methods={"GET"})
      * @Route("/list/resappranks/new", name="resappranks_new", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/new", name="resapplanguageproficiency_new", methods={"GET"})
+     * @Route("/list/resappfitforprogram/new", name="resappfitforprogram_new", methods={"GET"})
      * @Route("/list/resappvisastatus/new", name="resappvisastatus_new", methods={"GET"})
      * @Route("/list/postsoph/new", name="postsoph_new", methods={"GET"})
      *
@@ -1469,6 +1472,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_show", methods={"GET"})
      * @Route("/list/resappranks/{id}", name="resappranks_show", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_show", methods={"GET"})
+     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_show", methods={"GET"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_show", methods={"GET"})
      * @Route("/list/postsoph/{id}", name="postsoph_show", methods={"GET"})
      *
@@ -1740,6 +1744,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/{id}/edit", name="resappstatuses_edit", methods={"GET"})
      * @Route("/list/resappranks/{id}/edit", name="resappranks_edit", methods={"GET"})
      * @Route("/list/resapplanguageproficiency/{id}/edit", name="resapplanguageproficiency_edit", methods={"GET"})
+     * @Route("/list/resappfitforprogram/{id}/edit", name="resappfitforprogram_edit", methods={"GET"})
      * @Route("/list/resappvisastatus/{id}/edit", name="resappvisastatus_edit", methods={"GET"})
      * @Route("/list/postsoph/{id}/edit", name="postsoph_edit", methods={"GET"})
      *
@@ -2061,6 +2066,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_update", methods={"PUT"})
      * @Route("/list/resappranks/{id}", name="resappranks_update", methods={"PUT"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_update", methods={"PUT"})
+     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_update", methods={"PUT"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_update", methods={"PUT"})
      * @Route("/list/postsoph/{id}", name="postsoph_update", methods={"PUT"})
      *
@@ -2743,6 +2749,11 @@ class ListController extends OrderAbstractController
             case "resapplanguageproficiency":
                 $className = "LanguageProficiency";
                 $displayName = "Residency Application Language Proficiencies";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resappfitforprogram":
+                $className = "ResAppFitForProgram";
+                $displayName = "Residency Application Fit for Program";
                 $bundleName = "ResAppBundle";
                 break;
             case "resappvisastatus":
@@ -3659,6 +3670,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_delete", methods={"DELETE"})
      * @Route("/list/resappranks/{id}", name="resappranks_delete", methods={"DELETE"})
      * @Route("/list/resapplanguageproficiency/{id}", name="resapplanguageproficiency_delete", methods={"DELETE"})
+     * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_delete", methods={"DELETE"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_delete", methods={"DELETE"})
      * @Route("/list/postsoph/{id}", name="postsoph_delete", methods={"DELETE"})
      *

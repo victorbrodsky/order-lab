@@ -156,6 +156,11 @@ class InterviewType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width interview-languageProficiency'),
         ));
 
+        $builder->add('fitForProgram',null, array(
+            'label' => 'Fit for residency program:',
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width interview-fitForProgram'),
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

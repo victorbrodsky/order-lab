@@ -142,6 +142,11 @@
             errorArr.push("Please select Language Proficiency");
         }
 
+        var fitForProgram = getFitForProgram();
+        if( !fitForProgram ) {
+            errorArr.push("Please select Fit for Program");
+        }
+
         if( errorArr.length > 0 ) {
             $('#error-div').html( errorArr.join("<br>") );
             $('#error-div').show();
@@ -163,6 +168,19 @@
             }
         }
         return languageProficiency;
+    }
+
+    function getFitForProgram() {
+        var fitForProgram = null;
+        if( isIE() && isIE() <= 7 ) {
+            var element = document.getElementById("oleg_resappbundle_interview_fitForProgram");
+            fitForProgram = getSelect2Text(element);
+        } else {
+            if( $('.interview-fitForProgram').select2('data') ) {
+                fitForProgram = $('.interview-fitForProgram').select2('data').text;
+            }
+        }
+        return fitForProgram;
     }
 
 </script>

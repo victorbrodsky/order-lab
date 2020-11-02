@@ -116,6 +116,13 @@ class Interview {
      */
     private $location;
 
+    /**
+     * Fit for residency program
+     *
+     * @ORM\ManyToOne(targetEntity="ResAppFitForProgram")
+     * @ORM\JoinColumn(name="fitForProgram_id", referencedColumnName="id", nullable=true)
+     */
+    private $fitForProgram;
 
 
 
@@ -326,6 +333,22 @@ class Interview {
     public function getStartTime()
     {
         return $this->startTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFitForProgram()
+    {
+        return $this->fitForProgram;
+    }
+
+    /**
+     * @param mixed $fitForProgram
+     */
+    public function setFitForProgram($fitForProgram)
+    {
+        $this->fitForProgram = $fitForProgram;
     }
 
 
