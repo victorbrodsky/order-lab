@@ -628,7 +628,8 @@
                     </td>
 
                     <td>
-                        {{ entity.startDate|date('m/d/Y','UTC') }}
+                        {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
+                        {{ entity.startDate|date('m/d/Y',false) }}
                     </td>
 
                     <td>

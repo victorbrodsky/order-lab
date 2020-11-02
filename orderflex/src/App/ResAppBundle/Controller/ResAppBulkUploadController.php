@@ -395,6 +395,10 @@ class ResAppBulkUploadController extends OrderAbstractController
             $erasIdValue = $erasIdArr['val'];
             //$erasIdId = $erasIdArr['id'];
 
+            $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
+            $receiptDateValue = $receiptDateArr['val'];
+            //$receiptDateId = $receiptDateArr['id'];
+
             $seasonStartDateArr = $this->getValueByHeaderName('Application Season Start Date',$row,$headers);
             $seasonStartDateValue = $seasonStartDateArr['val'];
             //$seasonStartDateId = $seasonStartDateArr['id'];
@@ -465,8 +469,9 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $rowArr = array();
                 $rowArr['AAMC ID']['value'] = $erasIdValue;
                 $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
+                $rowArr['Application Receipt Date']['value'] = $receiptDateValue; //10/21/2020
                 $rowArr['Preferred Email']['value'] = $emailValue;
-                $rowArr['Last Name']['value'] = $lastNameValue;
+                //$rowArr['Last Name']['value'] = $lastNameValue;
 
                 $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
@@ -718,9 +723,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
             } //if $medSchoolGradDateValue, $medSchoolNameValue, $degreeValue
 
-            $receiptDateArr = $this->getValueByHeaderName('Application Receipt Date',$row,$headers);
-            $receiptDateValue = $receiptDateArr['val'];
-            //$receiptDateId = $receiptDateArr['id'];
+            $timestampDate = NULL;
             if( $receiptDateValue ) {
                 //Convert $receiptDateValue 9/15/2018
                 //make same format (mm/dd/YYYY) 5/5/1987=>05/05/1987

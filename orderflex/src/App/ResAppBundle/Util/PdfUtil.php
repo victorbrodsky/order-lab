@@ -735,11 +735,16 @@ class PdfUtil {
         //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
         $aamcId = $rowArr['AAMC ID']['value'];
         $email = $rowArr['Preferred Email']['value'];
-        $lastName = $rowArr['Last Name']['value'];
+        //$lastName = $rowArr['Last Name']['value'];
 
         $expectedResidencyStartDate = NULL;
         if( isset($rowArr['Expected Residency Start Date']) ) {
-            $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
+            $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value']; //07/01/2021
+        }
+
+        $applicationReceiptDate = NULL;
+        if( isset($rowArr['Application Receipt Date']) ) {
+            $applicationReceiptDate = $rowArr['Application Receipt Date']['value']; //10/21/2020
         }
 
         $erasApplicantId = NULL;
@@ -752,16 +757,34 @@ class PdfUtil {
         $dql->select('resapp');
         $dql->leftJoin('resapp.user','user');
         $dql->leftJoin('user.infos','infos');
-        $dql->where("resapp.aamcId = :aamcId");
-        $dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
-        $dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
+
+        //$dql->where("resapp.aamcId = :aamcId");
+        //$dql->andWhere("LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail)");
+        //$dql->andWhere("LOWER(infos.lastName) = LOWER(:userInfoLastName)");
+
+        $dql->where("(resapp.aamcId = :aamcId OR LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail))");
         $dql->orderBy("resapp.id","DESC");
 
         if( $erasApplicantId ) {
-            $dql->andWhere("resapp.erasApplicantId = :erasApplicantId");
+            $dql->orWhere("resapp.erasApplicantId = :erasApplicantId");
         }
-        if( $expectedResidencyStartDate) {
-            $dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
+        if( $expectedResidencyStartDate || $applicationReceiptDate ) {
+            //$dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
+            $dateStrArr = array();
+            if( $expectedResidencyStartDate ) {
+                $dateStrArr[] = "resapp.startDate = :expectedResidencyStartDate"; //startDate(date) in DB: 2019-07-01
+            }
+            if( $applicationReceiptDate ) {
+                $dateStrArr[] = "resapp.timestamp >= :applicationReceiptDate"; //timestamp(datetime) in DB: 2018-09-29 10:00:00
+            }
+            if( count($dateStrArr) > 0 ) {
+                $dateStr = implode(" OR ",$dateStrArr);
+                if( $dateStr ) {
+                    $dateStr = "(".$dateStr.")";
+                    //echo "[$expectedResidencyStartDate], [$applicationReceiptDate]: dateStr=[$dateStr] <br>";
+                    $dql->andWhere($dateStr);
+                }
+            }
         }
 
         $query = $this->em->createQuery($dql);
@@ -774,12 +797,20 @@ class PdfUtil {
         if( $expectedResidencyStartDate) {
             $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
         }
+        if( $applicationReceiptDate) {
+            $query->setParameter('applicationReceiptDate', $applicationReceiptDate);
+        }
 
         $query->setParameter('aamcId', $aamcId);
         $query->setParameter('userInfoEmail', "'".$email."'");
-        $query->setParameter('userInfoLastName', "'".$lastName."'");
+        //$query->setParameter('userInfoLastName', "'".$lastName."'");
+
+
         $resapps = $query->getResult();
+
+        //echo "sql=".$query->getSql()."<br>";
         //echo "resapps count=".count($resapps)."<br>";
+        //exit('111');
 
         return $resapps;
     }

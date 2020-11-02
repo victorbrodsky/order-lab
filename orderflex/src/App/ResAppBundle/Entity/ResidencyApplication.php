@@ -197,7 +197,7 @@ class ResidencyApplication extends BaseUserAttributes {
     private $appStatus;
 
     /**
-     * timestamp when google form is opened
+     * CSV=>Applicant Applied Date, Handsontable=>Application Receipt Date
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
