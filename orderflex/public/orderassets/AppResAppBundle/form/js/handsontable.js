@@ -65,9 +65,9 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     var updateClass = 'ht-validation-update';
     var dontaddClass = 'ht-validation-dontadd';
     
-    var parentTr = $(td).parent('tr');
-    console.log("parentTr:");
-    console.log(parentTr);
+    //var parentTr = $(td).parent('tr');
+    //console.log("parentTr:");
+    //console.log(parentTr);
     // var parentTr = parent.find('tr');
     // console.log("parentTr:");
     // console.log(parentTr);
@@ -80,29 +80,41 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         //var cellClass = 'ht-validation-dontadd';
 
         console.log(value+"!");
-        $(parentTr).css( "background-color", "red" );
+        //$(parentTr).css( "background-color", "red" );
         // $(parentTr).removeClass(addClass);
         // $(parentTr).removeClass(updateClass);
         // $(parentTr).addClass(dontaddClass);
+
+        $(td).addClass(dontaddClass);
+        $(td).removeClass(addClass);
+        $(td).removeClass(updateClass);
     }
     if( value+"" == "Update PDF" ) {
         //var cellClass = "ht-validation-update";
 
         console.log(value+"!");
-        $(parentTr).css( "background-color", "blue" );
+        //$(parentTr).css( "background-color", "blue" );
         // $(parentTr).removeClass(addClass);
         // $(parentTr).removeClass(dontaddClass);
         // $(parentTr).addClass(updateClass);
+
+        $(td).addClass(updateClass);
+        $(td).removeClass(addClass);
+        $(td).removeClass(dontaddClass);
     }
     if( value+"" == "Add" ) {
         //return false;
         //var cellClass = "ht-validation-add";
 
         console.log(value+"!");
-        $(parentTr).css( "background-color", "green" );
+        //$(parentTr).css( "background-color", "green" );
         // $(parentTr).removeClass(updateClass);
         // $(parentTr).removeClass(dontaddClass);
         // $(parentTr).addClass(addClass);
+
+        $(td).addClass(addClass);
+        $(td).removeClass(updateClass);
+        $(td).removeClass(dontaddClass);
     }
 
     //if( col != 0 ) {
@@ -124,36 +136,36 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     // }
 };
 
-function validateActionCell( row, col, value ) {
-    if( _sotable == null ) {
-        _sotable = $(_htableid).handsontable('getInstance');
-    }
-
-    console.log("row="+row+", col="+col+",value="+value);
-
-    //var columnsLen = _columnData_scanorder.length;
-    //console.log("columnsLen="+columnsLen);
-    //var columnsLen = 22;
-    //console.log("columnsLen="+columnsLen);
-    if( value == "Do not add" ) {
-        var cellBackgroundColor = "#ffcccc";
-    }
-    if( value == "Update PDF" ) {
-        var cellBackgroundColor = "lightblue";
-        // for( var j = 0; j <= columnsLen; j++ ) {
-        //     console.log("columns j="+j);
-        //     _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
-        // }
-    }
-    if( value == "Add" ) {
-        return false;
-        var cellBackgroundColor = "lightgreen";
-    }
-    //var thiscell = $(_htableid).handsontable("getCell", rowNumber, columnNumber);
-    //thiscell.style.backgroundColor = cellBackgroundColor;
-
-    return true;
-}
+// function validateActionCell( row, col, value ) {
+//     if( _sotable == null ) {
+//         _sotable = $(_htableid).handsontable('getInstance');
+//     }
+//
+//     console.log("row="+row+", col="+col+",value="+value);
+//
+//     //var columnsLen = _columnData_scanorder.length;
+//     //console.log("columnsLen="+columnsLen);
+//     //var columnsLen = 22;
+//     //console.log("columnsLen="+columnsLen);
+//     if( value == "Do not add" ) {
+//         var cellBackgroundColor = "#ffcccc";
+//     }
+//     if( value == "Update PDF" ) {
+//         var cellBackgroundColor = "lightblue";
+//         // for( var j = 0; j <= columnsLen; j++ ) {
+//         //     console.log("columns j="+j);
+//         //     _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
+//         // }
+//     }
+//     if( value == "Add" ) {
+//         return false;
+//         var cellBackgroundColor = "lightgreen";
+//     }
+//     //var thiscell = $(_htableid).handsontable("getCell", rowNumber, columnNumber);
+//     //thiscell.style.backgroundColor = cellBackgroundColor;
+//
+//     return true;
+// }
 
 
 function getResidencytracks() {
