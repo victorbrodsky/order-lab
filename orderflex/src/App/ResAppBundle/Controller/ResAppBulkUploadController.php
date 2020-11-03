@@ -54,7 +54,7 @@ class ResAppBulkUploadController extends OrderAbstractController
      */
     public function uploadCsvMultipleApplicationsAction(Request $request)
     {
-        //exit('test exit uploadCsvMultipleApplicationsAction');
+        //exit('test uploadCsvMultipleApplicationsAction');
         if (
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
             $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
@@ -734,7 +734,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $resappImportFromOldSystemUtil->setTrainingDegree($training, $degreeValue, $user);
                     }
                 } else {
-                    exit("Unknown degreeValue=[$degreeValue]");
+                    //exit("Unknown degreeValue=[$degreeValue]");
                 }
 
                 if( $medSchoolGradDateValue ) {
@@ -1054,7 +1054,13 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $user = $users[0];
                 }
                 if( count($users) > 1 ) {
-                    exit("Multiple users found count=".count($users)." by email ".$email);
+                    $user = $users[0]; //use the first found user
+                    //exit("Multiple users found count=".count($users)." by email ".$email);
+                    //Event Log
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $eventType = 'Residency Application Bulk Upload';
+                    $msg = "Warning: Multiple users found count=".count($users)." by email ".$email. ". Use the first found user $user";
+                    $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$creatorUser,null,null,$eventType);
                 }
             }
         }
@@ -1492,7 +1498,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //                    //echo "Page $counter: <br>";
 //                    //dump($pdfTextPage);
 //                    echo "Page $counter=[".$pdfTextPage."]<br>";
-//                    exit("string found $startStr");
+//                    //exit("string found $startStr");
 //                }
 //            }
             $startStr = "Applicant ID:";

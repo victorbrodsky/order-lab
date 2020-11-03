@@ -352,7 +352,7 @@ class ResAppApplicantController extends OrderAbstractController {
         //$text .= "The ONLINE EVALUATION FORM URL personalize link:" . $break . $interviewFormLink . $break.$break;
         $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $applicationFormLink . $break.$break;
 
-        $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
+        $text .= "The ITINERARY and COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
@@ -510,7 +510,7 @@ class ResAppApplicantController extends OrderAbstractController {
             $text = "Dear " . $observer->getUsernameOptimal().",".$break.$break;
             $text .= "Please review the RESIDENCY APPLICATION for the candidate ".$applicant->getUsernameOptimal() . " (ID: ".$entity->getId().")".$break.$break;
 
-            $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
+            $text .= "The ITINERARY and COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
 
 //            if( $scheduleLink ) {
 //                $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
