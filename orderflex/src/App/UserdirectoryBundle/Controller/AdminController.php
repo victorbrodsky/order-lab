@@ -6300,7 +6300,7 @@ class AdminController extends OrderAbstractController
             "A",
             "B",
             "C",
-            "N/A"
+            "Do not rank"
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();

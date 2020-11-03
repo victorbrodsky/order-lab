@@ -1013,8 +1013,8 @@ class ResAppUtil {
         $ews->setCellValue('K1', 'Date');
         $ews->setCellValue('L1', 'Academic Score');
         $ews->setCellValue('M1', 'Personality Score');
-        $ews->setCellValue('N1', 'Potential Score');
-        $ews->setCellValue('O1', 'Overall Potential Score');
+        $ews->setCellValue('N1', 'Overall Potential Score');
+        $ews->setCellValue('O1', 'Total Score');
         $ews->setCellValue('P1', 'Language Proficiency');
         $ews->setCellValue('Q1', 'Fit for Program');
         $ews->setCellValue('R1', 'Comments');
@@ -1240,8 +1240,8 @@ class ResAppUtil {
                 'Date',                         //11 - L
                 'Academic Score',                //12 - M
                 'Personality Score',             //13 - N
-                'Potential Score',               //14 - O
-                'Overall Potential Score',      //15 - P
+                'Overall Potential Score',       //14 - O
+                'Total Score',                  //15 - P
                 'Language Proficiency',         //16 - Q
                 'Fit for Program',             //17 - R
                 'Comments',                     //18 - S

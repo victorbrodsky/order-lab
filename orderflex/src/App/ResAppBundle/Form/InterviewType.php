@@ -132,13 +132,13 @@ class InterviewType extends AbstractType
         ));
 
         $builder->add('potentialRank',null, array(
-            'label' => 'Potential Score:',
+            'label' => 'Overall Potential Score:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-rank interview-potentialRank'),
         ));
 
         $builder->add('totalRank', TextType::class, array(
-            'label' => 'Overall Potential Score:',
+            'label' => 'Total Score:',
             'required' => false,
             //'disabled' => true,
             'attr' => array('class' => 'form-control interview-totalRank', 'readonly'=>true),
