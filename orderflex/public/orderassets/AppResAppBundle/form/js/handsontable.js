@@ -89,7 +89,7 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).removeClass(addClass);
         $(td).removeClass(updateClass);
     }
-    if( value+"" == "Update PDF" ) {
+    if( value+"" == "Update PDF & ID Only" ) {
         //var cellClass = "ht-validation-update";
 
         console.log(value+"!");
@@ -225,7 +225,7 @@ function ajaxFinishedCondition() {
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Do not add");
         _actions_simple.push("Add");
-        _actions_simple.push("Update PDF");
+        _actions_simple.push("Update PDF & ID Only");
         //_actions_simple.push(null);
 
         done++;

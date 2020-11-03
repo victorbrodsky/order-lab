@@ -190,11 +190,11 @@ class PdfUtil {
                 $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
                 $rowArr["Last Name"]['id'] = $applicantUser->getId();
 
-                $rowArr['Issue']['value'] = "Update PDF only, CSV is not provided";
+                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
                 $rowArr['Issue']['id'] = $residencyApplicationDb->getId();
                 
                 //change the value in the “Action” column to “Do not add”
-                $rowArr['Action']['value'] = "Update PDF";
+                $rowArr['Action']['value'] = "Update PDF & ID Only";
                 $rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
                 $handsomtableJsonData[] = $rowArr;

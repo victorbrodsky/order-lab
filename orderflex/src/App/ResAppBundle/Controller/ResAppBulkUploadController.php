@@ -257,6 +257,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         $updatedReasapps = array();
         $updatedStrArr = array();
+        $usedErasDocumentArr = array();
 
         if( $data == null ) {
             //exit('Table order data is null.');
@@ -481,7 +482,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
 
-            if( $actionValue == "Update PDF" ) {
+            if( $actionValue == "Update PDF & ID Only" ) {
 
                 $updateInfo = "";
 
@@ -498,6 +499,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if ($erasDocument) {
                     $residencyApplicationDb->addCoverLetter($erasDocument);
                     $reasppUpdated = true;
+                    $usedErasDocumentArr[$erasDocument->getId()] = true;
                     $updateInfo = "; PDF file updated ".$erasDocument->getOriginalname();
                 } else {
                     $updateInfo = "; ERROR: PDF file not found";
@@ -535,13 +537,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //echo "Do not add row=$count <br>";
 
                 //Remove eras application PDF document file
-                if( $erasDocument ) {
-                    $inputDataFile->removeErasFile($erasDocument);
-                    $em->remove($erasDocument);
-                    if( !$testing ) {
-                        $em->flush();
-                    }
-                }
+//                if( $erasDocument ) {
+//                    $inputDataFile->removeErasFile($erasDocument);
+//                    $em->remove($erasDocument);
+//                    if( !$testing ) {
+//                        $em->flush();
+//                    }
+//                }
+                $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
 
                 if( $actionValue == "Do not add" && $residencyApplicationDb ) {
                     $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
@@ -563,13 +566,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( $residencyApplicationDb ) {
 
                     //Remove eras application PDF document file
-                    if( $erasDocument ) {
-                        $inputDataFile->removeErasFile($erasDocument);
-                        $em->remove($erasDocument);
-                        if( !$testing ) {
-                            $em->flush();
-                        }
-                    }
+//                    if( $erasDocument ) {
+//                        $inputDataFile->removeErasFile($erasDocument);
+//                        $em->remove($erasDocument);
+//                        if( !$testing ) {
+//                            $em->flush();
+//                        }
+//                    }
+                    $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
 
                     $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
                     continue;
@@ -682,6 +686,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             if( $erasDocument ) {
                 $residencyApplication->addCoverLetter($erasDocument);
+                $usedErasDocumentArr[$erasDocument->getId()] = true;
                 $addedPdfInfo = "; Added PDF ".$erasDocument->getOriginalname();
             } else {
                 $addedPdfInfo = "; PDF file is missing";
@@ -963,6 +968,30 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //echo $header.": key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
         return $res;
+    }
+
+    //Remove eras application PDF document file if not used in $usedErasDocumentArr
+    public function removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing=false) {
+        $em = $this->getDoctrine()->getManager();
+        //Remove eras application PDF document file
+        if( $erasDocument ) {
+            if( $usedErasDocumentArr && isset($usedErasDocumentArr[$erasDocument->getId()]) ) {
+                //File is used previously => do not delete
+                return false;
+            }
+
+            if( $inputDataFile ) {
+                $inputDataFile->removeErasFile($erasDocument);
+            }
+
+            $em->remove($erasDocument);
+
+            if( !$testing ) {
+                $em->flush();
+            }
+        }
+
+        return true;
     }
 
     public function getDatetimeFromStr( $datetimeStr ) {

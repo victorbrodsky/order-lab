@@ -1420,6 +1420,15 @@ class ResidencyApplication extends BaseUserAttributes {
         }
     }
 
+    //get recent "Application PDF without attachmed documents" - formReports
+    public function getRecentFormReports() {
+        if( count($this->getReports()) > 0 ) {
+            return $this->getReports()->last();
+        } else {
+            return null;
+        }
+    }
+
     public function getInterviewIdByUser( $interviewer ) {
         $interview = $this->getInterviewByUser($interviewer);
         if( $interview ) {

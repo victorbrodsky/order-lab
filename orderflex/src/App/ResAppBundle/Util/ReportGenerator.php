@@ -549,6 +549,20 @@ class ReportGenerator {
         $this->generateApplicationPdf($id,$applicationFilePath);
         $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
+//        //0) generate application pdf or get the most recent "Application PDF without attachmed documents"
+//        $recentFormReport = $entity->getRecentFormReports();
+//        if( $recentFormReport ) {
+//            //use "Application PDF without attached documents: Will be automatically generated if left empty" if exists, instead of generating PDF
+//            $applicationFilePath = $userSecUtil->getAbsoluteServerFilePath($recentFormReport);
+//        } else {
+//            //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+//            //0) generate application pdf
+//            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+//            $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
+//            $this->generateApplicationPdf($id,$applicationFilePath);
+//            $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+//        }
+
         //1) get all upload documents
         $filePathsArr = array();
         $fileErrors = array();
@@ -573,10 +587,10 @@ class ReportGenerator {
             }
         }
 
-        //application form
-        if( $applicationFilePath ) {
-            $filePathsArr[] = $applicationFilePath;
-        }
+//        //application form
+//        if( $applicationFilePath ) {
+//            $filePathsArr[] = $applicationFilePath;
+//        }
 
         //cv
         $recentDocumentCv = $entity->getRecentCv();
@@ -625,6 +639,11 @@ class ReportGenerator {
             if( $this->isValidFile($reference,$fileErrors,"Reference Letter") ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
             }
+        }
+
+        //application form
+        if( $applicationFilePath ) {
+            $filePathsArr[] = $applicationFilePath;
         }
 
         //other documents
@@ -699,7 +718,7 @@ class ReportGenerator {
             $logger->error("filenameMerged (filesize=".$filesize.") does not exist: ".$filenameMerged);
         }
 
-        //keep application form pdf for "Application PDF without attached documents"
+        //keep application form pdf for "Application PDF without attached documents: Will be automatically generated if left empty"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Residency-Application-Without-Attachments");
         //$formReportPath = $reportPath . '/' . $fileUniqueName;
         $formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
