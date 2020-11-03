@@ -160,6 +160,15 @@ class InterviewType extends AbstractType
             'label' => 'Fit for residency program:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-fitForProgram'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
     }
 

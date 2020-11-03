@@ -649,6 +649,12 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $updatedStrArr["Skip adding residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
                 continue;
             }
+            if( !$lastNameValue ) {
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing Last Name.";
+                $updatedStrArr["Skip adding residency application. ERROR: Missing Last Name"][] = $updateInfo;
+                continue;
+            }
 
             ///////////////// Create new user or get the existed user //////////////////////
             $userArr = array(

@@ -57,6 +57,12 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
+
+//        $fits = $this->getDoctrine()->getRepository('AppResAppBundle:ResAppFitForProgram')->findAll();
+//        foreach($fits as $fit) {
+//            echo "fit=$fit <br>";
+//        }
+
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
 

@@ -121,7 +121,6 @@ class Interview {
      *
      * @ORM\ManyToOne(targetEntity="ResAppFitForProgram")
      * @ORM\JoinColumn(name="fitForProgram_id", referencedColumnName="id", nullable=true)
-     * @ORM\OrderBy({"orderinlist" = "ASC"})
      */
     private $fitForProgram;
 

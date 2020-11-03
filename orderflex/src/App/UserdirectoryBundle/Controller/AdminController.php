@@ -6297,19 +6297,20 @@ class AdminController extends OrderAbstractController
         }
 
         $elements = array(
-            "A",
-            "B",
-            "C",
-            "Do not rank"
+            "A" => 1,
+            "B" => 2,
+            "C" => 3,
+            "Do not rank" => 4
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
-        foreach( $elements as $name ) {
+        foreach( $elements as $name=>$abbreviation ) {
 
             $entity = new ResAppFitForProgram();
             $this->setDefaultList($entity,$count,$username,$name);
+            $entity->setAbbreviation($abbreviation);
 
             $em->persist($entity);
             $em->flush();
