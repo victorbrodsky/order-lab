@@ -237,7 +237,7 @@ class ResAppApplicantController extends OrderAbstractController {
             $emailErrorStr = implode("; ",$emailErrorArr);
         }
 
-        $this->sendConfirmationEmail($emails,$entity,$event,$request, $emailErrorStr); //to admin
+        $this->sendConfirmationEmail($emails,$entity,$event,$request,$emailErrorStr); //to admin
         
         //return $this->redirect( $this->generateUrl('resapp_home') );
 
