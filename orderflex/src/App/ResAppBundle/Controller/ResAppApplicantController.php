@@ -115,6 +115,7 @@ class ResAppApplicantController extends OrderAbstractController {
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         //$startDateStr = $transformer->transform($startDate);
 
+        ////////////// Getting comparison 1st best of 1 available in AP/CP for 2021 ///////////////
 //        $applicants = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
         $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
@@ -143,6 +144,7 @@ class ResAppApplicantController extends OrderAbstractController {
         $applicantions = $query->getResult();
 
         //echo "applicants=".count($applicantions)."<br>";
+        ////////////// EOF Getting comparison 1st best of 1 available in AP/CP for 2021 ///////////////
 
         if( count($applicantions) > 0 ) {
 
@@ -173,6 +175,8 @@ class ResAppApplicantController extends OrderAbstractController {
                 $entity->getInterviewScore().
                 " (".$rankStr." best of ".count($applicantions).
                 " available in ".$resappType." for ".$startDateStr.")";
+
+            $res = $res . "<br>" . "Average Fit for Program: " . $entity->getCalculatedAverageFit();
 
         }
 

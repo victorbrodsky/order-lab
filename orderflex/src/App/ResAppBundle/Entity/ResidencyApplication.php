@@ -1758,6 +1758,86 @@ class ResidencyApplication extends BaseUserAttributes {
         return $note;
     }
 
+    public function getCalculatedAverageFit() {
+        $count = 0;
+        $countNa = 0;
+        $totalFit = 0;
+        foreach( $this->getInterviews() as $interview ) {
+            $fit = $interview->getFitForProgram();
+            if( $fit ) {
+                $fitValue = $fit->getAbbreviation();
+
+                //“; One ‘Do Not Rank' feedback received.” or “; More than one 'Do Not Rank’ feedback received”
+                if( $fitValue == 4 ) {
+                    $countNa++;
+                }
+
+                $totalFit = $totalFit + $fitValue;
+                $count++;
+            }
+        }
+        if( $count > 0 ) {
+            $totalFit = $totalFit/$count;
+            $totalFit = round($totalFit,2);
+        }
+
+        //A-1, B-2, C-3, “Do not rank”-4
+        if( $totalFit == 0 ) {
+            $totalFit = "N/A";
+        }
+        if( $totalFit == 1 ) {
+            $totalFit = "A";
+        }
+
+        //1 - 2
+        if( $totalFit > 1 && $totalFit < 1.5 ) {
+            $totalFit = "A-";
+        }
+        if( $totalFit >= 1.5 && $totalFit < 2 ) {
+            $totalFit = "B+";
+        }
+
+        if( $totalFit == 2 ) {
+            $totalFit = "B";
+        }
+
+        //2 - 3
+        if( $totalFit > 2 && $totalFit < 2.5 ) {
+            $totalFit = "B-";
+        }
+        if( $totalFit >= 2.5 && $totalFit < 3 ) {
+            $totalFit = "C+";
+        }
+
+        if( $totalFit == 3 ) {
+            $totalFit = "C";
+        }
+
+        //3 - 4
+        if( $totalFit > 3 && $totalFit < 3.5 ) { //3.5
+            $totalFit = "C-";
+        }
+        if( $totalFit >= 3.5 && $totalFit < 4 ) {
+            $totalFit = "C+";
+        }
+
+        if( $totalFit == 4 ) {
+            $totalFit = "Do not rank";
+        }
+
+        //“; One ‘Do Not Rank' feedback received.” or “; More than one 'Do Not Rank’ feedback received”
+        if( $countNa > 0 ) {
+            if( $countNa == 1 ) {
+                $totalFit = $totalFit . "; One 'Do Not Rank' feedback received";
+            }
+            if( $countNa > 1 ) {
+                $totalFit = $totalFit . "; More than one 'Do Not Rank' feedback received";
+            }
+        }
+
+        //$entity->setInterviewScore($score);
+        return $totalFit;
+    }
 
     public function __toString() {
         return "ResidencyApplication";
