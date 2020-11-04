@@ -4660,6 +4660,8 @@ class CallLogUtil
                 $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
                 $dql->andWhere("dob.field = :dob");
                 $parameters['dob'] = $dobDateTime;
+                $parameters['statusValid'] = 'valid';
+                $parameters['statusAlias'] = 'alias';
                 $where = true;
             } else {
                 $searchArr[] = "DOB '$dob' is not in the valid format (mm/dd/YYYY)";
@@ -4835,6 +4837,9 @@ class CallLogUtil
 
             $query = $em->createQuery($dql);
             $query->setParameters($parameters);
+            //dump($parameters);
+            //echo "sql=".$query->getSql()."<br>";
+            //exit('test');
             $patients = $query->getResult();
 
             //testing
