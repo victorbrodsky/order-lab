@@ -212,22 +212,32 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $emails = array();
+        $emailErrorArr = array();
         $event = "Invited interviewers to rate residency application ID " . $id . " ".$entity->getUser().".";
 
         //get all interviews
         foreach( $entity->getInterviews() as $interview ) {
             if( !$interview->getTotalRank() || $interview->getTotalRank() <= 0 ) {
                 //send email to interviewer with links to PDF and Interview object to fill out.
-                $email = $this->sendInvitationEmail($interview);
+                $emailResArr = $this->sendInvitationEmail($interview);
+                $email = $emailResArr['email'];
+                $emailError = $emailResArr['error'];
                 if( $email ) {
                     $emails[] = $email;
+                } else {
+                    $emailErrorArr[] = $emailError;
                 }
             } else {
                 $event = $event . "<br>" . "Skipped interviewer ".$interview->getInterviewerInfo().", because the corresponding evaluation form has been rated.";
             }
         }
 
-        $this->sendConfirmationEmail($emails,$entity,$event,$request); //to admin
+        $emailErrorStr = NULL;
+        if( count($emailErrorArr) > 0 ) {
+            $emailErrorStr = implode("; ",$emailErrorArr);
+        }
+
+        $this->sendConfirmationEmail($emails,$entity,$event,$request, $emailErrorStr); //to admin
         
         //return $this->redirect( $this->generateUrl('resapp_home') );
 
@@ -258,7 +268,9 @@ class ResAppApplicantController extends OrderAbstractController {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
         }
 
-        $email = $this->sendInvitationEmail($interview);
+        $emailResArr = $this->sendInvitationEmail($interview);
+        $email = $emailResArr['email'];
+        $emailError = $emailResArr['error'];
 
         $resapp = $interview->getResapp();
 
@@ -268,7 +280,7 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $event = "Invited interviewer to rate residency application ID " . $resapp->getId() . " ".$resapp->getUser().".";
-        $this->sendConfirmationEmail($emails,$resapp,$event,$request);
+        $this->sendConfirmationEmail($emails,$resapp,$event,$request,$emailError);
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');
@@ -285,6 +297,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
     public function sendInvitationEmail( $interview ) {
 
+        $emailResArr = array();
         $logger = $this->container->get('logger');
         $emailUtil = $this->get('user_mailer_utility');
         //$em = $this->getDoctrine()->getManager();
@@ -294,7 +307,10 @@ class ResAppApplicantController extends OrderAbstractController {
 
         if( !$interviewer ) {
             $logger->error("send InvitationEmail: No interviewer exists for interview=" . $interview );
-            return null;
+            //return null;
+            $emailResArr['email'] = NULL;
+            $emailResArr['error'] = "send InvitationEmail: No interviewer exists for interview=" . $interview;
+            return $emailResArr;
         }
 
         if( !$resapp->getRecentItinerary() ) {
@@ -305,8 +321,11 @@ class ResAppApplicantController extends OrderAbstractController {
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
 
-            $logger->error("send InvitationEmail: No recent itinerary found for resapp ID=" . $resapp->getId() );
-            return null;
+            $logger->error("send InvitationEmail: No recent itinerary found for residency application ID=" . $resapp->getId() );
+            //return null;
+            $emailResArr['email'] = NULL;
+            $emailResArr['error'] = "send InvitationEmail: No recent itinerary found for residency application ID=" . $resapp->getId();
+            return $emailResArr;
         }
 
         $attachmentPath = null;
@@ -378,19 +397,27 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $logger->notice("send InvitationEmail: Email has been sent to " . $email . $interviewDateStr);
 
-        return $email;
+        //return $email;
+
+        $emailResArr['email'] = $email;
+        $emailResArr['error'] = NULL;
+        return $emailResArr;
     }
 
     public function convertToHref($url) {
         return '<a href="'.$url.'">'.$url.'</a>';
     }
 
-    public function sendConfirmationEmail( $emails, $resapp, $event, $request ) {
+    public function sendConfirmationEmail( $emails, $resapp, $event, $request, $emailError ) {
 
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
-            $emailStr = " Emails have not been sent: there are no destination emails. Probably itinerary or interviewer(s) do not exists.";
+            //$emailStr = " Emails have not been sent: there are no destination emails. Probably itinerary or interviewer(s) do not exists.";
+            $emailStr = " Emails have not been sent: there are no destination emails.";
+            if( $emailError ) {
+                $emailStr = $emailStr . "<br>Error: $emailError";
+            }
         }
 
         $logger = $this->container->get('logger');
@@ -485,6 +512,7 @@ class ResAppApplicantController extends OrderAbstractController {
         $emailUtil = $this->get('user_mailer_utility');
 
         $emails = array();
+        $emailErrorArr = array();
 
         //get all interviews
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -504,7 +532,11 @@ class ResAppApplicantController extends OrderAbstractController {
 
             //get email
             $email = $observer->getEmail();
-            $emails[] = $email;
+            if( $email ) {
+                $emails[] = $email;
+            } else {
+                $emailErrorArr[] = "Email is empty for observer".$observer->getUsernameOptimal();
+            }
 
             $applicant = $entity->getUser();
 
@@ -544,8 +576,13 @@ class ResAppApplicantController extends OrderAbstractController {
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }
 
+        $emailErrorStr = NULL;
+        if( count($emailErrorArr) > 0 ) {
+            $emailErrorStr = implode("; ",$emailErrorArr);
+        }
+
         $event = "Invited observers to view residency application ID " . $id . " ".$entity->getUser().".";
-        $this->sendConfirmationEmail($emails,$entity,$event,$request);
+        $this->sendConfirmationEmail($emails,$entity,$event,$request,$emailErrorStr);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

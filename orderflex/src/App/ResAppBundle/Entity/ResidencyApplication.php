@@ -1818,11 +1818,11 @@ class ResidencyApplication extends BaseUserAttributes {
             $totalFit = "C-";
         }
         if( $totalFit >= 3.5 && $totalFit < 4 ) {
-            $totalFit = "C+";
+            $totalFit = "D+";
         }
 
         if( $totalFit == 4 ) {
-            $totalFit = "Do not rank";
+            $totalFit = "D (Do not rank)";
         }
 
         //“; One ‘Do Not Rank' feedback received.” or “; More than one 'Do Not Rank’ feedback received”
