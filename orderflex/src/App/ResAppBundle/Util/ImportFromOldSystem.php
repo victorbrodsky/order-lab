@@ -220,7 +220,7 @@ class ImportFromOldSystem {
                 $facultyResidentEmail = $facultyResidentArr['EMAIL'];//'EMAIL' => $EMAIL,
 
                 if( !$interviewer ) {
-                    echo $count.": academicRank=$academicRank: No user exists: FirstName=$facultyResidentFirstName, LastName=$facultyResidentLastName, email=$facultyResidentEmail, phone$facultyResidentPhone<br>";
+                    echo $count.": academicScore=$academicRank: No user exists: FirstName=$facultyResidentFirstName, LastName=$facultyResidentLastName, email=$facultyResidentEmail, phone$facultyResidentPhone<br>";
                     $count++;
                 } else {
 
@@ -340,13 +340,13 @@ class ImportFromOldSystem {
         $decimal = number_format($str, 1);
         //echo "[$str]=>[$decimal] <br>";
         if( array_key_exists($decimal, $ranksArr) === false ) {
-            echo "Warning: Rank not valid [$str]=>[$decimal] <br>";
+            echo "Warning: Score not valid [$str]=>[$decimal] <br>";
             return NULL;
             //exit("Rank not valid [$str]=>[$decimal]");
         }
         $rankEntity = $ranksArr[$decimal];
         if( !$rankEntity ) {
-            exit("Rank not found by str=$str, decimal=$decimal");
+            exit("Score not found by str=$str, decimal=$decimal");
         }
         return $rankEntity;
     }

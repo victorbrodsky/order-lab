@@ -432,11 +432,11 @@
                 {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
                 {% set interviewDescrStr =
                 interviewerUrl~":<br>"~
-                "Academic Rank - "~interview.academicRank~
-                "<br>Personality Rank - "~interview.personalityRank~
-                "<br>Potential Rank - "~interview.potentialRank~
+                "Academic Score - "~interview.academicRank~
+                "<br>Personality Score - "~interview.personalityRank~
+                "<br>Overall Potential Score - "~interview.potentialRank~
                 "<br>Language Proficiency - "~interview.languageProficiency~
-                "<br>Total Rank - "~interview.totalRank~
+                "<br>Total Score - "~interview.totalRank~
                 "<br>Comment: "~interview.comment|e %}
                 {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
             {% endif %}

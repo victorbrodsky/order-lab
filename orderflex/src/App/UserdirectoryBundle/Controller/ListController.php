@@ -2727,7 +2727,7 @@ class ListController extends OrderAbstractController
                 break;
             case "fellappranks":
                 $className = "FellAppRank";
-                $displayName = "Fellowship Application Ranks";
+                $displayName = "Fellowship Application Score";
                 $bundleName = "FellAppBundle";
                 break;
             case "fellapplanguageproficiency":
@@ -2743,7 +2743,7 @@ class ListController extends OrderAbstractController
                 break;
             case "resappranks":
                 $className = "ResAppRank";
-                $displayName = "Residency Application Ranks";
+                $displayName = "Residency Application Score";
                 $bundleName = "ResAppBundle";
                 break;
             case "resapplanguageproficiency":

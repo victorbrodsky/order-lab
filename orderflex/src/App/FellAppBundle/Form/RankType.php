@@ -32,7 +32,7 @@ class RankType extends AbstractType
     {
 
         $builder->add('rank',null, array(
-            'label' => 'Rank:',
+            'label' => 'Score:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));

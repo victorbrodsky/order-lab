@@ -122,25 +122,25 @@ class InterviewType extends AbstractType
         } //if showFull
 
         $builder->add('academicRank',null, array(
-            'label' => 'Academic Rank:',
+            'label' => 'Academic Score:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-rank interview-academicRank'),
         ));
 
         $builder->add('personalityRank',null, array(
-            'label' => 'Personality Rank:',
+            'label' => 'Personality Score:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-rank interview-personalityRank'),
         ));
 
         $builder->add('potentialRank',null, array(
-            'label' => 'Potential Rank:',
+            'label' => 'Overall Potential Score:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width interview-rank interview-potentialRank'),
         ));
 
         $builder->add('totalRank', TextType::class, array(
-            'label' => 'Total Rank:',
+            'label' => 'Total Score:',
             'required' => false,
             //'disabled' => true,
             'attr' => array('class' => 'form-control interview-totalRank', 'readonly'=>true),

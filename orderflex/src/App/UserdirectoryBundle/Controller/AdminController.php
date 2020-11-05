@@ -1043,12 +1043,12 @@ class AdminController extends OrderAbstractController
             'Certifying Board Organizations='.$count_generateCertifyingBoardOrganization.', '.
             'Training Types='.$count_TrainingTypeList.', '.
             'FellApp Statuses='.$count_FellAppStatus.', '.
-            'FellApp Ranks='.$count_FellAppRank.', '.
+            'FellApp Score='.$count_FellAppRank.', '.
             'FellAppVisaStatus='.$count_FellAppVisaStatus.', '.
             'FellApp Language Proficiency='.$count_LanguageProficiency.', '.
 
             'ResApp Statuses='.$count_ResAppStatus.', '.
-            'ResApp Ranks='.$count_ResAppRank.', '.
+            'ResApp Score='.$count_ResAppRank.', '.
             'ResAppVisaStatus='.$count_ResAppVisaStatus.', '.
             'PostSophList='.$count_PostSophList.', '.
             'count_ResAppFitForProgram='.$count_ResAppFitForProgram.', '.
@@ -7181,7 +7181,7 @@ class AdminController extends OrderAbstractController
             "590" => array('JobTitleList','joblists-list'),
 
             "600" => array('FellAppStatus','fellappstatuses-list','Fellowship Application Status'),
-            "610" => array('FellAppRank','fellappranks-list','Fellowship Application Rank'),
+            "610" => array('FellAppRank','fellappranks-list','Fellowship Application Score'),
             "620" => array('LanguageProficiency','fellapplanguageproficiency-list'),
             "630" => array('CollaborationTypeList','collaborationtypes-list'),
             "640" => array('PermissionList','permission-list'),
@@ -7303,7 +7303,7 @@ class AdminController extends OrderAbstractController
             "accessionlisttype" => array('AccessionListType','accessionlisttype-list','Accession List Type'),
 
             "resappstatuses" => array('ResAppStatus','resappstatuses-list','Residency Application Status'),
-            "resappranks" => array('ResAppRank','resappranks-list','Residency Application Rank'),
+            "resappranks" => array('ResAppRank','resappranks-list','Residency Application Score'),
             "resapplanguageproficiency" => array('LanguageProficiency','resapplanguageproficiency-list','Residency Language Proficiency'),
             "resappvisastatus" => array('VisaStatus','resappvisastatus-list','Residency Visa Status'),
             "postsoph" => array('PostSophList','postsoph-list','Post Soph List'),

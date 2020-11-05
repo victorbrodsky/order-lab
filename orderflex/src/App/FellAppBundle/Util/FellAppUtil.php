@@ -921,10 +921,10 @@ class FellAppUtil {
         
         $ews->setCellValue('J1', 'Interviewer');
         $ews->setCellValue('K1', 'Date');
-        $ews->setCellValue('L1', 'Academic Rank');
-        $ews->setCellValue('M1', 'Personality Rank');
-        $ews->setCellValue('N1', 'Potential Rank');
-        $ews->setCellValue('O1', 'Total Rank');
+        $ews->setCellValue('L1', 'Academic Score');
+        $ews->setCellValue('M1', 'Personality Score');
+        $ews->setCellValue('N1', 'Overall Potential Score');
+        $ews->setCellValue('O1', 'Total Score');
         $ews->setCellValue('P1', 'Language Proficiency');
         $ews->setCellValue('Q1', 'Comments');
         
@@ -1019,12 +1019,12 @@ class FellAppUtil {
             }
             
             //All Total Ranks:           
-            $ews->setCellValue('A'.$row, "All Total Ranks:");
+            $ews->setCellValue('A'.$row, "All Total Scores:");
             $ews->setCellValue('B'.$row, $allTotalRanks);
             
             //Avg Rank:
             $row++;
-            $ews->setCellValue('A'.$row, "Avg Rank:");
+            $ews->setCellValue('A'.$row, "Avg Score:");
             $ews->setCellValue('B'.$row, $totalScore);
             
             $row = $row + 2;
@@ -1142,10 +1142,10 @@ class FellAppUtil {
                 'Interview Date',               //9 - J
                 'Interviewer',                  //10 - K
                 'Date',                         //11 - L
-                'Academic Rank',                //12 - M
-                'Personality Rank',             //13 - N
-                'Potential Rank',               //14 - O
-                'Total Rank',                   //15 - P
+                'Academic Score',                //12 - M
+                'Personality Score',             //13 - N
+                'Overall Potential Score',               //14 - O
+                'Total Score',                   //15 - P
                 'Language Proficiency',         //16 - Q
                 'Comments',                     //17 - R
             ],
@@ -1306,7 +1306,7 @@ class FellAppUtil {
 
             //All Total Ranks:
             //$ews->setCellValue('A'.$row, "All Total Ranks:");
-            $data[0] = "All Total Ranks:";
+            $data[0] = "All Total Scores:";
 
             //$ews->setCellValue('B'.$row, $allTotalRanks);
             $data[1] = $allTotalRanks;
@@ -1319,7 +1319,7 @@ class FellAppUtil {
             $data = array();
             //$row++;
             //$ews->setCellValue('A'.$row, "Avg Rank:");
-            $data[0] = "Avg Rank:";
+            $data[0] = "Avg Score:";
             //$ews->setCellValue('B'.$row, $totalScore);
             $data[1] = $totalScore;
             //$writer->addRowWithStyle($data, $footerStyle);
