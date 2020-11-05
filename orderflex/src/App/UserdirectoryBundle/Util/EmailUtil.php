@@ -94,24 +94,31 @@ class EmailUtil {
             }
             if (strpos($url, "/fellowship-applications/") !== false) {
                 $sitenameAbbreviation = "fellapp";
+                $subject = "[Fellowship Applications] " . $subject;
             }
             if (strpos($url, "/residency-applications/") !== false) {
                 $sitenameAbbreviation = "resapp";
+                $subject = "[Residency Applications] " . $subject;
             }
             if (strpos($url, "/call-log-book/") !== false) {
                 $sitenameAbbreviation = "calllog";
+                $subject = "[Call Log Book] " . $subject;
             }
             if (strpos($url, "/critical-result-notifications/") !== false) {
                 $sitenameAbbreviation = "crn";
+                $subject = "[Critical Result Notifications] " . $subject;
             }
             if (strpos($url, "/vacation-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
+                $subject = "[Vacation Request] " . $subject;
             }
             if (strpos($url, "/scan/") !== false) {
                 $sitenameAbbreviation = "scan";
+                $subject = "[Scan Order] " . $subject;
             }
             if (strpos($url, "/deidentifier/") !== false) {
                 $sitenameAbbreviation = "deidentifier";
+                $subject = "[Deidentifier] " . $subject;
             }
         }
 

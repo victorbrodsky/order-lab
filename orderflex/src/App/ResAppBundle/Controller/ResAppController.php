@@ -1908,6 +1908,7 @@ class ResAppController extends OrderAbstractController {
 
         $resappUtil = $this->container->get('resapp_util');
         $logger = $this->container->get('logger');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -1931,7 +1932,11 @@ class ResAppController extends OrderAbstractController {
         $em->persist($resapp);
         $em->flush();
 
-        //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Residency Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
+        $emailNotificationSent = false;
+        $coordinatorEmails = NULL;
+        $applicantName = $resapp->getUser()->getUsernameShortest();
+
+        //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Residency Program Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
         if( $status == 'priority' ) {
             //$break = "\r\n";
             $break = "<br>";
@@ -1941,7 +1946,7 @@ class ResAppController extends OrderAbstractController {
             $logger->notice("Residency application ".$resapp->getId()." status has been marked as Priority to the directors and coordinators emails " . implode(", ",$responsibleEmails));
 
             //Subject: FirstName LastName has marked FirstName LastName's ResidencyType residency application (ID:id#) as "Priority"
-            $emailSubject = $user." has marked ".$resapp->getUser()->getUsernameShortest()."'s ".$resapp->getResidencyTrack().
+            $emailSubject = $user." has marked ".$applicantName."'s ".$resapp->getResidencyTrack().
                 " residency application (ID:".$resapp->getId().") as 'Priority'";
 
             //Body: FirstName LastName (CWID: xxx1234) has marked FirstName LastName's ResidencyType
@@ -1972,24 +1977,48 @@ class ResAppController extends OrderAbstractController {
             $emailBody .= $applicationLink;
             $emailBody .= $break.$break."Download the Application PDF:".$break;
             $emailBody .= $linkToGeneratedApplicantPDF;
-            $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->sendEmail( $responsibleEmails, $emailSubject, $emailBody );
+
+            $emailNotificationSent = true;
         }
 
         if( $sendEmail && $status == 'acceptedandnotified' ) {
             $resappUtil->sendAcceptedNotificationEmail($resapp);
+            $emailNotificationSent = true;
         }
 
         if( $sendEmail && $status == 'rejectedandnotified' ) {
             $resappUtil->sendRejectedNotificationEmail($resapp);
+            $emailNotificationSent = true;
         }
 
         $eventType = 'Residency Application Status changed to ' . $statusObj->getAction();
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $event = $eventType . '; application ID ' . $resapp->getID() . ' by user ' . $user;
+        $event = "Status for ".$resapp->getResidencyTrack()." residency application ID " . $resapp->getID() . ", " .
+            $applicantName . ", has been changed to '" .
+            $statusObj->getAction() . "' by user " . $user;
         $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$resapp,$request,$eventType);
-        
+
+        //If email not sent to coordinators
+        if( !$emailNotificationSent ) {
+            //email notifications about the changes in application status (hidden, etc)
+            // to only be sent to the users with the “residency program coordinator” role
+            // and not to the “residency program director” role
+            if( !$coordinatorEmails ) {
+                $coordinatorEmails = $resappUtil->getCoordinatorsOfResAppEmails($resapp);
+            }
+            if( $coordinatorEmails && count($coordinatorEmails) > 0 ) {
+                //$fromEmail = $userSecUtil->getSiteFromEmail('resapp'); //[Residency Application] 
+                $emailSubject = "Status for ".$resapp->getResidencyTrack()." residency application ID " . $resapp->getID() .
+                    ", " . $applicantName . ", has been changed to '" . $statusObj->getAction() . "'";
+                $emailUtil->sendEmail($coordinatorEmails, $emailSubject, $event);
+                $event = $event . ".<br> Notification email has been sent to coordinator(s): ".implode("; ",$coordinatorEmails);
+            } else {
+                $event = $event . ".<br> Notification email has not been sent to coordinator(s). Error: no coordinators emails";
+            }
+        }//$status == 'priority'
+
         return $event;
     }
 
