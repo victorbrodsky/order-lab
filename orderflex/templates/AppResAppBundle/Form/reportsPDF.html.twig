@@ -21,7 +21,7 @@
 {% endif %}
 
 {#{% if is_granted('ROLE_RESAPP_COORDINATOR') %}#}
-<div class="panel panel-info">
+<div class="panel panel-default">
 
     <div class="panel-heading">
         <h4 class="panel-title">
@@ -65,11 +65,39 @@
         <div class="panel-body">
 
             <div class="well form-element-holder user-FormReport">
-                {#<label class="col-xs-12 control-label">Complete Residency Application PDF</label>#}
                 <div class="row withpaddingtop">
                     <div class="col-xs-12">
 
                         {{ usermacros.documentsContainer(null,form.formReports,cycle,'noprototype',8,'default','Residency Application PDF Without Attached Documents') }}
+
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->
+
+{#Manually Uploaded Application PDF without attachments#}
+<div class="panel panel-info">
+
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#form-manualReports">
+                Manually Uploaded Application PDF without attachments: Will override the fields in the Applicant Data section
+            </a>
+        </h4>
+    </div>
+
+    <div id="form-manualReports" class="panel-collapse collapse {{ collapsein }}">
+        <div class="panel-body">
+
+            <div class="well form-element-holder user-ManualReport">
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+
+                        {{ usermacros.documentsContainer(null,form.manualReports,cycle,'noprototype',8,'default','Manually Uploaded Application PDF without Attached Documents') }}
 
                     </div>
                 </div>

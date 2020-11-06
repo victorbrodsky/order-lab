@@ -296,6 +296,17 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
+        $builder->add('manualReports', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Manual Report(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
+
 
         $builder->add('oldReports', CollectionType::class, array(
             'entry_type' => DocumentType::class,

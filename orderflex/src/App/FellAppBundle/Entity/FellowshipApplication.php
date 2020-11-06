@@ -188,6 +188,8 @@ class FellowshipApplication extends BaseUserAttributes {
     private $reports;
 
     /**
+     * Application PDF without attached documents: Will be automatically generated if left empty
+     *
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="fellapp_fellApp_formReport",
      *      joinColumns={@ORM\JoinColumn(name="fellApp_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -196,6 +198,18 @@ class FellowshipApplication extends BaseUserAttributes {
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $formReports;
+
+    /**
+     * Manually Uploaded Application PDF without attachments
+     * 
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="fellapp_fellapp_manualreports",
+     *      joinColumns={@ORM\JoinColumn(name="fellapp_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="manualreport_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $manualReports;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
@@ -349,6 +363,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $this->references = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->formReports = new ArrayCollection();
+        $this->manualReports = new ArrayCollection();
         $this->oldReports = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->itinerarys = new ArrayCollection();
@@ -763,6 +778,24 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getFormReports()
     {
         return $this->formReports;
+    }
+
+    public function addManualReport($item)
+    {
+        if( $item && !$this->manualReports->contains($item) ) {
+            $this->manualReports->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeManualReport($item)
+    {
+        $this->manualReports->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getManualReports()
+    {
+        return $this->manualReports;
     }
 
     public function addOldReport($item)
