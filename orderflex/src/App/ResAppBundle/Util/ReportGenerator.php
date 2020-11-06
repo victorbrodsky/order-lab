@@ -538,6 +538,9 @@ class ReportGenerator {
         //    chmod($outdir, 0700);
         //}
 
+        //delete application temp folder if exists
+        //$this->deleteDir($outdir);
+
         //Don't use it: DIRECTORY_SEPARATOR CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
         //$logger->notice("2 outdir=".$outdir);
@@ -549,20 +552,12 @@ class ReportGenerator {
         $this->generateApplicationPdf($id,$applicationFilePath);
         $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
-//        //0) generate application pdf or get the most recent "Application PDF without attachmed documents"
-//        $recentFormReport = $entity->getRecentFormReports();
-//        if( $recentFormReport ) {
-//            //use "Application PDF without attached documents: Will be automatically generated if left empty" if exists, instead of generating PDF
-//            $applicationFilePath = $userSecUtil->getAbsoluteServerFilePath($recentFormReport);
-//        } else {
-//            //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
-//            //0) generate application pdf
-//            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
-//            $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
-//            $this->generateApplicationPdf($id,$applicationFilePath);
-//            $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
-//        }
-
+        //Application in PDF order
+        //1)Itinerary file in the "Itinerary/Interview Schedule" section (required to be able to send invitation email)
+        //2)ERAS file(s) in the "Applicant" section
+        //3)application fields in the "Applicant" section (first name, last name, dates, email etc.) or manually uploaded application
+        //4)Other Documents in the "Applicant" section
+        
         //1) get all upload documents
         $filePathsArr = array();
         $fileErrors = array();
@@ -641,9 +636,27 @@ class ReportGenerator {
             }
         }
 
-        //application form
-        if( $applicationFilePath ) {
-            $filePathsArr[] = $applicationFilePath;
+        //application form: use HTML pdf only if $manualReports do not exist
+        //$applicationFilePath = NULL;
+        $manualReports = $entity->getManualReports();
+        if( count($manualReports) > 0 ) {
+            //order from most recent dates to the oldest/earliest dates
+            foreach( $manualReports as $manualReport ) {
+                if( $this->isValidFile($manualReport,$fileErrors,"Manual Report") ) {
+                    $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($manualReport);
+                }
+            }
+        } else {
+//            //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+//            //0) generate application pdf
+//            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+//            $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
+//            $this->generateApplicationPdf($id,$applicationFilePath);
+//            $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+            
+            if( $applicationFilePath ) {
+                $filePathsArr[] = $applicationFilePath;
+            }
         }
 
         //other documents
@@ -722,7 +735,7 @@ class ReportGenerator {
         $fileUniqueName = $this->constructUniqueFileName($entity,"Residency-Application-Without-Attachments");
         //$formReportPath = $reportPath . '/' . $fileUniqueName;
         $formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
-        if( file_exists($applicationFilePath) ) {
+        if( $applicationFilePath && file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
                 //echo "failed to copy $applicationFilePath...\n<br>";
                 $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
@@ -1582,7 +1595,6 @@ class ReportGenerator {
         return $string;
     }
 
-
     protected static function deleteDir($dirPath) {
         if (! is_dir($dirPath)) {
             //throw new \InvalidArgumentException("$dirPath must be a directory");
@@ -1604,6 +1616,43 @@ class ReportGenerator {
         }
         rmdir($dirPath);
     }
+//    //protected static function deleteDir($dirPath) {
+//    public function deleteDir($dirPath) {
+//        $logger = $this->container->get('logger');
+//
+//        //$count++;
+//        //if( $count > 1000 ) {
+//        //    $logger->error("ERROR: Folder delete: counter=".$count);
+//        //}
+//
+//        if( !is_dir($dirPath) ) {
+//            //throw new \InvalidArgumentException("$dirPath must be a directory");
+//            $logger->error("ERROR: Folder does not exist: ".$dirPath);
+//            return false;
+//        }
+//        //if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+//        //    $dirPath .= '/';
+//        //}
+//        if (substr($dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
+//            $dirPath .= DIRECTORY_SEPARATOR;
+//        }
+//        $files = glob($dirPath . '*', GLOB_MARK);
+//        foreach ($files as $file) {
+//            if( is_dir($file) ) {
+//                self::deleteDir($file);
+//            } else {
+//                unlink($file);
+//            }
+//        }
+//
+//        rmdir($dirPath);
+//
+//        if( file_exists($dirPath) ) {
+//            $logger->error("ERROR: Folder is not deleted: ".$dirPath);
+//        } else {
+//            $logger->notice("Folder is deleted: ".$dirPath);
+//        }
+//    }
 
 
 

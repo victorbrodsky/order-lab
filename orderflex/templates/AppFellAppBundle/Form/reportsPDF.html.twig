@@ -81,12 +81,13 @@
 </div> <!-- panel panel-info -->
 
 {#Manually Uploaded Application PDF without attachments#}
-<div class="panel panel-info">
+{% if cycle != 'show' or entity.manualReports|length > 0 %}
+<div class="panel panel-default">
 
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" href="#form-manualReports">
-                Manually Uploaded Application PDF without attachments: Will override the fields in the Applicant Data section
+                Manually Uploaded Application PDF without attachments: Will override automatically generated PDF with Applicant Data
             </a>
         </h4>
     </div>
@@ -108,6 +109,7 @@
     </div> <!-- panel-collapse -->
 
 </div> <!-- panel panel-info -->
+{% endif %}
 
 {% if cycle != "new" %}
 <div class="panel panel-default">

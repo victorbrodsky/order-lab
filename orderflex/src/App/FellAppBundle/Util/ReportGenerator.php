@@ -563,6 +563,18 @@ class ReportGenerator {
         $this->generateApplicationPdf($id,$applicationFilePath);
         $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
+        //Application in PDF order
+        //1)Itinerary file in the "Itinerary/Interview Schedule" section (required to be able to send invitation email)
+        //2)Photo
+        //3) application fields in the "Applicant" section (first name, last name, dates, email etc.) or manually uploaded application
+        //4)CV
+        //5)cover letter
+        //6)scores
+        //7)Reprimand
+        //8)Legal Explanation
+        //9)references
+        //10)Other Documents in the "Applicant" section
+
         //1) get all upload documents
         $filePathsArr = array();
         $fileErrors = array();
@@ -588,8 +600,29 @@ class ReportGenerator {
         }
 
         //application form
-        if( $applicationFilePath ) {
-            $filePathsArr[] = $applicationFilePath;
+//        if( $applicationFilePath ) {
+//            $filePathsArr[] = $applicationFilePath;
+//        }
+        //application form: use HTML pdf only if $manualReports do not exist
+        $manualReports = $entity->getManualReports();
+        if( count($manualReports) > 0 ) {
+            //order from most recent dates to the oldest/earliest dates
+            foreach( $manualReports as $manualReport ) {
+                if( $this->isValidFile($manualReport,$fileErrors,"Manual Report") ) {
+                    $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($manualReport);
+                }
+            }
+        } else {
+//            //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+//            //0) generate application pdf
+//            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+//            $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
+//            $this->generateApplicationPdf($id,$applicationFilePath);
+//            $logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+            if( $applicationFilePath ) {
+                $filePathsArr[] = $applicationFilePath;
+            }
         }
 
         //cv

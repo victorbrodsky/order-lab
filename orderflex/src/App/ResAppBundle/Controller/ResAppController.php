@@ -1860,6 +1860,7 @@ class ResAppController extends OrderAbstractController {
 
         $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
         $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
+        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'manualReport' );
         $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
     }
 
