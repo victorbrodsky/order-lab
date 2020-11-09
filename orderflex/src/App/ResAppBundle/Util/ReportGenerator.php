@@ -905,6 +905,8 @@ class ReportGenerator {
             //array('cookie' => array($session->getName() => $session->getId()))
         );
 
+        $logger->notice("after knp_snappy generate=".$applicationOutputFilePath);
+
         //testing
         //$pdfPath = "resapp_download";
         //$pdfPathParametersArr = array('id' => $applicationId);
