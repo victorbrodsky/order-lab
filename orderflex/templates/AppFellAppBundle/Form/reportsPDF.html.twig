@@ -20,13 +20,14 @@
     {% set collapsein = "in" %}
 {% endif %}
 
+{% if cycle == "show" %}
 {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
 <div class="panel panel-default">
 
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" href="#complete-reports">
-                Complete Application PDF: Will be automatically generated if left empty
+                Complete Application PDF: Will be automatically generated
             </a>
         </h4>
     </div>
@@ -56,7 +57,7 @@
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" href="#form-reports">
-                Application PDF without attached documents: Will be automatically generated if left empty
+                Application PDF without attached documents: Will be automatically generated
             </a>
         </h4>
     </div>
@@ -79,6 +80,7 @@
     </div> <!-- panel-collapse -->
 
 </div> <!-- panel panel-info -->
+{% endif %}
 
 {#Manually Uploaded Application PDF without attachments#}
 {% if cycle != 'show' or entity.manualReports|length > 0 %}
@@ -111,7 +113,7 @@
 </div> <!-- panel panel-info -->
 {% endif %}
 
-{% if cycle != "new" %}
+{% if cycle == "show" %}
 <div class="panel panel-default">
 
     <div class="panel-heading">
