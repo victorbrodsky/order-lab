@@ -1751,13 +1751,13 @@ class ResidencyApplication extends BaseUserAttributes {
         $fullIdArr = array();
         if( $this->getGoogleFormId() ) {
             //return $this->getId() . '<br>(Old ID:' . $this->getGoogleFormId() . ')';
-            $fullIdArr[] = "Old ID: " . $this->getGoogleFormId();
+            $fullIdArr[] = "Old: " . $this->getGoogleFormId();
         }
         if( $this->getErasApplicantId() ) {
-            $fullIdArr[] = "ERAS ID: " . $this->getErasApplicantId();
+            $fullIdArr[] = "ERAS: " . $this->getErasApplicantId();
         }
         if( $this->getAamcId() ) {
-            $fullIdArr[] = "AAMC ID: " . $this->getAamcId();
+            $fullIdArr[] = "AAMC: " . $this->getAamcId();
         }
 
         if( count($fullIdArr) > 0 ) {
