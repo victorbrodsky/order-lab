@@ -2835,7 +2835,7 @@ class ResAppController extends OrderAbstractController {
         $processes = $em->getRepository('AppResAppBundle:Process')->findAll();
         $processInfoArr = array();
         foreach($processes as $processe) {
-            $processInfoArr[] = $processe->setResappId();
+            $processInfoArr[] = $processe->getResappId();
         }
         $processInfoStr = NULL;
         if( count($processInfoArr) > 0 ) {
