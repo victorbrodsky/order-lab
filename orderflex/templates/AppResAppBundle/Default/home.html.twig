@@ -633,12 +633,13 @@
                     </td>
 
                     <td>
-                        {% if entity.googleFormId %}
-                            {% set applicationId = entity.id~' ('~entity.googleFormId~')' %}
-                        {% else %}
-                            {% set applicationId = entity.id %}
-                        {% endif %}
-                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank" style="white-space: nowrap;">{{ applicationId }}</a>
+                        {#{% if entity.googleFormId %}#}
+                            {#{% set applicationId = entity.id~' ('~entity.googleFormId~')' %}#}
+                        {#{% else %}#}
+                            {#{% set applicationId = entity.id %}#}
+                        {#{% endif %}#}
+                        {#<a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank" style="white-space: nowrap;">{{ applicationId }}</a>#}
+                        <a href="{{ path(pathbase~'_show', { 'id': entity.id }) }}" target="_blank" style="white-space: nowrap;">{{ entity.getFullId()|raw }}</a>
                     </td>
 
                     <td>

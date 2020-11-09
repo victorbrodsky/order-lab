@@ -538,6 +538,17 @@ class ResidencyApplicationType extends AbstractType
             'attr' => array('class' => 'combobox'),
         ));
 
+        $builder->add('aamcId', null, array(
+            'label' => 'AAMC ID:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+        $builder->add('erasApplicantId', null, array(
+            'label' => 'ERAS Applicant ID (Unique):',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

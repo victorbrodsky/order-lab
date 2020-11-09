@@ -1746,6 +1746,27 @@ class ResidencyApplication extends BaseUserAttributes {
         return "Unknown Applicant (Application ID " . $this->getId() . ")";
     }
 
+    public function getFullId() {
+        $fullId = NULL;
+        $fullIdArr = array();
+        if( $this->getGoogleFormId() ) {
+            //return $this->getId() . '<br>(Old ID:' . $this->getGoogleFormId() . ')';
+            $fullIdArr[] = "Old ID: " . $this->getGoogleFormId();
+        }
+        if( $this->getErasApplicantId() ) {
+            $fullIdArr[] = "ERAS ID: " . $this->getErasApplicantId();
+        }
+        if( $this->getAamcId() ) {
+            $fullIdArr[] = "AAMC ID: " . $this->getAamcId();
+        }
+
+        if( count($fullIdArr) > 0 ) {
+            $fullId = "<br>" . implode("<br>",$fullIdArr);
+        }
+
+        return $this->getId() . $fullId;
+    }
+
     public function autoSetRecLetterReceived()
     {
         foreach($this->getReferences() as $reference) {
