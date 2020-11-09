@@ -590,13 +590,17 @@ class ReportGenerator {
         //check if photo is not image
         $photo = $entity->getRecentAvatar();
         if( $photo ) {
-            if( $this->isValidFile($photo,$fileErrors,"Photo") ) {
-                $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
-                $photoUrl = null;
-                if ($ext == 'pdf') {
-                    $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+            //$ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
+            //if( $ext == 'pdf' ) {
+                if( $this->isValidFile($photo, $fileErrors, "Photo") ) {
+                    $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
+                    if ($ext == 'pdf') {
+                        $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+                    }
                 }
-            }
+            //} else {
+            //    $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+            //}
         }
 
         //application form

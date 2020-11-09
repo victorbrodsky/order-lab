@@ -2833,10 +2833,18 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $processes = $em->getRepository('AppResAppBundle:Process')->findAll();
+        $processInfoArr = array();
+        foreach($processes as $processe) {
+            $processInfoArr[] = $processe->setResappId();
+        }
+        $processInfoStr = NULL;
+        if( count($processInfoArr) > 0 ) {
+            $processInfoStr = " (ID=".implode(", ",$processInfoArr).")";
+        }
         $estimatedTime = count($processes)*5; //5 min for each report
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Queue with ' . count($processes) . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processes in queue ' . $numUpdated
+            'Queue with ' . count($processes) . $processInfoStr . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processes in queue ' . $numUpdated
         );
 
         //return $this->redirect( $this->generateUrl('resapp_home') );
