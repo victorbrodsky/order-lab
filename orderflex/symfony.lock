@@ -191,6 +191,9 @@
             "./config/packages/knp_snappy.yaml"
         ]
     },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.1.1"
+    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -229,7 +232,7 @@
         ]
     },
     "php": {
-        "version": "7.3"
+        "version": "7.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -285,17 +288,8 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
-    "setasign/fpdf": {
-        "version": "1.8.2"
-    },
-    "setasign/fpdi": {
-        "version": "v2.3.4"
-    },
     "sinergi/browser-detector": {
         "version": "6.1.2"
-    },
-    "smalot/pdfparser": {
-        "version": "v0.16.2"
     },
     "spatie/pdf-to-text": {
         "version": "1.3.0"
@@ -754,6 +748,9 @@
     },
     "twilio/sdk": {
         "version": "6.4.0"
+    },
+    "webimpress/safe-writer": {
+        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.6.0"

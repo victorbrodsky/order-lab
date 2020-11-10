@@ -905,335 +905,10 @@ class PdfUtil {
         return $pdfFilePaths;
     }
 
-    public function getHandsomtableDataArray($parsedDataArr) {
-        $tableDataArr = array();
-
-        foreach($parsedDataArr as $parsedData) {
-            $rowArr = array();
-
-            $currentDate = new \DateTime();
-            $currentDateStr = $currentDate->format('m\d\Y H:i:s');
-
-            $rowArr["Application Receipt Date"]['id'] = 1;
-            $rowArr["Application Receipt Date"]['value'] = $currentDateStr;
-
-            //echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
-            $rowArr["Residency Track"] = NULL; //$parsedData["Residency Track"];
-
-            //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-            $rowArr["Application Season Start Date"] = NULL; //$parsedData["Application Season Start Date"];
-
-            //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-            $rowArr["Application Season End Date"] = NULL; //$parsedData["Application Season End Date"];
-
-            //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-            $rowArr["Expected Residency Start Date"] = NULL; //$parsedData["Expected Residency Start Date"];
-
-            //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-            $rowArr["Expected Graduation Date"] = NULL; //$parsedData["Expected Graduation Date"];
-
-            //// get last, first name ////
-            $fullName = $parsedData["Name:"];
-            $fullNameArr = explode(",",$fullName);
-            if( count($fullNameArr) > 1) {
-                $lastName = trim($fullNameArr[0]);
-                $firstName = trim($fullNameArr[1]);
-            } else {
-                $lastName = $fullName;
-                $firstName = NULL;
-            }
-            //// EOF get last, first name ////
-
-            //First Name
-            $rowArr["First Name"]['id'] = 1;
-            $rowArr["First Name"]['value'] = $firstName;
-
-            //Last Name
-            $rowArr["Last Name"]['id'] = 1;
-            $rowArr["Last Name"]['value'] = $lastName;
-
-            //Middle Name
-            $rowArr["Middle Name"] = NULL;
-
-            //Preferred Email
-            $rowArr["Preferred Email"]['id'] = 1;
-            $rowArr["Preferred Email"]['value'] = $parsedData["Email:"];
-
-            //Couple’s Match:
-            $rowArr["Couple’s Match"]['id'] = 1;
-            $rowArr["Couple’s Match"]['value'] = $parsedData["Participating as a Couple in NRMP:"];
-
-            //ERAS Application ID
-            $rowArr["ERAS Application ID"]['id'] = 1;
-            $rowArr["ERAS Application ID"]['value'] = $parsedData["Applicant ID:"];
-
-            $tableDataArr[] = $rowArr;
-        }
-
-        return $tableDataArr;
-    }
-
-    public function getParsedDataArray($pdfArr) {
-
-        $parsedDataArr = array();
-        
-        foreach($pdfArr as $erasFile) {
-            $parsedDataArr[] = $this->extractDataPdf($erasFile);
-        }
-
-        return $parsedDataArr;
-    }
-
-    public function getTestApplications() {
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
-        $dql = $repository->createQueryBuilder("resapp");
-        $dql->select('resapp');
-        $dql->leftJoin('resapp.coverLetters','coverLetters');
-        $dql->where("coverLetters IS NOT NULL");
-        $dql->orderBy("resapp.id","DESC");
-        $query = $this->em->createQuery($dql);
-        $query->setMaxResults(10);
-        $resapps = $query->getResult();
-        echo "resapps count=".count($resapps)."<br>";
-        
-        return $resapps;
-    }
-    public function getTestPdfApplications() {
-        $resapps = $this->getTestApplications();
-        echo "resapps count=".count($resapps)."<br>";
-
-        $resappPdfs = array();
-
-        foreach($resapps as $resapp) {
-            $erasFiles = $resapp->getCoverLetters();
-            $erasFile = null;
-            $processedGsFile = null;
-
-            if( count($erasFiles) > 0 ) {
-                $erasFile = $erasFiles[0];
-            } else {
-                continue;
-            }
-
-            if( !$erasFile ) {
-                continue;
-            }
-
-            if( strpos($erasFile, '.pdf') !== false ) {
-                //PDF
-            } else {
-                echo "Skip: File is not PDF <br>";
-                continue;
-            }
-
-            //echo "get ERAS from ID=".$resapp->getId()."<br>";
-            $resappPdfs[] = $erasFile;
-        }
-
-        return $resappPdfs;
-    }
-    
-    //Compressed PDF is version > 1.4
-    public function isPdfCompressed($pdfPath) {
-
-        $pdfversion = $this->getPdfVersion($pdfPath);
-
-        if( !$pdfversion ) {
-            return false;
-        }
-
-        if( $pdfversion > "1.4" ){
-            // proceed if PDF version greater than 1.4
-            // convert with ghostscript to version 1.4
-
-            return true;
-        }
-        else{
-            // proceed if PDF version upto 1.4
-            return false;
-        }
-
-        return false;
-    }
-    public function getPdfVersion($pdfPath) {
-        // pdf version information
-        $filepdf = fopen($pdfPath,"r");
-        if ($filepdf) {
-            $line_first = fgets($filepdf);
-            fclose($filepdf);
-
-            // extract number such as 1.4 ,1.5 from first read line of pdf file
-            preg_match_all('!\d+!', $line_first, $matches);
-            // save that number in a variable
-            $pdfversion = implode('.', $matches[0]);
-            echo "pdfversion=$pdfversion <br>";
-
-            return $pdfversion;
-
-        } else{
-            echo "error opening the file.";
-            exit();
-        }
-
-        return null;
-    }
-    
-    public function extractDataPdf( $pdfDocument ) {
-
-        $resappRepGen = $this->container->get('resapp_reportgenerator');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $tempdir = null;
-        $processedGsFile = null;
-
-        $pdfDocumentId = $pdfDocument->getId();
-        $pdfPath = $pdfDocument->getAttachmentEmailPath();
-
-        //testing
-        if(0) {
-            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
-            $parentRoot = str_replace('order-lab', '', $projectRoot);
-            $parentRoot = str_replace('orderflex', '', $parentRoot);
-            $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-            $filename = "eras_gs.pdf";
-            //$filename = "eras.pdf";
-            $pdfPath = $parentRoot . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $filename;
-            //echo "pdfPath=$pdfPath<br>";
-        }
-
-        echo "pdfPath=$pdfPath<br>";
-        if( $this->isPdfCompressed($pdfPath) ) {
-            echo "Compressed <br>";
-
-            //process via GhostCript
-            if(1) {
-
-                //$resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath');
-
-                //1) create temp dir
-                //Uploaded\resapp\documents
-                $uploadedFolder = realpath($this->uploadPath);
-                //echo "destinationFolder=".$destinationFolder."<br>";
-                if( !file_exists($uploadedFolder) ) {
-                    echo "Create destination folder [$uploadedFolder]<br>";
-                    mkdir($uploadedFolder, 0700, true);
-                    chmod($uploadedFolder, 0700);
-                }
-
-                $tempdir = $uploadedFolder.DIRECTORY_SEPARATOR.'temp_'.$pdfDocumentId; //Uploaded\resapp\documents
-                if( !file_exists($tempdir) ) {
-                    //echo "Create destination temp folder [$tempdir]<br>";
-                    mkdir($tempdir, 0700, true);
-                    chmod($tempdir, 0700);
-                }
-
-                //2) copy to temp dir
-                //$outFilename = pathinfo($file, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
-                //$tempPdfFile = $tempdir . DIRECTORY_SEPARATOR . pathinfo($pdfPath, PATHINFO_FILENAME) . "_gs.pdf";
-                $tempPdfFile = $tempdir . DIRECTORY_SEPARATOR . pathinfo($pdfPath, PATHINFO_FILENAME) . ".pdf";
-                if( !file_exists($tempPdfFile) ) {
-                    if( !copy($pdfPath, $tempPdfFile ) ) {
-                        echo "failed to copy $pdfPath...\n<br>";
-                        $errorMsg = "Residency Application document $pdfPath - Failed to copy to destination folder; filePath=".$tempPdfFile;
-                        exit($errorMsg);
-                    }
-                }
-
-                if( !file_exists($tempPdfFile) ) {
-                    //echo "failed to copy $filePath...\n<br>";
-                    $errorMsg = "Residency Application document $pdfPath - Failed to copy to destination folder; filePath=".$tempPdfFile;
-                    exit($errorMsg);
-                }
-
-                //3) process via GhostCript
-                $processedFiles = $resappRepGen->processFilesGostscript(array($tempPdfFile));
-                if (count($processedFiles) > 0) {
-                    //$dir = dirname($erasFilePath);
-                    $processedGsFile = $processedFiles[0];
-                    $processedGsFile = str_replace('"', '', $processedGsFile);
-                    //$path = $dir.DIRECTORY_SEPARATOR.$path;
-                    //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
-                    echo "processedGsFile=" . $processedGsFile . "<br>";
-                } else {
-                    return null;
-                }
-            }
-
-        } else {
-            echo "Not Compressed (version < 1.4) <br>";
-        }//isPdfCompressed
-
-        if( $processedGsFile ) {
-            $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
-            //dump($parsedDataArr);
-            //exit("GS processed");
-        } else {
-            $parsedDataArr = $this->parsePdfSpatie($pdfPath);
-            //dump($parsedDataArr);
-        }
-
-        if( $tempdir ) {
-            //echo "Delete temp dir: $tempdir <br>";
-            $this->deleteDir($tempdir);
-        }
-
-        return $parsedDataArr;
-    }
-
     public function extractPdfText($path) {
         return $this->extractPdfTextSpatie($path, true);
-        //return $this->parsePdfCirovargas($path);
+        //return $this->parsePdfCirovargas($path); //free alternative
     }
-
-    public function parsePdfCirovargas($path) {
-
-        if (file_exists($path)) {
-            //echo "The file $path exists<br>";
-        } else {
-            echo "The file $path does not exist<br>";
-        }
-
-        $field = null;
-
-        if(0) {
-            $resappRepGen = $this->container->get('resapp_reportgenerator');
-            $processedFiles = $resappRepGen->processFilesGostscript(array($path));
-
-            if (count($processedFiles) > 0) {
-                $dir = dirname($path);
-                $path = $processedFiles[0];
-                $path = str_replace('"', '', $path);
-                //$path = $dir.DIRECTORY_SEPARATOR.$path;
-                $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
-                echo "path=" . $path . "<br>";
-            } else {
-                return null;
-            }
-        }
-
-        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
-        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
-
-        $pdfService = new PDFService();
-        $text = $pdfService->pdf2text($path);
-
-        if('' == trim($text)) {
-            //echo "Use parseFile:<br>";
-            $text = $pdfService->parseFile($path);
-        }
-
-//        $startStr = "Applicant ID:";
-//        $endStr = "AAMC ID:";
-//        $field = $this->getPdfField($text,$startStr,$endStr);
-//        echo "Cirovargas: $startStr=[".$field."]<br>";
-        //exit();
-
-        //dump($text);
-        //exit();
-
-        return $text;
-    }
-
     //based on pdftotext. which pdftotext
     public function extractPdfTextSpatie($path, $asText=false) {
 
@@ -1289,55 +964,53 @@ class PdfUtil {
 
         return $keysArr;
     }
-
-    //based on pdftotext. which pdftotext
-    public function parsePdfSpatie($path) {
+    public function parsePdfCirovargas($path) {
 
         if (file_exists($path)) {
-            //echo "The file $path exists <br>";
+            //echo "The file $path exists<br>";
         } else {
-            echo "The file $path does not exist <br>";
+            echo "The file $path does not exist<br>";
         }
 
-        $userServiceUtil = $this->container->get('user_service_utility');
+        $field = null;
 
-        // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
+        if(0) {
+            $resappRepGen = $this->container->get('resapp_reportgenerator');
+            $processedFiles = $resappRepGen->processFilesGostscript(array($path));
 
-        //$pdftotextPath = '/mingw64/bin/pdftotext';
-        $pdftotextPath = '/bin/pdftotext';
-
-        if( $userServiceUtil->isWinOs() ) {
-            //$pdftotextPath = '/mingw64/bin/pdftotext';
-            //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
-            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
-        } else {
-            $pdftotextPath = '/bin/pdftotext';
+            if (count($processedFiles) > 0) {
+                $dir = dirname($path);
+                $path = $processedFiles[0];
+                $path = str_replace('"', '', $path);
+                //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                $path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                echo "path=" . $path . "<br>";
+            } else {
+                return null;
+            }
         }
 
-        $pdftotext = new Pdf($pdftotextPath);
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\eras_gs.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\temp\\PackingSlip.pdf";
 
-        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
-        //$path = '"'.$path.'"';
-        //$path = "'".$path."'";
-        $path = realpath($path);
-        //echo "Spatie source pdf path=".$path."<br>";
+        $pdfService = new PDFService();
+        $text = $pdfService->pdf2text($path);
 
-        $text = $pdftotext->setPdf($path)->text();
-        //dump($text);
+        if('' == trim($text)) {
+            //echo "Use parseFile:<br>";
+            $text = $pdfService->parseFile($path);
+        }
 
 //        $startStr = "Applicant ID:";
 //        $endStr = "AAMC ID:";
 //        $field = $this->getPdfField($text,$startStr,$endStr);
-//        if( $field ) {
-//            echo "Spatie: $startStr=[" . $field . "]<br>";
-//        }
+//        echo "Cirovargas: $startStr=[".$field."]<br>";
+        //exit();
 
-        $keysArr = $this->getKeyFields($text);
+        //dump($text);
+        //exit();
 
-        //echo "keysArr=".count($keysArr)."<br>";
-        //dump($keysArr);
-
-        return $keysArr;
+        return $text;
     }
 
     //$key = 'Applicant ID'
@@ -1450,56 +1123,6 @@ class PdfUtil {
         return $minField;
     }
 
-    public function getKeyFields_Single($text) {
-
-        $keysArr = array();
-
-        foreach( $this->getKeyFieldArr_Single() as $key=>$endStr ) {
-            echo "key=$key, endStr=$endStr<br>";
-            $field = $this->getPdfField($text,$key,$endStr);
-            if( $field ) {
-
-                //Exception
-                if( $key == "Email:" ) {
-                    $emailStrArr = explode(" ",$field);
-                    foreach($emailStrArr as $emailStr) {
-                        if (strpos($emailStr, '@') !== false) {
-                            //echo 'true';
-                            $field = $emailStr;
-                            break;
-                        }
-                    }
-                }
-                //Exception
-                if( $key == "Applicant ID:" ) {
-                    $applicationIdStrArr = explode(" ",$field);
-                    if( count($applicationIdStrArr) > 0 ) {
-                        $field = $applicationIdStrArr[0];
-                    }
-                }
-
-                echo "$key=[" . $field . "]<br>";
-                $keysArr[$key] = $field;
-            }
-        }
-        return $keysArr;
-    }
-    public function getKeyFieldArr_Single() {
-
-        $fieldsArr = array();
-
-        $fieldsArr["Applicant ID:"] = "AAMC ID:";
-        $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
-        $fieldsArr["Email:"] = "Gender:";
-        $fieldsArr["Name:"] = "Previous Last Name:";
-        $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
-        $fieldsArr["USMLE ID:"] = "NBOME ID:";
-        $fieldsArr["NBOME ID:"] = "Email:";
-        $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
-
-        return $fieldsArr;
-    }
-
     public function getPdfField($text,$startStr,$endStr) {
         //$startStr = "Applicant ID:";
         //$endStr = "AAMC ID:";
@@ -1565,5 +1188,253 @@ class PdfUtil {
     }
 
 
+
+    //Compressed PDF is version > 1.4
+    //Used for setasign (not used anymore).
+    public function isPdfCompressed($pdfPath) {
+
+        $pdfversion = $this->getPdfVersion($pdfPath);
+
+        if( !$pdfversion ) {
+            return false;
+        }
+
+        if( $pdfversion > "1.4" ){
+            // proceed if PDF version greater than 1.4
+            // convert with ghostscript to version 1.4
+
+            return true;
+        }
+        else{
+            // proceed if PDF version upto 1.4
+            return false;
+        }
+
+        return false;
+    }
+    public function getPdfVersion($pdfPath) {
+        // pdf version information
+        $filepdf = fopen($pdfPath,"r");
+        if ($filepdf) {
+            $line_first = fgets($filepdf);
+            fclose($filepdf);
+
+            // extract number such as 1.4 ,1.5 from first read line of pdf file
+            preg_match_all('!\d+!', $line_first, $matches);
+            // save that number in a variable
+            $pdfversion = implode('.', $matches[0]);
+            echo "pdfversion=$pdfversion <br>";
+
+            return $pdfversion;
+
+        } else{
+            echo "error opening the file.";
+            exit();
+        }
+
+        return null;
+    }
+
+    //Not Used
+    public function extractDataPdf( $pdfDocument ) {
+
+        $resappRepGen = $this->container->get('resapp_reportgenerator');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $tempdir = null;
+        $processedGsFile = null;
+
+        $pdfDocumentId = $pdfDocument->getId();
+        $pdfPath = $pdfDocument->getAttachmentEmailPath();
+
+        //testing
+        if(0) {
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+            $parentRoot = str_replace('order-lab', '', $projectRoot);
+            $parentRoot = str_replace('orderflex', '', $parentRoot);
+            $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+            $filename = "eras_gs.pdf";
+            //$filename = "eras.pdf";
+            $pdfPath = $parentRoot . DIRECTORY_SEPARATOR . "temp" . DIRECTORY_SEPARATOR . $filename;
+            //echo "pdfPath=$pdfPath<br>";
+        }
+
+        echo "pdfPath=$pdfPath<br>";
+        if( $this->isPdfCompressed($pdfPath) ) {
+            echo "Compressed <br>";
+
+            //process via GhostCript
+            if(1) {
+
+                //$resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath');
+
+                //1) create temp dir
+                //Uploaded\resapp\documents
+                $uploadedFolder = realpath($this->uploadPath);
+                //echo "destinationFolder=".$destinationFolder."<br>";
+                if( !file_exists($uploadedFolder) ) {
+                    echo "Create destination folder [$uploadedFolder]<br>";
+                    mkdir($uploadedFolder, 0700, true);
+                    chmod($uploadedFolder, 0700);
+                }
+
+                $tempdir = $uploadedFolder.DIRECTORY_SEPARATOR.'temp_'.$pdfDocumentId; //Uploaded\resapp\documents
+                if( !file_exists($tempdir) ) {
+                    //echo "Create destination temp folder [$tempdir]<br>";
+                    mkdir($tempdir, 0700, true);
+                    chmod($tempdir, 0700);
+                }
+
+                //2) copy to temp dir
+                //$outFilename = pathinfo($file, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
+                //$tempPdfFile = $tempdir . DIRECTORY_SEPARATOR . pathinfo($pdfPath, PATHINFO_FILENAME) . "_gs.pdf";
+                $tempPdfFile = $tempdir . DIRECTORY_SEPARATOR . pathinfo($pdfPath, PATHINFO_FILENAME) . ".pdf";
+                if( !file_exists($tempPdfFile) ) {
+                    if( !copy($pdfPath, $tempPdfFile ) ) {
+                        echo "failed to copy $pdfPath...\n<br>";
+                        $errorMsg = "Residency Application document $pdfPath - Failed to copy to destination folder; filePath=".$tempPdfFile;
+                        exit($errorMsg);
+                    }
+                }
+
+                if( !file_exists($tempPdfFile) ) {
+                    //echo "failed to copy $filePath...\n<br>";
+                    $errorMsg = "Residency Application document $pdfPath - Failed to copy to destination folder; filePath=".$tempPdfFile;
+                    exit($errorMsg);
+                }
+
+                //3) process via GhostCript
+                $processedFiles = $resappRepGen->processFilesGostscript(array($tempPdfFile));
+                if (count($processedFiles) > 0) {
+                    //$dir = dirname($erasFilePath);
+                    $processedGsFile = $processedFiles[0];
+                    $processedGsFile = str_replace('"', '', $processedGsFile);
+                    //$path = $dir.DIRECTORY_SEPARATOR.$path;
+                    //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+                    echo "processedGsFile=" . $processedGsFile . "<br>";
+                } else {
+                    return null;
+                }
+            }
+
+        } else {
+            echo "Not Compressed (version < 1.4) <br>";
+        }//isPdfCompressed
+
+        if( $processedGsFile ) {
+            $parsedDataArr = $this->parsePdfSpatie($processedGsFile);
+            //dump($parsedDataArr);
+            //exit("GS processed");
+        } else {
+            $parsedDataArr = $this->parsePdfSpatie($pdfPath);
+            //dump($parsedDataArr);
+        }
+
+        if( $tempdir ) {
+            //echo "Delete temp dir: $tempdir <br>";
+            $this->deleteDir($tempdir);
+        }
+
+        return $parsedDataArr;
+    }
+    //based on pdftotext. which pdftotext
+    public function parsePdfSpatie($path) {
+
+        if (file_exists($path)) {
+            //echo "The file $path exists <br>";
+        } else {
+            echo "The file $path does not exist <br>";
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        // /mingw64/bin/pdftotext C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\temp\eras.pdf -
+
+        //$pdftotextPath = '/mingw64/bin/pdftotext';
+        $pdftotextPath = '/bin/pdftotext';
+
+        if( $userServiceUtil->isWinOs() ) {
+            //$pdftotextPath = '/mingw64/bin/pdftotext';
+            //"C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\olegutil\pdftotext\bin64\pdftotext"
+            $pdftotextPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\olegutil\\pdftotext\\bin64\\pdftotext";
+        } else {
+            $pdftotextPath = '/bin/pdftotext';
+        }
+
+        $pdftotext = new Pdf($pdftotextPath);
+
+        //$path = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/temp/eras_gs.pdf";
+        //$path = '"'.$path.'"';
+        //$path = "'".$path."'";
+        $path = realpath($path);
+        //echo "Spatie source pdf path=".$path."<br>";
+
+        $text = $pdftotext->setPdf($path)->text();
+        //dump($text);
+
+//        $startStr = "Applicant ID:";
+//        $endStr = "AAMC ID:";
+//        $field = $this->getPdfField($text,$startStr,$endStr);
+//        if( $field ) {
+//            echo "Spatie: $startStr=[" . $field . "]<br>";
+//        }
+
+        $keysArr = $this->getKeyFields($text);
+
+        //echo "keysArr=".count($keysArr)."<br>";
+        //dump($keysArr);
+
+        return $keysArr;
+    }
+
+    //    public function getKeyFields_Single($text) {
+//
+//        $keysArr = array();
+//
+//        foreach( $this->getKeyFieldArr_Single() as $key=>$endStr ) {
+//            echo "key=$key, endStr=$endStr<br>";
+//            $field = $this->getPdfField($text,$key,$endStr);
+//            if( $field ) {
+//
+//                //Exception
+//                if( $key == "Email:" ) {
+//                    $emailStrArr = explode(" ",$field);
+//                    foreach($emailStrArr as $emailStr) {
+//                        if (strpos($emailStr, '@') !== false) {
+//                            //echo 'true';
+//                            $field = $emailStr;
+//                            break;
+//                        }
+//                    }
+//                }
+//                //Exception
+//                if( $key == "Applicant ID:" ) {
+//                    $applicationIdStrArr = explode(" ",$field);
+//                    if( count($applicationIdStrArr) > 0 ) {
+//                        $field = $applicationIdStrArr[0];
+//                    }
+//                }
+//
+//                echo "$key=[" . $field . "]<br>";
+//                $keysArr[$key] = $field;
+//            }
+//        }
+//        return $keysArr;
+//    }
+//    public function getKeyFieldArr_Single() {
+//
+//        $fieldsArr = array();
+//
+//        $fieldsArr["Applicant ID:"] = "AAMC ID:";
+//        $fieldsArr["AAMC ID:"] = "Most Recent Medical School:";
+//        $fieldsArr["Email:"] = "Gender:";
+//        $fieldsArr["Name:"] = "Previous Last Name:";
+//        $fieldsArr["Birth Date:"] = "Authorized to Work in the US:";
+//        $fieldsArr["USMLE ID:"] = "NBOME ID:";
+//        $fieldsArr["NBOME ID:"] = "Email:";
+//        $fieldsArr["NRMP ID:"] = "Participating in the NRMP Match:";
+//
+//        return $fieldsArr;
+//    }
 
 } 
