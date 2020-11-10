@@ -1812,13 +1812,21 @@ class ResidencyApplication extends BaseUserAttributes {
         return $note;
     }
 
+    //1.33 (A-, scored by 3 of 6 interviewers)
     public function getCalculatedAverageFit() {
+        $totalCount = 0;
+        $evaluatedCount = 0;
         $count = 0;
         $countNa = 0;
         $totalFit = 0;
+        $fitStr = "";
+        $totalFitLetter = "";
+
         foreach( $this->getInterviews() as $interview ) {
+            $totalCount++;
             $fit = $interview->getFitForProgram();
             if( $fit ) {
+                $evaluatedCount++;
                 $fitValue = $fit->getAbbreviation();
 
                 //“; One ‘Do Not Rank' feedback received.” or “; More than one 'Do Not Rank’ feedback received”
@@ -1837,60 +1845,65 @@ class ResidencyApplication extends BaseUserAttributes {
 
         //A-1, B-2, C-3, “Do not rank”-4
         if( $totalFit == 0 ) {
-            $totalFit = "N/A";
+            $totalFitLetter = "N/A";
         }
         if( $totalFit == 1 ) {
-            $totalFit = "A";
+            $totalFitLetter = "A";
         }
 
         //1 - 2
         if( $totalFit > 1 && $totalFit < 1.5 ) {
-            $totalFit = "A-";
+            $totalFitLetter = "A-";
         }
         if( $totalFit >= 1.5 && $totalFit < 2 ) {
-            $totalFit = "B+";
+            $totalFitLetter = "B+";
         }
 
         if( $totalFit == 2 ) {
-            $totalFit = "B";
+            $totalFitLetter = "B";
         }
 
         //2 - 3
         if( $totalFit > 2 && $totalFit < 2.5 ) {
-            $totalFit = "B-";
+            $totalFitLetter = "B-";
         }
         if( $totalFit >= 2.5 && $totalFit < 3 ) {
-            $totalFit = "C+";
+            $totalFitLetter = "C+";
         }
 
         if( $totalFit == 3 ) {
-            $totalFit = "C";
+            $totalFitLetter = "C";
         }
 
         //3 - 4
         if( $totalFit > 3 && $totalFit < 3.5 ) { //3.5
-            $totalFit = "C-";
+            $totalFitLetter = "C-";
         }
         if( $totalFit >= 3.5 && $totalFit < 4 ) {
-            $totalFit = "D+";
+            $totalFitLetter = "D+";
         }
 
         if( $totalFit == 4 ) {
-            $totalFit = "D (Do not rank)";
+            $totalFitLetter = "D (Do not rank)";
         }
 
+        //1.33 (A-, scored by 3 of 6 interviewers)
         //“; One ‘Do Not Rank' feedback received.” or “; More than one 'Do Not Rank’ feedback received”
         if( $countNa > 0 ) {
             if( $countNa == 1 ) {
-                $totalFit = $totalFit . "; One 'Do Not Rank' feedback received";
+                //$fitStr = $totalFit . "(" . $totalFitLetter . ", One 'Do Not Rank' feedback received" . ", scored by $evaluatedCount of $totalCount interviewers)";
+                $totalFitLetter = $totalFitLetter. ", One 'Do Not Rank' feedback received";
             }
             if( $countNa > 1 ) {
-                $totalFit = $totalFit . "; More than one 'Do Not Rank' feedback received";
+                //$fitStr = $totalFit . "(" . $totalFitLetter . ", More than one 'Do Not Rank' feedback received" . ", scored by $evaluatedCount of $totalCount interviewers)";
+                $totalFitLetter = $totalFitLetter . ", More than one 'Do Not Rank' feedback received";
             }
         }
 
+        $fitStr = $totalFit . " (" . $totalFitLetter . ", scored by $evaluatedCount of $totalCount interviewers)";
+
         //$entity->setInterviewScore($score);
-        return $totalFit;
+        return $fitStr;
     }
 
     public function __toString() {

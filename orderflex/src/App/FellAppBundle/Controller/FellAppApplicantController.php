@@ -169,7 +169,7 @@ class FellAppApplicantController extends OrderAbstractController {
                 $rankStr = $rank."rd";
             }
 
-            $res = "Interview Score: ".
+            $res = "Interview Score (lower is better): ".
                 $entity->getInterviewScore().
                 " (".$rankStr." best of ".count($applicantions).
                 " available in ".$fellappType." for ".$startDateStr.")";
@@ -562,6 +562,7 @@ class FellAppApplicantController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $em = $this->getDoctrine()->getManager();
         $fellowshipSubspecialty = null;
         $institutionNameFellappName = "";
@@ -597,7 +598,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), UrlGeneratorInterface::ABSOLUTE_URL); // use absolute path!
 
-        $output = $this->get('knp_snappy.pdf')->getOutput($pageUrl, array(
+        $output = $fellappRepGen->getSnappyPdf()->getOutput($pageUrl, array(
             'cookie' => array(
                 'PHPSESSID' => $PHPSESSID
             )));

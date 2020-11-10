@@ -96,6 +96,7 @@ class ResAppApplicantController extends OrderAbstractController {
         //$logger = $this->container->get('logger');
 
         $em = $this->getDoctrine()->getManager();
+        $resappUtil = $this->container->get('resapp_util');
 
         $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
 
@@ -171,13 +172,13 @@ class ResAppApplicantController extends OrderAbstractController {
                 $rankStr = $rank."rd";
             }
 
-            $res = "Interview Score: ".
+            $res = "Interview Score (lower is better): ".
                 $entity->getInterviewScore().
                 " (".$rankStr." best of ".count($applicantions).
                 " available in ".$resappType." for ".$startDateStr.")";
 
-            $res = $res . "<br>" . "Average Fit for Program: " . $entity->getCalculatedAverageFit();
-
+            //Average Fit for Program: 1.33 (A-, scored by 3 of 6 interviewers)
+            $res = $res . "<br>" . "Average Fit for Program (lower is better): " . $entity->getCalculatedAverageFit(); //$resappUtil->getCalculatedAverageFit(); //$entity->getCalculatedAverageFit();
         }
 
         $response = new Response();
@@ -604,6 +605,7 @@ class ResAppApplicantController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
+        $resappRepGen = $this->container->get('resapp_reportgenerator');
         $em = $this->getDoctrine()->getManager();
         $residencyTrack = null;
         $institutionNameResappName = "";
@@ -639,10 +641,15 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $pageUrl = $this->generateUrl('resapp_interview_applicants_list', array('resappIds'=>$resappIds), UrlGeneratorInterface::ABSOLUTE_URL); // use absolute path!
 
-        $output = $this->get('knp_snappy.pdf')->getOutput($pageUrl, array(
-            'cookie' => array(
-                'PHPSESSID' => $PHPSESSID
-            )));
+        //$output = $this->get('knp_snappy.pdf')->getOutput(
+        $output = $resappRepGen->getSnappyPdf()->getOutput(
+            $pageUrl, 
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        );
 
     } else {
 

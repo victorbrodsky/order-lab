@@ -934,6 +934,10 @@ class ReportGenerator {
         return "PDF generated=[".$applicationOutputFilePath."]";
     }
 
+    public function getSnappyPdf() {
+        return $this->container->get('knp_snappy.pdf');
+    }
+
     //convert all uploads to pdf using LibreOffice
     protected function convertToPdf( $filePathsArr, $outdir, $entity ) {
 

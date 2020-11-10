@@ -2254,4 +2254,6 @@ class ResAppUtil {
 
         return $ethnicities;
     }
+
+    
 } 
