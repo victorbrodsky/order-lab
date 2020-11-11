@@ -1023,12 +1023,22 @@ class PdfUtil {
             return NULL;
         }
 
-        //$endArr = array('endAnchor'=>$endArr,'length'=>NULL);
-        $key = NULL; //startAnchor
+        //$fieldsArr[] = array('field'=>"Applicant ID:",'startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11);
+        $thisKey = NULL; //field to find
+        if( isset($fieldsArr['field']) ) {
+            $thisKey = $fieldsArr['field'];
+        }
+        if( $thisKey && $thisKey == $key ) {
+            //OK
+        } else {
+            return NULL;
+        }
+
+        $startAnchor = NULL;
         $endAnchorArr = NULL;
         $length = NULL;
         if( isset($fieldsArr['startAnchor']) ) {
-            $key = $fieldsArr['startAnchor'];
+            $startAnchor = $fieldsArr['startAnchor'];
         }
         if( isset($fieldsArr['endAnchor']) ) {
             $endAnchorArr = $fieldsArr['endAnchor'];
@@ -1036,7 +1046,7 @@ class PdfUtil {
         if( isset($fieldsArr['length']) ) {
             $length = $fieldsArr['length'];
         }
-        $field = $this->getShortestField($text, $key, $endAnchorArr, $length);
+        $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $length);
         return $field;
     }
 
@@ -1047,13 +1057,16 @@ class PdfUtil {
         foreach( $this->getKeyFieldArr() as $fieldsArr ) {
             //echo "key=$key<br>";
 
-            //$endArr = array('endAnchor'=>$endArr,'length'=>NULL);
-            //$endAnchorArr = $endArr['endAnchor'];
-            $key = NULL; //startAnchor
+            //$fieldsArr[] = array('field'=>"Applicant ID:",'startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11);
+            $key = NULL; //field to find
+            $startAnchor = NULL;
             $endAnchorArr = NULL;
             $length = NULL;
+            if( isset($fieldsArr['field']) ) {
+                $key = $fieldsArr['field'];
+            }
             if( isset($fieldsArr['startAnchor']) ) {
-                $key = $fieldsArr['startAnchor'];
+                $startAnchor = $fieldsArr['startAnchor'];
             }
             if( isset($fieldsArr['endAnchor']) ) {
                 $endAnchorArr = $fieldsArr['endAnchor'];
@@ -1063,9 +1076,9 @@ class PdfUtil {
             }
 
 //            foreach($fieldsArr as $endStr) {
-//                $field = $this->getPdfField($text, $key, $endStr);
+//                $field = $this->getPdfField($text, $startAnchor, $endStr);
 //            }
-            $field = $this->getShortestField($text, $key, $endAnchorArr, $length);
+            $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $length);
 
             if( $field ) {
 
@@ -1194,8 +1207,8 @@ class PdfUtil {
     public function getKeyArr( $keyFields, $key ) {
         if( $keyFields && count($keyFields) > 0 && $key ) {
             foreach($keyFields as $fieldsArr) {
-                if( isset($fieldsArr['startAnchor']) ) {
-                    if( $fieldsArr['startAnchor'] == $key ) {
+                if( isset($fieldsArr['field']) ) {
+                    if( $fieldsArr['field'] == $key ) {
                         return $fieldsArr;
                     }
                 }
@@ -1203,7 +1216,7 @@ class PdfUtil {
         }
         return NULL;
     }
-    public function getShortestField($text, $key, $endAnchorArr, $length) {
+    public function getShortestField($text, $startAnchor, $endAnchorArr, $length) {
         //echo "key=[$key] <br>";
         //echo "$text <br><br>";
 
@@ -1211,7 +1224,7 @@ class PdfUtil {
             $minLength = NULL;
             $minField = NULL;
             foreach($endAnchorArr as $endAnchorStr) {
-                $field = $this->getPdfField($text,$key,$endAnchorStr,$length);
+                $field = $this->getPdfField($text,$startAnchor,$endAnchorStr,$length);
                 $fieldLen = strlen($field);
                 if( $minLength === NULL || $fieldLen <= $minLength ) {
                     $minLength = $fieldLen;
@@ -1222,7 +1235,7 @@ class PdfUtil {
         }
 
         if( $length ) {
-            $field = $this->getPdfField($text,$key,NULL,$length);
+            $field = $this->getPdfField($text,$startAnchor,NULL,$length);
             return $field;
         }
 
