@@ -1016,17 +1016,25 @@ class PdfUtil {
     //$key = 'Applicant ID'
     public function getSingleKeyField($text,$key) {
         $keyFields = $this->getKeyFieldArr();
-        $endArr = $keyFields[$key];
-        //$endArr = array('endAnchor'=>$endArr,'length'=>NULL);
-        if( isset($endArr['endAnchor']) ) {
-            $endAnchorArr = $endArr['endAnchor'];
-        } else {
-            $endAnchorArr = NULL;
+
+        //$fieldsArr = $keyFields[$key];
+        $fieldsArr = $this->getKeyArr($keyFields,$key);
+        if( !$fieldsArr ) {
+            return NULL;
         }
-        if( isset($endArr['length']) ) {
-            $length = $endArr['length'];
-        } else {
-            $length = NULL;
+
+        //$endArr = array('endAnchor'=>$endArr,'length'=>NULL);
+        $key = NULL; //startAnchor
+        $endAnchorArr = NULL;
+        $length = NULL;
+        if( isset($fieldsArr['startAnchor']) ) {
+            $key = $fieldsArr['startAnchor'];
+        }
+        if( isset($fieldsArr['endAnchor']) ) {
+            $endAnchorArr = $fieldsArr['endAnchor'];
+        }
+        if( isset($fieldsArr['length']) ) {
+            $length = $fieldsArr['length'];
         }
         $field = $this->getShortestField($text, $key, $endAnchorArr, $length);
         return $field;
@@ -1036,23 +1044,25 @@ class PdfUtil {
 
         $keysArr = array();
 
-        foreach( $this->getKeyFieldArr() as $key=>$endArr ) {
+        foreach( $this->getKeyFieldArr() as $fieldsArr ) {
             //echo "key=$key<br>";
 
             //$endArr = array('endAnchor'=>$endArr,'length'=>NULL);
             //$endAnchorArr = $endArr['endAnchor'];
-            if( isset($endArr['endAnchor']) ) {
-                $endAnchorArr = $endArr['endAnchor'];
-            } else {
-                $endAnchorArr = NULL;
+            $key = NULL; //startAnchor
+            $endAnchorArr = NULL;
+            $length = NULL;
+            if( isset($fieldsArr['startAnchor']) ) {
+                $key = $fieldsArr['startAnchor'];
             }
-            if( isset($endArr['length']) ) {
-                $length = $endArr['length'];
-            } else {
-                $length = NULL;
+            if( isset($fieldsArr['endAnchor']) ) {
+                $endAnchorArr = $fieldsArr['endAnchor'];
+            }
+            if( isset($fieldsArr['length']) ) {
+                $length = $fieldsArr['length'];
             }
 
-//            foreach($endArr as $endStr) {
+//            foreach($fieldsArr as $endStr) {
 //                $field = $this->getPdfField($text, $key, $endStr);
 //            }
             $field = $this->getShortestField($text, $key, $endAnchorArr, $length);
@@ -1151,21 +1161,47 @@ class PdfUtil {
         $endArr[] = "Self Identification:";
         /////// EOF endArr ///////
 
+//        $fieldsArr = array();
+//        $fieldsArr["Applicant ID:"] = array('endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
+//        $fieldsArr["AAMC ID:"] = array('endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
+//        $fieldsArr["Email:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Name:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Birth Date:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["USMLE ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["NBOME ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["NRMP ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Gender:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Participating as a Couple in NRMP:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Present Mailing Address:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+//        $fieldsArr["Preferred Phone #:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+
         $fieldsArr = array();
-        $fieldsArr["Applicant ID:"] = array('endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
-        $fieldsArr["AAMC ID:"] = array('endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
-        $fieldsArr["Email:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Name:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Birth Date:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["USMLE ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["NBOME ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["NRMP ID:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Gender:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Participating as a Couple in NRMP:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Present Mailing Address:"] = array('endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr["Preferred Phone #:"] = array('endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
+        $fieldsArr[] = array('startAnchor'=>"AAMC ID:",'endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
+        $fieldsArr[] = array('startAnchor'=>"Email:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Name:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Birth Date:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"USMLE ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"NBOME ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"NRMP ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Gender:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Participating as a Couple in NRMP:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Present Mailing Address:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('startAnchor'=>"Preferred Phone #:",'endAnchor'=>$endArr,'length'=>NULL);
 
         return $fieldsArr;
+    }
+    public function getKeyArr( $keyFields, $key ) {
+        if( $keyFields && count($keyFields) > 0 && $key ) {
+            foreach($keyFields as $fieldsArr) {
+                if( isset($fieldsArr['startAnchor']) ) {
+                    if( $fieldsArr['startAnchor'] == $key ) {
+                        return $fieldsArr;
+                    }
+                }
+            }
+        }
+        return NULL;
     }
     public function getShortestField($text, $key, $endAnchorArr, $length) {
         //echo "key=[$key] <br>";

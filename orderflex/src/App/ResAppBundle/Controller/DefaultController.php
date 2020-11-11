@@ -63,14 +63,14 @@ class DefaultController extends OrderAbstractController
 //            echo "fit=$fit <br>";
 //        }
 
-//        //testing extract pdf as array of keys
-//        $resappPdfUtil = $this->get('resapp_pdfutil');
-//        $keyFieldArr = $resappPdfUtil->getKeyFieldArr();
-//        dump($keyFieldArr);
-//        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
-//        $keysArr = $resappPdfUtil->extractPdfText($path,false);
-//        dump($keysArr);
-//        exit('111');
+        //testing extract pdf as array of keys
+        $resappPdfUtil = $this->get('resapp_pdfutil');
+        $keyFieldArr = $resappPdfUtil->getKeyFieldArr();
+        dump($keyFieldArr);
+        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
+        $keysArr = $resappPdfUtil->extractPdfText($path,false);
+        dump($keysArr);
+        exit('111');
 
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
