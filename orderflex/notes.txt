@@ -657,16 +657,27 @@ Anchors JSON working example:
 
 [
 {"startAnchor":"Applicant ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":11},
+
 {"startAnchor":"AAMC ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":9},
+
 {"startAnchor":"Email:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Name:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Birth Date:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"USMLE ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"NBOME ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"NRMP ID:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Gender:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Participating as a Couple in NRMP:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Present Mailing Address:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
 {"startAnchor":"Preferred Phone #:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null}
 ]
 
