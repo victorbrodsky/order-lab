@@ -178,7 +178,7 @@ class ResAppApplicantController extends OrderAbstractController {
                 " available in ".$resappType." for ".$startDateStr.")";
 
             //Average Fit for Program: 1.33 (A-, scored by 3 of 6 interviewers)
-            $res = $res . "<br>" . "Average Fit for Program (lower is better): " . $entity->getCalculatedAverageFit(); //$resappUtil->getCalculatedAverageFit(); //$entity->getCalculatedAverageFit();
+            $res = $res . "<br>" . "Average Fit for Program (lower is better): " . $entity->getCalculatedAverageFit();
         }
 
         $response = new Response();

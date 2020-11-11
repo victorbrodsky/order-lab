@@ -111,7 +111,12 @@ class ResappSiteParameterType extends AbstractType
             )
         ));
 
-
+        $builder->add('dataExtractionAnchor',null,array(
+            'label'=>'Data Extraction Anchors (in json format):',
+            'attr' => array(
+                'class'=>'form-control textarea',
+            )
+        ));
 
 
         if( $this->params['cycle'] != 'show' ) {

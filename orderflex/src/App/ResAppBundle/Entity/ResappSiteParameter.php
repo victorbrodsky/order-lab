@@ -241,8 +241,13 @@ class ResappSiteParameter {
 //     */
 //    private $applicationPageLinkResApp;
 
-    
-    
+    /**
+     * Data Extraction Anchors in json (getKeyFieldArr):
+     * Preceding anchor, Subsequent anchor, Number of characters
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dataExtractionAnchor;
     
     
     
@@ -445,6 +450,23 @@ class ResappSiteParameter {
     {
         $this->confirmationEmailResApp = $confirmationEmailResApp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDataExtractionAnchor()
+    {
+        return $this->dataExtractionAnchor;
+    }
+
+    /**
+     * @param mixed $dataExtractionAnchor
+     */
+    public function setDataExtractionAnchor($dataExtractionAnchor)
+    {
+        $this->dataExtractionAnchor = $dataExtractionAnchor;
+    }
+
 
 
 }
