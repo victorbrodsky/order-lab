@@ -1037,6 +1037,8 @@ class PdfUtil {
         $startAnchor = NULL;
         $endAnchorArr = NULL;
         $length = NULL;
+        $minLength = 2;
+        $maxLength = 200;
         if( isset($fieldsArr['startAnchor']) ) {
             $startAnchor = $fieldsArr['startAnchor'];
         }
@@ -1046,7 +1048,13 @@ class PdfUtil {
         if( isset($fieldsArr['length']) ) {
             $length = $fieldsArr['length'];
         }
-        $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $length);
+        if( isset($fieldsArr['minLength']) ) {
+            $minLength = (int)$fieldsArr['minLength'];
+        }
+        if( isset($fieldsArr['maxLength']) ) {
+            $maxLength = (int)$fieldsArr['maxLength'];
+        }
+        $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength);
         return $field;
     }
 
@@ -1062,6 +1070,8 @@ class PdfUtil {
             $startAnchor = NULL;
             $endAnchorArr = NULL;
             $length = NULL;
+            $minLength = 2;
+            $maxLength = 200;
             if( isset($fieldsArr['field']) ) {
                 $key = $fieldsArr['field'];
             }
@@ -1073,12 +1083,22 @@ class PdfUtil {
             }
             if( isset($fieldsArr['length']) ) {
                 $length = $fieldsArr['length'];
+                //echo $key.": length=$length<br>";
+            }
+            if( isset($fieldsArr['minLength']) ) {
+                $minLength = (int)$fieldsArr['minLength'];
+                //echo $key.": minLength=$minLength<br>";
+            }
+            if( isset($fieldsArr['maxLength']) ) {
+                $maxLength = (int)$fieldsArr['maxLength'];
+                //echo $key.": maxLength=$maxLength<br>";
             }
 
 //            foreach($fieldsArr as $endStr) {
 //                $field = $this->getPdfField($text, $startAnchor, $endStr);
 //            }
-            $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $length);
+            //echo $key.": minLength=$minLength<br>";
+            $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength);
 
             if( $field ) {
 
@@ -1108,37 +1128,22 @@ class PdfUtil {
         return $keysArr;
     }
 
-    //$keyFieldJson=
-    //{
-    //"Applicant ID:":
-    //{
-    //"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
-    //"length":11
-    //},
-    //
-    //"AAMC ID:":
-    //{
-    //    "endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
-    //"length":null
-    //},
-    //
-    //"Email:":
-    //{
-    //    "endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
-    //"length":null
-    //}
-    //}
     public function getKeyFieldArr() {
         $userSecUtil = $this->container->get('user_security_utility');
         $keyFieldJson = $userSecUtil->getSiteSettingParameter('dataExtractionAnchor',$this->container->getParameter('resapp.sitename'));
         //$keyFieldJson = '{"Applicant ID:":"Applicant ID:,AAMC ID:,Email:","b":2,"c":3,"d":4,"e":5}';
+
+        //// EOF get default JSON /////
         //$keyFieldJson = json_encode($this->getDefaultKeyFieldArr()); //testing
-        //dump($keyFieldJson);
         //echo $keyFieldJson;
         //exit('111');
+        //// EOF get default JSON /////
+
         if( $keyFieldJson ) {
             $keyFieldArr = json_decode($keyFieldJson, true); //json to associative arrays
             //echo "keyFieldArr=[".$keyFieldArr."]<br>";
+            //dump($keyFieldArr);
+            //exit('111');
             if( count($keyFieldArr) > 0 ) {
                 return $keyFieldArr;
             }
@@ -1189,18 +1194,18 @@ class PdfUtil {
 //        $fieldsArr["Preferred Phone #:"] = array('endAnchor'=>$endArr,'length'=>NULL);
 
         $fieldsArr = array();
-        $fieldsArr[] = array('field'=>"Applicant ID:",'startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
-        $fieldsArr[] = array('field'=>"AAMC ID:",'startAnchor'=>"AAMC ID:",'endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
-        $fieldsArr[] = array('field'=>"Email:",'startAnchor'=>"Email:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Name:",'startAnchor'=>"Name:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Birth Date:",'startAnchor'=>"Birth Date:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"USMLE ID:",'startAnchor'=>"USMLE ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"NBOME ID:",'startAnchor'=>"NBOME ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"NRMP ID:",'startAnchor'=>"NRMP ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Gender:",'startAnchor'=>"Gender:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Participating as a Couple in NRMP:",'startAnchor'=>"Participating as a Couple in NRMP:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Present Mailing Address:",'startAnchor'=>"Present Mailing Address:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('field'=>"Preferred Phone #:",'startAnchor'=>"Preferred Phone #:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Applicant ID:",'startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'minLength'=>10,'length'=>11,'maxLength'=>11); //' 2021248381' => length=space+10=11
+        $fieldsArr[] = array('field'=>"AAMC ID:",'startAnchor'=>"AAMC ID:",'endAnchor'=>$endArr,'minLength'=>8,'length'=>9,'maxLength'=>9); //' 14003481' => length=space+8=9
+        $fieldsArr[] = array('field'=>"Email:",'startAnchor'=>"Email:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Name:",'startAnchor'=>"Name:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Birth Date:",'startAnchor'=>"Birth Date:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"USMLE ID:",'startAnchor'=>"USMLE ID:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"NBOME ID:",'startAnchor'=>"NBOME ID:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"NRMP ID:",'startAnchor'=>"NRMP ID:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Gender:",'startAnchor'=>"Gender:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Participating as a Couple in NRMP:",'startAnchor'=>"Participating as a Couple in NRMP:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Present Mailing Address:",'startAnchor'=>"Present Mailing Address:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
+        $fieldsArr[] = array('field'=>"Preferred Phone #:",'startAnchor'=>"Preferred Phone #:",'endAnchor'=>$endArr,'minLength'=>NULL,'length'=>NULL,'maxLength'=>NULL);
 
         return $fieldsArr;
     }
@@ -1216,35 +1221,52 @@ class PdfUtil {
         }
         return NULL;
     }
-    public function getShortestField($text, $startAnchor, $endAnchorArr, $length) {
-        //echo "key=[$key] <br>";
+    public function getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength) {
+        //echo "startAnchor=[$startAnchor] <br>";
         //echo "$text <br><br>";
 
         if( $endAnchorArr && count($endAnchorArr) > 0 ) {
-            $minLength = NULL;
-            $minField = NULL;
+            $thisMinLength = NULL;
+            $thisMinField = NULL;
             foreach($endAnchorArr as $endAnchorStr) {
                 $field = $this->getPdfField($text,$startAnchor,$endAnchorStr,$length);
                 $fieldLen = strlen($field);
-                if( $minLength === NULL || $fieldLen <= $minLength ) {
-                    $minLength = $fieldLen;
-                    $minField = $field;
+                if( $thisMinLength === NULL || $fieldLen <= $thisMinLength ) {
+                    $thisMinLength = $fieldLen;
+                    $thisMinField = $field;
                 }
             }
-            return $minField;
+
+            $len = strlen($thisMinField);
+            if( $len >= $minLength && $len <= $maxLength ) {
+                return $thisMinField;
+            }
         }
 
         if( $length ) {
+            //echo "try length=$length <br>";
             $field = $this->getPdfField($text,$startAnchor,NULL,$length);
-            return $field;
+            //return $field;
+            $len = strlen($field);
+            //echo $startAnchor.": minLength=[$minLength], len=[$len], maxLength=[$maxLength] <br>";
+            if( $len >= $minLength && $len <= $maxLength ) {
+                return $field;
+            }
         }
 
         return NULL;
     }
 
     public function getPdfField($text,$startStr,$endStr,$length=NULL) {
+        //echo "startStr=[$startStr] <br>";
         //$startStr = "Applicant ID:";
         //$endStr = "AAMC ID:";
+
+        //if startStr does not exists => return NULL
+        if( strpos($text, $startStr) === false ) {
+            return NULL;
+        }
+
         if( $endStr ) {
             $field = $this->string_between_two_string2($text, $startStr, $endStr);
             //$field = NULL; //testing
@@ -1269,6 +1291,7 @@ class PdfUtil {
 
         //try to use $length
         if( $length ) {
+            //echo "length=[$length]<br>";
             //dump($text);
             //echo "text=".$text."<br>";
             $subtring_start = strpos($text, $startStr);

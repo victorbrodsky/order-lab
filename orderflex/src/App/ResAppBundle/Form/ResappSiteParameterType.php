@@ -112,7 +112,7 @@ class ResappSiteParameterType extends AbstractType
         ));
 
         $builder->add('dataExtractionAnchor',null,array(
-            'label'=>'Data Extraction Anchors in json format ([{"startAnchor":"Applicant ID:","endAnchor":["AAMC ID:","Email:"],"length":11},...]):',
+            'label'=>'Data Extraction Anchors in json format ([{"field":"Applicant ID:","startAnchor":"Applicant ID:","endAnchor":["AAMC ID:","Email:"],"minLength":10,"length":11,"maxLength":11},...]):',
             'attr' => array(
                 'class'=>'form-control textarea',
             )

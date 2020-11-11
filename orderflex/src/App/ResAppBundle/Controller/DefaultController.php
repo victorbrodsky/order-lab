@@ -67,10 +67,10 @@ class DefaultController extends OrderAbstractController
         $resappPdfUtil = $this->get('resapp_pdfutil');
         //$keyFieldArr = $resappPdfUtil->getKeyFieldArr();
         //dump($keyFieldArr);
-        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
-        $keysArr = $resappPdfUtil->extractPdfText($path,false);
-        dump($keysArr);
-        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\BarbatiZ_13018609_f2d01751-e7f9-41f6-97b5-da8289db6137.pdf";
+        //$path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
+        //$keysArr = $resappPdfUtil->extractPdfText($path,false);
+        //dump($keysArr);
+        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\BarbatiZ_13018609_f2d01751-e7f9-41f6-97b5-da8289db6137.pdf"; //custom
         $keysArr = $resappPdfUtil->extractPdfText($path,false);
         dump($keysArr);
         exit('111');
