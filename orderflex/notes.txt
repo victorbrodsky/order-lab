@@ -590,3 +590,66 @@ DigitalOcean packer:
 3) cd order-lab/packer/
 4) bash deploy-order-digital-ocean.sh --token xxx --os centos --protocol https
 
+
+Anchors JSON working example:
+{
+"Applicant ID:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":11
+},
+
+"AAMC ID:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":9
+},
+
+"Email:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"Name:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"Birth Date:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"USMLE ID:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"NBOME ID:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"NRMP ID:":
+{
+"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],
+"length":null
+},
+
+"Gender:":
+{"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
+"Participating as a Couple in NRMP:":
+{"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
+"Present Mailing Address:":
+{"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null},
+
+"Preferred Phone #:":
+{"endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"length":null}
+}
