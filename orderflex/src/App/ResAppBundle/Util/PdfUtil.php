@@ -1176,18 +1176,18 @@ class PdfUtil {
 //        $fieldsArr["Preferred Phone #:"] = array('endAnchor'=>$endArr,'length'=>NULL);
 
         $fieldsArr = array();
-        $fieldsArr[] = array('startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
-        $fieldsArr[] = array('startAnchor'=>"AAMC ID:",'endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
-        $fieldsArr[] = array('startAnchor'=>"Email:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Name:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Birth Date:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"USMLE ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"NBOME ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"NRMP ID:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Gender:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Participating as a Couple in NRMP:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Present Mailing Address:",'endAnchor'=>$endArr,'length'=>NULL);
-        $fieldsArr[] = array('startAnchor'=>"Preferred Phone #:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Applicant ID:",'startAnchor'=>"Applicant ID:",'endAnchor'=>$endArr,'length'=>11); //' 2021248381' => length=space+10=11
+        $fieldsArr[] = array('field'=>"AAMC ID:",'startAnchor'=>"AAMC ID:",'endAnchor'=>$endArr,'length'=>9); //' 14003481' => length=space+8=9
+        $fieldsArr[] = array('field'=>"Email:",'startAnchor'=>"Email:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Name:",'startAnchor'=>"Name:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Birth Date:",'startAnchor'=>"Birth Date:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"USMLE ID:",'startAnchor'=>"USMLE ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"NBOME ID:",'startAnchor'=>"NBOME ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"NRMP ID:",'startAnchor'=>"NRMP ID:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Gender:",'startAnchor'=>"Gender:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Participating as a Couple in NRMP:",'startAnchor'=>"Participating as a Couple in NRMP:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Present Mailing Address:",'startAnchor'=>"Present Mailing Address:",'endAnchor'=>$endArr,'length'=>NULL);
+        $fieldsArr[] = array('field'=>"Preferred Phone #:",'startAnchor'=>"Preferred Phone #:",'endAnchor'=>$endArr,'length'=>NULL);
 
         return $fieldsArr;
     }
