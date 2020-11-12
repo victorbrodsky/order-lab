@@ -1072,6 +1072,8 @@ class PdfUtil {
             $length = NULL;
             $minLength = 2;
             $maxLength = 200;
+            //$minLength = NULL;
+            //$maxLength = NULL;
             if( isset($fieldsArr['field']) ) {
                 $key = $fieldsArr['field'];
             }
@@ -1237,8 +1239,7 @@ class PdfUtil {
                 }
             }
 
-            $len = strlen($thisMinField);
-            if( $len >= $minLength && $len <= $maxLength ) {
+            if( $this->isValidFieldLength($thisMinField, $minLength, $maxLength) ) {
                 return $thisMinField;
             }
         }
@@ -1246,15 +1247,31 @@ class PdfUtil {
         if( $length ) {
             //echo "try length=$length <br>";
             $field = $this->getPdfField($text,$startAnchor,NULL,$length);
-            //return $field;
-            $len = strlen($field);
-            //echo $startAnchor.": minLength=[$minLength], len=[$len], maxLength=[$maxLength] <br>";
-            if( $len >= $minLength && $len <= $maxLength ) {
+            if( $this->isValidFieldLength($field, $minLength, $maxLength) ) {
                 return $field;
             }
         }
 
         return NULL;
+    }
+    public function isValidFieldLength( $field, $minLength, $maxLength ) {
+        $valid = true;
+        $len = strlen($field);
+        if( $minLength ) {
+            if( $len >= $minLength ) {
+                $valid = true;
+            } else {
+                $valid = false;
+            }
+        }
+        if( $maxLength ) {
+            if( $len <= $maxLength ) {
+                $valid = true;
+            } else {
+                $valid = false;
+            }
+        }
+        return $valid;
     }
 
     public function getPdfField($text,$startStr,$endStr,$length=NULL) {
