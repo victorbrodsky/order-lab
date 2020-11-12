@@ -334,11 +334,14 @@
 
 
                 {#link to open/download file#}
+                {#show not just the date and time in the user’s local time zone (NYC) but append to it the UTC date and time as follows: “ - MM/DD/YYYY HH:MM UTC)#}
                 <div class="file-upload-showlink">
                     <div style="overflow:hidden; white-space:nowrap;">
                         {% if documentObj.id %}
                             <a target="_blank"
-                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>
+                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">
+                                {{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s T') }}, {{ documentObj.createdate|date('m/d/Y H:i:s T','UTC') }})
+                            </a>
                         {% endif %}
                     </div>
                 </div>

@@ -99,6 +99,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //dump($form);
             //exit("form submitted");
 
+            //Extracting applications from CSV and/or associate PDF
             if( $form->getClickedButton() === $form->get('upload') ) {
                 //exit("Extracting applications from CSV");
 
@@ -171,6 +172,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                     ". Extracted data rows=".count($handsomtableJsonData).". $errorMsg";
                 $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
             }
+            //Add applications or PDF
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
                 //exit("Adding Application to be implemented");
 
@@ -212,8 +214,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 return $this->redirect($this->generateUrl('resapp_home'));
             }
             else {
-
-                //Event Log
+                //Logical Error. Event Log
                 $eventType = 'Residency Application Bulk Upload';
                 $msg = "Unknown button clicked";
                 $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
