@@ -52,7 +52,7 @@ var _columnData_scanorder = [];
 
 var actionRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    console.log("row="+row+", col="+col+",value="+value);
+    //console.log("row="+row+", col="+col+",value="+value);
 
     // if( !validateActionCell(row,col,value) ) {
     //     console.log('add error');
@@ -75,11 +75,11 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     // console.log("parentTr2:");
     // console.log(parentTr2);
 
+    console.log("actionRenderer:"+value);
     if( value+"" == "Do not add" ) {
         //var cellBackgroundColor = "#ffcccc";
         //var cellClass = 'ht-validation-dontadd';
 
-        console.log(value+"!");
         //$(parentTr).css( "background-color", "red" );
         // $(parentTr).removeClass(addClass);
         // $(parentTr).removeClass(updateClass);
@@ -92,7 +92,6 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     if( value+"" == "Update PDF & ID Only" ) {
         //var cellClass = "ht-validation-update";
 
-        console.log(value+"!");
         //$(parentTr).css( "background-color", "blue" );
         // $(parentTr).removeClass(addClass);
         // $(parentTr).removeClass(dontaddClass);
@@ -106,7 +105,6 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         //return false;
         //var cellClass = "ht-validation-add";
 
-        console.log(value+"!");
         //$(parentTr).css( "background-color", "green" );
         // $(parentTr).removeClass(updateClass);
         // $(parentTr).removeClass(dontaddClass);
@@ -315,7 +313,7 @@ function resappMakeColumnData() {
             columns: {
                 type: 'autocomplete',
                 source: _actions_simple,
-                strict: true,
+                strict: false,
                 filter: false,
                 renderer: actionRenderer
             }
@@ -427,14 +425,14 @@ function handsonTableInit(handsometableDataArr) {
             }
 
             //load data
-            //console.log('load data for row='+i);
+            console.log('load data for row='+i);
             //if( typeof handsometableDataArr != 'undefined' ) {
             if( handsometableDataArr &&
                 typeof handsometableDataArr != 'undefined' &&
                 handsometableDataArr.length > 0
             ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                //console.log('headerTitle='+headerTitle);
+                console.log('headerTitle='+headerTitle);
                 //console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' &&
                     typeof handsometableDataArr[i-1] != 'undefined' &&
@@ -446,7 +444,7 @@ function handsonTableInit(handsometableDataArr) {
                     //console.log(')');
                     if( handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = handsometableDataArr[i-1][headerTitle]["value"];
-                        //console.log( "cellValue="+cellValue );
+                        console.log( "cellValue="+cellValue );
                         //var cellId = handsometableDataArr[i-1][headerTitle]["id"];
                         //console.log('cellValue='+cellValue);
                         //var value = handsometableDataArr[i-1][headerTitle];
@@ -454,6 +452,8 @@ function handsonTableInit(handsometableDataArr) {
                         if( cellValue != null && cellValue != "" ) {
                             //console.log(headerTitle+': set cellValue('+i+','+ii+')='+cellValue);
                             rowElement[ii] = cellValue;
+                            //var testArr = [1,2,3];
+                            //rowElement[ii] = testArr; //cellValue;
                         }
                     }
                 }
@@ -478,7 +478,8 @@ function handsonTableInit(handsometableDataArr) {
     //console.log("data:");
     //console.log(data);
     //console.log(_colHeader);
-    //console.log(columnsType);
+    console.log("columnsType:");
+    console.log(columnsType);
 
     $(_htableid).handsontable({
         data: data,

@@ -80,15 +80,21 @@ class PdfUtil {
 
     public function getExistingApplicationsByPdf( $pdfFiles ) {
         $handsomtableJsonData = array();
+        $usedPdfArr = array();
+        $pdfInfoArr = array();
 
         foreach($pdfFiles as $pdfFile) {
 
             $residencyApplicationDb = NULL;
             $erasApplicantId = NULL;
 
+            //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
+            $pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'originalName'=>$pdfFile->getOriginalname());
+
             $originalFileName = $pdfFile->getOriginalname();
             //echo "originalFileName=$originalFileName <br>";
             if( $originalFileName ) {
+
                 //Correct file name notation "...aid=12345678.pdf"
                 if(
                     //strpos($originalFileName, 'ApplicantID=') !== false ||
@@ -160,6 +166,8 @@ class PdfUtil {
 //
 //                "Preferred Email" => "E-mail",
 
+                $usedPdfArr[$pdfFile->getId()] = true;
+
                 $rowArr = array();
 
                 $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
@@ -199,7 +207,11 @@ class PdfUtil {
 
                 $handsomtableJsonData[] = $rowArr;
             }
-        }
+        }//foreach $pdfFiles
+
+        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr);
+        //dump($handsomtableJsonData);
+        //exit("111");
 
         if( count($handsomtableJsonData) == 0 ) {
             $handsomtableJsonData = "No match of existing residency applications and provided PDF files are found";
@@ -569,24 +581,8 @@ class PdfUtil {
 
         //added not used PDF files
         $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr);
-//        //$notUsedPdfArr = array();
-//        foreach($pdfInfoArr as $fileId=>$pdfFileArr) {
-//            if( isset($usedPdfArr[$fileId]) && $usedPdfArr[$fileId] ) {
-//                //used
-//            } else {
-//                //$notUsedPdfArr[$fileId] = $pdfFileArr;
-//                //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
-//                $rowArr = array();
-//                $rowArr['ERAS Application']['id'] = $fileId;
-//                $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
-//                //$rowArr['Issue']['id'] = null;
-//                //$rowArr['Issue']['value'] = "";
-//                //Add to John Smith’s application (ID 1234)
-//                $rowArr['Action']['id'] = null;
-//                $rowArr['Action']['value'] = "application ID 1";
-//                $handsomtableJsonData[] = $rowArr;
-//            }
-//        }
+        //dump($handsomtableJsonData);
+        //exit("111");
 
         $reader->close();
 
@@ -688,6 +684,8 @@ class PdfUtil {
     }
 
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
+        return $handsomtableJsonData; //testing
+
         $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
         if( !$archiveStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."archive");
@@ -711,14 +709,23 @@ class PdfUtil {
                 //$rowArr['Issue']['id'] = null;
                 //$rowArr['Issue']['value'] = "";
                 //Add to John Smith’s application (ID 1234)
+                $resappIdArr = array();
+                $resappInfoArr = array();
                 foreach($this->getResappToAddPDF($archiveStatus,$hideStatus) as $resapp) {
-                    $rowArr['Action']['id'] = $resapp->getId();
-                    $rowArr['Action']['value'] = "Add to ".$resapp;
+                    echo "resapps=".$resapp->getId()."<br>";
+                    $resappIdArr[] = $resapp->getId();
+                    $resappInfoArr[] = "Add to ".$resapp->getId();
+                    //$rowArr['Action']['id'] = $resapp->getId();
+                    //$rowArr['Action']['value'] = "Add to ".$resapp->getId();
                 }
+                $rowArr['Action']['id'] = $resappIdArr;
+                $rowArr['Action']['value'] = $resappInfoArr;
 
                 $handsomtableJsonData[] = $rowArr;
             }
         }
+
+        return $handsomtableJsonData;
     }
     public function getResappToAddPDF($archiveStatus,$hideStatus) {
         //show the list of current residency applicants that do not have a status of Hidden or Archived for the current year
@@ -735,12 +742,13 @@ class PdfUtil {
         //$dql->andWhere("user.email = :applicantEmail");
         //$dql->andWhere("resapp.id != :resappId");
 
-        //applicationSeasonStartDate
+        //applicationSeasonStartDate: current application season year: 7-1-2020 to 6-30-2021 (7-1-currentyear to 6-30-nextyear)
         //$startDate = $resapp->getStartDate();
         $startDateStr = date("Y");
-        $bottomDate = $startDateStr."-01-01";
-        $topDate = $startDateStr."-12-31";
-        $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+        $endDateStr = date("Y",strtotime('+1 year')); //nextyear
+        $startDate = $startDateStr."-07-01";
+        $endDate = $endDateStr."-06-30";
+        $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
         $query = $this->em->createQuery($dql);
 
@@ -750,6 +758,8 @@ class PdfUtil {
         ));
 
         $resapps = $query->getResult();
+        //echo "resapps=".count($resapps)."<br>";
+
         return $resapps;
     }
 
