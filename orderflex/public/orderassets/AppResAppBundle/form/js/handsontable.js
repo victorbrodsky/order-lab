@@ -38,7 +38,11 @@ var _residencytracks_simple = [];
 var _ethnicities = [];
 var _ethnicities_simple = [];
 
+var _resapps = [];
+var _resapps_simple = [];
+
 var _actions_simple = [];
+var _actions_complex = [];
 
 //var _tdSize = 64;
 //var _tdSize = 26;
@@ -208,6 +212,20 @@ function getResidencyEthnicities() {
         });
     }
 }
+function getResApplicationsForThisYear() {
+    var url = Routing.generate('resapp_get_resapps_current_year');
+    //console.log("run url="+url);
+
+    if( _resapps.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: false //asyncflag
+        }).done(function(data) {
+            _resapps = data;
+        });
+    }
+}
 
 function ajaxFinishedCondition() {
 
@@ -225,6 +243,20 @@ function ajaxFinishedCondition() {
         _actions_simple.push("Add");
         _actions_simple.push("Update PDF & ID Only");
         //_actions_simple.push(null);
+
+        done++;
+    }
+
+    if( _actions_complex.length == 0 ) {
+
+        for( var i = 0; i < _actions_simple.length; i++ ) {
+            _actions_complex[i] = _actions_simple[i];
+        }
+        _actions_complex.push("111");
+        _actions_complex.push("222");
+        _actions_complex.push("333");
+        _actions_complex.push("444");
+        _actions_complex.push("555");
 
         done++;
     }
@@ -274,6 +306,33 @@ function ajaxFinishedCondition() {
             }
             //console.log("_ethnicities_simple:");
             //console.log(_ethnicities_simple);
+
+            //return true;
+            done++;
+        }
+    } else {
+        //return false;
+    }
+
+    if( _resapps.length > 0 ) {
+
+        if(
+            _resapps_simple.length >= _resapps.length
+        ) {
+            //return true;
+            done++;
+        } else {
+            //_resapps_simple.push(""); //add default empty _resapps
+            _resapps_simple.push("Do not add");
+            _resapps_simple.push("Add");
+            _resapps_simple.push("Update PDF & ID Only");
+            for(var i = 0; i < _resapps.length; i++) {
+                var ethnicityName = _resapps[i];
+                //console.log('ethnicityName='+ethnicityName);
+                _resapps_simple.push(ethnicityName);
+            }
+            //console.log("_resapps_simple:");
+            //console.log(_resapps_simple);
 
             //return true;
             done++;
@@ -534,6 +593,15 @@ function handsonTableInit(handsometableDataArr) {
                     //console.log('cellProperties:');
                     //console.log(cellProperties);
                 }
+            }
+
+            //https://github.com/handsontable/handsontable/issues/4428
+            //http://jsfiddle.net/handsoncode/wp7ynbng/1/
+            if( r <= 1 ) {
+                cellProperties.source = _actions_simple;
+            } else {
+                //if cell value has "Add to "
+                cellProperties.source = _resapps_simple;
             }
 
             //var columns = this.getSettings().columns;

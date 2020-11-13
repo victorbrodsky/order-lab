@@ -97,4 +97,33 @@ class ResAppUtilController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/resapps-current-year", name="resapp_get_resapps_current_year", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getResApplicationsForThisYearAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+
+        $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+        if (!$archiveStatus) {
+            throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
+        }
+        $hideStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+        if (!$archiveStatus) {
+            throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
+        }
+
+        $resapps = $resappPdfUtil->getResappToAddPDF($archiveStatus, $hideStatus);
+
+        $resappsInfoArr = array();
+        foreach($resapps as $resapp) {
+            $resappsInfoArr[] = "Add to ".$resapp->getId();
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($resappsInfoArr));
+        return $response;
+    }
 }
