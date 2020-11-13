@@ -597,6 +597,8 @@ function handsonTableInit(handsometableDataArr) {
 
             //https://github.com/handsontable/handsontable/issues/4428
             //http://jsfiddle.net/handsoncode/wp7ynbng/1/
+            //http://jsfiddle.net/e2rxvkb0/
+            //Cell does not keep chosen value, require to choose second time. Use actionRenderer?
             if( r <= 1 ) {
                 cellProperties.source = _actions_simple;
             } else {
