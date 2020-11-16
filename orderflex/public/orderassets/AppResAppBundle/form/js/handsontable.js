@@ -79,7 +79,7 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
     // console.log("parentTr2:");
     // console.log(parentTr2);
 
-    console.log("actionRenderer:"+value);
+    //console.log("actionRenderer:"+value);
     if( value+"" == "Do not add" ) {
         //var cellBackgroundColor = "#ffcccc";
         //var cellClass = 'ht-validation-dontadd';
@@ -247,19 +247,19 @@ function ajaxFinishedCondition() {
         done++;
     }
 
-    if( _actions_complex.length == 0 ) {
-
-        for( var i = 0; i < _actions_simple.length; i++ ) {
-            _actions_complex[i] = _actions_simple[i];
-        }
-        _actions_complex.push("111");
-        _actions_complex.push("222");
-        _actions_complex.push("333");
-        _actions_complex.push("444");
-        _actions_complex.push("555");
-
-        done++;
-    }
+    // if( _actions_complex.length == 0 ) {
+    //
+    //     for( var i = 0; i < _actions_simple.length; i++ ) {
+    //         _actions_complex[i] = _actions_simple[i];
+    //     }
+    //     _actions_complex.push("111");
+    //     _actions_complex.push("222");
+    //     _actions_complex.push("333");
+    //     _actions_complex.push("444");
+    //     _actions_complex.push("555");
+    //
+    //     done++;
+    // }
 
     if( _residencytracks.length > 0 ) {
 
@@ -331,8 +331,8 @@ function ajaxFinishedCondition() {
                 //console.log('ethnicityName='+ethnicityName);
                 _resapps_simple.push(ethnicityName);
             }
-            //console.log("_resapps_simple:");
-            //console.log(_resapps_simple);
+            console.log("_resapps_simple:");
+            console.log(_resapps_simple);
 
             //return true;
             done++;
@@ -484,14 +484,14 @@ function handsonTableInit(handsometableDataArr) {
             }
 
             //load data
-            console.log('load data for row='+i);
+            //console.log('load data for row='+i);
             //if( typeof handsometableDataArr != 'undefined' ) {
             if( handsometableDataArr &&
                 typeof handsometableDataArr != 'undefined' &&
                 handsometableDataArr.length > 0
             ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
+                //console.log('headerTitle='+headerTitle);
                 //console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' &&
                     typeof handsometableDataArr[i-1] != 'undefined' &&
@@ -503,7 +503,7 @@ function handsonTableInit(handsometableDataArr) {
                     //console.log(')');
                     if( handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = handsometableDataArr[i-1][headerTitle]["value"];
-                        console.log( "cellValue="+cellValue );
+                        //console.log( "cellValue="+cellValue );
                         //var cellId = handsometableDataArr[i-1][headerTitle]["id"];
                         //console.log('cellValue='+cellValue);
                         //var value = handsometableDataArr[i-1][headerTitle];
@@ -537,8 +537,8 @@ function handsonTableInit(handsometableDataArr) {
     //console.log("data:");
     //console.log(data);
     //console.log(_colHeader);
-    console.log("columnsType:");
-    console.log(columnsType);
+    //console.log("columnsType:");
+    //console.log(columnsType);
 
     $(_htableid).handsontable({
         data: data,
@@ -573,6 +573,8 @@ function handsonTableInit(handsometableDataArr) {
         //overflow: 'auto',
         cells: function(r,c,prop) {
             var cellProperties = {};
+            var headerTitle = null;
+            var cellId = null;
 
             // if( tableFormCycle == 'show' ) {
             //     cellProperties.readOnly = true;
@@ -581,13 +583,14 @@ function handsonTableInit(handsometableDataArr) {
             //console.log("c="+c+"; r="+r);                      //c=7
             //console.log(_columnData_scanorder[c]);    //_columnData_scanorder[c].header="Barcode"
             if( c > 0 ) {
-                var headerTitle = _columnData_scanorder[c]['header'];
+                headerTitle = _columnData_scanorder[c]['header'];
+                //console.log("c="+c+"; r="+r+"; headerTitle="+headerTitle);
                 if( typeof headerTitle != 'undefined' && headerTitle != '' &&
                     handsometableDataArr && typeof handsometableDataArr != 'undefined' && typeof handsometableDataArr[r] != 'undefined' &&
                     typeof handsometableDataArr[r][headerTitle] != 'undefined' &&
                     handsometableDataArr[r][headerTitle] != null
                 ) {
-                    var cellId = handsometableDataArr[r][headerTitle]["id"];
+                    cellId = handsometableDataArr[r][headerTitle]["id"];
                     //console.log("cellId="+cellId);
                     cellProperties.id = cellId;
                     //console.log('cellProperties:');
@@ -599,12 +602,27 @@ function handsonTableInit(handsometableDataArr) {
             //http://jsfiddle.net/handsoncode/wp7ynbng/1/
             //http://jsfiddle.net/e2rxvkb0/
             //Cell does not keep chosen value, require to choose second time. Use actionRenderer?
-            if( r <= 1 ) {
-                cellProperties.source = _actions_simple;
-            } else {
-                //if cell value has "Add to "
-                cellProperties.source = _resapps_simple;
+            //Issue id = -1, value = "No match found"
+            //if( headerTitle && headerTitle == "Issue" ) {
+                //console.log("headerTitle=" + headerTitle + ", cellId=" + cellId);
+            //}
+            if( c == 0 && typeof handsometableDataArr[r] != 'undefined' ) {
+            //if( headerTitle && headerTitle == "Action" ) {
+                //console.log("c="+c+"; r="+r);
+                var issueCellId = handsometableDataArr[r]["Issue"]["id"];
+                var erasFileCellId = handsometableDataArr[r]["ERAS Application"]["id"];
+                var erasFileCellValue = handsometableDataArr[r]["ERAS Application"]["value"];
+                //console.log("headerTitle=" + headerTitle + ", issueCellId=" + issueCellId);
+                if( issueCellId && issueCellId == -1 && erasFileCellId && erasFileCellValue ) {
+                    cellProperties.source = _resapps_simple; //overwrite with extended choices including "Add to John Smith’s application (ID 1234)"
+                }
             }
+            // if( headerTitle && headerTitle == "Issue" && cellId && cellId == -1 ) {
+            //     console.log("Use extended choices!!!");
+            //     cellProperties.source = _resapps_simple; //extended choices including "Add to John Smith’s application (ID 1234)"
+            // } else {
+            //     cellProperties.source = _actions_simple;
+            // }
 
             //var columns = this.getSettings().columns;
             //var columnsLen = columns.length;
@@ -836,7 +854,7 @@ function resizeTableHeight_new() {
     //var indexRow = _sotable.recalculateAllRowsHeight();
     //var heightRow = _sotable.getColumnHeaderHeight();
     //var heightRow = _sotable.getRowHeight(indexRow);
-    console.log("heightRow="+heightRow+", countRow="+countRow);
+    //console.log("heightRow="+heightRow+", countRow="+countRow);
     //var newHeight = countRow*(_tdSize + _tdPadding*4);
     var newHeight = countRow*heightRow;
     _sotable.updateSettings({height: newHeight});

@@ -684,7 +684,7 @@ class PdfUtil {
     }
 
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
-        return $handsomtableJsonData; //testing
+        //return $handsomtableJsonData; //testing
 
         $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
         if( !$archiveStatus ) {
@@ -706,20 +706,21 @@ class PdfUtil {
                 $rowArr = array();
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
-                //$rowArr['Issue']['id'] = null;
-                //$rowArr['Issue']['value'] = "";
-                //Add to John Smith’s application (ID 1234)
-                $resappIdArr = array();
-                $resappInfoArr = array();
-                foreach($this->getResappToAddPDF($archiveStatus,$hideStatus) as $resapp) {
-                    echo "resapps=".$resapp->getId()."<br>";
-                    $resappIdArr[] = $resapp->getId();
-                    $resappInfoArr[] = "Add to ".$resapp->getId();
-                    //$rowArr['Action']['id'] = $resapp->getId();
-                    //$rowArr['Action']['value'] = "Add to ".$resapp->getId();
-                }
-                $rowArr['Action']['id'] = $resappIdArr;
-                $rowArr['Action']['value'] = $resappInfoArr;
+                $rowArr['Issue']['id'] = -1;
+                $rowArr['Issue']['value'] = "No match found";
+
+//                //Add to John Smith’s application (ID 1234)
+//                $resappIdArr = array();
+//                $resappInfoArr = array();
+//                foreach($this->getResappToAddPDF($archiveStatus,$hideStatus) as $resapp) {
+//                    echo "resapps=".$resapp->getId()."<br>";
+//                    $resappIdArr[] = $resapp->getId();
+//                    $resappInfoArr[] = "Add to ".$resapp->getId();
+//                    //$rowArr['Action']['id'] = $resapp->getId();
+//                    //$rowArr['Action']['value'] = "Add to ".$resapp->getId();
+//                }
+//                $rowArr['Action']['id'] = $resappIdArr;
+//                $rowArr['Action']['value'] = $resappInfoArr;
 
                 $handsomtableJsonData[] = $rowArr;
             }

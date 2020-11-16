@@ -118,7 +118,9 @@ class ResAppUtilController extends OrderAbstractController
 
         $resappsInfoArr = array();
         foreach($resapps as $resapp) {
-            $resappsInfoArr[] = "Add to ".$resapp->getId();
+            //Add to John Smith’s application (ID 1234)
+            $applicantName = $resapp->getApplicantFullName();
+            $resappsInfoArr[] = "Add to ".$applicantName."'s application (ID ".$resapp->getId().")";
         }
 
         $response = new Response();
