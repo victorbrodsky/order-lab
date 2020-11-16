@@ -386,7 +386,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $actionArr = $this->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
-            //$actionId = $actionArr['id'];
+            $actionId = $actionArr['id'];
 
             //echo "actionId=".$actionId." <br>";
             //echo "actionValue=".$actionValue." <br>";
@@ -518,7 +518,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if( !$residencyApplicationDb ) {
                     $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                        $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr.
+                        $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Existing application not found.";
                     $updatedStrArr["Skip updating PDF for existing residency application. ERROR: Existing application not found"][] = $updateInfo;
                     continue;
@@ -608,6 +608,58 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
                     continue;
                 }
+            }
+
+            if( strpos($actionValue, 'Add to ') !== false && $actionId ) {
+                //Add PDF to this resapp by id $actionId
+                $updateInfo = "";
+
+                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($actionId);
+                if( !$residencyApplicationDb ) {
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
+                        $firstNameValue . " " . $lastNameValue . " with ID=" . $actionId . $issueStr.
+                        ". ERROR: Existing application not found.";
+                    $updatedStrArr["Skip add PDF to the existing residency application. ERROR: Existing application not found"][] = $updateInfo;
+                    continue;
+                }
+
+                $reasppUpdated = false;
+                //Add PDF to Other Document section
+                if( $erasDocument ) {
+                    $residencyApplicationDb->addDocument($erasDocument);
+                    $reasppUpdated = true;
+                    $usedErasDocumentArr[$erasDocument->getId()] = true;
+                    $updateInfo = "; PDF file added ".$erasDocument->getOriginalname();
+                } else {
+                    $updateInfo = "; ERROR: PDF file not found";
+                }
+                //echo "updateInfo=$updateInfo; ID=".$erasDocument->getId()." <br>";
+                //update $erasIdValue if null
+                if ($erasIdValue && !$residencyApplicationDb->getErasApplicantId()) {
+                    $residencyApplicationDb->setErasApplicantId($erasIdValue);
+                    $reasppUpdated = true;
+                    $updateInfo = "; Added ERAS applicant ID $erasIdValue";
+                }
+
+                if ($reasppUpdated) {
+                    if (!$testing) {
+                        $em->flush();
+                        $updatedReasapps[] = $residencyApplicationDb;
+
+                        $updateInfo = "ERAS Applicant ID $erasIdValue for " .
+                            $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                        $updatedStrArr["Adding PDF to the existing residency application"][] = $updateInfo;
+                        echo $updateInfo . "<br>";
+                    }
+                } else {
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
+                        $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                    $updatedStrArr["Skip adding PDF to the existing residency application"][] = $updateInfo;
+                }
+
+                //dump($updatedStrArr);
+                //exit('exit update pdf');
+                continue;
             }
 
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);

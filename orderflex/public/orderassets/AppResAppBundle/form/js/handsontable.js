@@ -331,8 +331,8 @@ function ajaxFinishedCondition() {
                 //console.log('ethnicityName='+ethnicityName);
                 _resapps_simple.push(ethnicityName);
             }
-            console.log("_resapps_simple:");
-            console.log(_resapps_simple);
+            //console.log("_resapps_simple:");
+            //console.log(_resapps_simple);
 
             //return true;
             done++;
@@ -606,7 +606,12 @@ function handsonTableInit(handsometableDataArr) {
             //if( headerTitle && headerTitle == "Issue" ) {
                 //console.log("headerTitle=" + headerTitle + ", cellId=" + cellId);
             //}
-            if( c == 0 && typeof handsometableDataArr[r] != 'undefined' ) {
+            if(
+                c == 0 &&
+                typeof handsometableDataArr[r] != 'undefined' &&
+                typeof handsometableDataArr[r]["Issue"]["id"] != 'undefined' &&
+                typeof handsometableDataArr[r]["ERAS Application"]["id"] != 'undefined'
+            ) {
             //if( headerTitle && headerTitle == "Action" ) {
                 //console.log("c="+c+"; r="+r);
                 var issueCellId = handsometableDataArr[r]["Issue"]["id"];
