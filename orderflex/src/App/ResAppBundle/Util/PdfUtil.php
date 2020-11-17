@@ -584,6 +584,8 @@ class PdfUtil {
         //dump($handsomtableJsonData);
         //exit("111");
 
+        //TODO: If all three values of a given application (from the CSV) are found in the text extracted from the PDF? 190(12) Conflict?
+
         $reader->close();
 
         return $handsomtableJsonData;
