@@ -516,9 +516,14 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 $updateInfo = "";
 
+                $applicantName = $firstNameValue . " " . $lastNameValue;
+                if( !$firstNameValue && !$lastNameValue ) {
+                    $applicantName = "Unknown Applicant";
+                }
+
                 if( !$residencyApplicationDb ) {
                     $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                        $firstNameValue . " " . $lastNameValue . $issueStr.
+                        $applicantName . $issueStr.
                     ". ERROR: Existing application not found.";
                     $updatedStrArr["Skip updating PDF for existing residency application. ERROR: Existing application not found"][] = $updateInfo;
                     continue;
@@ -542,19 +547,23 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $updateInfo = "; Added ERAS applicant ID $erasIdValue";
                 }
 
+                if( !$erasIdValue ) {
+                    $erasIdValue = "Unknown ERAS";
+                }
+
                 if ($reasppUpdated) {
                     if (!$testing) {
                         $em->flush();
                         $updatedReasapps[] = $residencyApplicationDb;
 
-                        $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                            $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                        $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                            " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
                         $updatedStrArr["Updating PDF for existing residency application"][] = $updateInfo;
                         echo $updateInfo . "<br>";
                     }
                 } else {
-                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                        $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                        " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
                     $updatedStrArr["Skip updating PDF for existing residency application"][] = $updateInfo;
                 }
 
@@ -610,14 +619,36 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
             }
 
+            if( strpos($actionValue, 'Add to ') !== false ) {
+                echo "actionId=".$actionId." <br>";
+                echo "actionValue=".$actionValue." <br>";
+                if( !$actionId ) {
+                    //actionValue=Add to Steven Adams's application (ID 746)
+                    $actionIdArr = explode("(ID", $actionValue);
+                    if (count($actionIdArr) == 2) {
+                        $actionId = $actionIdArr[1];
+                        $actionId = str_replace(")", "", $actionId);
+                        $actionId = trim($actionId);
+                    }
+                }
+            }
+
             if( strpos($actionValue, 'Add to ') !== false && $actionId ) {
+                echo "actionId=".$actionId." <br>";
+                echo "actionValue=".$actionValue." <br>";
                 //Add PDF to this resapp by id $actionId
                 $updateInfo = "";
 
+                $applicantName = $firstNameValue . " " . $lastNameValue;
+                if( !$firstNameValue && !$lastNameValue ) {
+                    $applicantName = "Unknown Applicant";
+                }
+
                 $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($actionId);
+                echo "residencyApplicationDb=".$residencyApplicationDb->getId()." <br>";
                 if( !$residencyApplicationDb ) {
-                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                        $firstNameValue . " " . $lastNameValue . " with ID=" . $actionId . $issueStr.
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                        " with ID=" . $actionId . $issueStr.
                         ". ERROR: Existing application not found.";
                     $updatedStrArr["Skip add PDF to the existing residency application. ERROR: Existing application not found"][] = $updateInfo;
                     continue;
@@ -634,6 +665,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $updateInfo = "; ERROR: PDF file not found";
                 }
                 //echo "updateInfo=$updateInfo; ID=".$erasDocument->getId()." <br>";
+
                 //update $erasIdValue if null
                 if ($erasIdValue && !$residencyApplicationDb->getErasApplicantId()) {
                     $residencyApplicationDb->setErasApplicantId($erasIdValue);
@@ -641,24 +673,33 @@ class ResAppBulkUploadController extends OrderAbstractController
                     $updateInfo = "; Added ERAS applicant ID $erasIdValue";
                 }
 
+                if( !$erasIdValue ) {
+                    $erasIdValue = "Unknown ERAS";
+                }
+
                 if ($reasppUpdated) {
                     if (!$testing) {
                         $em->flush();
                         $updatedReasapps[] = $residencyApplicationDb;
 
-                        $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                            $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                        $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                             " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
                         $updatedStrArr["Adding PDF to the existing residency application"][] = $updateInfo;
                         echo $updateInfo . "<br>";
+                    } else {
+                        $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                            " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                        $updatedStrArr["Adding PDF to the existing residency application"][] = $updateInfo;
+                        //echo $updateInfo . "<br>";
                     }
                 } else {
-                    $updateInfo = "ERAS Applicant ID $erasIdValue for " .
-                        $firstNameValue . " " . $lastNameValue . " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
+                    $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
+                         " with ID=" . $residencyApplicationDb->getId() . $issueStr . $updateInfo;
                     $updatedStrArr["Skip adding PDF to the existing residency application"][] = $updateInfo;
                 }
 
                 //dump($updatedStrArr);
-                //exit('exit update pdf');
+                //exit('exit adding pdf to resapp ID='.$residencyApplicationDb->getId());
                 continue;
             }
 

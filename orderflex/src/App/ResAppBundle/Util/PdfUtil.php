@@ -708,6 +708,8 @@ class PdfUtil {
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Issue']['id'] = -1;
                 $rowArr['Issue']['value'] = "No match found";
+                //$rowArr['Action']['value'] = "Update PDF & ID Only";
+                //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
