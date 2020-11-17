@@ -78,35 +78,35 @@ class ResAppBulkUploadController extends OrderAbstractController
         $handsomtableJsonData = array(); //$this->getTableData($inputDataFile);
 
         //////////// testing /////////////
-        if(0) {
-            $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
-            if (!$archiveStatus) {
-                throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
-            }
-            $hideStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
-            if (!$archiveStatus) {
-                throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
-            }
-            $rowArr = array();
-            $rowArr['ERAS Application']['id'] = 1;
-            $rowArr['ERAS Application']['value'] = 'test originalName';
-            //$rowArr['Issue']['id'] = null;
-            //$rowArr['Issue']['value'] = "";
-            //Add to John Smith’s application (ID 1234)
-            $resappIdArr = array();
-            $resappInfoArr = array();
-            foreach ($resappPdfUtil->getResappToAddPDF($archiveStatus, $hideStatus) as $resapp) {
-                echo "resapps=" . $resapp->getId() . "<br>";
-                $resappIdArr[] = $resapp->getId();
-                $resappInfoArr[] = "Add to " . $resapp->getId();
-                //$rowArr['Action']['id'] = $resapp->getId();
-                //$rowArr['Action']['value'] = "Add to ".$resapp->getId();
-            }
-            $rowArr['Action']['id'] = $resappIdArr;
-            $rowArr['Action']['value'] = $resappInfoArr;
-
-            $handsomtableJsonData[] = $rowArr;
-        }
+//        if(0) {
+//            $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+//            if (!$archiveStatus) {
+//                throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
+//            }
+//            $hideStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+//            if (!$archiveStatus) {
+//                throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
+//            }
+//            $rowArr = array();
+//            $rowArr['ERAS Application']['id'] = 1;
+//            $rowArr['ERAS Application']['value'] = 'test originalName';
+//            //$rowArr['Issue']['id'] = null;
+//            //$rowArr['Issue']['value'] = "";
+//            //Add to John Smith’s application (ID 1234)
+//            $resappIdArr = array();
+//            $resappInfoArr = array();
+//            foreach ($resappPdfUtil->getEnabledResapps() as $resapp) {
+//                echo "resapps=" . $resapp->getId() . "<br>";
+//                $resappIdArr[] = $resapp->getId();
+//                $resappInfoArr[] = "Add to " . $resapp->getId();
+//                //$rowArr['Action']['id'] = $resapp->getId();
+//                //$rowArr['Action']['value'] = "Add to ".$resapp->getId();
+//            }
+//            $rowArr['Action']['id'] = $resappIdArr;
+//            $rowArr['Action']['value'] = $resappInfoArr;
+//
+//            $handsomtableJsonData[] = $rowArr;
+//        }
         //////////// EOF testing /////////////
 
         if(0) {

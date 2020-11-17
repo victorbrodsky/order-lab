@@ -105,22 +105,35 @@ class ResAppUtilController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
 
-        $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
-        if (!$archiveStatus) {
-            throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
-        }
-        $hideStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
-        if (!$archiveStatus) {
-            throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
-        }
-
-        $resapps = $resappPdfUtil->getResappToAddPDF($archiveStatus, $hideStatus);
+//        $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+//        if (!$archiveStatus) {
+//            throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
+//        }
+//        $hideStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+//        if (!$archiveStatus) {
+//            throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
+//        }
+//        $declinedStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("declined");
+//        if (!$declinedStatus) {
+//            throw new EntityNotFoundException('Unable to find entity by name=' . "declined");
+//        }
+//        $rejectedStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("reject");
+//        if (!$rejectedStatus) {
+//            throw new EntityNotFoundException('Unable to find entity by name=' . "reject");
+//        }
+//        $rejectedandnotifiedStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("rejectedandnotified");
+//        if (!$rejectedandnotifiedStatus) {
+//            throw new EntityNotFoundException('Unable to find entity by name=' . "rejectedandnotified");
+//        }
+//        $exceptStatusArr = array($archiveStatus,$hideStatus,$declinedStatus,$rejectedStatus,$rejectedandnotifiedStatus);
+        $resapps = $resappPdfUtil->getEnabledResapps();
 
         $resappsInfoArr = array();
         foreach($resapps as $resapp) {
             //Add to John Smith’s application (ID 1234)
-            $applicantName = $resapp->getApplicantFullName();
-            $resappsInfoArr[] = "Add to ".$applicantName."'s application (ID ".$resapp->getId().")";
+            //$applicantName = $resapp->getApplicantFullName();
+            //$resappsInfoArr[] = "Add to ".$applicantName."'s application (ID ".$resapp->getId().")";
+            $resappsInfoArr[] = $resapp->getAddToStr();
         }
 
         $response = new Response();

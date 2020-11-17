@@ -1906,6 +1906,13 @@ class ResidencyApplication extends BaseUserAttributes {
         return $fitStr;
     }
 
+    //Add to John Smith’s application (ID 1234)
+    public function getAddToStr() {
+        $applicantName = $this->getApplicantFullName();
+        $msg = "Add to ".$applicantName."'s application (ID ".$this->getId().")";
+        return $msg;
+    }
+
     public function __toString() {
         return "ResidencyApplication";
     }

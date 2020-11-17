@@ -686,14 +686,29 @@ class PdfUtil {
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
         //return $handsomtableJsonData; //testing
 
-        $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
-        if( !$archiveStatus ) {
-            throw new EntityNotFoundException('Unable to find entity by name='."archive");
+//        $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+//        if( !$archiveStatus ) {
+//            throw new EntityNotFoundException('Unable to find entity by name='."archive");
+//        }
+//        $hideStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+//        if( !$archiveStatus ) {
+//            throw new EntityNotFoundException('Unable to find entity by name='."hide");
+//        }
+
+        //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
+        $resapps = $this->getEnabledResapps();
+        $resappInfoArr = array();
+        foreach($resapps as $resapp) {
+            $subjectUser = $resapp->getUser();
+            if($subjectUser) {
+                $resappInfoArr[$resapp->getId()] = array(
+                    'email' => $subjectUser->getSingleEmail(), 
+                    'lastname' => $subjectUser->getSingleLastName(),
+                    'firstname' => $subjectUser->getSingleFirstName()
+                );
+            }
         }
-        $hideStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
-        if( !$archiveStatus ) {
-            throw new EntityNotFoundException('Unable to find entity by name='."hide");
-        }
+        
         //added not used PDF files
         //$notUsedPdfArr = array();
         foreach($pdfInfoArr as $fileId=>$pdfFileArr) {
@@ -711,10 +726,26 @@ class PdfUtil {
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
+                //find file has Email, LastName FirstName
+//                foreach($resappInfoArr as $resappId=>$resappInfoArr) {
+//                    $pdfText = $pdfInfoArr[$resappId]['text'];
+//                    $email = $resappInfoArr['email'];
+//                    if( $email ) {
+//                        if( strpos($pdfText, $email) !== false ) {
+//                            //Found by email
+//                        }
+//                    }
+//                }
+                $foundResapp = $this->findResappByApplicant($resappInfoArr,$pdfFileArr);
+                if( $foundResapp ) {
+                    $rowArr['Action']['value'] = $foundResapp->getAddToStr();
+                    $rowArr['Action']['id'] = $foundResapp->getId();
+                }
+
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
 //                $resappInfoArr = array();
-//                foreach($this->getResappToAddPDF($archiveStatus,$hideStatus) as $resapp) {
+//                foreach($this->getEnabledResapps() as $resapp) {
 //                    echo "resapps=".$resapp->getId()."<br>";
 //                    $resappIdArr[] = $resapp->getId();
 //                    $resappInfoArr[] = "Add to ".$resapp->getId();
@@ -730,14 +761,47 @@ class PdfUtil {
 
         return $handsomtableJsonData;
     }
-    public function getResappToAddPDF($archiveStatus,$hideStatus) {
+    public function getEnabledResapps($exceptStatusArr=array()) {
+
+        if( count($exceptStatusArr) == 0 ) {
+            $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+            if (!$archiveStatus) {
+                throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
+            }
+            $hideStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+            if (!$archiveStatus) {
+                throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
+            }
+            $declinedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("declined");
+            if (!$declinedStatus) {
+                throw new EntityNotFoundException('Unable to find entity by name=' . "declined");
+            }
+            $rejectedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("reject");
+            if (!$rejectedStatus) {
+                throw new EntityNotFoundException('Unable to find entity by name=' . "reject");
+            }
+            $rejectedandnotifiedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("rejectedandnotified");
+            if (!$rejectedandnotifiedStatus) {
+                throw new EntityNotFoundException('Unable to find entity by name=' . "rejectedandnotified");
+            }
+            $exceptStatusArr = array($archiveStatus,$hideStatus,$declinedStatus,$rejectedStatus,$rejectedandnotifiedStatus);
+        }
+
         //show the list of current residency applicants that do not have a status of Hidden or Archived for the current year
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
 
         //ResAppStatus
-        $dql->where("resapp.appStatus != :archive AND  resapp.appStatus != :hide");
+        $whereArr = array();
+        foreach($exceptStatusArr as $exceptStatus) {
+            $whereArr[] = "resapp.appStatus != ".$exceptStatus->getId();
+        }
+        if( count($whereArr) > 0 ) {
+            $whereStr = implode(" AND ", $whereArr);
+            $dql->where($whereStr);
+            //$dql->where("resapp.appStatus != :archive AND  resapp.appStatus != :hide");
+        }
 
         //$dql->leftJoin("resapp.residencyTrack", "residencyTrack");
         //$dql->leftJoin("resapp.user", "user");
@@ -755,15 +819,74 @@ class PdfUtil {
 
         $query = $this->em->createQuery($dql);
 
-        $query->setParameters(array(
-            "archive" => $archiveStatus->getId(),
-            "hide" => $hideStatus->getId(),
-        ));
+//        $query->setParameters(array(
+//            "archive" => $archiveStatus->getId(),
+//            "hide" => $hideStatus->getId(),
+//        ));
 
         $resapps = $query->getResult();
         //echo "resapps=".count($resapps)."<br>";
 
         return $resapps;
+    }
+    public function findResappByApplicant($resappInfoArr,$pdfInfoArr) {
+
+        $foundResappId = NULL;
+        $pdfText = NULL;
+        //dump($pdfInfoArr);
+        //exit('111');
+
+        if( isset($pdfInfoArr['text']) ) {
+            $pdfText = $pdfInfoArr['text'];
+        } else {
+            $pdfFile = $pdfInfoArr['file'];
+            if( $pdfFile ) {
+                $pdfFilePath = $pdfFile->getFullServerPath();
+                if ($pdfFilePath) {
+                    $pdfText = $this->extractPdfText($pdfFilePath);
+                    //$pdfInfoArr[$pdfFile->getId()] = array('file' => $pdfFile, 'text' => $pdfText, 'path' => $pdfFilePath, 'originalName' => $pdfFile->getOriginalname());
+                }
+            }
+        }
+
+        if( !$pdfText ) {
+            return NULL;
+        }
+
+        //find file has Email, LastName FirstName
+        foreach($resappInfoArr as $resappId=>$resappInfoArr) {
+
+            $email = $resappInfoArr['email'];
+            if( $email ) {
+                if( strpos($pdfText, $email) !== false ) {
+                    //Found by email
+                    $foundResappId = $resappId;
+                    break;
+                }
+            }
+
+            //Search by lastname and firstname
+            $lastname = $resappInfoArr['lastname'];
+            if( $lastname ) {
+                if( strpos($pdfText, $lastname) !== false ) {
+                    //Search by firstname
+                    $firstname = $resappInfoArr['firstname'];
+                    if( $firstname ) {
+                        if( strpos($pdfText, $firstname) !== false ) {
+                            //Found by firstname
+                            $foundResappId = $resappId;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if( $foundResappId ) {
+            return $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($foundResappId);
+        }
+
+        return NULL;
     }
 
     public function getPdfTextArr( $pdfFiles ) {
