@@ -490,6 +490,21 @@ class ResAppBulkUploadController extends OrderAbstractController
             $usmle3Value = $usmle3Arr['val'];
             //$usmle3Id = $usmle3Arr['id'];
 
+//            $applicantName = $firstNameValue . " " . $lastNameValue;
+//            if( !$firstNameValue && !$lastNameValue ) {
+//                $applicantName = "Unknown Applicant";
+//            }
+            $applicantName = $firstNameValue . " " . $lastNameValue;
+            if( !$firstNameValue && !$lastNameValue ) {
+                //extract applicant name from PDF $erasDocument
+                if( $erasDocument ) {
+                    $applicantName = $resappPdfUtil->findKeyInDocument($erasDocument, 'Name:');
+                }
+            }
+            if( !$applicantName ) {
+                $applicantName = "Unknown Applicant";
+            }
+
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
                 $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
@@ -515,11 +530,6 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $actionValue == "Update PDF & ID Only" ) {
 
                 $updateInfo = "";
-
-                $applicantName = $firstNameValue . " " . $lastNameValue;
-                if( !$firstNameValue && !$lastNameValue ) {
-                    $applicantName = "Unknown Applicant";
-                }
 
                 if( !$residencyApplicationDb ) {
                     $updateInfo = "ERAS Applicant ID $erasIdValue for " .
@@ -586,14 +596,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
 
                 if( $actionValue == "Do not add" && $residencyApplicationDb ) {
-                    $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
+                    $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
                 }
                 elseif( $residencyApplicationDb ) {
-                    $updatedStrArr["Skip existing residency application$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
+                    $updatedStrArr["Skip existing residency application$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
                     //exit("Skip existing residency application $actionValue !!!");
                 }
                 elseif( $actionValue ) {
-                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue";
+                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = $applicantName."";
                 }
 
                 continue;
@@ -639,10 +649,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //Add PDF to this resapp by id $actionId
                 $updateInfo = "";
 
-                $applicantName = $firstNameValue . " " . $lastNameValue;
-                if( !$firstNameValue && !$lastNameValue ) {
-                    $applicantName = "Unknown Applicant";
-                }
+//                $applicantName = $firstNameValue . " " . $lastNameValue;
+//                if( !$firstNameValue && !$lastNameValue ) {
+//                    //extract applicant name from PDF $erasDocument
+//                    $applicantName = $resappPdfUtil->findKeyInDocument($erasDocument,'Name:');
+//                    if( !$applicantName ) {
+//                        $applicantName = "Unknown Applicant";
+//                    }
+//                }
 
                 $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($actionId);
                 echo "residencyApplicationDb=".$residencyApplicationDb->getId()." <br>";

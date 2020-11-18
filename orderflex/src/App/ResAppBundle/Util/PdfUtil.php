@@ -541,6 +541,10 @@ class PdfUtil {
                     //change the value in the “Action” column to “Do not add”
                     $rowArr['Action']['id'] = null;
                     $rowArr['Action']['value'] = "Do not add";
+                } else {
+                    //No duplicate found => change the value in the “Action” column to “Add”
+                    $rowArr['Action']['id'] = null;
+                    $rowArr['Action']['value'] = "Add";
                 }
                 ////////////// EOF check for duplicate //////////////////
 
@@ -584,7 +588,8 @@ class PdfUtil {
         //dump($handsomtableJsonData);
         //exit("111");
 
-        //TODO: If all three values of a given application (from the CSV) are found in the text extracted from the PDF? 190(12) Conflict?
+        //If all three values of a given application (from the CSV) are found in the text extracted from the PDF? 190(12)
+        //No need: the row is already prepopulated from CSV and associated PDF file is inserted to the ERAS Application column
 
         $reader->close();
 
@@ -687,15 +692,6 @@ class PdfUtil {
 
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
         //return $handsomtableJsonData; //testing
-
-//        $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
-//        if( !$archiveStatus ) {
-//            throw new EntityNotFoundException('Unable to find entity by name='."archive");
-//        }
-//        $hideStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
-//        if( !$archiveStatus ) {
-//            throw new EntityNotFoundException('Unable to find entity by name='."hide");
-//        }
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
         $resapps = $this->getEnabledResapps();
@@ -1240,6 +1236,18 @@ class PdfUtil {
         return $text;
     }
 
+    public function findKeyInDocument($pdfFile,$key) {
+        $pdfFilePath = $pdfFile->getFullServerPath();
+        if ($pdfFilePath) {
+            $pdfText = $this->extractPdfText($pdfFilePath);
+            if ($pdfText) {
+                $keyValue = $this->getSingleKeyField($pdfText,$key);
+                return $keyValue;
+                //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
+            }
+        }
+        return NULL;
+    }
     //$key = 'Applicant ID'
     public function getSingleKeyField($text,$key) {
         $keyFields = $this->getKeyFieldArr();
