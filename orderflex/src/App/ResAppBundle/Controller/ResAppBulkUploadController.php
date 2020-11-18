@@ -529,7 +529,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             if( $actionValue == "Update PDF & ID Only" ) {
 
-                $updateInfo = "";
+                //$updateInfo = "";
 
                 if( !$residencyApplicationDb ) {
                     $updateInfo = "ERAS Applicant ID $erasIdValue for " .
@@ -609,8 +609,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             } //action != Add
 
-            //Previous condition should catch this too ("Add" + $residencyApplicationDb)
-            if( $actionValue == "Add" ) {
+            //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
+            if( $actionValue == "Create New Record" ) {
                 //exit("$actionValue !!!");
                 if( $residencyApplicationDb ) {
 
@@ -717,6 +717,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             }
 
+            //Create New Record
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
             $countryCitizenshipValue = $countryCitizenshipArr['val'];
             //$countryCitizenshipId = $countryCitizenshipArr['id'];
@@ -781,19 +782,19 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( !$medSchoolNameValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing Medical School.";
-                $updatedStrArr["Skip adding residency application. ERROR: Missing Medical School"][] = $updateInfo;
+                $updatedStrArr["Skip creating residency application. ERROR: Missing Medical School"][] = $updateInfo;
                 continue;
             }
             if( !$usmle1Value ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing USMLE Score Step 1.";
-                $updatedStrArr["Skip adding residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
+                $updatedStrArr["Skip creating residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
                 continue;
             }
             if( !$lastNameValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing Last Name.";
-                $updatedStrArr["Skip adding residency application. ERROR: Missing Last Name"][] = $updateInfo;
+                $updatedStrArr["Skip creating residency application. ERROR: Missing Last Name"][] = $updateInfo;
                 continue;
             }
 

@@ -105,7 +105,7 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).removeClass(addClass);
         $(td).removeClass(dontaddClass);
     }
-    if( value+"" == "Add" ) {
+    if( value+"" == "Create New Record" ) {
         //return false;
         //var cellClass = "ht-validation-add";
 
@@ -159,7 +159,7 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
 //         //     _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
 //         // }
 //     }
-//     if( value == "Add" ) {
+//     if( value == "Create New Record" ) {
 //         return false;
 //         var cellBackgroundColor = "lightgreen";
 //     }
@@ -240,7 +240,7 @@ function ajaxFinishedCondition() {
 
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Do not add");
-        _actions_simple.push("Add");
+        _actions_simple.push("Create New Record");
         _actions_simple.push("Update PDF & ID Only");
         //_actions_simple.push(null);
 
@@ -324,7 +324,7 @@ function ajaxFinishedCondition() {
         } else {
             //_resapps_simple.push(""); //add default empty _resapps
             _resapps_simple.push("Do not add");
-            _resapps_simple.push("Add");
+            _resapps_simple.push("Create New Record");
             _resapps_simple.push("Update PDF & ID Only");
             for(var i = 0; i < _resapps.length; i++) {
                 var ethnicityName = _resapps[i];
@@ -644,7 +644,7 @@ function handsonTableInit(handsometableDataArr) {
             // if( newValue == "Update PDF" ) {
             //     var cellBackgroundColor = "lightblue";
             // }
-            // if( newValue == "Add" ) {
+            // if( newValue == "Create New Record" ) {
             //     var cellBackgroundColor = "lightgreen";
             // }
             // cellProperties.style = 'style="backgroundColor: red"';
@@ -706,7 +706,7 @@ function handsonTableInit(handsometableDataArr) {
                 //         _sotable.getCellMeta(rowNumber, j + 1).readOnly = true;
                 //     }
                 // }
-                // if( newValue == "Add" ) {
+                // if( newValue == "Create New Record" ) {
                 //     var cellBackgroundColor = "lightgreen";
                 // }
                 // var thiscell = $(_htableid).handsontable("getCell", rowNumber, columnNumber);
@@ -753,7 +753,7 @@ function handsonTableInit(handsometableDataArr) {
             //         // var thiscell = $(_htableid).handsontable("getCell", rowNumber, j);
             //         // thiscell.style.backgroundColor = cellBackgroundColor;
             //     }
-            //     if( newValue == "Add" ) {
+            //     if( newValue == "Create New Record" ) {
             //         var cellBackgroundColor = "lightgreen";
             //         for( var j = 0; j < columnsLen; j++ ) {
             //             console.log("columns j="+j);
@@ -953,32 +953,44 @@ function resappValidateHandsonTable() {
     console.log("resapp validateHandsonTable");
 
     if( !_sotable ) {
-        return true;
+        return "Logical Error: table does not exists";
     }
 
     //resHideBtn();
+    var validationError = null;
 
     var countRow = _sotable.countRows();
     //console.log("countRow="+countRow);
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         //console.log("row="+row);
         _rowToProcessArr.push(row);
+
+        //validate
+        //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
+        // the existing applications in the current year’s applications without statuses of Hidden and Archived),
+        // before beginning the bulk import, show a modal:
+        //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
+        // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
+        //if(  )
+        //validationError = "Test Error";
+        
     } //for each row
 
     //get rows data from _rowToProcessArr
-    resappAssignDataToDatalocker();
+    validationError = resappAssignDataToDatalocker();
 
     //resShowBtn();
 
     //console.log("END !!!!!!!!!!!");
     //return true;
 
-    return false;
+    return validationError;
 }
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
 function resappAssignDataToDatalocker() {
 
+    var validationError = "";
     var headers = _sotable.getColHeader();
 
     //get rows data from _rowToProcessArr
@@ -1008,10 +1020,25 @@ function resappAssignDataToDatalocker() {
                 "id"    : cellId,
                 "value" : cellValue
             });
+
+            //validate
+            //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
+            // the existing applications in the current year’s applications without statuses of Hidden and Archived),
+            // before beginning the bulk import, show a modal:
+            //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
+            // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
+            //if(  )
+            //validationError = validationError + "Test Error ";
+            if( col == 0 && cellValue == "Create New Record" ) {
+                //call server to verify for duplicate "check for duplicate" (checkDuplicate: getDuplicateTableResApps and getDuplicateDbResApps)
+                validationError = validationError + "Test Error 'Create New Record' row "+i+"<br>";
+            }
+
         }
 
-        data.row.push(rowArr);
+        //validationError = validationError + "Test Error row "+i+"<br>";
 
+        data.row.push(rowArr);
     }
     //console.log(data);
 
@@ -1026,6 +1053,8 @@ function resappAssignDataToDatalocker() {
     //console.log("jsonstr:");
     //console.log(jsonstr);
     $("#oleg_resappbundle_bulkupload_datalocker").val( jsonstr );
+
+    return validationError;
 }
 
 

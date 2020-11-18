@@ -98,6 +98,10 @@
 
     <div id="please-wait" style="display: none;">Please Wait ...</div>
 
+    <p>
+        <div id="projectError" class="alert alert-danger" style="display: none;"></div>
+    </p>
+
     {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
 
 {% endblock %}
@@ -216,107 +220,128 @@
             $("#projectError").hide();
             $("#projectError").html(null);
 
-            //validate "Requested Quantity" in product and service
-            $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
-                //console.log( "Required: "+index + ": " + $( this ).text() );
-                label = $( this ).text();   //$(this).find("label").text();
-                value = null;
+//            //validate "Requested Quantity" in product and service
+//            $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
+//                //console.log( "Required: "+index + ": " + $( this ).text() );
+//                label = $( this ).text();   //$(this).find("label").text();
+//                value = null;
+//
+//                var holder = $(this).closest(".row");
+//
+//                //input
+//                var inputField = holder.find(".form-control");
+//                if( inputField.length > 0 ) {
+//                    value = inputField.val();
+//                    //console.log("label="+label+"; value="+value);
+//                    if( !value ) {
+//                        //console.log("Error Input form-control. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//                //select combobox
+//                var selectField = holder.find("select.combobox");
+//                if( selectField.length > 0 ) {
+//                    value = selectField.val();
+//                    //console.log("select combobox: label="+label+"; value="+value);
+//                    if( !value ) {
+//                        console.log("Error Select select combobox. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//                //input combobox
+//                var inputSelectField = holder.find("input.combobox");
+//                if( inputSelectField.length > 0 ) {
+//                    value = inputSelectField.val();
+//                    //console.log("input combobox: label="+label+"; value="+value);
+//                    if( !value ) {
+//                        console.log("Error Select input combobox. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//            });
 
-                var holder = $(this).closest(".row");
+//            if( validated == false ) {
+//                console.log("Error: required value is NULL! label="+label+"; value="+value);
+//                var msg = "The required field '" + label + "' is empty";
+//                $("#projectError").show();
+//                $("#projectError").html(msg);
+//
+//                resappShowBtn();
+//                return false;
+//            }
 
-                //input
-                var inputField = holder.find(".form-control");
-                if( inputField.length > 0 ) {
-                    value = inputField.val();
-                    //console.log("label="+label+"; value="+value);
-                    if( !value ) {
-                        //console.log("Error Input form-control. label="+label);
-                        validated = false;
-                        transresShowBtn();
-                        return false;
-                    }
-                }
+//            if( withConfirm == true ) {
+//                var confirmationSubmit = $('#confirmationSubmit');
+//                if (confirmationSubmit.length) {
+//                    if (confirmationSubmit.is(':checked')) {
+//                        //ok confirmed
+//                        //console.log("ok confirmed");
+//                    } else {
+//                        var msg = "Please confirm the agreement in order to submit a new work request.";
+//                        $("#projectError").show();
+//                        $("#projectError").html(msg);
+//                        //console.log("not confirmed");
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//            }
 
-                //select combobox
-                var selectField = holder.find("select.combobox");
-                if( selectField.length > 0 ) {
-                    value = selectField.val();
-                    //console.log("select combobox: label="+label+"; value="+value);
-                    if( !value ) {
-                        console.log("Error Select select combobox. label="+label);
-                        validated = false;
-                        transresShowBtn();
-                        return false;
-                    }
-                }
+//            var requiredQunatities = $(".product-requested-quantity");
+//            $.each(requiredQunatities, function( index, valueField ) {
+//                //console.log("valueField:");
+//                //console.log(valueField);
+//                //transresShowBtn();
+//                //return false;
+//                var value = valueField.value;
+//                //alert( index + ": " + value );
+//                //console.log("requiredQunatity="+value);
+//                if( Math.floor(value) == value && $.isNumeric(value) ) {
+//                    //integer ok
+//                } else {
+//                    var msg = "Please enter an integer (a number) into the 'Requested Quantity' field before submitting.";
+//                    $("#projectError").show();
+//                    $("#projectError").html(msg);
+//
+//                    transresShowBtn();
+//                    return false;
+//                }
+//            });
 
-                //input combobox
-                var inputSelectField = holder.find("input.combobox");
-                if( inputSelectField.length > 0 ) {
-                    value = inputSelectField.val();
-                    //console.log("input combobox: label="+label+"; value="+value);
-                    if( !value ) {
-                        console.log("Error Select input combobox. label="+label);
-                        validated = false;
-                        transresShowBtn();
-                        return false;
-                    }
-                }
+            //validate
+            //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
+            // the existing applications in the current year’s applications without statuses of Hidden and Archived),
+            // before beginning the bulk import, show a modal:
+            //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
+            // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
 
-            });
-
-            if( validated == false ) {
-                console.log("Error: required value is NULL! label="+label+"; value="+value);
-                var msg = "The required field '" + label + "' is empty";
+            var validationError = resappValidateHandsonTable();
+            if( validationError ) {
+                console.log("resappValidateRequest: validationError="+validationError);
                 $("#projectError").show();
-                $("#projectError").html(msg);
-
+                $("#projectError").html(validationError);
                 resappShowBtn();
+
                 return false;
             }
 
-            if( withConfirm == true ) {
-                var confirmationSubmit = $('#confirmationSubmit');
-                if (confirmationSubmit.length) {
-                    if (confirmationSubmit.is(':checked')) {
-                        //ok confirmed
-                        //console.log("ok confirmed");
-                    } else {
-                        var msg = "Please confirm the agreement in order to submit a new work request.";
-                        $("#projectError").show();
-                        $("#projectError").html(msg);
-                        //console.log("not confirmed");
-                        transresShowBtn();
-                        return false;
-                    }
-                }
-            }
+            //testing
+            console.log("resappValidateRequest: finished");
+            resappShowBtn();
+            return false;
 
-            var requiredQunatities = $(".product-requested-quantity");
-            $.each(requiredQunatities, function( index, valueField ) {
-                //console.log("valueField:");
-                //console.log(valueField);
-                //transresShowBtn();
-                //return false;
-                var value = valueField.value;
-                //alert( index + ": " + value );
-                //console.log("requiredQunatity="+value);
-                if( Math.floor(value) == value && $.isNumeric(value) ) {
-                    //integer ok
-                } else {
-                    var msg = "Please enter an integer (a number) into the 'Requested Quantity' field before submitting.";
-                    $("#projectError").show();
-                    $("#projectError").html(msg);
+            return true;
+        }//EOF resappValidateRequest
 
-                    transresShowBtn();
-                    return false;
-                }
-            });
-
-            //console.log("transresValidateRequest: finished");
-
-            resappValidateHandsonTable();
-        }
         function resappHideBtn() {
             //console.log("hide submit");
             $(":submit").hide();

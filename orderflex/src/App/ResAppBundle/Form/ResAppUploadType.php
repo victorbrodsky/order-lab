@@ -78,10 +78,10 @@ class ResAppUploadType extends AbstractType
             'attr' => array('class' => 'btn btn-default')
         ));
 
-        $builder->add('addbtn', SubmitType::class, array(
-            'label' => "Add Listed Applications",
-            'attr' => array('class' => 'btn btn-primary')
-        ));
+//        $builder->add('addbtn', SubmitType::class, array(
+//            'label' => "Add Listed Applications",
+//            'attr' => array('class' => 'btn btn-primary')
+//        ));
         $builder->add('addbtn', SubmitType::class, array(
             'label' => 'Add Listed Applications',
             'attr' => array('class'=>'btn btn-primary resapp-addbtn', 'onclick'=>'return resappValidateRequest(true);')

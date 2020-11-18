@@ -509,33 +509,48 @@ class PdfUtil {
                 ////////////// EOF Try to get ERAS Application ID //////////////////
 
                 ////////////// check for duplicate //////////////////
-                $duplicateIds = array();
-                $duplicateArr = array();
-                //check for duplicate in $handsomtableJsonData
-                $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
-                if( $duplicateTableResApps  ) {
-                    //$rowArr['Issue']['id'] = null;
-                    //$rowArr['Issue']['value'] = "Duplicate in batch";
-                    $duplicateArr[] = "Duplicate in batch";
-                } else {
-                    //$rowArr['Issue']['id'] = null;
-                    //$rowArr['Issue']['value'] = "Not Duplicated";
-                }
-                //check for duplicate in DB
-                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
-                if( count($duplicateDbResApps) > 0  ) {
-                    //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
-                    //$rowArr['Issue']['value'] = "Previously Imported";
-                    foreach($duplicateDbResApps as $duplicateDbResApp) {
-                        $duplicateIds[] = $duplicateDbResApp->getId();
-                    }
-                    $duplicateArr[] = "Previously Imported";
-                } else {
-                    //$rowArr['Issue']['id'] = null;
-                    //$rowArr['Issue']['value'] = "Not Imported";
-                }
+//                $duplicateIds = array();
+//                $duplicateArr = array();
+//                //check for duplicate in $handsomtableJsonData
+//                $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
+//                if( $duplicateTableResApps  ) {
+//                    //$rowArr['Issue']['id'] = null;
+//                    //$rowArr['Issue']['value'] = "Duplicate in batch";
+//                    $duplicateArr[] = "Duplicate in batch";
+//                } else {
+//                    //$rowArr['Issue']['id'] = null;
+//                    //$rowArr['Issue']['value'] = "Not Duplicated";
+//                }
+//                //check for duplicate in DB
+//                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+//                if( count($duplicateDbResApps) > 0  ) {
+//                    //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
+//                    //$rowArr['Issue']['value'] = "Previously Imported";
+//                    foreach($duplicateDbResApps as $duplicateDbResApp) {
+//                        $duplicateIds[] = $duplicateDbResApp->getId();
+//                    }
+//                    $duplicateArr[] = "Previously Imported";
+//                } else {
+//                    //$rowArr['Issue']['id'] = null;
+//                    //$rowArr['Issue']['value'] = "Not Imported";
+//                }
+//                if( count($duplicateArr) > 0 ) {
+//                    $rowArr['Issue']['id'] = implode(",",$duplicateIds);
+//                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+//
+//                    //change the value in the “Action” column to “Do not add”
+//                    $rowArr['Action']['id'] = null;
+//                    $rowArr['Action']['value'] = "Do not add";
+//                } else {
+//                    //No duplicate found => change the value in the “Action” column to “Add”
+//                    //Testing: comment out below for testing
+//                    //$rowArr['Action']['id'] = null;
+//                    //$rowArr['Action']['value'] = "Create New Record";
+//                }
+
+                $duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
                 if( count($duplicateArr) > 0 ) {
-                    $rowArr['Issue']['id'] = implode(",",$duplicateIds);
+                    $rowArr['Issue']['id'] = null; //implode(",",$duplicateIds);
                     $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
 
                     //change the value in the “Action” column to “Do not add”
@@ -543,8 +558,9 @@ class PdfUtil {
                     $rowArr['Action']['value'] = "Do not add";
                 } else {
                     //No duplicate found => change the value in the “Action” column to “Add”
-                    $rowArr['Action']['id'] = null;
-                    $rowArr['Action']['value'] = "Add";
+                    //Testing: comment out below for testing
+                    //$rowArr['Action']['id'] = null;
+                    //$rowArr['Action']['value'] = "Create New Record";
                 }
                 ////////////// EOF check for duplicate //////////////////
 
@@ -690,6 +706,51 @@ class PdfUtil {
         return $map;
     }
 
+    public function checkDuplicate( $rowArr, $handsomtableJsonData ) {
+        ////////////// check for duplicate //////////////////
+        $duplicateIds = array();
+        $duplicateArr = array();
+        //check for duplicate in $handsomtableJsonData
+        $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
+        if( $duplicateTableResApps  ) {
+            //$rowArr['Issue']['id'] = null;
+            //$rowArr['Issue']['value'] = "Duplicate in batch";
+            $duplicateArr[] = "Duplicate in batch";
+        } else {
+            //$rowArr['Issue']['id'] = null;
+            //$rowArr['Issue']['value'] = "Not Duplicated";
+        }
+        //check for duplicate in DB
+        $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
+        if( count($duplicateDbResApps) > 0  ) {
+            //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
+            //$rowArr['Issue']['value'] = "Previously Imported";
+            foreach($duplicateDbResApps as $duplicateDbResApp) {
+                $duplicateIds[] = $duplicateDbResApp->getId();
+            }
+            $duplicateArr[] = "Previously Imported";
+        } else {
+            //$rowArr['Issue']['id'] = null;
+            //$rowArr['Issue']['value'] = "Not Imported";
+        }
+//        if( count($duplicateArr) > 0 ) {
+//            $rowArr['Issue']['id'] = implode(",",$duplicateIds);
+//            $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+//
+//            //change the value in the “Action” column to “Do not add”
+//            $rowArr['Action']['id'] = null;
+//            $rowArr['Action']['value'] = "Do not add";
+//        } else {
+//            //No duplicate found => change the value in the “Action” column to “Add”
+//            //Testing: comment out below for testing
+//            //$rowArr['Action']['id'] = null;
+//            //$rowArr['Action']['value'] = "Create New Record";
+//        }
+        ////////////// EOF check for duplicate //////////////////
+        
+        return $duplicateArr;
+    }
+    
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
         //return $handsomtableJsonData; //testing
 
