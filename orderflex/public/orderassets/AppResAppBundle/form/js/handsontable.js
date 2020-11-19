@@ -1029,17 +1029,17 @@ function resappAssignDataToDatalocker() {
             // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
             //if(  )
             //validationError = validationError + "Test Error ";
-            if( col == 0 && cellValue == "Create New Record" ) {
-                //call server to verify for duplicate "check for duplicate" (checkDuplicate: getDuplicateTableResApps and getDuplicateDbResApps)
-                validationError = validationError + "Test Error 'Create New Record' row "+i+"<br>";
-            }
+            // if( col == 0 && cellValue == "Create New Record" ) {
+            //     //call server to verify for duplicate "check for duplicate" (checkDuplicate: getDuplicateTableResApps and getDuplicateDbResApps)
+            //     validationError = validationError + "Test Error 'Create New Record' row "+i+"<br>";
+            // }
 
         }
 
         //validationError = validationError + "Test Error row "+i+"<br>";
 
         data.row.push(rowArr);
-    }
+    }//for
     //console.log(data);
 
     // if( _btnClickedName != null ) {
@@ -1052,9 +1052,29 @@ function resappAssignDataToDatalocker() {
     //var jsonstr = data;
     //console.log("jsonstr:");
     //console.log(jsonstr);
+
+    validationError = resappCheckDuplicate(jsonstr);
+
     $("#oleg_resappbundle_bulkupload_datalocker").val( jsonstr );
 
     return validationError;
 }
 
+//TODO: do it in one ajax request for all "Create New Record"
+function resappCheckDuplicate(jsonstr) {
+    var validationError = "DefaultTestError";
+    var url = Routing.generate('resapp_check_duplicate');
+    $.ajax({
+        type: "POST",
+        url: url,
+        timeout: _ajaxTimeout,
+        async: false, //asyncflag
+        //contentType: 'application/json',
+        //dataType: 'json',
+        data: {tabledata: jsonstr}
+    }).done(function(data) {
+        validationError = data; //"Test Error";
+    });
 
+    return validationError;
+}

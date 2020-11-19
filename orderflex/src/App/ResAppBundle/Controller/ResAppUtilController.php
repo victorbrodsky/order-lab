@@ -120,4 +120,105 @@ class ResAppUtilController extends OrderAbstractController
         $response->setContent(json_encode($resappsInfoArr));
         return $response;
     }
+
+    /**
+     * @Route("/resapp-check-duplicate", name="resapp_check_duplicate", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function checkDuplicateAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $resappPdfUtil = $this->container->get('resapp_pdfutil');
+
+        //$duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
+
+        $tabledata = $request->get('tabledata');
+
+        $data = json_decode($tabledata, true);
+
+        //dump($data);
+        //exit('111');
+
+        if( $data == null ) {
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode("Table is empty"));
+            return $response;
+        }
+
+        $duplicateInfoArr = array();
+        $headers = $data["header"];
+
+        foreach( $data["row"] as $row ) {
+            $actionArr = $resappPdfUtil->getValueByHeaderName('Action',$row,$headers);
+            $actionValue = $actionArr['val'];
+            $actionId = $actionArr['id'];
+            echo "actionId=".$actionId." <br>";
+            echo "actionValue=".$actionValue." <br>";
+
+            $erasIdArr = $resappPdfUtil->getValueByHeaderName('ERAS Application ID',$row,$headers);
+            $erasIdValue = $erasIdArr['val'];
+            //$erasIdId = $erasIdArr['id'];
+
+            $residencyStartDateArr = $resappPdfUtil->getValueByHeaderName('Expected Residency Start Date',$row,$headers);
+            $residencyStartDateValue = $residencyStartDateArr['val'];
+            //$residencyStartDateId = $residencyStartDateArr['id'];
+
+            $receiptDateArr = $resappPdfUtil->getValueByHeaderName('Application Receipt Date',$row,$headers);
+            $receiptDateValue = $receiptDateArr['val'];
+            //$receiptDateId = $receiptDateArr['id'];
+
+            $emailArr = $resappPdfUtil->getValueByHeaderName('Preferred Email',$row,$headers);
+            $emailValue = $emailArr['val'];
+            $emailValue = strtolower($emailValue);
+            //$emailId = $emailArr['id'];
+
+
+            $residencyApplicationDb = NULL;
+            if( $erasIdValue ) {
+                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+                //echo "1Found resapp?: $residencyApplicationDb <br>";
+            }
+
+            if( !$residencyApplicationDb ) {
+                //Try to find by aamcId and startDate ("Expected Residency Start Date")
+                $rowArr = array();
+                $rowArr['AAMC ID']['value'] = $erasIdValue;
+                $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
+                $rowArr['Application Receipt Date']['value'] = $receiptDateValue; //10/21/2020
+                $rowArr['Preferred Email']['value'] = $emailValue;
+                //$rowArr['Last Name']['value'] = $lastNameValue;
+
+                $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
+                if( count($duplicateDbResApps) > 0  ) {
+                    $residencyApplicationDb = $duplicateDbResApps[0];
+                }
+
+                if( $residencyApplicationDb ) {
+                    $duplicateInfoArr[] = "Duplicate: ".$residencyApplicationDb->getId();
+                }
+
+                //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
+            }
+        }
+        
+        //$resapps = $resappPdfUtil->getEnabledResapps();
+
+
+//        foreach($resapps as $resapp) {
+//            //Add to John Smith’s application (ID 1234)
+//            //$applicantName = $resapp->getApplicantFullName();
+//            //$resappsInfoArr[] = "Add to ".$applicantName."'s application (ID ".$resapp->getId().")";
+//            $resappsInfoArr[] = $resapp->getAddToStr();
+//        }
+
+        $duplicateInfoArr[] = "Test Error";
+
+        dump($duplicateInfoArr);
+        exit('111');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($duplicateInfoArr));
+        return $response;
+    }
 }

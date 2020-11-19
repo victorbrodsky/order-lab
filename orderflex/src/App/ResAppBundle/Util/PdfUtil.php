@@ -710,6 +710,7 @@ class PdfUtil {
         ////////////// check for duplicate //////////////////
         $duplicateIds = array();
         $duplicateArr = array();
+        
         //check for duplicate in $handsomtableJsonData
         $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
         if( $duplicateTableResApps  ) {
@@ -720,6 +721,7 @@ class PdfUtil {
             //$rowArr['Issue']['id'] = null;
             //$rowArr['Issue']['value'] = "Not Duplicated";
         }
+        
         //check for duplicate in DB
         $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
         if( count($duplicateDbResApps) > 0  ) {
@@ -1863,6 +1865,32 @@ class PdfUtil {
         return $keysArr;
     }
 
+    public function getValueByHeaderName($header, $row, $headers) {
+
+        $res = array();
+
+        $key = array_search($header, $headers);
+
+        //$res['val'] = $row[$key]['value'];
+        if( array_key_exists('value',$row[$key]) ) {
+            $res['val'] = trim($row[$key]['value']);
+        } else {
+            $res['val'] = null;
+        }
+
+        $id = null;
+
+        if( array_key_exists('id', $row[$key]) ) {
+            $id = trim($row[$key]['id']);
+            //echo "id=".$id.", val=".$res['val']."<br>";
+        }
+
+        $res['id'] = $id;
+
+        //echo $header.": key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
+        return $res;
+    }
+    
     //    public function getKeyFields_Single($text) {
 //
 //        $keysArr = array();
