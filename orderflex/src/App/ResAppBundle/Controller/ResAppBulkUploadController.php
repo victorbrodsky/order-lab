@@ -514,11 +514,13 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( !$residencyApplicationDb ) {
                 //Try to find by aamcId and startDate ("Expected Residency Start Date")
                 $rowArr = array();
-                $rowArr['AAMC ID']['value'] = $erasIdValue;
+                $rowArr['AAMC ID']['value'] = $aamcIdValue;
+                $rowArr['ERAS Application ID']['value'] = $erasIdValue;
                 $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
                 $rowArr['Application Receipt Date']['value'] = $receiptDateValue; //10/21/2020
                 $rowArr['Preferred Email']['value'] = $emailValue;
-                //$rowArr['Last Name']['value'] = $lastNameValue;
+                $rowArr['Last Name']['value'] = $lastNameValue;
+                $rowArr['First Name']['value'] = $firstNameValue;
 
                 $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {

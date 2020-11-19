@@ -364,6 +364,16 @@ function resappMakeColumnData() {
     //     }
     // }
 
+    //$year = $this->getYear($cellValue);
+    //$cellValue = "07/01/".$year;
+    var year = new Date().getFullYear();
+    var seasonStartDate = "07/01/"+year;
+    var seasonEndDate = "06/30/"+year;
+
+    var nextYear = year + 1;
+    var residencyStartDate = "07/01/"+nextYear;
+    var residencyEndDate = "06/30/"+nextYear;
+
     _columnData_scanorder = [
 
         {
@@ -430,10 +440,11 @@ function resappMakeColumnData() {
         { header:'Couple’s Match', columns:{} },
         { header:'Post-Sophomore Fellowship', columns:{} },
 
-        { header:'Application Season Start Date', columns:{} },
-        { header:'Application Season End Date', columns:{} },
-        { header:'Expected Residency Start Date', columns:{} },
-        { header:'Expected Graduation Date', columns:{} },
+        { header:'Application Season Start Date', default:seasonStartDate, columns:{} },
+        { header:'Application Season End Date', default:seasonEndDate, columns:{} },
+
+        { header:'Expected Residency Start Date', default:residencyStartDate, columns:{} },
+        { header:'Expected Graduation Date', default:residencyEndDate, columns:{} },
 
         { header:'Previous Residency Start Date', columns:{} },
         { header:'Previous Residency Graduation/Departure Date', columns:{} },
@@ -476,7 +487,11 @@ function handsonTableInit(handsometableDataArr) {
 
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
-                rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
+                if( 'source' in _columnData_scanorder[ii]['columns'] ) {
+                    rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
+                } else {
+                    rowElement[ii] = index; //set default
+                }
                 //console.log('assign rowElement='+rowElement[ii]);
             } else {
                 //console.log('assign rowElement is null');
@@ -792,7 +807,11 @@ function handsonTableInit(handsometableDataArr) {
                 var value = null;
                 if( 'default' in _columnData_scanorder[col] ) {
                     var indexSource = _columnData_scanorder[col]['default'];
-                    value = _columnData_scanorder[col]['columns']['source'][indexSource];
+                    if( 'source' in _columnData_scanorder[col]['columns'] ) {
+                        value = _columnData_scanorder[col]['columns']['source'][indexSource];
+                    } else {
+                        value = indexSource;
+                    }
                 }
 
                 //var row = this.countRows()-2;

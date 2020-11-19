@@ -129,13 +129,20 @@ class ResAppUtilController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
 
+        //validate
+        //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
+        // the existing applications in the current year’s applications without statuses of Hidden and Archived),
+        // before beginning the bulk import, show a modal:
+        //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
+        // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
+
         //$duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
 
         $tabledata = $request->get('tabledata');
 
         $data = json_decode($tabledata, true);
 
-        //dump($data);
+        dump($data);
         //exit('111');
 
         if( $data == null ) {
@@ -155,9 +162,17 @@ class ResAppUtilController extends OrderAbstractController
             echo "actionId=".$actionId." <br>";
             echo "actionValue=".$actionValue." <br>";
 
+            if( $actionValue != "Create New Record" ) {
+                //continue;
+            }
+
             $erasIdArr = $resappPdfUtil->getValueByHeaderName('ERAS Application ID',$row,$headers);
             $erasIdValue = $erasIdArr['val'];
             //$erasIdId = $erasIdArr['id'];
+
+            $aamcIdArr = $resappPdfUtil->getValueByHeaderName('AAMC ID',$row,$headers);
+            $aamcIdValue = $aamcIdArr['val'];
+            //$aamcIdId = $aamcIdArr['id'];
 
             $residencyStartDateArr = $resappPdfUtil->getValueByHeaderName('Expected Residency Start Date',$row,$headers);
             $residencyStartDateValue = $residencyStartDateArr['val'];
@@ -172,6 +187,13 @@ class ResAppUtilController extends OrderAbstractController
             $emailValue = strtolower($emailValue);
             //$emailId = $emailArr['id'];
 
+            $firstNameArr = $resappPdfUtil->getValueByHeaderName('First Name',$row,$headers);
+            $firstNameValue = $firstNameArr['val'];
+            //$firstNameId = $firstNameArr['id'];
+
+            $lastNameArr = $resappPdfUtil->getValueByHeaderName('Last Name',$row,$headers);
+            $lastNameValue = $lastNameArr['val'];
+            //$lastNameId = $lastNameArr['id'];
 
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
@@ -182,11 +204,13 @@ class ResAppUtilController extends OrderAbstractController
             if( !$residencyApplicationDb ) {
                 //Try to find by aamcId and startDate ("Expected Residency Start Date")
                 $rowArr = array();
-                $rowArr['AAMC ID']['value'] = $erasIdValue;
+                $rowArr['AAMC ID']['value'] = $aamcIdValue;
+                $rowArr['ERAS Application ID']['value'] = $erasIdValue;
                 $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
                 $rowArr['Application Receipt Date']['value'] = $receiptDateValue; //10/21/2020
                 $rowArr['Preferred Email']['value'] = $emailValue;
-                //$rowArr['Last Name']['value'] = $lastNameValue;
+                $rowArr['Last Name']['value'] = $lastNameValue;
+                $rowArr['First Name']['value'] = $firstNameValue;
 
                 $duplicateDbResApps = $resappPdfUtil->getDuplicateDbResApps($rowArr);
                 if( count($duplicateDbResApps) > 0  ) {
@@ -195,6 +219,21 @@ class ResAppUtilController extends OrderAbstractController
 
                 if( $residencyApplicationDb ) {
                     $duplicateInfoArr[] = "Duplicate: ".$residencyApplicationDb->getId();
+                }
+
+                //check for duplicate in $handsomtableJsonData TODO:
+                if(0) {
+                    $thisRowArr = $resappPdfUtil->getDuplicateTableResApps($rowArr, $data);
+                    if ($thisRowArr) {
+                        $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
+                        $thisEmail = $thisRowArr['Preferred Email']['value'];
+                        $thisFirstName = $thisRowArr['First Name']['value'];
+                        $thisLastName = $thisRowArr['Last Name']['value'];
+                        $duplicateInfoArr[] = "Duplicate in batch: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
+                    } else {
+                        //$rowArr['Issue']['id'] = null;
+                        //$rowArr['Issue']['value'] = "Not Duplicated";
+                    }
                 }
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";

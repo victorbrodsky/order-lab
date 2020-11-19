@@ -1015,22 +1015,18 @@ class PdfUtil {
         return NULL;
     }
 
+    //check if duplicate exists, found by:
+    //1) $erasApplicantId
+    // 'Expected Residency Start Date' AND (email or aamcId or ($firstName and $lastName))
     public function getDuplicateDbResApps($rowArr) {
         //A- By ERAS Application ID, then separately
         //B- By Preferred e-mail + Expected Residency Start Date, and lastly, separately
         //C- By Last Name + First Name + Application Season Start Date + Expected Residency Start Date combination.
-        $aamcId = $rowArr['AAMC ID']['value'];
-        $email = $rowArr['Preferred Email']['value'];
-        //$lastName = $rowArr['Last Name']['value'];
 
-        $expectedResidencyStartDate = NULL;
-        if( isset($rowArr['Expected Residency Start Date']) ) {
-            //$expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value']; //07/01/2021
-        }
-
-        $applicationReceiptDate = NULL;
-        if( isset($rowArr['Application Receipt Date']) ) {
-            //$applicationReceiptDate = $rowArr['Application Receipt Date']['value']; //10/21/2020
+        //$aamcId = $rowArr['AAMC ID']['value'];
+        $aamcId = NULL;
+        if( isset($rowArr['AAMC ID']) ) {
+            $aamcId = $rowArr['AAMC ID']['value'];
         }
 
         $erasApplicantId = NULL;
@@ -1038,30 +1034,73 @@ class PdfUtil {
             $erasApplicantId = $rowArr['ERAS Application ID']['value'];
         }
 
+        //$email = $rowArr['Preferred Email']['value'];
+        $email = NULL;
+        if( isset($rowArr['Preferred Email']) ) {
+            $email = $rowArr['Preferred Email']['value'];
+        }
+
+        $expectedResidencyStartDate = NULL;
+        if( isset($rowArr['Expected Residency Start Date']) ) {
+            $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value']; //07/01/2021
+        }
+
+        $applicationReceiptDate = NULL;
+        if( isset($rowArr['Application Receipt Date']) ) {
+            $applicationReceiptDate = $rowArr['Application Receipt Date']['value']; //10/21/2020
+        }
+
+        $lastName = NULL;
+        if( isset($rowArr['Last Name']) ) {
+            $lastName = $rowArr['Last Name']['value'];
+        }
+        $firstName = NULL;
+        if( isset($rowArr['First Name']) ) {
+            $firstName = $rowArr['First Name']['value'];
+        }
+
         //echo "aamcId=[$aamcId], email=[$email], expectedResidencyStartDate=[$expectedResidencyStartDate],
         //    applicationReceiptDate=[$applicationReceiptDate], erasApplicantId=[$erasApplicantId] <br>";
+
+        $parameters = array();
 
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin('resapp.user','user');
         $dql->leftJoin('user.infos','infos');
+        $dql->orderBy("resapp.id","DESC"); //descending order when they are arranged from the largest to the smallest number
+
+        //A- By ERAS Application ID, then separately
+        if( $erasApplicantId ) {
+            $dql->where("resapp.erasApplicantId = :erasApplicantId");
+            $parameters["erasApplicantId"] = $erasApplicantId;
+            $query = $this->em->createQuery($dql);
+            $query->setParameters($parameters);
+            $resapps = $query->getResult();
+            return $resapps;
+        }
 
         $dql->where("(resapp.aamcId = :aamcId OR LOWER(infos.email) = LOWER(:userInfoEmail) OR LOWER(infos.emailCanonical) = LOWER(:userInfoEmail))");
+        $parameters["aamcId"] = $aamcId;
+        $parameters["userInfoEmail"] = $email;
 
-        $dql->orderBy("resapp.id","DESC");
-
-        if( $erasApplicantId ) {
-            $dql->orWhere("resapp.erasApplicantId = :erasApplicantId");
+        if( $lastName && $firstName ) {
+            $dql->orWhere("(LOWER(infos.firstName) = LOWER(:firstName) AND LOWER(infos.lastName) = LOWER(:lastName))");
+            $parameters["firstName"] = $firstName;
+            $parameters["lastName"] = $lastName;
         }
+
         if( $expectedResidencyStartDate || $applicationReceiptDate ) {
             //$dql->andWhere("resapp.startDate = :expectedResidencyStartDate");
             $dateStrArr = array();
             if( $expectedResidencyStartDate ) {
                 $dateStrArr[] = "resapp.startDate = :expectedResidencyStartDate"; //startDate(date) in DB: 2019-07-01
+                $parameters["expectedResidencyStartDate"] = $expectedResidencyStartDate;
             }
             if( $applicationReceiptDate ) {
                 $dateStrArr[] = "resapp.timestamp >= :applicationReceiptDate"; //timestamp(datetime) in DB: 2018-09-29 10:00:00
+                $parameters["applicationReceiptDate"] = $applicationReceiptDate;
             }
             if( count($dateStrArr) > 0 ) {
                 $dateStr = implode(" OR ",$dateStrArr);
@@ -1075,23 +1114,8 @@ class PdfUtil {
 
         $query = $this->em->createQuery($dql);
         //$query->setMaxResults(10);
-        
-        if( $erasApplicantId ) {
-            $query->setParameter('erasApplicantId', $erasApplicantId);
-        }
 
-        if( $expectedResidencyStartDate) {
-            $query->setParameter('expectedResidencyStartDate', $expectedResidencyStartDate);
-        }
-        if( $applicationReceiptDate) {
-            $query->setParameter('applicationReceiptDate', $applicationReceiptDate);
-        }
-
-        $query->setParameter('aamcId', $aamcId);
-        $query->setParameter('userInfoEmail', $email);
-        //$query->setParameter('userInfoLastName', "'".$lastName."'");
-
-
+        $query->setParameters($parameters);
         $resapps = $query->getResult();
 
         //echo "sql=".$query->getSql()."<br>";
@@ -1105,11 +1129,13 @@ class PdfUtil {
         if( count($handsomtableJsonData) == 0 ) {
             return NULL;
         }
+        dump($handsomtableJsonData);
+        exit('111');
 
         $aamcId = $rowArr['AAMC ID']['value'];
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
-        //$lastName = $rowArr['Last Name']['value'];
+        $lastName = $rowArr['Last Name']['value'];
 
         $erasApplicantId = NULL;
         if( isset($rowArr['ERAS Application ID']) ) {
@@ -1121,20 +1147,23 @@ class PdfUtil {
             $thisAamcId = $thisRowArr['AAMC ID']['value'];
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
             $thisEmail = $thisRowArr['Preferred Email']['value'];
-            //$thisLastName = $thisRowArr['Last Name']['value'];
+            $thisLastName = $thisRowArr['Last Name']['value'];
 
             $thisErasApplicantId = NULL;
             if( isset($rowArr['ERAS Application ID']) ) {
                 $thisErasApplicantId = $rowArr['ERAS Application ID']['value'];
             }
 
-            $erasApplicantIdSame = true; //ignore by default
+            $erasApplicantIdSame = false; //ignore by default
             if( $erasApplicantId && $thisErasApplicantId ) {
                 if( $erasApplicantId == $thisErasApplicantId ) {
                     $erasApplicantIdSame = true;
                 } else {
                     $erasApplicantIdSame = false;
                 }
+            }
+            if( $erasApplicantIdSame ) {
+                return $thisRowArr;
             }
 
 //            echo     "[$aamcId]=[$thisAamcId],"
@@ -1144,15 +1173,33 @@ class PdfUtil {
 //                    ."[$erasApplicantId]=[$thisErasApplicantId]"
 //                    ."<br>";
 
-            if(
-                $aamcId == $thisAamcId
-                && $expectedResidencyStartDate == $thisExpectedResidencyStartDate
-                && $email == $thisEmail
-                //&& $lastName == $thisLastName
-                && $erasApplicantIdSame
-            ) {
-                //echo "Duplicate!!!<br>";
-                return $thisRowArr;
+//            if(
+//                $aamcId == $thisAamcId
+//                && $expectedResidencyStartDate == $thisExpectedResidencyStartDate
+//                && $email == $thisEmail
+//                //&& $lastName == $thisLastName
+//                && $erasApplicantIdSame
+//            ) {
+//                //echo "Duplicate!!!<br>";
+//                return $thisRowArr;
+//            } else {
+//                //echo "NoDuplicate<br>";
+//            }
+
+            if( $expectedResidencyStartDate == $thisExpectedResidencyStartDate ) {
+
+                if( $aamcId == $thisAamcId ) {
+                    return $thisRowArr;
+                }
+
+                if( $email == $thisEmail ) {
+                    return $thisRowArr;
+                }
+
+                if( $lastName == $thisLastName ) {
+                    return $thisRowArr;
+                }
+
             } else {
                 //echo "NoDuplicate<br>";
             }
