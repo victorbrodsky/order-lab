@@ -142,8 +142,9 @@ class ResAppUtilController extends OrderAbstractController
 
         $data = json_decode($tabledata, true);
 
+        //testing: data incremented by number of rows after each validation
         dump($data);
-        //exit('111');
+        exit('111');
 
         if( $data == null ) {
             $response = new Response();
@@ -152,7 +153,8 @@ class ResAppUtilController extends OrderAbstractController
             return $response;
         }
 
-        $duplicateInfoArr = array();
+        $duplicateDbInfoArr = array();
+        $duplicateTableInfoArr = array();
         $headers = $data["header"];
 
         //construct $handsomtableJsonData in format (array of $thisRowArr['AAMC ID']['value']):
@@ -169,19 +171,20 @@ class ResAppUtilController extends OrderAbstractController
             }
             $handsomtableJsonData[] = $thisRowArr;
         }
-        dump($handsomtableJsonData);
+        //dump($handsomtableJsonData);
 
         $rowCount = 0;
 
         foreach( $data["row"] as $row ) {
             $actionArr = $resappPdfUtil->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
-            $actionId = $actionArr['id'];
-            echo "actionId=".$actionId." <br>";
+            //$actionId = $actionArr['id'];
+            //echo "actionId=".$actionId." <br>";
             echo "actionValue=".$actionValue." <br>";
 
             if( $actionValue != "Create New Record" ) {
-                //continue;
+                $rowCount = $rowCount++;
+                continue;
             }
 
             $erasIdArr = $resappPdfUtil->getValueByHeaderName('ERAS Application ID',$row,$headers);
@@ -236,7 +239,9 @@ class ResAppUtilController extends OrderAbstractController
                 }
 
                 if( $residencyApplicationDb ) {
-                    $duplicateInfoArr[] = "Duplicate in row $rowCount: ".$residencyApplicationDb->getId();
+                    //$duplicateDbInfoArr[] = "Duplicate in row $rowCount: ".$firstNameValue . " " . $lastNameValue; //$residencyApplicationDb->getId();
+                    $duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue . " (".$rowCount.")"; //$residencyApplicationDb->getId();
+                    //$duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue;
                 }
 
                 //check for duplicate in $handsomtableJsonData TODO:
@@ -248,7 +253,10 @@ class ResAppUtilController extends OrderAbstractController
                         $thisEmail = $duplicateRowArr['Preferred Email']['value'];
                         $thisFirstName = $duplicateRowArr['First Name']['value'];
                         $thisLastName = $duplicateRowArr['Last Name']['value'];
-                        $duplicateInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
+                        //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
+                        //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName";
+                        $duplicateTableInfoArr[] = "$thisFirstName $thisLastName" . " (".$rowCount.")";
+                        //$duplicateTableInfoArr[] = $thisFirstName . " " . $thisLastName;
                     } else {
                         //$rowArr['Issue']['id'] = null;
                         //$rowArr['Issue']['value'] = "Not Duplicated";
@@ -273,14 +281,48 @@ class ResAppUtilController extends OrderAbstractController
 //            $resappsInfoArr[] = $resapp->getAddToStr();
 //        }
 
-        $duplicateInfoArr[] = "Test Error";
+        //$duplicateInfoArr[] = "Test Error";
 
-        dump($duplicateInfoArr);
-        exit('111');
+        //dump($duplicateInfoArr);
+        //exit('111');
+
+        $duplicateInfoStr = null;
+
+        $duplicateDbInfoStr = null;
+        if( count($duplicateDbInfoArr) > 0 ) {
+            $duplicateDbInfoStr = implode(", ",$duplicateDbInfoArr);
+            $duplicateDbInfoStr = "$duplicateDbInfoStr already exist in the system";
+        }
+
+        $duplicateTableInfoStr = null;
+        if( count($duplicateTableInfoArr) > 0 ) {
+            $duplicateTableInfoStr = implode(", ",$duplicateTableInfoArr);
+            $duplicateTableInfoStr = "$duplicateTableInfoStr already exist in the table batch";
+        }
+
+        if( $duplicateDbInfoStr || $duplicateTableInfoStr ) {
+            //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
+            $duplicateInfoStr = "Application(s) for ";
+            if( $duplicateDbInfoStr ) {
+                $duplicateInfoStr = $duplicateInfoStr . $duplicateDbInfoStr;
+            }
+            $duplicateInfoStr = $duplicateInfoStr . "<br><br>"; //testing
+            if( $duplicateTableInfoStr ) {
+                if( $duplicateInfoStr ) {
+                    $duplicateInfoStr = $duplicateInfoStr . " and " . $duplicateTableInfoStr;
+                } else {
+                    $duplicateInfoStr = $duplicateInfoStr . $duplicateTableInfoStr;
+                }
+            }
+
+            $duplicateInfoStr = $duplicateInfoStr . ". " .
+                "Would you like to create new (possibly duplicate) records for these applications?";
+        }
+        //$duplicateInfoStr = null; //testing
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($duplicateInfoArr));
+        $response->setContent(json_encode($duplicateInfoStr)); //json_encode($duplicateInfoArr)
         return $response;
     }
 }

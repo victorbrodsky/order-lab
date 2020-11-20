@@ -635,7 +635,7 @@ function handsonTableInit(handsometableDataArr) {
                 //var erasFileCellId = handsometableDataArr[r]["ERAS Application"]["id"];
                 //var erasFileCellValue = handsometableDataArr[r]["ERAS Application"]["value"];
                 //console.log("headerTitle=" + headerTitle + ", issueCellId=" + issueCellId+", erasFileCellId="+erasFileCellId+", erasFileCellValue="+erasFileCellValue);
-                console.log("headerTitle=" + headerTitle + ", issueCellId=" + issueCellId);
+                //console.log("headerTitle=" + headerTitle + ", issueCellId=" + issueCellId);
                 if( issueCellId && issueCellId == -1 ) {
                 //if( issueCellId && issueCellId == -1 && erasFileCellId && erasFileCellValue ) {
                     cellProperties.source = _resapps_simple; //overwrite with extended choices including "Add to John Smith’s application (ID 1234)"
@@ -1003,7 +1003,7 @@ function resappAssignDataToDatalocker() {
     var headers = _sotable.getColHeader();
 
     //get rows data from _rowToProcessArr
-    //var data = [];
+    var data = [];
     var data = {
         header: headers,
         row: []
@@ -1081,8 +1081,8 @@ function resappCheckDuplicate(jsonstr) {
         //contentType: 'application/json',
         //dataType: 'json',
         data: {tabledata: jsonstr}
-    }).done(function(data) {
-        validationError = data; //"Test Error";
+    }).done(function(validationResult) {
+        validationError = validationResult; //"Test Error";
     });
 
     return validationError;

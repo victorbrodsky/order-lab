@@ -1106,7 +1106,7 @@ class PdfUtil {
                 $dateStr = implode(" OR ",$dateStrArr);
                 if( $dateStr ) {
                     $dateStr = "(".$dateStr.")";
-                    echo "[$expectedResidencyStartDate], [$applicationReceiptDate]: dateStr=[$dateStr] <br>";
+                    //echo "[$expectedResidencyStartDate], [$applicationReceiptDate]: dateStr=[$dateStr] <br>";
                     $dql->andWhere($dateStr);
                 }
             }
@@ -1155,7 +1155,7 @@ class PdfUtil {
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
             $thisEmail = $thisRowArr['Preferred Email']['value'];
             $thisLastName = $thisRowArr['Last Name']['value'];
-            echo "thisAamcId=$thisAamcId, thisLastName=$thisLastName<br>";
+            //echo "thisAamcId=$thisAamcId, thisLastName=$thisLastName<br>";
 
             $thisErasApplicantId = NULL;
             if( isset($rowArr['ERAS Application ID']) ) {

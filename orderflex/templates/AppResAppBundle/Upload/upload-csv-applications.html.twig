@@ -331,11 +331,14 @@
                 $("#projectError").html(validationError);
                 resappShowBtn();
 
-                return false;
+                //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
+                confirm(validationError);
+
+                //return false;
             }
 
             //testing
-            console.log("resappValidateRequest: finished");
+            console.log("resappValidateRequest: test finished");
             resappShowBtn();
             return false;
 
