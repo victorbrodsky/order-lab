@@ -983,16 +983,6 @@ function resappValidateHandsonTable() {
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
         //console.log("row="+row);
         _rowToProcessArr.push(row);
-
-        //validate
-        //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
-        // the existing applications in the current year’s applications without statuses of Hidden and Archived),
-        // before beginning the bulk import, show a modal:
-        //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
-        // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
-        //if(  )
-        //validationError = "Test Error";
-        
     } //for each row
 
     //get rows data from _rowToProcessArr

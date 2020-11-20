@@ -1125,12 +1125,12 @@ class PdfUtil {
         return $resapps;
     }
 
-    public function getDuplicateTableResApps( $rowArr, $handsomtableJsonData ) {
+    public function getDuplicateTableResApps( $rowArr, $handsomtableJsonData, $thisRow=null ) {
         if( count($handsomtableJsonData) == 0 ) {
             return NULL;
         }
-        dump($handsomtableJsonData);
-        exit('111');
+        //dump($handsomtableJsonData);
+        //exit('111');
 
         $aamcId = $rowArr['AAMC ID']['value'];
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
@@ -1142,12 +1142,20 @@ class PdfUtil {
             $erasApplicantId = $rowArr['ERAS Application ID']['value'];
         }
 
+        $rowCount = 0;
+
         foreach($handsomtableJsonData as $thisRowArr) {
+
+            if( $thisRow && $rowCount == $thisRow ) {
+                continue; //skip the same row
+            }
+            $rowCount++;
 
             $thisAamcId = $thisRowArr['AAMC ID']['value'];
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
             $thisEmail = $thisRowArr['Preferred Email']['value'];
             $thisLastName = $thisRowArr['Last Name']['value'];
+            echo "thisAamcId=$thisAamcId, thisLastName=$thisLastName<br>";
 
             $thisErasApplicantId = NULL;
             if( isset($rowArr['ERAS Application ID']) ) {
@@ -1204,7 +1212,7 @@ class PdfUtil {
                 //echo "NoDuplicate<br>";
             }
 
-        }
+        }//foreach
 
         return NULL;
     }

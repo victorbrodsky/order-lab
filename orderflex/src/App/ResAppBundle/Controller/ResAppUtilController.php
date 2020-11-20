@@ -155,6 +155,24 @@ class ResAppUtilController extends OrderAbstractController
         $duplicateInfoArr = array();
         $headers = $data["header"];
 
+        //construct $handsomtableJsonData in format (array of $thisRowArr['AAMC ID']['value']):
+        // $thisRowArr['Header Title']['value'] = $value;
+        // $thisRowArr['Header Title']['id'] = $id;
+        // $handsomtableJsonData[] = $thisRowArr;
+        $handsomtableJsonData = array();
+        foreach( $data["row"] as $row ) {
+            $thisRowArr = array();
+            foreach($headers as $header) {
+                $cellMeta = $resappPdfUtil->getValueByHeaderName($header,$row,$headers);
+                $thisRowArr[$header.""]['value'] = $cellMeta['val'];
+                $thisRowArr[$header.""]['id'] = $cellMeta['id'];
+            }
+            $handsomtableJsonData[] = $thisRowArr;
+        }
+        dump($handsomtableJsonData);
+
+        $rowCount = 0;
+
         foreach( $data["row"] as $row ) {
             $actionArr = $resappPdfUtil->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
@@ -218,27 +236,32 @@ class ResAppUtilController extends OrderAbstractController
                 }
 
                 if( $residencyApplicationDb ) {
-                    $duplicateInfoArr[] = "Duplicate: ".$residencyApplicationDb->getId();
+                    $duplicateInfoArr[] = "Duplicate in row $rowCount: ".$residencyApplicationDb->getId();
                 }
 
                 //check for duplicate in $handsomtableJsonData TODO:
-                if(0) {
-                    $thisRowArr = $resappPdfUtil->getDuplicateTableResApps($rowArr, $data);
-                    if ($thisRowArr) {
-                        $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
-                        $thisEmail = $thisRowArr['Preferred Email']['value'];
-                        $thisFirstName = $thisRowArr['First Name']['value'];
-                        $thisLastName = $thisRowArr['Last Name']['value'];
-                        $duplicateInfoArr[] = "Duplicate in batch: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
+                if(1) {
+
+                    $duplicateRowArr = $resappPdfUtil->getDuplicateTableResApps($rowArr, $handsomtableJsonData, $rowCount);
+                    if ($duplicateRowArr) {
+                        $thisExpectedResidencyStartDate = $duplicateRowArr['Expected Residency Start Date']['value'];
+                        $thisEmail = $duplicateRowArr['Preferred Email']['value'];
+                        $thisFirstName = $duplicateRowArr['First Name']['value'];
+                        $thisLastName = $duplicateRowArr['Last Name']['value'];
+                        $duplicateInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
                     } else {
                         //$rowArr['Issue']['id'] = null;
                         //$rowArr['Issue']['value'] = "Not Duplicated";
                     }
                 }
 
+                $rowCount++;
+
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
-        }
+        }//foreach( $data["row"] as $row ) {
+
+
         
         //$resapps = $resappPdfUtil->getEnabledResapps();
 
