@@ -1070,7 +1070,7 @@ function resappAssignDataToDatalocker() {
     return validationError;
 }
 
-//TODO: do it in one ajax request for all "Create New Record"
+//Do it in one ajax request for all "Create New Record"
 function resappCheckDuplicate(jsonstr) {
     var validationError = "DefaultTestError";
     var url = Routing.generate('resapp_check_duplicate');

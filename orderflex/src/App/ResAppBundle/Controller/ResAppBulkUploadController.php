@@ -612,18 +612,6 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             } //action != Add
 
-            //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
-            if( $actionValue == "Create New Record" ) {
-                //exit("$actionValue !!!");
-
-                if( $residencyApplicationDb ) {
-                    //Remove eras application PDF document file
-                    $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
-                    $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
-                    continue;
-                }
-            }
-
             //Get $actionId from 'Action' string: 'Add to FirstNAme LastName (ID 123)'
             if( strpos($actionValue, 'Add to ') !== false ) {
                 echo "actionId=".$actionId." <br>";
@@ -711,6 +699,18 @@ class ResAppBulkUploadController extends OrderAbstractController
                 //dump($updatedStrArr);
                 //exit('exit adding pdf to resapp ID='.$residencyApplicationDb->getId());
                 continue;
+            } //'Add to '
+
+            //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
+            if( $actionValue == "Create New Record" ) {
+                //exit("$actionValue !!!");
+
+                if( $residencyApplicationDb ) {
+                    //Remove eras application PDF document file
+                    $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
+                    $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
+                    continue;
+                }
             }
 
             //Create New Record
@@ -775,6 +775,24 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$previousResidencyTrackId = $previousResidencyTrackArr['id'];
 
             //Do no create if some key fields are missing
+            if( !$firstNameValue ) {
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing First Name.";
+                $updatedStrArr["Skip creating residency application. ERROR: Missing First Name"][] = $updateInfo;
+                continue;
+            }
+            if( !$lastNameValue ) {
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing Last Name.";
+                $updatedStrArr["Skip creating residency application. ERROR: Missing Last Name"][] = $updateInfo;
+                continue;
+            }
+            if( !$emailValue ) {
+                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+                    ". ERROR: Missing Preferred Email.";
+                $updatedStrArr["Skip creating residency application. ERROR: Missing Preferred Email"][] = $updateInfo;
+                continue;
+            }
             if( !$medSchoolNameValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
                     ". ERROR: Missing Medical School.";
@@ -787,10 +805,10 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $updatedStrArr["Skip creating residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
                 continue;
             }
-            if( !$lastNameValue ) {
+            if( !$residencyStartDateValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing Last Name.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing Last Name"][] = $updateInfo;
+                    ". ERROR: Missing Expected Residency Start Date.";
+                $updatedStrArr["Skip creating residency application. ERROR: Missing Expected Residency Start Date"][] = $updateInfo;
                 continue;
             }
 

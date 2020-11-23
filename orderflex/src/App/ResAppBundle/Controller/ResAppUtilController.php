@@ -153,6 +153,7 @@ class ResAppUtilController extends OrderAbstractController
             return $response;
         }
 
+        $missingInfoArr = array();
         $duplicateDbInfoArr = array();
         $duplicateTableInfoArr = array();
         $headers = $data["header"];
@@ -270,7 +271,21 @@ class ResAppUtilController extends OrderAbstractController
                     }
                 }
 
-                //$rowCount++;
+//                //TODO: check empty fields in handsontable in JS
+//                //check if 'First Name', 'Last Name', 'Preferred Email', 'Expected Residency Start Date'
+//                //Medical School, USMLE Score Step 1?
+//                if( !$firstNameValue ) {
+//                    $missingInfoArr[] = "First Name";
+//                }
+//                if( !$lastNameValue ) {
+//                    $missingInfoArr[] = "Last Name";
+//                }
+//                if( !$emailValue ) {
+//                    $missingInfoArr[] = "Preferred Email";
+//                }
+//                if( !$residencyStartDateValue ) {
+//                    $missingInfoArr[] = "Expected Residency Start Date";
+//                }
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
