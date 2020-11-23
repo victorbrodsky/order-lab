@@ -1132,6 +1132,12 @@ class PdfUtil {
         //dump($handsomtableJsonData);
         //exit('111');
 
+//        $actionValue = NULL;
+//        if( isset($rowArr['Action']) ) {
+//            $actionValue = $rowArr['Action']['value'];
+//        }
+//        echo "getDuplicateTableResApps: actionValue=[".$actionValue."]<br>";
+
         $aamcId = $rowArr['AAMC ID']['value'];
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
@@ -1142,14 +1148,30 @@ class PdfUtil {
             $erasApplicantId = $rowArr['ERAS Application ID']['value'];
         }
 
+        //make the first row index 1
         $rowCount = 0;
 
         foreach($handsomtableJsonData as $thisRowArr) {
 
+            $rowCount++;
+
+            $actionValue = NULL;
+            if( isset($thisRowArr['Action']) ) {
+                $actionValue = $thisRowArr['Action']['value'];
+            }
+            //echo "getDuplicateTableResApps: actionValue=[".$actionValue."]<br>";
+
+            if( $actionValue != "Create New Record" ) {
+                //$rowCount++;
+                continue;
+            }
+            
             if( $thisRow && $rowCount == $thisRow ) {
+                //$rowCount++;
                 continue; //skip the same row
             }
-            $rowCount++;
+            
+            //$rowCount++;
 
             $thisAamcId = $thisRowArr['AAMC ID']['value'];
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];

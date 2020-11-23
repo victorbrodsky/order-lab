@@ -584,53 +584,47 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             }
 
-            if( $actionValue == "Do not add" || $residencyApplicationDb ) {
-                //echo "Do not add row=$count <br>";
-
-                //Remove eras application PDF document file
-//                if( $erasDocument ) {
-//                    $inputDataFile->removeErasFile($erasDocument);
-//                    $em->remove($erasDocument);
-//                    if( !$testing ) {
-//                        $em->flush();
-//                    }
+//            if( $actionValue == "Do not add" || $residencyApplicationDb ) {
+//                //echo "Do not add row=$count <br>";
+//
+//                //Remove eras application PDF document file
+//                $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
+//
+//                if( $actionValue == "Do not add" && $residencyApplicationDb ) {
+//                    $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
 //                }
+//                elseif( $residencyApplicationDb ) {
+//                    $updatedStrArr["Skip existing residency application$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
+//                    //exit("Skip existing residency application $actionValue !!!");
+//                }
+//                elseif( $actionValue ) {
+//                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = $applicantName."";
+//                }
+//
+//                continue;
+//            } //action != Add
+            if( $actionValue == "Do not add" ) {
+                //echo "Do not add row=$count <br>";
+                //Remove eras application PDF document file
                 $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
-
-                if( $actionValue == "Do not add" && $residencyApplicationDb ) {
-                    $updatedStrArr["Skip existing residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
-                }
-                elseif( $residencyApplicationDb ) {
-                    $updatedStrArr["Skip existing residency application$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
-                    //exit("Skip existing residency application $actionValue !!!");
-                }
-                elseif( $actionValue ) {
-                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = $applicantName."";
-                }
-
+                //$updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = $applicantName."";
+                $updatedStrArr["Skip residency application, marked as '$actionValue'"][] = $applicantName.$issueStr;
                 continue;
             } //action != Add
 
             //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
             if( $actionValue == "Create New Record" ) {
                 //exit("$actionValue !!!");
+
                 if( $residencyApplicationDb ) {
-
                     //Remove eras application PDF document file
-//                    if( $erasDocument ) {
-//                        $inputDataFile->removeErasFile($erasDocument);
-//                        $em->remove($erasDocument);
-//                        if( !$testing ) {
-//                            $em->flush();
-//                        }
-//                    }
                     $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
-
-                    $updatedStrArr["Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
+                    $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$firstNameValue $lastNameValue with ID=" . $residencyApplicationDb->getId();
                     continue;
                 }
             }
 
+            //Get $actionId from 'Action' string: 'Add to FirstNAme LastName (ID 123)'
             if( strpos($actionValue, 'Add to ') !== false ) {
                 echo "actionId=".$actionId." <br>";
                 echo "actionValue=".$actionValue." <br>";
@@ -1151,7 +1145,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        return $datetime;
     }
 
-    //Create resapp user
+    //Create or get existing resapp user
     public function createNewResappUser( $userArr ) {
         $em = $this->getDoctrine()->getManager();
 

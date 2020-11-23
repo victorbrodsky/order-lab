@@ -332,15 +332,21 @@
                 resappShowBtn();
 
                 //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
-                confirm(validationError);
+                validationError = validationError + " Would you like to create new (possibly duplicate) records for these applications?";
+                var confirmRes = confirm(validationError);
+                if( confirmRes == true ) {
+                    //OK
+                } else {
+                    return false;
+                }
 
                 //return false;
             }
 
             //testing
-            console.log("resappValidateRequest: test finished");
-            resappShowBtn();
-            return false;
+            //console.log("resappValidateRequest: test finished");
+            //resappShowBtn();
+            //return false;
 
             return true;
         }//EOF resappValidateRequest

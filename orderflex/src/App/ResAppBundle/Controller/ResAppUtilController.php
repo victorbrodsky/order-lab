@@ -143,8 +143,8 @@ class ResAppUtilController extends OrderAbstractController
         $data = json_decode($tabledata, true);
 
         //testing: data incremented by number of rows after each validation
-        dump($data);
-        exit('111');
+        //dump($data);
+        //exit('111');
 
         if( $data == null ) {
             $response = new Response();
@@ -173,17 +173,23 @@ class ResAppUtilController extends OrderAbstractController
         }
         //dump($handsomtableJsonData);
 
+        //make the first row index 1
         $rowCount = 0;
 
         foreach( $data["row"] as $row ) {
+
+            $rowCount++;
+
             $actionArr = $resappPdfUtil->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
+            $actionValue = trim($actionValue);
             //$actionId = $actionArr['id'];
             //echo "actionId=".$actionId." <br>";
-            echo "actionValue=".$actionValue." <br>";
+            //echo "checkDuplicateAction: actionValue=[".$actionValue."]<br>";
 
+            //process duplicate only for "Create New Record" action
             if( $actionValue != "Create New Record" ) {
-                $rowCount = $rowCount++;
+                //$rowCount++;
                 continue;
             }
 
@@ -225,6 +231,7 @@ class ResAppUtilController extends OrderAbstractController
             if( !$residencyApplicationDb ) {
                 //Try to find by aamcId and startDate ("Expected Residency Start Date")
                 $rowArr = array();
+                $rowArr['Action']['value'] = $actionValue;
                 $rowArr['AAMC ID']['value'] = $aamcIdValue;
                 $rowArr['ERAS Application ID']['value'] = $erasIdValue;
                 $rowArr['Expected Residency Start Date']['value'] = $residencyStartDateValue; //07/01/2019
@@ -240,11 +247,11 @@ class ResAppUtilController extends OrderAbstractController
 
                 if( $residencyApplicationDb ) {
                     //$duplicateDbInfoArr[] = "Duplicate in row $rowCount: ".$firstNameValue . " " . $lastNameValue; //$residencyApplicationDb->getId();
-                    $duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue . " (".$rowCount.")"; //$residencyApplicationDb->getId();
+                    $duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue . " (row #".$rowCount.")"; //$residencyApplicationDb->getId();
                     //$duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue;
                 }
 
-                //check for duplicate in $handsomtableJsonData TODO:
+                //check for duplicate in $handsomtableJsonData TODO: add _rowToProcessArr = []; to resappValidateHandsonTable
                 if(1) {
 
                     $duplicateRowArr = $resappPdfUtil->getDuplicateTableResApps($rowArr, $handsomtableJsonData, $rowCount);
@@ -255,7 +262,7 @@ class ResAppUtilController extends OrderAbstractController
                         $thisLastName = $duplicateRowArr['Last Name']['value'];
                         //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
                         //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName";
-                        $duplicateTableInfoArr[] = "$thisFirstName $thisLastName" . " (".$rowCount.")";
+                        $duplicateTableInfoArr[] = "$thisFirstName $thisLastName" . " (row #".$rowCount.")";
                         //$duplicateTableInfoArr[] = $thisFirstName . " " . $thisLastName;
                     } else {
                         //$rowArr['Issue']['id'] = null;
@@ -263,7 +270,7 @@ class ResAppUtilController extends OrderAbstractController
                     }
                 }
 
-                $rowCount++;
+                //$rowCount++;
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
@@ -293,12 +300,14 @@ class ResAppUtilController extends OrderAbstractController
             $duplicateDbInfoStr = implode(", ",$duplicateDbInfoArr);
             $duplicateDbInfoStr = "$duplicateDbInfoStr already exist in the system";
         }
+        //echo "<br><br>duplicateDbInfoStr=$duplicateDbInfoStr <br><br>";
 
         $duplicateTableInfoStr = null;
         if( count($duplicateTableInfoArr) > 0 ) {
             $duplicateTableInfoStr = implode(", ",$duplicateTableInfoArr);
             $duplicateTableInfoStr = "$duplicateTableInfoStr already exist in the table batch";
         }
+        //echo "<br><br>duplicateTableInfoStr=$duplicateTableInfoStr <br><br>";
 
         if( $duplicateDbInfoStr || $duplicateTableInfoStr ) {
             //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
@@ -306,7 +315,7 @@ class ResAppUtilController extends OrderAbstractController
             if( $duplicateDbInfoStr ) {
                 $duplicateInfoStr = $duplicateInfoStr . $duplicateDbInfoStr;
             }
-            $duplicateInfoStr = $duplicateInfoStr . "<br><br>"; //testing
+            //$duplicateInfoStr = $duplicateInfoStr . "<br><br>"; //testing
             if( $duplicateTableInfoStr ) {
                 if( $duplicateInfoStr ) {
                     $duplicateInfoStr = $duplicateInfoStr . " and " . $duplicateTableInfoStr;
@@ -315,10 +324,12 @@ class ResAppUtilController extends OrderAbstractController
                 }
             }
 
-            $duplicateInfoStr = $duplicateInfoStr . ". " .
-                "Would you like to create new (possibly duplicate) records for these applications?";
+            $duplicateInfoStr = $duplicateInfoStr . ".";
+            //$duplicateInfoStr = $duplicateInfoStr . " Would you like to create new (possibly duplicate) records for these applications?";
         }
         //$duplicateInfoStr = null; //testing
+        //echo "<br><br>duplicateInfoStr=$duplicateInfoStr <br><br>";
+        //exit('111');
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

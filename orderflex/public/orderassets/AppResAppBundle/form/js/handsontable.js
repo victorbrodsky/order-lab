@@ -977,6 +977,7 @@ function resappValidateHandsonTable() {
 
     //resHideBtn();
     var validationError = null;
+    _rowToProcessArr = [];
 
     var countRow = _sotable.countRows();
     //console.log("countRow="+countRow);
