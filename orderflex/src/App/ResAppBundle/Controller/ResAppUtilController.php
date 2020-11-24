@@ -153,9 +153,11 @@ class ResAppUtilController extends OrderAbstractController
             return $response;
         }
 
-        $missingInfoArr = array();
+        //$missingInfoArr = array();
+        $validationError = array();
         $duplicateDbInfoArr = array();
         $duplicateTableInfoArr = array();
+        $fieldsErrorArr = array();
         $headers = $data["header"];
 
         //construct $handsomtableJsonData in format (array of $thisRowArr['AAMC ID']['value']):
@@ -271,21 +273,21 @@ class ResAppUtilController extends OrderAbstractController
                     }
                 }
 
-//                //TODO: check empty fields in handsontable in JS
-//                //check if 'First Name', 'Last Name', 'Preferred Email', 'Expected Residency Start Date'
-//                //Medical School, USMLE Score Step 1?
-//                if( !$firstNameValue ) {
-//                    $missingInfoArr[] = "First Name";
-//                }
-//                if( !$lastNameValue ) {
-//                    $missingInfoArr[] = "Last Name";
-//                }
-//                if( !$emailValue ) {
-//                    $missingInfoArr[] = "Preferred Email";
-//                }
-//                if( !$residencyStartDateValue ) {
-//                    $missingInfoArr[] = "Expected Residency Start Date";
-//                }
+                //TODO: check empty fields in handsontable in JS
+                //check if 'First Name', 'Last Name', 'Preferred Email', 'Expected Residency Start Date'
+                //Medical School, USMLE Score Step 1?
+                if( !$firstNameValue ) {
+                    $fieldsErrorArr[$rowCount][] = "First Name";
+                }
+                if( !$lastNameValue ) {
+                    $fieldsErrorArr[$rowCount][] = "Last Name";
+                }
+                if( !$emailValue ) {
+                    $fieldsErrorArr[$rowCount][] = "Preferred Email";
+                }
+                if( !$residencyStartDateValue ) {
+                    $fieldsErrorArr[$rowCount][] = "Expected Residency Start Date";
+                }
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
@@ -345,6 +347,23 @@ class ResAppUtilController extends OrderAbstractController
         //$duplicateInfoStr = null; //testing
         //echo "<br><br>duplicateInfoStr=$duplicateInfoStr <br><br>";
         //exit('111');
+
+        $fieldsErrorRowArr = array();
+        if( count($fieldsErrorArr) > 0 ) {
+            foreach($fieldsErrorArr as $rowIndex=>$errorArr) {
+                if( $rowIndex && count($rowIndex) > 0 ) {
+                    $fieldsErrorRowStr = "in row #".$rowIndex." ".implode(", ", $fieldsErrorArr);
+                    $fieldsErrorRowArr[] = $fieldsErrorRowStr;
+                }
+            }
+        }
+        $fieldsErrorStr = NULL;
+        if( count($fieldsErrorRowArr) > 0 ) {
+            $fieldsErrorStr = "Missing fields: ".implode("; ", $fieldsErrorRowArr);
+        }
+
+        $validationError['validationDuplicateError'] = $duplicateInfoStr;
+        $validationError['validationFieldsError'] = $fieldsErrorStr;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

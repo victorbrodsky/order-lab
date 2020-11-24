@@ -1000,7 +1000,7 @@ function resappValidateHandsonTable() {
 //get rows data from _rowToProcessArr and assign this to datalocker field
 function resappAssignDataToDatalocker() {
 
-    var validationError = "";
+    var validationError = [];
     var headers = _sotable.getColHeader();
 
     //get rows data from _rowToProcessArr
@@ -1056,6 +1056,8 @@ function resappAssignDataToDatalocker() {
     //     $("#oleg_orderformbundle_messagetype_clickedbtn").val( _btnClickedName );
     // }
 
+    //var validationFieldsError = resappValidateFieldsHandsonTable(data);
+
     //provide table data to controller
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
@@ -1063,9 +1065,11 @@ function resappAssignDataToDatalocker() {
     //console.log("jsonstr:");
     //console.log(jsonstr);
 
-    validationError = resappCheckDuplicate(jsonstr);
+    var validationError = resappCheckDuplicate(jsonstr);
 
     $("#oleg_resappbundle_bulkupload_datalocker").val( jsonstr );
+    
+    //var validationError = {validationDuplicateError:validationDuplicateError, validationFieldsError:validationFieldsError};
 
     return validationError;
 }
@@ -1088,3 +1092,15 @@ function resappCheckDuplicate(jsonstr) {
 
     return validationError;
 }
+
+// //use
+// function resappValidateFieldsHandsonTable(data) {
+//
+//     for( var i=0; i<_rowToProcessArr.length; i++ ) {
+//
+//     }
+//
+//     //testing
+//     return "First Name is empty";
+// }
+

@@ -325,23 +325,62 @@
             // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
 
             var validationError = resappValidateHandsonTable();
-            if( validationError ) {
-                console.log("resappValidateRequest: validationError="+validationError);
-                $("#projectError").show();
-                $("#projectError").html(validationError);
-                resappShowBtn();
+            var validationDuplicateError = validationError.validationDuplicateError;
+            var validationFieldsError = validationError.validationFieldsError;
+
+            if( validationDuplicateError ) {
+                console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
+//                $("#projectError").show();
+//                $("#projectError").html(validationDuplicateError);
+//                resappShowBtn();
 
                 //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
-                validationError = validationError + " Would you like to create new (possibly duplicate) records for these applications?";
-                var confirmRes = confirm(validationError);
+                validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
+
+//                var confirmRes = confirm(validationDuplicateError);
+//                if( confirmRes == true ) {
+//                    //OK
+//                } else {
+//                    return false;
+//                }
+
+                //return false;
+            }
+
+            if( validationFieldsError ) {
+
+                //validationFieldsError = "Missing fields: " + validationFieldsError;
+
+                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                //$("#projectError").show();
+                //$("#projectError").html(validationFieldsError);
+                //resappShowBtn();
+
+//                var confirmRes = confirm(validationFieldsError);
+//                if( confirmRes == true ) {
+//                    //OK
+//                } else {
+//                    return false;
+//                }
+            }
+
+            if( validationDuplicateError || validationFieldsError ) {
+                var validationErrorStr = validationDuplicateError + " " + validationFieldsError;
+                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                $("#projectError").show();
+                $("#projectError").html(validationErrorStr);
+                resappShowBtn();
+
+                var confirmRes = confirm(validationErrorStr);
                 if( confirmRes == true ) {
                     //OK
                 } else {
                     return false;
                 }
-
-                //return false;
             }
+
+            //validation of the application to add with empty fields
+            //var validationFieldsError = resappValidateFieldsHandsonTable();
 
             //testing
             //console.log("resappValidateRequest: test finished");
