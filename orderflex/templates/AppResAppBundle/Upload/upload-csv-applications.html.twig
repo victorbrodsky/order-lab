@@ -325,12 +325,14 @@
             // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
 
             var validationError = resappValidateHandsonTable();
+            console.log("validationError:");
+            console.log(validationError);
             var validationDuplicateError = validationError.validationDuplicateError;
-            console.log("validationDuplicateError:");
-            console.log(validationDuplicateError);
+            console.log("validationDuplicateError="+validationDuplicateError);
+            //console.log(validationDuplicateError);
             var validationFieldsError = validationError.validationFieldsError;
-            console.log("validationFieldsError:");
-            console.log(validationFieldsError);
+            console.log("validationFieldsError="+validationFieldsError);
+            //console.log(validationFieldsError);
 
             if( validationDuplicateError ) {
                 console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
@@ -355,17 +357,19 @@
 
                 //validationFieldsError = "Missing fields: " + validationFieldsError;
 
-                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
-                //$("#projectError").show();
-                //$("#projectError").html(validationFieldsError);
-                //resappShowBtn();
+                validationFieldsError = validationFieldsError + " Would you like to proceed? The applications with missing fields will be ignored.";
 
-//                var confirmRes = confirm(validationFieldsError);
-//                if( confirmRes == true ) {
-//                    //OK
-//                } else {
-//                    return false;
-//                }
+                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                $("#projectError").show();
+                $("#projectError").html(validationFieldsError);
+                resappShowBtn();
+
+                var confirmRes = confirm(validationFieldsError);
+                if( confirmRes == true ) {
+                    //OK
+                } else {
+                    return false;
+                }
             }
 
             if( validationDuplicateError || validationFieldsError ) {
@@ -387,9 +391,9 @@
             //var validationFieldsError = resappValidateFieldsHandsonTable();
 
             //testing
-            console.log("resappValidateRequest: test finished");
-            resappShowBtn();
-            return false;
+            //console.log("resappValidateRequest: test finished");
+            //resappShowBtn();
+            //return false;
 
             return true;
         }//EOF resappValidateRequest

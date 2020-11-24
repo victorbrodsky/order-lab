@@ -289,7 +289,7 @@ class ResAppUtilController extends OrderAbstractController
                     $fieldsErrorArr[$rowCount][] = "Expected Residency Start Date";
                 }
                 //testing
-                $fieldsErrorArr[$rowCount][] = "First Name";
+                //$fieldsErrorArr[$rowCount][] = "First Name";
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
@@ -352,9 +352,9 @@ class ResAppUtilController extends OrderAbstractController
 
         $fieldsErrorRowArr = array();
         //if( count($fieldsErrorArr) > 0 ) {
-            foreach($fieldsErrorArr as $rowIndex=>$errorArr) {
-                if( $rowIndex && count($rowIndex) > 0 ) {
-                    $fieldsErrorRowStr = "in row #".$rowIndex." ".implode(", ", $fieldsErrorArr);
+            foreach($fieldsErrorArr as $rowIndex => $errorArr) {
+                if( $rowIndex && count($errorArr) > 0 ) {
+                    $fieldsErrorRowStr = "in row #".$rowIndex." ".implode(", ", $errorArr);
                     $fieldsErrorRowArr[] = $fieldsErrorRowStr;
                 }
             }
