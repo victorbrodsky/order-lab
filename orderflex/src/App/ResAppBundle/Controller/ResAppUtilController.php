@@ -288,6 +288,8 @@ class ResAppUtilController extends OrderAbstractController
                 if( !$residencyStartDateValue ) {
                     $fieldsErrorArr[$rowCount][] = "Expected Residency Start Date";
                 }
+                //testing
+                $fieldsErrorArr[$rowCount][] = "First Name";
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
             }
@@ -349,14 +351,14 @@ class ResAppUtilController extends OrderAbstractController
         //exit('111');
 
         $fieldsErrorRowArr = array();
-        if( count($fieldsErrorArr) > 0 ) {
+        //if( count($fieldsErrorArr) > 0 ) {
             foreach($fieldsErrorArr as $rowIndex=>$errorArr) {
                 if( $rowIndex && count($rowIndex) > 0 ) {
                     $fieldsErrorRowStr = "in row #".$rowIndex." ".implode(", ", $fieldsErrorArr);
                     $fieldsErrorRowArr[] = $fieldsErrorRowStr;
                 }
             }
-        }
+        //}
         $fieldsErrorStr = NULL;
         if( count($fieldsErrorRowArr) > 0 ) {
             $fieldsErrorStr = "Missing fields: ".implode("; ", $fieldsErrorRowArr);
@@ -367,7 +369,7 @@ class ResAppUtilController extends OrderAbstractController
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($duplicateInfoStr)); //json_encode($duplicateInfoArr)
+        $response->setContent(json_encode($validationError)); //json_encode($duplicateInfoArr)
         return $response;
     }
 }

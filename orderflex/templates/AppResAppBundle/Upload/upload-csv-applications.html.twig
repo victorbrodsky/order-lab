@@ -326,7 +326,11 @@
 
             var validationError = resappValidateHandsonTable();
             var validationDuplicateError = validationError.validationDuplicateError;
+            console.log("validationDuplicateError:");
+            console.log(validationDuplicateError);
             var validationFieldsError = validationError.validationFieldsError;
+            console.log("validationFieldsError:");
+            console.log(validationFieldsError);
 
             if( validationDuplicateError ) {
                 console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
@@ -366,7 +370,7 @@
 
             if( validationDuplicateError || validationFieldsError ) {
                 var validationErrorStr = validationDuplicateError + " " + validationFieldsError;
-                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                console.log("resappValidateRequest: validationErrorStr="+validationErrorStr);
                 $("#projectError").show();
                 $("#projectError").html(validationErrorStr);
                 resappShowBtn();
@@ -383,9 +387,9 @@
             //var validationFieldsError = resappValidateFieldsHandsonTable();
 
             //testing
-            //console.log("resappValidateRequest: test finished");
-            //resappShowBtn();
-            //return false;
+            console.log("resappValidateRequest: test finished");
+            resappShowBtn();
+            return false;
 
             return true;
         }//EOF resappValidateRequest
