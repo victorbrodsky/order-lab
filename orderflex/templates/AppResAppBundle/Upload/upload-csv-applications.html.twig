@@ -127,6 +127,15 @@
 
         $(document).ready(function() {
 
+            //testing
+//            var confirmResDuplicateError = creatConfirmationModal("Are you sure?",function(){alert('Clicked OK'); return true;},function(){alert('Clicked Cancel'); return false;});
+//            console.log("confirmResDuplicateError="+confirmResDuplicateError);
+//            if( confirmResDuplicateError == true ) {
+//                alert("OK");
+//            } else {
+//                alert("Cancel");
+//            }
+
             //document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
 
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
@@ -345,7 +354,13 @@
                 $("#projectError").html(validationFieldsError);
                 resappShowBtn();
 
-                var confirmResFieldsError = confirm(validationFieldsError);
+                //var confirmResFieldsError = confirm(validationFieldsError);
+                var confirmResFieldsError = creatConfirmationModal(
+                        validationFieldsError,
+                        function(){return true;},
+                        function(){return false;}
+                );
+                //console.log("confirmResFieldsError="+confirmResFieldsError);
                 if( confirmResFieldsError == true ) {
                     //OK
                     //TODO: it would be good to change Action to "Do not add"
@@ -363,9 +378,13 @@
                 //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
                 validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
 
-                var confirmResDuplicateError = creatConfirmationModal(validationDuplicateError);
+                var confirmResDuplicateError = creatConfirmationModal(
+                        validationDuplicateError,
+                        function(){return true;},
+                        function(){return false;}
+                );
                 //var confirmResDuplicateError = confirm(validationDuplicateError);
-                console.log("confirmResDuplicateError="+confirmResDuplicateError);
+                //console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
                 } else {
@@ -396,9 +415,9 @@
             //var validationFieldsError = resappValidateFieldsHandsonTable();
 
             //testing
-            console.log("resappValidateRequest: test finished");
-            resappShowBtn();
-            return false;
+            //console.log("resappValidateRequest: test finished");
+            //resappShowBtn();
+            //return false;
 
             return true;
         }//EOF resappValidateRequest
@@ -414,35 +433,71 @@
             $('#please-wait').hide();
         }
 
-        function creatConfirmationModal(validationDuplicateError) {
+        //http://jsfiddle.net/MjmVr/363/
+        function creatConfirmationModal( validationDuplicateError, true_func, false_func ) {
             var modalHtml =
-                    '<div id="resappDataConfirmModal" class="modal fade resapp-data-confirm-modal" tabindex="-1" role="dialog">' +
+                '<div id="resappDataConfirmModal" class="modal fade resapp-data-confirm-modal" tabindex="-1" role="dialog">' +
                     '<div class="modal-dialog" role="document">' +
-                    '<div class="modal-content">' +
-                        '<div class="modal-header text-center">' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                            '<h3 id="dataConfirmLabel">Confirmation</h3>' +
-                        '</div>' +
-                        '<div class="modal-body text-center">' +
-                            validationDuplicateError+
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                            //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
-                            //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
-                            //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
-                            //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
-                            '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
-                            '<button class="btn btn-default resapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+    //                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center">' +
+                                validationDuplicateError+
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
+                                '<button class="btn btn-primary resapp-data-confirm-ok">OK</button>' +
+                                '<button class="btn btn-default resapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
-                    '</div>' +
-                    '</div>';
+                '</div>';
 
             $('body').append(modalHtml);
 
             $('#resappDataConfirmModal').modal({show:true});
 
-            return false;
+            $('.resapp-data-confirm-ok').on('click', function(event){
+                //alert("on modal js: dataConfirmOK clicked");
+                //var footer = $('.modal-footer');
+                //footer.html('Please wait ...');
+
+                $(this).modal( 'hide' ).data( 'bs.modal', null );
+                $(this).remove();
+                $('.modal-backdrop').remove();
+                $('body').removeClass( "modal-open" );
+                $('#resappDataConfirmModal').remove();
+                true_func();
+            });
+
+            $('.resapp-data-confirm-cancel').on('click', function(event){
+                //alert("on modal js: dataConfirmOK clicked");
+                //var footer = $('.modal-footer');
+                //footer.html('Please wait ...');
+
+                $(this).modal( 'hide' ).data( 'bs.modal', null );
+                $(this).remove();
+                $('.modal-backdrop').remove();
+                $('body').removeClass( "modal-open" );
+                $('#resappDataConfirmModal').remove();
+                false_func();
+            });
+
+//            $('#resappDataConfirmModal').on('hidden.bs.modal', function () {
+//                //console.log("hidden.bs.modal");
+//                $(this).modal( 'hide' ).data( 'bs.modal', null );
+//                $(this).remove();
+//                $('.modal-backdrop').remove();
+//                $('body').removeClass( "modal-open" );
+//                false_func();
+//            });
+
+            //return false;
         }
 
     </script>
