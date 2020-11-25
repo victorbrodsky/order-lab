@@ -363,7 +363,9 @@
                 //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
                 validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
 
-                var confirmResDuplicateError = confirm(validationDuplicateError);
+                var confirmResDuplicateError = creatConfirmationModal(validationDuplicateError);
+                //var confirmResDuplicateError = confirm(validationDuplicateError);
+                console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
                 } else {
@@ -394,9 +396,9 @@
             //var validationFieldsError = resappValidateFieldsHandsonTable();
 
             //testing
-            //console.log("resappValidateRequest: test finished");
-            //resappShowBtn();
-            //return false;
+            console.log("resappValidateRequest: test finished");
+            resappShowBtn();
+            return false;
 
             return true;
         }//EOF resappValidateRequest
@@ -410,6 +412,37 @@
             //console.log("show submit");
             $(":submit").show();
             $('#please-wait').hide();
+        }
+
+        function creatConfirmationModal(validationDuplicateError) {
+            var modalHtml =
+                    '<div id="resappDataConfirmModal" class="modal fade resapp-data-confirm-modal" tabindex="-1" role="dialog">' +
+                    '<div class="modal-dialog" role="document">' +
+                    '<div class="modal-content">' +
+                        '<div class="modal-header text-center">' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                            '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                        '</div>' +
+                        '<div class="modal-body text-center">' +
+                            validationDuplicateError+
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                            //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
+                            //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
+                            //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
+                            //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
+                            '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
+                            '<button class="btn btn-default resapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
+            $('body').append(modalHtml);
+
+            $('#resappDataConfirmModal').modal({show:true});
+
+            return false;
         }
 
     </script>

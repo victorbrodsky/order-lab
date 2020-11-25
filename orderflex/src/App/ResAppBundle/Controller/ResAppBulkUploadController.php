@@ -818,7 +818,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //                continue;
 //            }
             if( count($missingFieldsArr) > 0 ) {
-                $updatedStrArr["Skip creating residency application (missing fields)"] = implode(", ",$missingFieldsArr);
+                $updatedStrArr["Skip creating residency application (missing fields)"][] = implode(", ",$missingFieldsArr);
                 continue;
             }
 

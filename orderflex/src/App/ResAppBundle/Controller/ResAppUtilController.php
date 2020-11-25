@@ -354,7 +354,7 @@ class ResAppUtilController extends OrderAbstractController
         //if( count($fieldsErrorArr) > 0 ) {
             foreach($fieldsErrorArr as $rowIndex => $errorArr) {
                 if( $rowIndex && count($errorArr) > 0 ) {
-                    $fieldsErrorRowStr = "in row #".$rowIndex." ".implode(", ", $errorArr);
+                    $fieldsErrorRowStr = implode(", ", $errorArr)." (row #".$rowIndex.")";
                     $fieldsErrorRowArr[] = $fieldsErrorRowStr;
                 }
             }
