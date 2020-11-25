@@ -334,25 +334,6 @@
             console.log("validationFieldsError="+validationFieldsError);
             //console.log(validationFieldsError);
 
-            if( validationDuplicateError ) {
-                console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
-//                $("#projectError").show();
-//                $("#projectError").html(validationDuplicateError);
-//                resappShowBtn();
-
-                //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
-                validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
-
-//                var confirmRes = confirm(validationDuplicateError);
-//                if( confirmRes == true ) {
-//                    //OK
-//                } else {
-//                    return false;
-//                }
-
-                //return false;
-            }
-
             if( validationFieldsError ) {
 
                 //validationFieldsError = "Missing fields: " + validationFieldsError;
@@ -364,28 +345,50 @@
                 $("#projectError").html(validationFieldsError);
                 resappShowBtn();
 
-                var confirmRes = confirm(validationFieldsError);
-                if( confirmRes == true ) {
+                var confirmResFieldsError = confirm(validationFieldsError);
+                if( confirmResFieldsError == true ) {
                     //OK
+                    //TODO: it would be good to change Action to "Do not add"
                 } else {
                     return false;
                 }
             }
 
-            if( validationDuplicateError || validationFieldsError ) {
-                var validationErrorStr = validationDuplicateError + " " + validationFieldsError;
-                console.log("resappValidateRequest: validationErrorStr="+validationErrorStr);
+            if( validationDuplicateError ) {
+                console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
                 $("#projectError").show();
-                $("#projectError").html(validationErrorStr);
+                $("#projectError").html(validationDuplicateError);
                 resappShowBtn();
 
-                var confirmRes = confirm(validationErrorStr);
-                if( confirmRes == true ) {
+                //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
+                validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
+
+                var confirmResDuplicateError = confirm(validationDuplicateError);
+                if( confirmResDuplicateError == true ) {
                     //OK
                 } else {
                     return false;
                 }
             }
+
+//            if( validationDuplicateError || validationFieldsError ) {
+//                var validationErrorStr = validationDuplicateError + " " + validationFieldsError;
+//                console.log("resappValidateRequest: validationErrorStr="+validationErrorStr);
+//                $("#projectError").show();
+//                $("#projectError").html(validationErrorStr);
+//                resappShowBtn();
+//
+//                var confirmRes = confirm(validationErrorStr);
+//                if( confirmRes == true ) {
+//                    //OK
+//                } else {
+//                    return false;
+//                }
+//            }
+
+            //clear error message
+            $("#projectError").hide();
+            $("#projectError").html(null);
 
             //validation of the application to add with empty fields
             //var validationFieldsError = resappValidateFieldsHandsonTable();

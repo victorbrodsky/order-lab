@@ -775,42 +775,43 @@ class ResAppBulkUploadController extends OrderAbstractController
             //$previousResidencyTrackId = $previousResidencyTrackArr['id'];
 
             //Do no create if some key fields are missing
+            //'First Name', 'Last Name', 'Preferred Email', 'Expected Residency Start Date'
             if( !$firstNameValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing First Name.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing First Name"][] = $updateInfo;
+                    " Missing First Name.";
+                $updatedStrArr["Skip creating residency application (missing fields)"][] = $updateInfo;
                 continue;
             }
             if( !$lastNameValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing Last Name.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing Last Name"][] = $updateInfo;
+                    " Missing Last Name.";
+                $updatedStrArr["Skip creating residency application (missing fields)"][] = $updateInfo;
                 continue;
             }
             if( !$emailValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing Preferred Email.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing Preferred Email"][] = $updateInfo;
-                continue;
-            }
-            if( !$medSchoolNameValue ) {
-                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing Medical School.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing Medical School"][] = $updateInfo;
-                continue;
-            }
-            if( !$usmle1Value ) {
-                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing USMLE Score Step 1.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
+                    " Missing Preferred Email.";
+                $updatedStrArr["Skip creating residency application (missing fields)"][] = $updateInfo;
                 continue;
             }
             if( !$residencyStartDateValue ) {
                 $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
-                    ". ERROR: Missing Expected Residency Start Date.";
-                $updatedStrArr["Skip creating residency application. ERROR: Missing Expected Residency Start Date"][] = $updateInfo;
+                    " Missing Expected Residency Start Date.";
+                $updatedStrArr["Skip creating residency application (missing fields)"][] = $updateInfo;
                 continue;
             }
+//            if( !$medSchoolNameValue ) {
+//                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+//                    ". ERROR: Missing Medical School.";
+//                $updatedStrArr["Skip creating residency application. ERROR: Missing Medical School"][] = $updateInfo;
+//                continue;
+//            }
+//            if( !$usmle1Value ) {
+//                $updateInfo = $firstNameValue . " " . $lastNameValue . $issueStr.
+//                    ". ERROR: Missing USMLE Score Step 1.";
+//                $updatedStrArr["Skip creating residency application. ERROR: Missing USMLE Score Step 1"][] = $updateInfo;
+//                continue;
+//            }
 
             ///////////////// Create new user or get the existed user //////////////////////
             $userArr = array(

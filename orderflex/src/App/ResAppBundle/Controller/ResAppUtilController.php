@@ -361,7 +361,7 @@ class ResAppUtilController extends OrderAbstractController
         //}
         $fieldsErrorStr = NULL;
         if( count($fieldsErrorRowArr) > 0 ) {
-            $fieldsErrorStr = "Missing fields: ".implode("; ", $fieldsErrorRowArr);
+            $fieldsErrorStr = "Missing fields: ".implode("; ", $fieldsErrorRowArr).".";
         }
 
         $validationError['validationDuplicateError'] = $duplicateInfoStr;
