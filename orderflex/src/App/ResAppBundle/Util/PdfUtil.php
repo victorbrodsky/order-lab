@@ -2018,4 +2018,28 @@ class PdfUtil {
 //        return $fieldsArr;
 //    }
 
+    public function getEmbedPdf( $pdfDocument ) {
+        if( !$pdfDocument ) {
+            return NULL;
+        }
+
+        $pdfDocumentPath = $pdfDocument->getAttachmentEmailPath();
+        //$pdfDocumentPath = $pdfDocument->getServerPath();
+        $pdfDocumentPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test2\\testPdf_StevenAdamsFull.pdf";
+
+        if( !$pdfDocumentPath ) {
+            return NULL;
+        }
+        echo "pdfDocumentPath=$pdfDocumentPath<br>";
+
+        //$embedPdfHtml = '<embed src="'.$pdfDocumentPath.'" type="application/pdf" width="800px" height="2100px" class="responsive">';
+        //$embedPdfHtml = '<embed src="'.$pdfDocumentPath.'" width="100%" height="100%" >';
+        //$embedPdfHtml = '<iframe src="'.$pdfDocumentPath.'" style="width: 100%;height: 100%;border: none;"></iframe>';
+        $embedPdfHtml = '<object width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
+
+        $embedPdfHtml = '<br><br>Complete Application in PDF (ID='.$pdfDocument->getId().'):<br>' . $embedPdfHtml;
+
+        return $embedPdfHtml;
+    }
+
 } 

@@ -363,8 +363,10 @@
                 //console.log("confirmResFieldsError="+confirmResFieldsError);
                 if( confirmResFieldsError == true ) {
                     //OK
+                    console.log("confirmResFieldsError OK");
                     //TODO: it would be good to change Action to "Do not add"
                 } else {
+                    console.log("confirmResFieldsError Cancel");
                     return false;
                 }
             }
@@ -387,7 +389,9 @@
                 //console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
+                    console.log("confirmResDuplicateError OK");
                 } else {
+                    console.log("confirmResDuplicateError Cancel");
                     return false;
                 }
             }
@@ -497,7 +501,7 @@
 //                false_func();
 //            });
 
-            //return false;
+            return false;
         }
 
     </script>

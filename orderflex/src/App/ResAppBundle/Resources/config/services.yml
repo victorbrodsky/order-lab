@@ -8,6 +8,7 @@ twig:
     globals:
         resapp_sitename: '%resapp.sitename%'
         resapp_util: "@resapp_util"
+        resapp_pdfutil: "@resapp_pdfutil"
 
 services:
     _defaults:
