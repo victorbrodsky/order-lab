@@ -705,12 +705,14 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $actionValue == "Create New Record" ) {
                 //exit("$actionValue !!!");
 
+                /////// testing: remove this temporary condition below after testing is completed //////
                 if( $residencyApplicationDb ) {
                     //Remove eras application PDF document file
                     $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
                     $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
                     continue;
                 }
+                /////// EOF testing: remove this temporary condition below after testing is completed //////
             }
 
             //Create New Record
