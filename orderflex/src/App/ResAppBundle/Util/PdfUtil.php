@@ -2023,21 +2023,24 @@ class PdfUtil {
             return NULL;
         }
 
-        $pdfDocumentPath = $pdfDocument->getAttachmentEmailPath();
+        //docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType})
+        //$pdfDocumentPath = $pdfDocument->getAttachmentEmailPath();
         //$pdfDocumentPath = $pdfDocument->getServerPath();
-        $pdfDocumentPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test2\\testPdf_StevenAdamsFull.pdf";
+        $pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        //$pdfDocumentPath = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test2\\testPdf_StevenAdamsFull.pdf";
 
         if( !$pdfDocumentPath ) {
             return NULL;
         }
-        echo "pdfDocumentPath=$pdfDocumentPath<br>";
+        //echo "pdfDocumentPath=$pdfDocumentPath<br>";
 
         //$embedPdfHtml = '<embed src="'.$pdfDocumentPath.'" type="application/pdf" width="800px" height="2100px" class="responsive">';
         //$embedPdfHtml = '<embed src="'.$pdfDocumentPath.'" width="100%" height="100%" >';
         //$embedPdfHtml = '<iframe src="'.$pdfDocumentPath.'" style="width: 100%;height: 100%;border: none;"></iframe>';
-        $embedPdfHtml = '<object width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
+        $embedPdfHtml = '<object type="application/pdf" width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
 
-        $embedPdfHtml = '<br><br>Complete Application in PDF (ID='.$pdfDocument->getId().'):<br>' . $embedPdfHtml;
+        //$embedPdfHtml = '<br><br>Complete Application in PDF (ID='.$pdfDocument->getId().'):<br>' . $embedPdfHtml;
+        $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br>' . $embedPdfHtml;
 
         return $embedPdfHtml;
     }

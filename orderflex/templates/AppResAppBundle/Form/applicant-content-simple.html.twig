@@ -96,8 +96,8 @@
 {% endif %}
 
 {#testing embed PDF#}
-{% set embedPdf = resapp_pdfutil.getEmbedPdf(entity.getRecentReport()) %}
-<p>{{ embedPdf|raw }}</p>
+{#{% set embedPdf = resapp_pdfutil.getEmbedPdf(entity.getRecentReport()) %}#}
+{#<p>{{ embedPdf|raw }}</p>#}
 
 {{ form_start(form,{'attr': {'id': 'resapp-applicant-form'}}) }}
 

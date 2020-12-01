@@ -2470,11 +2470,13 @@
     <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
 
         {% if '.pdf' in docAbsPath %}
-            {#pdf!!!#}
+            {#pdf!!! docAbsPath={{ docAbsPath }}#}
             <object {{ atr }}
                   {#alt="{{ docAlt }}"#}
                   data="{{ docSnapshotPath }}"
+                  {#data="{{ docAbsPath }}"#}
                   {#style="display:block; max-width:100%; max-height:100%;"#}
+                  style="display:block; width:100px; height:100px;"
                   type="application/pdf"
                   class="{{ objectClass }}"
             >

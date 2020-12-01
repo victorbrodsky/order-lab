@@ -1256,6 +1256,11 @@ class ResAppController extends OrderAbstractController {
             //$this->getDoctrine()->getManager()->flush();
             //return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
 
+            //testing
+            //$resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+            //echo "Current reports count=".count($entity->getReports())."<br>";
+            //exit('111');
+
             /////////////// Process Removed Collections ///////////////
             $removedCollections = array();
 
@@ -1311,6 +1316,12 @@ class ResAppController extends OrderAbstractController {
             //echo "report count=".count($entity->getReports())."<br>";
             //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
             if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
+
+                //testing
+                //$resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+                //echo "Current reports count=".count($entity->getReports())."<br>";
+                //exit('222');
+
                 $resappRepGen = $this->container->get('resapp_reportgenerator');
                 $resappRepGen->addResAppReportToQueue( $entity->getId(), 'overwrite' );
                 $this->get('session')->getFlashBag()->add(

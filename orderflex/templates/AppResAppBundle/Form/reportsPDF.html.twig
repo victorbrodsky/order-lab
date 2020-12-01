@@ -20,9 +20,15 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{% if cycle == 'show' %}
+{#Hide report, old report, formReports for show page#}
+{% set hidenPart = null %}
+{% if cycle != 'show' %}
+    {% set hidenPart = 'style=display:none;' %}
+{% endif %}
+
+{% if 1 or cycle == 'show' %}
 {#{% if is_granted('ROLE_RESAPP_COORDINATOR') %}#}
-<div class="panel panel-default">
+<div class="panel panel-default" {{ hidenPart }}>
 
     <div class="panel-heading">
         <h4 class="panel-title">
@@ -52,7 +58,7 @@
 </div> <!-- panel panel-info -->
 
 {#Application without attached documents#}
-<div class="panel panel-default">
+<div class="panel panel-default" {{ hidenPart }}>
 
     <div class="panel-heading">
         <h4 class="panel-title">
@@ -112,8 +118,8 @@
 </div> <!-- panel panel-info -->
 {% endif %}
 
-{% if cycle == "show" %}
-<div class="panel panel-default">
+{% if 1 or cycle == 'show' %}
+<div class="panel panel-default" {{ hidenPart }}>
 
     <div class="panel-heading">
         <h4 class="panel-title">
