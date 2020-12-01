@@ -20,7 +20,7 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{#Hide report, old report, formReports for show page#}
+{#Hide report, old report, formReports for show page: they must be rendered on the form in order to be processed on the controller#}
 {% set hidenPart = null %}
 {% if cycle != 'show' %}
     {% set hidenPart = 'style=display:none;' %}

@@ -2038,6 +2038,7 @@ class PdfUtil {
         //$embedPdfHtml = '<embed src="'.$pdfDocumentPath.'" width="100%" height="100%" >';
         //$embedPdfHtml = '<iframe src="'.$pdfDocumentPath.'" style="width: 100%;height: 100%;border: none;"></iframe>';
         $embedPdfHtml = '<object type="application/pdf" width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
+        //$embedPdfHtml = '<object type="application/pdf" width="100%" height="100%" data="'.$pdfDocumentPath.'"></object>';
 
         //$embedPdfHtml = '<br><br>Complete Application in PDF (ID='.$pdfDocument->getId().'):<br>' . $embedPdfHtml;
         $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br>' . $embedPdfHtml;
