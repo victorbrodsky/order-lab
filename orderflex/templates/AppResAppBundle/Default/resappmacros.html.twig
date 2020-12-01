@@ -40,9 +40,18 @@
         {% else %}
             {% if forminterview.vars.value and forminterview.vars.value.id and forminterview.vars.value.interviewer %}
                 {#add link to invite this interviewer to rate#}
-                <a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">
+                {#<a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">#}
+                    {#Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>#}
+                {#</a>#}
+                {% set embedPdf = resapp_pdfutil.getEmbedPdfByInterview(forminterview.vars.value) %}
+                <a target="_blank"
+                   general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
+                   general-data-callback="refreshpage"
+                   href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
+                >
                     Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
                 </a>
+
             {% endif %}
         {% endif %}
 
@@ -448,14 +457,35 @@
                 {% else %}
                     <a
                         onclick="sendInviteInterviewersToRate('{{ url('resapp_inviteinterviewerstorate', { 'id': resapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
-                        href="#">Invite these interviewers to submit evaluations</a>
+                        href="#"
+                    >Invite these interviewers to submit evaluations</a>
+
+                    {#<br>#}
+                    {#{% set embedPdf = resapp_pdfutil.getEmbedPdf(resapp.getRecentReport()) %}#}
+                    {#<a target="_blank"#}
+                       {#general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores. {{ embedPdf }}"#}
+                       {#general-data-callback="refreshpage"#}
+                       {#href="{{ path('resapp_inviteinterviewerstorate', { 'id': resapp.id}, true) }}"#}
+                    {#>Invite these interviewers to submit evaluations</a>#}
+
                  {% endif %}
             {% else %}
                 <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
             {% endif %}
+
             {% if resapp.daysAfterInterviewDate() and resapp.daysAfterInterviewDate() > 0 %}
                 <b>(Interview date was {{ resapp.interviewDate|date('m/d/Y','UTC') }}, {{ resapp.daysAfterInterviewDate()|abs }} days ago).</b>
             {% endif %}
+
+            {% if resapp.itinerarys|length > 0 and resapp.getRecentReport() %}
+                {% if reallinks %}
+                    {#do nothing#}
+                {% else %}
+                    {% set embedPdf = resapp_pdfutil.getEmbedPdf(resapp.getRecentReport()) %}
+                    {{ embedPdf|raw }}
+                {% endif %}
+            {% endif %}
+
             </p>
         {% endif %}
 

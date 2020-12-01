@@ -2045,5 +2045,17 @@ class PdfUtil {
 
         return $embedPdfHtml;
     }
+    public function getEmbedPdfByInterview( $interview ) {
+        if( !$interview ) {
+            return NULL;
+        }
+
+        $resapp = $interview->getResApp();
+        if( !$resapp ) {
+            return NULL;
+        }
+
+        return $this->getEmbedPdf($resapp->getRecentReport());
+    }
 
 } 
