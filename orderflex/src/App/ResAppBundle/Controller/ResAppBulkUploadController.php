@@ -701,19 +701,19 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             } //'Add to '
 
-            //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
-            if( $actionValue == "Create New Record" ) {
-                //exit("$actionValue !!!");
-
-                /////// testing: remove this temporary condition below after testing is completed //////
-                if( $residencyApplicationDb ) {
-                    //Remove eras application PDF document file
-                    $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
-                    $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
-                    continue;
-                }
-                /////// EOF testing: remove this temporary condition below after testing is completed //////
-            }
+//            //Previous condition should catch this too ("Create New Record" + $residencyApplicationDb)
+//            if( $actionValue == "Create New Record" ) {
+//                //exit("$actionValue !!!");
+//
+//                /////// testing: remove this temporary condition below after testing is completed //////
+//                if( $residencyApplicationDb ) {
+//                    //Remove eras application PDF document file
+//                    $this->removeErasPdfFile($inputDataFile,$erasDocument,$usedErasDocumentArr,$testing);
+//                    $updatedStrArr["Testing: Skip residency application, marked as '$actionValue'$issueStr"][] = "$applicantName with ID=" . $residencyApplicationDb->getId();
+//                    continue;
+//                }
+//                /////// EOF testing: remove this temporary condition below after testing is completed //////
+//            }
 
             /////////////// $actionValue == "Create New Record" ///////////////
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
