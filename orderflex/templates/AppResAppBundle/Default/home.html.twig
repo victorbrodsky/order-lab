@@ -1157,7 +1157,7 @@
                                             {% if entity.interviews|length > 0 and entity.itinerarys|length > 0 %}
                                                 {% set embedPdf = resapp_pdfutil.getEmbedPdf(entity.getRecentReport()) %}
                                                 <li>
-                                                    <a target="_blank"
+                                                    <a
                                                         general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores. {{ embedPdf }}"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('resapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">

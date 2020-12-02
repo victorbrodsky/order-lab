@@ -40,17 +40,17 @@
         {% else %}
             {% if forminterview.vars.value and forminterview.vars.value.id and forminterview.vars.value.interviewer %}
                 {#add link to invite this interviewer to rate#}
-                <a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">
-                    Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
-                </a>
-                {#{% set embedPdf = resapp_pdfutil.getEmbedPdfByInterview(forminterview.vars.value) %}#}
-                {#<a target="_blank"#}
-                   {#general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"#}
-                   {#general-data-callback="refreshpage"#}
-                   {#href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"#}
-                {#>#}
+                {#<a target="_blank" href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">#}
                     {#Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>#}
                 {#</a>#}
+                {#<br>#}
+                {% set embedPdf = resapp_pdfutil.getEmbedPdfByInterview(forminterview.vars.value) %}
+                <a
+                   general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
+                   href="{{ path('resapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
+                >
+                    Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
+                </a>
 
             {% endif %}
         {% endif %}
