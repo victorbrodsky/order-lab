@@ -715,7 +715,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 /////// EOF testing: remove this temporary condition below after testing is completed //////
             }
 
-            //Create New Record
+            /////////////// $actionValue == "Create New Record" ///////////////
             $countryCitizenshipArr = $this->getValueByHeaderName('Country of Citizenship',$row,$headers);
             $countryCitizenshipValue = $countryCitizenshipArr['val'];
             //$countryCitizenshipId = $countryCitizenshipArr['id'];
@@ -1077,9 +1077,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
             }
 
-
             ///////////////// EOF Create new ResidencyApplication //////////////////////
-            //uploadedPhotoUrl
+            /////////////// EOF $actionValue == "Create New Record" ///////////////
 
             if( !$testing ) {
                 $em->flush();

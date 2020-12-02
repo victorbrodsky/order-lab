@@ -559,8 +559,8 @@ class PdfUtil {
                 } else {
                     //No duplicate found => change the value in the “Action” column to “Add”
                     //Testing: comment out below for testing
-                    //$rowArr['Action']['id'] = null;
-                    //$rowArr['Action']['value'] = "Create New Record";
+                    $rowArr['Action']['id'] = null;
+                    $rowArr['Action']['value'] = "Create New Record";
                 }
                 ////////////// EOF check for duplicate //////////////////
 
