@@ -1142,6 +1142,7 @@ class PdfUtil {
         $expectedResidencyStartDate = $rowArr['Expected Residency Start Date']['value'];
         $email = $rowArr['Preferred Email']['value'];
         $lastName = $rowArr['Last Name']['value'];
+        $firstName = $rowArr['First Name']['value'];
 
         $erasApplicantId = NULL;
         if( isset($rowArr['ERAS Application ID']) ) {
@@ -1177,6 +1178,7 @@ class PdfUtil {
             $thisExpectedResidencyStartDate = $thisRowArr['Expected Residency Start Date']['value'];
             $thisEmail = $thisRowArr['Preferred Email']['value'];
             $thisLastName = $thisRowArr['Last Name']['value'];
+            $thisFirstName = $thisRowArr['First Name']['value'];
             //echo "thisAamcId=$thisAamcId, thisLastName=$thisLastName<br>";
 
             $thisErasApplicantId = NULL;
@@ -1226,8 +1228,10 @@ class PdfUtil {
                     return $thisRowArr;
                 }
 
-                if( $lastName == $thisLastName ) {
-                    return $thisRowArr;
+                if( $lastName && $thisLastName && $firstName && $thisFirstName ) {
+                    if ($lastName == $thisLastName && $firstName == $thisFirstName) {
+                        return $thisRowArr;
+                    }
                 }
 
             } else {
