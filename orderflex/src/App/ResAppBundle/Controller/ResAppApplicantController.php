@@ -288,10 +288,13 @@ class ResAppApplicantController extends OrderAbstractController {
 //        $response->setContent(json_encode("ok"));
 //        return $response;
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            "A personal invitation email has been sent to ".$interview->getInterviewer()." ".$email
-        );
+        if( $email ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "A personal invitation email has been sent to " . $interview->getInterviewer() . " " . $email
+            );
+        }
+
         return $this->redirect( $this->generateUrl('resapp_show',array('id' => $resapp->getId())) );
     }
 

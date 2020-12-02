@@ -40,7 +40,15 @@
         {% else %}
             {% if forminterview.vars.value and forminterview.vars.value.id and forminterview.vars.value.interviewer %}
                 {#add link to invite this interviewer to rate#}
-                <a target="_blank" href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">
+                {#<a target="_blank" href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}">#}
+                    {#Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>#}
+                {#</a>#}
+
+                {% set embedPdf = fellapp_util.getEmbedPdfByInterview(forminterview.vars.value) %}
+                <a
+                        general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
+                        href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
+                >
                     Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
                 </a>
             {% endif %}
@@ -496,6 +504,16 @@
             {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
                 <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>
             {% endif %}
+
+            {% if fellapp.itinerarys|length > 0 and fellapp.getRecentReport() %}
+                {% if reallinks %}
+                    {#do nothing#}
+                {% else %}
+                    {% set embedPdf = fellapp_pdfutil.getEmbedPdf(fellapp.getRecentReport()) %}
+                    {{ embedPdf|raw }}
+                {% endif %}
+            {% endif %}
+
             </p>
         {% endif %}
 

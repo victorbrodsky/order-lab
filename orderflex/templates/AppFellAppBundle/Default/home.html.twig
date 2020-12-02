@@ -1146,6 +1146,11 @@
                                             {% endif %}
                                         </li>
 
+                                        {#{% set embedPdf = null %}#}
+                                        {#{% if entity.getRecentReport() %}#}
+                                            {#{% set embedPdf = fellapp_util.getEmbedPdf(entity.getRecentReport()) %}#}
+                                        {#{% endif %}#}
+
                                         {#invite references#}
                                         {% if entity.hasAllCheckmarksOrReferenceLetters() == false %}
                                             <hr>
@@ -1175,7 +1180,7 @@
                                             {% if entity.interviews|length > 0 and entity.itinerarys|length > 0 %}
                                                 {% set embedPdf = fellapp_util.getEmbedPdf(entity.getRecentReport()) %}
                                                 <li>
-                                                    <a target="_blank"
+                                                    <a
                                                         general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores. {{ embedPdf }}"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_inviteinterviewerstorate', { 'id': entity.id}, true) }}">

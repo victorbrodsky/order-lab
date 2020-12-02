@@ -459,15 +459,6 @@
                         onclick="sendInviteInterviewersToRate('{{ url('resapp_inviteinterviewerstorate', { 'id': resapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
                         href="#"
                     >Invite these interviewers to submit evaluations</a>
-
-                    {#<br>#}
-                    {#{% set embedPdf = resapp_pdfutil.getEmbedPdf(resapp.getRecentReport()) %}#}
-                    {#<a target="_blank"#}
-                       {#general-data-confirm="Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores. {{ embedPdf }}"#}
-                       {#general-data-callback="refreshpage"#}
-                       {#href="{{ path('resapp_inviteinterviewerstorate', { 'id': resapp.id}, true) }}"#}
-                    {#>Invite these interviewers to submit evaluations</a>#}
-
                  {% endif %}
             {% else %}
                 <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
