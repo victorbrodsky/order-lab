@@ -199,7 +199,7 @@ class PdfUtil {
                 $rowArr["Last Name"]['id'] = $applicantUser->getId();
 
                 $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
-                $rowArr['Issue']['id'] = $residencyApplicationDb->getId();
+                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
                 
                 //change the value in the “Action” column to “Do not add”
                 $rowArr['Action']['value'] = "Update PDF & ID Only";
@@ -509,53 +509,31 @@ class PdfUtil {
                 ////////////// EOF Try to get ERAS Application ID //////////////////
 
                 ////////////// check for duplicate //////////////////
-//                $duplicateIds = array();
-//                $duplicateArr = array();
-//                //check for duplicate in $handsomtableJsonData
-//                $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
-//                if( $duplicateTableResApps  ) {
-//                    //$rowArr['Issue']['id'] = null;
-//                    //$rowArr['Issue']['value'] = "Duplicate in batch";
-//                    $duplicateArr[] = "Duplicate in batch";
-//                } else {
-//                    //$rowArr['Issue']['id'] = null;
-//                    //$rowArr['Issue']['value'] = "Not Duplicated";
-//                }
-//                //check for duplicate in DB
-//                $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
-//                if( count($duplicateDbResApps) > 0  ) {
-//                    //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
-//                    //$rowArr['Issue']['value'] = "Previously Imported";
-//                    foreach($duplicateDbResApps as $duplicateDbResApp) {
-//                        $duplicateIds[] = $duplicateDbResApp->getId();
-//                    }
-//                    $duplicateArr[] = "Previously Imported";
-//                } else {
-//                    //$rowArr['Issue']['id'] = null;
-//                    //$rowArr['Issue']['value'] = "Not Imported";
-//                }
-//                if( count($duplicateArr) > 0 ) {
-//                    $rowArr['Issue']['id'] = implode(",",$duplicateIds);
-//                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
-//
-//                    //change the value in the “Action” column to “Do not add”
-//                    $rowArr['Action']['id'] = null;
-//                    $rowArr['Action']['value'] = "Do not add";
-//                } else {
-//                    //No duplicate found => change the value in the “Action” column to “Add”
-//                    //Testing: comment out below for testing
-//                    //$rowArr['Action']['id'] = null;
-//                    //$rowArr['Action']['value'] = "Create New Record";
-//                }
-
                 $duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
                 if( count($duplicateArr) > 0 ) {
-                    $rowArr['Issue']['id'] = null; //implode(",",$duplicateIds);
-                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
 
                     //change the value in the “Action” column to “Do not add”
                     $rowArr['Action']['id'] = null;
                     $rowArr['Action']['value'] = "Do not add";
+
+                    $rowArr['Issue']['id'] = null;
+                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+
+                    if( $pdfFile ) {
+
+                        //check if this PDF already attached to the application
+                        //if $duplicateArr has "Previously Imported"
+                        if( in_array( "Previously Imported" ,$duplicateArr ) ) {
+                            //change the value in the “Action” column to "Update PDF & ID Only"
+                            $rowArr['Action']['id'] = null;
+                            $rowArr['Action']['value'] = "Update PDF & ID Only";
+
+                            $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
+                            $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+                        }
+
+                    }
+
                 } else {
                     //No duplicate found => change the value in the “Action” column to “Add”
                     //Testing: comment out below for testing
@@ -572,9 +550,9 @@ class PdfUtil {
                 //"Count of Scientific Monograph" => "Count of Scientific Monograph",
                 $numberFirstAuthorPublications =
                     (int)$rowArr['Count of Peer Reviewed Book Chapter']['value']
-                + (int)$rowArr['Count of Peer Reviewed Journal Articles/Abstracts']['value']
-                + (int)$rowArr['Count of Peer Reviewed Online Publication']['value']
-                + (int)$rowArr['Count of Scientific Monograph']['value'];
+                    + (int)$rowArr['Count of Peer Reviewed Journal Articles/Abstracts']['value']
+                    + (int)$rowArr['Count of Peer Reviewed Online Publication']['value']
+                    + (int)$rowArr['Count of Scientific Monograph']['value'];
                 if( $numberFirstAuthorPublications ) {
                     $rowArr['Number of first author publications']['id'] = null;
                     $rowArr['Number of first author publications']['value'] = $numberFirstAuthorPublications;

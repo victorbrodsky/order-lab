@@ -42,7 +42,7 @@ var _resapps = [];
 var _resapps_simple = [];
 
 var _actions_simple = [];
-var _actions_complex = [];
+var _actions_duplicate = []; //action with "Update" only
 
 //var _tdSize = 64;
 //var _tdSize = 26;
@@ -241,9 +241,15 @@ function ajaxFinishedCondition() {
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Do not add");
         _actions_simple.push("Create New Record");
-        _actions_simple.push("Update PDF & ID Only");
+        //_actions_simple.push("Update PDF & ID Only");
         //_actions_simple.push(null);
+        done++;
+    }
 
+    if( _actions_duplicate.length == 0 ) {
+        _actions_duplicate.push("Do not add");
+        _actions_duplicate.push("Create New Record");
+        _actions_duplicate.push("Update PDF & ID Only");
         done++;
     }
 
@@ -327,9 +333,9 @@ function ajaxFinishedCondition() {
             _resapps_simple.push("Create New Record");
             _resapps_simple.push("Update PDF & ID Only");
             for(var i = 0; i < _resapps.length; i++) {
-                var ethnicityName = _resapps[i];
-                //console.log('ethnicityName='+ethnicityName);
-                _resapps_simple.push(ethnicityName);
+                var resappInfo = _resapps[i];
+                //console.log('resappInfo='+resappInfo);
+                _resapps_simple.push(resappInfo);
             }
             //console.log("_resapps_simple:");
             //console.log(_resapps_simple);
@@ -341,7 +347,7 @@ function ajaxFinishedCondition() {
         //return false;
     }
 
-    if( done >= 3 ) {
+    if( done >= 4 ) {
         return true;
     }
 
@@ -640,6 +646,11 @@ function handsonTableInit(handsometableDataArr) {
                 //if( issueCellId && issueCellId == -1 && erasFileCellId && erasFileCellValue ) {
                     cellProperties.source = _resapps_simple; //overwrite with extended choices including "Add to John Smith’s application (ID 1234)"
                 }
+                
+                if( issueCellId && issueCellId == -2 ) {
+                    cellProperties.source = _actions_duplicate; //overwrite with extended choices including "Update PDF & ID Only"
+                }
+                
             }
             // if( headerTitle && headerTitle == "Issue" && cellId && cellId == -1 ) {
             //     console.log("Use extended choices!!!");
