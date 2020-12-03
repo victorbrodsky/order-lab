@@ -509,7 +509,10 @@ class PdfUtil {
                 ////////////// EOF Try to get ERAS Application ID //////////////////
 
                 ////////////// check for duplicate //////////////////
-                $duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
+                $duplicateRes = $this->checkDuplicate($rowArr,$handsomtableJsonData);
+                $duplicateArr = $duplicateRes['duplicateInfoArr'];
+                $duplicateResapps = $duplicateRes['duplicateResapps'];
+
                 if( count($duplicateArr) > 0 ) {
 
                     //change the value in the “Action” column to “Do not add”
@@ -523,15 +526,17 @@ class PdfUtil {
 
                         //TODO: check if this PDF already attached to the application (if PDF different => Issue="PDF Differs")
                         //md5_file() in itself is slow. it takes 0.4 sec to return the md5 for a file of 70kb => pre-generate md5 for each file on upload or processDocument
+                        $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,$duplicateResapps);
+                        if( $existedPDF === false ) {
+                            //if $duplicateArr has "Previously Imported"
+                            if (in_array("Previously Imported", $duplicateArr)) {
+                                //change the value in the “Action” column to "Update PDF & ID Only"
+                                $rowArr['Action']['id'] = null;
+                                $rowArr['Action']['value'] = "Update PDF & ID Only";
 
-                        //if $duplicateArr has "Previously Imported"
-                        if( in_array( "Previously Imported" ,$duplicateArr ) ) {
-                            //change the value in the “Action” column to "Update PDF & ID Only"
-                            $rowArr['Action']['id'] = null;
-                            $rowArr['Action']['value'] = "Update PDF & ID Only";
-
-                            $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
-                            $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+                                $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
+                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr);
+                            }
                         }
 
                     }
@@ -686,9 +691,11 @@ class PdfUtil {
         return $map;
     }
 
+    //Used in getCsvApplicationsData
     public function checkDuplicate( $rowArr, $handsomtableJsonData ) {
         ////////////// check for duplicate //////////////////
-        $duplicateIds = array();
+        //$duplicateIds = array();
+        $duplicateResapps = array();
         $duplicateArr = array();
         
         //check for duplicate in $handsomtableJsonData
@@ -708,7 +715,8 @@ class PdfUtil {
             //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
             //$rowArr['Issue']['value'] = "Previously Imported";
             foreach($duplicateDbResApps as $duplicateDbResApp) {
-                $duplicateIds[] = $duplicateDbResApp->getId();
+                //$duplicateIds[] = $duplicateDbResApp->getId();
+                $duplicateResapps[] = $duplicateDbResApp;
             }
             $duplicateArr[] = "Previously Imported";
         } else {
@@ -729,8 +737,13 @@ class PdfUtil {
 //            //$rowArr['Action']['value'] = "Create New Record";
 //        }
         ////////////// EOF check for duplicate //////////////////
-        
-        return $duplicateArr;
+
+        $duplicateRes = array();
+        $duplicateRes['duplicateInfoArr'] = $duplicateArr;
+        //$duplicateRes['duplicateIdArr'] = $duplicateIds;
+        $duplicateRes['duplicateResapps'] = $duplicateResapps;
+
+        return $duplicateRes;
     }
     
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
@@ -928,6 +941,38 @@ class PdfUtil {
         }
 
         return NULL;
+    }
+
+    //Check if given PDF ($pdfFile) is the same as the most recent PDF in the res applications ($duplicateIds)
+    //Use md5_file and file size
+    public function checkIfPDFExistInResapp($pdfFile,$duplicateResapps) {
+        $thisHash = $this->getDocumentHash($pdfFile);
+
+        foreach($duplicateResapps as $duplicateResapp) {
+            //check all documents (getDocuments)
+            foreach($duplicateResapp->getDocuments() as $document) {
+                $documentHash = $this->getDocumentHash($document);
+                echo $duplicateResapp->getId().": compare document hash: [$thisHash]?=[$documentHash] <br>";
+                if( hash_equals($thisHash,$documentHash) ) {
+                    return true;
+                }
+            }
+
+            //check the most recent ERAS (getRecentCoverLetter)
+            $recentFile = $duplicateResapp->getRecentCoverLetter();
+            $recentFileHash = $this->getDocumentHash($recentFile);
+            echo $duplicateResapp->getId().": compare eras hash: [$thisHash]?=[$recentFileHash] <br>";
+            if( hash_equals($thisHash,$recentFileHash) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public function getDocumentHash($document) {
+        $filename = $document->getFullServerPath();
+        $md5file = md5_file($filename);
+        return $md5file;
     }
 
     public function getPdfTextArr( $pdfFiles ) {
