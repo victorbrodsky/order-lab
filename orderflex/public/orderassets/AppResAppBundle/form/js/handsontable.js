@@ -104,6 +104,8 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).addClass(updateClass);
         $(td).removeClass(addClass);
         $(td).removeClass(dontaddClass);
+
+        //TODO: lock all the other fields in that row
     }
     if( value+"" == "Create New Record" ) {
         //return false;

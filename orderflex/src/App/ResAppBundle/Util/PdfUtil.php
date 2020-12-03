@@ -521,7 +521,9 @@ class PdfUtil {
 
                     if( $pdfFile ) {
 
-                        //check if this PDF already attached to the application
+                        //TODO: check if this PDF already attached to the application (if PDF different => Issue="PDF Differs")
+                        //md5_file() in itself is slow. it takes 0.4 sec to return the md5 for a file of 70kb => pre-generate md5 for each file on upload or processDocument
+
                         //if $duplicateArr has "Previously Imported"
                         if( in_array( "Previously Imported" ,$duplicateArr ) ) {
                             //change the value in the “Action” column to "Update PDF & ID Only"
@@ -761,7 +763,7 @@ class PdfUtil {
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Issue']['id'] = -1;
-                $rowArr['Issue']['value'] = "No match found";
+                $rowArr['Issue']['value'] = "No match found"; //match not found in CVS file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
