@@ -954,6 +954,7 @@ class PdfUtil {
                 $documentHash = $this->getDocumentHash($document);
                 echo $duplicateResapp->getId().": compare document hash: [$thisHash]?=[$documentHash] <br>";
                 if( hash_equals($thisHash,$documentHash) ) {
+                    echo "document hash match <br>";
                     return true;
                 }
             }
@@ -963,6 +964,7 @@ class PdfUtil {
             $recentFileHash = $this->getDocumentHash($recentFile);
             echo $duplicateResapp->getId().": compare eras hash: [$thisHash]?=[$recentFileHash] <br>";
             if( hash_equals($thisHash,$recentFileHash) ) {
+                echo "document eras match <br>";
                 return true;
             }
         }

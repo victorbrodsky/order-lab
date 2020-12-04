@@ -147,14 +147,24 @@ class Document {
      */
     private $entityId;
 
+    /**
+     * MD5 hash (checksum to identify duplicate document)
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $documentHash;
 
     //private $subdomain = 'order'; //accommodate 'order' subdomain in view.med.cornell.edu/order/, however it should be independent on the url
     private $subdomain = '';
+
+
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
         $this->setCreatedate(new \DateTime());
     }
+
 
 
     /**
@@ -261,11 +271,22 @@ class Document {
      */
     public function setUploadDirectory($uploadDirectory)
     {
-        if( $uploadDirectory ) {
-            
-        }
+//        if( $uploadDirectory ) {
+//
+//        }
         
         $this->uploadDirectory = $uploadDirectory;
+
+        //set hash if file exists
+        $filename = $this->getFullServerPath();
+        if( file_exists($uploadDirectory) ) {
+            $hash = md5_file($uploadDirectory);
+            if( $hash ) {
+                $this->setDocumentHash($hash);
+            }
+        } else {
+            exit("Testing: file does not exists");
+        }
     }
 
     /**
@@ -358,7 +379,21 @@ class Document {
         return $this->title;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDocumentHash()
+    {
+        return $this->documentHash;
+    }
 
+    /**
+     * @param mixed $documentHash
+     */
+    public function setDocumentHash($documentHash)
+    {
+        $this->documentHash = $documentHash;
+    }
 
 
     /**
