@@ -237,6 +237,9 @@ class Document {
     public function setSize($size)
     {
         $this->size = $size;
+
+        //set hash if file exists
+        $this->generateAndSetDocumentHash();
     }
 
     /**
@@ -278,15 +281,7 @@ class Document {
         $this->uploadDirectory = $uploadDirectory;
 
         //set hash if file exists
-        $filename = $this->getFullServerPath();
-        if( file_exists($uploadDirectory) ) {
-            $hash = md5_file($uploadDirectory);
-            if( $hash ) {
-                $this->setDocumentHash($hash);
-            }
-        } else {
-            exit("Testing: file does not exists");
-        }
+        $this->generateAndSetDocumentHash();
     }
 
     /**
@@ -540,6 +535,13 @@ class Document {
     //example: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2/web/Uploaded/fellapp/documents/56fbf9e8867c3.jpg
     public function getFullServerPath($withRealPath=true)
     {
+        if( !$this->getUploadDirectory() ) {
+            return NULL;
+        }
+        if( !$this->getUniquename() ) {
+            return NULL;
+        }
+
         //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
 
         //From web getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web
@@ -809,5 +811,32 @@ class Document {
             return $this->getUniquename();
         }
         return $this->getFullDescriptionStr();
+    }
+
+    public function generateDocumentHash() {
+        //set hash if file exists
+        $filename = $this->getFullServerPath();
+        if( file_exists($filename) ) {
+            $hash = md5_file($filename);
+            if( $hash ) {
+                //$this->setDocumentHash($hash);
+                return $hash;
+            }
+        } else {
+            exit("Testing: file does not exists");
+        }
+
+        return NULL;
+    }
+    public function generateAndSetDocumentHash() {
+        if( $this->getDocumentHash() ) {
+            return $this->getDocumentHash();
+        }
+        $hash = $this->generateDocumentHash();
+        if( $hash ) {
+            $this->setDocumentHash($hash);
+            return $hash;
+        }
+        return NULL;
     }
 }
