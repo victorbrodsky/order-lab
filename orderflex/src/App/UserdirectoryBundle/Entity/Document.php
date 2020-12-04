@@ -239,7 +239,7 @@ class Document {
         $this->size = $size;
 
         //set hash if file exists
-        $this->generateAndSetDocumentHash();
+        $this->getOrGenerateSetDocumentHash();
     }
 
     /**
@@ -281,7 +281,7 @@ class Document {
         $this->uploadDirectory = $uploadDirectory;
 
         //set hash if file exists
-        $this->generateAndSetDocumentHash();
+        $this->getOrGenerateSetDocumentHash();
     }
 
     /**
@@ -813,22 +813,7 @@ class Document {
         return $this->getFullDescriptionStr();
     }
 
-    public function generateDocumentHash() {
-        //set hash if file exists
-        $filename = $this->getFullServerPath();
-        if( file_exists($filename) ) {
-            $hash = md5_file($filename);
-            if( $hash ) {
-                //$this->setDocumentHash($hash);
-                return $hash;
-            }
-        } else {
-            exit("Testing: file does not exists");
-        }
-
-        return NULL;
-    }
-    public function generateAndSetDocumentHash() {
+    public function getOrGenerateSetDocumentHash() {
         if( $this->getDocumentHash() ) {
             return $this->getDocumentHash();
         }
@@ -839,4 +824,20 @@ class Document {
         }
         return NULL;
     }
+    public function generateDocumentHash() {
+        //set hash if file exists
+        $filename = $this->getFullServerPath();
+        if( file_exists($filename) ) {
+            $hash = md5_file($filename);
+            if( $hash ) {
+                return $hash;
+            }
+        }
+//        else {
+//            exit("Testing: file does not exists");
+//        }
+
+        return NULL;
+    }
+    
 }

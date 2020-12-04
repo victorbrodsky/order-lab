@@ -946,6 +946,9 @@ class PdfUtil {
     //Check if given PDF ($pdfFile) is the same as the most recent PDF in the res applications ($duplicateIds)
     //Use md5_file and file size
     public function checkIfPDFExistInResapp($pdfFile,$duplicateResapps) {
+
+        return false; //testing
+
         $thisHash = $this->getDocumentHash($pdfFile);
 
         foreach($duplicateResapps as $duplicateResapp) {
@@ -972,9 +975,11 @@ class PdfUtil {
         return false;
     }
     public function getDocumentHash($document) {
-        $filename = $document->getFullServerPath();
-        $md5file = md5_file($filename);
-        return $md5file;
+        //$filename = $document->getFullServerPath();
+        //$md5file = md5_file($filename);
+        //return $md5file;
+
+        return $document->getOrGenerateSetDocumentHash();
     }
 
     public function getPdfTextArr( $pdfFiles ) {
