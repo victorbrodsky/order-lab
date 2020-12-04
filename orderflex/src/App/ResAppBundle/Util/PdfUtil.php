@@ -535,7 +535,7 @@ class PdfUtil {
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
 
                                 $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
-                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr);
+                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "PDF Differs";
                             }
                         }
 
@@ -776,7 +776,7 @@ class PdfUtil {
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Issue']['id'] = -1;
-                $rowArr['Issue']['value'] = "No match found"; //match not found in CVS file
+                $rowArr['Issue']['value'] = "No match found in CVS"; //match not found in CVS file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
@@ -790,10 +790,27 @@ class PdfUtil {
 //                        }
 //                    }
 //                }
-                $foundResapp = $this->findResappByApplicant($resappInfoArr,$pdfFileArr);
+
+                $foundResapp = $this->findResappByApplicant($resappInfoArr,$pdfFileArr); //find match for resapp info and given pdf
                 if( $foundResapp ) {
-                    $rowArr['Action']['value'] = $foundResapp->getAddToStr();
-                    $rowArr['Action']['id'] = $foundResapp->getId();
+
+                    //check If PDF is Existed In Resapp
+                    $pdfFile = $pdfFileArr['file'];
+                    $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($foundResapp));
+                    if( $existedPDF === false ) {
+                        $rowArr['Action']['value'] = $foundResapp->getAddToStr();
+                        $rowArr['Action']['id'] = $foundResapp->getId();
+
+                        $rowArr['Issue']['id'] = -1;
+                        $rowArr['Issue']['value'] = "No match found in CVS, PDF Differs"; //match not found in CVS file
+                    } else {
+                        $rowArr['Action']['value'] = "Do not add";
+                        $rowArr['Action']['id'] = null;
+
+                        $rowArr['Issue']['id'] = -1;
+                        $rowArr['Issue']['value'] = "No match found in CVS, PDF already existed"; //match not found in CVS file
+                    }
+
                 }
 
 //                //Add to John Smith’s application (ID 1234)
@@ -883,6 +900,7 @@ class PdfUtil {
 
         return $resapps;
     }
+    //find match for resapp info and given pdf
     public function findResappByApplicant($resappInfoArr,$pdfInfoArr) {
 
         $foundResappId = NULL;
@@ -908,9 +926,9 @@ class PdfUtil {
         }
 
         //find file has Email, LastName FirstName
-        foreach($resappInfoArr as $resappId=>$resappInfoArr) {
+        foreach($resappInfoArr as $resappId=>$thisResappInfoArr) {
 
-            $email = $resappInfoArr['email'];
+            $email = $thisResappInfoArr['email'];
             if( $email ) {
                 if( strpos($pdfText, $email) !== false ) {
                     //Found by email
@@ -920,11 +938,11 @@ class PdfUtil {
             }
 
             //Search by lastname and firstname
-            $lastname = $resappInfoArr['lastname'];
+            $lastname = $thisResappInfoArr['lastname'];
             if( $lastname ) {
                 if( strpos($pdfText, $lastname) !== false ) {
                     //Search by firstname
-                    $firstname = $resappInfoArr['firstname'];
+                    $firstname = $thisResappInfoArr['firstname'];
                     if( $firstname ) {
                         if( strpos($pdfText, $firstname) !== false ) {
                             //Found by firstname
@@ -947,7 +965,7 @@ class PdfUtil {
     //Use md5_file and file size
     public function checkIfPDFExistInResapp($pdfFile,$duplicateResapps) {
 
-        return false; //testing
+        //return false; //testing
 
         $thisHash = $this->getDocumentHash($pdfFile);
 
@@ -955,9 +973,9 @@ class PdfUtil {
             //check all documents (getDocuments)
             foreach($duplicateResapp->getDocuments() as $document) {
                 $documentHash = $this->getDocumentHash($document);
-                echo $duplicateResapp->getId().": compare document hash: [$thisHash]?=[$documentHash] <br>";
-                if( hash_equals($thisHash,$documentHash) ) {
-                    echo "document hash match <br>";
+                //echo $duplicateResapp->getId().": compare document hash: [$thisHash]?=[$documentHash] <br>";
+                if( $thisHash && $documentHash && hash_equals($thisHash,$documentHash) ) {
+                    //echo "document hash match <br>";
                     return true;
                 }
             }
@@ -965,9 +983,9 @@ class PdfUtil {
             //check the most recent ERAS (getRecentCoverLetter)
             $recentFile = $duplicateResapp->getRecentCoverLetter();
             $recentFileHash = $this->getDocumentHash($recentFile);
-            echo $duplicateResapp->getId().": compare eras hash: [$thisHash]?=[$recentFileHash] <br>";
-            if( hash_equals($thisHash,$recentFileHash) ) {
-                echo "document eras match <br>";
+            //echo $duplicateResapp->getId().": compare eras hash: [$thisHash]?=[$recentFileHash] <br>";
+            if( $thisHash && $recentFileHash && hash_equals($thisHash,$recentFileHash) ) {
+                //echo "document eras match <br>";
                 return true;
             }
         }
@@ -978,6 +996,10 @@ class PdfUtil {
         //$filename = $document->getFullServerPath();
         //$md5file = md5_file($filename);
         //return $md5file;
+
+        if( !$document ) {
+            return NULL;
+        }
 
         return $document->getOrGenerateSetDocumentHash();
     }
