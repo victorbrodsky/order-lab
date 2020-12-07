@@ -776,7 +776,7 @@ class PdfUtil {
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Issue']['id'] = -1;
-                $rowArr['Issue']['value'] = "No match found in CVS"; //match not found in CVS file
+                $rowArr['Issue']['value'] = "No match found in CSV"; //match not found in CSV file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
@@ -802,13 +802,13 @@ class PdfUtil {
                         $rowArr['Action']['id'] = $foundResapp->getId();
 
                         $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match found in CVS, PDF Differs"; //match not found in CVS file
+                        $rowArr['Issue']['value'] = "No match found in CSV, PDF Differs"; //match not found in CSV file
                     } else {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
 
                         $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match found in CVS, PDF already existed"; //match not found in CVS file
+                        $rowArr['Issue']['value'] = "No match found in CSV, PDF already existed"; //match not found in CSV file
                     }
 
                 }

@@ -1048,7 +1048,7 @@ class GoogleSheetManagement {
             //$exportLinks = $file->getExportLinks();
             //$downloadUrl = $exportLinks['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 
-            //exportLink does not work anymore (since ~26 June 2020) for cvs files. The body has 307 Temporary Redirect: The document has moved here.
+            //exportLink does not work anymore (since ~26 June 2020) for CSV files. The body has 307 Temporary Redirect: The document has moved here.
             //Therefore, use api file export HTTP request: https://developers.google.com/drive/api/v3/reference/files/export
             //$fileId = $file->getId();
             $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
