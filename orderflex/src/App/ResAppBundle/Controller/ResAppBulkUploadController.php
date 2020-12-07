@@ -153,6 +153,19 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $pdfFilePaths[] = $file->getFullServerPath();
                         $pdfFiles[] = $file;
                         $pdfFileNames[] = $file->getOriginalname();
+                    } elseif ($ext == 'zip') {
+                        //extract archive $file
+                        $zip = new \ZipArchive();
+
+                        $zipFilePath = $file->getFullServerPath();
+                        $res = $zip->open($zipFilePath);
+                        if( $res === TRUE ) {
+                            $zip->extractTo('Uploaded/resapp/temp_extract_path/');
+                            $zip->close();
+                            //echo 'woot!';
+                        } else {
+                            //echo 'doh!';
+                        }
                     }
                 }
 

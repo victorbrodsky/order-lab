@@ -208,11 +208,24 @@ class PdfUtil {
 //                $handsomtableJsonData[] = $rowArr;
 
                 $rowArr = array();
+
                 //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
-                $rowArr = $this->populateRowByExistedResapp($rowArr,$residencyApplicationDb,$erasApplicantId,$pdfFile);
-                if( $rowArr && count($rowArr) > 0 ) {
-                    $handsomtableJsonData[] = $rowArr;
+                $rowArr = $this->populateRowByExistedResapp($rowArr,$residencyApplicationDb,$pdfFile);
+
+                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
+                if( !$thisErasApplicantId ) {
+                    $thisErasApplicantId = $erasApplicantId;
                 }
+                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
+
+                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
+                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
+
+                //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+                //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
+
+                $handsomtableJsonData[] = $rowArr;
             }
         }//foreach $pdfFiles
 
@@ -531,7 +544,7 @@ class PdfUtil {
 
                     if( $pdfFile ) {
 
-                        //TODO: check if this PDF already attached to the application (if PDF different => Issue="PDF Differs")
+                        //TODO: check if this PDF already attached to the application (if PDF different => Issue="previously uploaded PDF differs")
                         //md5_file() in itself is slow. it takes 0.4 sec to return the md5 for a file of 70kb => pre-generate md5 for each file on upload or processDocument
                         $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,$duplicateResapps);
                         if( $existedPDF === false ) {
@@ -542,7 +555,7 @@ class PdfUtil {
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
 
                                 $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
-                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "PDF Differs";
+                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "previously uploaded PDF differs";
                             }
                         }
 
@@ -698,19 +711,18 @@ class PdfUtil {
         return $map;
     }
 
-    public function populateRowByExistedResapp( $rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL ) {
+    //populate row by existing residency application
+    public function populateRowByExistedResapp( $rowArr, $residencyApplicationDb, $pdfFile=NULL ) {
 
         if( !$residencyApplicationDb ) {
             return $rowArr;
         }
 
         $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
-        if( !$thisErasApplicantId ) {
-            $thisErasApplicantId = $erasApplicantId;
+        if( $thisErasApplicantId ) {
+            $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+            $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
         }
-
-        $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
-        $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
 
         $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
         $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
@@ -719,9 +731,6 @@ class PdfUtil {
             $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
             $rowArr['ERAS Application']['id'] = $pdfFile->getId();
         }
-
-        //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
-        //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
 
         $applicantUser = $residencyApplicationDb->getUser();
 
@@ -736,13 +745,6 @@ class PdfUtil {
 
         $rowArr['Middle Name']['value'] = $applicantUser->getMiddleName();
         $rowArr['Middle Name']['id'] = $applicantUser->getId();
-
-        $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
-        $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
-
-        //change the value in the “Action” column to “Do not add”
-        $rowArr['Action']['value'] = "Update PDF & ID Only";
-        $rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
         $applicationReceiptDate = $residencyApplicationDb->getTimestamp();
         if( $applicationReceiptDate ) {
@@ -922,16 +924,6 @@ class PdfUtil {
             $rowArr['Expected Graduation Date']['id'] = null;
         }
 
-
-//        $rowArr['Action']['value'] = null;
-//        $rowArr['Action']['id'] = null;
-//
-//        $rowArr['Action']['value'] = null;
-//        $rowArr['Action']['id'] = null;
-//
-//        $rowArr['Action']['value'] = null;
-//        $rowArr['Action']['id'] = null;
-
         return $rowArr;
     }
 
@@ -1014,13 +1006,15 @@ class PdfUtil {
                 //used
             } else {
 
+                $pdfFile = $pdfFileArr['file'];
+
                 //$notUsedPdfArr[$fileId] = $pdfFileArr;
                 //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
                 $rowArr = array();
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Issue']['id'] = -1;
-                $rowArr['Issue']['value'] = "No match found in CSV"; //match not found in CSV file
+                $rowArr['Issue']['value'] = "No match in CSV"; //match not found in CSV file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
@@ -1039,26 +1033,25 @@ class PdfUtil {
                 if( $foundResapp ) {
 
                     //check If PDF is Existed In Resapp
-                    $pdfFile = $pdfFileArr['file'];
                     $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($foundResapp));
                     if( $existedPDF === false ) {
                         $rowArr['Action']['value'] = $foundResapp->getAddToStr();
                         $rowArr['Action']['id'] = $foundResapp->getId();
 
                         $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match found in CSV, PDF Differs"; //match not found in CSV file
+                        $rowArr['Issue']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
                     } else {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
 
                         $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match found in CSV, PDF already existed"; //match not found in CSV file
+                        $rowArr['Issue']['value'] = "No match in CSV, same PDF previously uploaded"; //match not found in CSV file
                     }
 
                 }
 
                 //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
-                $rowArr = $this->populateRowByExistedResapp($rowArr,$foundResapp,null,$pdfFile);
+                $rowArr = $this->populateRowByExistedResapp($rowArr,$foundResapp,$pdfFile);
 
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
