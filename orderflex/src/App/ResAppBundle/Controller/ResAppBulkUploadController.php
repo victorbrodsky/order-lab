@@ -886,7 +886,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $medSchoolGradDateValue || $medSchoolNameValue || $degreeValue ) {
                 $training = new Training($user);
                 $training->setOrderinlist(10);
-                $training->setTrainingType($trainingType);
+                $training->setTrainingType($trainingType); //Medical
 
                 $residencyApplication->addTraining($training);
                 $resappUser->addTraining($training);
@@ -1017,7 +1017,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $previousResidencyCityValue ||
                 $previousResidencyStateValue ||
                 $previousResidencyCountryValue
-                //|| $previousResidencyTrackValue
+                || $previousResidencyTrackValue
             ) {
                 $training = new Training($user);
                 $training->setOrderinlist(20);
@@ -1043,6 +1043,13 @@ class ResAppBulkUploadController extends OrderAbstractController
                 if( $previousResidencyGradDate ) {
                     //echo "$previousResidencyStartDateValue =>" . $previousResidencyStartDate->format('dd-mm-Y') . "<br>";
                     $training->setCompletionDate($previousResidencyGradDate);
+                }
+
+                if( $previousResidencyTrackValue ) {
+                    $previousResidencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($previousResidencyTrackValue);
+                    if( $previousResidencyTrack ) {
+                        $training->setResidencyTrack($previousResidencyTrack);
+                    }
                 }
 
                 //GeoLocation

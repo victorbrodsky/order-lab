@@ -2464,8 +2464,16 @@
     {% endif %}
 
     {% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}
-    {% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType}) %}
+    {#{% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType}) %}#}
     {#docAbsPath={{ docAbsPath }}<br>#}
+
+
+    {% if '.pdf' in docAbsPath or '.doc' in docAbsPath %}
+        {#do not show PDF and DOC preview#}
+        {% set docSnapshotPath = docAbsPath %}
+    {% else %}
+        {% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':viewType}) %}
+    {% endif %}
 
     <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
 
@@ -2476,7 +2484,7 @@
                   data="{{ docSnapshotPath }}"
                   {#data="{{ docAbsPath }}"#}
                   {#style="display:block; max-width:100%; max-height:100%;"#}
-                  style="display:block; width:100px; height:100px;"
+                  {#style="display:block; width:100px; height:100px;"#}
                   type="application/pdf"
                   class="{{ objectClass }}"
             >

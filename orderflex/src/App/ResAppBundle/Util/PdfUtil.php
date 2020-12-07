@@ -168,44 +168,51 @@ class PdfUtil {
 
                 $usedPdfArr[$pdfFile->getId()] = true;
 
+//                $rowArr = array();
+//
+//                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
+//                if( !$thisErasApplicantId ) {
+//                    $thisErasApplicantId = $erasApplicantId;
+//                }
+//
+//                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+//                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
+//
+//                $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
+//                $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
+//
+//                $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+//                $rowArr['ERAS Application']['id'] = $pdfFile->getId();
+//
+//                //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
+//                //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
+//
+//                $applicantUser = $residencyApplicationDb->getUser();
+//
+//                $rowArr["Preferred Email"]['value'] = $applicantUser->getEmail();
+//                $rowArr["Preferred Email"]['id'] = $applicantUser->getId();
+//
+//                $rowArr["First Name"]['value'] = $applicantUser->getFirstName();
+//                $rowArr["First Name"]['id'] = $applicantUser->getId();
+//
+//                $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
+//                $rowArr["Last Name"]['id'] = $applicantUser->getId();
+//
+//                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
+//                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
+//
+//                //change the value in the “Action” column to “Do not add”
+//                $rowArr['Action']['value'] = "Update PDF & ID Only";
+//                $rowArr['Action']['id'] = $residencyApplicationDb->getId();
+//
+//                $handsomtableJsonData[] = $rowArr;
+
                 $rowArr = array();
-
-                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
-                if( !$thisErasApplicantId ) {
-                    $thisErasApplicantId = $erasApplicantId;
+                //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
+                $rowArr = $this->populateRowByExistedResapp($rowArr,$residencyApplicationDb,$erasApplicantId,$pdfFile);
+                if( $rowArr && count($rowArr) > 0 ) {
+                    $handsomtableJsonData[] = $rowArr;
                 }
-
-                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
-                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
-
-                $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
-                $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
-
-                $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
-                $rowArr['ERAS Application']['id'] = $pdfFile->getId();
-
-                //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
-                //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
-
-                $applicantUser = $residencyApplicationDb->getUser();
-
-                $rowArr["Preferred Email"]['value'] = $applicantUser->getEmail();
-                $rowArr["Preferred Email"]['id'] = $applicantUser->getId();
-
-                $rowArr["First Name"]['value'] = $applicantUser->getFirstName();
-                $rowArr["First Name"]['id'] = $applicantUser->getId();
-
-                $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
-                $rowArr["Last Name"]['id'] = $applicantUser->getId();
-
-                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
-                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
-                
-                //change the value in the “Action” column to “Do not add”
-                $rowArr['Action']['value'] = "Update PDF & ID Only";
-                $rowArr['Action']['id'] = $residencyApplicationDb->getId();
-
-                $handsomtableJsonData[] = $rowArr;
             }
         }//foreach $pdfFiles
 
@@ -691,6 +698,243 @@ class PdfUtil {
         return $map;
     }
 
+    public function populateRowByExistedResapp( $rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL ) {
+
+        if( !$residencyApplicationDb ) {
+            return $rowArr;
+        }
+
+        $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
+        if( !$thisErasApplicantId ) {
+            $thisErasApplicantId = $erasApplicantId;
+        }
+
+        $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+        $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
+
+        $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
+        $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
+
+        if( $pdfFile ) {
+            $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+            $rowArr['ERAS Application']['id'] = $pdfFile->getId();
+        }
+
+        //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
+        //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
+
+        $applicantUser = $residencyApplicationDb->getUser();
+
+        $rowArr["Preferred Email"]['value'] = $applicantUser->getEmail();
+        $rowArr["Preferred Email"]['id'] = $applicantUser->getId();
+
+        $rowArr["First Name"]['value'] = $applicantUser->getFirstName();
+        $rowArr["First Name"]['id'] = $applicantUser->getId();
+
+        $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
+        $rowArr["Last Name"]['id'] = $applicantUser->getId();
+
+        $rowArr['Middle Name']['value'] = $applicantUser->getMiddleName();
+        $rowArr['Middle Name']['id'] = $applicantUser->getId();
+
+        $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
+        $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
+
+        //change the value in the “Action” column to “Do not add”
+        $rowArr['Action']['value'] = "Update PDF & ID Only";
+        $rowArr['Action']['id'] = $residencyApplicationDb->getId();
+
+        $applicationReceiptDate = $residencyApplicationDb->getTimestamp();
+        if( $applicationReceiptDate ) {
+            $rowArr['Application Receipt Date']['value'] = $applicationReceiptDate->format('m/d/Y');;
+            $rowArr['Application Receipt Date']['id'] = null;
+        }
+
+        $rowArr['Residency Track']['value'] = $residencyApplicationDb->getResidencyTrack()."";
+        $rowArr['Residency Track']['id'] = null;
+
+        $trainings = $applicantUser->getTrainings();
+        if( count($trainings) > 0 ) {
+
+            $training = NULL;
+            $previousTraining = NULL;
+
+            foreach($trainings as $thisTraining) {
+                $trainingTypeName = $thisTraining->getTrainingType()."";
+                //echo $thisTraining->getId().": trainingTypeName=".$trainingTypeName."<br>";
+
+                if( $trainingTypeName == "Residency" ) {
+                    $previousTraining = $thisTraining;
+                    continue;
+                }
+
+                if( $trainingTypeName == "Medical" ) {
+                    $training = $thisTraining;
+                    continue;
+                }
+            }
+
+            //Residency School ($training)
+            if( $training ) {
+                $institution = $training->getInstitution();
+                if ($institution) {
+                    $rowArr['Medical School Name']['value'] = $institution . "";
+                    $rowArr['Medical School Name']['id'] = $institution->getId();
+                }
+
+                $completionDate = $training->getCompletionDate();
+                if ($completionDate) {
+                    $rowArr['Medical School Graduation Date']['value'] = $completionDate->format('m/d/Y');
+                    $rowArr['Medical School Graduation Date']['id'] = null;
+                }
+
+                $degree = $training->getDegree();
+                if ($degree) {
+                    $rowArr['Degree']['value'] = $degree . "";
+                    $rowArr['Degree']['id'] = null;
+                }
+            }
+
+            //Previous Residency ($previousTraining)
+            if( $previousTraining ) {
+                $previousTrainingStartDate = $previousTraining->getStartDate();
+                if ($previousTrainingStartDate) {
+                    $rowArr['Previous Residency Start Date']['value'] = $previousTrainingStartDate->format('m/d/Y');
+                    $rowArr['Previous Residency Start Date']['id'] = null;
+                }
+                $previousTrainingCompletionDate = $previousTraining->getCompletionDate();
+                if ($previousTrainingCompletionDate) {
+                    $rowArr['Previous Residency Graduation/Departure Date']['value'] = $previousTrainingCompletionDate->format('m/d/Y');
+                    $rowArr['Previous Residency Graduation/Departure Date']['id'] = null;
+                }
+
+                $previousTrainingInstitution = $previousTraining->getInstitution();
+                if( $previousTrainingInstitution ) {
+                    $rowArr['Previous Residency Institution']['value'] = $previousTrainingInstitution."";
+                    $rowArr['Previous Residency Institution']['id'] = null;
+                }
+
+                $geoLocation = $previousTraining->getGeoLocation();
+                //echo "geoLocation=$geoLocation <br>";
+                if( $geoLocation ) {
+                    $previousTrainingCity = $geoLocation->getCity();
+                    if ($previousTrainingCity) {
+                        $rowArr['Previous Residency City']['value'] = $previousTrainingCity . "";
+                        $rowArr['Previous Residency City']['id'] = null;
+                    }
+                    $previousTrainingState = $geoLocation->getState();
+                    if ($previousTrainingState) {
+                        $rowArr['Previous Residency State']['value'] = $previousTrainingState . "";
+                        $rowArr['Previous Residency State']['id'] = null;
+                    }
+                    $previousTrainingCountry = $geoLocation->getCountry();
+                    if ($previousTrainingCountry) {
+                        $rowArr['Previous Residency Country']['value'] = $previousTrainingCountry . "";
+                        $rowArr['Previous Residency Country']['id'] = null;
+                    }
+                }
+
+                $previousTrainingResidencyTrack = $previousTraining->getResidencyTrack();
+                if( $previousTrainingResidencyTrack ) {
+                    $rowArr['Previous Residency Track']['value'] = $previousTrainingResidencyTrack . "";
+                    $rowArr['Previous Residency Track']['id'] = null;
+                }
+            }
+            
+        }
+
+        $examinations = $residencyApplicationDb->getExaminations();
+        if( count($examinations) > 0 ) {
+            $examination = $examinations[0];
+
+            $rowArr['USMLE Step 1 Score']['value'] = $examination->getUSMLEStep1Score();
+            $rowArr['USMLE Step 1 Score']['id'] = null;
+
+            $rowArr['USMLE Step 2 CK Score']['value'] = $examination->getUSMLEStep2CKScore();;
+            $rowArr['USMLE Step 2 CK Score']['id'] = null;
+
+            $rowArr['USMLE Step 3 Score']['value'] = $examination->getUSMLEStep3Score();;
+            $rowArr['USMLE Step 3 Score']['id'] = null;
+        }
+
+        $citizenships = $residencyApplicationDb->getCitizenships();
+        if( count($citizenships) > 0 ) {
+            $citizenship = $citizenships[0];
+            if( $citizenship ) {
+                $rowArr['Country of Citizenship']['value'] = $citizenship->getCountry()."";
+                $rowArr['Country of Citizenship']['id'] = null;
+
+                $rowArr['Visa Status']['value'] = $citizenship->getVisa();
+                $rowArr['Visa Status']['id'] = null;
+            }
+
+        }
+
+        $rowArr['Is the applicant a member of any of the following groups?']['value'] = $residencyApplicationDb->getEthnicity();
+        $rowArr['Is the applicant a member of any of the following groups?']['id'] = null;
+
+        $rowArr['Number of first author publications']['value'] = $residencyApplicationDb->getFirstPublications();
+        $rowArr['Number of first author publications']['id'] = null;
+
+        $rowArr['Number of all publications']['value'] = $residencyApplicationDb->getAllPublications();;
+        $rowArr['Number of all publications']['id'] = null;
+        
+        if( $residencyApplicationDb->getAoa() ) {
+            $aoa = "Yes";
+        } else {
+            $aoa = "No";
+        }
+        $rowArr['AOA']['value'] = $aoa;
+        $rowArr['AOA']['id'] = null;
+
+        if( $residencyApplicationDb->getCouple() ) {
+            $coupleMatch = "Yes";
+        } else {
+            $coupleMatch = "No";
+        }
+        $rowArr['Couple’s Match']['value'] = $coupleMatch;
+        $rowArr['Couple’s Match']['id'] = null;
+
+        $rowArr['Post-Sophomore Fellowship']['value'] = $residencyApplicationDb->getPostSoph()."";
+        $rowArr['Post-Sophomore Fellowship']['id'] = null;
+
+        // Application Season Start Date/Application Season End Date
+        $applicationSeasonStartDate = $residencyApplicationDb->getApplicationSeasonStartDate();
+        if( $applicationSeasonStartDate ) {
+            $rowArr['Application Season Start Date']['value'] = $applicationSeasonStartDate->format('m/d/Y');
+            $rowArr['Application Season Start Date']['id'] = null;
+        }
+        $applicationSeasonEndDate = $residencyApplicationDb->getApplicationSeasonEndDate();
+        if( $applicationSeasonEndDate ) {
+            $rowArr['Application Season End Date']['value'] = $applicationSeasonEndDate->format('m/d/Y');
+            $rowArr['Application Season End Date']['id'] = null;
+        }
+
+        // Expected Residency Start Date/Expected Graduation Date
+        $residencyStartDate = $residencyApplicationDb->getStartDate();
+        if( $residencyStartDate ) {
+            $rowArr['Expected Residency Start Date']['value'] = $residencyStartDate->format('m/d/Y');
+            $rowArr['Expected Residency Start Date']['id'] = null;
+        }
+        $residencyEndDate = $residencyApplicationDb->getEndDate();
+        if( $residencyEndDate ) {
+            $rowArr['Expected Graduation Date']['value'] = $residencyEndDate->format('m/d/Y');
+            $rowArr['Expected Graduation Date']['id'] = null;
+        }
+
+
+//        $rowArr['Action']['value'] = null;
+//        $rowArr['Action']['id'] = null;
+//
+//        $rowArr['Action']['value'] = null;
+//        $rowArr['Action']['id'] = null;
+//
+//        $rowArr['Action']['value'] = null;
+//        $rowArr['Action']['id'] = null;
+
+        return $rowArr;
+    }
+
     //Used in getCsvApplicationsData
     public function checkDuplicate( $rowArr, $handsomtableJsonData ) {
         ////////////// check for duplicate //////////////////
@@ -812,6 +1056,9 @@ class PdfUtil {
                     }
 
                 }
+
+                //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
+                $rowArr = $this->populateRowByExistedResapp($rowArr,$foundResapp,null,$pdfFile);
 
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
@@ -968,25 +1215,34 @@ class PdfUtil {
         //return false; //testing
 
         $thisHash = $this->getDocumentHash($pdfFile);
+        $thisSize = $pdfFile->getSize();
 
         foreach($duplicateResapps as $duplicateResapp) {
             //check all documents (getDocuments)
             foreach($duplicateResapp->getDocuments() as $document) {
                 $documentHash = $this->getDocumentHash($document);
-                //echo $duplicateResapp->getId().": compare document hash: [$thisHash]?=[$documentHash] <br>";
+                $documentSize = $document->getSize();
+                //echo "compare document hash: ".$pdfFile->getOriginalnameClean()."[$thisHash]?=".$document->getOriginalnameClean()."[$documentHash] <br>";
                 if( $thisHash && $documentHash && hash_equals($thisHash,$documentHash) ) {
                     //echo "document hash match <br>";
-                    return true;
+                    //echo "compare document size: ".$pdfFile->getOriginalnameClean()."[$thisSize]?=".$document->getOriginalnameClean()."[$documentSize] <br>";
+                    if( $thisSize && $documentSize && $thisSize == $documentSize ) {
+                        return true;
+                    }
                 }
             }
 
             //check the most recent ERAS (getRecentCoverLetter)
             $recentFile = $duplicateResapp->getRecentCoverLetter();
             $recentFileHash = $this->getDocumentHash($recentFile);
-            //echo $duplicateResapp->getId().": compare eras hash: [$thisHash]?=[$recentFileHash] <br>";
+            $recentFileSize = $recentFile->getSize();
+            //echo "compare eras hash: ".$pdfFile->getOriginalnameClean()."[$thisHash]?=".$recentFile->getOriginalnameClean()."[$recentFileHash] <br>";
             if( $thisHash && $recentFileHash && hash_equals($thisHash,$recentFileHash) ) {
                 //echo "document eras match <br>";
-                return true;
+                //echo "compare eras size: ".$pdfFile->getOriginalnameClean()."[$thisSize]?=".$recentFile->getOriginalnameClean()."[$recentFileSize] <br>";
+                if( $thisSize && $recentFileSize && $thisSize == $recentFileSize ) {
+                    return true;
+                }
             }
         }
 
