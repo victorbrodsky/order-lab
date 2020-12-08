@@ -23,6 +23,7 @@ use App\ResAppBundle\Form\ResAppUploadCsvType;
 use App\ResAppBundle\Form\ResAppUploadType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\Citizenship;
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\Examination;
 use App\UserdirectoryBundle\Entity\GeoLocation;
@@ -131,7 +132,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             //dump($form);
             //exit("form submitted");
 
-            //Extracting applications from CSV and/or associate PDF
+            //1) Extracting applications from CSV and/or associate PDF
             if( $form->getClickedButton() === $form->get('upload') ) {
                 //exit("Extracting applications from CSV");
 
@@ -144,8 +145,78 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $em->persist($inputDataFile);
                 $em->flush();
 
+                //first run to process zip files
                 $files = $inputDataFile->getErasFiles();
                 foreach ($files as $file) {
+                    $ext = $file->getExtension();
+
+                    if ($ext == 'zip') {
+                        //extract archive $file
+                        $zip = new \ZipArchive();
+
+                        $zipFilePath = $file->getFullServerPath();
+                        $res = $zip->open($zipFilePath);
+                        if( $res === TRUE ) {
+                            $destinationPath = 'Uploaded/resapp/documents';
+                            $sourcePath = $destinationPath.'/temp_extract_path';
+                            $zip->extractTo($sourcePath);
+                            $zip->close();
+                            //echo 'woot!';
+
+                            //remove zip file from $inputDataFile
+                            $inputDataFile->removeErasFile($file);
+
+                            //process all files in temp folder and add them to $inputDataFile as addErasFile()
+                            //$tempFiles = scandir($tempPath);
+                            $tempFiles = array_diff(scandir($sourcePath), array('.', '..'));
+
+                            $processed = false;
+
+                            foreach($tempFiles as $tempFile) {
+                                echo "tempFile=$tempFile <br>";
+
+                                //$ext = $tempFile->getExtension();
+                                $ext = pathinfo($tempFile, PATHINFO_EXTENSION);
+
+                                if ($ext == 'csv') {
+                                    //$fileDocument = $this->createDocument($file,$tempFile);
+                                    //$inputDataFile->addErasFile($fileDocument);
+                                    $this->createAndAddDocumentToInputDataFile($inputDataFile,$tempFile,$sourcePath,$destinationPath);
+                                    $processed = true;
+                                } elseif ($ext == 'pdf') {
+                                    $this->createAndAddDocumentToInputDataFile($inputDataFile,$tempFile,$sourcePath,$destinationPath);
+                                    $processed = true;
+                                } elseif ($ext == 'zip') {
+                                    //ignore zip file because it was processed previously
+                                    //exit("Nested zip file is not allowed");
+                                }
+                            }
+
+                            //delete $tempPath and all containing files
+                            $resappPdfUtil->deletePublicDir($sourcePath);
+
+                            if( $processed ) {
+
+                                //$files = $inputDataFile->getErasFiles();
+                                //echo "1 file count=" . count($files) . "<br>";
+
+                                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
+                                $em->persist($inputDataFile);
+                                $em->flush();
+                            }
+
+                        } else {
+                            //echo 'doh!';
+                        }
+                    }
+                }
+
+                //2) Final run to process all files in $inputDataFile (except zip files, because they were processed previously)
+                $files = $inputDataFile->getErasFiles();
+                echo "2 file count=" . count($files) . "<br>";
+
+                foreach ($files as $file) {
+                    echo "file=" . $file . "<br>";
                     $ext = $file->getExtension();
                     if ($ext == 'csv') {
                         $inputFileName = $file->getFullServerPath();
@@ -154,24 +225,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $pdfFiles[] = $file;
                         $pdfFileNames[] = $file->getOriginalname();
                     } elseif ($ext == 'zip') {
-                        //extract archive $file
-                        $zip = new \ZipArchive();
-
-                        $zipFilePath = $file->getFullServerPath();
-                        $res = $zip->open($zipFilePath);
-                        if( $res === TRUE ) {
-                            $zip->extractTo('Uploaded/resapp/temp_extract_path/');
-                            $zip->close();
-                            //echo 'woot!';
-                        } else {
-                            //echo 'doh!';
-                        }
+                        //Ignore zip file because it was processed previously
                     }
                 }
 
                 //echo "inputFileName=" . $inputFileName . "<br>";
                 //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
                 //dump($pdfFilePaths);
+                //exit('111');
 
                 if( $inputFileName || count($pdfFiles) > 0 ) {
                     if ($inputFileName) {
@@ -216,7 +277,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                     "pdfFiles=".implode(", ",$pdfFileNames) .
                     ". Extracted data rows=".count($handsomtableJsonData).". $errorMsg";
                 $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
-            }
+            } //Clicked Upload
             //Add applications or PDF
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
                 //exit("Adding Application to be implemented");
@@ -281,6 +342,70 @@ class ResAppBulkUploadController extends OrderAbstractController
             'handsometableData' => $handsomtableJsonData,
             'withdata' => $withdata
         );
+    }
+
+    public function createAndAddDocumentToInputDataFile( $inputDataFile, $file, $sourcePath, $destinationPath ) {
+        $em = $this->getDoctrine()->getManager();
+        $fileDocument = $this->createDocument($file,$sourcePath,$destinationPath);
+        $inputDataFile->addErasFile($fileDocument);
+        $em->flush();
+        echo "added document to inputDataFile=".$fileDocument->getId()."<br>";
+        return $fileDocument;
+    }
+    public function createDocument( $fileName, $sourcePath, $destinationPath ) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // it is possible, that two clients send a file with the
+        // exact same filename, therefore we have to add the session
+        // to the uuid otherwise we will get a mess
+        //$uuid = md5(sprintf('%s.%s', $fileName, $session->getId()));
+        //$uniquefilename = ""; //5fce61383d8ed.pdf or AP_CP-Residency-Application-Without-Attachments-2021-ID748-Tanaka-Kara-generated-on-12-07-2020-at-09-34-19-pm_UTC.pdf
+
+        $currentDatetime = new \DateTime();
+        $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+        $fileUniqueName = $currentDatetimeTimestamp."-".$user->getUsernameOptimal()."-".$fileName;
+        $fileUniqueName = str_replace(" ","-",$fileUniqueName);
+        $fileUniqueName = str_replace(",","-",$fileUniqueName);
+        $fileUniqueName = str_replace("(","-",$fileUniqueName);
+        $fileUniqueName = str_replace(")","-",$fileUniqueName);
+
+        //$sourcePath = realpath($sourcePath);
+        $sourceFile = $sourcePath . DIRECTORY_SEPARATOR . $fileName;
+
+        //$destinationPath = realpath($destinationPath);
+        $destinationFile = $destinationPath . DIRECTORY_SEPARATOR . $fileUniqueName;
+
+        //copy $file to
+        if( file_exists($sourceFile) ) {
+            //echo "The file $file exists";
+            rename($sourceFile, $destinationFile);
+        } else {
+            //echo "The file $file does not exist";
+            exit("The file $sourceFile does not exist");
+        }
+
+        $filesize = filesize($destinationFile);
+        //echo "inputFileSize=".$inputFileSize."<br>";
+        if( !$filesize ) {
+            exit("Invalid file size for file=".$destinationFile);
+        }
+
+        $object = new Document($user);
+        $object->setCleanOriginalname($fileName);
+        $object->setUniquename($fileUniqueName);
+        $object->setUploadDirectory($destinationPath);         // "Uploaded/resapp/documents"
+        $object->setSize($filesize);
+
+        $documentTypeName = "Residency ERAS Document";
+        $documentErasType = $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($documentTypeName);
+        $object->setType($documentErasType);
+
+        //exit('exit upload listener');
+        $em->persist($object);
+        //$em->flush();
+
+        return $object;
     }
 
     //return created/updated array of DataResult objects existing in the Request

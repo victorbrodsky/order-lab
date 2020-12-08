@@ -2048,6 +2048,9 @@ class PdfUtil {
         }
         rmdir($dirPath);
     }
+    public function deletePublicDir($dirPath) {
+        $this->deleteDir($dirPath);
+    }
 
 
 
