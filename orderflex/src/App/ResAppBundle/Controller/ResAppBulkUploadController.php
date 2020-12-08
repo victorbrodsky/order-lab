@@ -136,14 +136,11 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $form->getClickedButton() === $form->get('upload') ) {
                 //exit("Extracting applications from CSV");
 
-                $pdfFilePaths = array();
-                $pdfFiles = array();
-                $pdfFileNames = array();
-                $inputFileName = NULL;
-
                 $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
                 $em->persist($inputDataFile);
                 $em->flush();
+
+                $processed = false;
 
                 //first run to process zip files
                 $files = $inputDataFile->getErasFiles();
@@ -170,20 +167,13 @@ class ResAppBulkUploadController extends OrderAbstractController
                             //$tempFiles = scandir($tempPath);
                             $tempFiles = array_diff(scandir($sourcePath), array('.', '..'));
 
-                            $processed = false;
-
                             foreach($tempFiles as $tempFile) {
-                                echo "tempFile=$tempFile <br>";
+                                //echo "tempFile=$tempFile <br>";
 
                                 //$ext = $tempFile->getExtension();
                                 $ext = pathinfo($tempFile, PATHINFO_EXTENSION);
 
-                                if ($ext == 'csv') {
-                                    //$fileDocument = $this->createDocument($file,$tempFile);
-                                    //$inputDataFile->addErasFile($fileDocument);
-                                    $this->createAndAddDocumentToInputDataFile($inputDataFile,$tempFile,$sourcePath,$destinationPath);
-                                    $processed = true;
-                                } elseif ($ext == 'pdf') {
+                                if( $ext == 'csv' || $ext == 'pdf' ) {
                                     $this->createAndAddDocumentToInputDataFile($inputDataFile,$tempFile,$sourcePath,$destinationPath);
                                     $processed = true;
                                 } elseif ($ext == 'zip') {
@@ -195,31 +185,42 @@ class ResAppBulkUploadController extends OrderAbstractController
                             //delete $tempPath and all containing files
                             $resappPdfUtil->deletePublicDir($sourcePath);
 
-                            if( $processed ) {
-
-                                //$files = $inputDataFile->getErasFiles();
-                                //echo "1 file count=" . count($files) . "<br>";
-
-                                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
-                                $em->persist($inputDataFile);
-                                $em->flush();
-                            }
-
                         } else {
                             //echo 'doh!';
                         }
-                    }
+                    }//if zip
+                }//foreach file step 1
+
+                if( $processed ) {
+                    //$files = $inputDataFile->getErasFiles();
+                    //echo "1 file count=" . count($files) . "<br>";
+
+                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
+                    $em->persist($inputDataFile);
+                    $em->flush();
                 }
 
                 //2) Final run to process all files in $inputDataFile (except zip files, because they were processed previously)
+                $pdfFilePaths = array();
+                $pdfFiles = array();
+                $pdfFileNames = array();
+                $inputFileName = NULL;
+
                 $files = $inputDataFile->getErasFiles();
-                echo "2 file count=" . count($files) . "<br>";
+                //echo "2 file count=" . count($files) . "<br>";
 
                 foreach ($files as $file) {
-                    echo "file=" . $file . "<br>";
+                    //echo "file=" . $file . "<br>";
                     $ext = $file->getExtension();
                     if ($ext == 'csv') {
-                        $inputFileName = $file->getFullServerPath();
+                        if( !$inputFileName ) {
+                            $inputFileName = $file->getFullServerPath();
+                        } else {
+                            $this->get('session')->getFlashBag()->add(
+                                'warning',
+                                "Multiple CSV files are not supported. CSV file ".$file->getOriginalName()." is ignored."
+                            );
+                        }
                     } elseif ($ext == 'pdf') {
                         $pdfFilePaths[] = $file->getFullServerPath();
                         $pdfFiles[] = $file;
@@ -228,6 +229,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                         //Ignore zip file because it was processed previously
                     }
                 }
+
+                //TODO: merge multiple CSV file
 
                 //echo "inputFileName=" . $inputFileName . "<br>";
                 //echo "pdfFilePaths count=" . count($pdfFilePaths) . "<br>";
@@ -269,7 +272,17 @@ class ResAppBulkUploadController extends OrderAbstractController
                     }
                     $em->remove($inputDataFile);
                     $em->flush();
+                    $processed = true;
                 }
+
+                //if( $processed ) {
+                    //recreate form with new files in $inputDataFile
+                    $form = $this->createForm(ResAppUploadType::class, $inputDataFile,
+                        array(
+                            'form_custom_value' => array()
+                        )
+                    );
+                //}
 
                 //Event Log
                 $eventType = 'Residency Application Bulk Upload';
@@ -297,7 +310,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if( count($updatedStrArr) > 0 ) {
                     foreach($updatedStrArr as $key=>$valueArr) {
-                        $updatedStr = $updatedStr . $key . ":<br>" . implode(", ",$valueArr) . "<br><br>";
+                        $updatedStr = $updatedStr . $key . ":<br>" . implode("; ",$valueArr) . "<br><br>";
                     }
                    //$updatedStr = implode("<br>",$updatedStrArr);
                     $this->get('session')->getFlashBag()->add(
@@ -349,7 +362,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $fileDocument = $this->createDocument($file,$sourcePath,$destinationPath);
         $inputDataFile->addErasFile($fileDocument);
         $em->flush();
-        echo "added document to inputDataFile=".$fileDocument->getId()."<br>";
+        //echo "added document to inputDataFile=".$fileDocument->getId()."<br>";
         return $fileDocument;
     }
     public function createDocument( $fileName, $sourcePath, $destinationPath ) {
@@ -989,9 +1002,9 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $erasDocument ) {
                 $residencyApplication->addCoverLetter($erasDocument);
                 $usedErasDocumentArr[$erasDocument->getId()] = true;
-                $addedPdfInfo = "; Added PDF ".$erasDocument->getOriginalname();
+                $addedPdfInfo = " (Added PDF ".$erasDocument->getOriginalname().")";
             } else {
-                $addedPdfInfo = "; PDF file is missing";
+                $addedPdfInfo = " (PDF file is missing)";
             }
 
             if( $seasonStartDateValue ) {

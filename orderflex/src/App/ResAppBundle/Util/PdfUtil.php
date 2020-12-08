@@ -491,8 +491,33 @@ class PdfUtil {
                     //Relax keys to identify matched PDF
                     $keysArr = array(
                         $rowArr["AAMC ID"]['value'],
-                        //$rowArr["Preferred Email"]['value']
+                        $rowArr["Preferred Email"]['value']
                     );
+
+                    if(
+                        isset($rowArr["First Name"]) && isset($rowArr["First Name"]['value']) &&
+                        isset($rowArr["Last Name"]) && isset($rowArr["Last Name"]['value'])
+                    ) {
+                        $keysArr[] = $rowArr["First Name"]['value'] . " " . $rowArr["Last Name"]['value'];
+                        $keysArr[] = $rowArr["Last Name"]['value'] . " " . $rowArr["First Name"]['value'];
+                    }
+
+                    if (isset($rowArr["USMLE ID"]) && isset($rowArr["USMLE ID"]['value'])) {
+                        $keysArr[] = $rowArr["USMLE ID"]['value'];
+                    }
+
+                    if (isset($rowArr["NBOME ID"]) && isset($rowArr["NBOME ID"]['value'])) {
+                        $keysArr[] = $rowArr["NBOME ID"]['value'];
+                    }
+
+                    if (isset($rowArr["NRMP ID"]) && isset($rowArr["NRMP ID"]['value'])) {
+                        $keysArr[] = $rowArr["NRMP ID"]['value'];
+                    }
+
+                    if (isset($rowArr["ERAS Application ID"]) && isset($rowArr["ERAS Application ID"]['value'])) {
+                        $keysArr[] = $rowArr["ERAS Application ID"]['value'];
+                    }
+
                 } else {
                     //Strict keys to identify matched PDF
                     $keysArr = array(
@@ -508,8 +533,9 @@ class PdfUtil {
                     }
                 }
 
-                ////////////// Try to get ERAS Application ID //////////////////
-                $pdfFile = $this->findPdfByInfoArr($pdfInfoArr,$keysArr);
+                ////////////// Try to find match between application and PDF files (by ERAS Application ID?) //////////////////
+                //$pdfFile = $this->findPdfByInfoArrByAllKeys($pdfInfoArr,$keysArr);
+                $pdfFile = $this->findPdfByInfoArrByAnyKeys($pdfInfoArr,$keysArr);
                 if( $pdfFile ) {
                     //echo "!!!! found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                     $usedPdfArr[$pdfFile->getId()] = true;
@@ -526,7 +552,7 @@ class PdfUtil {
                 } else {
                     //echo "Not found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                 }
-                ////////////// EOF Try to get ERAS Application ID //////////////////
+                ////////////// EOF Try to find match between application and PDF files (by ERAS Application ID?) //////////////////
 
                 ////////////// check for duplicate //////////////////
                 $duplicateRes = $this->checkDuplicate($rowArr,$handsomtableJsonData);
@@ -1267,7 +1293,25 @@ class PdfUtil {
 
         return $pdfInfoArr;
     }
-    public function findPdfByInfoArr( $pdfInfoArr, $keysArr ) {
+    public function findPdfByInfoArrByAnyKeys($pdfInfoArr, $keysArr) {
+        foreach( $pdfInfoArr as $fileId=>$pdfFileArr ) {
+            $pdfFile = $pdfFileArr['file'];
+            $pdfText = $pdfFileArr['text'];
+            if( $pdfText ) {
+                foreach ($keysArr as $keyStr) {
+                    if( $keyStr ) {
+                        if( strpos($pdfText, $keyStr) !== false ) {
+                            //echo $pdfOriginalName. ": " . $keyStr." found<br>";
+                            return $pdfFile;
+                        }
+                    }
+                }
+            }
+        }
+
+        return NULL;
+    }
+    public function findPdfByInfoArrByAllKeys( $pdfInfoArr, $keysArr ) {
         foreach( $pdfInfoArr as $fileId=>$pdfFileArr ) {
             $pdfFile = $pdfFileArr['file'];
             //$pdfOriginalName = $pdfFileArr['originalName'];

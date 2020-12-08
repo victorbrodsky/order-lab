@@ -47,6 +47,7 @@ var _actions_duplicate = []; //action with "Update" only
 //var _tdSize = 64;
 //var _tdSize = 26;
 var _tdSize = 36;
+//var _tdSize = 56;
 var _tdPadding = 5;
 var _rowHeight =  _tdSize + 2*_tdPadding;
 
