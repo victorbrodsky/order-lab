@@ -51,12 +51,21 @@
     </p>
 
     {% for interview in interviews %}
+
+        {#Indicate if form has been already filled out#}
+        {#{% if interview.isEmpty() %}#}
+            {#{% set formStatus = "" %}#}
+        {#{% else %}#}
+            {#{% set formStatus = " (Not empty)" %}#}
+        {#{% endif %}#}
+
         <p>
             {% if cycle == "edit" %}
                 <a target="_blank" href="{{ path('resapp_interview_edit',{'id':interview.id}) }}">The ONLINE EVALUATION FORM for {{ interview.getInterviewerInfo() }}</a>
             {% else %}
                 <a target="_blank" href="{{ path('resapp_interview_show',{'id':interview.id}) }}">The ONLINE EVALUATION FORM for {{ interview.getInterviewerInfo() }}</a>
             {% endif %}
+            {{ interview.formStatus() }}
         </p>
     {% endfor %}
 

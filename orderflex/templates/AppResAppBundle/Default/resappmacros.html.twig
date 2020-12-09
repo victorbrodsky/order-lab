@@ -57,6 +57,11 @@
 
         {{ formmacros.field(forminterview.interviewer) }}
 
+        {#add submitter if exists (Submitted by)#}
+        {% if forminterview.vars.value and forminterview.vars.value.submitter and forminterview.vars.value.interviewer.id != forminterview.vars.value.submitter.id %}
+            {{ formmacros.simplefield("Submitted by:", forminterview.vars.value.submitter, "input", "disabled") }}
+        {% endif %}
+
         {{ formmacros.field(forminterview.location) }}
 
         {{ formmacros.fieldDateLabel(forminterview.interviewDate,'allow-future-date') }}
@@ -401,9 +406,17 @@
         {% if not interview.totalRank %}
             {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
         {% else %}
+
+            {#add submitter if exists (Submitted by)#}
+            {% if interview.submitter and interview.interviewer.id != interview.submitter.id %}
+                {% set submitterInfo = " (submitted by "~interview.submitter.getUsernameOptimal()~")" %}
+            {% else %}
+                {% set submitterInfo = "" %}
+            {% endif %}
+
             {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
             {% set interviewDescrStr =
-            interviewerUrl~":<br>"~
+            interviewerUrl~submitterInfo~":<br>"~
             "Academic Score - "~interview.academicRank~
             "<br>Personality Score - "~interview.personalityRank~
             "<br>Overall Potential Score - "~interview.potentialRank~

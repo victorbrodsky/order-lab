@@ -68,6 +68,11 @@
             Your evaluation was received and is shown above. <br>
             If you have any questions or would like to make any changes, please email the residency coordinator.
         </div>
+
+        {#add submitter if exists (Submitted by)#}
+        {% if entity.submitter and entity.interviewer.id != entity.submitter.id %}
+            <p>Submitted by {{ entity.submitter.getUsernameOptimal() }}</p>
+        {% endif %}
     {% endif %}
 
     {% if cycle == 'edit' %}
@@ -78,6 +83,11 @@
         <br>
         Thank you for your feedback, {{ app.user.getUsernameOptimal() }}
         <br>
+
+        {#add submitter if different from interviewer#}
+        {% if entity.interviewer.id != app.user.id %}
+            <p>Submit evaluation on behalf of an interviewer {{ entity.interviewer.getUsernameOptimal() }}</p>
+        {% endif %}
 
     {% endif %}
 

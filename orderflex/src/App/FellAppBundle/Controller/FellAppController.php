@@ -2073,8 +2073,8 @@ class FellAppController extends OrderAbstractController {
         $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $resapp = $interview->getResapp();
-        $applicant = $resapp->getUser();
+        $fellapp = $interview->getFellapp();
+        $applicant = $fellapp->getUser();
         $interviewer = $interview->getInterviewer();
 
         if( !$interview ) {
@@ -2134,8 +2134,6 @@ class FellAppController extends OrderAbstractController {
 
             //Set an actual submitter of the scores
             $interview->setSubmitter($user);
-
-            $fellapp = $interview->getFellapp();
 
             $this->calculateScore($fellapp);
             

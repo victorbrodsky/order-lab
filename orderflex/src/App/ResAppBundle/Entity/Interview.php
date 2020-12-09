@@ -416,4 +416,17 @@ class Interview {
         return $res;
     }
 
+    public function isEmpty() {
+        if( $this->getTotalRank() ) {
+            return false;
+        }
+
+        return true;
+    }
+    public function formStatus() {
+        if( !$this->isEmpty() ) {
+            return " (submitted)";
+        }
+        return NULL;
+    }
 } 
