@@ -2068,6 +2068,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
 
@@ -2075,10 +2076,11 @@ class FellAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
-        //check if the interviewer is the same as current user
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        if( $user->getId() != $interview->getInterviewer()->getId() ) {
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        //check if the interviewer is the same as current user (except Admin)
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            if ($user->getId() != $interview->getInterviewer()->getId()) {
+                return $this->redirect($this->generateUrl('fellapp-nopermission'));
+            }
         }
 
         $cycle = 'edit';
