@@ -2068,17 +2068,27 @@ class FellAppController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $resapp = $interview->getResapp();
+        $applicant = $resapp->getUser();
+        $interviewer = $interview->getInterviewer();
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
         //check if the interviewer is the same as current user (except Admin)
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
-            if ($user->getId() != $interview->getInterviewer()->getId()) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')
+        ){
+            //allow
+        } else {
+            if( $user->getId() != $interviewer->getId() ) {
                 return $this->redirect($this->generateUrl('fellapp-nopermission'));
             }
         }
@@ -2092,7 +2102,7 @@ class FellAppController extends OrderAbstractController {
             'cycle' => $cycle,
             'container' => $this->container,
             'em' => $em,
-            'interviewer' => $interview->getInterviewer(),
+            'interviewer' => $interviewer,
             'showFull' => false
         );
         $form = $this->createForm(
@@ -2116,12 +2126,14 @@ class FellAppController extends OrderAbstractController {
 
         if( $form->isValid() && $formCompleted ) {
 
-//            $interviewer = $interview->getInterviewer();
 //            echo "interviewer=".$interviewer."<br>";
 //            if( !$interviewer ) {
 //                exit('no interviewer');
 //            }
 //            exit('1');
+
+            //Set an actual submitter of the scores
+            $interview->setSubmitter($user);
 
             $fellapp = $interview->getFellapp();
 
@@ -2136,15 +2148,23 @@ class FellAppController extends OrderAbstractController {
             $em->persist($interview);
             $em->flush();
 
-
-            $applicant = $fellapp->getUser();
+            ////// Event Log //////
             $eventType = 'Fellowship Interview Evaluation Updated';
-            $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.token_storage')->getToken()->getUser();
-            //$event = $eventType . '; application ID ' . $fellapp->getId();
-            $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
-            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
 
+            //if the submitting user is different from the intended interviewer, append a sentence
+            //"Submitted on behalf of [InterviewerFirstName InterviewerLastName] by [UserFirstName UserLastName]"
+            if( $user->getId() == $interviewer->getId() ) {
+                $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().
+                    ' (ID: '.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
+            } else {
+                $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().')'.
+                    ' has been submitted on behalf of ' . $interviewer->getUsernameOptimal() .
+                    ' by ' . $user->getUsernameOptimal();
+            }
+            
+            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
+            ////// EOF Event Log //////
+            
             //return $this->redirect( $this->generateUrl('fellapp_home'));
 
             $this->get('session')->getFlashBag()->add(

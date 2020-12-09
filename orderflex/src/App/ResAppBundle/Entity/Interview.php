@@ -52,6 +52,13 @@ class Interview {
      */
     private $resapp;
 
+    /**
+     * actual submitter of the scores
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="submitter_id", referencedColumnName="id")
+     */
+    private $submitter;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
@@ -350,6 +357,24 @@ class Interview {
     {
         $this->fitForProgram = $fitForProgram;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmitter()
+    {
+        return $this->submitter;
+    }
+
+    /**
+     * @param mixed $submitter
+     */
+    public function setSubmitter($submitter)
+    {
+        $this->submitter = $submitter;
+    }
+    
+    
 
 
     public function __toString() {

@@ -2167,10 +2167,13 @@ class ResAppController extends OrderAbstractController {
         ){
             //allow
         } else {
-            if ($user->getId() != $interviewerId) {
+            if( $user->getId() != $interviewerId ) {
                 return $this->redirect($this->generateUrl('resapp-nopermission'));
             }
         }
+
+        //Set an actual submitter of the scores
+        //$interview->setSubmitter($user);
 
         if( $routeName == "resapp_interview_edit" && $interview->getTotalRank() && $interview->getTotalRank() > 0 ) {
             return $this->redirect( $this->generateUrl('resapp_interview_show',array('id' => $interview->getId())) );
@@ -2229,25 +2232,32 @@ class ResAppController extends OrderAbstractController {
 
         //echo "status <br>";
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_INTERVIEWER') ){
-//            return $this->redirect( $this->generateUrl('resapp-nopermission') );
-//        }
         if( false == $this->get('security.authorization_checker')->isGranted("create","Interview") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $interview = $em->getRepository('AppResAppBundle:Interview')->find($id);
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $resapp = $interview->getResapp();
+        $applicant = $resapp->getUser();
+        $interviewer = $interview->getInterviewer();
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Residency Application Interview by id='.$id);
         }
 
         //check if the interviewer is the same as current user (except Admin)
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
-            if ($user->getId() != $interview->getInterviewer()->getId()) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+        ){
+            //allow
+        } else {
+            if( $user->getId() != $interviewer->getId() ) {
                 return $this->redirect($this->generateUrl('resapp-nopermission'));
             }
         }
@@ -2261,7 +2271,7 @@ class ResAppController extends OrderAbstractController {
             'cycle' => $cycle,
             'container' => $this->container,
             'em' => $em,
-            'interviewer' => $interview->getInterviewer(),
+            'interviewer' => $interviewer,
             'showFull' => false
         );
         $form = $this->createForm(
@@ -2285,14 +2295,14 @@ class ResAppController extends OrderAbstractController {
 
         if( $form->isValid() && $formCompleted ) {
 
-//            $interviewer = $interview->getInterviewer();
 //            echo "interviewer=".$interviewer."<br>";
 //            if( !$interviewer ) {
 //                exit('no interviewer');
 //            }
 //            exit('1');
 
-            $resapp = $interview->getResapp();
+            //Set an actual submitter of the scores
+            $interview->setSubmitter($user);
 
             $this->calculateScore($resapp); // /interview/update/{id}
             
@@ -2305,16 +2315,22 @@ class ResAppController extends OrderAbstractController {
             $em->persist($interview);
             $em->flush();
 
-
-            $applicant = $resapp->getUser();
+            ////// Event Log //////
             $eventType = 'Residency Interview Evaluation Updated';
-            $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.token_storage')->getToken()->getUser();
-            //$event = $eventType . '; application ID ' . $resapp->getId();
-            $event = 'Residency Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$resapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
-            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$resapp,$request,$eventType);
 
-            //return $this->redirect( $this->generateUrl('resapp_home'));
+            //if the submitting user is different from the intended interviewer, append a sentence
+            //"Submitted on behalf of [InterviewerFirstName InterviewerLastName] by [UserFirstName UserLastName]"
+            if( $user->getId() == $interviewer->getId() ) {
+                $event = 'Residency Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$resapp->getId().')'.
+                    ' has been submitted by ' . $user->getUsernameOptimal();
+            } else {
+                $event = 'Residency Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$resapp->getId().')'.
+                    ' has been submitted on behalf of ' . $interviewer->getUsernameOptimal() .
+                    ' by ' . $user->getUsernameOptimal();
+            }
+
+            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$resapp,$request,$eventType);
+            ////// EOF Event Log //////
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
