@@ -581,7 +581,7 @@ class PdfUtil {
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
 
                                 $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
-                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "previously uploaded PDF differs";
+                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "new PDF"; //"previously uploaded PDF differs";
                             }
                         }
 
@@ -1065,7 +1065,8 @@ class PdfUtil {
                         $rowArr['Action']['id'] = $foundResapp->getId();
 
                         $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
+                        //$rowArr['Issue']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
+                        $rowArr['Issue']['value'] = "No match in CSV, new PDF"; //match not found in CSV file
                     } else {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
@@ -1253,14 +1254,16 @@ class PdfUtil {
 
             //check the most recent ERAS (getRecentCoverLetter)
             $recentFile = $duplicateResapp->getRecentCoverLetter();
-            $recentFileHash = $this->getDocumentHash($recentFile);
-            $recentFileSize = $recentFile->getSize();
-            //echo "compare eras hash: ".$pdfFile->getOriginalnameClean()."[$thisHash]?=".$recentFile->getOriginalnameClean()."[$recentFileHash] <br>";
-            if( $thisHash && $recentFileHash && hash_equals($thisHash,$recentFileHash) ) {
-                //echo "document eras match <br>";
-                //echo "compare eras size: ".$pdfFile->getOriginalnameClean()."[$thisSize]?=".$recentFile->getOriginalnameClean()."[$recentFileSize] <br>";
-                if( $thisSize && $recentFileSize && $thisSize == $recentFileSize ) {
-                    return true;
+            if( $recentFile ) {
+                $recentFileHash = $this->getDocumentHash($recentFile);
+                $recentFileSize = $recentFile->getSize();
+                //echo "compare eras hash: ".$pdfFile->getOriginalnameClean()."[$thisHash]?=".$recentFile->getOriginalnameClean()."[$recentFileHash] <br>";
+                if ($thisHash && $recentFileHash && hash_equals($thisHash, $recentFileHash)) {
+                    //echo "document eras match <br>";
+                    //echo "compare eras size: ".$pdfFile->getOriginalnameClean()."[$thisSize]?=".$recentFile->getOriginalnameClean()."[$recentFileSize] <br>";
+                    if ($thisSize && $recentFileSize && $thisSize == $recentFileSize) {
+                        return true;
+                    }
                 }
             }
         }

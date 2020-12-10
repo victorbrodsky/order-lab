@@ -56,36 +56,35 @@ var _columnData_scanorder = [];
 
 function resappDisableRow(row,status) {
     if( _sotable ) {
+
+        //var addClass = 'ht-validation-add';
+        //var updateClass = 'ht-validation-update';
+        //var dontaddClass = 'ht-validation-dontadd';
+
         var columnsLen = _columnData_scanorder.length;
-        console.log("columnsLen=" + columnsLen + ", row=" + row);
+        //console.log("columnsLen=" + columnsLen + ", row=" + row);
         for (var j = 1; j < columnsLen; j++) {
             //console.log("columns j=" + j);
             if( status == 'disable' ) {
                 _sotable.getCellMeta(row, j).readOnly = true;
+                //_sotable.getCellMeta(row, j).backgroundColor = dontaddClass;
+                //_sotable.setCellMeta(row, j, 'className','dontaddClass');
+                //$(_sotable.getCell(row, j)).css({"background-color": "#F2DEDE"})
             }
             if( status == 'enable' ) {
                 _sotable.getCellMeta(row, j).readOnly = false;
+                //_sotable.getCellMeta(row, j).backgroundColor = addClass;
+                //_sotable.setCellMeta(row, j, 'className','addClass');
+                //$(_sotable.getCell(row, j)).css({"background-color": "lightgreen"})
             }
         }
     }
 }
-
 var actionRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-    console.log("row="+row+", col="+col+",value="+value);
+    //console.log("row="+row+", col="+col+",value="+value);
 
     Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
 
-    //TODO: lock all the other fields in that row
-    //console.log("actionRenderer value="+value);
-    //resappDisableRow(row);
-
-    // if( !validateActionCell(row,col,value) ) {
-    //     console.log('add error');
-    //     $(td).addClass('ht-validation-error');
-    // } else {
-    //     console.log('remove error');
-    //     $(td).removeClass('ht-validation-error');
-    // }
     var addClass = 'ht-validation-add';
     var updateClass = 'ht-validation-update';
     var dontaddClass = 'ht-validation-dontadd';
@@ -129,8 +128,9 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).removeClass(addClass);
         $(td).removeClass(dontaddClass);
 
-        //TODO: lock all the other fields in that row
         resappDisableRow(row,'disable');
+
+        //TODO: enable field "ERAS Application ID" if empty
     }
     if( value+"" == "Create New Record" ) {
         //return false;
@@ -146,6 +146,16 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).removeClass(dontaddClass);
 
         resappDisableRow(row,'enable');
+    }
+
+    //Add to ...
+    //if( value.indexOf("Add to ") !== -1 ) {
+    if( value && value.includes("Add to ") ) {
+        $(td).addClass(updateClass);
+        $(td).removeClass(addClass);
+        $(td).removeClass(dontaddClass);
+
+        resappDisableRow(row,'disable');
     }
 
     //if( col != 0 ) {
