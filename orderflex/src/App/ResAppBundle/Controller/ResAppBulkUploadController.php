@@ -293,7 +293,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             } //Clicked Upload
             //Add applications or PDF
             elseif( $form->getClickedButton() === $form->get('addbtn') ) {
-                //exit("Adding Application to be implemented");
+                //exit("Adding Application to the system");
 
                 //$user = $this->get('security.token_storage')->getToken()->getUser();
 

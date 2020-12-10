@@ -400,8 +400,11 @@ class Interview {
         return true;
     }
     public function formStatus() {
+        //return NULL;
+        //$submitted = " (submitted)";
+        $submitted = '<span class="glyphicon glyphicon-ok" style="color:#50C878"></span>&nbsp;';
         if( !$this->isEmpty() ) {
-            return " (submitted)";
+            return $submitted;
         }
         return NULL;
     }

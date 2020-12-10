@@ -54,10 +54,30 @@ var _rowHeight =  _tdSize + 2*_tdPadding;
 //total 33
 var _columnData_scanorder = [];
 
+function resappDisableRow(row,status) {
+    if( _sotable ) {
+        var columnsLen = _columnData_scanorder.length;
+        console.log("columnsLen=" + columnsLen + ", row=" + row);
+        for (var j = 1; j < columnsLen; j++) {
+            //console.log("columns j=" + j);
+            if( status == 'disable' ) {
+                _sotable.getCellMeta(row, j).readOnly = true;
+            }
+            if( status == 'enable' ) {
+                _sotable.getCellMeta(row, j).readOnly = false;
+            }
+        }
+    }
+}
 
 var actionRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    console.log("row="+row+", col="+col+",value="+value);
+
     Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-    //console.log("row="+row+", col="+col+",value="+value);
+
+    //TODO: lock all the other fields in that row
+    //console.log("actionRenderer value="+value);
+    //resappDisableRow(row);
 
     // if( !validateActionCell(row,col,value) ) {
     //     console.log('add error');
@@ -93,6 +113,9 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).addClass(dontaddClass);
         $(td).removeClass(addClass);
         $(td).removeClass(updateClass);
+
+        //console.log("actionRenderer: Do not add");
+        resappDisableRow(row,'disable'); //testing
     }
     if( value+"" == "Update PDF & ID Only" ) {
         //var cellClass = "ht-validation-update";
@@ -107,6 +130,7 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).removeClass(dontaddClass);
 
         //TODO: lock all the other fields in that row
+        resappDisableRow(row,'disable');
     }
     if( value+"" == "Create New Record" ) {
         //return false;
@@ -120,6 +144,8 @@ var actionRenderer = function (instance, td, row, col, prop, value, cellProperti
         $(td).addClass(addClass);
         $(td).removeClass(updateClass);
         $(td).removeClass(dontaddClass);
+
+        resappDisableRow(row,'enable');
     }
 
     //if( col != 0 ) {
@@ -244,8 +270,10 @@ function ajaxFinishedCondition() {
     if( _actions_simple.length == 0 ) {
         _actions_simple.push("Do not add");
         _actions_simple.push("Create New Record");
-        //_actions_simple.push("Update PDF & ID Only");
+
+        //_actions_simple.push("Update PDF & ID Only"); //testing: remove for prod
         //_actions_simple.push(null);
+
         done++;
     }
 
