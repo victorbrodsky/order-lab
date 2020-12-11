@@ -111,6 +111,31 @@ class ResappSiteParameterType extends AbstractType
             )
         ));
 
+//        $builder->add('defaultResidencyTrack',null,array(
+//            'label'=>'Default Residency Track for Bulk Import:',
+//            'attr' => array(
+//                'class'=>'form-control form-control-modif',
+//                'style'=>'margin:0',
+//            )
+//        ));
+        $builder->add('defaultResidencyTrack', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+            'choice_label' => 'name',
+            'label' => 'Default Residency Track for Bulk Import:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
         $builder->add('dataExtractionAnchor',null,array(
             'label'=>'Data Extraction Anchors in json format ([{"field":"Applicant ID:","startAnchor":"Applicant ID:","endAnchor":["AAMC ID:","Email:"],"minLength":10,"length":11,"maxLength":11},...]):',
             'attr' => array(

@@ -2220,6 +2220,23 @@ class ResAppUtil {
         return $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyTypeId);
     }
 
+    public function getDefaultResidencyTrack() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $defaultResidencyTrack = $userSecUtil->getSiteSettingParameter('defaultResidencyTrack',$this->container->getParameter('resapp.sitename'));
+        //echo "1defaultResidencyTrack=$defaultResidencyTrack <br>";
+        if( !$defaultResidencyTrack ) {
+            $residencyTracks = $this->em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findAll();
+            if( count($residencyTracks) > 0 ) {
+                $defaultResidencyTrack = $residencyTracks[0];
+            }
+        }
+        if( $defaultResidencyTrack ) {
+            //echo "2defaultResidencyTrack=$defaultResidencyTrack <br>";
+            return $defaultResidencyTrack->getId();
+        }
+        return NULL;
+    }
+
     public function getEthnicities( $entity=NULL, $cycle=NULL ) {
 //        $ethnicities = array(
 //            "Black or African American" => "Black or African American",

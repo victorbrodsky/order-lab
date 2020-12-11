@@ -348,12 +348,19 @@ class ResAppBulkUploadController extends OrderAbstractController
             $withdata = true;
         }
 
+        //testing
+        //$resappUtil = $this->container->get('resapp_util');
+        //$defaultResidencyTrackId = $resappUtil->getDefaultResidencyTrack();
+        //echo "defaultResidencyTrackId=$defaultResidencyTrackId <br>";
+        //exit('111');
+
         return array(
             'form' => $form->createView(),
             'cycle' => $cycle,
             'inputDataFile' => $inputDataFile,
             'handsometableData' => $handsomtableJsonData,
-            'withdata' => $withdata
+            'withdata' => $withdata,
+            //'defaultResidencyTrack' => $defaultResidencyTrack
         );
     }
 

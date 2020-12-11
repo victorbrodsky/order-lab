@@ -249,8 +249,15 @@ class ResappSiteParameter {
      */
     private $dataExtractionAnchor;
     
-    
-    
+    /**
+     * Default Residency Track for Bulk Import
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ResidencyTrackList", cascade={"persist"})
+     */
+    private $defaultResidencyTrack;
+
+
+
     public function __construct() {
 
     }
@@ -465,6 +472,22 @@ class ResappSiteParameter {
     public function setDataExtractionAnchor($dataExtractionAnchor)
     {
         $this->dataExtractionAnchor = $dataExtractionAnchor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultResidencyTrack()
+    {
+        return $this->defaultResidencyTrack;
+    }
+
+    /**
+     * @param mixed $defaultResidencyTrack
+     */
+    public function setDefaultResidencyTrack($defaultResidencyTrack)
+    {
+        $this->defaultResidencyTrack = $defaultResidencyTrack;
     }
 
 

@@ -398,9 +398,12 @@ function ajaxFinishedCondition() {
 function resappMakeColumnData() {
 
     var defaultActionIndex = 0;
-    var defaultResidencytrackIndex = 1;
     var defaultEthnicityIndex = 0;
-    //var defaultResidencytrack = $('#default-accession-type').val();
+
+    var defaultResidencytrackIndex = 1;
+    //var defaultResidencytrackIndex = $('#default-residency-track').val();
+    console.log("defaultResidencytrackIndex="+defaultResidencytrackIndex);
+
     //console.log("Residencytrack="+Residencytrack);
     // if( Residencytrack ) {
     //     for(var i = 0; i < _accessiontypes_simple.length; i++) {
