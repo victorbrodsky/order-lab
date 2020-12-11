@@ -5955,6 +5955,7 @@ class AdminController extends OrderAbstractController
             'priority'=>'Priority',
             'archive'=>'Archived',
             'accepted'=>'Accepted',
+            'declined'=>'Declined',
             'acceptedandnotified'=>'Accepted and Notified',
             'rejectedandnotified'=>'Rejected and Notified'
 

@@ -189,6 +189,7 @@ class FellAppController extends OrderAbstractController {
         $interviewee = $filterform['interviewee']->getData();
         $active = $filterform['active']->getData();
         $reject = $filterform['reject']->getData();
+        $declined = $filterform['declined']->getData();
         //$onhold = $filterform['onhold']->getData();
         $priority = $filterform['priority']->getData();
 
@@ -362,6 +363,11 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
+        if( $declined ) {
+            $orWhere[] = "appStatus.name = 'declined'";
+            $searchFlag = true;
+        }
+
 //        if( $onhold ) {
 //            $orWhere[] = "appStatus.name = 'onhold'";
 //            $searchFlag = true;
@@ -481,6 +487,9 @@ class FellAppController extends OrderAbstractController {
         $reject = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId,$startYearStr);
         $rejectTotal = $fellappUtil->getFellAppByStatusAndYear('reject',$fellSubspecId);
 
+        $declined = $fellappUtil->getFellAppByStatusAndYear('declined',$fellSubspecId,$startYearStr);
+        $declinedTotal = $fellappUtil->getFellAppByStatusAndYear('declined',$fellSubspecId);
+
         //$onhold = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId,$startYearStr);
         //$onholdTotal = $fellappUtil->getFellAppByStatusAndYear('onhold',$fellSubspecId);
 
@@ -569,6 +578,8 @@ class FellAppController extends OrderAbstractController {
             'activeTotal' => count($activeTotal),
             'reject' => count($reject),
             'rejectTotal' => count($rejectTotal),
+            'declined' => count($declined),
+            'declinedTotal' => count($declinedTotal),
             //'onhold' => count($onhold),
             //'onholdTotal' => count($onholdTotal),
             'priority' => count($priority),
@@ -2653,7 +2664,7 @@ class FellAppController extends OrderAbstractController {
         $processes = $em->getRepository('AppFellAppBundle:Process')->findAll();
         $processInfoArr = array();
         foreach($processes as $processe) {
-            $processInfoArr[] = $processe->getResappId();
+            $processInfoArr[] = $processe->getFellappId();
         }
         $processInfoStr = NULL;
         if( count($processInfoArr) > 0 ) {

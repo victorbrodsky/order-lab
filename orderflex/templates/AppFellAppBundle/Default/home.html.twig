@@ -280,6 +280,22 @@
                     &nbsp;&nbsp;
 
                     <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.declined) }}   {{ form_label(fellappfilter.declined) }}
+                        {#{{ fellappmacros.addBadge( filter, seasonStartYear, declined, declinedTotal, 'declined' ) }}#}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[declined]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ declined }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[declined]':1,'filter[filter]':filter}) }}">{{ declinedTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('declined') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
                         {{ form_widget(fellappfilter.reject) }}   {{ form_label(fellappfilter.reject) }}
                         {#{{ fellappmacros.addBadge( filter, currentYear, reject, rejectTotal, 'reject' ) }}#}
                         <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
@@ -476,6 +492,9 @@
                 {% endif %}
                 {% if entity.appStatus.name == 'rejectedandnotified' %}
                     {% set trclassname = "fell-app-status-legend-rejectedandnotified" %}
+                {% endif %}
+                {% if entity.appStatus.name == 'declined' %}
+                    {% set trclassname = "fell-app-status-legend-declined" %}
                 {% endif %}
                 {#EOF Set row color#}
 
@@ -1014,6 +1033,16 @@
                                                     </a>
                                                 {% endif %}
 
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'declined' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Declined'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}">Decline
+                                                </a>
                                             </li>
                                         {% endif %}
 

@@ -113,7 +113,7 @@ class ReportGenerator {
     }
     public function getFellApplicationsByYear($startYearStr) {
 
-        $repository = $this->em->getRepository('AppResAppBundle:FellowshipApplication');
+        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql = $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
 

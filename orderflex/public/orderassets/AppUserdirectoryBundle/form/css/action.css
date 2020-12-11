@@ -109,6 +109,10 @@
     background: #c0e3fa;
 }
 
+.fell-app-status-legend-declined {
+    background: #b08800;
+}
+
 .fell-app-status-legend-accepted {
     /*background: #3c89bd;*/
     background: #439AD4;
