@@ -2225,14 +2225,14 @@ class ResAppUtil {
         $defaultResidencyTrack = $userSecUtil->getSiteSettingParameter('defaultResidencyTrack',$this->container->getParameter('resapp.sitename'));
         //echo "1defaultResidencyTrack=$defaultResidencyTrack <br>";
         if( !$defaultResidencyTrack ) {
-            $residencyTracks = $this->em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findAll();
+            $residencyTracks = $this->em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findBy(array(), array('orderinlist' => 'ASC'));
             if( count($residencyTracks) > 0 ) {
                 $defaultResidencyTrack = $residencyTracks[0];
             }
         }
         if( $defaultResidencyTrack ) {
             //echo "2defaultResidencyTrack=$defaultResidencyTrack <br>";
-            return $defaultResidencyTrack->getId();
+            return $defaultResidencyTrack->getName();
         }
         return NULL;
     }

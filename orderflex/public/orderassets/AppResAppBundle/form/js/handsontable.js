@@ -400,19 +400,19 @@ function resappMakeColumnData() {
     var defaultActionIndex = 0;
     var defaultEthnicityIndex = 0;
 
+    //get default residency track
     var defaultResidencytrackIndex = 1;
-    //var defaultResidencytrackIndex = $('#default-residency-track').val();
-    console.log("defaultResidencytrackIndex="+defaultResidencytrackIndex);
-
-    //console.log("Residencytrack="+Residencytrack);
-    // if( Residencytrack ) {
-    //     for(var i = 0; i < _accessiontypes_simple.length; i++) {
-    //         //console.log(_accessiontypes_simple[i]+"=?"+Residencytrack);
-    //         if( _accessiontypes_simple[i] == Residencytrack ) {
-    //             ResidencytrackIndex = i;
-    //         }
-    //     }
-    // }
+    var defaultResidencytrackDefault = $('#default-residency-track').val();
+    //console.log("defaultResidencytrackDefault="+defaultResidencytrackDefault);
+    if( defaultResidencytrackDefault ) {
+        for(var i = 0; i < _residencytracks_simple.length; i++) {
+            //console.log(_accessiontypes_simple[i]+"=?"+Residencytrack);
+            if( _residencytracks_simple[i] == defaultResidencytrackDefault ) {
+                defaultResidencytrackIndex = i;
+            }
+        }
+    }
+    // var defaultResidencytrackIndex = 1;
 
     //$year = $this->getYear($cellValue);
     //$cellValue = "07/01/".$year;
@@ -1024,7 +1024,7 @@ function resizeTableHeight_new() {
 // }
 
 function resappValidateHandsonTable() {
-    console.log("resapp validateHandsonTable");
+    //console.log("resapp validateHandsonTable");
 
     if( !_sotable ) {
         return "Logical Error: table does not exists";
