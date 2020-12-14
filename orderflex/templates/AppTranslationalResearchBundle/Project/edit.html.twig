@@ -24,6 +24,13 @@
 
     <div id="add-new-user-modal-prototype"></div>
 
+    {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% if messageToUsers is defined and messageToUsers %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h5>
+    {% endif %}
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
