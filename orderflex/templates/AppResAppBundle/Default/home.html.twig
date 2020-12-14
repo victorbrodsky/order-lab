@@ -1375,6 +1375,8 @@
 
             //onInterviewModalShow();
 
+            resappResetStartDate();
+
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
             //var datas = [
@@ -1391,6 +1393,37 @@
             //console.log('year='+year);
 
         });
+
+        //reset to null applicationSeasonStartDates or startDates if one of them is changed
+        //These start date fields can have multiple values, therefore it is not logical to recalculate the other start value
+        //it is more logical to reset the other start date to null
+        function resappResetStartDate() {
+            $(document.body).on("change",".datepicker-startDates",function(){
+                //alert(this.value);
+                console.log("select2 value=" + this.value);
+                if( this.value ) {
+                    resappSetStartDateValue(".datepicker-applicationSeasonStartDates");
+                }
+            });
+
+            $(document.body).on("change",".datepicker-applicationSeasonStartDates",function(){
+                //alert(this.value);
+                console.log("select2 value=" + this.value);
+                if( this.value ) {
+                    resappSetStartDateValue(".datepicker-startDates");
+                }
+            });
+
+//            $(document.body).on("change",".datepicker-startDates, .datepicker-applicationSeasonStartDates",function(){
+//                alert(this.value);
+//            });
+        }
+        function resappSetStartDateValue( identifier ) {
+            console.log("Set select2 to null. identifier=" + identifier);
+            //$("."+className).val(null);
+            //$("."+className).trigger('change'); // Notify any JS components that the value changed
+            $(identifier).select2('val', null);
+        }
 
         //I think the "Filter" button needs to turn green if any of the fields
         // in the filter well are modified. When the "Filter" button is pressed
