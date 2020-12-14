@@ -108,12 +108,19 @@ class ResAppController extends OrderAbstractController {
 
         $enableGoolge = false;
         $searchFlag = false;
-        //$currentYear = date("Y")+2;
-        $currentYear = date("Y")+1;
-        $defaultStartDates = $currentYear;
 
-        $applicationSeasonStartDate = date("Y");
-        $defaultApplicationSeasonStartDates = $applicationSeasonStartDate;
+        //Application Season Start Year (applicationSeasonStartDates):
+        //current year if current date is between July 1st and December 31st (inclusive) or
+        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
+        $currentYear = date("Y")+1;
+        //$defaultStartDates = $currentYear;
+
+        //$applicationSeasonStartDate = date("Y");
+        //$defaultApplicationSeasonStartDates = $applicationSeasonStartDate;
+
+        $datesArr = $resappUtil->getDefaultStartDates();
+        $defaultStartDates = $datesArr['Residency Start Year'];
+        $defaultApplicationSeasonStartDates = $datesArr['Application Season Start Year'];
 
         $residencyTypes = $resappUtil->getResidencyTypesByUser($user);
         //echo "residencyTypes count=".count($residencyTypes)."<br>";
@@ -245,7 +252,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
-                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -267,7 +274,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route, //'resapp_home',
                 array(
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
-                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
