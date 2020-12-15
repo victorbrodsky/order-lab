@@ -269,6 +269,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappvisastatus/", name="resappvisastatus-list", methods={"GET"})
      * @Route("/list/postsoph/", name="postsoph-list", methods={"GET"})
      *
+     * @Route("/list/resappapplyingresidencytrack/", name="resappapplyingresidencytrack-list", methods={"GET"})
+     * @Route("/list/resapplearnarealist/", name="resapplearnarealist-list", methods={"GET"})
+     * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist-list", methods={"GET"})
+     *
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
@@ -872,6 +876,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappvisastatus/", name="resappvisastatus_create", methods={"POST"})
      * @Route("/list/postsoph/", name="postsoph_create", methods={"POST"})
      *
+     * @Route("/list/resappapplyingresidencytrack/", name="resappapplyingresidencytrack_create", methods={"POST"})
+     * @Route("/list/resapplearnarealist/", name="resapplearnarealist_create", methods={"POST"})
+     * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist_create", methods={"POST"})
+     *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
@@ -1197,6 +1205,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappvisastatus/new", name="resappvisastatus_new", methods={"GET"})
      * @Route("/list/postsoph/new", name="postsoph_new", methods={"GET"})
      *
+     * @Route("/list/resappapplyingresidencytrack/new", name="resappapplyingresidencytrack_new", methods={"GET"})
+     * @Route("/list/resapplearnarealist/new", name="resapplearnarealist_new", methods={"GET"})
+     * @Route("/list/resappspecificindividuallist/new", name="resappspecificindividuallist_new", methods={"GET"})
+     *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
@@ -1476,6 +1488,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_show", methods={"GET"})
      * @Route("/list/postsoph/{id}", name="postsoph_show", methods={"GET"})
      *
+     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_show", methods={"GET"})
+     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_show", methods={"GET"})
+     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_show", methods={"GET"})
+     *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
@@ -1747,6 +1763,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappfitforprogram/{id}/edit", name="resappfitforprogram_edit", methods={"GET"})
      * @Route("/list/resappvisastatus/{id}/edit", name="resappvisastatus_edit", methods={"GET"})
      * @Route("/list/postsoph/{id}/edit", name="postsoph_edit", methods={"GET"})
+     *
+     * @Route("/list/resappapplyingresidencytrack/{id}/edit", name="resappapplyingresidencytrack_edit", methods={"GET"})
+     * @Route("/list/resapplearnarealist/{id}/edit", name="resapplearnarealist_edit", methods={"GET"})
+     * @Route("/list/resappspecificindividuallist/{id}/edit", name="resappspecificindividuallist_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2069,6 +2089,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappfitforprogram/{id}", name="resappfitforprogram_update", methods={"PUT"})
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_update", methods={"PUT"})
      * @Route("/list/postsoph/{id}", name="postsoph_update", methods={"PUT"})
+     *
+     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_update", methods={"PUT"})
+     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_update", methods={"PUT"})
+     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2764,6 +2788,22 @@ class ListController extends OrderAbstractController
             case "postsoph":
                 $className = "PostSophList";
                 $displayName = "Post Soph List";
+                $bundleName = "ResAppBundle";
+                break;
+
+            case "resappapplyingresidencytrack":
+                $className = "ApplyingResidencyTrack";
+                $displayName = "Applying Residency Track";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resapplearnarealist":
+                $className = "LearnAreaList";
+                $displayName = "Learn Area List";
+                $bundleName = "ResAppBundle";
+                break;
+            case "resappspecificindividuallist":
+                $className = "SpecificIndividualList";
+                $displayName = "Specific Individuals Meet List";
                 $bundleName = "ResAppBundle";
                 break;
 
@@ -3674,6 +3714,9 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappvisastatus/{id}", name="resappvisastatus_delete", methods={"DELETE"})
      * @Route("/list/postsoph/{id}", name="postsoph_delete", methods={"DELETE"})
      *
+     * @Route("/list/resappapplyingresidencytrack/{id}", name="resappapplyingresidencytrack_delete", methods={"DELETE"})
+     * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_delete", methods={"DELETE"})
+     * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_delete", methods={"DELETE"})
      *
      */
     public function deleteAction(Request $request, $id)

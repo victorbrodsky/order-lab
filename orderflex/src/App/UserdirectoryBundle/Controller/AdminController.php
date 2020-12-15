@@ -24,11 +24,14 @@ use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
 use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
+use App\ResAppBundle\Entity\ApplyingResidencyTrack;
 use App\ResAppBundle\Entity\FitForProgram;
+use App\ResAppBundle\Entity\LearnAreaList;
 use App\ResAppBundle\Entity\PostSophList;
 use App\ResAppBundle\Entity\ResAppFitForProgram;
 use App\ResAppBundle\Entity\ResAppRank;
 use App\ResAppBundle\Entity\ResAppStatus;
+use App\ResAppBundle\Entity\SpecificIndividualList;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
@@ -925,7 +928,11 @@ class AdminController extends OrderAbstractController
         $count_ResAppLanguageProficiency = $this->generateResAppLanguageProficiency();
         $count_ResAppFitForProgram = $this->generateResAppFitForProgram();
 
-        $logger->notice("Finished generateLanguageProficiency");
+        $count_ResAppApplyingResidencyTrack = $this->generateResAppApplyingResidencyTrack();
+        $count_ResAppLearnAreaList = $this->generateResAppLearnAreaList();
+        $count_ResAppSpecificIndividualList = $this->generateResAppSpecificIndividualList();
+
+        $logger->notice("Finished generateResAppSpecificIndividualList");
 
         $collaborationtypes = $this->generateCollaborationtypes();
 //        $count_Permissions = $this->generatePermissions();
@@ -1053,6 +1060,10 @@ class AdminController extends OrderAbstractController
             'PostSophList='.$count_PostSophList.', '.
             'count_ResAppFitForProgram='.$count_ResAppFitForProgram.', '.
             'ResAppLanguageProficiency='.$count_ResAppLanguageProficiency.', '.
+
+            'ResAppApplyingResidencyTrack='.$count_ResAppApplyingResidencyTrack.', '.
+            'ResAppLearnAreaList='.$count_ResAppLearnAreaList.', '.
+            'ResAppSpecificIndividualList='.$count_ResAppSpecificIndividualList.', '.
 
             'Permissions ='.$count_Permissions.', '.
             'PermissionObjects ='.$count_PermissionObjects.', '.
@@ -6322,6 +6333,119 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+
+    public function generateResAppApplyingResidencyTrack() {
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "AP/CP",
+            "AP Only",
+            "CP Only",
+            "CP/Physician Scientist Training Program (PSTP)",
+            "AP/Physician Scientist Training Program (PSTP)"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('AppResAppBundle:ApplyingResidencyTrack')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new ApplyingResidencyTrack();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateResAppLearnAreaList() {
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "No Specific Preference",
+            "Autopsy",
+            "Breast Pathology",
+            "Cellular Therapy",
+            "Chemistry",
+            "Cytopathology",
+            "Dermatopathology",
+            "GI and Liver Pathology",
+            "GU Pathology",
+            "GYN Pathology",
+            "Head and Neck Pathology",
+            "Hematopathology",
+            "Hematology/Coagulation",
+            "Informatics",
+            "Laboratory Management",
+            "Microbiology",
+            "Molecular Pathology",
+            "Neuropathology",
+            "Renal Pathology",
+            "Thoracic Pathology",
+            "Transfusion Medicine"
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('AppResAppBundle:LearnAreaList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new LearnAreaList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
+
+    public function generateResAppSpecificIndividualList() {
+        $em = $this->getDoctrine()->getManager();
+
+        //blank list, no default values
+        $elements = array();
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('AppResAppBundle:SpecificIndividualList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new SpecificIndividualList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+    }
     ////////////////////// EOF ResApp //////////////////////////////////////
 
 
@@ -7309,6 +7433,11 @@ class AdminController extends OrderAbstractController
             "resappvisastatus" => array('VisaStatus','resappvisastatus-list','Residency Visa Status'),
             "postsoph" => array('PostSophList','postsoph-list','Post Soph List'),
             "resappfitforprogram" => array('ResAppFitForProgram','resappfitforprogram-list','Residency Fit For Program'),
+
+            "resappapplyingresidencytrack" => array('ApplyingResidencyTrack','resappapplyingresidencytrack-list','Applying Residency Track'),
+            "resapplearnarealist" => array('LearnAreaList','resapplearnarealist-list','Learn Area List'),
+            "resappspecificindividuallist" => array('SpecificIndividualList','resappspecificindividuallist-list','Specific Individuals Meet List'),
+            
         );
 
         if( $withcustom ) {

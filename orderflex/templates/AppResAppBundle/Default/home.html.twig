@@ -1376,7 +1376,6 @@
             //onInterviewModalShow();
 
             resappResetStartDate();
-            //resappSetStartDateValue("#filter_applicationSeasonStartDates");
 
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
@@ -1414,15 +1413,9 @@
                     resappSetStartDateValue("#filter_startDates");
                 }
             });
-
-//            $(document.body).on("change",".datepicker-startDates, .datepicker-applicationSeasonStartDates",function(){
-//                alert(this.value);
-//            });
         }
         function resappSetStartDateValue( identifierName ) {
-            console.log("Set select2 to null. identifierName=" + identifierName);
-            //$("."+className).val(null);
-            //$("."+className).trigger('change'); // Notify any JS components that the value changed
+            //console.log("Set select2 to null. identifierName=" + identifierName);
             $(identifierName).val(null).trigger('change');
             //$(identifierName).select2('val', null);
             //$(identifierName).select2('data', null);
