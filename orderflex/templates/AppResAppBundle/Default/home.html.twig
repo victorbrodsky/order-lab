@@ -1376,6 +1376,7 @@
             //onInterviewModalShow();
 
             resappResetStartDate();
+            //resappSetStartDateValue("#filter_applicationSeasonStartDates");
 
             /////////// set default year by JS ///////////
             //var year = parseInt(new Date().getFullYear()) + 2;
@@ -1398,19 +1399,19 @@
         //These start date fields can have multiple values, therefore it is not logical to recalculate the other start value
         //it is more logical to reset the other start date to null
         function resappResetStartDate() {
-            $(document.body).on("change",".datepicker-startDates",function(){
+            $(document.body).on("change","#filter_startDates",function(){
                 //alert(this.value);
                 console.log("select2 value=" + this.value);
                 if( this.value ) {
-                    resappSetStartDateValue(".datepicker-applicationSeasonStartDates");
+                    resappSetStartDateValue("#filter_applicationSeasonStartDates");
                 }
             });
 
-            $(document.body).on("change",".datepicker-applicationSeasonStartDates",function(){
+            $(document.body).on("change","#filter_applicationSeasonStartDates",function(){
                 //alert(this.value);
                 console.log("select2 value=" + this.value);
                 if( this.value ) {
-                    resappSetStartDateValue(".datepicker-startDates");
+                    resappSetStartDateValue("#filter_startDates");
                 }
             });
 
@@ -1418,11 +1419,14 @@
 //                alert(this.value);
 //            });
         }
-        function resappSetStartDateValue( identifier ) {
-            console.log("Set select2 to null. identifier=" + identifier);
+        function resappSetStartDateValue( identifierName ) {
+            console.log("Set select2 to null. identifierName=" + identifierName);
             //$("."+className).val(null);
             //$("."+className).trigger('change'); // Notify any JS components that the value changed
-            $(identifier).select2('val', null);
+            $(identifierName).val(null).trigger('change');
+            //$(identifierName).select2('val', null);
+            //$(identifierName).select2('data', null);
+
         }
 
         //I think the "Filter" button needs to turn green if any of the fields
