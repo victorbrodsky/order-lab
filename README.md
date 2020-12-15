@@ -17,11 +17,13 @@ It includes several functional applications tied by LDAP/AD-capable single sign-
 
 - Employee Directory
 
-- Vacation Request Approval / Vacation Day Carryover / Away Calendar System
+- Vacation Request Approval / Vacation Day Carryover Approval / Away Calendar System
 
-- Call Log Book
+- Call Log Book for resident physicians on call
 
 - Fellowship Application and Recommendation Letter Submission / Candidate Interview Evaluation System
+
+- Residency Application (ERAS) and Candidate Interview Evaluation System
 
 - Glass Slide Scan Ordering System
 
@@ -29,10 +31,12 @@ It includes several functional applications tied by LDAP/AD-capable single sign-
 
 - Translational Research Project Approval, Work Order Processing, Invoicing, and Dashboards
 
+- Critical Result Notification and Acknowledgement Tracking
+
 
 ## Data Models
 
-The [core data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/orderflex/uml), although additional attributes may have been added since their creation.
+The [core data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/orderflex/uml), although additional attributes not shown on these diagrams may have been added since their creation.
 
 
 ## Support
@@ -58,13 +62,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 
-## Installation instructions for deploying a Linux-based server on Linux
+## Installation instructions for deploying a Linux-based server using a local Linux client (tested on a local Ubuntu OS)
 
->**Warning:** This software was initially developed and tested in a Windows-based environment to accommodate existing servers. To ease further
-> development and testing, the [Packer](https://www.packer.io/)-based deployment script for a [Digital Ocean](https://www.digitalocean.com/)
-> virtual machine (VM) is provided. Additional testing is necessary to discover and address unresolved issues associated with
-> cross-platform compatibility (and Linux specifically). The installation instructions assume the use of a Linux platform (such as 
-> [Ubuntu](https://www.ubuntu.com/)). The specific commercial hosting provider was chosen as an example for convenience.
+>**Warning:** This software was initially developed and tested in a Windows-based environment to accommodate existing servers. It is now running on CentOS Linux. 
+> To ease further development and testing, the [Packer](https://www.packer.io/)-based deployment [script](https://github.com/victorbrodsky/order-lab/blob/master/packer/deploy-order-digital-ocean.sh) for a [Digital Ocean](https://www.digitalocean.com/)
+> [virtual machine (VM)](https://en.wikipedia.org/wiki/Virtual_machine) is provided. Additional testing may be necessary to discover and address unresolved issues associated with
+> cross-platform compatibility (for example, with specific Linux distributions or Windows versions). The installation instructions assume the use of a Linux platform on your local machine (such as 
+> [Ubuntu](https://www.ubuntu.com/)). If you are using a different operating system such as Windows or OSX, you may need to first [create a local Ubuntu virtual machine with VirtualBox](https://brb.nci.nih.gov/seqtools/installUbuntu.html) or another tool. The specific commercial server hosting provider was chosen as an example for convenience.
 > 
 
 1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
@@ -79,14 +83,14 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
         snap install packer
         snap install doctl
 
-    Make sure to add both to your PATH. Alternatively, you can check for the latest versions of each [Packer](https://www.packer.io/downloads.html) and [doctl](https://github.com/digitalocean/doctl/releases), substitute the versions into the commands below instead of the now current 1.4.1 and 1.18.0 (as of 5/23/2019), and run them:
+    Make sure to add both to your PATH. Alternatively, you can check for the latest versions of each [Packer](https://www.packer.io/downloads.html) and [doctl](https://github.com/digitalocean/doctl/releases), substitute the versions into the commands below instead of the now current 1.6.5 and 1.54.0 (as of 12/15/2020), and run them:
 
-        wget -P ~/Downloads https://releases.hashicorp.com/packer/1.4.1/packer_1.4.1_linux_amd64.zip
+        wget -P ~/Downloads https://releases.hashicorp.com/packer/1.6.5/packer_1.6.5_linux_amd64.zip
         sudo mkdir /usr/local/packer
-        sudo unzip ~/Downloads/packer_1.4.1_linux_amd64.zip -d /usr/local/packer
-        wget -P ~/Downloads https://github.com/digitalocean/doctl/releases/download/v1.18.0/doctl-1.18.0-linux-amd64.tar.gz
+        sudo unzip ~/Downloads/packer_1.6.5_linux_amd64.zip -d /usr/local/packer
+        wget -P ~/Downloads https://github.com/digitalocean/doctl/releases/download/v1.54.0/doctl-1.54.0-linux-amd64.tar.gz
         sudo mkdir /usr/local/doctl
-        sudo tar xf ~/Downloads/doctl-1.18.0-linux-amd64.tar.gz -C /usr/local/doctl
+        sudo tar xf ~/Downloads/doctl-1.54.0-linux-amd64.tar.gz -C /usr/local/doctl
         echo "export PATH=\"\$PATH:/usr/local/packer:/usr/local/doctl\"" >> ~/.bashrc
         source ~/.bashrc
 
@@ -98,13 +102,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 		cd order-lab-master/packer
 
-5. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
+5. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP, (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
 
 	(a) Run /packer/deploy-order-digital-ocean.sh via the following command (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword
 		
-	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
+	(b) First, obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Next, get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was initially generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
 	
 		openssl genrsa -out www.example.com.key 2048
 		
@@ -112,34 +116,37 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 		openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
 	
-	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
+	to generate the second [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https) file, later used to obtain the third SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to first substitute your API token (from step 1 above), database user name (such as "dbusername"), the database password (such as "dbpassword"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key
 		
-	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (first make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
 
-	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
+	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now. The "Connection Channel" variable on the Site Settings web page being set to either “https” or "http" after installation controls whether SSL (https://) is used or not.
 
-6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending on whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
+6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending on whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take some time.)
 
-7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
+7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit'. Set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-8. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+8. Populate the database tables with default values by logging into the Employee Directory site (http://IPADDRESS/order/directory/) as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+	5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
     6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
+	7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+	8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
 
-9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
+9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, and clicking the "Update" button.
 
 10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back to the site via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
 12. In order to later update to the latest version, connect to your server via:
 
@@ -152,9 +159,9 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
         cd orderflex
         bash deploy_prod.sh
 
-Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
+Note: If you choose to use MySQL database on Linux instead of the default Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
-##  Installation instructions for deploying a Linux-based server on MacOS X
+##  Installation instructions for deploying a Linux-based server using a local MacOS X client (tested on a local MacOS X)
 
 > MacOS X instructions were tested on version 10.12.3 'Sierra'.  
 
@@ -250,8 +257,11 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+	5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
     6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
+	7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+	8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
 
 10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
@@ -477,12 +487,15 @@ Symfony 3.4 with PHP 5.6:
 	
 	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-        1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-        2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-        3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-        4a) Import Antibodies for the MySQL database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_mysql.sql)
-        5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-        6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
+    	1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    	2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    	3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    	4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    	5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+		5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    	6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
+		7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+		8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
 	
 	e) Run the deployment script again by following step 5a above:
 
