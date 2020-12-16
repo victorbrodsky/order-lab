@@ -26,6 +26,7 @@
 namespace App\OrderformBundle\Form\DataTransformer;
 
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -45,7 +46,7 @@ class AccountTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(EntityManagerInterface $em=null, $user=null)
     {
         $this->em = $em;
         $this->user = $user;

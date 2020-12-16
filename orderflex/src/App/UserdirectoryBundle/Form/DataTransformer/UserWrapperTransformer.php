@@ -26,6 +26,7 @@
 namespace App\UserdirectoryBundle\Form\DataTransformer;
 
 use App\UserdirectoryBundle\Entity\UserWrapper;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -55,7 +56,7 @@ class UserWrapperTransformer implements DataTransformerInterface
     /**
      * @param ObjectManager $om
      */
-    public function __construct( ObjectManager $em, ContainerInterface $serviceContainer, $user=null, $className=null, $bundleName=null )
+    public function __construct( EntityManagerInterface $em, ContainerInterface $serviceContainer, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
         $this->serviceContainer = $serviceContainer;

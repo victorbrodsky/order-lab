@@ -28,6 +28,7 @@ namespace App\OrderformBundle\Form\CustomType;
 
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -61,7 +62,7 @@ class ScanCustomSelectorType extends AbstractType {
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, ContainerInterface $serviceContainer = null)
+    public function __construct(EntityManagerInterface $om, ContainerInterface $serviceContainer = null)
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;

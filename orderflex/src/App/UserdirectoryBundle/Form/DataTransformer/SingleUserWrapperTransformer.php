@@ -30,6 +30,7 @@ use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 //used by user type
 class SingleUserWrapperTransformer extends UserWrapperTransformer//implements DataTransformerInterface

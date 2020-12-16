@@ -25,6 +25,7 @@
 
 namespace App\UserdirectoryBundle\Form\DataTransformer;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -34,7 +35,7 @@ class StringToBooleanTransformer implements DataTransformerInterface
     private $em;
     private $user;
 
-    public function __construct(ObjectManager $em=null, $user=null)
+    public function __construct(EntityManagerInterface $em=null, $user=null)
     {
         $this->em = $em;
         $this->user = $user;

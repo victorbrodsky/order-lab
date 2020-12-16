@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Form\CustomType;
 
 
 use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,7 +58,7 @@ class CustomSelectorType extends AbstractType {
      * @param ObjectManager $om
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, ContainerInterface $serviceContainer)
+    public function __construct(EntityManagerInterface $om, ContainerInterface $serviceContainer)
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;
