@@ -620,4 +620,16 @@ Anchors JSON working example:
 ]
 
 
+Composer update:
+Argument 1 passed to App\OrderformBundle\Form\CustomType\ScanCustomSelectorType::__construct() must be an instance of
+Doctrine\Common\Persistence\ObjectManager, instance of Doctrine\ORM\EntityManager given
 
+https://github.com/doctrine/orm/issues/8242:
+To anyone getting stuck with this,
+Just use "doctrine/common":"^2.13" till package is upgraded along with whole eco-system and gets full compatibility.
+It installed orm version 2.7.3 which is stable release at the moment of writing. took me a quite while to figure out why packages aren't in sync even in LTS / stable channel.
+
+https://github.com/markitosgv/JWTRefreshTokenBundle/issues/200
+
+Try to use the original gedmo (already implemented Symfony 4):
+composer require gedmo/doctrine-extensions
