@@ -440,6 +440,48 @@ class ResidencyApplication extends BaseUserAttributes {
 
     //Residency types: AP/EXP CP/EXP +Experimental Pathology
 
+    /**
+     * Which residency track are you applying for (select one - maximum two)
+     *
+     * @ORM\ManyToMany(targetEntity="ApplyingResidencyTrack", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="resapp_application_applyingtrack",
+     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="applyingtrack_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $applyingTracks;
+
+    /**
+     * Which areas (if any) would you like to learn more about during your visit (check up to 3 in order of priority)
+     *
+     * @ORM\ManyToMany(targetEntity="LearnAreaList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="resapp_application_learnarea",
+     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="learnarea_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $learnAreas;
+
+    /**
+     * If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank).
+     * We will do our best to accommodate your request (Multiselect)
+     *
+     * @ORM\ManyToMany(targetEntity="SpecificIndividualList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="resapp_application_specificIndividual",
+     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="specificIndividual_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $specificIndividuals;
+
+    /**
+     * Questionnaire and Responses: Comments (any additional brief remarks)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $questionnaireComments;
+
+
 
     public function __construct($author=null) {
         parent::__construct($author);
@@ -467,6 +509,9 @@ class ResidencyApplication extends BaseUserAttributes {
         $this->stateLicenses = new ArrayCollection();
         $this->boardCertifications = new ArrayCollection();
 
+        $this->applyingTracks = new ArrayCollection();
+        $this->learnAreas = new ArrayCollection();
+        $this->specificIndividuals = new ArrayCollection();
     }
 
 
@@ -1390,6 +1435,73 @@ class ResidencyApplication extends BaseUserAttributes {
             return null;
         }
     }
+
+    public function getApplyingTracks()
+    {
+        return $this->applyingTracks;
+    }
+    public function addApplyingTrack($item)
+    {
+        if( $item && !$this->applyingTracks->contains($item) ) {
+            $this->applyingTracks->add($item);
+        }
+
+    }
+    public function removeApplyingTrack($item)
+    {
+        $this->applyingTracks->removeElement($item);
+    }
+
+    public function getLearnAreas()
+    {
+        return $this->learnAreas;
+    }
+    public function addLearnArea($item)
+    {
+        if( $item && !$this->learnAreas->contains($item) ) {
+            $this->learnAreas->add($item);
+        }
+
+    }
+    public function removeLearnArea($item)
+    {
+        $this->learnAreas->removeElement($item);
+    }
+
+    public function getSpecificIndividuals()
+    {
+        return $this->specificIndividuals;
+    }
+    public function addSpecificIndividual($item)
+    {
+        if( $item && !$this->specificIndividuals->contains($item) ) {
+            $this->specificIndividuals->add($item);
+        }
+
+    }
+    public function removeSpecificIndividual($item)
+    {
+        $this->specificIndividuals->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuestionnaireComments()
+    {
+        return $this->questionnaireComments;
+    }
+
+    /**
+     * @param mixed $questionnaireComments
+     */
+    public function setQuestionnaireComments($questionnaireComments)
+    {
+        $this->questionnaireComments = $questionnaireComments;
+    }
+
+    
+
 
 //    public function getRecentExaminationScores() {
 //        $recentExamination = $this->getUser()->getCredentials()->getOneRecentExamination();

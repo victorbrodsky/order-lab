@@ -389,6 +389,27 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
 
+    {#Questionnaire and Responses#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#residencyQuestionnaireResponses">
+                    Questionnaire and Responses
+                </a>
+            </h4>
+        </div>
+        <div id="residencyQuestionnaireResponses" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                {{ formmacros.field(form.applyingTracks) }}
+                {{ formmacros.field(form.learnAreas) }}
+                {{ formmacros.field(form.specificIndividuals) }}
+                {{ formmacros.field(form.questionnaireComments) }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
     {#Uploads Section#}
     <div class="panel panel-default">
         <div class="panel-heading">
