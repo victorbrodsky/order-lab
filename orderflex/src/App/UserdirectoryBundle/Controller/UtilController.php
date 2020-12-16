@@ -42,6 +42,8 @@ class UtilController extends OrderAbstractController {
 
 
     /**
+     * util/common/generic
+     *
      * @Route("/common/generic/{name}", name="employees_get_generic_select2", methods={"GET"})
      */
     public function getGenericAction( Request $request, $name ) {
@@ -1652,6 +1654,16 @@ class UtilController extends OrderAbstractController {
 
             case "residencytracks":
                 $className = "ResidencyTrackList";
+                break;
+
+            case "specificindividuals":
+                $className = "SpecificIndividualList";
+                $bundleName = "ResAppBundle";
+                break;
+
+            case "learnareas":
+                $className = "LearnAreaList";
+                $bundleName = "ResAppBundle";
                 break;
 
 //            case "patientLists":

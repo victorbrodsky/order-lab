@@ -60,6 +60,8 @@ var _organizations = [];
 
 var _usernametype = [];
 
+//var _specificIndividuals = [];
+
 function initAllComboboxGeneric(newForm) {
 
     //console.log('init All Combobox Generic');
@@ -103,6 +105,8 @@ function initAllComboboxGeneric(newForm) {
     setBuidlingListener(newForm);
 
     getComboboxGeneric(newForm,'usernametype',_usernametype,false);
+
+    //getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,false);
 }
 
 

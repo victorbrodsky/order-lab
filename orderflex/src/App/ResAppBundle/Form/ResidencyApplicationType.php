@@ -20,6 +20,7 @@ namespace App\ResAppBundle\Form;
 
 use App\UserdirectoryBundle\Form\BoardCertificationType;
 use App\UserdirectoryBundle\Form\CitizenshipType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
 use App\UserdirectoryBundle\Form\DocumentType;
 use App\UserdirectoryBundle\Form\ExaminationType;
@@ -586,26 +587,33 @@ class ResidencyApplicationType extends AbstractType
         // the “FirstName LastName, Degrees” format sorted by last name,
         // followed by the current list of values from the platform list
         // manger list created in step 6C above and ALLOWING NEW VALUES.
-        $builder->add('specificIndividuals',null, array(
+//        $builder->add('specificIndividuals',null, array(
+//            'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
+//            'required' => false,
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
+        $builder->add('specificIndividuals', CustomSelectorType::class, array(
             'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
             'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
+            //'multiple' => true,
+            'attr' => array('class' => 'combobox ajax-combobox-specificindividuals', 'type' => 'hidden'),
+            'classtype' => 'specificindividuals'
         ));
 
         $builder->add('questionnaireComments', null, array(
             'label' => 'Comments (any additional brief remarks):',
             'required' => false,
-            'attr' => array('class' => 'textarea'),
+            'attr' => array('class' => 'textarea form-control'),
         ));
     }
 

@@ -190,7 +190,7 @@ function getElementTargetByHolder(holder,target) {
 //Generic ajax combobox
 function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag) {
 
-    //console.log('get Combobox Generic: name='+name);
+    console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
     targetid = getElementTargetByHolder(holder,targetid);

@@ -67,6 +67,8 @@
 
     <script language="Javascript">
 
+        var _specificIndividuals = [];
+
         $(document).ready(function() {
             var hashValue = window.location.hash;
             //console.log("hashValue="+hashValue);
@@ -75,6 +77,11 @@
                 $('#interviews').collapse('show');
                 expandTextarea($('#interviews'));
             }
+
+            var multiple = true;
+            //var multiple = false;
+            var newForm = null;
+            getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,multiple);
         });
 
     </script>
