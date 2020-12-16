@@ -550,43 +550,45 @@ class ResidencyApplicationType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('applyingTracks',null, array(
-            'label' => 'Which residency track are you applying for (select one - maximum two):',
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        //////////// Questionnaire and Responses //////////////
+        if( 0 ) {
+            $builder->add('applyingTracks', null, array(
+                'label' => 'Which residency track are you applying for (select one - maximum two):',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
 
-        //Multi-select Select2 dropdown ALLOWING NEW VALUES
-        $builder->add('learnAreas',null, array(
-            'label' => 'Which areas (if any) would you like to learn more about during your visit (check up to 3 in order of priority):',
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+            //Multi-select Select2 dropdown ALLOWING NEW VALUES
+            $builder->add('learnAreas', null, array(
+                'label' => 'Which areas (if any) would you like to learn more about during your visit (check up to 3 in order of priority):',
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
 
-        //Multiselect Select2 dropdown listing all current faculty members (users) in
-        // the “FirstName LastName, Degrees” format sorted by last name,
-        // followed by the current list of values from the platform list
-        // manger list created in step 6C above and ALLOWING NEW VALUES.
+            //Multiselect Select2 dropdown listing all current faculty members (users) in
+            // the “FirstName LastName, Degrees” format sorted by last name,
+            // followed by the current list of values from the platform list
+            // manger list created in step 6C above and ALLOWING NEW VALUES.
 //        $builder->add('specificIndividuals',null, array(
 //            'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
 //            'required' => false,
@@ -602,19 +604,22 @@ class ResidencyApplicationType extends AbstractType
 //                    ));
 //            },
 //        ));
-        $builder->add('specificIndividuals', CustomSelectorType::class, array(
-            'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
-            'required' => false,
-            //'multiple' => true,
-            'attr' => array('class' => 'combobox ajax-combobox-specificindividuals', 'type' => 'hidden'),
-            'classtype' => 'specificindividuals'
-        ));
+            $builder->add('specificIndividuals', CustomSelectorType::class, array(
+                'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
+                'required' => false,
+                //'multiple' => true,
+                'attr' => array('class' => 'combobox ajax-combobox-specificindividuals', 'type' => 'hidden'),
+                'classtype' => 'specificindividuals'
+            ));
 
-        $builder->add('questionnaireComments', null, array(
-            'label' => 'Comments (any additional brief remarks):',
-            'required' => false,
-            'attr' => array('class' => 'textarea form-control'),
-        ));
+            $builder->add('questionnaireComments', null, array(
+                'label' => 'Comments (any additional brief remarks):',
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control'),
+            ));
+        }
+        //////////// EOF Questionnaire and Responses //////////////
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

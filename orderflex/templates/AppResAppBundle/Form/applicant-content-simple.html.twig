@@ -390,6 +390,7 @@
     </div> <!-- panel panel-info -->
 
     {#Questionnaire and Responses#}
+    {% if form.applyingTracks is defined %}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -409,6 +410,7 @@
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
+    {% endif %}
 
     {#Uploads Section#}
     <div class="panel panel-default">
