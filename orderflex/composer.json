@@ -66,8 +66,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/App/",
-            "Doctrine\\Common\\Lexer\\": "src/App/Doctrine/Common/Lexer/"
+            "App\\": "src/App/"
         },
 		"classmap": [
             "src/Kernel.php"

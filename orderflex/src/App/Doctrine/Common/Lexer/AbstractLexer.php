@@ -256,6 +256,7 @@ abstract class AbstractLexer
         //exit("!!! input=$input");
         $matches = preg_split($this->regex, (string)$input, -1, $flags);
 
+
         if ($matches === false) {
             // Work around https://bugs.php.net/78122
             $matches = [[$input, 0]];
