@@ -104,9 +104,13 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 5. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP, (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
 
-	(a) Run /packer/deploy-order-digital-ocean.sh via the following command (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	(a) Run /packer/deploy-order-digital-ocean.sh via one of the following commands (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword
+		
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --os ubuntu
 		
 	(b) First, obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Next, get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was initially generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
 	
@@ -116,19 +120,47 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 		openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
 	
-	to generate the second [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https) file, later used to obtain the third SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to first substitute your API token (from step 1 above), database user name (such as "dbusername"), the database password (such as "dbpassword"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
+	to generate the second [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https) file, later used to obtain the third SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run one of the following commands in the terminal (make sure to first substitute your API token (from step 1 above), database user name (such as "dbusername"), the database password (such as "dbpassword"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key
 		
-	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (first make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key --os ubuntu
+		
+	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run one of the following commands in the terminal (first make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
+
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com --os ubuntu
 
 	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now. The "Connection Channel" variable on the Site Settings web page being set to either “https” or "http" after installation controls whether SSL (https://) is used or not.
 
+	For reference, this is the full list of parameters for the server installation script deploy-order-digital-ocean.sh:
+	
+	--token: API-TOKEN-FROM-STEP-1 (must be provided)
+	
+	--os: centos or ubuntu server operating system (default is centos)
+	
+	--parameters: parameters.yml file name (default parameters.yml)
+	
+	--dbuser: optional (default is symfony)
+	
+	--dbpass: optional (default is symfony)
+	
+	--protocol: optional (default is http)
+	
+	--domainname: domain name (optional)
+	
+	--sslcertificate: ssl certificate file (optional)
+	
+	--sslprivatekey: ssl private key file (optional)
+
 6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending on whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take some time.)
 
-7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit'. Set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
+7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit'. Set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
 8. Populate the database tables with default values by logging into the Employee Directory site (http://IPADDRESS/order/directory/) as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
@@ -193,13 +225,13 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 6. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
 
-	(a) Run /packer/deploy-order-digital-ocean.sh via the following command (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	(a) Run /packer/deploy-order-digital-ocean.sh via one of the following commands (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
-		Ubuntu (--os is set to Unbuntu by default):
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword
 		
-		Centos:
-		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --os centos
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --os ubuntu
 		
 	(b) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Get an SSL certificate from a Certificate Authority such as [Let's Encrypt](https://letsencrypt.org/) or [Comodo](https://comodosslstore.com/positivessl.aspx) using the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https). You can also [generate a local certificate](https://letsencrypt.org/docs/certificates-for-localhost/) for testing purposes. Copy the SSL Certificate file (www.example.com.crt) and SSL Private Key file (www.example.com.key) to the /packer folder. The SSL Private Key file (www.example.com.key) is the one that was generated when preparing the Certificate Signing Request (CSR), likely via a command similar to this one:
 	
@@ -209,37 +241,37 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 	
 		openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
 	
-	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run the following command in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
+	to generate the [Certificate Signing Request (CSR)](https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https)file, later used to obtain the SSL certificate file (www.example.com.crt) from your Certificate Authority. Once both the www.example.com.crt and the www.example.com.key files are in the /packer folder, run one of the following commands in the terminal (make sure to substitute your API token (from step 1 above), database user name (such as "symfony"), the database password (such as "symfony"), your domain name (such as "example.com"), and the SSL certificate and private key file names below.):
 
-		Ubuntu (--os is set to Unbuntu by default):
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key
 		
-		Centos:
-		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key --os centos
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol https --domainname example.com --sslcertificate www.example.com.crt --sslprivatekey www.example.com.key --os ubuntu
 		
-	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run the following command in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
+	(c) Obtain a domain name from a registrar (for example from [Google Domains](https://domains.google/#/)) if you don't have one already and follow these [instructions to add the nameservers of your Digital Ocean webhost](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars). It may take up to 48 hours for the domain name to start working. Run one of the following commands in the terminal (make sure to substitute your API token, database user name, the database password, and your domain name (such as "example.com") instead of "example.com" below. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
-		Ubuntu (--os is set to Unbuntu by default):
+		CentOS (--os is set to CentOS on the server by default):
         bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com
 
-		Centos:
-		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com --os centos
+		Ubuntu:
+		bash deploy-order-digital-ocean.sh --token API-TOKEN-FROM-STEP-1 --parameters parameters.yml --dbuser dbusername --dbpass dbpassword --protocol http --domainname example.com --os ubuntu
 
 	Note: If you get your SSL certificate from [Let's Encrypt](https://letsencrypt.org/), make sure to follow their recommendation to ensure the certificate gets updated in a timely fashion and to avoid expiration. [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) and a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle) are available.  In the past, uncommenting (removing "#" from the beginning of) the line 289 in /order-lab/orderflex/app/config/security.yml file was necessary to enable SSL, but everything should be done automatically now and is controlled via the "Connection Channel" variable in Site Settings being set to either “https” or "http".
 
-	The full list of parameters for script deploy-order-digital-ocean.sh:
+	For reference, this is the full list of parameters for the server installation script deploy-order-digital-ocean.sh:
 	
 	--token: API-TOKEN-FROM-STEP-1 (must be provided)
 	
-	--os: centos or ubuntu operating system (default is ubuntu)
+	--os: centos or ubuntu server operating system (default is centos)
 	
 	--parameters: parameters.yml file name (default parameters.yml)
 	
-	--dbuser: optional (default symfony)
+	--dbuser: optional (default is symfony)
 	
-	--dbpass: optional (default symfony)
+	--dbpass: optional (default is symfony)
 	
-	--protocol: optional (default http)
+	--protocol: optional (default is http)
 	
 	--domainname: domain name (optional)
 	
@@ -249,7 +281,7 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ (or either http://example.com/order/directory/admin/first-time-login-generation-init/ or https://example.com/order/directory/admin/first-time-login-generation-init/ depending whether you used the domain name and the ssl certificate in the command above) to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
-8. Select "Local User" above the user name field and log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (or http://example.com/order/directory/ or https://example.com/order/directory/ depending on whether you used your domain name and SSL certificates during set up). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
+8. Select "Local User" above the user name field and log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (or http://example.com/order/directory/ or https://example.com/order/directory/ depending on whether you used your domain name and SSL certificates during set up). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
 9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
@@ -265,7 +297,7 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
-11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/orderflex/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add your Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/. To use the Google SMTP Email Server to send email notifications, [generate the Google API key on the Google site](https://support.google.com/accounts/answer/185833?hl=en) as follows: enable 2-step verification, generate Google App specific password, and disable 2-step verification, then enter the Google "App specific password" (API key) on the Site Settings page.
 
 12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
@@ -282,15 +314,17 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
-## Installation Instructions for deploying different versions of Symfony and PHP on Linux (Digital Ocean)
-
-Symfony 4.4 with PHP 7.4:
-1) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
-2) cd order-lab/packer
-3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+## For reference: installation instructions for deploying an older version for Symfony 3.4 and PHP 5.6 on Linux (Digital Ocean)
 
 Symfony 3.4 with PHP 5.6:
 1) git clone --single-branch --branch sf3.4-php5.6-windows https://github.com/victorbrodsky/order-lab.git
+2) cd order-lab/packer
+3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
+
+## For reference: installation instructions for deploying an older version for Symfony 4 and PHP 7.4 on Linux (Digital Ocean)
+
+Symfony 4.4 with PHP 7.4:
+1) git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 2) cd order-lab/packer
 3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
 
@@ -299,9 +333,9 @@ Symfony 3.4 with PHP 5.6:
 
 > Tested on Windows 10 and Windows 7
 
-1. Choose a folder on the server that will be used for installation of ORDER. This folder will be referred to as "C:\ORDER_LOCATION\" in these instructions, which you will need to replace with the actual file path of the location you select. Several files will need to be downloaded and installed.
+1. Choose a folder on the server that will be used for installation of ORDER. This folder will be referred to as "C:\ORDER_LOCATION\" in these instructions, and you will need to replace its name with the actual file path of the location you select. Several files will need to be downloaded and installed.
 	
-	a) Download the [installer for GIT version control](https://git-scm.com/download/win/) appropriate for your version of Windows. Run the installer with the standard installation options. (Tested with version 2.12.0.)
+	a) Download the [installer for git version control](https://git-scm.com/download/win/) appropriate for your version of Windows. Run the installer with the standard installation options. (Tested with version 2.12.0.)
 
 	b) Install all of the Microsoft Visual C++ Redistributable Packages relevant to your Windows version.
 
@@ -325,7 +359,7 @@ Symfony 3.4 with PHP 5.6:
     * [VC13 2013 Update 5 (x86)](https://support.microsoft.com/en-us/help/4032938/)
     * [VC16 2015-2019 (VC16 x86) 14.20.27508](https://aka.ms/vs/16/release/VC_redist.x86.exe)
 
-	c) Install an Apache-PHP-MySQL stack of your choice (for example: [AMPPS](http://www.ampps.com/downloads), [WAMP](http://www.wampserver.com/en/), or [XAMPP](https://www.apachefriends.org/index.html). PHP version 5.6.7 was initially tested and is preferred, but PHP version 7.1 appears to work as well and avoids the "PHP Fatal error: Allowed memory size of X bytes exhausted..." after running "composer update" in the later installation steps. MSSQL Server has been tested as well. The following instructions will assume AMPPS with PHP 5.6.7 were chosen.
+	c) Install an Apache-PHP-MySQL stack of your choice (for example: [AMPPS](http://www.ampps.com/downloads), [WAMP](http://www.wampserver.com/en/), or [XAMPP](https://www.apachefriends.org/index.html). PHP version 5.6.7 was initially tested with earlier versions, but PHP version 7.1 (and more recently 7.4) appears to work as well and avoids the "PHP Fatal error: Allowed memory size of X bytes exhausted..." after running "composer update" in the later installation steps. MSSQL Server and Postgres have been tested as well. The following instructions will assume AMPPS with PHP 5.6.7 were chosen.
 
 	d) Download the [installer for AMPPS](http://www.ampps.com/downloads) Apache-PHP-MySQL stack appropriate for your version of Windows. Run the installer with the standard installation options. After installation, open AMPPS, and when prompted to install "C++ Redistributable Visual Studio", select "Yes". (Tested with version 3.6.)
 
@@ -466,14 +500,6 @@ Symfony 3.4 with PHP 5.6:
 		mailer_password: null
 		locale: en   
 		delivery_strategy: realtime
-		
-	Note for Google Email Server: 
-		Use Google API password as follow:
-		a) Enable 2-step verification
-		b) Generate Google App specific password
-		c) Disable 2-step verification
-		
-	
 	
 5. Deployment
 	
@@ -483,7 +509,7 @@ Symfony 3.4 with PHP 5.6:
 
 	[http://localhost/order/directory/admin/first-time-login-generation-init/](http://localhost/order/directory/admin/first-time-login-generation-init/)  Wait until the site re-directs to the log in screen (it might take a while.)
 
-	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
+	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 	
 	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
@@ -556,11 +582,11 @@ Symfony 3.4 with PHP 5.6:
 
 [Admin page](http://collage.med.cornell.edu/order/admin)
 
-### To include assets located in your bundles' Resources/public folder (target is by default "web"):
+### To include assets located in your bundle's Resources/public folder (target is by default "web"):
 
 	 php bin/console assets:install
 
-### Note: For production mode execute the following command to clean cache and fix assetic links to js and css
+### Note: For production mode, execute the following command to clean cache and fix assetic links to js and css:
 (read: Dumping Asset Files in the dev environment [http://symfony.com/doc/current/cookbook/assetic/asset_management.html](http://symfony.com/doc/current/cookbook/assetic/asset_management.html)):
 
 	 php bin/console cache:clear --env=prod --no-debug or (php bin/console cache:clear --env=prod --no-debug --no-warmup)
@@ -604,7 +630,7 @@ Symfony 3.4 with PHP 5.6:
 	 php bin/console doctrine:database:drop --force
 	 php bin/console doctrine:database:create
 
-### Create Symfony project (cd to htdocs/order)
+### To create a Symfony project (cd to htdocs/order)
 
 1) create git repository from remote server (on Bitbucket for example):
 
@@ -636,7 +662,6 @@ Symfony 3.4 with PHP 5.6:
 
 php ./bin/symfony_requirements
 
-
 ### To get changes onto your local machine:
 
 1) cd to folder created by clone
@@ -649,7 +674,7 @@ php ./bin/symfony_requirements
 
 	 git pull
 
-### If there are some local modified files, then git will not allow a merge with local modifications. There are 3 options (option (b): git stash is enough):
+### If there are some local modified files, git will not allow a merge with local modifications. There are 3 options (option (b): git stash is enough):
 
 a) Run command:
 
@@ -672,52 +697,52 @@ c) Run command:
 
 	 git push -u origin iss51
 
-### To create a local branch from a remote repo
+### To create a local branch from a remote repository:
 
 	 git fetch origin
 	 git checkout --track origin/iss51
 
-### Or:
+### Alternatively, to create a local branch from a remote repository::
 
 	 git remote update (note: this is the same as git fetch --all)
 	 git pull
 
-### To update the whole tree, even from a subfolder (including removed of deleted files)
+### To update the whole tree, even from a subfolder (including removed of deleted files):
 
 	 git add -u .
 	 git commit -m "message"
 	 git push -u origin master
 
-### To remove already cached files after changing .gitignore (First commit any outstanding code changes and then run this command)
+### To remove already cached files after changing .gitignore (First commit any outstanding code changes and then run this command):
 
 	 git rm -r --cached .
 	 git add .
 	 git commit -m ".gitignore is now working"
 
-### To check only a specific file from a remote repository
+### To check out only a specific file from a remote repository
 
 [http://stackoverflow.com/questions/2466735/how-to-checkout-only-one-file-from-git-repository](http://stackoverflow.com/questions/2466735/how-to-checkout-only-one-file-from-git-repository)
 
-### To download all the recent changes (but not put it in your current checked out code (working area)):
+### To download all the recent changes (without putting it in your current checked out code (working area)):
 
 	 git fetch
 
-### To checkout a particular file from the the downloaded changes (origin/master):
+### To checkout a particular file from the downloaded changes (origin/master):
 
 	 git checkout origin/master -- path/to/file
 
-### To revert a specific file to a specific version (abcde-commit you want)
+### To revert a specific file to a specific version (replace abcde with commit you want):
 
 	 git checkout abcde file/to/restore
 
-### To push tags to remote. If you're pushing to your origin you can ignore the <remote> part.
+### To push tags to the remote repository (if you're pushing to your origin you can ignore the <remote> part):
 	 git push --tags <remote>
 
-### To remove a file wrongly committed
+### To remove a file committed in error:
 	 git filter-branch --tree-filter 'rm -rf path/to/your/file' HEAD
 	 git push
 
-### Testing: run phpunit script, located in symfony's 'bin' folder:
+### Testing: to run the phpunit script, located in symfony's 'bin' folder:
 
 	Run all tests (>70 tests, >210 assertions in ~9 minutes): ./bin/simple-phpunit
 	Run Employee directory test only: ./bin/simple-phpunit tests/Oleg/TestBundle/UserTest.php
@@ -728,16 +753,17 @@ c) Run command:
 	
 	To run test on the server without existing data use TESTENV=nodata in front of ./bin/simple-phpunit: TESTENV=nodata ./bin/simple-phpunit
 
-### Testing with casperjs on the original Dev server on the intranet: 
+### Unit testing with casperjs on the original Dev server on the intranet: 
 
-1. run   [/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
+1. run   [/order/test/index.php](http://IPADDRESS/order/test/index.php)
 
 2. The resulting log and screen shots are in order/test folder)
 
 
-### Redirect to a new server keeping the same url parameters
+### To redirect visiting users to a new server while keeping the same url path, on the old redirecting server add one of the following snippets to the "<VirtualHost *:80>" section of the Apache's httpd.conf file:
+
 1. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/vacation-request
-   Add to <VirtualHost *:80> section:
+
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
 		RewriteCond %{REQUEST_URI} /order/		
@@ -745,11 +771,9 @@ c) Run command:
 	</IfModule>
 
 2. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/order/vacation-request
-	Add to <VirtualHost *:80> section:
+
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
 		RewriteCond %{REQUEST_URI} /order/
 		RewriteRule (.*) https://view.med.cornell.edu$1 [R=301,L]		
-	</IfModule>	
-
-
+	</IfModule>
