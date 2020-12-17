@@ -452,6 +452,9 @@ class ResidencyApplication extends BaseUserAttributes {
     private $applyingTracks;
 
     /**
+     * ERROR: The property "learnAreas" in class "App\ResAppBundle\Entity\ResidencyApplication" can be defined with the methods
+     * "addLearnArea()", "removeLearnArea()" but the new value must be an array or an instance of \Traversable, "string" given...
+     *
      * Which areas (if any) would you like to learn more about during your visit (check up to 3 in order of priority)
      *
      * @ORM\ManyToMany(targetEntity="LearnAreaList", cascade={"persist","remove"})

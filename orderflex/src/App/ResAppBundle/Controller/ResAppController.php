@@ -17,6 +17,7 @@
 
 namespace App\ResAppBundle\Controller;
 
+use App\ResAppBundle\Entity\LearnAreaList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use App\ResAppBundle\Entity\ResidencyApplication;
@@ -1247,6 +1248,11 @@ class ResAppController extends OrderAbstractController {
         foreach( $entity->getReports() as $report ) {
             $originalReports->add($report);
         }
+
+        $originalLearnAreas = new ArrayCollection();
+        foreach( $entity->getLearnAreas() as $learnArea ) {
+            $originalLearnAreas->add($learnArea);
+        }
         ////// EOF PRE Update INFO //////
 
         if( $routeName == "resapp_edit_default_interviewers" ) {
@@ -1272,6 +1278,11 @@ class ResAppController extends OrderAbstractController {
             $removedCollections = array();
 
             $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+
+            $removedInfo = $this->removeCollection($originalLearnAreas,$entity->getLearnAreas(),$entity);
             if( $removedInfo ) {
                 $removedCollections[] = $removedInfo;
             }
@@ -1491,6 +1502,11 @@ class ResAppController extends OrderAbstractController {
                 if( $element instanceof Interview ) {
                     $entity->removeInterview($element);
                     //$element->setInterviewer(NULL);
+                    $em->remove($element);
+                }
+
+                if( $element instanceof LearnAreaList ) {
+                    $entity->removeLearnArea($element);
                     $em->remove($element);
                 }
             }
