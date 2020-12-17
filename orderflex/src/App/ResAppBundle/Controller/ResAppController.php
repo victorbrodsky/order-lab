@@ -1249,10 +1249,10 @@ class ResAppController extends OrderAbstractController {
             $originalReports->add($report);
         }
 
-        $originalLearnAreas = new ArrayCollection();
-        foreach( $entity->getLearnAreas() as $learnArea ) {
-            $originalLearnAreas->add($learnArea);
-        }
+//        $originalLearnAreas = new ArrayCollection();
+//        foreach( $entity->getLearnAreas() as $learnArea ) {
+//            $originalLearnAreas->add($learnArea);
+//        }
         ////// EOF PRE Update INFO //////
 
         if( $routeName == "resapp_edit_default_interviewers" ) {
@@ -1282,11 +1282,13 @@ class ResAppController extends OrderAbstractController {
                 $removedCollections[] = $removedInfo;
             }
 
-            $removedInfo = $this->removeCollection($originalLearnAreas,$entity->getLearnAreas(),$entity);
-            if( $removedInfo ) {
-                $removedCollections[] = $removedInfo;
-            }
+//            $removedInfo = $this->removeCollection($originalLearnAreas,$entity->getLearnAreas(),$entity);
+//            if( $removedInfo ) {
+//                $removedCollections[] = $removedInfo;
+//            }
             /////////////// EOF Process Removed Collections ///////////////
+
+            //TODO:  '5,21,Area1' => convert Area1 to an object LearnAreaList
 
             $this->calculateScore($entity); // /edit/{id}  /edit-with-default-interviewers/{id}
 
@@ -1505,10 +1507,10 @@ class ResAppController extends OrderAbstractController {
                     $em->remove($element);
                 }
 
-                if( $element instanceof LearnAreaList ) {
-                    $entity->removeLearnArea($element);
-                    $em->remove($element);
-                }
+//                if( $element instanceof LearnAreaList ) {
+//                    $entity->removeLearnArea($element);
+//                    $em->remove($element);
+//                }
             }
         } //foreach
 
