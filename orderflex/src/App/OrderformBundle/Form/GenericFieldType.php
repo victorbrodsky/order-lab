@@ -77,6 +77,15 @@ class GenericFieldType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        if( $this->genAttr && isset($this->genAttr['class']) ) {
+            //ok
+        } else {
+            $this->genAttr = array('class'=>null);
+        }
+
+        //dump($this->genAttr);
+        //exit('class='.$this->genAttr['class']);
+
         $resolver->setDefaults(array(
             'data_class' => $this->genAttr['class'],
             'form_custom_value' => null,

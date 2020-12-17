@@ -462,14 +462,27 @@ class ResidencyApplication extends BaseUserAttributes {
      **/
     private $learnAreas;
 
+//    /**
+//     * SpecificIndividualList is unused, but keep it in DB because it's already linked to the PlatformListManagerRootList
+//     * If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank).
+//     * We will do our best to accommodate your request (Multiselect)
+//     *
+//     * @ORM\ManyToMany(targetEntity="SpecificIndividualList", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="resapp_application_specificIndividual",
+//     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="specificIndividual_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $specificIndividuals;
     /**
+     * Use UserWrapper list (similar to "Ordering Provider(s):" => message->proxyuser in scan/scan-order/multi-slide-table-view/new)
      * If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank).
      * We will do our best to accommodate your request (Multiselect)
      *
-     * @ORM\ManyToMany(targetEntity="SpecificIndividualList", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="resapp_application_specificIndividual",
-     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="specificIndividual_id", referencedColumnName="id")}
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="resapp_application_specificindividual",
+     *      joinColumns={@ORM\JoinColumn(name="residencyapplication_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="specificindividual_id", referencedColumnName="id")}
      *      )
      **/
     private $specificIndividuals;
@@ -511,7 +524,7 @@ class ResidencyApplication extends BaseUserAttributes {
 
         $this->applyingTracks = new ArrayCollection();
         $this->learnAreas = new ArrayCollection();
-        $this->specificIndividuals = new ArrayCollection();
+        $this->specificIndividuals = new ArrayCollection(); //UserWrapper
     }
 
 
@@ -1468,6 +1481,7 @@ class ResidencyApplication extends BaseUserAttributes {
         $this->learnAreas->removeElement($item);
     }
 
+    //Use the same name for UserWrapper list
     public function getSpecificIndividuals()
     {
         return $this->specificIndividuals;
@@ -1483,6 +1497,7 @@ class ResidencyApplication extends BaseUserAttributes {
     {
         $this->specificIndividuals->removeElement($item);
     }
+
 
     /**
      * @return mixed
