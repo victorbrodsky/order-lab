@@ -480,16 +480,16 @@ function ajaxFinishedCondition() {
     //console.log('_scanregion.length='+_scanregion.length);
     //console.log('_slidetypes.length='+_slidetypes.length);
 
-    if( !(_accessiontype.length > 0) ) { console.log('NULL _accessiontype.length='+_accessiontype.length); }
-    if( !(_procedure.length > 0) ) { console.log('NULL _procedure.length='+_procedure.length); }
-    if( !(_mrntype.length > 0) ) { console.log('NULL _mrntype.length='+_mrntype.length); }
-    if( !(_partname.length > 0) ) { console.log('NULL _partname.length='+_partname.length); }
-    if( !(_blockname.length > 0) ) { console.log('NULL _blockname.length='+_blockname.length); }
-    if( !(_stain.length > 0) ) { console.log('NULL _stain.length='+_stain.length); }
-    if( !(_organ.length > 0) ) { console.log('NULL _organ.length='+_organ.length); }
-    if( !(_scanregion.length > 0) ) { console.log('NULL _scanregion.length='+_scanregion.length); }
-    if( !(_slidetypes.length > 0) ) { console.log('NULL _slidetypes.length='+_slidetypes.length); }
-    if( !(_parttitle.length > 0) ) { console.log('NULL _parttitle.length='+_parttitle.length); }
+    // if( !(_accessiontype.length > 0) ) { console.log('NULL _accessiontype.length='+_accessiontype.length); }
+    // if( !(_procedure.length > 0) ) { console.log('NULL _procedure.length='+_procedure.length); }
+    // if( !(_mrntype.length > 0) ) { console.log('NULL _mrntype.length='+_mrntype.length); }
+    // if( !(_partname.length > 0) ) { console.log('NULL _partname.length='+_partname.length); }
+    // if( !(_blockname.length > 0) ) { console.log('NULL _blockname.length='+_blockname.length); }
+    // if( !(_stain.length > 0) ) { console.log('NULL _stain.length='+_stain.length); }
+    // if( !(_organ.length > 0) ) { console.log('NULL _organ.length='+_organ.length); }
+    // if( !(_scanregion.length > 0) ) { console.log('NULL _scanregion.length='+_scanregion.length); }
+    // if( !(_slidetypes.length > 0) ) { console.log('NULL _slidetypes.length='+_slidetypes.length); }
+    // if( !(_parttitle.length > 0) ) { console.log('NULL _parttitle.length='+_parttitle.length); }
 
     if(
             _accessiontype.length > 0 &&
