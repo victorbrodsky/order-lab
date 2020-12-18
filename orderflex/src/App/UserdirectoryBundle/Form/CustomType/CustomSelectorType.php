@@ -222,6 +222,14 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new ResearchLabTransformer($this->om, $username, 'Grant');
                 break;
 
+            case "learnareas":
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'LearnAreaList', 'ResAppBundle');
+                break;
+
+//            case "specificindividuals":
+//                $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
+//                break;
+
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }
