@@ -598,7 +598,7 @@ function setResappNavBar() {
         id = 'myinterviewees';
     }
 
-    if( full.indexOf("/residency-applications/send-rejection-emails") !== -1 ) {
+    if( full.indexOf("/residency-applications/group-emails") !== -1 ) {
         id = 'resapprejectionemails';
     }
 

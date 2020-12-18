@@ -7,7 +7,9 @@ function resappSendRejectionEmails() {
     console.log("resappSendRejectionEmails");
 
     var year = $('#filter_startDates').val();
-    var confirmText = "Would you like to send the following rejection notification e-mail to the following other "+year+" applicants?";
+    //var confirmText = "Would you like to send the following rejection notification e-mail to the following other "+year+" applicants?";
+    var confirmText = "Would you like to send the following rejection notification e-mail to the selected "+year+" applicants?";
+    //TODO: add list of checked applicants
     if( confirm(confirmText) ) {
         //txt = "You pressed OK!";
     } else {

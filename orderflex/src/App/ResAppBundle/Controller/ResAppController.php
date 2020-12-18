@@ -50,10 +50,11 @@ class ResAppController extends OrderAbstractController {
 
     /**
      * Show home page
+     * send-rejection-emails are replaced by group-emails
      *
      * @Route("/", name="resapp_home")
      * @Route("/my-interviewees/", name="resapp_myinterviewees")
-     * @Route("/send-rejection-emails", name="resapp_send_rejection_emails")
+     * @Route("/group-emails", name="resapp_send_rejection_emails")
      * @Route("/accepted-residents", name="resapp_accepted_residents")
      *
      * @Template("AppResAppBundle/Default/home.html.twig")
