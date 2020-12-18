@@ -452,9 +452,6 @@ class ResidencyApplication extends BaseUserAttributes {
     private $applyingTracks;
 
     /**
-     * ERROR: The property "learnAreas" in class "App\ResAppBundle\Entity\ResidencyApplication" can be defined with the methods
-     * "addLearnArea()", "removeLearnArea()" but the new value must be an array or an instance of \Traversable, "string" given...
-     *
      * Which areas (if any) would you like to learn more about during your visit (check up to 3 in order of priority)
      *
      * @ORM\ManyToMany(targetEntity="LearnAreaList", cascade={"persist","remove"})
@@ -465,17 +462,6 @@ class ResidencyApplication extends BaseUserAttributes {
      **/
     private $learnAreas;
 
-//    /**
-//     * SpecificIndividualList is unused, but keep it in DB because it's already linked to the PlatformListManagerRootList
-//     * If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:
-//     *
-//     * @ORM\ManyToMany(targetEntity="SpecificIndividualList", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="resapp_application_specificIndividual",
-//     *      joinColumns={@ORM\JoinColumn(name="residencyApplication_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="specificIndividual_id", referencedColumnName="id")}
-//     *      )
-//     **/
-//    private $specificIndividuals;
     /**
      * Use UserWrapper list (similar to "Ordering Provider(s):" => message->proxyuser in scan/scan-order/multi-slide-table-view/new)
      * If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:
