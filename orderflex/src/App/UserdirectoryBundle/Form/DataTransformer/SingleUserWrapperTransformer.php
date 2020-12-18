@@ -63,7 +63,7 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
         $wrapperUser = $entity->getEntity();
 
         if( $wrapperUser instanceof User ) {
-            //display user usning userInfos.displayName to match with the optimising version getProxyusersAction using userInfos.displayName
+            //display user usning userInfos.displayName to match with the optimising version getUserWrappersAction (previously getProxyusersAction) using userInfos.displayName
             return $wrapperUser->getDisplayName();
         }
 

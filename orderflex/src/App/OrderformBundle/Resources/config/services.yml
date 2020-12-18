@@ -29,9 +29,13 @@ services:
             - { name: form.type, alias: scan_custom_selector }
 
     #Redirect admin to index
-    authentication_handler:
+#    authentication_handler:
+#        class: App\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    scan_authentication_handler:
         class: App\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
 
     #security utility
 #    order_security_utility: use user_security_utility instead

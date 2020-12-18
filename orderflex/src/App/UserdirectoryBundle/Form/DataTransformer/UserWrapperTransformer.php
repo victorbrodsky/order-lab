@@ -113,8 +113,8 @@ class UserWrapperTransformer implements DataTransformerInterface
                 if( $entity ) {
                     //echo "add userwrapper to show ".$entity->getEntity()."<br>";
                     //$idArr[] = $entity->getUserStr();
-                    $idArr[] = $entity->getEntity();
-                    //$idArr[] = $entity->getId();
+                    //$idArr[] = $entity->getEntity();
+                    $idArr[] = $entity->getId();
                 }
             }
             

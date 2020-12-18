@@ -1288,8 +1288,6 @@ class ResAppController extends OrderAbstractController {
 //            }
             /////////////// EOF Process Removed Collections ///////////////
 
-            //TODO:  '5,21,Area1' => convert Area1 to an object LearnAreaList
-
             $this->calculateScore($entity); // /edit/{id}  /edit-with-default-interviewers/{id}
 
             $this->processDocuments($entity);

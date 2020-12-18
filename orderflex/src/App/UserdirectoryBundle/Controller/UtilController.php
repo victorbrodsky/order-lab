@@ -1551,7 +1551,7 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * Get all users and user wrappers combined
+     * Get all users and user wrappers combined (previously getProxyusersAction)
      * @Route("/common/userwrapper", name="employees_get_userwrapper", methods={"GET"})
      */
     public function getUserWrappersAction(Request $request) {
