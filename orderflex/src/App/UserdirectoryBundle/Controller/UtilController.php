@@ -1556,6 +1556,8 @@ class UtilController extends OrderAbstractController {
      */
     public function getUserWrappersAction(Request $request) {
 
+        //exit('getUserWrappersAction');
+
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('user_security_utility');
