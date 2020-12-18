@@ -199,7 +199,7 @@ class ResappTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/residency-applications/send-rejection-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
+        $crawler = $this->client->request('GET', '/residency-applications/group-emails?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[reject]=1');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
