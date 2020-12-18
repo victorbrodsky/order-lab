@@ -864,6 +864,8 @@ class ScanUtilController extends UtilController {
      */
     public function getProxyusersAction(Request $request) {
 
+        exit('proxyuser');
+
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('user_security_utility');

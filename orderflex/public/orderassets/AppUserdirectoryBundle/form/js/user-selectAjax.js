@@ -60,7 +60,7 @@ var _organizations = [];
 
 var _usernametype = [];
 
-//var _specificIndividuals = [];
+var _specificIndividuals = [];
 var _learnareas = [];
 
 function initAllComboboxGeneric(newForm) {
@@ -107,7 +107,7 @@ function initAllComboboxGeneric(newForm) {
 
     getComboboxGeneric(newForm,'usernametype',_usernametype,false);
 
-    //getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,true);
+    getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,true,'');
     getComboboxGeneric(newForm,'learnareas',_learnareas,true);
 }
 

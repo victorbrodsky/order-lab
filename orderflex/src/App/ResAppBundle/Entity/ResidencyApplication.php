@@ -467,8 +467,7 @@ class ResidencyApplication extends BaseUserAttributes {
 
 //    /**
 //     * SpecificIndividualList is unused, but keep it in DB because it's already linked to the PlatformListManagerRootList
-//     * If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank).
-//     * We will do our best to accommodate your request (Multiselect)
+//     * If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:
 //     *
 //     * @ORM\ManyToMany(targetEntity="SpecificIndividualList", cascade={"persist","remove"})
 //     * @ORM\JoinTable(name="resapp_application_specificIndividual",
@@ -479,8 +478,7 @@ class ResidencyApplication extends BaseUserAttributes {
 //    private $specificIndividuals;
     /**
      * Use UserWrapper list (similar to "Ordering Provider(s):" => message->proxyuser in scan/scan-order/multi-slide-table-view/new)
-     * If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank).
-     * We will do our best to accommodate your request (Multiselect)
+     * If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:
      *
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
      * @ORM\JoinTable(name="resapp_application_specificindividual",

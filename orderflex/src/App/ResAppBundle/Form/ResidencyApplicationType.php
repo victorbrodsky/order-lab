@@ -596,7 +596,7 @@ class ResidencyApplicationType extends AbstractType
             // followed by the current list of values from the platform list
             // manger list created in step 6C above and ALLOWING NEW VALUES.
 //            $builder->add('specificIndividuals',null, array(
-//                'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
+//                'label' => 'If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
 //                'required' => false,
 //                'multiple' => true,
 //                'attr' => array('class' => 'combobox'),
@@ -611,7 +611,7 @@ class ResidencyApplicationType extends AbstractType
 //                },
 //            ));
             $builder->add('specificIndividuals', CustomSelectorType::class, array(
-                'label' => 'If you would like to meet specific individuals at Cornell, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
+                'label' => 'If you would like to meet specific individuals, please indicate their names here (otherwise leave blank). We will do our best to accommodate your request:',
                 'required' => false,
                 'attr' => array('class' => 'combobox ajax-combobox-specificindividuals', 'type' => 'hidden'),
                 'classtype' => 'specificindividuals'

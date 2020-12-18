@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Form\CustomType;
 
 
 use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -226,9 +227,9 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'LearnAreaList', 'ResAppBundle');
                 break;
 
-//            case "specificindividuals":
-//                $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
-//                break;
+            case "specificindividuals":
+                $transformer = new UserWrapperTransformer($this->om, $this->serviceContainer, $username, 'UserWrapper');
+                break;
 
             default:
                 $transformer = new StringTransformer($this->om, $username);

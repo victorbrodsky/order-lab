@@ -1541,6 +1541,149 @@ class UtilController extends OrderAbstractController {
         $response->setContent(json_encode($output));
         return $response;
     }
+
+    /**
+     * Get all users and user wrappers combined
+     * @Route("/common/specificindividuals", name="employees_get_specificindividuals", methods={"GET"})
+     */
+    public function getSpecificIndividualsAction(Request $request) {
+        return $this->getUserWrappersAction($request);
+    }
+
+    /**
+     * Get all users and user wrappers combined
+     * @Route("/common/userwrapper", name="employees_get_userwrapper", methods={"GET"})
+     */
+    public function getUserWrappersAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
+        $securityUtil = $this->get('user_security_utility');
+        $cycle = $request->query->get('cycle');
+
+        $output = array();
+
+        ///////////// 1) get all real users /////////////
+        if(0) {
+            $query = $em->createQueryBuilder()
+                ->from('AppUserdirectoryBundle:User', 'list')
+                ->select("list")
+                //->groupBy('list.id')
+                ->leftJoin("list.infos", "infos")
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
+                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+                ->orderBy("infos.displayName", "ASC");
+
+            $users = $query->getQuery()->getResult();
+            //echo "users count=".count($users)."<br>";
+
+            foreach ($users as $user) {
+                $element = array('id' => $user."", 'text' => $user . "");
+                //$element = array('id' => $user->getUsername()."", 'text' => $user . "");
+                //$element = array('id' => $user->getId(), 'text' => $user . "");
+                //if( !$this->in_complex_array($user."",$output,'text') ) {
+                $output[] = $element;
+                //}
+            }
+        }
+        if(1) {
+            //Optimising (lighter) version without loop.
+            // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
+            $query = $em->createQueryBuilder()
+                ->from('AppUserdirectoryBundle:User', 'list')
+                ->select("infos.displayName as id, infos.displayName as text")
+                //->groupBy('list.id')
+                ->leftJoin("list.infos", "infos")
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                ->andWhere("(list.testingAccount = false OR list.testingAccount IS NULL)")
+                ->andWhere("(list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system')")
+                ->andWhere("infos.displayName IS NOT NULL")
+                ->orderBy("infos.displayName", "ASC")
+            ;
+
+            $output = $query->getQuery()->getResult();
+            //echo "users count=".count($output)."<br>";
+        }
+        ///////////// EOF 1) get all real users /////////////
+
+
+        $sourceSystem = $securityUtil->getDefaultSourceSystemByRequest($request);
+
+        ///////////// 2) default user wrappers for this source ///////////////
+        ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
+        if(1) {
+            $query = $em->createQueryBuilder()
+                ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+                ->select("list")
+                ->leftJoin("list.user", "user")
+                ->leftJoin("user.infos", "infos")
+                ->leftJoin("list.creator", "creator")
+                ->leftJoin("list.userWrapperSource", "userWrapperSource")
+                ->orderBy("infos.displayName", "ASC");
+
+            //default OR user-added user wrappers created by logged in user
+            //$query->andWhere("list.type=:default");
+            //echo "cycle=".$cycle."<br>";
+            if( $cycle != "show" && $cycle != "edit" && $cycle != "amend" ) {
+                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
+                    array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'loggedUser' => $loggedUser->getId()
+                    )
+                );
+            }
+
+            if( $sourceSystem ) {
+                //echo "sourceSystem: id=".$sourceSystem->getId()."; ".$sourceSystem."<br>";
+                $query->andWhere("userWrapperSource.id IS NULL OR userWrapperSource.id=" . $sourceSystem->getId());
+            }
+
+            //echo "query=".$query." <br><br>";
+            //exit();
+
+            $userWrappers = $query->getQuery()->getResult();
+            foreach ($userWrappers as $userWrapper) {
+                $thisId = $userWrapper->getId();
+                $element = array(
+                    'id' => $thisId,
+                    'text' => $userWrapper . ""
+                    //'text' => $userWrapper . "" . " [wrapper ID#".$thisId."]" //testing //TODO: fix user wrapper for edit/amend
+                );
+
+//                if( $cycle == "show" || $cycle == "edit" || $cycle == "amend" ) {
+//                    $output[] = $element;
+//                } else {
+//                    if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+//                        $output[] = $element;
+//                    }
+//                }
+
+                if( !$this->in_complex_array($userWrapper . "", $output, 'id') ) {
+                    $output[] = $element;
+                }
+
+            }
+
+            //print_r($output);
+            //exit('1');
+        }
+        ///////////// EOF 2) 3) user wrappers for this source ///////////////
+
+        //$output = array_merge($users,$output);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
     
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
@@ -1654,11 +1797,6 @@ class UtilController extends OrderAbstractController {
 
             case "residencytracks":
                 $className = "ResidencyTrackList";
-                break;
-
-            case "specificindividuals":
-                $className = "SpecificIndividualList";
-                $bundleName = "ResAppBundle";
                 break;
 
             case "learnareas":
