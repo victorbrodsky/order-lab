@@ -148,7 +148,7 @@ class PdfUtil {
                         $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
                     }
                     if( $residencyApplicationDb ) {
-                        echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
+                        //echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
                     }
 
                     $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
@@ -157,7 +157,7 @@ class PdfUtil {
                         $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
                     }
                     if( $residencyApplicationDb ) {
-                        echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
+                        //echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
                     }
 
                 }
