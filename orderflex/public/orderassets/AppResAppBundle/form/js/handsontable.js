@@ -440,7 +440,7 @@ function resappMakeColumnData() {
 
         { header:'AAMC ID', columns:{} },
 
-        { header:'Issue', columns:{} },
+        { header:'Status', columns:{} },
 
         { header:'ERAS Application', columns:{} },
 
@@ -506,7 +506,7 @@ function resappMakeColumnData() {
         
         // { header:'ERAS Application ID', columns:{} },
         //{ header:'ERAS Application', columns:{} },
-        //{ header:'Issue', columns:{} },
+        //{ header:'Status', columns:{} },
     ];
 
 }
@@ -667,21 +667,21 @@ function handsonTableInit(handsometableDataArr) {
             //http://jsfiddle.net/handsoncode/wp7ynbng/1/
             //http://jsfiddle.net/e2rxvkb0/
             //Cell does not keep chosen value, require to choose second time. Use actionRenderer?
-            //Issue id = -1, value = "No match found"
-            //if( headerTitle && headerTitle == "Issue" ) {
+            //Status id = -1, value = "No match found"
+            //if( headerTitle && headerTitle == "Status" ) {
                 //console.log("headerTitle=" + headerTitle + ", cellId=" + cellId);
             //}
             if(
                 c == 0 &&
                 typeof handsometableDataArr[r] != 'undefined' &&
-                typeof handsometableDataArr[r]["Issue"] != 'undefined' &&
-                typeof handsometableDataArr[r]["Issue"]["id"] != 'undefined'
+                typeof handsometableDataArr[r]["Status"] != 'undefined' &&
+                typeof handsometableDataArr[r]["Status"]["id"] != 'undefined'
                 //&& typeof handsometableDataArr[r]["ERAS Application"] != 'undefined' && handsometableDataArr[r]["ERAS Application"].length > 0 &&
                 //typeof handsometableDataArr[r]["ERAS Application"]["id"] != 'undefined'
             ) {
             //if( headerTitle && headerTitle == "Action" ) {
                 //console.log("c="+c+"; r="+r);
-                var issueCellId = handsometableDataArr[r]["Issue"]["id"];
+                var issueCellId = handsometableDataArr[r]["Status"]["id"];
                 //var erasFileCellId = handsometableDataArr[r]["ERAS Application"]["id"];
                 //var erasFileCellValue = handsometableDataArr[r]["ERAS Application"]["value"];
                 //console.log("headerTitle=" + headerTitle + ", issueCellId=" + issueCellId+", erasFileCellId="+erasFileCellId+", erasFileCellValue="+erasFileCellValue);
@@ -696,7 +696,7 @@ function handsonTableInit(handsometableDataArr) {
                 }
                 
             }
-            // if( headerTitle && headerTitle == "Issue" && cellId && cellId == -1 ) {
+            // if( headerTitle && headerTitle == "Status" && cellId && cellId == -1 ) {
             //     console.log("Use extended choices!!!");
             //     cellProperties.source = _resapps_simple; //extended choices including "Add to John Smith’s application (ID 1234)"
             // } else {

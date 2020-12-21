@@ -91,8 +91,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 //            $rowArr = array();
 //            $rowArr['ERAS Application']['id'] = 1;
 //            $rowArr['ERAS Application']['value'] = 'test originalName';
-//            //$rowArr['Issue']['id'] = null;
-//            //$rowArr['Issue']['value'] = "";
+//            //$rowArr['Status']['id'] = null;
+//            //$rowArr['Status']['value'] = "";
 //            //Add to John Smith’s application (ID 1234)
 //            $resappIdArr = array();
 //            $resappInfoArr = array();
@@ -555,12 +555,12 @@ class ResAppBulkUploadController extends OrderAbstractController
             //echo "aamcIdValue=".$aamcIdValue." <br>";
             //exit('111');
 
-            $issueArr = $this->getValueByHeaderName('Issue',$row,$headers);
+            $issueArr = $this->getValueByHeaderName('Status',$row,$headers); //Issue
             $issueValue = $issueArr['val']; //i.e. "Dupliacte in batch"
             //$issueId = $issueArr['id'];
             $issueStr = "";
             if( $issueValue ) {
-                $issueStr = " (with issue '$issueValue')";
+                $issueStr = " (with status '$issueValue')";
             }
 
             $erasFileArr = $this->getValueByHeaderName('ERAS Application',$row,$headers);

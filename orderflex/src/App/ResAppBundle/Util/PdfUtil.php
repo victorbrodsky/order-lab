@@ -198,8 +198,8 @@ class PdfUtil {
 //                $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
 //                $rowArr["Last Name"]['id'] = $applicantUser->getId();
 //
-//                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
-//                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
+//                $rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
+//                $rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
 //
 //                //change the value in the “Action” column to “Do not add”
 //                $rowArr['Action']['value'] = "Update PDF & ID Only";
@@ -219,8 +219,8 @@ class PdfUtil {
                 $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
                 $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
 
-                $rowArr['Issue']['value'] = "Update PDF & ID Only, CSV is not provided";
-                $rowArr['Issue']['id'] = -2; //$residencyApplicationDb->getId();
+                $rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
+                $rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
 
                 //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
@@ -565,12 +565,12 @@ class PdfUtil {
                     $rowArr['Action']['id'] = null;
                     $rowArr['Action']['value'] = "Do not add";
 
-                    $rowArr['Issue']['id'] = null;
-                    $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+                    $rowArr['Status']['id'] = null;
+                    $rowArr['Status']['value'] = implode(", ",$duplicateArr);
 
                     if( $pdfFile ) {
 
-                        //TODO: check if this PDF already attached to the application (if PDF different => Issue="previously uploaded PDF differs")
+                        //TODO: check if this PDF already attached to the application (if PDF different => Status="previously uploaded PDF differs")
                         //md5_file() in itself is slow. it takes 0.4 sec to return the md5 for a file of 70kb => pre-generate md5 for each file on upload or processDocument
                         $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,$duplicateResapps);
                         if( $existedPDF === false ) {
@@ -580,8 +580,8 @@ class PdfUtil {
                                 $rowArr['Action']['id'] = null;
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
 
-                                $rowArr['Issue']['id'] = -2; //implode(",",$duplicateIds);
-                                $rowArr['Issue']['value'] = implode(", ", $duplicateArr) . ", " . "new PDF"; //"previously uploaded PDF differs";
+                                $rowArr['Status']['id'] = -2; //implode(",",$duplicateIds);
+                                $rowArr['Status']['value'] = implode(", ", $duplicateArr) . ", " . "new PDF"; //"previously uploaded PDF differs";
                             }
                         }
 
@@ -963,31 +963,31 @@ class PdfUtil {
         //check for duplicate in $handsomtableJsonData
         $duplicateTableResApps = $this->getDuplicateTableResApps($rowArr, $handsomtableJsonData);
         if( $duplicateTableResApps  ) {
-            //$rowArr['Issue']['id'] = null;
-            //$rowArr['Issue']['value'] = "Duplicate in batch";
+            //$rowArr['Status']['id'] = null;
+            //$rowArr['Status']['value'] = "Duplicate in batch";
             $duplicateArr[] = "Duplicate in batch";
         } else {
-            //$rowArr['Issue']['id'] = null;
-            //$rowArr['Issue']['value'] = "Not Duplicated";
+            //$rowArr['Status']['id'] = null;
+            //$rowArr['Status']['value'] = "Not Duplicated";
         }
         
         //check for duplicate in DB
         $duplicateDbResApps = $this->getDuplicateDbResApps($rowArr);
         if( count($duplicateDbResApps) > 0  ) {
-            //$rowArr['Issue']['id'] = implode(",",$duplicateDbResApps);
-            //$rowArr['Issue']['value'] = "Previously Imported";
+            //$rowArr['Status']['id'] = implode(",",$duplicateDbResApps);
+            //$rowArr['Status']['value'] = "Previously Imported";
             foreach($duplicateDbResApps as $duplicateDbResApp) {
                 //$duplicateIds[] = $duplicateDbResApp->getId();
                 $duplicateResapps[] = $duplicateDbResApp;
             }
             $duplicateArr[] = "Previously Imported";
         } else {
-            //$rowArr['Issue']['id'] = null;
-            //$rowArr['Issue']['value'] = "Not Imported";
+            //$rowArr['Status']['id'] = null;
+            //$rowArr['Status']['value'] = "Not Imported";
         }
 //        if( count($duplicateArr) > 0 ) {
-//            $rowArr['Issue']['id'] = implode(",",$duplicateIds);
-//            $rowArr['Issue']['value'] = implode(", ",$duplicateArr);
+//            $rowArr['Status']['id'] = implode(",",$duplicateIds);
+//            $rowArr['Status']['value'] = implode(", ",$duplicateArr);
 //
 //            //change the value in the “Action” column to “Do not add”
 //            $rowArr['Action']['id'] = null;
@@ -1039,8 +1039,8 @@ class PdfUtil {
                 $rowArr = array();
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
-                $rowArr['Issue']['id'] = -1;
-                $rowArr['Issue']['value'] = "No match in CSV"; //match not found in CSV file
+                $rowArr['Status']['id'] = -1;
+                $rowArr['Status']['value'] = "No match in CSV"; //match not found in CSV file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
@@ -1064,15 +1064,15 @@ class PdfUtil {
                         $rowArr['Action']['value'] = $foundResapp->getAddToStr();
                         $rowArr['Action']['id'] = $foundResapp->getId();
 
-                        $rowArr['Issue']['id'] = -1;
-                        //$rowArr['Issue']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
-                        $rowArr['Issue']['value'] = "No match in CSV, new PDF"; //match not found in CSV file
+                        $rowArr['Status']['id'] = -1;
+                        //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
+                        $rowArr['Status']['value'] = "No match in CSV, new PDF"; //match not found in CSV file
                     } else {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
 
-                        $rowArr['Issue']['id'] = -1;
-                        $rowArr['Issue']['value'] = "No match in CSV, same PDF previously uploaded"; //match not found in CSV file
+                        $rowArr['Status']['id'] = -1;
+                        $rowArr['Status']['value'] = "No match in CSV, same PDF previously uploaded"; //match not found in CSV file
                     }
 
                 }
