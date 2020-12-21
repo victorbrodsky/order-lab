@@ -662,7 +662,7 @@ class PdfUtil {
         //exit(111);
 
         //added not used PDF files
-        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"No match in CSV");
+        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"Not in CSV");
         //dump($handsomtableJsonData);
         //exit("111");
 
@@ -1039,7 +1039,7 @@ class PdfUtil {
         return $duplicateRes;
     }
     
-    public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,$csvStatus="No match in CSV") {
+    public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,$csvStatus) {
         //return $handsomtableJsonData; //testing
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
