@@ -95,7 +95,7 @@ class PdfUtil {
             //echo "originalFileName=$originalFileName <br>";
             if( $originalFileName ) {
 
-                //Correct file name notation "...aid=12345678.pdf"
+                //Try to find by a file name notation "...aid=12345678.pdf"
                 if(
                     //strpos($originalFileName, 'ApplicantID=') !== false ||
                     //strpos($originalFileName, 'AID=') !== false ||
@@ -105,6 +105,10 @@ class PdfUtil {
                     if( count($originalFileNameSplit) > 0 ) {
                         $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
                         $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
+                        $erasApplicantId = str_replace("=","",$erasApplicantId);
+                        $erasApplicantId = str_replace(":","",$erasApplicantId);
+                        $erasApplicantId = str_replace("-","",$erasApplicantId);
+                        $erasApplicantId = str_replace("_","",$erasApplicantId);
                         //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
 //                        $aidSplit = explode('_',$aidPart);
 //                        if( count($aidSplit) > 0 ) {
@@ -121,6 +125,8 @@ class PdfUtil {
                 }
             }
 
+            //Try to find by PDF content: "Applicant ID:" or "AAMC ID:"
+            //TODO: if multiple application exists, choose the one with status=active
             if( !$residencyApplicationDb ) {
                 $pdfText = NULL;
                 $pdfFilePath = $pdfFile->getFullServerPath();
@@ -141,11 +147,17 @@ class PdfUtil {
                         //find resapp by Applicant ID
                         $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
                     }
+                    if( $residencyApplicationDb ) {
+                        echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
+                    }
 
                     $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
                     //echo "aamcID=$aamcID <br>";
-                    if ($aamcID) {
+                    if( $aamcID && !$residencyApplicationDb ) {
                         $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
+                    }
+                    if( $residencyApplicationDb ) {
+                        echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
                     }
 
                 }
@@ -225,11 +237,30 @@ class PdfUtil {
                 //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
 
+
+                //check If PDF is Existed In Resapp
+                $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($residencyApplicationDb));
+                if( $existedPDF === false ) {
+                    $rowArr['Action']['value'] = $residencyApplicationDb->getAddToStr();
+                    $rowArr['Action']['id'] = $residencyApplicationDb->getId();
+
+                    $rowArr['Status']['id'] = -1;
+                    //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
+                    $rowArr['Status']['value'] = "CSV is not provided, new PDF"; //match not found in CSV file
+                } else {
+                    $rowArr['Action']['value'] = "Do not add";
+                    $rowArr['Action']['id'] = null;
+
+                    $rowArr['Status']['id'] = -1;
+                    $rowArr['Status']['value'] = "CSV is not provided, same PDF previously uploaded"; //match not found in CSV file
+                }
+
+
                 $handsomtableJsonData[] = $rowArr;
             }
         }//foreach $pdfFiles
 
-        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr);
+        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"CSV is not provided");
         //dump($handsomtableJsonData);
         //exit("111");
 
@@ -631,7 +662,7 @@ class PdfUtil {
         //exit(111);
 
         //added not used PDF files
-        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr);
+        $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"No match in CSV");
         //dump($handsomtableJsonData);
         //exit("111");
 
@@ -1008,7 +1039,7 @@ class PdfUtil {
         return $duplicateRes;
     }
     
-    public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr) {
+    public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,$csvStatus="No match in CSV") {
         //return $handsomtableJsonData; //testing
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
@@ -1040,7 +1071,7 @@ class PdfUtil {
                 $rowArr['ERAS Application']['id'] = $fileId;
                 $rowArr['ERAS Application']['value'] = $pdfFileArr['originalName'];
                 $rowArr['Status']['id'] = -1;
-                $rowArr['Status']['value'] = "No match in CSV"; //match not found in CSV file
+                $rowArr['Status']['value'] = $csvStatus; //"No match in CSV"; //match not found in CSV file
                 //$rowArr['Action']['value'] = "Update PDF & ID Only";
                 //$rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
@@ -1066,13 +1097,13 @@ class PdfUtil {
 
                         $rowArr['Status']['id'] = -1;
                         //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
-                        $rowArr['Status']['value'] = "No match in CSV, new PDF"; //match not found in CSV file
+                        $rowArr['Status']['value'] = $csvStatus.", new PDF"; //"No match in CSV, new PDF"; //match not found in CSV file
                     } else {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
 
                         $rowArr['Status']['id'] = -1;
-                        $rowArr['Status']['value'] = "No match in CSV, same PDF previously uploaded"; //match not found in CSV file
+                        $rowArr['Status']['value'] = $csvStatus.", same PDF previously uploaded"; //"No match in CSV, same PDF previously uploaded"; //match not found in CSV file
                     }
 
                 }
