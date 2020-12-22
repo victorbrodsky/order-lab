@@ -457,7 +457,8 @@ class RequestController extends OrderAbstractController
                     $product->setTransresRequest(null);
                     $em->persist($product);
                     // if you wanted to delete the Tag entirely, you can also do that
-                    $em->remove($product);
+                    //don't delete $product entity because it might be still used in InvoiceItem entity
+                    //$em->remove($product);
                 }
             }
 
