@@ -91,9 +91,12 @@ class PdfUtil {
             //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
             $pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'originalName'=>$pdfFile->getOriginalname());
 
-            $originalFileName = $pdfFile->getOriginalname();
-            //echo "originalFileName=$originalFileName <br>";
-            if( $originalFileName ) {
+            $useDirectSearch = true;
+            $useDirectSearch = false; //use the same logic flow as for PDF not found in CSV (addNotUsedPDFtoTable)
+            if( $useDirectSearch ) {
+                $originalFileName = $pdfFile->getOriginalname();
+                //echo "originalFileName=$originalFileName <br>";
+                if ($originalFileName) {
 
 //                //Try to find by a file name notation "...aid=12345678.pdf"
 //                if(
@@ -124,49 +127,49 @@ class PdfUtil {
 //                    }
 //                }
 
-                $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
-            }
-
-            //Try to find by PDF content: "Applicant ID:" or "AAMC ID:"
-            //TODO: if multiple application exists, choose the one with status=active
-            if( !$residencyApplicationDb ) {
-                $pdfText = NULL;
-                $pdfFilePath = $pdfFile->getFullServerPath();
-                if ($pdfFilePath) {
-                    $pdfText = $this->extractPdfText($pdfFilePath);
-                    //if ($pdfText) {
-                    //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
-                    //}
+                    $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
                 }
 
-                if ($pdfText) {
-                    $keyExistCount = 0;
-                    $totalCount = 0;
-
-                    $extractedErasApplicantID = $this->getSingleKeyField($pdfText, 'Applicant ID:');
-                    //echo "erasApplicantID=$extractedErasApplicantID <br>";
-                    if ($extractedErasApplicantID) {
-                        //find resapp by Applicant ID
-                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
-                    }
-                    if( $residencyApplicationDb ) {
-                        //echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
+                //Try to find by PDF content: "Applicant ID:" or "AAMC ID:"
+                //TODO: if multiple application exists, choose the one with status=active
+                if (!$residencyApplicationDb) {
+                    $pdfText = NULL;
+                    $pdfFilePath = $pdfFile->getFullServerPath();
+                    if ($pdfFilePath) {
+                        $pdfText = $this->extractPdfText($pdfFilePath);
+                        //if ($pdfText) {
+                        //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
+                        //}
                     }
 
-                    $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
-                    //echo "aamcID=$aamcID <br>";
-                    if( $aamcID && !$residencyApplicationDb ) {
-                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
-                    }
-                    if( $residencyApplicationDb ) {
-                        //echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
-                    }
+                    if ($pdfText) {
+                        $keyExistCount = 0;
+                        $totalCount = 0;
 
+                        $extractedErasApplicantID = $this->getSingleKeyField($pdfText, 'Applicant ID:');
+                        //echo "erasApplicantID=$extractedErasApplicantID <br>";
+                        if ($extractedErasApplicantID) {
+                            //find resapp by Applicant ID
+                            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
+                        }
+                        if ($residencyApplicationDb) {
+                            //echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
+                        }
+
+                        $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
+                        //echo "aamcID=$aamcID <br>";
+                        if ($aamcID && !$residencyApplicationDb) {
+                            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
+                        }
+                        if ($residencyApplicationDb) {
+                            //echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
+                        }
+
+                    }
                 }
-            }
 
-            if( $residencyApplicationDb ) {
-                //Construct $handsomtableJsonData
+                if ($residencyApplicationDb) {
+                    //Construct $handsomtableJsonData
 
 //                "Application Receipt Date" => "Applicant Applied Date",
 //                "Application Season Start Date" => "Applicant Applied Date",
@@ -180,7 +183,7 @@ class PdfUtil {
 //
 //                "Preferred Email" => "E-mail",
 
-                $usedPdfArr[$pdfFile->getId()] = true;
+                    $usedPdfArr[$pdfFile->getId()] = true;
 
 //                $rowArr = array();
 //
@@ -221,47 +224,49 @@ class PdfUtil {
 //
 //                $handsomtableJsonData[] = $rowArr;
 
-                $rowArr = array();
+                    $rowArr = array();
 
-                //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
-                $rowArr = $this->populateRowByExistedResapp($rowArr,$residencyApplicationDb,$pdfFile);
+                    //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
+                    $rowArr = $this->populateRowByExistedResapp($rowArr, $residencyApplicationDb, $pdfFile);
 
-                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
-                if( !$thisErasApplicantId ) {
-                    $thisErasApplicantId = $erasApplicantId;
+                    $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
+                    if (!$thisErasApplicantId) {
+                        $thisErasApplicantId = $erasApplicantId;
+                    }
+                    $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
+                    $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
+
+                    //$rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
+                    //$rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
+
+                    //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
+                    //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
+
+
+                    //check If PDF is Existed In Resapp
+                    $existedPDF = $this->checkIfPDFExistInResapp($pdfFile, array($residencyApplicationDb));
+                    if ($existedPDF === false) {
+                        //New PDF
+                        $rowArr['Action']['value'] = $residencyApplicationDb->getAddToStr();
+                        $rowArr['Action']['id'] = $residencyApplicationDb->getId();
+
+                        $rowArr['Status']['id'] = -2;
+                        //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
+                        $rowArr['Status']['value'] = "CSV is not provided, new PDF"; //match not found in CSV file
+                    } else {
+                        //PDF is already existed in the residency application
+                        $rowArr['Action']['value'] = "Do not add";
+                        $rowArr['Action']['id'] = null;
+
+                        $rowArr['Status']['id'] = -2;
+                        $rowArr['Status']['value'] = "CSV is not provided, same PDF previously uploaded"; //match not found in CSV file
+                    }
+
+
+                    $handsomtableJsonData[] = $rowArr;
                 }
-                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
-                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
 
-                //$rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
-                //$rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
-
-                //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
-                //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
-
-
-                //check If PDF is Existed In Resapp
-                $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($residencyApplicationDb));
-                if( $existedPDF === false ) {
-                    //New PDF
-                    $rowArr['Action']['value'] = $residencyApplicationDb->getAddToStr();
-                    $rowArr['Action']['id'] = $residencyApplicationDb->getId();
-
-                    $rowArr['Status']['id'] = -2;
-                    //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
-                    $rowArr['Status']['value'] = "CSV is not provided, new PDF"; //match not found in CSV file
-                } else {
-                    //PDF is already existed in the residency application
-                    $rowArr['Action']['value'] = "Do not add";
-                    $rowArr['Action']['id'] = null;
-
-                    $rowArr['Status']['id'] = -2;
-                    $rowArr['Status']['value'] = "CSV is not provided, same PDF previously uploaded"; //match not found in CSV file
-                }
-
-
-                $handsomtableJsonData[] = $rowArr;
-            }
+            }//if use add Not UsedPDFtoTable function
         }//foreach $pdfFiles
 
         $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"CSV is not provided");
@@ -1052,7 +1057,7 @@ class PdfUtil {
         foreach($resapps as $resapp) {
             $subjectUser = $resapp->getUser();
             if($subjectUser) {
-                //TODO: add key values "ERAS Application ID", "AAMC ID"
+                //Add key values including "ERAS Application ID", "AAMC ID"
                 $resappInfoArr[$resapp->getId()] = array(
                     'email' => $subjectUser->getSingleEmail(), 
                     'lastname' => $subjectUser->getSingleLastName(),
@@ -1069,7 +1074,7 @@ class PdfUtil {
             if( isset($usedPdfArr[$fileId]) && $usedPdfArr[$fileId] ) {
                 //used
             } else {
-
+                //PDF has not been associated in CSV or CSV is not provided
                 $pdfFile = $pdfFileArr['file'];
 
                 //$notUsedPdfArr[$fileId] = $pdfFileArr;
@@ -1114,6 +1119,9 @@ class PdfUtil {
                         $rowArr['Status']['value'] = $csvStatus.", same PDF previously uploaded"; //"No match in CSV, same PDF previously uploaded"; //match not found in CSV file
                     }
 
+                    //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
+                    $rowArr = $this->populateRowByExistedResapp($rowArr,$foundResapp,$pdfFile);
+
                 } else {
                     //resapp not found
                     $rowArr['Action']['value'] = "Do not add";
@@ -1121,10 +1129,41 @@ class PdfUtil {
 
                     $rowArr['Status']['id'] = -1;
                     $rowArr['Status']['value'] = $csvStatus.", unexpected PDF Format"; //"No match in CSV"; //match not found in CSV file
+
+                    //TODO: try to get table values from PDF file $pdfFile
+                    if( $pdfFile ) {
+                        $pdfFilePath = $pdfFile->getFullServerPath();
+                        //$pdfFilePath = realpath($pdfFilePath);
+//                        if (file_exists($pdfFilePath)) {
+//                            //echo "The file $path exists <br>";
+//                        } else {
+//                            echo "1The file $pdfFilePath does not exist <br>";
+//                        }
+                        //exit('pdfFilePath='.$pdfFilePath);
+                        if( $pdfFilePath ) {
+                            $pdfKeys = $this->extractPdfText($pdfFilePath,false); //false => return array of keys
+                            dump($pdfKeys);
+                            exit('pdfFilePath='.$pdfFilePath);
+//                              "Applicant ID:" => "2019101136"
+//                              "AAMC ID:" => "13781849"
+//                              "Email:" => "ben.gertsen@gmail.com"
+//                              "Name:" => "Gertsen, Benjamin Garrett"
+//                              "Birth Date:" => "05/05/1987 Birth Place: Petaluma, CA Citizenship: U.S. Citizen"
+//                              "USMLE ID:" => "5-358-577-4"
+//                              "NRMP ID:" => "N0577580"
+//                              "Gender:" => "Male"
+//                              "Participating as a Couple in NRMP:" => "No"
+//                              "Present Mailing Address:" => "138 Edgemont Rd Rochester, NY 14620"
+//                              "Preferred Phone #:" => "3608579057"
+
+                            
+
+                        }
+                    }
+
                 }
 
-                //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
-                $rowArr = $this->populateRowByExistedResapp($rowArr,$foundResapp,$pdfFile);
+
 
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
@@ -1213,7 +1252,8 @@ class PdfUtil {
 
         return $resapps;
     }
-    //find match for resapp info and given pdf
+    //find the first match for resapp info and given pdf
+    //return first matched residency application or NULL
     //Used in addNotUsedPDFtoTable
     public function findResappByApplicant($resappInfoArr,$pdfInfoArr) {
 
@@ -1221,7 +1261,9 @@ class PdfUtil {
         if( isset($pdfInfoArr['originalName']) ) {
             $originalFileName = $pdfInfoArr['originalName'];
             $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
-            return $residencyApplicationDb;
+            if( $residencyApplicationDb ) {
+                return $residencyApplicationDb;
+            }
         }
 
         $foundResappId = NULL;
@@ -1258,7 +1300,7 @@ class PdfUtil {
                 }
             }
 
-            //Search by "AAMC ID"
+            //Search by "ERAS Application ID"
             $erasApplicantId = $thisResappInfoArr['erasApplicantId'];
             if( $erasApplicantId ) {
                 if( strpos($pdfText, $erasApplicantId) !== false ) {
@@ -1741,7 +1783,7 @@ class PdfUtil {
         if (file_exists($path)) {
             //echo "The file $path exists <br>";
         } else {
-            echo "The file $path does not exist <br>";
+            echo "extractPdfTextSpatie: The file $path does not exist <br>";
         }
 
         $userServiceUtil = $this->container->get('user_service_utility');
