@@ -95,34 +95,36 @@ class PdfUtil {
             //echo "originalFileName=$originalFileName <br>";
             if( $originalFileName ) {
 
-                //Try to find by a file name notation "...aid=12345678.pdf"
-                if(
-                    //strpos($originalFileName, 'ApplicantID=') !== false ||
-                    //strpos($originalFileName, 'AID=') !== false ||
-                    strpos($originalFileName, 'aid') !== false
-                ) {
-                    $originalFileNameSplit = explode('aid',$originalFileName);
-                    if( count($originalFileNameSplit) > 0 ) {
-                        $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
-                        $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
-                        $erasApplicantId = str_replace("=","",$erasApplicantId);
-                        $erasApplicantId = str_replace(":","",$erasApplicantId);
-                        $erasApplicantId = str_replace("-","",$erasApplicantId);
-                        $erasApplicantId = str_replace("_","",$erasApplicantId);
-                        //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
-//                        $aidSplit = explode('_',$aidPart);
-//                        if( count($aidSplit) > 0 ) {
-//                            $erasApplicantId = $aidSplit[0];
-//                        } else {
-//                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
-//                            if( count($aidSplit) > 0 ) {
-//                                $erasApplicantId = $aidSplit[0];
-//                            }
-//                        }
-                        //echo "filename erasApplicantId=$erasApplicantId <br>";
-                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
-                    }
-                }
+//                //Try to find by a file name notation "...aid=12345678.pdf"
+//                if(
+//                    //strpos($originalFileName, 'ApplicantID=') !== false ||
+//                    //strpos($originalFileName, 'AID=') !== false ||
+//                    strpos($originalFileName, 'aid') !== false
+//                ) {
+//                    $originalFileNameSplit = explode('aid',$originalFileName);
+//                    if( count($originalFileNameSplit) > 0 ) {
+//                        $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
+//                        $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
+//                        $erasApplicantId = str_replace("=","",$erasApplicantId);
+//                        $erasApplicantId = str_replace(":","",$erasApplicantId);
+//                        $erasApplicantId = str_replace("-","",$erasApplicantId);
+//                        $erasApplicantId = str_replace("_","",$erasApplicantId);
+//                        //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
+////                        $aidSplit = explode('_',$aidPart);
+////                        if( count($aidSplit) > 0 ) {
+////                            $erasApplicantId = $aidSplit[0];
+////                        } else {
+////                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
+////                            if( count($aidSplit) > 0 ) {
+////                                $erasApplicantId = $aidSplit[0];
+////                            }
+////                        }
+//                        //echo "filename erasApplicantId=$erasApplicantId <br>";
+//                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
+//                    }
+//                }
+
+                $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
             }
 
             //Try to find by PDF content: "Applicant ID:" or "AAMC ID:"
@@ -231,8 +233,8 @@ class PdfUtil {
                 $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
                 $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
 
-                $rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
-                $rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
+                //$rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
+                //$rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
 
                 //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                 //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
@@ -241,17 +243,19 @@ class PdfUtil {
                 //check If PDF is Existed In Resapp
                 $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($residencyApplicationDb));
                 if( $existedPDF === false ) {
+                    //New PDF
                     $rowArr['Action']['value'] = $residencyApplicationDb->getAddToStr();
                     $rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
-                    $rowArr['Status']['id'] = -1;
+                    $rowArr['Status']['id'] = -2;
                     //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
                     $rowArr['Status']['value'] = "CSV is not provided, new PDF"; //match not found in CSV file
                 } else {
+                    //PDF is already existed in the residency application
                     $rowArr['Action']['value'] = "Do not add";
                     $rowArr['Action']['id'] = null;
 
-                    $rowArr['Status']['id'] = -1;
+                    $rowArr['Status']['id'] = -2;
                     $rowArr['Status']['value'] = "CSV is not provided, same PDF previously uploaded"; //match not found in CSV file
                 }
 
@@ -601,12 +605,12 @@ class PdfUtil {
 
                     if( $pdfFile ) {
 
-                        //TODO: check if this PDF already attached to the application (if PDF different => Status="previously uploaded PDF differs")
+                        //Check if this PDF already attached to the application (if PDF different => Status="previously uploaded PDF differs")
                         //md5_file() in itself is slow. it takes 0.4 sec to return the md5 for a file of 70kb => pre-generate md5 for each file on upload or processDocument
                         $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,$duplicateResapps);
                         if( $existedPDF === false ) {
                             //if $duplicateArr has "Previously Imported"
-                            if (in_array("Previously Imported", $duplicateArr)) {
+                            if( in_array("Previously Imported", $duplicateArr) ) {
                                 //change the value in the “Action” column to "Update PDF & ID Only"
                                 $rowArr['Action']['id'] = null;
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
@@ -1048,10 +1052,13 @@ class PdfUtil {
         foreach($resapps as $resapp) {
             $subjectUser = $resapp->getUser();
             if($subjectUser) {
+                //TODO: add key values "ERAS Application ID", "AAMC ID"
                 $resappInfoArr[$resapp->getId()] = array(
                     'email' => $subjectUser->getSingleEmail(), 
                     'lastname' => $subjectUser->getSingleLastName(),
-                    'firstname' => $subjectUser->getSingleFirstName()
+                    'firstname' => $subjectUser->getSingleFirstName(),
+                    'aamcId' => $resapp->getAamcId(),
+                    'erasApplicantId' => $resapp->getErasApplicantId()
                 );
             }
         }
@@ -1091,6 +1098,7 @@ class PdfUtil {
 
                     //check If PDF is Existed In Resapp
                     $existedPDF = $this->checkIfPDFExistInResapp($pdfFile,array($foundResapp));
+
                     if( $existedPDF === false ) {
                         $rowArr['Action']['value'] = $foundResapp->getAddToStr();
                         $rowArr['Action']['id'] = $foundResapp->getId();
@@ -1106,6 +1114,13 @@ class PdfUtil {
                         $rowArr['Status']['value'] = $csvStatus.", same PDF previously uploaded"; //"No match in CSV, same PDF previously uploaded"; //match not found in CSV file
                     }
 
+                } else {
+                    //resapp not found
+                    $rowArr['Action']['value'] = "Do not add";
+                    $rowArr['Action']['id'] = null;
+
+                    $rowArr['Status']['id'] = -1;
+                    $rowArr['Status']['value'] = $csvStatus.", unexpected PDF Format"; //"No match in CSV"; //match not found in CSV file
                 }
 
                 //$rowArr, $residencyApplicationDb, $erasApplicantId=NULL, $pdfFile=NULL
@@ -1199,7 +1214,15 @@ class PdfUtil {
         return $resapps;
     }
     //find match for resapp info and given pdf
+    //Used in addNotUsedPDFtoTable
     public function findResappByApplicant($resappInfoArr,$pdfInfoArr) {
+
+        //try to find by filename notation "...aid=12345678.pdf"
+        if( isset($pdfInfoArr['originalName']) ) {
+            $originalFileName = $pdfInfoArr['originalName'];
+            $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
+            return $residencyApplicationDb;
+        }
 
         $foundResappId = NULL;
         $pdfText = NULL;
@@ -1226,6 +1249,25 @@ class PdfUtil {
         //find file has Email, LastName FirstName
         foreach($resappInfoArr as $resappId=>$thisResappInfoArr) {
 
+            //Search by "AAMC ID"
+            $aamcId = $thisResappInfoArr['aamcId'];
+            if( $aamcId ) {
+                if( strpos($pdfText, $aamcId) !== false ) {
+                    $foundResappId = $resappId;
+                    break;
+                }
+            }
+
+            //Search by "AAMC ID"
+            $erasApplicantId = $thisResappInfoArr['erasApplicantId'];
+            if( $erasApplicantId ) {
+                if( strpos($pdfText, $erasApplicantId) !== false ) {
+                    $foundResappId = $resappId;
+                    break;
+                }
+            }
+
+            //Search by email
             $email = $thisResappInfoArr['email'];
             if( $email ) {
                 if( strpos($pdfText, $email) !== false ) {
@@ -1253,9 +1295,45 @@ class PdfUtil {
         }
 
         if( $foundResappId ) {
-            return $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($foundResappId);
+            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($foundResappId);
+            return $residencyApplicationDb;
         }
 
+        return NULL;
+    }
+
+    //Try to find by a file name notation "...aid=12345678.pdf"
+    public function findResApplicationByFileName( $originalFileName ) {
+        if( !$originalFileName ) {
+            return NULL;
+        }
+        if(
+            //strpos($originalFileName, 'ApplicantID=') !== false ||
+            //strpos($originalFileName, 'AID=') !== false ||
+            strpos($originalFileName, 'aid') !== false
+        ) {
+            $originalFileNameSplit = explode('aid',$originalFileName);
+            if( count($originalFileNameSplit) > 0 ) {
+                $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
+                $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
+                $erasApplicantId = str_replace("=","",$erasApplicantId);
+                $erasApplicantId = str_replace(":","",$erasApplicantId);
+                $erasApplicantId = str_replace("-","",$erasApplicantId);
+                $erasApplicantId = str_replace("_","",$erasApplicantId);
+                //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
+//                        $aidSplit = explode('_',$aidPart);
+//                        if( count($aidSplit) > 0 ) {
+//                            $erasApplicantId = $aidSplit[0];
+//                        } else {
+//                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
+//                            if( count($aidSplit) > 0 ) {
+//                                $erasApplicantId = $aidSplit[0];
+//                            }
+//                        }
+                //echo "filename erasApplicantId=$erasApplicantId <br>";
+                return $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
+            }
+        }
         return NULL;
     }
 
