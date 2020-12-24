@@ -416,6 +416,7 @@ function resappMakeColumnData() {
 
     //$year = $this->getYear($cellValue);
     //$cellValue = "07/01/".$year;
+    //Take in consideration before or after July 1st?
     var year = new Date().getFullYear();
     var seasonStartDate = "07/01/"+year;
     var seasonEndDate = "06/30/"+year;

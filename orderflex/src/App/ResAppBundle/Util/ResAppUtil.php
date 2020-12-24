@@ -2312,7 +2312,10 @@ class ResAppUtil {
         }
 
         $resArr['Application Season Start Year'] = $applicationSeasonStartDate;
+        $resArr['Application Season End Year'] = $applicationSeasonStartDate+1;
+
         $resArr['Residency Start Year'] = $startDate;
+        $resArr['Residency End Year'] = $startDate+1;
 
         return $resArr;
     }

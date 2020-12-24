@@ -91,42 +91,16 @@ class PdfUtil {
             //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
             $pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'originalName'=>$pdfFile->getOriginalname());
 
-            $useDirectSearch = true;
-            $useDirectSearch = false; //use the same logic flow as for PDF not found in CSV (addNotUsedPDFtoTable)
+            $useDirectSearch = true; //search for all matched application in DB
+
+            //use the same logic flow as for PDF not found in CSV (addNotUsedPDFtoTable)
+            //It will use addNotUsedPDFtoTable to process PDF and will mark PDF for the previous year as "Create New Record"
+            $useDirectSearch = false;
+
             if( $useDirectSearch ) {
                 $originalFileName = $pdfFile->getOriginalname();
                 //echo "originalFileName=$originalFileName <br>";
                 if ($originalFileName) {
-
-//                //Try to find by a file name notation "...aid=12345678.pdf"
-//                if(
-//                    //strpos($originalFileName, 'ApplicantID=') !== false ||
-//                    //strpos($originalFileName, 'AID=') !== false ||
-//                    strpos($originalFileName, 'aid') !== false
-//                ) {
-//                    $originalFileNameSplit = explode('aid',$originalFileName);
-//                    if( count($originalFileNameSplit) > 0 ) {
-//                        $erasApplicantId = $originalFileNameSplit[1]; //2021248381.pdf
-//                        $erasApplicantId = str_replace(".pdf","",$erasApplicantId);
-//                        $erasApplicantId = str_replace("=","",$erasApplicantId);
-//                        $erasApplicantId = str_replace(":","",$erasApplicantId);
-//                        $erasApplicantId = str_replace("-","",$erasApplicantId);
-//                        $erasApplicantId = str_replace("_","",$erasApplicantId);
-//                        //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
-////                        $aidSplit = explode('_',$aidPart);
-////                        if( count($aidSplit) > 0 ) {
-////                            $erasApplicantId = $aidSplit[0];
-////                        } else {
-////                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
-////                            if( count($aidSplit) > 0 ) {
-////                                $erasApplicantId = $aidSplit[0];
-////                            }
-////                        }
-//                        //echo "filename erasApplicantId=$erasApplicantId <br>";
-//                        $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
-//                    }
-//                }
-
                     $residencyApplicationDb = $this->findResApplicationByFileName($originalFileName);
                 }
 
@@ -137,35 +111,28 @@ class PdfUtil {
                     $pdfFilePath = $pdfFile->getFullServerPath();
                     if ($pdfFilePath) {
                         $pdfText = $this->extractPdfText($pdfFilePath);
-                        //if ($pdfText) {
-                        //$pdfInfoArr[$pdfFile->getId()] = array('file'=>$pdfFile,'text' => $pdfText, 'path' => $pdfFilePath, 'originalName'=>$pdfFile->getOriginalname());
-                        //}
                     }
 
-                    if ($pdfText) {
-                        $keyExistCount = 0;
-                        $totalCount = 0;
-
+                    if( $pdfText ) {
                         $extractedErasApplicantID = $this->getSingleKeyField($pdfText, 'Applicant ID:');
                         //echo "erasApplicantID=$extractedErasApplicantID <br>";
                         if ($extractedErasApplicantID) {
                             //find resapp by Applicant ID
                             $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
                         }
-                        if ($residencyApplicationDb) {
-                            //echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
-                        }
+//                        if ($residencyApplicationDb) {
+//                            echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
+//                        }
 
                         $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
                         //echo "aamcID=$aamcID <br>";
                         if ($aamcID && !$residencyApplicationDb) {
                             $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
                         }
-                        if ($residencyApplicationDb) {
-                            //echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
-                        }
-
-                    }
+//                        if ($residencyApplicationDb) {
+//                            echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
+//                        }
+                    } //if( $pdfText ) {
                 }
 
                 if ($residencyApplicationDb) {
@@ -176,53 +143,12 @@ class PdfUtil {
 //                "Application Season End Date" => "Applicant Applied Date",
 //                "Expected Residency Start Date" => "Applicant Applied Date",
 //                "Expected Graduation Date" => "Applicant Applied Date",
-//
 //                "First Name" => "First Name",
 //                "Middle Name" => "Middle Name",
 //                "Last Name" => "Last Name",
-//
 //                "Preferred Email" => "E-mail",
 
                     $usedPdfArr[$pdfFile->getId()] = true;
-
-//                $rowArr = array();
-//
-//                $thisErasApplicantId = $residencyApplicationDb->getErasApplicantId();
-//                if( !$thisErasApplicantId ) {
-//                    $thisErasApplicantId = $erasApplicantId;
-//                }
-//
-//                $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
-//                $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
-//
-//                $rowArr["AAMC ID"]['value'] = $residencyApplicationDb->getAamcId();
-//                $rowArr["AAMC ID"]['id'] = $residencyApplicationDb->getId();
-//
-//                $rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
-//                $rowArr['ERAS Application']['id'] = $pdfFile->getId();
-//
-//                //$rowArr['Expected Residency Start Date']['value'] = $residencyApplicationDb->getStartDate();
-//                //$rowArr["Expected Residency Start Date"]['id'] = $residencyApplicationDb->getId();
-//
-//                $applicantUser = $residencyApplicationDb->getUser();
-//
-//                $rowArr["Preferred Email"]['value'] = $applicantUser->getEmail();
-//                $rowArr["Preferred Email"]['id'] = $applicantUser->getId();
-//
-//                $rowArr["First Name"]['value'] = $applicantUser->getFirstName();
-//                $rowArr["First Name"]['id'] = $applicantUser->getId();
-//
-//                $rowArr["Last Name"]['value'] = $applicantUser->getLastName();
-//                $rowArr["Last Name"]['id'] = $applicantUser->getId();
-//
-//                $rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
-//                $rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
-//
-//                //change the value in the “Action” column to “Do not add”
-//                $rowArr['Action']['value'] = "Update PDF & ID Only";
-//                $rowArr['Action']['id'] = $residencyApplicationDb->getId();
-//
-//                $handsomtableJsonData[] = $rowArr;
 
                     $rowArr = array();
 
@@ -236,12 +162,8 @@ class PdfUtil {
                     $rowArr['ERAS Application ID']['value'] = $thisErasApplicantId;
                     $rowArr['ERAS Application ID']['id'] = $residencyApplicationDb->getId();
 
-                    //$rowArr['Status']['value'] = "Update PDF & ID Only, CSV is not provided";
-                    //$rowArr['Status']['id'] = -2; //$residencyApplicationDb->getId();
-
                     //$rowArr['ERAS Application']['value'] = $pdfFile->getOriginalname();
                     //$rowArr['ERAS Application']['id'] = $pdfFile->getId();
-
 
                     //check If PDF is Existed In Resapp
                     $existedPDF = $this->checkIfPDFExistInResapp($pdfFile, array($residencyApplicationDb));
@@ -250,7 +172,7 @@ class PdfUtil {
                         $rowArr['Action']['value'] = $residencyApplicationDb->getAddToStr();
                         $rowArr['Action']['id'] = $residencyApplicationDb->getId();
 
-                        $rowArr['Status']['id'] = -2;
+                        $rowArr['Status']['id'] = -2; //-2 will add "Update PDF & ID Only" to handsontable
                         //$rowArr['Status']['value'] = "No match in CSV, previously uploaded PDF differs"; //match not found in CSV file
                         $rowArr['Status']['value'] = "CSV is not provided, new PDF"; //match not found in CSV file
                     } else {
@@ -258,7 +180,7 @@ class PdfUtil {
                         $rowArr['Action']['value'] = "Do not add";
                         $rowArr['Action']['id'] = null;
 
-                        $rowArr['Status']['id'] = -2;
+                        $rowArr['Status']['id'] = -2; //-2 will add "Update PDF & ID Only" to handsontable
                         $rowArr['Status']['value'] = "CSV is not provided, same PDF previously uploaded"; //match not found in CSV file
                     }
 
@@ -598,6 +520,7 @@ class PdfUtil {
                 $duplicateRes = $this->checkDuplicate($rowArr,$handsomtableJsonData);
                 $duplicateArr = $duplicateRes['duplicateInfoArr'];
                 $duplicateResapps = $duplicateRes['duplicateResapps'];
+                $duplicateIdArr = $duplicateRes['duplicateIdArr'];
 
                 if( count($duplicateArr) > 0 ) {
 
@@ -605,8 +528,13 @@ class PdfUtil {
                     $rowArr['Action']['id'] = null;
                     $rowArr['Action']['value'] = "Do not add";
 
+                    $duplicateIds = "";
+                    if( count($duplicateIdArr) > 0 ) {
+                        $duplicateIds = "; ID:".implode(",", $duplicateIdArr);
+                    }
+
                     $rowArr['Status']['id'] = null;
-                    $rowArr['Status']['value'] = implode(", ",$duplicateArr);
+                    $rowArr['Status']['value'] = implode(", ",$duplicateArr).$duplicateIds;
 
                     if( $pdfFile ) {
 
@@ -621,7 +549,7 @@ class PdfUtil {
                                 $rowArr['Action']['value'] = "Update PDF & ID Only";
 
                                 $rowArr['Status']['id'] = -2; //implode(",",$duplicateIds);
-                                $rowArr['Status']['value'] = implode(", ", $duplicateArr) . ", " . "new PDF"; //"previously uploaded PDF differs";
+                                $rowArr['Status']['value'] = implode(", ", $duplicateArr).$duplicateIds . ", " . "new PDF"; //"previously uploaded PDF differs";
                             }
                         }
 
@@ -996,7 +924,7 @@ class PdfUtil {
     //Used in getCsvApplicationsData
     public function checkDuplicate( $rowArr, $handsomtableJsonData ) {
         ////////////// check for duplicate //////////////////
-        //$duplicateIds = array();
+        $duplicateIds = array();
         $duplicateResapps = array();
         $duplicateArr = array();
         
@@ -1017,7 +945,7 @@ class PdfUtil {
             //$rowArr['Status']['id'] = implode(",",$duplicateDbResApps);
             //$rowArr['Status']['value'] = "Previously Imported";
             foreach($duplicateDbResApps as $duplicateDbResApp) {
-                //$duplicateIds[] = $duplicateDbResApp->getId();
+                $duplicateIds[] = $duplicateDbResApp->getId();
                 $duplicateResapps[] = $duplicateDbResApp;
             }
             $duplicateArr[] = "Previously Imported";
@@ -1042,12 +970,13 @@ class PdfUtil {
 
         $duplicateRes = array();
         $duplicateRes['duplicateInfoArr'] = $duplicateArr;
-        //$duplicateRes['duplicateIdArr'] = $duplicateIds;
+        $duplicateRes['duplicateIdArr'] = $duplicateIds;
         $duplicateRes['duplicateResapps'] = $duplicateResapps;
 
         return $duplicateRes;
     }
-    
+
+    //This function will mark PDF for existing, active application from previous application season year as "Create New Record"
     public function addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,$csvStatus) {
         //return $handsomtableJsonData; //testing
 
@@ -1133,13 +1062,6 @@ class PdfUtil {
                     //Try to get table values from PDF file $pdfFile
                     if( $pdfFile ) {
                         $pdfFilePath = $pdfFile->getFullServerPath();
-                        //$pdfFilePath = realpath($pdfFilePath);
-//                        if (file_exists($pdfFilePath)) {
-//                            //echo "The file $path exists <br>";
-//                        } else {
-//                            echo "1The file $pdfFilePath does not exist <br>";
-//                        }
-                        //exit('pdfFilePath='.$pdfFilePath);
                         if( $pdfFilePath ) {
                             $pdfKeys = $this->extractPdfText($pdfFilePath,false); //false => return array of keys
                             //dump($pdfKeys);
@@ -1166,7 +1088,27 @@ class PdfUtil {
 
                 }
 
+                //Check if this row already exists in table
+                if(1) {
+                    //add $rowArr['Expected Residency Start Date']['value']; $residencyStartDate->format('m/d/Y'); //07/01/2021
+                    $duplicateRes = $this->checkDuplicate($rowArr, $handsomtableJsonData);
+                    $duplicateArr = $duplicateRes['duplicateInfoArr'];
+                    $duplicateResapps = $duplicateRes['duplicateResapps'];
+                    $duplicateIdArr = $duplicateRes['duplicateIdArr'];
+                    if (count($duplicateArr) > 0) {
+                        //change the value in the “Action” column to “Do not add”
+                        $rowArr['Action']['id'] = null;
+                        $rowArr['Action']['value'] = "Do not add";
 
+                        $duplicateIds = "";
+                        if( count($duplicateIdArr) > 0 ) {
+                            $duplicateIds = "; ID:".implode(",", $duplicateIdArr);
+                        }
+
+                        $rowArr['Status']['id'] = null;
+                        $rowArr['Status']['value'] = implode(", ", $duplicateArr).$duplicateIds;
+                    }
+                }
 
 //                //Add to John Smith’s application (ID 1234)
 //                $resappIdArr = array();
@@ -1187,6 +1129,7 @@ class PdfUtil {
 
         return $handsomtableJsonData;
     }
+    //get all enabled (active) residency application for the current application season year
     public function getEnabledResapps($exceptStatusArr=array()) {
 
         if( count($exceptStatusArr) == 0 ) {
@@ -1235,6 +1178,7 @@ class PdfUtil {
         //$dql->andWhere("user.email = :applicantEmail");
         //$dql->andWhere("resapp.id != :resappId");
 
+        //show the list of current residency applicants that do not have a status of Hidden or Archived for the current year
         //applicationSeasonStartDate: current application season year: 7-1-2020 to 6-30-2021 (7-1-currentyear to 6-30-nextyear)
         //$startDate = $resapp->getStartDate();
         $startDateStr = date("Y");
@@ -1376,17 +1320,31 @@ class PdfUtil {
         //echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
         $rowArr["Residency Track"] = NULL; //$parsedData["Residency Track"];
 
+        //$datesArr = $resappUtil->getDefaultStartDates();
+        //$defaultStartDates = $datesArr['Residency Start Year'];
+        //$defaultApplicationSeasonStartDates = $datesArr['Application Season Start Year'];
+        $currentYear = $currentDate->format('Y');
+        $seasonStartDate = "07/01/".$currentYear;
+        $seasonEndDate = "06/30/".$currentYear;
+        $nextYear = $currentYear + 1;
+        $residencyStartDate = "07/01/".$nextYear;
+        $residencyEndDate = "06/30/".$nextYear;
+
         //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-        $rowArr["Application Season Start Date"] = NULL; //$parsedData["Application Season Start Date"];
+        $rowArr["Application Season Start Date"]['value'] = $seasonStartDate; //NULL; //$parsedData["Application Season Start Date"];
+        $rowArr["Application Season Start Date"]['id'] = 1;
 
         //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-        $rowArr["Application Season End Date"] = NULL; //$parsedData["Application Season End Date"];
+        $rowArr["Application Season End Date"]['value'] = $seasonEndDate; //NULL; //$parsedData["Application Season End Date"];
+        $rowArr["Application Season End Date"]['id'] = 1;
 
         //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-        $rowArr["Expected Residency Start Date"] = NULL; //$parsedData["Expected Residency Start Date"];
+        $rowArr["Expected Residency Start Date"]['value'] = $residencyStartDate; //NULL; //$parsedData["Expected Residency Start Date"];
+        $rowArr["Expected Residency Start Date"]['id'] = 1;
 
         //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
-        $rowArr["Expected Graduation Date"] = NULL; //$parsedData["Expected Graduation Date"];
+        $rowArr["Expected Graduation Date"]['value'] = $residencyEndDate; //NULL; //$parsedData["Expected Graduation Date"];
+        $rowArr["Expected Graduation Date"]['id'] = 1;
 
         //// get last, first name ////
         $firstName = NULL;
@@ -1460,15 +1418,6 @@ class PdfUtil {
                 $erasApplicantId = str_replace("-","",$erasApplicantId);
                 $erasApplicantId = str_replace("_","",$erasApplicantId);
                 //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
-//                        $aidSplit = explode('_',$aidPart);
-//                        if( count($aidSplit) > 0 ) {
-//                            $erasApplicantId = $aidSplit[0];
-//                        } else {
-//                            $aidSplit = explode('.',$aidPart); //End of file before extension "..._aid=12345678.pdf"
-//                            if( count($aidSplit) > 0 ) {
-//                                $erasApplicantId = $aidSplit[0];
-//                            }
-//                        }
                 //echo "filename erasApplicantId=$erasApplicantId <br>";
                 return $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
             }
