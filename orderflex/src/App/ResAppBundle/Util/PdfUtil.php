@@ -1130,7 +1130,7 @@ class PdfUtil {
                     $rowArr['Status']['id'] = -1;
                     $rowArr['Status']['value'] = $csvStatus.", unexpected PDF Format"; //"No match in CSV"; //match not found in CSV file
 
-                    //TODO: try to get table values from PDF file $pdfFile
+                    //Try to get table values from PDF file $pdfFile
                     if( $pdfFile ) {
                         $pdfFilePath = $pdfFile->getFullServerPath();
                         //$pdfFilePath = realpath($pdfFilePath);
@@ -1142,21 +1142,24 @@ class PdfUtil {
                         //exit('pdfFilePath='.$pdfFilePath);
                         if( $pdfFilePath ) {
                             $pdfKeys = $this->extractPdfText($pdfFilePath,false); //false => return array of keys
-                            dump($pdfKeys);
-                            exit('pdfFilePath='.$pdfFilePath);
-//                              "Applicant ID:" => "2019101136"
-//                              "AAMC ID:" => "13781849"
-//                              "Email:" => "ben.gertsen@gmail.com"
-//                              "Name:" => "Gertsen, Benjamin Garrett"
-//                              "Birth Date:" => "05/05/1987 Birth Place: Petaluma, CA Citizenship: U.S. Citizen"
-//                              "USMLE ID:" => "5-358-577-4"
-//                              "NRMP ID:" => "N0577580"
-//                              "Gender:" => "Male"
-//                              "Participating as a Couple in NRMP:" => "No"
-//                              "Present Mailing Address:" => "138 Edgemont Rd Rochester, NY 14620"
-//                              "Preferred Phone #:" => "3608579057"
+                            //dump($pdfKeys);
+                            //exit('pdfFilePath='.$pdfFilePath);
 
-                            
+                            //TODO: check if this row already exists in table
+                            //$duplicateRes = $this->checkDuplicate($rowArr,$handsomtableJsonData);
+                            //$duplicateArr = $duplicateRes['duplicateInfoArr'];
+                            //$duplicateResapps = $duplicateRes['duplicateResapps'];
+
+                            $additionalRowArr = $this->getHandsomtableData($pdfKeys);
+                            if( $additionalRowArr['keysFound'] ) {
+                                //keysFound
+                                $rowArr['Action']['value'] = "Create New Record";
+                                $rowArr['Action']['id'] = null;
+
+                                $rowArr['Status']['id'] = -1;
+                                $rowArr['Status']['value'] = $csvStatus.", Create new record from PDF"; //"No match in CSV"; //match not found in CSV file
+                            }
+                            $rowArr = array_merge($rowArr, $additionalRowArr);
 
                         }
                     }
@@ -1342,6 +1345,100 @@ class PdfUtil {
         }
 
         return NULL;
+    }
+
+    //$parsedData - key-value array where extracted keys from ERAS PDF file
+    public function getHandsomtableData( $parsedData ) {
+
+//        "Applicant ID:" => "2019101136"           ok
+//        "AAMC ID:" => "13781849"                  ok
+//        "Email:" => "ben.gertsen@gmail.com"       ok
+//        "Name:" => "Gertsen, Benjamin Garrett"    ok
+//        "Birth Date:" => "05/05/1987 Birth Place: Petaluma, CA Citizenship: U.S. Citizen" notused
+//        "USMLE ID:" => "5-358-577-4"              notused
+//        "NRMP ID:" => "N0577580"                  notused
+//        "Gender:" => "Male"                       notused
+//        "Participating as a Couple in NRMP:" => "No" ok
+//        "Present Mailing Address:" => "138 Edgemont Rd Rochester, NY 14620" notused
+//        "Preferred Phone #:" => "3608579057" notused
+
+        $rowArr = array();
+
+        $currentDate = new \DateTime();
+        //12dY 22:56:03
+        //$currentDateStr = $currentDate->format('m\d\Y H:i:s');
+        $currentDateStr = $currentDate->format('m/d/Y');
+        //echo "currentDateStr=".$currentDateStr."<br>";
+
+        $rowArr["Application Receipt Date"]['id'] = 1;
+        $rowArr["Application Receipt Date"]['value'] = $currentDateStr;
+
+        //echo "Residency Track:".$pdfTextArray["Residency Track"]."<br>";
+        $rowArr["Residency Track"] = NULL; //$parsedData["Residency Track"];
+
+        //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+        $rowArr["Application Season Start Date"] = NULL; //$parsedData["Application Season Start Date"];
+
+        //Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+        $rowArr["Application Season End Date"] = NULL; //$parsedData["Application Season End Date"];
+
+        //Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+        $rowArr["Expected Residency Start Date"] = NULL; //$parsedData["Expected Residency Start Date"];
+
+        //Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
+        $rowArr["Expected Graduation Date"] = NULL; //$parsedData["Expected Graduation Date"];
+
+        //// get last, first name ////
+        $firstName = NULL;
+        $lastName = NULL;
+        $fullName = $parsedData["Name:"];
+        $fullNameArr = explode(",",$fullName);
+        if( count($fullNameArr) > 1) {
+            $lastName = trim($fullNameArr[0]);
+            $firstName = trim($fullNameArr[1]);
+        } else {
+            $lastName = $fullName;
+            $firstName = NULL;
+        }
+        //// EOF get last, first name ////
+
+        //First Name
+        $rowArr["First Name"]['id'] = 1;
+        $rowArr["First Name"]['value'] = $firstName;
+
+        //Last Name
+        $rowArr["Last Name"]['id'] = 1;
+        $rowArr["Last Name"]['value'] = $lastName;
+
+        //Middle Name
+        $rowArr["Middle Name"] = NULL;
+
+        //Preferred Email
+        $rowArr["Preferred Email"]['id'] = 1;
+        $rowArr["Preferred Email"]['value'] = $parsedData["Email:"];
+
+        //Couple’s Match:
+        $rowArr["Couple’s Match"]['id'] = 1;
+        $rowArr["Couple’s Match"]['value'] = $parsedData["Participating as a Couple in NRMP:"];
+
+        //ERAS Application ID
+        $rowArr["ERAS Application ID"]['id'] = 1;
+        $rowArr["ERAS Application ID"]['value'] = $parsedData["Applicant ID:"];
+
+        //AAMC ID
+        $rowArr["AAMC ID"]['id'] = 1;
+        $rowArr["AAMC ID"]['value'] = $parsedData["AAMC ID:"];
+
+        $keysFound = false;
+        if( $rowArr["First Name"]['value'] && $rowArr["Last Name"]['value'] ) {
+            $keysFound = true;
+        }
+        if( $rowArr["Preferred Email"]['value'] ) {
+            $keysFound = true;
+        }
+        $rowArr['keysFound'] = $keysFound;
+
+        return $rowArr;
     }
 
     //Try to find by a file name notation "...aid=12345678.pdf"
