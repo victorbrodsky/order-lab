@@ -1350,17 +1350,17 @@ class PdfUtil {
     //$parsedData - key-value array where extracted keys from ERAS PDF file
     public function getHandsomtableData( $parsedData ) {
 
-//        "Applicant ID:" => "2019101136"           ok
-//        "AAMC ID:" => "13781849"                  ok
-//        "Email:" => "ben.gertsen@gmail.com"       ok
-//        "Name:" => "Gertsen, Benjamin Garrett"    ok
-//        "Birth Date:" => "05/05/1987 Birth Place: Petaluma, CA Citizenship: U.S. Citizen" notused
-//        "USMLE ID:" => "5-358-577-4"              notused
-//        "NRMP ID:" => "N0577580"                  notused
-//        "Gender:" => "Male"                       notused
+//        "Applicant ID:" => "11111"            ok
+//        "AAMC ID:" => "22222"                  ok
+//        "Email:" => "email@gmail.com"          ok
+//        "Name:" => "FamilyName, FirstName MiddleName"    ok
+//        "Birth Date:" => "m/d/Y Birth Place: City, State Citizenship: U.S. Citizen" notused
+//        "USMLE ID:" => "123"                  notused
+//        "NRMP ID:" => "N123"                  notused
+//        "Gender:" => "Male"                   notused
 //        "Participating as a Couple in NRMP:" => "No" ok
-//        "Present Mailing Address:" => "138 Edgemont Rd Rochester, NY 14620" notused
-//        "Preferred Phone #:" => "3608579057" notused
+//        "Present Mailing Address:" => "number street city, state zip" notused
+//        "Preferred Phone #:" => "12345678" notused
 
         $rowArr = array();
 
