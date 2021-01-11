@@ -182,7 +182,7 @@ class FellAppController extends OrderAbstractController {
 
         $filter = $filterform['filter']->getData();
         $search = $filterform['search']->getData();
-        $startDates = $filterform['startDates']->getData();
+        $startDates = $filterform['startDates']->getData(); //startDates: currentYear is year only i.e. 2021
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
         $complete = $filterform['complete']->getData();

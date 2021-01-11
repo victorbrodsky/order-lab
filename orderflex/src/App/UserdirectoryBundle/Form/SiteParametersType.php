@@ -715,14 +715,14 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearStart' )
             $builder->add('academicYearStart',null,array(
-                'label'=>'Academic Year Start (July 1st):',
+                'label'=>'Academic Year Start Day and Month (July 1st):',
                 //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
                 'attr' => array('class'=>'form-control')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearEnd' )
             $builder->add('academicYearEnd',null,array(
-                'label'=>'Academic Year End (June 30th):',
+                'label'=>'Academic Year End Day and Month (June 30th):',
                 'attr' => array('class'=>'form-control')
             ));
 

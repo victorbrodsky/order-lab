@@ -48,13 +48,13 @@ class VacReqSiteParameterType extends AbstractType
 
 
         $builder->add('academicYearStart',null,array(
-            'label'=>'Academic Year Start (July 1st):',
+            'label'=>'Vacation Academic Year Start (July 1st):',
             //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('academicYearEnd',null,array(
-            'label'=>'Academic Year End (June 30th):',
+            'label'=>'Vacation Academic Year End (June 30th):',
             'attr' => array('class'=>'form-control')
         ));
 

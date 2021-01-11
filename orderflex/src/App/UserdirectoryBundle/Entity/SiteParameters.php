@@ -944,11 +944,15 @@ class SiteParameters {
     private $academicYearEnd;
 
     /**
+     * Not Used: Moved to VacReqSiteParameter
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $holidaysUrl;
 
     /**
+     * Not Used: Moved to VacReqSiteParameter
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $vacationAccruedDaysPerMonth;

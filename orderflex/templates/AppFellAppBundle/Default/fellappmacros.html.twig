@@ -163,6 +163,7 @@
 
     {#href="{{ path('fellapp_home',{'filter[complete]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}"#}
 
+    {#currentYear is year only i.e. 2021#}
     <span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">
         <a style="color: white;" href="{{ path('fellapp_home',{filterStatus:1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
             {{ currentYearCount }}

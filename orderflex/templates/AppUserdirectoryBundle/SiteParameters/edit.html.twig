@@ -105,8 +105,13 @@
         {% if edit_form.academicYearStart is defined %}
             {#{{ formmacros.fielddate(edit_form.academicYearStart, "maintenanceenddate") }}#}
             {#{{ formmacros.fieldDateLabel(edit_form.academicYearStart,'allow-future-date') }}#}
-            {{ formmacros.field(edit_form.academicYearStart) }}
-            {#{{ form_label(edit_form.academicYearStart) }}#}
+
+            {#{{ formmacros.field(edit_form.academicYearStart) }}#}
+            {{ form_label(edit_form.academicYearStart) }}
+            {{ form_widget(edit_form.academicYearStart['month']) }}
+            {{ form_widget(edit_form.academicYearStart['day']) }}
+            {{ form_widget(edit_form.academicYearStart['year'],{'attr':{'style':'display:none'}}) }}
+
             {#{{ form_widget(edit_form.academicYearStart.month) }}#}
             {#{{ form_widget(edit_form.academicYearStart.day) }}#}
             {#{% set currentYear = "now"|date("Y") %}#}
@@ -118,7 +123,12 @@
         {% endif %}
         {% if edit_form.academicYearEnd is defined %}
             {#{{ formmacros.fieldDateLabel(edit_form.academicYearEnd,'allow-future-date') }}#}
-            {{ formmacros.field(edit_form.academicYearEnd) }}
+            {#{{ formmacros.field(edit_form.academicYearEnd) }}#}
+            {{ form_label(edit_form.academicYearEnd) }}
+            {{ form_widget(edit_form.academicYearEnd['month']) }}
+            {{ form_widget(edit_form.academicYearEnd['day']) }}
+            {{ form_widget(edit_form.academicYearEnd['year'],{'attr':{'style':'display:none'}}) }}
+
             {#{{ form_label(edit_form.academicYearEnd) }}#}
             {#{{ form_widget(edit_form.academicYearEnd.month) }}#}
             {#{{ form_widget(edit_form.academicYearEnd.day) }}#}

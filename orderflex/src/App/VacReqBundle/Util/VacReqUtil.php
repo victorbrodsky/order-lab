@@ -2180,6 +2180,7 @@ class VacReqUtil
         return $academicYearArr;
     }
 
+    //$yearOffset: 0=>current year, -1=>previous year
     //return format: Y-m-d
     public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false, $yearOffset=null) {
         $userSecUtil = $this->container->get('user_security_utility');

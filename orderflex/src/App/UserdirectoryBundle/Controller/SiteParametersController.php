@@ -345,6 +345,11 @@ class SiteParametersController extends OrderAbstractController
                 $updatedParam = implode("; ",$updatedParamArr);
             }
 
+            if( $param == 'academicYearStart' || $param == 'academicYearEnd' ) {
+                $originalParam = $originalParam->format('m/d');
+                $updatedParam = $updatedParam->format('m/d');
+            }
+
             //add a new eventlog record for an updated parameter
             $user = $this->get('security.token_storage')->getToken()->getUser();
             $userSecUtil = $this->get('user_security_utility');
