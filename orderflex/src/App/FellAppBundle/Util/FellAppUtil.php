@@ -132,17 +132,26 @@ class FellAppUtil {
                 $yearArr = explode(",",$year);
                 $criterions = array();
                 foreach($yearArr as $singleYear) {
-                    $bottomDate = $singleYear."-01-01";
-                    $topDate = $singleYear."-12-31";
-                    //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
+                    //$bottomDate = $singleYear."-01-01";
+                    //$topDate = $singleYear."-12-31";
+                    //echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+                    $startEndDates = $this->getAcademicYearStartEndDates($singleYear);
+                    $bottomDate = $startEndDates['startDate'];
+                    $topDate = $startEndDates['endDate'];
+                    //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $criterionStr = implode(" OR ",$criterions);
                 $dql->andWhere($criterionStr);
             } else {
                 //seingle year
-                $bottomDate = $year."-01-01";
-                $topDate = $year."-12-31";
+                //$bottomDate = $year."-01-01";
+                //$topDate = $year."-12-31";
+                //echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+                $startEndDates = $this->getAcademicYearStartEndDates($year);
+                $bottomDate = $startEndDates['startDate'];
+                $topDate = $startEndDates['endDate'];
+                //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                 $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }
@@ -172,9 +181,9 @@ class FellAppUtil {
         return $applicants;
     }
 
-    //$yearOffset: 0=>current year, -1=>previous year
+    //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
-    public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false, $yearOffset=null) {
+    public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
@@ -190,52 +199,56 @@ class FellAppUtil {
         $startDateMD = $academicYearStart->format('m-d');
         $endDateMD = $academicYearEnd->format('m-d');
 
-        $nowDate = new \DateTime(); //2016-07-15
-        //testing
-        if( 0 ) {
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2015-08-30"); //testing: expected 2015-2016
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-06-30"); //testing: expected 2015-2016
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-08-30"); //testing: expected 2016-2017
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-01-30"); //testing: expected 2016-2017
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-08-30"); //testing: expected 2017-2018
-            $nowDate = \DateTime::createFromFormat('Y-m-d', "2018-08-26");
-            //$nowDate = \DateTime::createFromFormat('Y-m-d', "2018-12-26");
-        }
+//        $nowDate = new \DateTime(); //2016-07-15
+//        //testing
+//        if( 0 ) {
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2015-08-30"); //testing: expected 2015-2016
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-06-30"); //testing: expected 2015-2016
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-08-30"); //testing: expected 2016-2017
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-01-30"); //testing: expected 2016-2017
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-08-30"); //testing: expected 2017-2018
+//            $nowDate = \DateTime::createFromFormat('Y-m-d', "2018-08-26");
+//            //$nowDate = \DateTime::createFromFormat('Y-m-d', "2018-12-26");
+//        }
 
-        $currentYear = $nowDate->format('Y'); //endDate
+//        if( !$currentYear ) {
+//            $currentYear = $nowDate->format('Y'); //endDate
+//        }
 
-        //check if current date < academicYearStart date
-        $academicYearStartDateStr = $currentYear."-".$startDateMD;
-        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
-        //echo "compare: current date ".$nowDate->format('Y-M-d')." < ".$academicYearStartDate->format('Y-M-d')."<br>";
-        if( $nowDate < $academicYearStartDate ) {
-            $currentYear = $currentYear - 1; //testing
-            //echo "adjust currentYear: $currentYear - 1<br>";
-        }
-        //echo "currentYear=".$currentYear."<br>";
+//        //check if current date < academicYearStart date
+//        $academicYearStartDateStr = $currentYear."-".$startDateMD;
+//        $academicYearStartDate = \DateTime::createFromFormat('Y-m-d', $academicYearStartDateStr);
+//        //echo "compare: current date ".$nowDate->format('Y-M-d')." < ".$academicYearStartDate->format('Y-M-d')."<br>";
+//        if( $nowDate < $academicYearStartDate ) {
+//            $currentYear = $currentYear - 1; //testing
+//            //echo "adjust currentYear: $currentYear - 1<br>";
+//        }
+//        //echo "currentYear=".$currentYear."<br>";
 
-        $previousYear = $currentYear - 1; //startDate
+        //$previousYear = $currentYear - 1; //startDate
 
-        $startDate = $previousYear."-".$startDateMD;
-        $currentYearStartDate = \DateTime::createFromFormat('Y-m-d', $startDate);
+        $nextYear = $currentYear + 1;
 
-        //echo "nowDate=".$nowDate->format('Y-M-d')."<br>";
-        //echo "currentYearStartDate=".$currentYearStartDate->format('Y-M-d')."<br>";
-        if( $nowDate > $currentYearStartDate ) {
-            $previousYear = $currentYear;
-            $currentYear = $currentYear + 1;
-            //echo "nowDate>currentYearStartDate: "."previousYear=$previousYear"."; currentYear=$currentYear <br>";
-        } else {
-            //echo "else: previousYear=$previousYear"."; currentYear=$currentYear <br>";
-        }
+//        $startDate = $previousYear."-".$startDateMD;
+//        $currentYearStartDate = \DateTime::createFromFormat('Y-m-d', $startDate);
+
+//        //echo "nowDate=".$nowDate->format('Y-M-d')."<br>";
+//        //echo "currentYearStartDate=".$currentYearStartDate->format('Y-M-d')."<br>";
+//        if( $nowDate > $currentYearStartDate ) {
+//            $previousYear = $currentYear;
+//            $currentYear = $currentYear + 1;
+//            //echo "nowDate>currentYearStartDate: "."previousYear=$previousYear"."; currentYear=$currentYear <br>";
+//        } else {
+//            //echo "else: previousYear=$previousYear"."; currentYear=$currentYear <br>";
+//        }
 
         if( $yearOffset ) {
-            $previousYear = $previousYear + $yearOffset;
             $currentYear = $currentYear + $yearOffset;
+            $nextYear = $nextYear + $yearOffset;
         }
 
-        $startDate = $previousYear."-".$startDateMD;
-        $endDate = $currentYear."-".$endDateMD;
+        $startDate = $currentYear."-".$startDateMD;
+        $endDate = $nextYear."-".$endDateMD;
         //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
 
         if( $asDateTimeObject ) {
@@ -244,9 +257,59 @@ class FellAppUtil {
         }
 
         return array(
+            //'currentYear' => $currentYear,
             'startDate'=> $startDate,
             'endDate'=> $endDate,
         );
+    }
+
+    public function getDefaultAcademicStartYear() {
+
+        $currentYear = intval(date("Y"));
+        $currentDate = new \DateTime();
+
+        //2011-03-26 (year-month-day)
+        $january1 = new \DateTime($currentYear."-01-01");
+        //$june30 = new \DateTime($currentYear."-06-30");
+        $july1 = new \DateTime($currentYear."-07-01"); //TODO: get from sitesetting
+        $december31 = new \DateTime($currentYear."-12-31");
+
+        //default dates
+        //$applicationSeasonStartDate = $currentYear;
+        //$startDate = $currentYear + 1;
+
+        //Application Season Start Year (applicationSeasonStartDates) set to:
+        //current year if current date is between July 1st and December 31st (inclusive) or
+        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
+        // 1January---(current year-1)---1July---(current year)---31December---
+
+        //Residency Start Year (startDates)
+        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
+        //current year if current date is between January 1st and June 30th (inclusive)
+        // 1July---(current year+1)---31December---(current year)---30June---
+
+        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
+        // current date is between July 1st and December 31st (inclusive) or
+        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
+            //$applicationSeasonStartDate = $currentYear;
+            //$startDate = $currentYear + 1;
+        }
+
+        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
+        // current date is between January 1st and June 30th (inclusive)
+        if( $currentDate >= $january1 && $currentDate < $july1 ) {
+            $currentYear = $currentYear - 1;
+            //$startDate = $currentYear;
+        }
+
+        //echo "currentYear=$currentYear <br>";
+
+        return $currentYear;
+        
+//        $resArr['Start Year'] = $applicationSeasonStartDate;
+//        $resArr['End Year'] = $applicationSeasonStartDate+1;
+//
+//        return $resArr;
     }
 
 //    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {

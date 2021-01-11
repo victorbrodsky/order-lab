@@ -120,6 +120,13 @@ class ReportGenerator {
         //startDate
         $bottomDate = $startYearStr."-01-01";
         $topDate = $startYearStr."-12-31";
+        echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+
+        $startEndDates = $this->getAcademicYearStartEndDates($startYearStr); //TODO: test it
+        $bottomDate = $startEndDates['startDate'];
+        $topDate = $startEndDates['endDate'];
+        echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
         $query = $this->em->createQuery($dql);

@@ -131,8 +131,16 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
+
         $bottomDate = $startDateStr."-01-01";
         $topDate = $startDateStr."-12-31";
+        echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+
+        $startEndDates = $this->getAcademicYearStartEndDates($startDateStr); //TODO: test it
+        $bottomDate = $startEndDates['startDate'];
+        $topDate = $startEndDates['endDate'];
+        echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
         $dql->andWhere("fellapp.interviewScore IS NOT NULL AND fellapp.interviewScore != '0'");
