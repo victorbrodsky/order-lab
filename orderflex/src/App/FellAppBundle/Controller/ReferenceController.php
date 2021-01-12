@@ -76,18 +76,25 @@ class ReferenceController extends OrderAbstractController
 //        }
 
         $resArr = $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellapp,true);
-        foreach($resArr as $res) {
-            if( $res['res'] == true ) {
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    $res['msg']
-                );
-            } else {
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $res['msg']
-                );
+        if( $resArr && is_array($resArr) ) {
+            foreach ($resArr as $res) {
+                if ($res['res'] == true) {
+                    $this->get('session')->getFlashBag()->add(
+                        'notice',
+                        $res['msg']
+                    );
+                } else {
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $res['msg']
+                    );
+                }
             }
+        } else {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Logical error: invitation emails have not been sent."
+            );
         }
 
 //        if( count($referenceNames) > 0 ) {

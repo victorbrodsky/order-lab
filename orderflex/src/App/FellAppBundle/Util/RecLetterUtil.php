@@ -1298,6 +1298,7 @@ class RecLetterUtil {
     public function sendInvitationEmailsToReferences( $fellapp, $flush=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
 
         $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp');
         if( $sendEmailUploadLetterFellApp ) {
@@ -1336,14 +1337,14 @@ class RecLetterUtil {
             $startDate = $fellapp->getStartDate();
             $startDateStr = $startDate->format('Y');
 
-            $bottomDate = $startDateStr."-01-01";
-            $topDate = $startDateStr."-12-31";
-            echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+            //$bottomDate = $startDateStr."-01-01";
+            //$topDate = $startDateStr."-12-31";
+            //echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
 
-            $startEndDates = $this->getAcademicYearStartEndDates($startDateStr); //TODO: test it
+            $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startDateStr);
             $bottomDate = $startEndDates['startDate'];
             $topDate = $startEndDates['endDate'];
-            echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+            //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
 
             $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
@@ -1356,9 +1357,11 @@ class RecLetterUtil {
             ));
 
             $duplicateFellapps = $query->getResult();
+            //echo "duplicateFellapps=".count($duplicateFellapps)."<br>";
             if( count($duplicateFellapps) > 0 ) {
                 $duplicates = true;
             }
+            //exit("duplicates=".$duplicates);
 
             if( $duplicates || $missingEmail ) {
                 //email to the Program Coordinator

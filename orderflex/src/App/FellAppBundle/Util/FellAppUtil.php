@@ -263,7 +263,10 @@ class FellAppUtil {
         );
     }
 
+    //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings
     public function getDefaultAcademicStartYear() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $currentYear = intval(date("Y"));
         $currentDate = new \DateTime();
@@ -271,7 +274,21 @@ class FellAppUtil {
         //2011-03-26 (year-month-day)
         $january1 = new \DateTime($currentYear."-01-01");
         //$june30 = new \DateTime($currentYear."-06-30");
-        $july1 = new \DateTime($currentYear."-07-01"); //TODO: get from sitesetting
+
+        //start date of the academic year
+        //$july1 = new \DateTime($currentYear."-07-01"); //get from site setting
+
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if( $academicYearStart ) {
+            $startDateMD = $academicYearStart->format('m-d');
+            $july1 = new \DateTime($currentYear."-".$startDateMD);
+        } else {
+            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+            //assume start date July 1st
+            $july1 = new \DateTime($currentYear."-07-01");
+        }
+        //echo "july1=".$july1->format("d-m-Y")."<br>";
+
         $december31 = new \DateTime($currentYear."-12-31");
 
         //default dates
@@ -305,11 +322,6 @@ class FellAppUtil {
         //echo "currentYear=$currentYear <br>";
 
         return $currentYear;
-        
-//        $resArr['Start Year'] = $applicationSeasonStartDate;
-//        $resArr['End Year'] = $applicationSeasonStartDate+1;
-//
-//        return $resArr;
     }
 
 //    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {

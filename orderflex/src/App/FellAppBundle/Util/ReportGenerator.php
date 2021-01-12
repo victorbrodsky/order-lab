@@ -86,7 +86,7 @@ class ReportGenerator {
     }
 
 
-
+    //Not Used: This method is disabled for security reason
     public function regenerateAllReports($startYearStr) {
 
         if( !$startYearStr ) {
@@ -111,21 +111,24 @@ class ReportGenerator {
 
         return $numDeleted;
     }
+    //Not Used: This method is disabled for security reason
     public function getFellApplicationsByYear($startYearStr) {
 
+        $fellappUtil = $this->container->get('fellapp_util');
+        
         $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
         $dql = $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
 
         //startDate
-        $bottomDate = $startYearStr."-01-01";
-        $topDate = $startYearStr."-12-31";
-        echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
+        //$bottomDate = $startYearStr."-01-01";
+        //$topDate = $startYearStr."-12-31";
+        //echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";
 
-        $startEndDates = $this->getAcademicYearStartEndDates($startYearStr); //TODO: test it
+        $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYearStr);
         $bottomDate = $startEndDates['startDate'];
         $topDate = $startEndDates['endDate'];
-        echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+        //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
 
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
