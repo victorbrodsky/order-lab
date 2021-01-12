@@ -130,7 +130,9 @@ class FellAppImportPopulateUtil {
         
         //Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications
         $fellappUtil = $this->container->get('fellapp_util');
-        $currentYear = date("Y")+2;
+        //$currentYear = date("Y")+2;
+        $currentYear = $fellappUtil->getDefaultAcademicStartYear();
+        $currentYear = $currentYear + 2;
         $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
 
         if( $filesGoogleDrive ) {

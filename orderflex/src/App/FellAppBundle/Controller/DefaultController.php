@@ -73,6 +73,12 @@ class DefaultController extends OrderAbstractController
 //                echo "###########<br>";
 //            }
 //        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $currentYear = $fellappUtil->getDefaultAcademicStartYear();
+        $currentYear = $currentYear + 2;
+        $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
+        echo "fellowshipDbApplications count=".count($fellowshipDbApplications)."<br>";
         /////////// EOF testing ///////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

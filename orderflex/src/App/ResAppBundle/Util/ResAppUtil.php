@@ -2272,6 +2272,7 @@ class ResAppUtil {
         return $ethnicities;
     }
 
+    //Assume start year is 01-01 (unlike fellowship application, usually July 1st, academicYearStart in the site settings)
     public function getDefaultStartDates() {
 
         $currentYear = intval(date("Y"));
