@@ -2463,10 +2463,42 @@ class VacReqUtil
         return $organizationalInstitutions;
     }
 
+    public function getAllGroups($asObject=true) {
+        $groupParams = array();
+        if( $asObject ) {
+            $groupParams['asObject'] = true; // array('asObject'=>true);
+        } else {
+            //
+        }
+        //$groupParams = array();
+        //$groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+
+        $user = null;
+        $userOrganizationalInstitutions = $this->getGroupsByPermission($user,$groupParams);
+
+        return $userOrganizationalInstitutions;
+
+//        $permissions = ( array_key_exists('permissions', $groupParams) ? $groupParams['permissions'] : null);
+//
+//        foreach( $permissions as $permission ) {
+//            $objectStr = $permission['objectStr'];
+//            $actionStr = $permission['actionStr'];
+//
+//            $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+//                findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+//        }
+//
+//        foreach( $roles as $role ) {
+//
+//        }
+
+    }
+
     //get all user's organizational groups and children specified to permission
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
-    public function getGroupsByPermission( $user, $params=array() ) {
+    public function getGroupsByPermission( $user=null, $params=array() ) {
 
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
         $asObjectRole = ( array_key_exists('asObjectRole', $params) ? $params['asObjectRole'] : false);
@@ -2486,6 +2518,13 @@ class VacReqUtil
             //echo "### objectStr=".$objectStr.", actionStr=".$actionStr."### <br>";
 
             $roles = new ArrayCollection();
+
+            if( !$user ) {
+                if( !$asUser ) {
+                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+                        findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
+                }
+            }
 
             if( count($roles)==0 && $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";

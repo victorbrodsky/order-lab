@@ -175,4 +175,32 @@ class VacReqAccessRequestController extends AccessRequestController
 //        return parent::addAuthorizedUserSubmitAction($request);
 //    }
 
+    public function getOrganizationalGroup() {
+        $vacreqUtil = $this->get('vacreq_util');
+        $organizationalGroups = $vacreqUtil->getAllGroups();
+        return $organizationalGroups;
+    }
+
+    public function getNote() {
+        $vacreqUtil = $this->get('vacreq_util');
+        $note = "<b>"."Please choose an appropriate 'Organizational Group' below. Your vacation/business requests will be reviewed by this group's reviewers:"."</b>";
+
+        $organizationalGroupArr = array();
+        $organizationalGroups = $vacreqUtil->getAllGroups(false);
+        foreach($organizationalGroups as $instId=>$organizationalGroupName) {
+            //echo "instId=$instId, organizationalGroupName=$organizationalGroupName <br>";
+            $organizationalGroupArr[] = $organizationalGroupName;
+        }
+
+        if( count($organizationalGroupArr) > 0 ) {
+            $noteInst = implode("<br>",$organizationalGroupArr);
+        } else {
+            $noteInst = NULL;
+        }
+
+        $note = $note."<br>".$noteInst;
+
+        return $note;
+    }
+
 }

@@ -353,12 +353,15 @@ class AccessRequestController extends OrderAbstractController
 
         $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
+        $note = $this->getNote();
+        
         return array(
             'user' => $user,
             'form' => $form->createView(),
             'sitename' => $sitename,
             'sitenamefull' => $sitenameFull,
-            'pendinguser' => true
+            'pendinguser' => true,
+            'note' => $note
         );
     }
     public function getParams() {
@@ -379,16 +382,18 @@ class AccessRequestController extends OrderAbstractController
 
         //$requestedInstitutionalPHIScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
-        $dql =  $repository->createQueryBuilder("institution");
-        $dql->select('institution');
-        $dql->leftJoin("institution.types", "types");
+//        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
+//        $dql =  $repository->createQueryBuilder("institution");
+//        $dql->select('institution');
+//        $dql->leftJoin("institution.types", "types");
+//
+//        $dql->where("institution.type = 'default'");
+//        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
+//
+//        $query = $em->createQuery($dql);
+//        $requestedScanOrderInstitutionScope = $query->getResult();
 
-        $dql->where("institution.type = 'default'");
-        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
-
-        $query = $em->createQuery($dql);
-        $requestedScanOrderInstitutionScope = $query->getResult();
+        $requestedScanOrderInstitutionScope = $this->getOrganizationalGroup();
 
         //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
@@ -400,6 +405,25 @@ class AccessRequestController extends OrderAbstractController
         return $params;
     }
 
+    public function getOrganizationalGroup() {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
+        $dql =  $repository->createQueryBuilder("institution");
+        $dql->select('institution');
+        $dql->leftJoin("institution.types", "types");
+
+        $dql->where("institution.type = 'default'");
+        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
+
+        $query = $em->createQuery($dql);
+        $requestedScanOrderInstitutionScope = $query->getResult();
+
+        return $requestedScanOrderInstitutionScope;
+    }
+    
+    public function getNote() {
+        return null;
+    }
 
 
 //    /**

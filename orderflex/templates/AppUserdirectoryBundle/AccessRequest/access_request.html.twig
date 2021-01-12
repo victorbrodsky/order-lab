@@ -107,6 +107,10 @@
 
                     {{ formmacros.field(form.job) }}
 
+                    {% if note is defined and note %}
+                        <p>{{ note|raw }}</p>
+                    {% endif %}
+
                     {% if form.organizationalGroup is defined %}
                         {{ formmacros.field(form.organizationalGroup) }}
                     {% endif %}
