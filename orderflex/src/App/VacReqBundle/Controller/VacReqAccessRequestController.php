@@ -181,9 +181,9 @@ class VacReqAccessRequestController extends AccessRequestController
         return $organizationalGroups;
     }
 
-    public function getNote() {
+    public function getGroupNote() {
         $vacreqUtil = $this->get('vacreq_util');
-        $note = "<b>"."Please choose an appropriate 'Organizational Group' below. Your vacation/business requests will be reviewed by this group's reviewers:"."</b>";
+        $note = "<b>"."Please choose an appropriate 'Organizational Group' below. Your vacation/business requests will be reviewed by this group's approvers."."</b>";
 
         $organizationalGroupArr = array();
         $organizationalGroups = $vacreqUtil->getAllGroups(false);
@@ -203,4 +203,9 @@ class VacReqAccessRequestController extends AccessRequestController
         return $note;
     }
 
+    public function getReasonNote() {
+        $note = "Please indicate the reason for access request and indicate if you would like to become the approver.";
+        //$note = "<b>".$note."</b>";
+        return $note;
+    }
 }

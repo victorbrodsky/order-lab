@@ -107,15 +107,19 @@
 
                     {{ formmacros.field(form.job) }}
 
-                    {% if note is defined and note %}
-                        <p>{{ note|raw }}</p>
+                    {% if groupnote is defined and groupnote %}
+                        <p>{{ groupnote|raw }}</p>
                     {% endif %}
 
                     {% if form.organizationalGroup is defined %}
                         {{ formmacros.field(form.organizationalGroup) }}
                     {% endif %}
 
+                    {% if reasonnote is defined and reasonnote %}
+                        <p>{{ reasonnote|raw }}</p>
+                    {% endif %}
                     {{ formmacros.field(form.reason) }}
+
                     {{ formmacros.field(form.similaruser) }}
 
                     <p style="padding-top:5px;">

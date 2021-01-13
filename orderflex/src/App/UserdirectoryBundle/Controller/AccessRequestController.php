@@ -353,7 +353,8 @@ class AccessRequestController extends OrderAbstractController
 
         $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
-        $note = $this->getNote();
+        $groupnote = $this->getGroupNote();
+        $reasonnote = $this->getReasonNote();
         
         return array(
             'user' => $user,
@@ -361,7 +362,8 @@ class AccessRequestController extends OrderAbstractController
             'sitename' => $sitename,
             'sitenamefull' => $sitenameFull,
             'pendinguser' => true,
-            'note' => $note
+            'groupnote' => $groupnote,
+            'reasonnote' => $reasonnote
         );
     }
     public function getParams() {
@@ -421,10 +423,13 @@ class AccessRequestController extends OrderAbstractController
         return $requestedScanOrderInstitutionScope;
     }
     
-    public function getNote() {
+    public function getGroupNote() {
         return null;
     }
-
+    public function getReasonNote() {
+        return null;
+    }
+    
 
 //    /**
 //     * when the user clicks "Yes" in answer to "would you like to request access to this site?",
