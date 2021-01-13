@@ -5837,6 +5837,22 @@ class TransResUtil
         }
         return $animal;
     }
+    public function getBusinessEntityName() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $name = $userSecUtil->getSiteSettingParameter('transresBusinessEntityName');
+        if( !$name ) {
+            $name = "Center for Translational Pathology";
+        }
+        return $name;
+    }
+    public function getBusinessEntityAbbreviation() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $name = $userSecUtil->getSiteSettingParameter('transresBusinessEntityAbbreviation');
+        if( !$name ) {
+            $name = "CTP";
+        }
+        return $name;
+    }
 
     public function tokenTruncate($string, $your_desired_width) {
         if( !$string ) {

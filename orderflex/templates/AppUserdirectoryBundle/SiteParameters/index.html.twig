@@ -999,6 +999,16 @@
                 <td>{{ entity.transresAnimalSubjectName }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresAnimalSubjectName'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Name of the business entity responsible for the translational research site (Center for Translational Pathology):</td>
+                <td>{{ entity.transresBusinessEntityName }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresBusinessEntityName'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Abbreviated name of the business entity responsible for the translational research site (CTP):</td>
+                <td>{{ entity.transresBusinessEntityAbbreviation }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresBusinessEntityAbbreviation'}) }}">Edit</a></td>
+            </tr>
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

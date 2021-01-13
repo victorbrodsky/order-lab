@@ -890,12 +890,17 @@ class UserServiceUtil {
             "noticeLdapName" => "Active Directory (LDAP)",
             ////////////////////////// EOF LDAP notice messages /////////////////////////
 
+            ////////////////////// Global TRP parameters //////////////////
             "transresProjectSelectionNote" => 'If your project request involves collaboration with any
                                                 <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"
                                                 >Weill Cornell Hematopathology faculty members</a>,<br>
                                                 please press the "New Hematopathology Project Request" button.<br>
                                                 For all other project requests, please press the "New AP/CP Project Request" button.',
 
+            "transresBusinessEntityName" => "Center for Translational Pathology",
+
+            "transresBusinessEntityAbbreviation" => "CTP",
+            ////////////////////// EOF Global TRP parameters //////////////////
 
             ////////////////////// EOF Third-Party Software //////////////////
 

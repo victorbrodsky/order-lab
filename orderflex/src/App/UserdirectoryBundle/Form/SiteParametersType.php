@@ -1086,6 +1086,18 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresBusinessEntityName' ) {
+            $builder->add('transresBusinessEntityName', null, array(
+                'label' => 'Name of the business entity responsible for the translational research site (Center for Translational Pathology):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresBusinessEntityAbbreviation' ) {
+            $builder->add('transresBusinessEntityAbbreviation', null, array(
+                'label' => 'Abbreviated name of the business entity responsible for the translational research site (CTP):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresDashboardInstitution' ) {
 //            $builder->add('transresDashboardInstitution', null, array(

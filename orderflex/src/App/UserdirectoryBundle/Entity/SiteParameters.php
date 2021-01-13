@@ -1192,6 +1192,20 @@ class SiteParameters {
     private $transresAnimalSubjectName;
 
     /**
+     * Name of the business entity responsible for the translational research site - default "Center for Translational Pathology"
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresBusinessEntityName;
+
+    /**
+     * Abbreviated name of the business entity responsible for the translational research site - default "CTP"
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresBusinessEntityAbbreviation;
+
+    /**
      * E-Mail Platform Administrator in case of critical errors
      *
      * @ORM\Column(type="boolean", nullable=true)
@@ -4140,6 +4154,38 @@ class SiteParameters {
     public function setTransresAnimalSubjectName($transresAnimalSubjectName)
     {
         $this->transresAnimalSubjectName = $transresAnimalSubjectName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresBusinessEntityName()
+    {
+        return $this->transresBusinessEntityName;
+    }
+
+    /**
+     * @param mixed $transresBusinessEntityName
+     */
+    public function setTransresBusinessEntityName($transresBusinessEntityName)
+    {
+        $this->transresBusinessEntityName = $transresBusinessEntityName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresBusinessEntityAbbreviation()
+    {
+        return $this->transresBusinessEntityAbbreviation;
+    }
+
+    /**
+     * @param mixed $transresBusinessEntityAbbreviation
+     */
+    public function setTransresBusinessEntityAbbreviation($transresBusinessEntityAbbreviation)
+    {
+        $this->transresBusinessEntityAbbreviation = $transresBusinessEntityAbbreviation;
     }
 
     /**
