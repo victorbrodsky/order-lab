@@ -1072,6 +1072,7 @@ class PdfUtil {
                             //$duplicateArr = $duplicateRes['duplicateInfoArr'];
                             //$duplicateResapps = $duplicateRes['duplicateResapps'];
 
+                            //echo "originalName=".$pdfFileArr['originalName']."<br>"; //testing
                             $additionalRowArr = $this->getHandsomtableData($pdfKeys);
                             if( $additionalRowArr['keysFound'] ) {
                                 //keysFound
@@ -1093,7 +1094,7 @@ class PdfUtil {
                     //add $rowArr['Expected Residency Start Date']['value']; $residencyStartDate->format('m/d/Y'); //07/01/2021
                     $duplicateRes = $this->checkDuplicate($rowArr, $handsomtableJsonData);
                     $duplicateArr = $duplicateRes['duplicateInfoArr'];
-                    $duplicateResapps = $duplicateRes['duplicateResapps'];
+                    //$duplicateResapps = $duplicateRes['duplicateResapps'];
                     $duplicateIdArr = $duplicateRes['duplicateIdArr'];
                     if (count($duplicateArr) > 0) {
                         //change the value in the “Action” column to “Do not add”
@@ -1308,6 +1309,15 @@ class PdfUtil {
 
         $rowArr = array();
 
+//        //testing
+//        //dump($parsedData);
+//        if( !isset($parsedData["Name:"]) ) {
+//            echo "Name not found <br>";
+//            //$rowArr['keysFound'] = false;
+//            //return $rowArr;
+//            //exit('111');
+//        }
+
         $currentDate = new \DateTime();
         //12dY 22:56:03
         //$currentDateStr = $currentDate->format('m\d\Y H:i:s');
@@ -1347,16 +1357,22 @@ class PdfUtil {
         $rowArr["Expected Graduation Date"]['id'] = 1;
 
         //// get last, first name ////
+//        $fullName = NULL;
         $firstName = NULL;
         $lastName = NULL;
+//        if( !isset($parsedData["Name:"]) ) {
+//            $fullName = $parsedData["Name:"];
+//        }
         $fullName = $parsedData["Name:"];
-        $fullNameArr = explode(",",$fullName);
-        if( count($fullNameArr) > 1) {
-            $lastName = trim($fullNameArr[0]);
-            $firstName = trim($fullNameArr[1]);
-        } else {
-            $lastName = $fullName;
-            $firstName = NULL;
+        if( $fullName ) {
+            $fullNameArr = explode(",", $fullName);
+            if (count($fullNameArr) > 1) {
+                $lastName = trim($fullNameArr[0]);
+                $firstName = trim($fullNameArr[1]);
+            } else {
+                $lastName = $fullName;
+                $firstName = NULL;
+            }
         }
         //// EOF get last, first name ////
 
@@ -1986,6 +2002,8 @@ class PdfUtil {
 
     public function getKeyFields($text) {
 
+        //echo "text=$text <br>";
+
         $keysArr = array();
 
         foreach( $this->getKeyFieldArr() as $fieldsArr ) {
@@ -2051,6 +2069,8 @@ class PdfUtil {
 
                 //echo "$key=[" . $field . "]<br>";
                 $keysArr[$key] = $field;
+            } else {
+                $keysArr[$key] = NULL;
             }
         }
         return $keysArr;
