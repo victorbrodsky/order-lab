@@ -2180,7 +2180,7 @@ class FellAppUtil {
         }
         
         $embedPdfHtml = '<object type="application/pdf" width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
-        $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br>' . $embedPdfHtml;
+        $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br><br>' . $embedPdfHtml;
 
         return $embedPdfHtml;
     }
