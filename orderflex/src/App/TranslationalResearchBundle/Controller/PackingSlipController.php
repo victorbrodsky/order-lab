@@ -181,14 +181,18 @@ class PackingSlipController extends OrderAbstractController
         // Please review the items and comments (if any), and if you have any concerns,
         // contact the Translational Research group by emailing [FirstName LastName] (email@address).
         // (mailto: link) list all users with Translational Research Administrator roles
-        $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
+        //$body = "The Translational Research group is working on your request ".$transresRequest->getOid().
+        //    " and is planning to deliver the items or services listed in the attached document.";
+        //The [Center for Translational Pathology] is working on your request
+        $body = "The ".$transresUtil->getBusinessEntityName()." is working on your request ".$transresRequest->getOid().
             " and is planning to deliver the items or services listed in the attached document.";
 
         $emailNoteConcern = $transresUtil->getTransresSiteProjectParameter('emailNoteConcern',$project);
         //echo "emailNoteConcern=[$emailNoteConcern]<br>";
         if( !$emailNoteConcern ) {
+            //contact the [Center for Translational Pathology] by emailing
             $emailNoteConcern = "Please review the deliverables and comments (if any), and if you have any concerns,".
-            " contact the Translational Research group by emailing [[EMAILS]]";
+            " contact the ".$transresUtil->getBusinessEntityName()." by emailing [[EMAILS]]";
         }
         //echo "emailNoteConcern=[$emailNoteConcern]<br>";
 
@@ -250,7 +254,8 @@ class PackingSlipController extends OrderAbstractController
         // In order to enable the delivery, please review the items and comments (if any),
         // and confirm that you agree with this plan by emailing emailing [FirstName LastName] (email@address).
         // (mailto: link) list all users with Translational Research Administrator roles
-        $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
+        //The [Center for Translational Pathology] is working on your request
+        $body = "The ".$transresUtil->getBusinessEntityName()." is working on your request ".$transresRequest->getOid().
             " for project ".$project->getTitle().
             " and is planning to deliver the items or services listed in the attached document.".
             " In order to enable the delivery, please review the items and comments (if any),".

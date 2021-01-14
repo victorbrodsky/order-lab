@@ -142,7 +142,8 @@ class ReminderUtil
 
         $invoiceReminderSubject = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSubject',null,$projectSpecialty);
         if( !$invoiceReminderSubject ) {
-            $invoiceReminderSubject = "[TRP] Translational Research Unpaid Invoice Reminder: [[INVOICE ID]]";
+            //$invoiceReminderSubject = "[TRP] Translational Research Unpaid Invoice Reminder: [[INVOICE ID]]";
+            $invoiceReminderSubject = "[TRP] Unpaid Invoice Reminder from the ".$transresUtil->getBusinessEntityName().": [[INVOICE ID]]";
         }
 
         $invoiceReminderBody = $transresUtil->getTransresSiteProjectParameter('invoiceReminderBody',null,$projectSpecialty);

@@ -1049,6 +1049,7 @@ class InvoiceController extends OrderAbstractController
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
         //$transresPermissionUtil = $this->get('transres_permission_util');
+        $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1085,7 +1086,9 @@ class InvoiceController extends OrderAbstractController
         $size = $res['size'];
 
         //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
-        $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+        //$msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+        //Draft invoice has been generated for the [Center for Translational Pathology]
+        $msg = "Draft invoice ".$invoice->getOid()." has been generated for the ".$transresUtil->getBusinessEntityName()."; PDF size=".$size;
 
         //3) send by email to recipient (principalInvestigator)
         //Send the most recent Invoice PDF by Email
@@ -1409,6 +1412,7 @@ class InvoiceController extends OrderAbstractController
 
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
 
         $newline = "<br>"; //"\n";
         $msg = "";
@@ -1431,7 +1435,9 @@ class InvoiceController extends OrderAbstractController
 
             //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
             //Draft Translation Research Invoice for work request APCP12-REQ12 has been generated
-            $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+            //$msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+            //Draft invoice has been generated for the [Center for Translational Pathology]
+            $msg = "Draft invoice ".$invoice->getOid()." has been generated for the ".$transresUtil->getBusinessEntityName()."; PDF size=".$size;
 
             //3) send by email to recipient (principalInvestigator)
             //Send the most recent Invoice PDF by Email
@@ -1454,7 +1460,9 @@ class InvoiceController extends OrderAbstractController
             }
 
             //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
-            $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated and sent by email.". "; PDF size=".$size;
+            //$msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated and sent by email.". "; PDF size=".$size;
+            //Draft invoice has been generated for the [Center for Translational Pathology]
+            $msg = "Draft invoice ".$invoice->getOid()." has been generated and sent by email for the ".$transresUtil->getBusinessEntityName()."; PDF size=".$size;
 
             //3) send by email to recipient (principalInvestigator)
             //Send the most recent Invoice PDF by Email

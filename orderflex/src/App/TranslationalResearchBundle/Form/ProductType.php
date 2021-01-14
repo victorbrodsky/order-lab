@@ -2,6 +2,7 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+use App\TranslationalResearchBundle\Util\TransResUtil;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,11 +22,22 @@ class ProductType extends AbstractType
 
     //protected $product;
     protected $params;
+    //protected $trpBusinessNameAbbreviation;
+
+//    public function __construct(TransResUtil $transresUtil)
+//    {
+//        $trpBusinessNameAbbreviation = $transresUtil->getBusinessEntityAbbreviation();
+//        $this->trpBusinessNameAbbreviation = $trpBusinessNameAbbreviation;
+//    }
 
     public function formConstructor( $params )
     {
         $this->params = $params;
         //$this->$product = $params['product'];
+
+        if( isset($params['transresUtil']) ) {
+            $this->trpBusinessNameAbbreviation = $params['transresUtil']->getBusinessEntityAbbreviation();
+        }
     }
 
     /**
@@ -105,8 +117,15 @@ class ProductType extends AbstractType
         ));
 
         if( $this->params['cycle'] != "new" ) {
+            $trpBusinessNameAbbreviation = "TRP";
+            if( isset($this->params['transresUtil']) ) {
+                $trpBusinessNameAbbreviation = $this->params['transresUtil']->getBusinessEntityAbbreviation();
+            }
             $builder->add('note', null, array(
-                'label' => "Note (TRP tech):",
+                //'label' => "Note (TRP tech):",
+                'label' => "Note ($trpBusinessNameAbbreviation tech):", //$this->trpBusinessNameAbbreviation
+                //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
+                //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control')
             ));

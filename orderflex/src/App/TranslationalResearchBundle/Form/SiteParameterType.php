@@ -74,13 +74,13 @@ class SiteParameterType extends AbstractType
 
         ////////// Invoice reminder email ////////////
         $builder->add('invoiceReminderEmail', null, array(
-            'label' => "Translational Research Reminder Email - Send From the Following Address:",
+            'label' => "Reminder Email - Send From the Following Address:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('invoiceReminderSchedule', null, array(
-            'label' => "Translational Research Unpaid Invoice Reminder Schedule 
+            'label' => "Unpaid Invoice Reminder Schedule 
             (overdue in months,reminder interval in months,max reminder count. 
             For example, '6,3,5' will send reminder emails after 6 months overdue every 3 months for 5 times):",
             'required' => false,
@@ -88,13 +88,13 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('invoiceReminderSubject', null, array(
-            'label' => "Translational Research Unpaid Invoice Reminder Email Subject:",
+            'label' => "Unpaid Invoice Reminder Email Subject:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('invoiceReminderBody', null, array(
-            'label' => "Translational Research Unpaid Invoice Reminder Email Body:",
+            'label' => "Unpaid Invoice Reminder Email Body:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -275,7 +275,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('emailNoteConcern', null, array(
-            'label' => "Translational Research Email Notification Asking To Contact With Concerns:",
+            'label' => "Email Notification Asking To Contact With Concerns:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -329,23 +329,23 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('projectReminderSubject_review', null, array(
-            'label' => "Translational Research project request review reminder email subject:",
+            'label' => "Project request review reminder email subject:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('projectReminderBody_review', null, array(
-            'label' => "Translational Research project request review reminder email body:",
+            'label' => "Project request review reminder email body:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('projectReminderSubject_missinginfo', null, array(
-            'label' => "Translational Research project request reminder missing info email subject:",
+            'label' => "Project request reminder missing info email subject:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('projectReminderBody_missinginfo', null, array(
-            'label' => "Translational Research project request reminder missing info email body:",
+            'label' => "Project request reminder missing info email body:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

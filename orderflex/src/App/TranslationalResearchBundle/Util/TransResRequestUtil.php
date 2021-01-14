@@ -1932,7 +1932,8 @@ class TransResRequestUtil
 //        }
 
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
-        $subject = "Draft Translational Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
+        //$subject = "Draft Translational Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
+        $subject = "Draft Invoice for the ".$transresUtil->getBusinessEntityName()." for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
 
         //1) Preview Invoice PDF
         $invoicePdfViewUrl = $this->container->get('router')->generate(
@@ -2886,7 +2887,8 @@ class TransResRequestUtil
         $invoiceEditUrl = $this->getInvoiceEditUrl($invoice);
         $sendInvoiceByEmailUrl = $this->getSendInvoiceByEmailUrl($invoice);
 
-        $emailSubject = "Draft Translational Research Invoice for work request ".$transresRequest->getOid()." has been generated";
+        //$emailSubject = "Draft Translational Research Invoice for work request ".$transresRequest->getOid()." has been generated";
+        $emailSubject = "Draft Invoice for the ".$transresUtil->getBusinessEntityName()." for work request ".$transresRequest->getOid()." has been generated";
 
         //Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:
         $body = "Please review the draft invoice pdf for work request ".$transresRequest->getOid()." by visiting:";
@@ -4275,6 +4277,10 @@ class TransResRequestUtil
 
 
     public function createtWorkRequestCsvSpout( $ids, $fileName, $limit=null ) {
+
+        $transresUtil = $this->get('transres_util');
+        $trpBusinessNameAbbreviation = $transresUtil->getBusinessEntityAbbreviation();
+        
         //$writer = WriterFactory::create(Type::XLSX); //cell type can not be set in xlsx
         //$writer = WriterFactory::create(Type::CSV);
         $writer = WriterEntityFactory::createCSVWriter();
@@ -4326,7 +4332,7 @@ class TransResRequestUtil
                 "Requestd Quantity",                        //13
                 "Completed Quantity",                       //14
                 "Comment",                                  //15
-                "Note (TRP tech)"                           //16
+                "Note ($trpBusinessNameAbbreviation tech)"                           //16
             ],
             $headerStyle
         );
@@ -4461,7 +4467,7 @@ class TransResRequestUtil
                 $productData[14] = "Requestd Quantity";
                 $productData[15] = "Completed Quantity";
                 $productData[16] = "Comment";
-                $productData[17] = "Note (TRP tech)";
+                $productData[17] = "Note ($trpBusinessNameAbbreviation tech)";
 
 //                'Products/Services Category',               //12 - M
 //                "Requestd Quantity",                        //13
