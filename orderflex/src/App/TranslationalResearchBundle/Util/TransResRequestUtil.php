@@ -4278,7 +4278,7 @@ class TransResRequestUtil
 
     public function createtWorkRequestCsvSpout( $ids, $fileName, $limit=null ) {
 
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $trpBusinessNameAbbreviation = $transresUtil->getBusinessEntityAbbreviation();
         
         //$writer = WriterFactory::create(Type::XLSX); //cell type can not be set in xlsx
