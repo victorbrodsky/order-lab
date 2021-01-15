@@ -310,7 +310,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if( count($updatedStrArr) > 0 ) {
                     foreach($updatedStrArr as $key=>$valueArr) {
-                        $updatedStr = $updatedStr . $key . ":<br>" . implode("; ",$valueArr) . "<br><br>";
+                        $updatedStr = "<b>".$updatedStr . $key . "</b>". ":<br>" . implode("; ",$valueArr) . "<br><br>";
                     }
                    //$updatedStr = implode("<br>",$updatedStrArr);
                     $this->get('session')->getFlashBag()->add(

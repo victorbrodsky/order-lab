@@ -382,13 +382,14 @@
                 //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
                 validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
 
+                //TODO: submit form: click on id=oleg_resappbundle_bulkupload_addbtn onclick="return resappValidateRequest(true);"
                 var confirmResDuplicateError = creatConfirmationModal(
                         validationDuplicateError,
                         function(){return true;},
                         function(){return false;}
                 );
                 //var confirmResDuplicateError = confirm(validationDuplicateError);
-                //console.log("confirmResDuplicateError="+confirmResDuplicateError);
+                console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
                     console.log("confirmResDuplicateError OK");
@@ -472,7 +473,7 @@
                 //alert("on modal js: dataConfirmOK clicked");
                 //var footer = $('.modal-footer');
                 //footer.html('Please wait ...');
-
+                console.log("confirmation ok");
                 $(this).modal( 'hide' ).data( 'bs.modal', null );
                 $(this).remove();
                 $('.modal-backdrop').remove();
@@ -485,7 +486,7 @@
                 //alert("on modal js: dataConfirmOK clicked");
                 //var footer = $('.modal-footer');
                 //footer.html('Please wait ...');
-
+                console.log("confirmation cancel");
                 $(this).modal( 'hide' ).data( 'bs.modal', null );
                 $(this).remove();
                 $('.modal-backdrop').remove();
@@ -503,6 +504,7 @@
 //                false_func();
 //            });
 
+            console.log("confirmation end");
             return false;
         }
 

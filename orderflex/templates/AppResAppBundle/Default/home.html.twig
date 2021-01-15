@@ -680,7 +680,9 @@
                     <td>
                         {#{{ entity.aoa()|raw }}#}
                         {% if entity.aoa() %}
-                            Yes
+                            {#Yes#}
+                            {#show “Yes” in AOA column as “AOA” (instead of Yes)#}
+                            AOA
                         {% else %}
                             {#instead of “No” show nothing#}
                             {#No#}
@@ -689,7 +691,9 @@
                     <td>
                         {#{{ entity.couple()|raw }}#}
                         {% if entity.couple() %}
-                            Yes
+                            {#Yes#}
+                            {#show Yes in the Couple’s Match column as a “Couple’s Match” (instead of Yes). If “Couple’s Match” does not fit, you can just use the word “Couple” instead#}
+                            Couple
                         {% else %}
                             {#instead of “No” show nothing#}
                             {#No#}
