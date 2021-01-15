@@ -292,7 +292,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,null,$request,$eventType);
             } //Clicked Upload
             //Add applications or PDF
-            elseif( $form->getClickedButton() === $form->get('addbtn') ) {
+            elseif( $form->getClickedButton() === $form->get('addbtn') || $form->getClickedButton() === $form->get('addbtnforce') ) {
                 //exit("Adding Application to the system");
 
                 //$user = $this->get('security.token_storage')->getToken()->getUser();

@@ -86,6 +86,11 @@ class ResAppUploadType extends AbstractType
             'label' => 'Add Listed Applications',
             'attr' => array('class'=>'btn btn-primary resapp-addbtn', 'onclick'=>'return resappValidateRequest(true);')
         ));
+        //Additional add button without validation. Used by JS to add the listed application in handsontable by confirmation modal
+        $builder->add('addbtnforce', SubmitType::class, array(
+            'label' => 'Add Listed Applications',
+            'attr' => array('class'=>'btn btn-primary resapp-addbtnforce', 'type' => 'hidden')
+        ));
         
     }
 

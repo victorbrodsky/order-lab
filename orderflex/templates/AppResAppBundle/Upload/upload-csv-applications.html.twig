@@ -90,6 +90,9 @@
             <div id="add-listed-button" style="display: none;">
                 {{ form_widget(form.addbtn) }}
             </div>
+            <div id="add-listed-button-novalidation" style="display: none;">
+                {{ form_widget(form.addbtnforce) }}
+            </div>
             <div id="add-listed-message" style="display: none;">Adding Applications...</div>
             </p>
         {% endif %}
@@ -365,10 +368,10 @@
                 //console.log("confirmResFieldsError="+confirmResFieldsError);
                 if( confirmResFieldsError == true ) {
                     //OK
-                    console.log("confirmResFieldsError OK");
+                    //console.log("confirmResFieldsError OK");
                     //TODO: it would be good to change Action to "Do not add"
                 } else {
-                    console.log("confirmResFieldsError Cancel");
+                    //console.log("confirmResFieldsError Cancel");
                     return false;
                 }
             }
@@ -392,9 +395,9 @@
                 console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
-                    console.log("confirmResDuplicateError OK");
+                    //console.log("confirmResDuplicateError OK");
                 } else {
-                    console.log("confirmResDuplicateError Cancel");
+                    //console.log("confirmResDuplicateError Cancel");
                     return false;
                 }
             }
@@ -473,12 +476,16 @@
                 //alert("on modal js: dataConfirmOK clicked");
                 //var footer = $('.modal-footer');
                 //footer.html('Please wait ...');
-                console.log("confirmation ok");
+                //console.log("confirmation ok");
                 $(this).modal( 'hide' ).data( 'bs.modal', null );
                 $(this).remove();
                 $('.modal-backdrop').remove();
                 $('body').removeClass( "modal-open" );
                 $('#resappDataConfirmModal').remove();
+
+                //Additional add button without validation. Used by JS to add the listed application in handsontable by confirmation modal
+                $("#oleg_resappbundle_bulkupload_addbtnforce").click();
+
                 true_func();
             });
 
@@ -486,7 +493,7 @@
                 //alert("on modal js: dataConfirmOK clicked");
                 //var footer = $('.modal-footer');
                 //footer.html('Please wait ...');
-                console.log("confirmation cancel");
+                //console.log("confirmation cancel");
                 $(this).modal( 'hide' ).data( 'bs.modal', null );
                 $(this).remove();
                 $('.modal-backdrop').remove();
@@ -504,7 +511,7 @@
 //                false_func();
 //            });
 
-            console.log("confirmation end");
+            //console.log("confirmation end");
             return false;
         }
 
