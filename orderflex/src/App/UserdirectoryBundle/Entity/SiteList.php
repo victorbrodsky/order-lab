@@ -103,6 +103,12 @@ class SiteList extends ListAbstract
      */
     private $requireMobilePhoneToLogin;
 
+    /**
+     * Note at the top of the log in page
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noteOnLoginPage;
 
 
 
@@ -243,6 +249,22 @@ class SiteList extends ListAbstract
     public function setRequireMobilePhoneToLogin($requireMobilePhoneToLogin)
     {
         $this->requireMobilePhoneToLogin = $requireMobilePhoneToLogin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoteOnLoginPage()
+    {
+        return $this->noteOnLoginPage;
+    }
+
+    /**
+     * @param mixed $noteOnLoginPage
+     */
+    public function setNoteOnLoginPage($noteOnLoginPage)
+    {
+        $this->noteOnLoginPage = $noteOnLoginPage;
     }
 
     

@@ -699,6 +699,11 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
 
+            $builder->add('noteOnLoginPage', null, array(
+                'label' => 'Note at the top of the log in page:',
+                'attr' => array('class' => 'form-control textarea')
+            ));
+
             $builder->add('documents', CollectionType::class, array(
                 'entry_type' => DocumentType::class,
                 'allow_add' => true,

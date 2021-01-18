@@ -2020,6 +2020,21 @@ class ResidencyApplication extends BaseUserAttributes {
         return $fitStr;
     }
 
+    public function getReviewedCount() {
+        $count = 0;
+        foreach( $this->getInterviews() as $interview ) {
+            if( $interview->isEmpty() === false ) {
+                $count++;
+            }
+        }
+
+        return  $count;
+    }
+
+    public function getReviewersCount() {
+        return count($this->getInterviews());
+    }
+
     //Add to John Smith’s application (ID 1234)
     public function getAddToStr() {
         $applicantName = $this->getApplicantFullName();

@@ -236,14 +236,20 @@ class SecurityController extends OrderAbstractController
             }
         }
 
-        $messageToUsers = $this->getMessageToUsers();
+        //$messageToUsers = $this->getMessageToUsers();
+        //$messageToUsers = null;
+
+        $noteOnLoginPage = null;
+        if( $siteObject ) {
+            $noteOnLoginPage = $siteObject->getNoteOnLoginPage();
+        }
 
         $formArr = array(
                             'last_username' => $lastUsername,   // last username entered by the user
                             'error'         => $error,
                             'sitename'     => $sitename,
                             'logo'  => $logoPath,
-                            'messageToUsers' => $messageToUsers,
+                            'messageToUsers' => $noteOnLoginPage,
                             'logoHeight' => 80,
                             'logoWidth' => 300
                         );
@@ -251,9 +257,9 @@ class SecurityController extends OrderAbstractController
         return $formArr;
     }
 
-    public function getMessageToUsers() {
-        return null;
-    }
+//    public function getMessageToUsers() {
+//        return null;
+//    }
 
 
 

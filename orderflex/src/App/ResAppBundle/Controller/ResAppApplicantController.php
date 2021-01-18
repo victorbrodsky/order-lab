@@ -179,10 +179,15 @@ class ResAppApplicantController extends OrderAbstractController {
                 $rankStr = $rank."rd";
             }
 
+            //for 2021, as rated by X of Y interviewers
+            $reviewedCount = $entity->getReviewedCount();
+            $reviewersCount = $entity->getReviewersCount();
+            $reviewedCountStr = ", as rated by $reviewedCount of $reviewersCount interviewers";
+
             $res = "Interview Score (lower is better): ".
                 $entity->getInterviewScore().
                 " (".$rankStr." best of ".count($applicantions).
-                " available in ".$resappType." for ".$startDateStr.")";
+                " available in ".$resappType." for ".$startDateStr.$reviewedCountStr.")";
 
             //Average Fit for Program: 1.33 (A-, scored by 3 of 6 interviewers)
             $res = $res . "<br>" . "Average Fit for Program (lower is better): " . $entity->getCalculatedAverageFit();

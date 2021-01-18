@@ -1028,6 +1028,9 @@
     {% if form.requireMobilePhoneToLogin is defined %}
         {{ formmacros.checkbox(form.requireMobilePhoneToLogin) }}
     {% endif %}
+    {% if form.noteOnLoginPage is defined %}
+        {{ formmacros.field(form.noteOnLoginPage) }}
+    {% endif %}
 
     {#Tag Types#}
     {% if form.tagTypes is defined %}
