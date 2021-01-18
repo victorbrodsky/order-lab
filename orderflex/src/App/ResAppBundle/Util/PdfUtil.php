@@ -188,7 +188,7 @@ class PdfUtil {
                     $handsomtableJsonData[] = $rowArr;
                 }
 
-            }//if use add Not UsedPDFtoTable function
+            }//if( $useDirectSearch ) { if use add Not UsedPDFtoTable function
         }//foreach $pdfFiles
 
         $handsomtableJsonData = $this->addNotUsedPDFtoTable($handsomtableJsonData,$pdfInfoArr,$usedPdfArr,"CSV is not provided");
@@ -982,6 +982,8 @@ class PdfUtil {
 
         //get email, LastName FirstName and Date of Birth for each applicant from the current year without a status of Hidden or Archived
         $resapps = $this->getEnabledResapps();
+        //echo "resapps count=".count($resapps)."<br>";
+
         $resappInfoArr = array();
         foreach($resapps as $resapp) {
             $subjectUser = $resapp->getUser();
@@ -1133,6 +1135,8 @@ class PdfUtil {
     //get all enabled (active) residency application for the current application season year
     public function getEnabledResapps($exceptStatusArr=array()) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         if( count($exceptStatusArr) == 0 ) {
             $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
             if (!$archiveStatus) {
@@ -1182,10 +1186,15 @@ class PdfUtil {
         //show the list of current residency applicants that do not have a status of Hidden or Archived for the current year
         //applicationSeasonStartDate: current application season year: 7-1-2020 to 6-30-2021 (7-1-currentyear to 6-30-nextyear)
         //$startDate = $resapp->getStartDate();
-        $startDateStr = date("Y");
-        $endDateStr = date("Y",strtotime('+1 year')); //nextyear
-        $startDate = $startDateStr."-07-01";
-        $endDate = $endDateStr."-06-30";
+//        $startDateStr = date("Y");
+//        $endDateStr = date("Y",strtotime('+1 year')); //nextyear
+//        $startDate = $startDateStr."-07-01";
+//        $endDate = $endDateStr."-06-30";
+
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        $startDate = $startEndDates['startDate'];
+        $endDate = $startEndDates['endDate'];
+
         $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
         $query = $this->em->createQuery($dql);
@@ -2045,6 +2054,7 @@ class PdfUtil {
 //            }
             //echo $key.": minLength=$minLength<br>";
             $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength);
+            //echo $key."=>minLength=$minLength; field=[$field]<br>";
 
             if( $field ) {
 
@@ -2067,7 +2077,7 @@ class PdfUtil {
                     }
                 }
 
-                //echo "$key=[" . $field . "]<br>";
+                echo "[$key]=[" . $field . "]<br>";
                 $keysArr[$key] = $field;
             } else {
                 $keysArr[$key] = NULL;
@@ -2170,7 +2180,7 @@ class PdfUtil {
         return NULL;
     }
     public function getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength) {
-        //echo "startAnchor=[$startAnchor] <br>";
+        //echo "startAnchor=[$startAnchor], length=[$length] <br>";
         //echo "$text <br><br>";
 
         if( $endAnchorArr && count($endAnchorArr) > 0 ) {
@@ -2186,6 +2196,7 @@ class PdfUtil {
             }
 
             if( $this->isValidFieldLength($thisMinField, $minLength, $maxLength) ) {
+                //echo "found by endAnchorArr thisMinField=$thisMinField <br>";
                 return $thisMinField;
             }
         }
@@ -2195,6 +2206,27 @@ class PdfUtil {
             $field = $this->getPdfField($text,$startAnchor,NULL,$length);
             if( $this->isValidFieldLength($field, $minLength, $maxLength) ) {
                 return $field;
+            }
+        }
+
+        //try identify "Email: email@ggg.com"
+        if(0) {
+            $length = 320; //email maximum length, https://www.rfc-editor.org/errata/eid1690
+            if ($length) {
+                //echo "try length=$length <br>";
+                $field = $this->getPdfField($text, $startAnchor, NULL, $length);
+                //echo "email field=".$field."<br>";
+                if ($field) {
+                    //  0        1           2 ...
+                    //"Email: email@ggg.com nnnn mmmm gggg"
+                    $fieldArr = explode(" ", $field);
+                    if (count($fieldArr) >= 2) {
+                        $field = $fieldArr[1];
+                        if (strpos($field, '@') !== false) {
+                            return $field;
+                        }
+                    }
+                }
             }
         }
 

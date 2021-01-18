@@ -184,6 +184,10 @@ class FellAppUtil {
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
     public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        return $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset);
+
+        /////////////// MOVED TO user_service_utility ///////////////
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
@@ -262,10 +266,13 @@ class FellAppUtil {
             'endDate'=> $endDate,
         );
     }
-
     //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings
     public function getDefaultAcademicStartYear() {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+        return $userServiceUtil->getDefaultAcademicStartYear();
+
+        /////////////// MOVED TO user_service_utility ///////////////
         $userSecUtil = $this->container->get('user_security_utility');
 
         $currentYear = intval(date("Y"));

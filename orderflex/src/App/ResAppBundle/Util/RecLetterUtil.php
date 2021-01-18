@@ -1276,6 +1276,7 @@ class RecLetterUtil {
     public function sendInvitationEmailsToReferences( $resapp, $flush=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $sendEmailUploadLetterResApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterResApp');
         if( $sendEmailUploadLetterResApp ) {
@@ -1313,9 +1314,12 @@ class RecLetterUtil {
             //startDate
             $startDate = $resapp->getStartDate();
             $startDateStr = $startDate->format('Y');
-            $bottomDate = $startDateStr."-01-01";
-            $topDate = $startDateStr."-12-31";
-            $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+            //$startDate = $startDateStr."-01-01";
+            //$endDate = $startDateStr."-12-31";
+            $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
+            $startDate = $startEndDates['startDate'];
+            $endDate = $startEndDates['endDate'];
+            $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
             $query = $this->em->createQuery($dql);
 

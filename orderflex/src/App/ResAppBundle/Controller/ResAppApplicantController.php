@@ -96,7 +96,8 @@ class ResAppApplicantController extends OrderAbstractController {
         //$logger = $this->container->get('logger');
 
         $em = $this->getDoctrine()->getManager();
-        $resappUtil = $this->container->get('resapp_util');
+        //$resappUtil = $this->container->get('resapp_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
 
@@ -133,9 +134,15 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
-        $bottomDate = $startDateStr."-01-01";
-        $topDate = $startDateStr."-12-31";
-        $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
+        //$startDate = $startDateStr."-01-01";
+        //$endDate = $startDateStr."-12-31";
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
+        $startDate = $startEndDates['startDate'];
+        $endDate = $startEndDates['endDate'];
+        //echo "startDate=$startDate, endDate=$endDate <br>";
+        //exit('111');
+
+        $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
         $dql->andWhere("resapp.interviewScore IS NOT NULL AND resapp.interviewScore != '0'");
 

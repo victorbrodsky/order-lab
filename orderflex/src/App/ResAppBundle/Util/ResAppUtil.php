@@ -93,6 +93,8 @@ class ResAppUtil {
     //$year can be multiple dates "2019,2020,2021..."
     public function getResAppByStatusAndYear($status,$resSubspecArg,$year=null,$interviewer=null) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         //echo "year=$year<br>";
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql =  $repository->createQueryBuilder("resapp");
@@ -130,8 +132,11 @@ class ResAppUtil {
                 $yearArr = explode(",",$year);
                 $criterions = array();
                 foreach($yearArr as $singleYear) {
-                    $bottomDate = $singleYear."-01-01";
-                    $topDate = $singleYear."-12-31";
+                    //$bottomDate = $singleYear."-01-01";
+                    //$topDate = $singleYear."-12-31";
+                    $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
+                    $bottomDate = $startEndDates['startDate'];
+                    $topDate = $startEndDates['endDate'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
@@ -139,8 +144,11 @@ class ResAppUtil {
                 $dql->andWhere($criterionStr);
             } else {
                 //seingle year
-                $bottomDate = $year."-01-01";
-                $topDate = $year."-12-31";
+                //$bottomDate = $year."-01-01";
+                //$topDate = $year."-12-31";
+                $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($year);
+                $bottomDate = $startEndDates['startDate'];
+                $topDate = $startEndDates['endDate'];
                 $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }

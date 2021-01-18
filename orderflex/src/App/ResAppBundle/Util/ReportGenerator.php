@@ -113,6 +113,8 @@ class ReportGenerator {
     }
     public function getResApplicationsByYear($startYearStr) {
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+        
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
@@ -120,8 +122,12 @@ class ReportGenerator {
         //startDate
         //$startDate = $resapp->getStartDate();
         //$startYearStr = $startDate->format('Y');
-        $bottomDate = $startYearStr."-01-01";
-        $topDate = $startYearStr."-12-31";
+        //$bottomDate = $startYearStr."-01-01";
+        //$topDate = $startYearStr."-12-31";
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        $bottomDate = $startEndDates['startDate'];
+        $topDate = $startEndDates['endDate'];
+
         $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
         $query = $this->em->createQuery($dql);
