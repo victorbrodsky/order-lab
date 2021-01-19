@@ -619,7 +619,12 @@
 
                     <td>
                         {% if entity.residencyTrack %}
-                            {{  entity.residencyTrack.name }}
+                            {#{% if entity.residencyTrack.name == "CP/EXP" or entity.residencyTrack.name == "AP/EXP" %}#}
+                            {% if "EXP" in entity.residencyTrack.name %}
+                                <b>{{  entity.residencyTrack.name }}</b>
+                            {% else %}
+                                {{  entity.residencyTrack.name }}
+                            {% endif %}
                         {% endif %}
                     </td>
 
