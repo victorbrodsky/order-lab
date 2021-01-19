@@ -122,6 +122,27 @@ class ResAppUtilController extends OrderAbstractController
     }
 
     /**
+     * @Route("/resapps-academic-start-end-dates", name="resapp_get_academic_start_end_dates", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getResAppStartEndDatesAction(Request $request) {
+
+        $resappUtil = $this->container->get('resapp_util');
+
+        $datesArr = $resappUtil->getResAppAcademicYearStartEndDates();
+
+//        $seasonStartDate = $datesArr['Season Start Date'];
+//        $seasonEndDate = $datesArr['Season End Date'];
+//
+//        $residencyStartDate = $datesArr['Residency Start Date'];
+//        $residencyStartDate = $datesArr['Residency End Date'];
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($datesArr));
+        return $response;
+    }
+
+    /**
      * @Route("/resapp-check-duplicate", name="resapp_check_duplicate", methods={"GET","POST"}, options={"expose"=true})
      */
     public function checkDuplicateAction(Request $request) {
@@ -231,6 +252,12 @@ class ResAppUtilController extends OrderAbstractController
                 //echo "1Found resapp?: $residencyApplicationDb <br>";
             }
 
+            //Residency application found in DB by Eras Application Id
+            if( $residencyApplicationDb ) {
+                $duplicateDbInfoArr[] = $firstNameValue . " " . $lastNameValue . " (row #".$rowCount.")"; //$residencyApplicationDb->getId();
+            }
+
+            //Residency application not found in DB => get info from handsontable fieds
             if( !$residencyApplicationDb ) {
                 //Try to find by aamcId and startDate ("Expected Residency Start Date")
                 $rowArr = array();
@@ -265,7 +292,7 @@ class ResAppUtilController extends OrderAbstractController
                         $thisLastName = $duplicateRowArr['Last Name']['value'];
                         //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName $thisEmail for Expected Residency Start Date $thisExpectedResidencyStartDate";
                         //$duplicateTableInfoArr[] = "Duplicate in batch in row $rowCount: $thisFirstName $thisLastName";
-                        $duplicateTableInfoArr[] = "$thisFirstName $thisLastName" . " (row #".$rowCount.")";
+                        $duplicateTableInfoArr[] = "$thisFirstName $thisLastName $thisEmail" . " (row #".$rowCount.")";
                         //$duplicateTableInfoArr[] = $thisFirstName . " " . $thisLastName;
                     } else {
                         //$rowArr['Issue']['id'] = null;
@@ -292,10 +319,9 @@ class ResAppUtilController extends OrderAbstractController
                 //$fieldsErrorArr[$rowCount][] = "First Name";
 
                 //echo "2Found resapp? (count=".count($duplicateDbResApps)."): $residencyApplicationDb <br>";
-            }
+            }//if( !$residencyApplicationDb )
+
         }//foreach( $data["row"] as $row ) {
-
-
         
         //$resapps = $resappPdfUtil->getEnabledResapps();
 
@@ -361,11 +387,18 @@ class ResAppUtilController extends OrderAbstractController
         //}
         $fieldsErrorStr = NULL;
         if( count($fieldsErrorRowArr) > 0 ) {
-            $fieldsErrorStr = "Missing fields: ".implode("; ", $fieldsErrorRowArr).".";
+            $warning = "The CSV format appears to contain unexpected changes 
+            and some of the information may not have been extracted appropriately. 
+            Please verify all of the listed information and correct if necessary before importing.";
+            $fieldsErrorStr = $warning."<br>"."Missing fields: ".implode("; ", $fieldsErrorRowArr).".";
         }
 
         $validationError['validationDuplicateError'] = $duplicateInfoStr;
         $validationError['validationFieldsError'] = $fieldsErrorStr;
+
+
+        //dump($validationError);
+        //exit('222');
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

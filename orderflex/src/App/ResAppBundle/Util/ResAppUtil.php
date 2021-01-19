@@ -2281,7 +2281,7 @@ class ResAppUtil {
     }
 
     //Assume start year is 01-01 (unlike fellowship application, usually July 1st, academicYearStart in the site settings)
-    public function getDefaultStartDates() {
+    public function getDefaultStartDatesOld() {
 
         $currentYear = intval(date("Y"));
         $currentDate = new \DateTime();
@@ -2325,6 +2325,49 @@ class ResAppUtil {
 
         $resArr['Residency Start Year'] = $startDate;
         $resArr['Residency End Year'] = $startDate+1;
+
+        return $resArr;
+    }
+    public function getDefaultStartDates() {
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $academicStartYear = $userServiceUtil->getDefaultAcademicStartYear();
+
+        $resArr['Application Season Start Year'] = $academicStartYear;
+        $resArr['Application Season End Year'] = $academicStartYear+1;
+
+        $resArr['Residency Start Year'] = $academicStartYear+1; //Application Season Start Year + 1 year
+        $resArr['Residency End Year'] = $academicStartYear+2;
+
+        return $resArr;
+    }
+
+    public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y" ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+        $startDateObject = $startEndDates['startDate'];
+        $endDateObject = $startEndDates['endDate'];
+
+        $startDate = $startDateObject->format($formatStr);
+        $endDate = $endDateObject->format($formatStr);
+
+        $resArr['Season Start Date'] = $startDate;
+        $resArr['Season End Date'] = $endDate;
+
+        $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year
+        $endDateObject->add(new \DateInterval('P1Y'));
+        $residencyStartDate = $startDateObject->format($formatStr);
+        $residencyEndDate = $endDateObject->format($formatStr);
+
+//        $startDateObjectPlusOne = clone $startDateObject;
+//        $endDateObjectPlusOne = clone $endDateObject;
+//        $startDateObjectPlusOne->modify('+1 year');
+//        $endDateObjectPlusOne->modify('+1 year');
+//        $residencyStartDate = $startDateObjectPlusOne->format($formatStr);
+//        $residencyEndDate = $endDateObjectPlusOne->format($formatStr);
+
+        $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
+        $resArr['Residency End Date'] = $residencyEndDate;
 
         return $resArr;
     }

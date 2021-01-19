@@ -54,6 +54,11 @@ var _rowHeight =  _tdSize + 2*_tdPadding;
 //total 33
 var _columnData_scanorder = [];
 
+var _seasonStartDate = null;
+var _seasonEndDate = null;
+var _residencyStartDate = null;
+var _residencyEndDate = null;
+
 function resappDisableRow(row,status) {
     if( _sotable ) {
 
@@ -265,6 +270,30 @@ function getResApplicationsForThisYear() {
         });
     }
 }
+function getResidencyStartEndDates() {
+    var url = Routing.generate('resapp_get_academic_start_end_dates');
+    console.log("run url="+url);
+    console.log("_seasonStartDate="+_seasonStartDate);
+
+
+    //if( _seasonStartDate == null && _seasonEndDate == null && _residencyStartDate == null && _residencyEndDate ) {
+    if( _seasonStartDate && _seasonEndDate && _residencyStartDate && _residencyEndDate ) {
+        //skip because already called
+    } else {
+        console.log("start ajax _seasonStartDate="+_seasonStartDate);
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: false //asyncflag
+        }).done(function(data) {
+            _seasonStartDate = data['Season Start Date'];
+            _seasonEndDate = data['Season End Date'];
+            _residencyStartDate = data['Residency Start Date'];
+            _residencyEndDate = data['Residency End Date'];
+            console.log("_seasonStartDate="+_seasonStartDate+", _residencyStartDate="+_residencyStartDate);
+        });
+    }
+}
 
 function ajaxFinishedCondition() {
 
@@ -388,7 +417,13 @@ function ajaxFinishedCondition() {
         //return false;
     }
 
-    if( done >= 4 ) {
+    if( _seasonStartDate && _seasonEndDate && _residencyStartDate && _residencyEndDate ) {
+        done++;
+    } else {
+        //not yet
+    }
+
+    if( done >= 5 ) {
         return true;
     }
 
@@ -417,13 +452,20 @@ function resappMakeColumnData() {
     //$year = $this->getYear($cellValue);
     //$cellValue = "07/01/".$year;
     //Take in consideration before or after July 1st?
-    var year = new Date().getFullYear();
-    var seasonStartDate = "07/01/"+year;
-    var seasonEndDate = "06/30/"+year;
+    // var year = new Date().getFullYear();
+    // var seasonStartDate = "07/01/"+year;
+    // year = year + 1;
+    // var seasonEndDate = "06/30/"+year;
+    //
+    // var nextYear = year + 1;
+    // var residencyStartDate = "07/01/"+nextYear;
+    // nextYear = nextYear + 1;
+    // var residencyEndDate = "06/30/"+nextYear;
 
-    var nextYear = year + 1;
-    var residencyStartDate = "07/01/"+nextYear;
-    var residencyEndDate = "06/30/"+nextYear;
+    var seasonStartDate = _seasonStartDate;
+    var seasonEndDate = _seasonEndDate;
+    var residencyStartDate = _residencyStartDate;
+    var residencyEndDate = _residencyEndDate;
 
     _columnData_scanorder = [
 

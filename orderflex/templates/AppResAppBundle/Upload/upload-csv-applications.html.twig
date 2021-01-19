@@ -157,6 +157,7 @@
             getResidencytracks();
             getResidencyEthnicities();
             getResApplicationsForThisYear();
+            getResidencyStartEndDates();
 
             // Wait until idle (busy must be false)
             var _TIMEOUT = 300; // waitfor test rate [msec]
@@ -339,13 +340,13 @@
             // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
 
             var validationError = resappValidateHandsonTable();
-            console.log("validationError:");
-            console.log(validationError);
+            //console.log("validationError:");
+            //console.log(validationError);
             var validationDuplicateError = validationError.validationDuplicateError;
-            console.log("validationDuplicateError="+validationDuplicateError);
+            //console.log("validationDuplicateError="+validationDuplicateError);
             //console.log(validationDuplicateError);
             var validationFieldsError = validationError.validationFieldsError;
-            console.log("validationFieldsError="+validationFieldsError);
+            //console.log("validationFieldsError="+validationFieldsError);
             //console.log(validationFieldsError);
 
             if( validationFieldsError ) {
@@ -354,7 +355,7 @@
 
                 validationFieldsError = validationFieldsError + " Would you like to proceed? The applications with missing fields will be ignored.";
 
-                console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                //console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
                 $("#projectError").show();
                 $("#projectError").html(validationFieldsError);
                 resappShowBtn();
@@ -377,7 +378,7 @@
             }
 
             if( validationDuplicateError ) {
-                console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
+                //console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
                 $("#projectError").show();
                 $("#projectError").html(validationDuplicateError);
                 resappShowBtn();
@@ -392,7 +393,7 @@
                         function(){return false;}
                 );
                 //var confirmResDuplicateError = confirm(validationDuplicateError);
-                console.log("confirmResDuplicateError="+confirmResDuplicateError);
+                //console.log("confirmResDuplicateError="+confirmResDuplicateError);
                 if( confirmResDuplicateError == true ) {
                     //OK
                     //console.log("confirmResDuplicateError OK");

@@ -212,6 +212,10 @@ class PdfUtil {
         $resappImportFromOldSystemUtil = $this->container->get('resapp_import_from_old_system_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        $academicStartEndDayMonth = $userServiceUtil->getAcademicStartEndDayMonth("m/d");
+        $academicStartDayMonth = $academicStartEndDayMonth['startDayMonth'];    //07/01/
+        $academicEndDayMonth = $academicStartEndDayMonth['endDayMonth'];        //06/30/
+
         $handsomtableJsonData = array();
 
         if( !$csvFileName ) {
@@ -312,30 +316,41 @@ class PdfUtil {
                             }
 
                             if( $cellValue ) {
+
+//                                $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
+//                                $seasonStartDate = $startEndDates['Season Start Date'];
+//                                $seasonEndDate = $startEndDates['Season End Date'];
+//                                $residencyStartDate = $startEndDates['Residency Start Date'];
+//                                $residencyEndDate = $startEndDates['Residency End Date'];
+                                
                                 if ($handsomTitle == "Application Season Start Date") {
                                     //get year 9/29/2018 m/d/Y
                                     $year = $this->getYear($cellValue);
-                                    $cellValue = "07/01/".$year;
+                                    //$cellValue = "07/01/".$year;
+                                    $cellValue = $academicStartDayMonth."/".$year;
                                     //$cellValue = $year."-12-31";
                                 }
                                 if ($handsomTitle == "Application Season End Date") {
                                     //get year 9/29/2018 m/d/Y
                                     $year = $this->getYear($cellValue);
                                     $year = $year + 1;
-                                    $cellValue = "06/30/".$year;
+                                    //$cellValue = "06/30/".$year;
+                                    $cellValue = $academicEndDayMonth."/".$year;
                                 }
                                 if ($handsomTitle == "Expected Residency Start Date") {
                                     //get year 9/29/2018 m/d/Y
                                     $year = $this->getYear($cellValue);
                                     //$year->modify('+1 year');
                                     $year = $year + 1;
-                                    $cellValue = "07/01/".$year;
+                                    //$cellValue = "07/01/".$year;
+                                    $cellValue = $academicStartDayMonth."/".$year;
                                 }
                                 if ($handsomTitle == "Expected Graduation Date") {
                                     //get year 9/29/2018 m/d/Y
                                     $year = $this->getYear($cellValue);
                                     $year = $year + 2;
-                                    $cellValue = "06/30/".$year;
+                                    //$cellValue = "06/30/".$year;
+                                    $cellValue = $academicEndDayMonth."/".$year;
                                 }
 
                                 if ($handsomTitle == "Birth Date") {
@@ -1304,6 +1319,8 @@ class PdfUtil {
     //$parsedData - key-value array where extracted keys from ERAS PDF file
     public function getHandsomtableData( $parsedData ) {
 
+        $resappUtil = $this->container->get('resapp_util');
+
 //        "Applicant ID:" => "11111"            ok
 //        "AAMC ID:" => "22222"                  ok
 //        "Email:" => "email@gmail.com"          ok
@@ -1342,12 +1359,18 @@ class PdfUtil {
         //$datesArr = $resappUtil->getDefaultStartDates();
         //$defaultStartDates = $datesArr['Residency Start Year'];
         //$defaultApplicationSeasonStartDates = $datesArr['Application Season Start Year'];
-        $currentYear = $currentDate->format('Y');
-        $seasonStartDate = "07/01/".$currentYear;
-        $seasonEndDate = "06/30/".$currentYear;
-        $nextYear = $currentYear + 1;
-        $residencyStartDate = "07/01/".$nextYear;
-        $residencyEndDate = "06/30/".$nextYear;
+//        $currentYear = $currentDate->format('Y');
+//        $seasonStartDate = "07/01/".$currentYear;
+//        $seasonEndDate = "06/30/".$currentYear;
+//        $nextYear = $currentYear + 1;
+//        $residencyStartDate = "07/01/".$nextYear;
+//        $residencyEndDate = "06/30/".$nextYear;
+
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
+        $seasonStartDate = $startEndDates['Season Start Date'];
+        $seasonEndDate = $startEndDates['Season End Date'];
+        $residencyStartDate = $startEndDates['Residency Start Date'];
+        $residencyEndDate = $startEndDates['Residency End Date'];
 
         //Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )
         $rowArr["Application Season Start Date"]['value'] = $seasonStartDate; //NULL; //$parsedData["Application Season Start Date"];

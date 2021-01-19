@@ -293,7 +293,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             } //Clicked Upload
             //Add applications or PDF
             elseif( $form->getClickedButton() === $form->get('addbtn') || $form->getClickedButton() === $form->get('addbtnforce') ) {
-                //exit("Adding Application to the system");
+                //exit("Adding Application to the system"); //testing
 
                 //$user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -1508,7 +1508,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             $pdfArr = $resappPdfUtil->getTestPdfApplications();
             $dataArr = $resappPdfUtil->getParsedDataArray($pdfArr);
             $handsomtableJsonData = $resappPdfUtil->getHandsomtableDataArray($dataArr);
-            dump($handsomtableJsonData);
+            //dump($handsomtableJsonData);
             //exit('111');
 
             //exit("parsed res=".implode(";",$res));

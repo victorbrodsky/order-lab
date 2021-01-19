@@ -2937,6 +2937,29 @@ Pathology and Laboratory Medicine",
         return $currentYear;
     }
 
+    public function getAcademicStartEndDayMonth( $formatStr="m-d" )
+    {
+        $userSecUtil = $this->container->get('user_security_utility');
+        //academicYearStart: July 01
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        if (!$academicYearStart) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        if (!$academicYearEnd) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        $startDayMonth = $academicYearStart->format($formatStr);
+        $endDayMonth = $academicYearEnd->format($formatStr);
+
+        return array(
+            'startDayMonth'=> $startDayMonth,
+            'endDayMonth'=> $endDayMonth,
+        );
+    }
+
 
 
 
