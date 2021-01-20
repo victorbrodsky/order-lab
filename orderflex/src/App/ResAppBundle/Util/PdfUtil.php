@@ -441,6 +441,15 @@ class PdfUtil {
                                 }
 
                                 //TODO: Is the applicant a member of any of the following groups?
+
+                                //"AOA" => "Alpha Omega Alpha"
+                                if( $handsomTitle == "AOA" ) {
+                                    if( $cellValue == "Alpha Omega Alpha (Member of AOA)" ) {
+                                        $cellValue = true; //'Alpha Omega Alpha (Member of AOA)';   //true;
+                                    } else {
+                                        $cellValue = false;
+                                    }
+                                }
                             }
 
                             $rowArr[$handsomTitle]['id'] = 1;
@@ -526,6 +535,17 @@ class PdfUtil {
                         $rowArr['ERAS Application ID']['id'] = null;
                         $rowArr['ERAS Application ID']['value'] = $erasApplicantID;
                     }
+
+                    //Try to get AOA from PDF if not set in CSV
+                    if( !$rowArr["AOA"]['value'] ) {
+                        //$aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha (Member of AOA)');
+                        $aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha'); //key field name="Alpha Omega Alpha"
+                        if( $aoaPresent ) {
+                            $rowArr["AOA"]['id'] = 1;
+                            $rowArr["AOA"]['value'] = true; //'Alpha Omega Alpha';  //$aoaPresent; //'Alpha Omega Alpha (Member of AOA)';
+                        }
+                    }
+
                 } else {
                     //echo "Not found ERAS Application:".$rowArr["Last Name"]['value']."<br>";
                 }
@@ -678,8 +698,10 @@ class PdfUtil {
             "Count of Non Peer Reviewed Online Publication" => "Count of Non Peer Reviewed Online Publication",
             "Count of Other Articles" => "Count of Other Articles",
 
-
+            //Alpha Omega Alpha (Member of AOA)
             //"" => "AOA",
+            "AOA" => "Alpha Omega Alpha",
+
             "Couple’s Match" => "Participating as a Couple in NRMP",
             //"" => "Post-Sophomore Fellowship",
 
@@ -1989,7 +2011,7 @@ class PdfUtil {
     }
     //$key = 'Applicant ID'
     public function getSingleKeyField($text,$key) {
-        $keyFields = $this->getKeyFieldArr();
+        $keyFields = $this->getKeyFieldArr(); //get key field and anchors from site settings.
 
         //$fieldsArr = $keyFields[$key];
         $fieldsArr = $this->getKeyArr($keyFields,$key);
@@ -2013,6 +2035,8 @@ class PdfUtil {
         $length = NULL;
         $minLength = 2;
         $maxLength = 200;
+        $checkIfStartAnchorPresent = NULL;
+
         if( isset($fieldsArr['startAnchor']) ) {
             $startAnchor = $fieldsArr['startAnchor'];
         }
@@ -2028,7 +2052,11 @@ class PdfUtil {
         if( isset($fieldsArr['maxLength']) ) {
             $maxLength = (int)$fieldsArr['maxLength'];
         }
-        $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength);
+        if( isset($fieldsArr['checkIfStartAnchorPresent']) ) {
+            $checkIfStartAnchorPresent = $fieldsArr['checkIfStartAnchorPresent'];
+        }
+
+        $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent);
         return $field;
     }
 
@@ -2048,6 +2076,7 @@ class PdfUtil {
             $length = NULL;
             $minLength = 2;
             $maxLength = 200;
+            $checkIfStartAnchorPresent = NULL;
             //$minLength = NULL;
             //$maxLength = NULL;
             if( isset($fieldsArr['field']) ) {
@@ -2071,12 +2100,15 @@ class PdfUtil {
                 $maxLength = (int)$fieldsArr['maxLength'];
                 //echo $key.": maxLength=$maxLength<br>";
             }
+            if( isset($fieldsArr['checkIfStartAnchorPresent']) ) {
+                $checkIfStartAnchorPresent = $fieldsArr['checkIfStartAnchorPresent'];
+            }
 
 //            foreach($fieldsArr as $endStr) {
 //                $field = $this->getPdfField($text, $startAnchor, $endStr);
 //            }
             //echo $key.": minLength=$minLength<br>";
-            $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength);
+            $field = $this->getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent);
             //echo $key."=>minLength=$minLength; field=[$field]<br>";
 
             if( $field ) {
@@ -2202,9 +2234,17 @@ class PdfUtil {
         }
         return NULL;
     }
-    public function getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength) {
+    public function getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent) {
         //echo "startAnchor=[$startAnchor], length=[$length] <br>";
         //echo "$text <br><br>";
+
+        if( $checkIfStartAnchorPresent ) {
+            $subtring_start = strpos($text, $startAnchor);
+            if( $subtring_start !== false ) {
+                return true;
+            }
+
+        }
 
         if( $endAnchorArr && count($endAnchorArr) > 0 ) {
             $thisMinLength = NULL;
