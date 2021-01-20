@@ -445,11 +445,13 @@ class PdfUtil {
                                 //"AOA" => "Alpha Omega Alpha"
                                 if( $handsomTitle == "AOA" ) {
                                     if( $cellValue == "Alpha Omega Alpha (Member of AOA)" ) {
+                                        //cellValue is converted to a boolean AOA as true in DB for all values except "no"
                                         $cellValue = "AOA"; //'Alpha Omega Alpha (Member of AOA)';   //true;
                                     } else {
                                         $cellValue = NULL;
                                     }
                                 }
+
                             }
 
                             $rowArr[$handsomTitle]['id'] = 1;
@@ -541,6 +543,7 @@ class PdfUtil {
                         //$aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha (Member of AOA)');
                         $aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha'); //key field name="Alpha Omega Alpha"
                         if( $aoaPresent ) {
+                            //cellValue is converted to a boolean AOA as true in DB for all values except "no"
                             $rowArr["AOA"]['id'] = 1;
                             $rowArr["AOA"]['value'] = "AOA"; //'Alpha Omega Alpha';  //$aoaPresent; //'Alpha Omega Alpha (Member of AOA)';
                         }
@@ -913,9 +916,11 @@ class PdfUtil {
         $rowArr['Number of all publications']['id'] = null;
         
         if( $residencyApplicationDb->getAoa() ) {
-            $aoa = "Yes";
+            //$aoa = "Yes";
+            $aoa = "AOA";
         } else {
-            $aoa = "No";
+            //$aoa = "No";
+            $aoa = NULL;
         }
         $rowArr['AOA']['value'] = $aoa;
         $rowArr['AOA']['id'] = null;
