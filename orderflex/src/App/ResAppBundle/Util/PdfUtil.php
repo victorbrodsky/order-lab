@@ -445,9 +445,9 @@ class PdfUtil {
                                 //"AOA" => "Alpha Omega Alpha"
                                 if( $handsomTitle == "AOA" ) {
                                     if( $cellValue == "Alpha Omega Alpha (Member of AOA)" ) {
-                                        $cellValue = true; //'Alpha Omega Alpha (Member of AOA)';   //true;
+                                        $cellValue = "AOA"; //'Alpha Omega Alpha (Member of AOA)';   //true;
                                     } else {
-                                        $cellValue = false;
+                                        $cellValue = NULL;
                                     }
                                 }
                             }
@@ -542,7 +542,7 @@ class PdfUtil {
                         $aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha'); //key field name="Alpha Omega Alpha"
                         if( $aoaPresent ) {
                             $rowArr["AOA"]['id'] = 1;
-                            $rowArr["AOA"]['value'] = true; //'Alpha Omega Alpha';  //$aoaPresent; //'Alpha Omega Alpha (Member of AOA)';
+                            $rowArr["AOA"]['value'] = "AOA"; //'Alpha Omega Alpha';  //$aoaPresent; //'Alpha Omega Alpha (Member of AOA)';
                         }
                     }
 
