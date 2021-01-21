@@ -123,6 +123,8 @@ class DefaultController extends OrderAbstractController
      */
     public function assignUsersAction(Request $request)
     {
+        exit("This is one time run method to assign the calllog roles");
+
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -1070,5 +1072,43 @@ class DefaultController extends OrderAbstractController
         }
 
         return $patient;
+    }
+
+
+    /**
+     * Location entries need to be re-linked to the one original Location ID (find by name "New York Presbyterian Hospital")
+     * 127.0.0.1/order/call-log-book/relink-duplicate-location
+     *
+     * @Route("/relink-duplicate-location", name="calllog_relink_duplicate_location")
+     */
+    public function relinkLocationAction(Request $request)
+    {
+        //exit("Permitted only once");
+
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("location");
+        $dql->select('location');
+
+        $dql->where("location.name = 'New York Presbyterian Hospital'");
+
+        $query = $em->createQuery($dql);
+
+        $locations = $query->getResult();
+        echo "locations=".count($locations)."<br>";
+
+        $count = 0;
+        foreach($locations as $location) {
+
+            $count++;
+        }
+
+
+        exit("EOF update locations. count=".$count);
     }
 }
