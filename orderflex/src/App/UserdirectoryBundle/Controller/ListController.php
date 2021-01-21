@@ -316,6 +316,7 @@ class ListController extends OrderAbstractController
         $dql->addGroupBy('original.name');
 
         $useWalker = false;
+        //$useWalker = true;
 
         //$dql->leftJoin("ent.objectType", "objectType");
 

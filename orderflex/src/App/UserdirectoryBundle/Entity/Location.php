@@ -740,6 +740,14 @@ class Location extends ListAbstract
 
         $name = $name . $locationFullname;
 
+        if( !$name ) {
+            $name = $this->getName();
+        }
+
+        if( !$name ) {
+            $name = "Unknown Location ID#".$this->getId()."";
+        }
+
         return $name;
     }
 
@@ -864,7 +872,7 @@ class Location extends ListAbstract
     }
 
     public function getStringify() {
-        $stringify = $this->getNameFull() ."; ". $this->getLocationAddress() . "; " . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
+        $stringify = $this->getLocationFullBuildingName() ."; ". $this->getLocationAddress() . "; " . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
         return $stringify;
     }
     public function getHashName() {

@@ -1096,43 +1096,65 @@ class DefaultController extends OrderAbstractController
         $dql->select('location');
 
         $dql->where("location.name = 'New York Presbyterian Hospital'");
-        $dql->orderBy("location.id","DESC");
+
+        $dql->orderBy("location.id", "DESC"); //last entered showed first
 
         $query = $em->createQuery($dql);
 
         $locations = $query->getResult();
         echo "locations=".count($locations)."<br>";
 
+//        foreach($locations as $location) {
+//            if( $location->getId() != $locationDefault->getId() ) {
+//                //$location->
+//            }
+//        }
+
+        $defaultLocations = array();
         $hashArr = array();
         $count = 0;
         foreach($locations as $location) {
+
+            echo "id=".$location->getId()." (".$location->getType()."): ";
 
             //$hash = $location->getHashName();
             $hash = $location->getStringify();
 
             if( isset($hashArr[$hash]) ) {
                 $hashArr[$hash]++;
+                if( $location->getType() != "disabled" ) {
+                    $location->setType("disabled");
+                    echo "disable this location=" . $location->getId();
+                    $em->flush();
+                    $count++;
+                }
             } else {
+                $defaultLocations[$hash] = $location;
                 $hashArr[$hash] = 1;
+                echo "!!! set as default location=".$location->getId();
             }
-            
-            $count++;
+
+            echo "<br>";
         }
 
-        foreach($hashArr as $hash => $hashCount) {
-            echo $hashCount.": hash=".$hash."<br>";
+        foreach($defaultLocations as $hash=>$defaultLocation) {
+            echo $hash.": defaultLocation=".$defaultLocation->getId()."<br>";
         }
 
-        foreach($locations as $location) {
+//        foreach($hashArr as $hash => $hashCount) {
+//            echo $hashCount.": hash=".$hash."<br>";
+//        }
 
-            //$hash = $location->getHashName();
-            $hash = $location->getStringify();
+//        foreach($locations as $location) {
+//
+//            //$hash = $location->getHashName();
+//            $hash = $location->getStringify();
+//
+//            $hashCount = $hashArr[$hash];
+//            //echo $location->getId().": hashCount=".$hashCount."<br>";
+//
+//        }
 
-            $hashCount = $hashArr[$hash];
-            echo $location->getId().": hashCount=".$hashCount."<br>";
-
-        }
-
-        exit("EOF update locations. count=".$count);
+        exit("EOF update locations. Disabled count=".$count);
     }
 }
