@@ -1115,11 +1115,13 @@ class DefaultController extends OrderAbstractController
         $count = 0;
         foreach($locations as $location) {
 
-            echo "id=".$location->getId()." (".$location->getType()."): ";
+            //echo "id=".$location->getId()." (".$location->getType()."): ";
 
             if( $location->getType() == "disabled" ) {
                 continue;
             }
+
+            echo "id=".$location->getId()." (".$location->getType()."): ";
 
             //$hash = $location->getHashName();
             $hash = $location->getStringify();
