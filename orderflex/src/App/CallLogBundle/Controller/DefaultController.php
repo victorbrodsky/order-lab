@@ -1102,12 +1102,24 @@ class DefaultController extends OrderAbstractController
         $locations = $query->getResult();
         echo "locations=".count($locations)."<br>";
 
+        $hashArr = array();
         $count = 0;
         foreach($locations as $location) {
 
+            $hash = $location->getHashName();
+
+            if( isset($hashArr[$hash]) ) {
+                $hashArr[$hash]++;
+            } else {
+                $hashArr[$hash] = 1;
+            }
+            
             $count++;
         }
 
+        foreach($hashArr as $hash => $count) {
+            echo $count.": hash=".$hash."<br>";
+        }
 
         exit("EOF update locations. count=".$count);
     }

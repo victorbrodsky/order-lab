@@ -863,6 +863,12 @@ class Location extends ListAbstract
         return implode(", ",$detailsArr);
     }
 
+    public function getHashName() {
+        $stringify = $this->getShortName() . $this->getLocationAddress() . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
+        $hash = hash("sha1",$stringify);
+        return $hash;
+    }
+
     public function hasLocationTypeName( $typeName ) {
         foreach( $this->getLocationTypes() as $loctype ) {
             if( $loctype->getName()."" == $typeName ) {
