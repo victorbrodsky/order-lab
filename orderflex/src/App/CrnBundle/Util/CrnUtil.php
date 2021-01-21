@@ -1263,6 +1263,9 @@ class CrnUtil
             $location = $spot->getCurrentLocation();
             //echo "location=".$location."<br>";
             if( $location ) {
+
+                $locationDb = NULL;
+                
                 if( $location->getId() ) {
                     //echo "find location by ID=".$location->getId()."<br>";
                     $locationDb = $this->em->getRepository('AppUserdirectoryBundle:Location')->find($location->getId());
@@ -1272,7 +1275,9 @@ class CrnUtil
                     } else {
                         //echo "use and create a current location =".$location->getName()."<br>";
                     }
-                } else  {
+                }
+
+                if( !$locationDb ) {
 
                     ///////// re-set name by current institution if institution name is default (location name has not been changed) /////////
                     $userSecUtil = $this->container->get('user_security_utility');

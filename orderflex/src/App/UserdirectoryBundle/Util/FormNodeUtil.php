@@ -1641,6 +1641,7 @@ class FormNodeUtil
         }
         //exit('111');
 
+        //$testing = true;
         if( $testing ) {
             print "#########<pre>";
             print_r($resultsArr);
@@ -1654,6 +1655,12 @@ class FormNodeUtil
 
         //group by section name
         foreach( $resultsArr as $thisResult  ) {
+
+//            dump($thisResult);
+//            if( !$thisResult ) {
+//                continue;
+//            }
+
             if( count($thisResult) == 0 ) {
                 continue;
             }

@@ -1264,20 +1264,28 @@ class CallLogUtil
             //echo "return: no tracker found in the encounter=".$encounter."<br>";
             return "";
         }
+
+        //echo "spot count=".count($encounter->getTracker()->getSpots())."<br>";
+
         foreach( $encounter->getTracker()->getSpots() as $spot ) {
             $location = $spot->getCurrentLocation();
             //echo "location=".$location."<br>";
             if( $location ) {
+
+                $locationDb = NULL;
+
                 if( $location->getId() ) {
                     //echo "find location by ID=".$location->getId()."<br>";
                     $locationDb = $this->em->getRepository('AppUserdirectoryBundle:Location')->find($location->getId());
-                    if ($locationDb) {
-                        //echo "set found location by ID=".$location->getId()."<br>";
+                    if( $locationDb ) {
+                        //echo "set the found location by ID=".$location->getId()."<br>";
                         $spot->setCurrentLocation($locationDb);
                     } else {
                         //echo "use and create a current location =".$location->getName()."<br>";
                     }
-                } else  {
+                }
+
+                if( !$locationDb ) {
 
                     ///////// re-set name by current institution if institution name is default (location name has not been changed) /////////
                     $userSecUtil = $this->container->get('user_security_utility');
@@ -1303,6 +1311,8 @@ class CallLogUtil
                     //if id is not provided, then find location by the fields (except prefilled locationTypes="Encounter Location" and name="New York Hospital Location")
                     $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
                     $dql = $repository->createQueryBuilder("list");
+
+                    //exit("before search location");
 
                     if( $location->getName() ) {
                         $dql->andWhere("list.name = :locationName");
@@ -1412,7 +1422,7 @@ class CallLogUtil
                         $dql->andWhere("locationTypes.name = :locationTypesName");
                         $parameters['locationTypesName'] = "Encounter Location";
 
-                        $dql->orderBy("list.id","DESC"); //last entered showed first
+                        $dql->orderBy("list.id", "DESC"); //last entered showed first
 
                         //$dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
                         //$parameters['typedef'] = 'default';
@@ -1420,22 +1430,30 @@ class CallLogUtil
 
                         $query = $this->em->createQuery($dql);
 
-                        if( count($parameters) > 0 ) {
+                        if (count($parameters) > 0) {
                             //print_r($parameters);
                             $query->setParameters($parameters);
                         }
 
                         $locations = $query->getResult();
-                        //print_r($parameters);
-                        //echo "locations count=".count($locations)."<br>";
+
+                        $testing = false;
+                        if( $testing ) {
+                            print_r($parameters);
+                            echo "locations count=" . count($locations) . "<br>";
+                            foreach ($locations as $location) {
+                                echo "location=" . $location->getId() . "; getNameFull=" . $location->getNameFull() . "; getLocationAddress=" . $location->getLocationAddress() . "<br>";
+                            }
+                            exit('end of process location');
+                        }
 
                         if( count($locations) > 0 ) {
                             $locationDb = $locations[0]; //use the last created location
                             $spot->setCurrentLocation($locationDb);
                             return $locationDb;
                         }
-                    }
-                } //if( $location->getId() )  else
+                    }//if search
+                }//if( $location->getId() )  else
             }//$location
         }//foreach spots
 

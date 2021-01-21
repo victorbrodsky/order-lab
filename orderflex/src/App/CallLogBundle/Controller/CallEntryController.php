@@ -1826,7 +1826,9 @@ class CallEntryController extends OrderAbstractController
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
-            
+
+            //exit('$newEncounter='.$newEncounter);
+
             //set system source and user's default institution
             if( $newEncounter ) {
 
@@ -1850,6 +1852,7 @@ class CallEntryController extends OrderAbstractController
 
                 } else {
                     ////////////// processing new encounter ///////////////////
+                    //exit('processing new encounter');
                     $newEncounter->setSource($system);
                     $newEncounter->setInstitution($institution);
                     $newEncounter->setVersion(1);
