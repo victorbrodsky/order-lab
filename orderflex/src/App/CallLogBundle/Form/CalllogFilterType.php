@@ -221,7 +221,12 @@ class CalllogFilterType extends AbstractType
                 return $er->createQueryBuilder('u')
                     ->leftJoin("u.locationTypes", "locationTypes")
                     ->where("locationTypes.name='Encounter Location'")
-                    ->orderBy("u.name","ASC");
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.name","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added'
+                    ));
             },
         ));
 
