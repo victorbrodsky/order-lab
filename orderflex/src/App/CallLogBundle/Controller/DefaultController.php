@@ -1096,6 +1096,7 @@ class DefaultController extends OrderAbstractController
         $dql->select('location');
 
         $dql->where("location.name = 'New York Presbyterian Hospital'");
+        $dql->orderBy("location.id","DESC");
 
         $query = $em->createQuery($dql);
 

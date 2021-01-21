@@ -864,7 +864,7 @@ class Location extends ListAbstract
     }
 
     public function getStringify() {
-        $stringify = $this->getShortName() . $this->getLocationAddress() . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
+        $stringify = $this->getNameFull() ."; ". $this->getLocationAddress() . "; " . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
         return $stringify;
     }
     public function getHashName() {
