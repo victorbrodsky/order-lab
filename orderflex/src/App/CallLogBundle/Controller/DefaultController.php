@@ -1117,6 +1117,10 @@ class DefaultController extends OrderAbstractController
 
             echo "id=".$location->getId()." (".$location->getType()."): ";
 
+            if( $location->getType() == "disabled" ) {
+                continue;
+            }
+
             //$hash = $location->getHashName();
             $hash = $location->getStringify();
 
