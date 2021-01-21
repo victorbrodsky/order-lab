@@ -1106,7 +1106,8 @@ class DefaultController extends OrderAbstractController
         $count = 0;
         foreach($locations as $location) {
 
-            $hash = $location->getHashName();
+            //$hash = $location->getHashName();
+            $hash = $location->getStringify();
 
             if( isset($hashArr[$hash]) ) {
                 $hashArr[$hash]++;
@@ -1117,8 +1118,18 @@ class DefaultController extends OrderAbstractController
             $count++;
         }
 
-        foreach($hashArr as $hash => $count) {
-            echo $count.": hash=".$hash."<br>";
+        foreach($hashArr as $hash => $hashCount) {
+            echo $hashCount.": hash=".$hash."<br>";
+        }
+
+        foreach($locations as $location) {
+
+            //$hash = $location->getHashName();
+            $hash = $location->getStringify();
+
+            $hashCount = $hashArr[$hash];
+            echo $location->getId().": hashCount=".$hashCount."<br>";
+
         }
 
         exit("EOF update locations. count=".$count);

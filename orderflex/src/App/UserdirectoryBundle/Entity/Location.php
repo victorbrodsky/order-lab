@@ -863,8 +863,12 @@ class Location extends ListAbstract
         return implode(", ",$detailsArr);
     }
 
-    public function getHashName() {
+    public function getStringify() {
         $stringify = $this->getShortName() . $this->getLocationAddress() . $this->getLocationTypesStr(); //$this->getLocationFullBuildingName()
+        return $stringify;
+    }
+    public function getHashName() {
+        $stringify = $this->getStringify();
         $hash = hash("sha1",$stringify);
         return $hash;
     }
