@@ -249,7 +249,7 @@ class CallEntrySamePatientController extends CallEntryController
         //add encounter
         $message->addEncounter($encounter2);
 
-        //set accession list
+        //set default accession list
         $scanorderUtil = $this->container->get('scanorder_utility');
         $accessionList = $scanorderUtil->getDefaultAccessionList();
         $message->addAccessionList($accessionList);
