@@ -1858,6 +1858,21 @@ class CallLogUtil
         return $resList;
     }
 
+//    public function getDefaultAccessionList() {
+//        $scanorderUtil = $this->container->get('scanorder_utility');
+//        $accessionListType = $this->getCalllogAccessionListType();
+//
+//        $accessionLists = $scanorderUtil->getDefaultAccessionLists(1,$accessionListType);
+//
+//        foreach( $accessionLists as $accessionList ) {
+//            if( $accessionList->getName()."" == 'Accessions for Follow-Up' ) {
+//                return $accessionList;
+//            }
+//        }
+//
+//        return NULL;
+//    }
+
     public function getDefaultPatientList() {
 
         $userSecUtil = $this->container->get('user_security_utility');

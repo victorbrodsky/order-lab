@@ -1502,6 +1502,11 @@ class CallEntryController extends OrderAbstractController
         $message->addPatient($patient);
         //add encounter
         $message->addEncounter($encounter2);
+        
+        //set accession list
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionList = $scanorderUtil->getDefaultAccessionList();
+        $message->addAccessionList($accessionList);
 
         //add calllog task
         //$task = new CalllogTask($user);
