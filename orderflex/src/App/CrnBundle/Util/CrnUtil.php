@@ -1799,6 +1799,11 @@ class CrnUtil
 
     //create a new AccessionListHierarchy node and add as a child to the $accessionList
     public function addToCrnAccessionLists( $message, $testing ) {
+        if( !$message->getAddAccessionToList() ) {
+            //echo "addAccessionToList is NULL <br>";
+            return null;
+        }
+
         $scanorderUtil = $this->container->get('scanorder_utility');
         $accessionListType = $this->getCrnAccessionListType();
         return $scanorderUtil->addToAccessionLists( $accessionListType, $message, $testing );
