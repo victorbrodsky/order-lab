@@ -1271,7 +1271,10 @@ class DefaultController extends OrderAbstractController
             foreach( $encounter->getTracker()->getSpots() as $spot ) {
                 $messages = $encounter->getMessage();
                 $message = $messages[0];
-                $messageId = $message->getId();
+                $messageId = "UnknownMessageId";
+                if( $message ) {
+                    $messageId = $message->getId();
+                }
                 $encounterId = $encounter->getId();
                 $messageArr[$messageId] = 1;
                 $thisLocation = $spot->getCurrentLocation();
