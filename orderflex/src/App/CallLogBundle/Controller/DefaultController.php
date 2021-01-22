@@ -1174,7 +1174,7 @@ class DefaultController extends OrderAbstractController
     {
         //exit("Permitted only once");
 
-        set_time_limit(360); //360 sec => 6 min
+        set_time_limit(600); //sec => 10 min
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -1293,8 +1293,10 @@ class DefaultController extends OrderAbstractController
                             //echo $messageId.": defaultLocation=".$defaultLocation->getId()."<br>";
                             echo $thisLocation->getId() . "-" . $thisLocation->getType() . "($messageId $encounterId)=>" . $defaultLocation->getId() . "; ";
                             $spot->setCurrentLocation($defaultLocation);
-                            //$em->flush();
+                            $em->flush();
                             $count++;
+                        } else {
+                            echo "SameLocationId=".$thisLocation->getId()."; ";
                         }
                     } else {
                         exit("1 Default location not found");
