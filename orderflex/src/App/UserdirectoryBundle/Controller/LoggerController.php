@@ -334,6 +334,11 @@ class LoggerController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
+        //dump($dqlParameters);
+        //$logs = $query->getResult();
+        //echo "logs=".count($logs)."<br>";
+        //exit('111');
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -537,7 +542,8 @@ class LoggerController extends OrderAbstractController
                 $dqlParameters['objectId'] = $objectIdArr;
             } else {
                 $dql->andWhere("logger.entityId = :objectId");
-                $dqlParameters['objectId'] = "'".$objectId."'";
+                //$dqlParameters['objectId'] = "'".$objectId."'";
+                $dqlParameters['objectId'] = $objectId;
             }
 
 

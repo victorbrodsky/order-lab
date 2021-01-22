@@ -1083,7 +1083,7 @@ class DefaultController extends OrderAbstractController
      */
     public function relinkLocationAction(Request $request)
     {
-        //exit("Permitted only once");
+        exit("Permitted only once");
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -1172,7 +1172,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateDefaultLocationAction(Request $request)
     {
-        //exit("Permitted only once");
+        exit("Permitted only once");
 
         set_time_limit(600); //sec => 10 min
 
