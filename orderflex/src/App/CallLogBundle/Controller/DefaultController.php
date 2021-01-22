@@ -1202,9 +1202,10 @@ class DefaultController extends OrderAbstractController
         $repository = $em->getRepository('AppUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
-
+        $dql->leftJoin("location.locationTypes", "locationTypes");
         $dql->where("location.name = 'New York Presbyterian Hospital'");
         $dql->andWhere("(location.type = 'default' OR location.type = 'user-added')");
+        $dql->andWhere("locationTypes.name='Encounter Location'");
         //$dql->andWhere("location.type = 'disabled'");
 
         $dql->orderBy("location.id", "DESC"); //last entered showed first
