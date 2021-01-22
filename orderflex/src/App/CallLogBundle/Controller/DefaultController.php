@@ -1272,6 +1272,7 @@ class DefaultController extends OrderAbstractController
                 $messages = $encounter->getMessage();
                 $message = $messages[0];
                 $messageId = $message->getId();
+                $encounterId = $encounter->getId();
                 $messageArr[$messageId] = 1;
                 $thisLocation = $spot->getCurrentLocation();
                 $thisLocationArr[$thisLocation->getId()] = 1;
@@ -1283,7 +1284,7 @@ class DefaultController extends OrderAbstractController
 
                     if( $defaultLocation ) {
                         //echo $messageId.": defaultLocation=".$defaultLocation->getId()."<br>";
-                        echo $thisLocation->getId()."($messageId)=>".$defaultLocation->getId()."; ";
+                        echo $thisLocation->getId()."($messageId $encounterId)=>".$defaultLocation->getId()."; ";
                         $spot->setCurrentLocation($defaultLocation);
                         //$em->flush();
                         $count++;
@@ -1298,7 +1299,7 @@ class DefaultController extends OrderAbstractController
 
         }
 
-        echo "messages=".count($messageArr)."<br>";
+        echo "<br>messages=".count($messageArr)."<br>";
         echo "thisLocationArr=".count($thisLocationArr)."<br>";
 
         exit("EOF update default locations. Count=".$count);
