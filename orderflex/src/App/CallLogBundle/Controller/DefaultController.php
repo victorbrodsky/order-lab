@@ -1163,4 +1163,145 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF update locations. Disabled count=".$count);
     }
+
+    /**
+     * Location entries need to be re-linked to the one original Location ID (find by name "New York Presbyterian Hospital")
+     * 127.0.0.1/order/call-log-book/relink-duplicate-location
+     *
+     * @Route("/update-default-location", name="calllog_update_default_location")
+     */
+    public function updateDefaultLocationAction(Request $request)
+    {
+        //exit("Permitted only once");
+
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //Step 0: find default encounters (default or user-added)
+        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("location");
+        $dql->select('location');
+        $dql->leftJoin("location.locationTypes", "locationTypes");
+
+        $dql->where("location.name = 'New York Presbyterian Hospital'");
+        //$dql->andWhere("(location.type = 'default' OR location.type = 'user-added')");
+        $dql->andWhere("location.type = 'disabled'");
+        $dql->andWhere("locationTypes.name='Encounter Location'");
+
+        $dql->orderBy("location.id", "DESC"); //last entered showed first
+
+        $query = $em->createQuery($dql);
+
+        $disabledLocations = $query->getResult();
+        echo "disabled locations=".count($disabledLocations)."<br>";
+
+        //Step 1: find default encounters (default or user-added)
+        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+        $dql =  $repository->createQueryBuilder("location");
+        $dql->select('location');
+
+        $dql->where("location.name = 'New York Presbyterian Hospital'");
+        $dql->andWhere("(location.type = 'default' OR location.type = 'user-added')");
+        //$dql->andWhere("location.type = 'disabled'");
+
+        $dql->orderBy("location.id", "DESC"); //last entered showed first
+
+        $query = $em->createQuery($dql);
+
+        $locations = $query->getResult();
+        echo "locations=".count($locations)."<br>";
+
+        $defaultLocations = array();
+        foreach($locations as $location) {
+
+            //echo "id=".$location->getId()." (".$location->getType()."): ";
+
+            $hash = $location->getStringify();
+            $defaultLocations[$hash] = $location;
+
+            //echo "<br>";
+        }
+
+        foreach($defaultLocations as $hash=>$defaultLocation) {
+            echo $defaultLocation->getId().": ".$hash."<br>";
+        }
+
+//        foreach($hashArr as $hash => $hashCount) {
+//            echo $hashCount.": hash=".$hash."<br>";
+//        }
+
+//        foreach($locations as $location) {
+//
+//            //$hash = $location->getHashName();
+//            $hash = $location->getStringify();
+//
+//            $hashCount = $hashArr[$hash];
+//            //echo $location->getId().": hashCount=".$hashCount."<br>";
+//
+//        }
+
+        //Step 2: find all encounters with disabled location
+        $repository = $em->getRepository('AppOrderformBundle:Encounter');
+        $dql = $repository->createQueryBuilder("encounter");
+        $dql->select('encounter');
+        $dql->leftJoin("encounter.tracker","tracker");
+        $dql->leftJoin("tracker.spots","spots");
+        $dql->leftJoin("spots.currentLocation","currentLocation");
+        $dql->leftJoin("currentLocation.locationTypes", "locationTypes");
+
+        $dql->where("currentLocation.name = 'New York Presbyterian Hospital'");
+        $dql->andWhere("currentLocation.type = 'disabled'");
+        $dql->andWhere("locationTypes.name='Encounter Location'");
+
+        $dql->orderBy("currentLocation.id", "DESC"); //last entered showed first
+
+        $query = $em->createQuery($dql);
+
+        $encounters = $query->getResult();
+        echo "encounters=".count($encounters)."<br>";
+
+        $messageArr = array();
+        $thisLocationArr = array();
+        $count = 0;
+        foreach($encounters as $encounter) {
+
+            foreach( $encounter->getTracker()->getSpots() as $spot ) {
+                $messages = $encounter->getMessage();
+                $message = $messages[0];
+                $messageId = $message->getId();
+                $messageArr[$messageId] = 1;
+                $thisLocation = $spot->getCurrentLocation();
+                $thisLocationArr[$thisLocation->getId()] = 1;
+                $hash = $thisLocation->getStringify();
+                //echo "hash=".$hash."<br>";
+
+                if( isset($defaultLocations[$hash]) ) {
+                    $defaultLocation = $defaultLocations[$hash];
+
+                    if( $defaultLocation ) {
+                        //echo $messageId.": defaultLocation=".$defaultLocation->getId()."<br>";
+                        echo $thisLocation->getId()."($messageId)=>".$defaultLocation->getId()."; ";
+                        $spot->setCurrentLocation($defaultLocation);
+                        //$em->flush();
+                        $count++;
+                    } else {
+                        exit("1 Default location not found");
+                    }
+                } else {
+                    exit("2 Default location not found");
+                }
+
+            }
+
+        }
+
+        echo "messages=".count($messageArr)."<br>";
+        echo "thisLocationArr=".count($thisLocationArr)."<br>";
+
+        exit("EOF update default locations. Count=".$count);
+    }
+
 }
