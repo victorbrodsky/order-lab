@@ -1174,6 +1174,8 @@ class DefaultController extends OrderAbstractController
     {
         //exit("Permitted only once");
 
+        set_time_limit(360); //360 sec => 6 min
+
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -1181,22 +1183,22 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //Step 0: find default encounters (default or user-added)
-        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
-        $dql =  $repository->createQueryBuilder("location");
-        $dql->select('location');
-        $dql->leftJoin("location.locationTypes", "locationTypes");
-
-        $dql->where("location.name = 'New York Presbyterian Hospital'");
-        //$dql->andWhere("(location.type = 'default' OR location.type = 'user-added')");
-        $dql->andWhere("location.type = 'disabled'");
-        $dql->andWhere("locationTypes.name='Encounter Location'");
-
-        $dql->orderBy("location.id", "DESC"); //last entered showed first
-
-        $query = $em->createQuery($dql);
-
-        $disabledLocations = $query->getResult();
-        echo "disabled locations=".count($disabledLocations)."<br>";
+//        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+//        $dql =  $repository->createQueryBuilder("location");
+//        $dql->select('location');
+//        $dql->leftJoin("location.locationTypes", "locationTypes");
+//
+//        $dql->where("location.name = 'New York Presbyterian Hospital'");
+//        //$dql->andWhere("(location.type = 'default' OR location.type = 'user-added')");
+//        $dql->andWhere("location.type = 'disabled'");
+//        $dql->andWhere("locationTypes.name='Encounter Location'");
+//
+//        $dql->orderBy("location.id", "DESC"); //last entered showed first
+//
+//        $query = $em->createQuery($dql);
+//
+//        $disabledLocations = $query->getResult();
+//        echo "disabled locations=".count($disabledLocations)."<br>";
 
         //Step 1: find default encounters (default or user-added)
         $repository = $em->getRepository('AppUserdirectoryBundle:Location');
@@ -1287,11 +1289,13 @@ class DefaultController extends OrderAbstractController
                     $defaultLocation = $defaultLocations[$hash];
 
                     if( $defaultLocation ) {
-                        //echo $messageId.": defaultLocation=".$defaultLocation->getId()."<br>";
-                        echo $thisLocation->getId()."($messageId $encounterId)=>".$defaultLocation->getId()."; ";
-                        $spot->setCurrentLocation($defaultLocation);
-                        //$em->flush();
-                        $count++;
+                        if( $defaultLocation->getId() != $thisLocation->getId() ) {
+                            //echo $messageId.": defaultLocation=".$defaultLocation->getId()."<br>";
+                            echo $thisLocation->getId() . "-" . $thisLocation->getType() . "($messageId $encounterId)=>" . $defaultLocation->getId() . "; ";
+                            $spot->setCurrentLocation($defaultLocation);
+                            //$em->flush();
+                            $count++;
+                        }
                     } else {
                         exit("1 Default location not found");
                     }
