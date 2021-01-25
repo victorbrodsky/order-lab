@@ -2192,8 +2192,8 @@ class PdfUtil {
             $keyFieldArr = json_decode($keyFieldJson, true); //json to associative arrays
             //echo 'JSON Last error: ', json_last_error_msg(), PHP_EOL, PHP_EOL;
             //echo "keyFieldArr=[".$keyFieldArr."]<br>";
-            //dump($keyFieldArr);
-            //exit('111');
+            dump($keyFieldArr);
+            exit('111');
             echo "keyFieldArr count=".count($keyFieldArr)."<br>";
             if( count($keyFieldArr) > 0 ) {
                 return $keyFieldArr;
