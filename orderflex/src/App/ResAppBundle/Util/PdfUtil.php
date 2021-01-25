@@ -2194,12 +2194,14 @@ class PdfUtil {
             //echo "keyFieldArr=[".$keyFieldArr."]<br>";
             //dump($keyFieldArr);
             //exit('111');
+            echo "keyFieldArr count=".count($keyFieldArr)."<br>";
             if( count($keyFieldArr) > 0 ) {
                 return $keyFieldArr;
             }
         }
 
         //use default anchors
+        echo "use default anchors<br>";
         return $this->getDefaultKeyFieldArr();
     }
     public function getDefaultKeyFieldArr() {
