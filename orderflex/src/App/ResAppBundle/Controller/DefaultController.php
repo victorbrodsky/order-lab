@@ -73,7 +73,7 @@ class DefaultController extends OrderAbstractController
 //        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\BarbatiZ_13018609_f2d01751-e7f9-41f6-97b5-da8289db6137.pdf"; //custom
 //        $keysArr = $resappPdfUtil->extractPdfText($path,false);
 //        dump($keysArr);
-        exit('111');
+        //exit('EOF getKeyFieldArr');
 
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }

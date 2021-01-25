@@ -931,7 +931,7 @@ function expandTextarea(holder) {
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;
         var newH = domElement.scrollHeight + 10;
-        //console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
+        console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
         domElement.style.height = newH + 'px';
         //domElement.readOnly = originalReadonly; //to get correct height make it readonly
 

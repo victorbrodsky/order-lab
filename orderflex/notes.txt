@@ -617,9 +617,9 @@ Anchors JSON working example (multiple startAnchor are supported only with check
 
 {"field":"Present Mailing Address:","startAnchor":"Present Mailing Address:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
 
-{"field":"Preferred Phone #:","startAnchor":"Preferred Phone #:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null}
+{"field":"Preferred Phone #:","startAnchor":"Preferred Phone #:","endAnchor":["Applicant ID:","AAMC ID:","Email:","Birth Date:","USMLE ID:","NBOME ID:","NRMP ID:","Most Recent Medical School:","Gender:","Previous Last","Previous Last Name:","Authorized to Work in the US:","Participating in the NRMP Match:","Authorized to Work in the US:","Current Work Authorization:","Permanent Mailing Address:","Preferred Phone #:","Alternate Phone #:","Self Identification:"],"minLength":null,"length":null,"maxLength":null},
 
-{"field":"Alpha Omega Alpha","startAnchor":"Alpha Omega Alpha (Member of AOA)","checkIfStartAnchorPresent":"true"}
+{"field":"Alpha Omega Alpha","startAnchor":"Alpha Omega Alpha (Member of AOA)","checkIfStartAnchorPresent":"true"},
 
 {"field":"Post-Sophomore Fellowship","startAnchor":["pathology rotation","pathology clerkship","pathology elective"],"checkIfStartAnchorPresent":"true"}
 ]
