@@ -249,10 +249,10 @@ class CrnEntrySamePatientController extends CrnEntryController
         //add encounter
         $message->addEncounter($encounter2);
 
-        //TODO: set default accession list
-        //$scanorderUtil = $this->container->get('scanorder_utility');
-        //$accessionList = $scanorderUtil->getDefaultAccessionList();
-        //$message->addAccessionList($accessionList);
+        //set default accession list
+        $scanorderUtil = $this->container->get('scanorder_utility');
+        $accessionList = $scanorderUtil->getDefaultAccessionList();
+        $message->addAccessionList($accessionList);
 
         //add crn task
         //$task = new CrnTask($user);
