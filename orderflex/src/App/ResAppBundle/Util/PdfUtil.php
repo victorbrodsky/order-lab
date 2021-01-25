@@ -452,6 +452,8 @@ class PdfUtil {
                                     }
                                 }
 
+                                //"Post-Sophomore Fellowship" => "Post-Sophomore Fellowship" => get it from PDF. CSV does not have this field
+
                             }
 
                             $rowArr[$handsomTitle]['id'] = 1;
@@ -532,6 +534,7 @@ class PdfUtil {
 
                     //TODO: get "ERAS Application ID" from PDF
                     $pdfText = $pdfInfoArr[$pdfFile->getId()]['text'];
+                    //echo "get Applicant ID:<br>";
                     $erasApplicantID = $this->getSingleKeyField($pdfText,'Applicant ID:');
                     if( $erasApplicantID ) {
                         $rowArr['ERAS Application ID']['id'] = null;
@@ -539,13 +542,37 @@ class PdfUtil {
                     }
 
                     //Try to get AOA from PDF if not set in CSV
-                    if( !$rowArr["AOA"]['value'] ) {
+                    if( isset($rowArr["AOA"]) && !$rowArr["AOA"]['value'] ) {
+                        $tryToGetAoa = true;
+                    } else {
+                        $tryToGetAoa = false;
+                    }
+                    if( $tryToGetAoa ) {
                         //$aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha (Member of AOA)');
+                        //echo "get Alpha Omega Alpha<br>";
                         $aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha'); //key field name="Alpha Omega Alpha"
                         if( $aoaPresent ) {
                             //cellValue is converted to a boolean AOA as true in DB for all values except "no"
                             $rowArr["AOA"]['id'] = 1;
                             $rowArr["AOA"]['value'] = "AOA"; //'Alpha Omega Alpha';  //$aoaPresent; //'Alpha Omega Alpha (Member of AOA)';
+                        }
+                    }
+
+                    //Try to get "Post-Sophomore Fellowship" from PDF:
+                    //"pathology rotation", "pathology clerkship", and "pathology elective"
+                    if( isset($rowArr["Post-Sophomore Fellowship"]) && !$rowArr["Post-Sophomore Fellowship"]['value'] ) {
+                        $tryToGetPsf = true;
+                    } else {
+                        $tryToGetPsf = false;
+                    }
+                    if( $tryToGetPsf ) {
+                        //$aoaPresent = $this->getSingleKeyField($pdfText,'Alpha Omega Alpha (Member of AOA)');
+                        //echo "get Post-Sophomore Fellowship<br>";
+                        $postSophomoreFellowshipPresent = $this->getSingleKeyField($pdfText,'Post-Sophomore Fellowship'); //key field name="Post-Sophomore Fellowship"
+                        if( $postSophomoreFellowshipPresent ) {
+                            //cellValue is converted to "Pathology"
+                            $rowArr["Post-Sophomore Fellowship"]['id'] = 1;
+                            $rowArr["Post-Sophomore Fellowship"]['value'] = "Pathology";
                         }
                     }
 
@@ -706,7 +733,7 @@ class PdfUtil {
             "AOA" => "Alpha Omega Alpha",
 
             "Couple’s Match" => "Participating as a Couple in NRMP",
-            //"" => "Post-Sophomore Fellowship",
+            "Post-Sophomore Fellowship" => "Post-Sophomore Fellowship",
 
             //CSV fields:
             //Most Recent Medical School
@@ -2016,6 +2043,7 @@ class PdfUtil {
     }
     //$key = 'Applicant ID'
     public function getSingleKeyField($text,$key) {
+        //echo "start get Single Key Field: key=$key<br>";
         $keyFields = $this->getKeyFieldArr(); //get key field and anchors from site settings.
 
         //$fieldsArr = $keyFields[$key];
@@ -2068,6 +2096,7 @@ class PdfUtil {
     public function getKeyFields($text) {
 
         //echo "text=$text <br>";
+        //echo "start get Key Fields <br>";
 
         $keysArr = array();
 
@@ -2150,6 +2179,8 @@ class PdfUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $keyFieldJson = $userSecUtil->getSiteSettingParameter('dataExtractionAnchor',$this->container->getParameter('resapp.sitename'));
         //$keyFieldJson = '{"Applicant ID:":"Applicant ID:,AAMC ID:,Email:","b":2,"c":3,"d":4,"e":5}';
+        //$keyFieldJson = "[]";
+        //echo "keyFieldJson=[$keyFieldJson]<br>";
 
         //// EOF get default JSON /////
         //$keyFieldJson = json_encode($this->getDefaultKeyFieldArr()); //testing
@@ -2159,6 +2190,7 @@ class PdfUtil {
 
         if( $keyFieldJson ) {
             $keyFieldArr = json_decode($keyFieldJson, true); //json to associative arrays
+            //echo 'JSON Last error: ', json_last_error_msg(), PHP_EOL, PHP_EOL;
             //echo "keyFieldArr=[".$keyFieldArr."]<br>";
             //dump($keyFieldArr);
             //exit('111');
@@ -2239,16 +2271,37 @@ class PdfUtil {
         }
         return NULL;
     }
-    public function getShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent) {
+    //$startAnchorArr can be array of strings
+    public function getShortestField($text, $startAnchorArr, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent) {
+        if( !$startAnchorArr ) {
+            return NULL;
+        }
+
+        if( is_array($startAnchorArr) ) {
+            foreach($startAnchorArr as $startAnchor) {
+                $field = $this->getSimpleShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent);
+                if( $field ) {
+                    return $field;
+                }
+            }
+        } else {
+            $startAnchor = $startAnchorArr;
+            return $this->getSimpleShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent);
+        }
+
+        return NULL;
+    }
+    //$startAnchor is a string
+    public function getSimpleShortestField($text, $startAnchor, $endAnchorArr, $minLength, $length, $maxLength, $checkIfStartAnchorPresent) {
         //echo "startAnchor=[$startAnchor], length=[$length] <br>";
         //echo "$text <br><br>";
 
+        //multiple startAnchor are supported only with checkIfStartAnchorPresent=true
         if( $checkIfStartAnchorPresent ) {
             $subtring_start = strpos($text, $startAnchor);
             if( $subtring_start !== false ) {
                 return true;
             }
-
         }
 
         if( $endAnchorArr && count($endAnchorArr) > 0 ) {
