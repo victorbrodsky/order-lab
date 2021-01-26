@@ -65,6 +65,7 @@ class Examination
      **/
     private $scores;
 
+    //USMLE Step 1 Score,	USMLE Step 2 CK Score,	USMLE Step 2 CS Score (Pass/Fail),	USMLE Step 3 Score
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -97,6 +98,8 @@ class Examination
     private $USMLEStep2CKDatePassed;
 
     /**
+     * USMLE Step 2 CS Score (Pass/Fail)
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $USMLEStep2CSScore;
@@ -141,6 +144,8 @@ class Examination
      */
     private $ECFMGCertificateDate;
 
+    //COMLEX-USA Level 1 Score,	COMLEX-USA Level 2 CE Score, COMLEX-USA Level 2 PE Score (Pass/Fail), COMLEX-USA Level 3 Score
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -170,6 +175,22 @@ class Examination
      * @ORM\Column(type="integer", nullable=true)
      */
     private $COMLEXLevel2Percentile;
+
+    //COMLEX-USA Level 2 PE Score (Pass/Fail)
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $COMLEXLevel2PEDatePassed;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $COMLEXLevel2PEScore;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $COMLEXLevel2PEPercentile;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -656,6 +677,54 @@ class Examination
         if( $this->isInteger($COMLEXLevel2Percentile) ) {
             $this->COMLEXLevel2Percentile = $COMLEXLevel2Percentile;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel2PEDatePassed()
+    {
+        return $this->COMLEXLevel2PEDatePassed;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel2PEDatePassed
+     */
+    public function setCOMLEXLevel2PEDatePassed($COMLEXLevel2PEDatePassed)
+    {
+        $this->COMLEXLevel2PEDatePassed = $COMLEXLevel2PEDatePassed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel2PEScore()
+    {
+        return $this->COMLEXLevel2PEScore;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel2PEScore
+     */
+    public function setCOMLEXLevel2PEScore($COMLEXLevel2PEScore)
+    {
+        $this->COMLEXLevel2PEScore = $COMLEXLevel2PEScore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCOMLEXLevel2PEPercentile()
+    {
+        return $this->COMLEXLevel2PEPercentile;
+    }
+
+    /**
+     * @param mixed $COMLEXLevel2PEPercentile
+     */
+    public function setCOMLEXLevel2PEPercentile($COMLEXLevel2PEPercentile)
+    {
+        $this->COMLEXLevel2PEPercentile = $COMLEXLevel2PEPercentile;
     }
 
     /**

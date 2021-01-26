@@ -703,9 +703,15 @@ class PdfUtil {
             "Medical School Graduation Date" => "Medical School Attendance Dates", //8/2014 - 5/2019
             "Degree" => "Medical Degree",
 
-            "USMLE Step 1 Score" => "USMLE Step 1 Score",
-            "USMLE Step 2 CK Score" => "USMLE Step 2 CK Score",
-            "USMLE Step 3 Score" => "USMLE Step 3 Score",
+            "USMLE Step 1 Score" => array("USMLE Step 1 Score","USMLE Step 1"),
+            "USMLE Step 2 CK Score" => array("USMLE Step 2 CK Score","USMLE Step 2 CK"),
+            "USMLE Step 2 CS Score" => array("USMLE Step 2 CS Score","USMLE Step 2 CS"),
+            "USMLE Step 3 Score" => array("USMLE Step 3 Score","USMLE Step 3"),
+
+            "COMLEX-USA Level 1 Score" => array("COMLEX-USA Level 1 Score","COMLEX-USA Level 1"),
+            "COMLEX-USA Level 2 CE Score" => array("COMLEX-USA Level 2 CE Score","COMLEX-USA Level 2 CE"),
+            "COMLEX-USA Level 2 PE Score" => array("COMLEX-USA Level 2 PE Score","COMLEX-USA Level 2 PE"),
+            "COMLEX-USA Level 3 Score" => array("COMLEX-USA Level 3 Score","COMLEX-USA Level 3"),
 
             "Country of Citizenship" => "Citizenship",
             //"Visa Status" => "Current Visa Status",
@@ -734,10 +740,10 @@ class PdfUtil {
             "Count of Other Articles" => "Count of Other Articles",
 
             //Alpha Omega Alpha (Member of AOA)
-            //"" => "AOA",
             "AOA" => "Alpha Omega Alpha",
 
             "Couple’s Match" => array("Participating as a Couple in NRMP","Participating as a Couple in NRMP:"),
+
             "Post-Sophomore Fellowship" => "Post-Sophomore Fellowship",
 
             //CSV fields:
@@ -915,14 +921,31 @@ class PdfUtil {
         if( count($examinations) > 0 ) {
             $examination = $examinations[0];
 
+            //USMLE
             $rowArr['USMLE Step 1 Score']['value'] = $examination->getUSMLEStep1Score();
             $rowArr['USMLE Step 1 Score']['id'] = null;
 
-            $rowArr['USMLE Step 2 CK Score']['value'] = $examination->getUSMLEStep2CKScore();;
+            $rowArr['USMLE Step 2 CK Score']['value'] = $examination->getUSMLEStep2CKScore();
             $rowArr['USMLE Step 2 CK Score']['id'] = null;
 
-            $rowArr['USMLE Step 3 Score']['value'] = $examination->getUSMLEStep3Score();;
+            $rowArr['USMLE Step 2 CS Score']['value'] = $examination->getUSMLEStep2CSScore(); //(Pass/Fail)
+            $rowArr['USMLE Step 2 CS Score']['id'] = null;
+
+            $rowArr['USMLE Step 3 Score']['value'] = $examination->getUSMLEStep3Score();
             $rowArr['USMLE Step 3 Score']['id'] = null;
+
+            //COMLEX
+            $rowArr['COMLEX Level 1 Score']['value'] = $examination->getCOMLEXLevel1Score(); //COMLEX-USA Level 1 Score
+            $rowArr['COMLEX Level 1 Score']['id'] = null;
+
+            $rowArr['COMLEX Level 2 CE Score']['value'] = $examination->getCOMLEXLevel2Score(); //COMLEX-USA Level 2 CE Score
+            $rowArr['COMLEX Level 2 CE Score']['id'] = null;
+
+            $rowArr['COMLEX Level 2 PE Score']['value'] = $examination->getCOMLEXLevel2PEScore(); //COMLEX-USA Level 2 PE Score
+            $rowArr['COMLEX Level 2 PE Score']['id'] = null;
+
+            $rowArr['COMLEX Level 3 Score']['value'] = $examination->getCOMLEXLevel3Score(); //COMLEX-USA Level 3 Score
+            $rowArr['COMLEX Level 3 Score']['id'] = null;
         }
 
         $citizenships = $residencyApplicationDb->getCitizenships();

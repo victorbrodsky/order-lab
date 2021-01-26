@@ -258,7 +258,13 @@
                     {% for examination in form.examinations %}
                         {{ formmacros.field(examination.USMLEStep1Score) }}
                         {{ formmacros.field(examination.USMLEStep2CKScore) }}
+                        {{ formmacros.field(examination.USMLEStep2CSScore) }}
                         {{ formmacros.field(examination.USMLEStep3Score) }}
+
+                        {{ formmacros.field(examination.COMLEXLevel1Score) }}
+                        {{ formmacros.field(examination.COMLEXLevel2Score) }}
+                        {{ formmacros.field(examination.COMLEXLevel2PEScore) }}
+                        {{ formmacros.field(examination.COMLEXLevel3Score) }}
                     {% endfor %}
                 </div>
 

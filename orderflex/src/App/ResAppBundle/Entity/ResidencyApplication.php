@@ -1734,7 +1734,8 @@ class ResidencyApplication extends BaseUserAttributes {
             if( 
                 !$examination->getUSMLEStep1Score() &&
                 !$examination->getUSMLEStep2CKScore() &&
-                !$examination->getUSMLEStep3Score()    
+                !$examination->getUSMLEStep2CSScore() &&
+                !$examination->getUSMLEStep3Score()
             ) {
                 continue;
             }
@@ -1746,6 +1747,11 @@ class ResidencyApplication extends BaseUserAttributes {
             }
             if( $examination->getUSMLEStep2CKScore() ) {
                 $usmleArr[] = $examination->getUSMLEStep2CKScore();
+            } else {
+                $usmleArr[] = "-";
+            }
+            if( $examination->getUSMLEStep2CSScore() ) {
+                $usmleArr[] = $examination->getUSMLEStep2CSScore();
             } else {
                 $usmleArr[] = "-";
             }
@@ -1768,6 +1774,7 @@ class ResidencyApplication extends BaseUserAttributes {
             if( 
                 !$examination->getCOMLEXLevel1Score() &&
                 !$examination->getCOMLEXLevel2Score() &&
+                !$examination->getCOMLEXLevel2PEScore() &&
                 !$examination->getCOMLEXLevel3Score()    
             ) {
                 continue;
@@ -1780,6 +1787,11 @@ class ResidencyApplication extends BaseUserAttributes {
             }
             if( $examination->getCOMLEXLevel2Score() ) {
                 $comlexArr[] = $examination->getCOMLEXLevel2Score();
+            } else {
+                $comlexArr[] = "-";
+            }
+            if( $examination->getCOMLEXLevel2PEScore() ) {
+                $comlexArr[] = $examination->getCOMLEXLevel2PEScore();
             } else {
                 $comlexArr[] = "-";
             }

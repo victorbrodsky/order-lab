@@ -644,10 +644,30 @@ class ResAppBulkUploadController extends OrderAbstractController
             $usmle2Value = $usmle2Arr['val'];
             //$usmle2Id = $usmle2Arr['id'];
 
+            $usmle2CSArr = $this->getValueByHeaderName('USMLE Step 2 CS Score',$row,$headers);
+            $usmle2CSValue = $usmle2CSArr['val'];
+            //$usmle2CSId = $usmle2Arr['id'];
+
             $usmle3Arr = $this->getValueByHeaderName('USMLE Step 3 Score',$row,$headers);
             $usmle3Value = $usmle3Arr['val'];
             //$usmle3Id = $usmle3Arr['id'];
 
+            $comlex1Arr = $this->getValueByHeaderName('COMLEX Level 1 Score',$row,$headers);
+            $comlex1Value = $comlex1Arr['val'];
+            //$comlex1Id = $usmle1Arr['id'];
+
+            $comlex2Arr = $this->getValueByHeaderName('COMLEX Level 2 Score',$row,$headers);
+            $comlex2Value = $comlex2Arr['val'];
+            //$comlex2Id = $usmle1Arr['id'];
+
+            $comlex2PEArr = $this->getValueByHeaderName('COMLEX Level 2 PE Score',$row,$headers);
+            $comlex2PEValue = $comlex2PEArr['val'];
+            //$comlex2PEId = $usmle1Arr['id'];
+
+            $comlex3Arr = $this->getValueByHeaderName('COMLEX Level 3 Score',$row,$headers);
+            $comlex3Value = $comlex3Arr['val'];
+            //$comlex3Id = $usmle3Arr['id'];
+            
 //            $applicantName = $firstNameValue . " " . $lastNameValue;
 //            if( !$firstNameValue && !$lastNameValue ) {
 //                $applicantName = "Unknown Applicant";
@@ -1104,14 +1124,31 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             //USMLE scores: $usmleStep1, $usmleStep2, $usmleStep3
             $examination = new Examination($user);
+            //USMLE
             if( $usmle1Value ) {
                 $examination->setUSMLEStep1Score($usmle1Value);
             }
             if( $usmle2Value ) {
                 $examination->setUSMLEStep2CKScore($usmle2Value);
             }
+            if( $usmle2CSValue ) {
+                $examination->setUSMLEStep2CSScore($usmle2CSValue);
+            }
             if( $usmle3Value ) {
                 $examination->setUSMLEStep3Score($usmle3Value);
+            }
+            //COMLEX
+            if( $comlex1Value ) {
+                $examination->setCOMLEXLevel1Score($comlex1Value);
+            }
+            if( $comlex2Value ) {
+                $examination->setCOMLEXLevel2Score($comlex2Value);
+            }
+            if( $comlex2PEValue ) {
+                $examination->setCOMLEXLevel2PEScore($comlex2PEValue);
+            }
+            if( $comlex3Value ) {
+                $examination->setCOMLEXLevel3Score($comlex3Value);
             }
             $residencyApplication->addExamination($examination);
 

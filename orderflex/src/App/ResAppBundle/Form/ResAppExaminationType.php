@@ -31,7 +31,7 @@ class ResAppExaminationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
+        //USMLE
         $builder->add('USMLEStep1Score', null, array(
             'label' => 'USMLE Scores Step 1:',
             'attr' => array('class'=>'form-control digit-mask')
@@ -42,11 +42,36 @@ class ResAppExaminationType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask')
         ));
 
+        $builder->add('USMLEStep2CSScore', null, array(
+            'label' => 'USMLE Scores Step 2 CS (Pass/Fail):',
+            'attr' => array('class'=>'form-control')
+        ));
+
         $builder->add('USMLEStep3Score', null, array(
             'label' => 'USMLE Scores Step 3:',
             'attr' => array('class'=>'form-control digit-mask')
         ));
 
+        //COMLEX
+        $builder->add('COMLEXLevel1Score', null, array(
+            'label' => 'COMLEX Level 1 Score:',
+            'attr' => array('class'=>'form-control digit-mask')
+        ));
+
+        $builder->add('COMLEXLevel2Score', null, array(
+            'label' => 'COMLEX Level 2 Score:',
+            'attr' => array('class'=>'form-control digit-mask')
+        ));
+
+        $builder->add('COMLEXLevel2PEScore', null, array(
+            'label' => 'COMLEX Level 2 PE Score (Pass/Fail):',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('COMLEXLevel3Score', null, array(
+            'label' => 'COMLEX Level 3 Score:',
+            'attr' => array('class'=>'form-control digit-mask')
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)
