@@ -286,6 +286,11 @@ class PdfUtil {
 
                 $rowArr = array();
                 foreach( $this->getHeaderMap() as $handsomTitle => $headerTitle ) {
+
+                    if( is_array($headerTitle) ) {
+                        $headerTitle = $headerTitle[0];
+                    }
+
                     //echo "csvHeaderTitle=$headerTitle => $handsomTitle <br>";
 
 //                    if( $handsomTitle == "Application Receipt Date" ) {
@@ -676,10 +681,10 @@ class PdfUtil {
         return $handsomtableJsonData;
     }
     public function getHeaderMap() {
-        //Handsomtable header title => CSV header title
+        //Handsomtable header title => CSV header title (or array(CSV header title, PDF key title))
         $map = array(
-            "AAMC ID" => "AAMC ID",
-            "ERAS Application ID" => "ERAS Application ID",
+            "AAMC ID" => array("AAMC ID","AAMC ID:"),
+            "ERAS Application ID" => array("ERAS Application ID","Applicant ID:"),
             //"Residency Track" => "Residency Track", //?
 
             "Application Receipt Date" => "Applicant Applied Date",
@@ -692,7 +697,7 @@ class PdfUtil {
             "Middle Name" => "Middle Name",
             "Last Name" => "Last Name",
 
-            "Preferred Email" => "E-mail", //PDF file has fieldname "Email:"
+            "Preferred Email" => array("E-mail","Email:"), //PDF file has fieldname "Email:"
 
             "Medical School Name" => "Most Recent Medical School",
             "Medical School Graduation Date" => "Medical School Attendance Dates", //8/2014 - 5/2019
@@ -732,7 +737,7 @@ class PdfUtil {
             //"" => "AOA",
             "AOA" => "Alpha Omega Alpha",
 
-            "Couple’s Match" => "Participating as a Couple in NRMP",
+            "Couple’s Match" => array("Participating as a Couple in NRMP","Participating as a Couple in NRMP:"),
             "Post-Sophomore Fellowship" => "Post-Sophomore Fellowship",
 
             //CSV fields:
@@ -764,9 +769,9 @@ class PdfUtil {
 
             //Extra fields to identify matched PDF
             "Birth Date" => "Date of Birth",
-            "USMLE ID" => "USMLE ID",
-            "NBOME ID" => "NBOME ID",
-            "NRMP ID" => "NRMP ID"
+            "USMLE ID" => array("USMLE ID","USMLE ID:"),
+            "NBOME ID" => array("NBOME ID","NBOME ID:"),
+            "NRMP ID" => array("NRMP ID","NRMP ID:")
         );
 
         return $map;
@@ -1386,6 +1391,8 @@ class PdfUtil {
 //        "Participating as a Couple in NRMP:" => "No" ok
 //        "Present Mailing Address:" => "number street city, state zip" notused
 //        "Preferred Phone #:" => "12345678" notused
+//        "Alpha Omega Alpha" => null
+//        "Post-Sophomore Fellowship" => true
 
         $rowArr = array();
 
@@ -1490,6 +1497,18 @@ class PdfUtil {
         $rowArr["AAMC ID"]['id'] = 1;
         $rowArr["AAMC ID"]['value'] = $parsedData["AAMC ID:"];
 
+        //Alpha Omega Alpha
+        if( $parsedData["Alpha Omega Alpha"] ) {
+            $rowArr["AOA"]['id'] = 1;
+            $rowArr["AOA"]['value'] = "AOA";
+        }
+
+        //Post-Sophomore Fellowship
+        if( $parsedData["Post-Sophomore Fellowship"] ) {
+            $rowArr["Post-Sophomore Fellowship"]['id'] = 1;
+            $rowArr["Post-Sophomore Fellowship"]['value'] = "Pathology";
+        }
+
         $keysFound = false;
         if( $rowArr["First Name"]['value'] && $rowArr["Last Name"]['value'] ) {
             $keysFound = true;
@@ -1499,19 +1518,36 @@ class PdfUtil {
         }
         $rowArr['keysFound'] = $keysFound;
 
-        //TODO: autofill the rest of not-assigned fields in $parsedData
-        //dump($parsedData);
-        //exit('111');
-        foreach($parsedData as $field=>$value) {
-            //convert CSV fieldname "Email:" to handsontable fieldname "Preferred Email"
-            //"Alpha Omega Alpha" => null: "Alpha Omega Alpha" convert to "AOA"
-            //"Post-Sophomore Fellowship" => true: "Post-Sophomore Fellowship" convert to "Post-Sophomore Fellowship"
-            //getHeaderMap();
-            //$handsontableFieldName = "Preferred Email";
-            //if( !isset($rowArr["Preferred Email"]) ) {
-//
-            //}
-        }
+//        //TODO: autofill the rest of not-assigned fields in $parsedData
+//        dump($parsedData);
+//        exit('111');
+//        PdfUtil.php on line 1508: $parsedData
+//        array:14 [▼
+//          "Applicant ID:" => "111"
+//          "AAMC ID:" => "111"
+//          "Email:" => "111@gmail.com"
+//          "Name:" => "111, 222" //Used in different format
+//          "Birth Date:" => "111" //NOT USED
+//          "USMLE ID:" => "1-111-111-0" //NOT USED
+//          "NBOME ID:" => null //NOT USED
+//          "NRMP ID:" => "N111" //NOT USED
+//          "Gender:" => "Female" //NOT USED
+//          "Participating as a Couple in NRMP:" => "No"
+//          "Present Mailing Address:" => "111 Orpington NY, NY 11111" //NOT USED
+//          "Preferred Phone #:" => "111-222-3333" //NOT USED
+//          "Alpha Omega Alpha" => null
+//          "Post-Sophomore Fellowship" => true
+//        ]
+//        foreach($parsedData as $field=>$value) {
+//            //convert CSV fieldname "Email:" to handsontable fieldname "Preferred Email"
+//            //"Alpha Omega Alpha" => null: "Alpha Omega Alpha" convert to "AOA"
+//            //"Post-Sophomore Fellowship" => true: "Post-Sophomore Fellowship" convert to "Post-Sophomore Fellowship"
+//            //getHeaderMap();
+//            //$handsontableFieldName = "Preferred Email";
+//            //if( !isset($rowArr["Preferred Email"]) ) {
+////
+//            //}
+//        }
 
         return $rowArr;
     }
