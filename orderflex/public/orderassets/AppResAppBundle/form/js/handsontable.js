@@ -517,8 +517,8 @@ function resappMakeColumnData() {
 
         { header:'COMLEX Level 1 Score', columns:{} },
         { header:'COMLEX Level 2 CE Score', columns:{} },
-        { header:'COMLEX Level 1 Score', columns:{} },
-        { header:'COMLEX Level 1 Score', columns:{} },
+        { header:'COMLEX Level 2 PE Score', columns:{} },
+        { header:'COMLEX Level 3 Score', columns:{} },
         
         { header:'Country of Citizenship', columns:{} },
         { header:'Visa Status', columns:{} },
