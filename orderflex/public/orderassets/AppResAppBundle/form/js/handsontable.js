@@ -509,9 +509,17 @@ function resappMakeColumnData() {
         { header:'Medical School Graduation Date', columns:{} },
         { header:'Medical School Name', columns:{} },
         { header:'Degree', columns:{} },
+        
         { header:'USMLE Step 1 Score', columns:{} },
         { header:'USMLE Step 2 CK Score', columns:{} },
+        { header:'USMLE Step 2 CS Score', columns:{} },
         { header:'USMLE Step 3 Score', columns:{} },
+
+        { header:'COMLEX Level 1 Score', columns:{} },
+        { header:'COMLEX Level 2 CE Score', columns:{} },
+        { header:'COMLEX Level 1 Score', columns:{} },
+        { header:'COMLEX Level 1 Score', columns:{} },
+        
         { header:'Country of Citizenship', columns:{} },
         { header:'Visa Status', columns:{} },
 

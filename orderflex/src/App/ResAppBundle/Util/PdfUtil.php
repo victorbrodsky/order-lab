@@ -708,10 +708,10 @@ class PdfUtil {
             "USMLE Step 2 CS Score" => array("USMLE Step 2 CS Score","USMLE Step 2 CS"),
             "USMLE Step 3 Score" => array("USMLE Step 3 Score","USMLE Step 3"),
 
-            "COMLEX-USA Level 1 Score" => array("COMLEX-USA Level 1 Score","COMLEX-USA Level 1"),
-            "COMLEX-USA Level 2 CE Score" => array("COMLEX-USA Level 2 CE Score","COMLEX-USA Level 2 CE"),
-            "COMLEX-USA Level 2 PE Score" => array("COMLEX-USA Level 2 PE Score","COMLEX-USA Level 2 PE"),
-            "COMLEX-USA Level 3 Score" => array("COMLEX-USA Level 3 Score","COMLEX-USA Level 3"),
+            "COMLEX Level 1 Score" => array("COMLEX-USA Level 1 Score","COMLEX-USA Level 1"),
+            "COMLEX Level 2 CE Score" => array("COMLEX-USA Level 2 CE Score","COMLEX-USA Level 2 CE"),
+            "COMLEX Level 2 PE Score" => array("COMLEX-USA Level 2 PE Score","COMLEX-USA Level 2 PE"),
+            "COMLEX Level 3 Score" => array("COMLEX-USA Level 3 Score","COMLEX-USA Level 3"),
 
             "Country of Citizenship" => "Citizenship",
             //"Visa Status" => "Current Visa Status",

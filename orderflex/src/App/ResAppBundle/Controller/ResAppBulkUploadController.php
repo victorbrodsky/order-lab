@@ -656,7 +656,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             $comlex1Value = $comlex1Arr['val'];
             //$comlex1Id = $usmle1Arr['id'];
 
-            $comlex2Arr = $this->getValueByHeaderName('COMLEX Level 2 Score',$row,$headers);
+            $comlex2Arr = $this->getValueByHeaderName('COMLEX Level 2 CE Score',$row,$headers);
             $comlex2Value = $comlex2Arr['val'];
             //$comlex2Id = $usmle1Arr['id'];
 
