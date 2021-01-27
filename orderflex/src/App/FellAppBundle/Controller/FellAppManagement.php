@@ -809,4 +809,164 @@ class FellAppManagement extends OrderAbstractController {
         exit("EOF updateUserInstRoleAction");
     }
 
+    /**
+     * @Route("/create-default-fellowship-type", name="fellapp_create_default_fellowship_type", methods={"GET"})
+     */
+    public function createDefaultFellowshipTypeAction(Request $request)
+    {
+
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')) {
+            return $this->redirect($this->generateUrl('fellapp-nopermission'));
+        }
+
+        $testing = false;
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(false);
+        if( count($fellowshipTypes) > 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Fellowship Type is already existed."
+            );
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
+        }
+
+//        ////// 0) get administrator //////
+//        $primaryPublicUserId = 'administrator';
+//        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+//        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
+//            array(
+//                'primaryPublicUserId' => $primaryPublicUserId,
+//                'keytype' => $localUserType->getId()
+//            )
+//        );
+//        if( count($administrators) > 1 ) {
+//            throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
+//        }
+//        if( count($administrators) == 1 ) {
+//            $administrator = $administrators[0];
+//        } else {
+//            $administrator = NULL;
+//            //throw new \Exception( "Administrator account does not exist." );
+//            exit("Administrator account does not exist.");
+//        }
+//        ////// EOF 0) get administrator //////
+
+
+        //1) Create default FellowshipSubspecialty
+        $fellowshipSubspecialtyName = "Clinical Informatics";
+        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialtyName);
+        if( !$subspecialtyType ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Fellowship Subspecialty $fellowshipSubspecialtyName does not exist."
+            );
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
+        }
+
+        //exit('subspecialtyType='.$subspecialtyType);
+        $count = 0;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////// 2) link default subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        if( $pathology ) {
+            if( $subspecialtyType->getInstitution() ) {
+                $msg = "Subspecialty ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
+                    ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $msg
+                );
+
+                return $this->redirectToRoute('fellapp_fellowshiptype_settings');
+            } else {
+                $subspecialtyType->setInstitution($pathology);
+                if (!$testing) {
+                    $em->persist($subspecialtyType);
+                    $em->flush($subspecialtyType);
+                    $msg = "Subspecialty linked with an associated institution ".$subspecialtyType->getInstitution().".";
+                }
+                $count++;
+            }
+        }
+        //////// EOF 2) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////// 2) create a new role (if not existed) ////////
+        //name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
+        //alias: Fellowship Program Interviewer WCMC Breast Pathology
+        //Description: Access to specific Fellowship Application type as Interviewer
+        //site: fellapp
+        //Institution: WCMC
+        //FellowshipSubspecialty: Breast Pathology
+        //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
+
+        $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$pathology,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " INTERVIEWER role has been created/enabled.";
+            $count = $count + $countInt;
+        }
+
+        $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$pathology,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " COORDINATOR role has been created/enabled.";
+            $count = $count + $countInt;
+        }
+
+        $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$pathology,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " DIRECTOR role has been created/enabled.";
+            $count = $count + $countInt;
+        }
+
+        //////// EOF 2) create a new role (if not existed) ////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//        //4) add administrator
+//        if( !$subspecialtyType->isUserExistByMethodStr($administrator, 'getInterviewers') ) {
+//            $subspecialtyType->addInterviewer($administrator);
+//        }
+//
+//        if( !$subspecialtyType->isUserExistByMethodStr($administrator, 'getCoordinators') ) {
+//            $subspecialtyType->addCoordinator($administrator);
+//        }
+//
+//        if( !$subspecialtyType->isUserExistByMethodStr($administrator, 'getDirectors') ) {
+//            $subspecialtyType->addDirector($administrator);
+//        }
+
+//        //3 Add role to administrator account
+//        $this->assignFellAppAccessRoles($subspecialtyType,$subspecialtyType->getDirectors(),"DIRECTOR");
+//        $this->assignFellAppAccessRoles($subspecialtyType,$subspecialtyType->getCoordinators(),"COORDINATOR");
+//        $this->assignFellAppAccessRoles($subspecialtyType,$subspecialtyType->getInterviewers(),"INTERVIEWER");
+
+        //$em->persist($subspecialtyType);
+        //->flush();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
+
 }
