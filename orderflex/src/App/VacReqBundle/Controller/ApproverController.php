@@ -1203,5 +1203,144 @@ class ApproverController extends OrderAbstractController
     }
 
 
+    /**
+     * @Route("/generate-default-group", name="vacreq_generate_default_group", methods={"GET"})
+     */
+    public function generateDefaultGroupAction(Request $request )
+    {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //get submitter groups
+        $vacreqUtil = $this->vacreqUtil;
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        if( count($organizationalInstitutions) > 0 ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Business/Vacation group is not empty."
+            );
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
+        }
+
+        $defaultInstName = "Pathology and Laboratory Medicine";
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        $institution = $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            $defaultInstName,
+            $wcmc,
+            $mapper
+        );
+//        $defaultInstName = "Pathology Informatics";
+//        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//            $defaultInstName,
+//            $pathology,
+//            $mapper
+//        );
+
+        if( !$institution ) {
+            $msg = "Default group '$defaultInstName' not found";
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $msg
+            );
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
+        }
+
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+
+        $count = 0;
+
+        //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
+        $roleNameBase = str_replace(" ","",$institution->getName());
+        $roleNameBase = strtoupper($roleNameBase);
+
+        //create approver role
+        $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
+        $approverRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$approverRole ) {
+            $approverRole = new Roles();
+            $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
+            $approverRole->setLevel(50);
+            $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+            $approverRole->setDescription('Can search and approve vacation requests for specified service');
+            $approverRole->addSite($site);
+            $approverRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
+
+            $em->persist($approverRole);
+            $em->flush($approverRole);
+
+            $count++;
+        } else {
+            $approverType = $approverRole->getType();
+            if( $approverType != 'default' && $approverType != 'user-added' ) {
+                $approverRole->setType('default');
+                $em->persist($approverRole);
+                $em->flush($approverRole);
+                $count++;
+            }
+        }
+
+        //create submitter role
+        $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
+        $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$submitterRole ) {
+            $submitterRole = new Roles();
+            $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+            $submitterRole->setLevel(30);
+            $submitterRole->setAlias('Vacation Request Submitter for the ' . $institution->getName());
+            $submitterRole->setDescription('Can search and create vacation requests for specified service');
+            $submitterRole->addSite($site);
+            $submitterRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+            $em->persist($submitterRole);
+            $em->flush($submitterRole);
+
+            $count++;
+        } else {
+            $submitterType = $submitterRole->getType();
+            if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                $submitterRole->setType('default');
+                $em->persist($submitterRole);
+                $em->flush($submitterRole);
+                $count++;
+            }
+        }
+
+        if( $count > 0 ) {
+            //Event Log
+            $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+        }
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
 
 }

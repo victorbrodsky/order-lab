@@ -862,7 +862,7 @@ class FellAppManagement extends OrderAbstractController {
         if( !$subspecialtyType ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "Fellowship Subspecialty $fellowshipSubspecialtyName does not exist."
+                "Fellowship Subspecialty '$fellowshipSubspecialtyName' does not exist."
             );
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
