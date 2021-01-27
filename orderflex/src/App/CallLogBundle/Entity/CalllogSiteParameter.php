@@ -169,6 +169,12 @@ class CalllogSiteParameter
      */
     private $numberOfMrnToDisplay;
 
+    /**
+     * Default Call Log New Entry View
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\ViewModeList")
+     */
+    private $viewMode;
 
 
 
@@ -512,6 +518,22 @@ class CalllogSiteParameter
     public function setNumberOfMrnToDisplay($numberOfMrnToDisplay)
     {
         $this->numberOfMrnToDisplay = $numberOfMrnToDisplay;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViewMode()
+    {
+        return $this->viewMode;
+    }
+
+    /**
+     * @param mixed $viewMode
+     */
+    public function setViewMode($viewMode)
+    {
+        $this->viewMode = $viewMode;
     }
 
     

@@ -242,6 +242,21 @@ class CalllogSiteParameterType extends AbstractType
             },
         ));
 
+        $builder->add('viewMode', null, array(
+            'label' => "Default Call Log New Entry View:",
+            'required' => false,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
         //TODO:
 //        $builder->add('useCache',null,array(
 //            'label'=>'Use cached values to display entry content preview in lists:',

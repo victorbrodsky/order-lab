@@ -89,6 +89,7 @@ use App\UserdirectoryBundle\Entity\TransfusionDATResultsList;
 use App\UserdirectoryBundle\Entity\TransfusionHemolysisCheckResultsList;
 use App\UserdirectoryBundle\Entity\TransfusionProductStatusList;
 use App\UserdirectoryBundle\Entity\TransfusionReactionTypeList;
+use App\UserdirectoryBundle\Entity\ViewModeList;
 use App\UserdirectoryBundle\Entity\WeekDaysList;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
@@ -887,6 +888,8 @@ class AdminController extends OrderAbstractController
 
         $count_sourcesystems = $this->generateSourceSystems();
 
+        $count_generateViewModeList = $this->generateViewModeList();
+
         $count_documenttypes = $this->generateDocumentTypes();
         $count_generateLinkTypes = $this->generateLinkTypes();
         $logger->notice("Finished generateLinkTypes");
@@ -999,6 +1002,7 @@ class AdminController extends OrderAbstractController
             'Generated Tables: '.
             'Sitenames='.$count_sitenameList.', '.
             'Source Systems='.$count_sourcesystems.', '.
+            'generateViewModeList='.$count_generateViewModeList.', '.
             'Roles='.$count_roles.', '.
             'Site Settings='.$count_siteParameters.', '.
             'generateDefaultOrgGroupSiteParameters='.$count_generateDefaultOrgGroupSiteParameters.', '.
@@ -3808,6 +3812,37 @@ class AdminController extends OrderAbstractController
 
     }
 
+    public function generateViewModeList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            'Clear',
+            'Empowered'
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $value ) {
+
+            if( $em->getRepository('AppUserdirectoryBundle:ViewModeList')->findOneByName($value) ) {
+                continue;
+            }
+
+            $entity = new ViewModeList();
+            $this->setDefaultList($entity,null,$username,$value);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
 
     public function generateDocumentTypes() {
 
@@ -7437,7 +7472,8 @@ class AdminController extends OrderAbstractController
             "resappapplyingresidencytrack" => array('ApplyingResidencyTrack','resappapplyingresidencytrack-list','Applying Residency Track'),
             "resapplearnarealist" => array('LearnAreaList','resapplearnarealist-list','Learn Area List'),
             "resappspecificindividuallist" => array('SpecificIndividualList','resappspecificindividuallist-list','Specific Individuals Meet List'),
-            
+
+            "viewmodes" => array('ViewModeList','viewmodes-list','View Mode List'),
         );
 
         if( $withcustom ) {
