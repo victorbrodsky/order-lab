@@ -30,20 +30,9 @@
 
 {% block content %}
 
-    {#{% if calllogViewMode == "Clear" %}#}
-        {#<h4 class="text-info calllog-title clearView" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
-            {#{{ title|raw }} - Clear View#}
-        {#</h4>#}
-    {#{% elseif calllogViewMode == "Empowered" %}#}
-        {#<h4 class="text-info calllog-title" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
-            {#{{ title|raw }} - Empowered View#}
-        {#</h4>#}
-    {#{% else %}#}
-        {#<h4 class="text-info calllog-title" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
-            {#{{ title|raw }}#}
-        {#</h4>#}
-    {#{% endif %}#}
-
+    {#<h4 class="text-info calllog-title" align="center">#}
+    {#{{ title|raw }}#}
+    {#</h4>#}
     <h4 class="text-info calllog-title" align="center">
         <a href="javascript:;" id="newEntryCallLogPageTitle" class="nonUnderlinedLink clearView" onclick="newEntryCallLogClearEmpoweredViewToggle()">New Entry - Clear View</a>
     </h4>
@@ -299,37 +288,24 @@
 
 
 {% block additionaljs %}
-
     {#<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>#}
-
     <script language="Javascript">
 
+        $(document).ready(function() {
+            //hide all alias
+            //calllogHideAllAlias(true,true);
+            //calllogHideAllAlias(true,true,'calllog-encounterInfo-holder');
 
-    $(document).ready(function() {
-        //hide all alias
-        //calllogHideAllAlias(true,true);
-        //calllogHideAllAlias(true,true,'calllog-encounterInfo-holder');
+            //init
+            initCallLogPage();
 
-        //init
-        initCallLogPage();
+            //preset mrn and mrn-type
+            calllogPresetMrnMrntype('patient-holder-1');
 
-        //preset mrn and mrn-type
-        calllogPresetMrnMrntype('patient-holder-1');
+            calllogSetViewMode();
+        });
 
-{#//        var defaultView = 'Clear'; //for testing - comment this out#}
-        {#var defaultView = '{{ entity.calllogdefaultnewentryview }}';#}
-        {#var defaultView = $("#calllogViewMode").val();#}
-        {#console.log("defaultView="+defaultView);#}
-        {#if( defaultView === 'Empowered' ){#}
-            {#newEntryCallLogEmpoweredViewDefaultOnLoad();#}
-        {#}else if( defaultView === 'Clear' ){#}
-            {#newEntryCallLogClearViewDefaultOnLoad();#}
-        {#}#}
-        calllogSetViewMode();
-    });
-
-
-</script>
+    </script>
 {% endblock %}
 
 {#{% block additionalcss %}#}

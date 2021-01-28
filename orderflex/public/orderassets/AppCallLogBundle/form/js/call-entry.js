@@ -3183,7 +3183,7 @@ function calllogSetViewMode() {
 //        var defaultView = 'Clear'; //for testing - comment this out
 //     var defaultView = '{{ entity.calllogdefaultnewentryview }}';
     var defaultView = $("#calllogViewMode").val();
-    console.log("defaultView="+defaultView);
+    //console.log("defaultView="+defaultView);
     if( defaultView === 'Empowered' ){
         newEntryCallLogEmpoweredViewDefaultOnLoad();
     }else if( defaultView === 'Clear' ){
@@ -3285,7 +3285,7 @@ function newEntryCallLogSetTitle(accordionDivID) {
 }
 
 function newEntryCallLogEmpoweredViewDefaultOnLoad() {
-    console.log("newEntryCallLogEmpoweredViewDefaultOnLoad");
+    //console.log("newEntryCallLogEmpoweredViewDefaultOnLoad");
     if($('[id*="calllog-EncounterInfo-"]').is( ":hidden" )){
         $('[id*="calllog-EncounterInfo-"]').collapse('show');
     }
@@ -3316,7 +3316,7 @@ function newEntryCallLogEmpoweredViewDefaultOnLoad() {
 }
 
 function newEntryCallLogClearViewDefaultOnLoad() {
-    console.log("newEntryCallLogClearViewDefaultOnLoad");
+    //console.log("newEntryCallLogClearViewDefaultOnLoad");
     if($('[id*="calllog-EncounterInfo-"]').is( ":visible" )){
         $('[id*="calllog-EncounterInfo-"]').collapse('hide');
     }
