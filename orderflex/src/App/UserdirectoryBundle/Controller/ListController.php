@@ -273,6 +273,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/", name="resapplearnarealist-list", methods={"GET"})
      * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist-list", methods={"GET"})
      * @Route("/list/viewmodes/", name="viewmodes-list", methods={"GET"})
+     * @Route("/list/transrespricetypes/", name="transrespricetypes-list", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
@@ -881,6 +882,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/", name="resapplearnarealist_create", methods={"POST"})
      * @Route("/list/resappspecificindividuallist/", name="resappspecificindividuallist_create", methods={"POST"})
      * @Route("/list/viewmodes/", name="viewmodes_create", methods={"POST"})
+     * @Route("/list/transrespricetypes/", name="transrespricetypes_create", methods={"POST"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1211,6 +1213,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/new", name="resapplearnarealist_new", methods={"GET"})
      * @Route("/list/resappspecificindividuallist/new", name="resappspecificindividuallist_new", methods={"GET"})
      * @Route("/list/viewmodes/new", name="viewmodes_new", methods={"GET"})
+     * @Route("/list/transrespricetypes/new", name="transrespricetypes_new", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1495,6 +1498,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_show", methods={"GET"})
      * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_show", methods={"GET"})
      * @Route("/list/viewmodes/{id}", name="viewmodes_show", methods={"GET"})
+     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_show", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
@@ -1772,6 +1776,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/{id}/edit", name="resapplearnarealist_edit", methods={"GET"})
      * @Route("/list/resappspecificindividuallist/{id}/edit", name="resappspecificindividuallist_edit", methods={"GET"})
      * @Route("/list/viewmodes/{id}/edit", name="viewmodes_edit", methods={"GET"})
+     * @Route("/list/transrespricetypes/{id}/edit", name="transrespricetypes_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2099,6 +2104,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_update", methods={"PUT"})
      * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_update", methods={"PUT"})
      * @Route("/list/viewmodes/{id}", name="viewmodes_update", methods={"PUT"})
+     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2983,6 +2989,11 @@ class ListController extends OrderAbstractController
                 $displayName = "Translational Research Project Specialty List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transrespricetypes":
+                $className = "PriceTypeList";
+                $displayName = "Translational Research Price Type List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
             case "transresprojecttypes":
                 $className = "ProjectTypeList";
                 $displayName = "Translational Research Project Type List";
@@ -3728,6 +3739,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/resapplearnarealist/{id}", name="resapplearnarealist_delete", methods={"DELETE"})
      * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_delete", methods={"DELETE"})
      * @Route("/list/viewmodes/{id}", name="viewmodes_delete", methods={"DELETE"})
+     * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_delete", methods={"DELETE"})
      *
      *
      */

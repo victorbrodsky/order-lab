@@ -527,6 +527,13 @@ class Project {
      */
     private $stateComment;
 
+    /**
+     * Utilize the following price list
+     *
+     * @ORM\ManyToOne(targetEntity="PriceTypeList")
+     */
+    private $priceList;
+
     //NOT USED
     //reminder email: identifier(state), reminderEmailDate
     // for each identifier $state - irb_review, admin_review, committee_review, final_review, irb_missinginfo, admin_missinginfo
@@ -1814,6 +1821,23 @@ class Project {
     {
         $this->stateComment = $stateComment;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPriceList()
+    {
+        return $this->priceList;
+    }
+
+    /**
+     * @param mixed $priceList
+     */
+    public function setPriceList($priceList)
+    {
+        $this->priceList = $priceList;
+    }
+    
 
 
 //    public function getReminderEmails()

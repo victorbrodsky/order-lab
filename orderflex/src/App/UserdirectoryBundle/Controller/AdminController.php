@@ -35,6 +35,7 @@ use App\ResAppBundle\Entity\SpecificIndividualList;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
+use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\ProjectTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
@@ -981,6 +982,7 @@ class AdminController extends OrderAbstractController
         $count_setFormNodeVersion = $this->setFormNodeVersion();
         $count_generateLifeForm = $this->generateLifeForm();
         $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
+        $count_generateTransResPriceTypeList = $this->generateTransResPriceTypeList();
         $count_generateTransResProjectTypeList = $this->generateTransResProjectTypeList();
         $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
@@ -1104,6 +1106,7 @@ class AdminController extends OrderAbstractController
             'LifeForms='.$count_generateLifeForm.', '.
             'TransResProjectSpecialty='.$count_generateTransResProjectSpecialty.', '.
             'ProjectTypeList='.$count_generateTransResProjectTypeList.', '.
+            'generateTransResPriceTypeList='.$count_generateTransResPriceTypeList.', '.
             'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
             'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
@@ -7449,6 +7452,8 @@ class AdminController extends OrderAbstractController
             "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),
             "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
+            "transrespricetypes" => array('PriceTypeList','transrespricetypes-list','Translational Research Price Type List'),
+
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -9411,6 +9416,37 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransResPriceTypeList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "External Pricing",
+            "Internal Pricing"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new PriceTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
