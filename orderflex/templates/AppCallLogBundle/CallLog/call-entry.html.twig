@@ -30,8 +30,22 @@
 
 {% block content %}
 
+    {#{% if calllogViewMode == "Clear" %}#}
+        {#<h4 class="text-info calllog-title clearView" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
+            {#{{ title|raw }} - Clear View#}
+        {#</h4>#}
+    {#{% elseif calllogViewMode == "Empowered" %}#}
+        {#<h4 class="text-info calllog-title" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
+            {#{{ title|raw }} - Empowered View#}
+        {#</h4>#}
+    {#{% else %}#}
+        {#<h4 class="text-info calllog-title" align="center" onclick="newEntryCallLogClearEmpoweredViewToggle();">#}
+            {#{{ title|raw }}#}
+        {#</h4>#}
+    {#{% endif %}#}
+
     <h4 class="text-info calllog-title" align="center">
-        {{ title|raw }}
+        <a href="javascript:;" id="newEntryCallLogPageTitle" class="nonUnderlinedLink clearView" onclick="newEntryCallLogClearEmpoweredViewToggle()">New Entry - Clear View</a>
     </h4>
 
     <br>
@@ -53,6 +67,7 @@
     <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
     <input type="hidden" id="mrn" value="{{ mrn }}" />
     <input type="hidden" id="mrntype" value="{{ mrntype }}" />
+    <input type="hidden" id="calllogViewMode" value="{{ calllogViewMode }}" />
     {#<input type="hidden" id="encounterid" value="{{ encounterid }}" />#}
 
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
@@ -110,7 +125,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#calllog-EncounterInfo-{{ encounter.vars.value.id }}">
+                            <a data-toggle="collapse" href="#calllog-EncounterInfo-{{ encounter.vars.value.id }}" onclick="newEntryCallLogSetTitle('#calllog-EncounterInfo')">
                                 Encounter Info
                             </a>
                         </h4>
@@ -301,6 +316,16 @@
         //preset mrn and mrn-type
         calllogPresetMrnMrntype('patient-holder-1');
 
+{#//        var defaultView = 'Clear'; //for testing - comment this out#}
+        {#var defaultView = '{{ entity.calllogdefaultnewentryview }}';#}
+        {#var defaultView = $("#calllogViewMode").val();#}
+        {#console.log("defaultView="+defaultView);#}
+        {#if( defaultView === 'Empowered' ){#}
+            {#newEntryCallLogEmpoweredViewDefaultOnLoad();#}
+        {#}else if( defaultView === 'Clear' ){#}
+            {#newEntryCallLogClearViewDefaultOnLoad();#}
+        {#}#}
+        calllogSetViewMode();
     });
 
 

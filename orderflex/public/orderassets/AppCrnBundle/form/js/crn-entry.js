@@ -22,7 +22,7 @@
 var _transTime = 500;
 var _patients = [];
 var _mrntype_original = null;
-_addAccessionCliked = false;
+var _addAccessionCliked = false;
 
 function initCrnPage() {
     listnereAccordionMasterPatientParent();

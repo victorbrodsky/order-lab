@@ -2967,6 +2967,22 @@ class CallLogUtil
         return $encounter;
     }
 
+    public function getDefaultViewMode() {
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $viewMode = $userSecUtil->getSiteSettingParameter('viewMode',$sitename);
+        if( !$viewMode ) {
+            $viewMode = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Clear");
+        }
+
+        if( !$viewMode ) {
+            $viewMode = "Empowered";
+        }
+
+        return $viewMode."";
+    }
+
 //    //TODO: save call log entry short info to setShortInfo($shortInfo)
 //    //as table:{{ user_formnode_utility.getFormNodeHolderShortInfo(message,message.messageCategory,1,trclassname)|raw }}
 //    public function updateMessageShortInfo($message) {

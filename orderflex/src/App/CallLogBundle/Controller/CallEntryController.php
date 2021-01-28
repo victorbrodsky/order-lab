@@ -1550,6 +1550,8 @@ class CallEntryController extends OrderAbstractController
             );
         }
 
+        $calllogViewMode = $calllogUtil->getDefaultViewMode();
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -1564,7 +1566,8 @@ class CallEntryController extends OrderAbstractController
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'readonlyPatient' => $readonlyPatient,
             'readonlyEncounter' => $readonlyEncounter,
-            'showPreviousEncounters' => $showPreviousEncounters
+            'showPreviousEncounters' => $showPreviousEncounters,
+            'calllogViewMode' => $calllogViewMode
             //'encounterid' => $encounterid
         );
     }

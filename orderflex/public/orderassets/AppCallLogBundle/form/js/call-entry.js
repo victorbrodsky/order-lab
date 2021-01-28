@@ -22,7 +22,7 @@
 var _transTime = 500;
 var _patients = [];
 var _mrntype_original = null;
-_addAccessionCliked = false;
+var _addAccessionCliked = false;
 
 function initCallLogPage() {
     listnereAccordionMasterPatientParent();
@@ -501,6 +501,9 @@ function showCalllogCallentryForm(show) {
         //generate encounter ID. Use : encounterid
         //var encounterid = $('#encounterid').val();
         //$('.encounter-id').val(encounterid);
+
+        //Set View Mode
+        calllogSetViewMode();
 
     } else {
         //console.log('hide patient info');
@@ -2676,7 +2679,7 @@ function calllogAddPreviousEncounters(patient) {
         response.forEach(function(item){
             var thisEncounterId = item['id'];
             var thisEncounterText = item['text'];
-            console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+            //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
             //text += thisEncounterText;
             if( thisEncounterText ) {
                 var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
@@ -3175,3 +3178,171 @@ function addCalllogAccessionToList(holderId) {
 
     });
 }
+
+function calllogSetViewMode() {
+//        var defaultView = 'Clear'; //for testing - comment this out
+//     var defaultView = '{{ entity.calllogdefaultnewentryview }}';
+    var defaultView = $("#calllogViewMode").val();
+    console.log("defaultView="+defaultView);
+    if( defaultView === 'Empowered' ){
+        newEntryCallLogEmpoweredViewDefaultOnLoad();
+    }else if( defaultView === 'Clear' ){
+        newEntryCallLogClearViewDefaultOnLoad();
+    }
+}
+function newEntryCallLogClearEmpoweredViewToggle() {
+    if($('#newEntryCallLogPageTitle').hasClass('clearView')){
+        $('[id*="calllog-EncounterInfo-"]').collapse('show');
+        $('#calllog-PatientList').collapse('show');
+        $('#calllog-documents').collapse('show');
+        $('#calllog-tasklist').collapse('show');
+        $('#calllog-EntryTags').collapse('show');
+        $('#calllog-EntryTags').on('shown.bs.collapse', function () {
+            if($('#calllog-tasklist').is( ":visible" ) && $('#calllog-documents').is( ":visible" ) && $('#calllog-PatientList').is( ":visible" ) && $('[id*="calllog-EncounterInfo-"]').is( ":visible" )){
+                $('#newEntryCallLogPageTitle').removeClass('clearView');
+                $('#newEntryCallLogPageTitle').removeClass('mixedView');
+                $('#newEntryCallLogPageTitle').text('New Entry - Empowered View');
+            }else{
+                $('#newEntryCallLogPageTitle').removeClass('clearView');
+                $('#newEntryCallLogPageTitle').addClass('mixedView');
+                $('#newEntryCallLogPageTitle').text('New Entry');
+            }
+        });
+    }else if($('#newEntryCallLogPageTitle').hasClass('mixedView')){
+        $('[id*="calllog-EncounterInfo-"]').collapse('hide');
+        $('#calllog-PatientList').collapse('hide');
+        $('#calllog-documents').collapse('hide');
+        $('#calllog-tasklist').collapse('hide');
+        $('#calllog-EntryTags').collapse('hide');
+        $('#calllog-EntryTags').on('hidden.bs.collapse', function () {
+            if($('#calllog-tasklist').is( ":hidden" ) && $('#calllog-documents').is( ":hidden" ) && $('#calllog-PatientList').is( ":hidden" ) && $('[id*="calllog-EncounterInfo-"]').is( ":hidden" )){
+                $('#newEntryCallLogPageTitle').removeClass('mixedView');
+                $('#newEntryCallLogPageTitle').addClass('clearView');
+                $('#newEntryCallLogPageTitle').text('New Entry - Clear View');
+            }else{
+                $('#newEntryCallLogPageTitle').removeClass('clearView');
+                $('#newEntryCallLogPageTitle').addClass('mixedView');
+                $('#newEntryCallLogPageTitle').text('New Entry');
+            }
+        });
+    }else{
+        $('[id*="calllog-EncounterInfo-"]').collapse('hide');
+        $('#calllog-PatientList').collapse('hide');
+        $('#calllog-documents').collapse('hide');
+        $('#calllog-tasklist').collapse('hide');
+        $('#calllog-EntryTags').collapse('hide');
+        $('#calllog-EntryTags').on('hidden.bs.collapse', function () {
+            if($('#calllog-tasklist').is( ":hidden" ) && $('#calllog-documents').is( ":hidden" ) && $('#calllog-PatientList').is( ":hidden" ) && $('[id*="calllog-EncounterInfo-"]').is( ":hidden" )){
+                $('#newEntryCallLogPageTitle').removeClass('mixedView');
+                $('#newEntryCallLogPageTitle').addClass('clearView');
+                $('#newEntryCallLogPageTitle').text('New Entry - Clear View');
+            }else{
+                $('#newEntryCallLogPageTitle').removeClass('clearView');
+                $('#newEntryCallLogPageTitle').addClass('mixedView');
+                $('#newEntryCallLogPageTitle').text('New Entry');
+            }
+        });
+    }
+    return false;
+}
+
+function newEntryCallLogSetTitle(accordionDivID) {
+    if (accordionDivID.indexOf('EncounterInfo') >=0) {
+        var accordionDivID = '[id*="calllog-EncounterInfo-"]';
+    }
+    var callLogNewEntryDivID = ['[id*="calllog-EncounterInfo-"]', '#calllog-PatientList', '#calllog-documents', '#calllog-tasklist', '#calllog-EntryTags'];
+    var clickedDivIDpos = callLogNewEntryDivID.indexOf(accordionDivID);
+    var removedItem = callLogNewEntryDivID.splice(clickedDivIDpos, 1);
+    $(accordionDivID).on('shown.bs.collapse', function () {
+        if($(callLogNewEntryDivID[0]).is( ":visible" ) && $(callLogNewEntryDivID[1]).is( ":visible" ) && $(callLogNewEntryDivID[2]).is( ":visible" ) && $(callLogNewEntryDivID[3]).is( ":visible" )){
+            $('#newEntryCallLogPageTitle').removeClass('mixedView');
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Empowered View');
+        }else if($(callLogNewEntryDivID[0]).is( ":hidden" ) && $(callLogNewEntryDivID[1]).is( ":hidden" ) && $(callLogNewEntryDivID[2]).is( ":hidden" ) && $(callLogNewEntryDivID[3]).is( ":hidden" )){
+            $('#newEntryCallLogPageTitle').addClass('mixedView');
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry');
+        }else{
+            $('#newEntryCallLogPageTitle').addClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Clear View');
+        }
+    });
+    $(accordionDivID).on('hidden.bs.collapse', function () {
+        if($(callLogNewEntryDivID[0]).is( ":visible" ) && $(callLogNewEntryDivID[1]).is( ":visible" ) && $(callLogNewEntryDivID[2]).is( ":visible" ) && $(callLogNewEntryDivID[3]).is( ":visible" )){
+            $('#newEntryCallLogPageTitle').addClass('mixedView');
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry');
+        }else if($(callLogNewEntryDivID[0]).is( ":hidden" ) && $(callLogNewEntryDivID[1]).is( ":hidden" ) && $(callLogNewEntryDivID[2]).is( ":hidden" ) && $(callLogNewEntryDivID[3]).is( ":hidden" )){
+            $('#newEntryCallLogPageTitle').removeClass('mixedView');
+            $('#newEntryCallLogPageTitle').addClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Clear View');
+        }else{
+            $('#newEntryCallLogPageTitle').removeClass('mixedView');
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Empowered View');
+        }
+    });
+}
+
+function newEntryCallLogEmpoweredViewDefaultOnLoad() {
+    console.log("newEntryCallLogEmpoweredViewDefaultOnLoad");
+    if($('[id*="calllog-EncounterInfo-"]').is( ":hidden" )){
+        $('[id*="calllog-EncounterInfo-"]').collapse('show');
+    }
+    if($('#calllog-PatientList').is( ":hidden" )){
+        $('#calllog-PatientList').collapse('show');
+    }
+    if($('#calllog-documents').is( ":hidden" )){
+        $('#calllog-documents').collapse('show');
+    }
+    if($('#calllog-tasklist').is( ":hidden" )){
+        $('#calllog-tasklist').collapse('show');
+    }
+    if($('#calllog-EntryTags').is( ":hidden" )){
+        $('#calllog-EntryTags').collapse('show');
+    }
+    $('#calllog-EntryTags').on('shown.bs.collapse', function () {
+        if($('#calllog-tasklist').is( ":visible" ) && $('#calllog-documents').is( ":visible" ) && $('#calllog-PatientList').is( ":visible" ) && $('[id*="calllog-EncounterInfo-"]').is( ":visible" )){
+            $('#newEntryCallLogPageTitle').removeClass('mixedView');
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Empowered View');
+        }else{
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').addClass('mixedView');
+            $('#newEntryCallLogPageTitle').text('New Entry');
+        }
+    });
+    return false;
+}
+
+function newEntryCallLogClearViewDefaultOnLoad() {
+    console.log("newEntryCallLogClearViewDefaultOnLoad");
+    if($('[id*="calllog-EncounterInfo-"]').is( ":visible" )){
+        $('[id*="calllog-EncounterInfo-"]').collapse('hide');
+    }
+    if($('#calllog-PatientList').is( ":visible" )){
+        $('#calllog-PatientList').collapse('hide');
+    }
+    if($('#calllog-documents').is( ":visible" )){
+        $('#calllog-documents').collapse('hide');
+    }
+    if($('#calllog-tasklist').is( ":visible" )){
+        $('#calllog-tasklist').collapse('hide');
+    }
+    if($('#calllog-EntryTags').is( ":visible" )){
+        $('#calllog-EntryTags').collapse('hide');
+    }
+    $('#calllog-EntryTags').on('hidden.bs.collapse', function () {
+        if($('#calllog-tasklist').is( ":hidden" ) && $('#calllog-documents').is( ":hidden" ) && $('#calllog-PatientList').is( ":hidden" ) && $('[id*="calllog-EncounterInfo-"]').is( ":hidden" )){
+            $('#newEntryCallLogPageTitle').removeClass('mixedView');
+            $('#newEntryCallLogPageTitle').addClass('clearView');
+            $('#newEntryCallLogPageTitle').text('New Entry - Clear View');
+        }else{
+            $('#newEntryCallLogPageTitle').removeClass('clearView');
+            $('#newEntryCallLogPageTitle').addClass('mixedView');
+            $('#newEntryCallLogPageTitle').text('New Entry');
+        }
+    });
+    return false;
+}
+
