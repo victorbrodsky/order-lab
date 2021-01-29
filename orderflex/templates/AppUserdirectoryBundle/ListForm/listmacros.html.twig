@@ -123,7 +123,10 @@
             {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'Section', 'ent.section') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Fee', 'ent.fee') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee per additional item', 'ent.feeAdditionalItem') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Specialty', 'projectSpecialties.name') }}</th>#}
                 <th>Specialty</th>
@@ -356,10 +359,13 @@
                     </td>
                 {% endif %}
 
-                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined %}
+                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined and entity.internalFee is defined %}
                     <td>{{ entity.section }}</td>
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
+                    <td>{{ entity.feeAdditionalItem }}</td>
+                    <td>{{ entity.internalFee }}</td>
+                    <td>{{ entity.internalFeeAdditionalItem }}</td>
                     <td>{{ entity.feeUnit }}</td>
                     <td>
                         {% for specialty in entity.projectSpecialties %}

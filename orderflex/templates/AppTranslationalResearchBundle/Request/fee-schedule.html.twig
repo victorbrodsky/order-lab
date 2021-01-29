@@ -42,7 +42,12 @@
                 <th>{{ knp_pagination_sortable(fees, 'Histology', 'list.productId') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Section', 'list.name') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Product ID', 'list.section') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Fee', 'list.fee') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Internal Fee for one', 'list.internalFee') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Internal fee per additional item', 'list.internalFeeAdditionalItem') }}</th>
+
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Specialty', 'projectSpecialties.name') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Type', 'list.type') }}</th>
@@ -77,6 +82,24 @@
                 <td>
                     {% if fee.fee %}
                         ${{ fee.fee }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fee.feeAdditionalItem %}
+                        ${{ fee.feeAdditionalItem }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fee.internalFee %}
+                        ${{ fee.internalFee }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fee.internalFeeAdditionalItem %}
+                        ${{ fee.internalFeeAdditionalItem }}
                     {% endif %}
                 </td>
 

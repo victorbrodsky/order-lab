@@ -44,11 +44,39 @@ class RequestCategoryTypeList extends ListAbstract
 
     /**
      * Price of Product or Service
+     * External fee - "Fee for one"
      *
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
     private $fee;
+
+    /**
+     * Price of Product or Service
+     * External fee - "Fee per additional item"
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $feeAdditionalItem;
+
+    /**
+     * Price of Product or Service
+     * Internal fee - "Internal fee for one"
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $internalFee;
+
+    /**
+     * Price of Product or Service
+     * Internal fee - "Internal Fee per additional item"
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $internalFeeAdditionalItem;
 
     /**
      * @var string
@@ -109,6 +137,54 @@ class RequestCategoryTypeList extends ListAbstract
     public function setFee($fee)
     {
         $this->fee = $fee;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeeAdditionalItem()
+    {
+        return $this->feeAdditionalItem;
+    }
+
+    /**
+     * @param string $feeAdditionalItem
+     */
+    public function setFeeAdditionalItem($feeAdditionalItem)
+    {
+        $this->feeAdditionalItem = $feeAdditionalItem;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalFee()
+    {
+        return $this->internalFee;
+    }
+
+    /**
+     * @param string $internalFee
+     */
+    public function setInternalFee($internalFee)
+    {
+        $this->internalFee = $internalFee;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalFeeAdditionalItem()
+    {
+        return $this->internalFeeAdditionalItem;
+    }
+
+    /**
+     * @param string $internalFeeAdditionalItem
+     */
+    public function setInternalFeeAdditionalItem($internalFeeAdditionalItem)
+    {
+        $this->internalFeeAdditionalItem = $internalFeeAdditionalItem;
     }
 
     /**

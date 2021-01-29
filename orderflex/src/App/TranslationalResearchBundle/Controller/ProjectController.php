@@ -2099,6 +2099,15 @@ class ProjectController extends OrderAbstractController
             $project->setMessageCategory($messageCategory);
         }
 
+        //set project price list
+        if( !$project->getPriceList() ) {
+            $priceListName = "External Pricing";
+            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+            if ($priceList) {
+                $project->setPriceList($priceList);
+            }
+        }
+
         return $project;
     }
 
@@ -2108,6 +2117,15 @@ class ProjectController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
+
+        //set project price list if not set
+        if( !$project->getPriceList() ) {
+            $priceListName = "External Pricing";
+            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+            if ($priceList) {
+                $project->setPriceList($priceList);
+            }
+        }
 
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
 
