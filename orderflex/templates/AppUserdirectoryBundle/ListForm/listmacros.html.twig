@@ -23,6 +23,8 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
+    {% set showInternalFee = 0 %}
+
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
         <tr>
@@ -126,9 +128,11 @@
                 <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee per additional item', 'ent.feeAdditionalItem') }}</th>
 
+                {% if showInternalFee %}
                 {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                     <th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>
                     <th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>
+                {% endif %}
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
@@ -369,9 +373,11 @@
                     <td>{{ entity.fee }}</td>
                     <td>{{ entity.feeAdditionalItem }}</td>
 
+                    {% if showInternalFee %}
                     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                         <td>{{ entity.internalFee }}</td>
                         <td>{{ entity.internalFeeAdditionalItem }}</td>
+                    {% endif %}
                     {% endif %}
 
                     <td>{{ entity.feeUnit }}</td>
