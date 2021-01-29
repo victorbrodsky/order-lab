@@ -637,16 +637,21 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
-            $builder->add('internalFee', TextType::class, array(
-                'label' => 'Internal Fee for one ($):',
-                'required' => false,
-                'attr' => array('class'=>'form-control')
-            ));
-            $builder->add('internalFeeAdditionalItem', TextType::class, array(
-                'label' => 'nternal fee per additional item ($):',
-                'required' => false,
-                'attr' => array('class'=>'form-control')
-            ));
+            if(
+                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            ) {
+                $builder->add('internalFee', TextType::class, array(
+                    'label' => 'Internal Fee for one ($):',
+                    'required' => false,
+                    'attr' => array('class' => 'form-control')
+                ));
+                $builder->add('internalFeeAdditionalItem', TextType::class, array(
+                    'label' => 'Internal fee per additional item ($):',
+                    'required' => false,
+                    'attr' => array('class' => 'form-control')
+                ));
+            }
 
             $builder->add('feeUnit', TextType::class, array(
                 'label' => 'Fee Unit:',

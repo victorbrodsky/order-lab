@@ -969,6 +969,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
+        $options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
 
         //exit("this->postPath=".$this->postPath);
         //$path = $pathbase.'_create'.$this->postPath;
@@ -1862,6 +1863,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
+        $options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
 
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())),

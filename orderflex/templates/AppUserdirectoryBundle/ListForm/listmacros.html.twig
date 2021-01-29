@@ -125,8 +125,12 @@
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee per additional item', 'ent.feeAdditionalItem') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>
+
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                    <th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>
+                    <th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Specialty', 'projectSpecialties.name') }}</th>#}
                 <th>Specialty</th>
@@ -364,8 +368,12 @@
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
                     <td>{{ entity.feeAdditionalItem }}</td>
-                    <td>{{ entity.internalFee }}</td>
-                    <td>{{ entity.internalFeeAdditionalItem }}</td>
+
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                        <td>{{ entity.internalFee }}</td>
+                        <td>{{ entity.internalFeeAdditionalItem }}</td>
+                    {% endif %}
+
                     <td>{{ entity.feeUnit }}</td>
                     <td>
                         {% for specialty in entity.projectSpecialties %}
@@ -996,9 +1004,20 @@
     {% if form.productId is defined %}
         {{ formmacros.field(form.productId) }}
     {% endif %}
+
     {% if form.fee is defined %}
         {{ formmacros.field(form.fee) }}
     {% endif %}
+    {% if form.feeAdditionalItem is defined %}
+        {{ formmacros.field(form.feeAdditionalItem) }}
+    {% endif %}
+    {% if form.internalFee is defined %}
+        {{ formmacros.field(form.internalFee) }}
+    {% endif %}
+    {% if form.internalFeeAdditionalItem is defined %}
+        {{ formmacros.field(form.internalFeeAdditionalItem) }}
+    {% endif %}
+
     {% if form.feeUnit is defined %}
         {{ formmacros.field(form.feeUnit) }}
     {% endif %}

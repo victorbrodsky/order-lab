@@ -129,25 +129,31 @@ class ProjectType extends AbstractType
             ));
         }
 
-        $builder->add('priceList', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:PriceTypeList',
-            'choice_label' => 'name',
-            'label' => 'Utilize the following price list:',
-            'disabled' => ($this->params['admin'] ? false : true),
-            //'disabled' => true,
-            'required' => false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        //visible only to TRP Admin, TRP Tech, Deputy Platform Admin, and Platform Admin
+        if(
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            $builder->add('priceList', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+                'choice_label' => 'name',
+                'label' => 'Utilize the following price list:',
+                'disabled' => ($this->params['admin'] ? false : true),
+                //'disabled' => true,
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         //////////// Project fields ////////////
         $builder->add('title',null,array(

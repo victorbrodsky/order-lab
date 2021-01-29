@@ -200,7 +200,9 @@
 
                     {{ formmacros.field(form.projectType) }}
 
-                    {{ formmacros.field(form.priceList) }}
+                    {% if form.priceList is defined %}
+                        {{ formmacros.field(form.priceList) }}
+                    {% endif %}
 
                     {{ formmacros.checkbox(form.funded) }}
 

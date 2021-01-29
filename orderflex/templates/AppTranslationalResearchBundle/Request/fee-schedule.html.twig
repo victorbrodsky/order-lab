@@ -45,8 +45,11 @@
 
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Internal Fee for one', 'list.internalFee') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Internal fee per additional item', 'list.internalFeeAdditionalItem') }}</th>
+
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                    <th>{{ knp_pagination_sortable(fees, 'Internal Fee for one', 'list.internalFee') }}</th>
+                    <th>{{ knp_pagination_sortable(fees, 'Internal fee per additional item', 'list.internalFeeAdditionalItem') }}</th>
+                {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Specialty', 'projectSpecialties.name') }}</th>
@@ -91,17 +94,18 @@
                     {% endif %}
                 </td>
 
-                <td>
-                    {% if fee.internalFee %}
-                        ${{ fee.internalFee }}
-                    {% endif %}
-                </td>
-
-                <td>
-                    {% if fee.internalFeeAdditionalItem %}
-                        ${{ fee.internalFeeAdditionalItem }}
-                    {% endif %}
-                </td>
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                    <td>
+                        {% if fee.internalFee %}
+                            ${{ fee.internalFee }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if fee.internalFeeAdditionalItem %}
+                            ${{ fee.internalFeeAdditionalItem }}
+                        {% endif %}
+                    </td>
+                {% endif %}
 
                 <td>
                     {{ fee.getFeeUnitStr() }}
