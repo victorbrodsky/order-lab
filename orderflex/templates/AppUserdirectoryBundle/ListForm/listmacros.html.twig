@@ -23,7 +23,7 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    {% set showInternalFee = 0 %}
+    {#{% set showInternalFee = 0 %}#}
 
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
@@ -128,12 +128,12 @@
                 <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee per additional item', 'ent.feeAdditionalItem') }}</th>
 
-                {% if showInternalFee %}
-                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                    <th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>
-                    <th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>
-                {% endif %}
-                {% endif %}
+                {#{% if showInternalFee %}#}
+                {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
+                    {#<th>{{ knp_pagination_sortable(entities, 'Internal Fee for one', 'ent.internalFee') }}</th>#}
+                    {#<th>{{ knp_pagination_sortable(entities, 'Internal fee per additional item', 'ent.internalFeeAdditionalItem') }}</th>#}
+                {#{% endif %}#}
+                {#{% endif %}#}
 
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Specialty', 'projectSpecialties.name') }}</th>#}
@@ -367,18 +367,18 @@
                     </td>
                 {% endif %}
 
-                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined and entity.internalFee is defined %}
+                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined %}
                     <td>{{ entity.section }}</td>
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
                     <td>{{ entity.feeAdditionalItem }}</td>
 
-                    {% if showInternalFee %}
-                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                        <td>{{ entity.internalFee }}</td>
-                        <td>{{ entity.internalFeeAdditionalItem }}</td>
-                    {% endif %}
-                    {% endif %}
+                    {#{% if showInternalFee %}#}
+                    {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
+                        {#<td>{{ entity.internalFee }}</td>#}
+                        {#<td>{{ entity.internalFeeAdditionalItem }}</td>#}
+                    {#{% endif %}#}
+                    {#{% endif %}#}
 
                     <td>{{ entity.feeUnit }}</td>
                     <td>
@@ -1017,11 +1017,16 @@
     {% if form.feeAdditionalItem is defined %}
         {{ formmacros.field(form.feeAdditionalItem) }}
     {% endif %}
-    {% if form.internalFee is defined %}
-        {{ formmacros.field(form.internalFee) }}
-    {% endif %}
-    {% if form.internalFeeAdditionalItem is defined %}
-        {{ formmacros.field(form.internalFeeAdditionalItem) }}
+    {#{% if form.internalFee is defined %}#}
+        {#{{ formmacros.field(form.internalFee) }}#}
+    {#{% endif %}#}
+    {#{% if form.internalFeeAdditionalItem is defined %}#}
+        {#{{ formmacros.field(form.internalFeeAdditionalItem) }}#}
+    {#{% endif %}#}
+    {#prices#}
+    {% if form.prices is defined %}
+        {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+        {{ userform.priceSection(form.prices, cycle, employees_sitename, "in", "Price(s)",true) }}
     {% endif %}
 
     {% if form.feeUnit is defined %}

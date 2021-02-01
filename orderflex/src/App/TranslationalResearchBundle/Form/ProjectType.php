@@ -130,7 +130,7 @@ class ProjectType extends AbstractType
         }
 
         //visible only to TRP Admin, TRP Tech, Deputy Platform Admin, and Platform Admin
-        if( 0 ) {
+        if( 1 ) {
             if (
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')

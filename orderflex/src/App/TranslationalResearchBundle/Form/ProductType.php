@@ -22,6 +22,7 @@ class ProductType extends AbstractType
 
     //protected $product;
     protected $params;
+    protected $priceList;
     //protected $trpBusinessNameAbbreviation;
 
 //    public function __construct(TransResUtil $transresUtil)
@@ -35,8 +36,17 @@ class ProductType extends AbstractType
         $this->params = $params;
         //$this->$product = $params['product'];
 
-        if( isset($params['transresUtil']) ) {
-            $this->trpBusinessNameAbbreviation = $params['transresUtil']->getBusinessEntityAbbreviation();
+//        if( isset($params['transresUtil']) ) {
+//            $this->trpBusinessNameAbbreviation = $params['transresUtil']->getBusinessEntityAbbreviation();
+//        }
+
+        $this->priceList = NULL;
+        if( isset($this->params['transresRequest']) ) {
+            $workRequest = $this->params['transresRequest'];
+            $project = $workRequest->getProject();
+            if( $project ) {
+                $this->priceList = $project->getPriceList();
+            }
         }
     }
 
@@ -74,9 +84,24 @@ class ProductType extends AbstractType
 //                    ));
 //            },
 //        ));
+//        $priceList = NULL;
+//        if( isset($this->params['transresRequest']) ) {
+//            $workRequest = $this->params['transresRequest'];
+//            $project = $workRequest->getProject();
+//            if( $project ) {
+//                $priceList = $project->getPriceList();
+//            }
+//        }
         $builder->add('category', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
-            'choice_label' => 'getOptimalAbbreviationName',
+            //'choice_label' => 'getOptimalAbbreviationName',
+            'choice_value' => function ($entity) {
+                //return "111";
+                if( $entity ) {
+                    return $entity->getOptimalAbbreviationName($this->priceList);
+                }
+                return '';
+            },
             'label'=>"Product or Service".$this->params['categoryListLink'].":",
             'required'=> false,
             'multiple' => false,

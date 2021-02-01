@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
 use Doctrine\ORM\EntityRepository;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
@@ -637,23 +638,33 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
-            if(0) {
-                if (
-                    $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-                    $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
-                ) {
-                    $builder->add('internalFee', TextType::class, array(
-                        'label' => 'Internal Fee for one ($):',
-                        'required' => false,
-                        'attr' => array('class' => 'form-control')
-                    ));
-                    $builder->add('internalFeeAdditionalItem', TextType::class, array(
-                        'label' => 'Internal fee per additional item ($):',
-                        'required' => false,
-                        'attr' => array('class' => 'form-control')
-                    ));
-                }
-            }
+//            if(0) {
+//                if (
+//                    $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+//                    $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//                ) {
+//                    $builder->add('internalFee', TextType::class, array(
+//                        'label' => 'Internal Fee for one ($):',
+//                        'required' => false,
+//                        'attr' => array('class' => 'form-control')
+//                    ));
+//                    $builder->add('internalFeeAdditionalItem', TextType::class, array(
+//                        'label' => 'Internal fee per additional item ($):',
+//                        'required' => false,
+//                        'attr' => array('class' => 'form-control')
+//                    ));
+//                }
+//            }
+            $builder->add('prices', CollectionType::class, array(
+                'entry_type' => PriceType::class,
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__prices__',
+            ));
 
             $builder->add('feeUnit', TextType::class, array(
                 'label' => 'Fee Unit:',

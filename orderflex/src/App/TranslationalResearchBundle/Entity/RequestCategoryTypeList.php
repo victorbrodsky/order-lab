@@ -60,23 +60,28 @@ class RequestCategoryTypeList extends ListAbstract
      */
     private $feeAdditionalItem;
 
-    /**
-     * Price of Product or Service
-     * Internal fee - "Internal fee for one"
-     *
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $internalFee;
+//    /**
+//     * Price of Product or Service
+//     * Internal fee - "Internal fee for one"
+//     *
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $internalFee;
+//
+//    /**
+//     * Price of Product or Service
+//     * Internal fee - "Internal Fee per additional item"
+//     *
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $internalFeeAdditionalItem;
 
     /**
-     * Price of Product or Service
-     * Internal fee - "Internal Fee per additional item"
-     *
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToMany(targetEntity="Prices", mappedBy="requestCategoryType", cascade={"persist","remove"})
      */
-    private $internalFeeAdditionalItem;
+    private $prices;
 
     /**
      * @var string
@@ -120,6 +125,7 @@ class RequestCategoryTypeList extends ListAbstract
         parent::__construct($author);
 
         $this->projectSpecialties = new ArrayCollection();
+        $this->prices = new ArrayCollection();
     }
 
 
@@ -155,37 +161,37 @@ class RequestCategoryTypeList extends ListAbstract
         $this->feeAdditionalItem = $feeAdditionalItem;
     }
 
-    /**
-     * @return string
-     */
-    public function getInternalFee()
-    {
-        return $this->internalFee;
-    }
-
-    /**
-     * @param string $internalFee
-     */
-    public function setInternalFee($internalFee)
-    {
-        $this->internalFee = $internalFee;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInternalFeeAdditionalItem()
-    {
-        return $this->internalFeeAdditionalItem;
-    }
-
-    /**
-     * @param string $internalFeeAdditionalItem
-     */
-    public function setInternalFeeAdditionalItem($internalFeeAdditionalItem)
-    {
-        $this->internalFeeAdditionalItem = $internalFeeAdditionalItem;
-    }
+//    /**
+//     * @return string
+//     */
+//    public function getInternalFee()
+//    {
+//        return $this->internalFee;
+//    }
+//
+//    /**
+//     * @param string $internalFee
+//     */
+//    public function setInternalFee($internalFee)
+//    {
+//        $this->internalFee = $internalFee;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getInternalFeeAdditionalItem()
+//    {
+//        return $this->internalFeeAdditionalItem;
+//    }
+//
+//    /**
+//     * @param string $internalFeeAdditionalItem
+//     */
+//    public function setInternalFeeAdditionalItem($internalFeeAdditionalItem)
+//    {
+//        $this->internalFeeAdditionalItem = $internalFeeAdditionalItem;
+//    }
 
     /**
      * @return string
@@ -261,6 +267,107 @@ class RequestCategoryTypeList extends ListAbstract
         return $this;
     }
 
+    public function getPrices()
+    {
+        return $this->prices;
+    }
+    public function addPrice( $item )
+    {
+        if( !$this->prices->contains($item) ) {
+            $this->prices->add($item);
+            $item->setRequestCategoryType($this);
+        }
+
+        return $this;
+    }
+    public function removePrice($item)
+    {
+        if( $this->prices->contains($item) ) {
+            $this->prices->removeElement($item);
+            //$item->setRequestCategoryType(NULL);
+        }
+
+        return $this;
+    }
+
+    public function getPrice($priceList=NULL) {
+        if( $priceList ) {
+            foreach( $this->getPrices() as $price ) {
+                $thisPriceList = $price->getPriceList();
+                if( $thisPriceList ) {
+                    if( $thisPriceList->getId() == $priceList->getId() ) {
+                        return $price;
+                    }
+                }
+            }
+        }
+        return NULL;
+    }
+    public function getPriceFee($priceList=NULL) {
+        $price = $this->getPrice($priceList);
+        if( $price ) {
+            $fee = $price->getFee();
+            if( $fee ) {
+                return $fee;
+            }
+        }
+        return $this->getFee();
+
+//        if( $priceList ) {
+//            foreach( $this->getPrices() as $price ) {
+//                $thisPriceList = $price->getPriceList();
+//                if( $thisPriceList ) {
+//                    if( $thisPriceList->getId() == $priceList->getId() ) {
+//                        return $price->getFee();
+//                    }
+//                }
+//            }
+//        }
+//        return $this->getFee();
+    }
+    public function getPriceFeeAdditionalItem($priceList=NULL) {
+        $price = $this->getPrice($priceList);
+        if( $price ) {
+            $feeAdditionalItem = $price->getFeeAdditionalItem();
+            if( $feeAdditionalItem ) {
+                return $feeAdditionalItem;
+            }
+        }
+        return $this->getFeeAdditionalItem();
+//        if( $priceList ) {
+//            foreach( $this->getPrices() as $price ) {
+//                $thisPriceList = $price->getPriceList();
+//                if( $thisPriceList ) {
+//                    if( $thisPriceList->getId() == $priceList->getId() ) {
+//                        return $price->getFeeAdditionalItem();
+//                    }
+//                }
+//            }
+//        }
+//        return $this->getFeeAdditionalItem();
+    }
+    public function getFeeStr($priceList=NULL) {
+        $res = "";
+        $price = $this->getPrice($priceList);
+        if( $price ) {
+            $fee = $price->getFee();
+            if( !$fee ) {
+                $fee = $this->getFee();
+            }
+            $feeAdditionalItem = $price->getFeeAdditionalItem();
+            if( !$feeAdditionalItem ) {
+                $feeAdditionalItem = $this->getFeeAdditionalItem();
+            }
+
+            $res = "$".$fee;
+
+            if( $feeAdditionalItem ) {
+                $res = $res . " ($" .  $feeAdditionalItem . " per additional item)";
+            }
+        }
+
+        return $res;
+    }
 
     public function getFeeUnitStr() {
         if( $this->getFeeUnit() == "Project-specific" ) {
@@ -270,8 +377,9 @@ class RequestCategoryTypeList extends ListAbstract
         }
     }
 
-    public function getOptimalAbbreviationName() {
-        return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
+    public function getOptimalAbbreviationName( $priceList=NULL ) {
+        //return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
+        return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": " . $this->getFeeStr($priceList) . "/" . $this->getFeeUnit();
     }
 
     public function getProductIdAndName() {

@@ -2156,6 +2156,13 @@ class ListController extends OrderAbstractController
             }
         }
 
+        if( method_exists($entity,'getPrices') ) {
+            $originalPrices = array();
+            foreach( $entity->getPrices() as $price ) {
+                $originalPrices[] = $price;
+            }
+        }
+
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
@@ -2251,19 +2258,54 @@ class ListController extends OrderAbstractController
                     //exit('1');
                     //set Edit event log for removed collection and changed fields or added collection
                     if (count($changedInfoArr) > 0 || count($removedVisualInfoCollections) > 0) {
-                        $event = "Visual Infosof the Antibody " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
+                        $event = "Visual Infos of the Antibody " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
                         $event = $event . implode("<br>", $changedInfoArr);
                         $event = $event . "<br>" . implode("<br>", $removedVisualInfoCollections);
                         //$userSecUtil = $this->get('user_security_utility');
                         //echo "event=".$event."<br>";
                         //print_r($removedCollections);
                         //exit();
-                        $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'), $event, $user, $entity, $request, 'Role Permission Updated');
+                        $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'), $event, $user, $entity, $request, 'Antibody Visual Info Updated');
                     }
                 }
                 //exit();
             }
             /////////// EOF remove visual infos. Used for antibody ///////////
+
+
+            /////////// remove prices. Used for RequestCategoryTypeList ///////////
+            if( method_exists($entity,'getPrices') ) {
+
+                /////////////// Process Removed Collections ///////////////
+                $removedPriceCollections = array();
+
+                $removedInfo = $this->removePriceCollection($originalPrices,$entity->getPrices(),$entity);
+                if( $removedInfo ) {
+                    $removedPriceCollections[] = $removedInfo;
+                }
+                /////////////// EOF Process Removed Collections ///////////////
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before removePriceCollection() function which flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                if(0) {
+                    //This caused doctrine problems to persist the Prices->documents
+                    $changedInfoArr = $this->setEventLogChanges($entity);
+                    //exit('1');
+                    //set Edit event log for removed collection and changed fields or added collection
+                    if (count($changedInfoArr) > 0 || count($removedPriceCollections) > 0) {
+                        $event = "Price the RequestCategoryTypeList " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
+                        $event = $event . implode("<br>", $changedInfoArr);
+                        $event = $event . "<br>" . implode("<br>", $removedPriceCollections);
+                        //$userSecUtil = $this->get('user_security_utility');
+                        //echo "event=".$event."<br>";
+                        //print_r($removedCollections);
+                        //exit();
+                        $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'), $event, $user, $entity, $request, 'RequestCategoryTypeList Price Updated');
+                    }
+                }
+                //exit();
+            }
+            /////////// EOF remove prices. Used for RequestCategoryTypeList ///////////
 
             if( $entity instanceof UsernameType ) {
                 $entity->setEmptyAbbreviation();
@@ -2368,6 +2410,22 @@ class ListController extends OrderAbstractController
                 $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
                 $entity->removeVisualInfo($element);
                 $element->setAntibody(NULL);
+                $em->persist($element);
+                $em->remove($element);
+            }
+        } //foreach
+
+        return implode("<br>", $removeArr);
+    }
+    public function removePriceCollection($originalArr,$currentArr,$entity) {
+        $em = $this->getDoctrine()->getManager();
+        $removeArr = array();
+
+        foreach( $originalArr as $element ) {
+            if( false === $currentArr->contains($element) ) {
+                $removeArr[] = "<strong>"."Removed: ".$element." ".$this->getEntityId($element)."</strong>";
+                $entity->removePrice($element);
+                $element->setRequestCategoryType(NULL);
                 $em->persist($element);
                 $em->remove($element);
             }
