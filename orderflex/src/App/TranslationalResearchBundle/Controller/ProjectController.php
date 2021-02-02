@@ -2119,13 +2119,15 @@ class ProjectController extends OrderAbstractController
         $routeName = $request->get('_route');
 
         //set project price list if not set
-        if( !$project->getPriceList() ) {
-            $priceListName = "External Pricing";
-            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
-            if ($priceList) {
-                $project->setPriceList($priceList);
+        //if( $cycle == "new" ) {
+            if (!$project->getPriceList()) {
+                $priceListName = "External Pricing";
+                $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+                if ($priceList) {
+                    $project->setPriceList($priceList);
+                }
             }
-        }
+        //}
 
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
 

@@ -150,6 +150,9 @@ class RequestCategoryTypeList extends ListAbstract
      */
     public function getFeeAdditionalItem()
     {
+        if( !$this->feeAdditionalItem && $this->getFee() ) {
+            return $this->getFee();
+        }
         return $this->feeAdditionalItem;
     }
 
@@ -347,8 +350,9 @@ class RequestCategoryTypeList extends ListAbstract
 //        return $this->getFeeAdditionalItem();
     }
     public function getFeeStr($priceList=NULL) {
-        $res = "";
+        $res = NULL;
         $price = $this->getPrice($priceList);
+        //echo $priceList.": price=$price <br>";
         if( $price ) {
             $fee = $price->getFee();
             if( !$fee ) {
@@ -364,7 +368,18 @@ class RequestCategoryTypeList extends ListAbstract
             if( $feeAdditionalItem ) {
                 $res = $res . " ($" .  $feeAdditionalItem . " per additional item)";
             }
+
+            if( $priceList ) {
+                $res = $res . "[" . $priceList . "]";
+            }
         }
+
+        if( !$res ) {
+            $fee = $this->getFee();
+            $feeAdditionalItem = $this->getFeeAdditionalItem();
+            $res = "$".$fee . " ($" .  $feeAdditionalItem . " per additional item)";
+        }
+        //echo $priceList.": res=$res <br>";
 
         return $res;
     }

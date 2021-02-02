@@ -102,9 +102,18 @@ class InvoiceItem {
     private $description;
 
     /**
+     * unitPrice based on $fee
+     *
      * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $unitPrice;
+
+    /**
+     * Additional unitPrice based on $feeAdditionalItem
+     *
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $additionalUnitPrice;
 
     /**
      * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
@@ -307,6 +316,39 @@ class InvoiceItem {
 
         $this->unitPrice = $unitPrice;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAdditionalUnitPrice()
+    {
+        if( !$this->additionalUnitPrice && $this->getUnitPrice() ) {
+            return $this->getUnitPrice();
+        }
+        
+        return $this->additionalUnitPrice;
+    }
+
+    /**
+     * @param mixed $additionalUnitPrice
+     */
+    public function setAdditionalUnitPrice($additionalUnitPrice)
+    {
+        //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
+        //if value is "" convert it to NULL
+        if( $additionalUnitPrice ) {
+            $additionalUnitPrice = trim($additionalUnitPrice);
+            if( !$additionalUnitPrice ) {
+                $additionalUnitPrice = NULL;
+            }
+        } else {
+            //if additionalUnitPrice is ""
+            $additionalUnitPrice = NULL;
+        }
+        
+        $this->additionalUnitPrice = $additionalUnitPrice;
+    }
+    
 
     /**
      * @return mixed

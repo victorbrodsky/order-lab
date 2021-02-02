@@ -905,6 +905,14 @@ class TransResRequest {
         return NULL;
     }
 
+    public function getPriceList() {
+        $project = $this->getProject();
+        if( $project ) {
+            return $project->getPriceList();
+        }
+        return NULL;
+    }
+
     /**
      * projectOid + "-RED-" + ID; Example: "HP8-REQ1" or "APCP7-REQ1"
      * @param string $oid

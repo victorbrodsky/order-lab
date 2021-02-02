@@ -2,6 +2,7 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\TranslationalResearchBundle\Util\TransResUtil;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
@@ -44,10 +45,12 @@ class ProductType extends AbstractType
         if( isset($this->params['transresRequest']) ) {
             $workRequest = $this->params['transresRequest'];
             $project = $workRequest->getProject();
+            //echo "project=".$project."<br>";
             if( $project ) {
                 $this->priceList = $project->getPriceList();
             }
         }
+        //echo "priceList=".$this->priceList."<br>";
     }
 
     /**
@@ -84,19 +87,18 @@ class ProductType extends AbstractType
 //                    ));
 //            },
 //        ));
-//        $priceList = NULL;
-//        if( isset($this->params['transresRequest']) ) {
-//            $workRequest = $this->params['transresRequest'];
-//            $project = $workRequest->getProject();
-//            if( $project ) {
-//                $priceList = $project->getPriceList();
-//            }
-//        }
+        //dynamically get label and price according to the priceList
         $builder->add('category', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
             //'choice_label' => 'getOptimalAbbreviationName',
-            'choice_value' => function ($entity) {
-                //return "111";
+//            'choice_value' => function ($entity) {
+//                //return "111";
+//                if( $entity ) {
+//                    return $entity->getOptimalAbbreviationName($this->priceList);
+//                }
+//                return '';
+//            },
+            'choice_label' => function(RequestCategoryTypeList $entity) {
                 if( $entity ) {
                     return $entity->getOptimalAbbreviationName($this->priceList);
                 }

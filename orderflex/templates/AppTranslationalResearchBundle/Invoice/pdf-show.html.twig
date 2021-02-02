@@ -123,6 +123,7 @@
 
     <br><br>
 
+    {#TODO: show additionalUnitPrice if exists on a new row#}
     <p>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -130,7 +131,9 @@
                 <th>Quantity</th>
                 <th>Item Code</th>
                 <th>Description</th>
-                <th>Unit Price ($)</th>
+                {#<th>Unit Price ($)</th>#}
+                <th>Price per one item ($)</th>
+                <th>Price per additional item ($)</th>
                 <th>Total ($)</th>
             </tr>
             {% for invoiceItem in invoice.invoiceItems %}
@@ -146,6 +149,7 @@
                     <td>{{ descriptionStr }}</td>
 
                     <td>{{ invoiceItem.unitPrice }}</td>
+                    <td>{{ invoiceItem.additionalUnitPrice }}</td>
                     <td>{{ invoiceItem.total }}</td>
                 </tr>
             {% endfor %}

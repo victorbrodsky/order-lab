@@ -145,6 +145,9 @@ class Prices
      */
     public function getFeeAdditionalItem()
     {
+        if( !$this->feeAdditionalItem && $this->fee ) {
+            return $this->fee;
+        }
         return $this->feeAdditionalItem;
     }
 

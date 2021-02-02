@@ -174,15 +174,27 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 
 function transresInvoiceItemListeneres(){
     //quantity or unit price update => update total
-    $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
+    $('.invoiceitem-quantity, .invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
         //console.log("update row total");
         var invoiceItemRow = $(this).closest('.user-collection-holder');
-        var quatity = invoiceItemRow.find(".invoiceitem-quantity").val();
+        var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
         var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
-        //console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
+        var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
+        //console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
         var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
-        if( quatity && unitPrice ) {
-            var total = parseFloat(quatity) * parseFloat(unitPrice);
+        if( quantity && unitPrice ) {
+            //var total = parseFloat(quantity) * parseFloat(unitPrice);
+            var total = 0;
+            if( !additionalUnitPrice ) {
+                additionalUnitPrice = unitPrice;
+            }
+            if( parseInt(quantity) == 1 ) {
+                total = parseFloat(quantity) * parseFloat(unitPrice);
+            } else if( parseInt(quantity) > 1 ) {
+                total = 1 * parseFloat(unitPrice);
+                total = total + (parseInt(quantity)-1) * additionalUnitPrice;
+            }
+
             total = transresRoundDecimal(total);
             //console.log("row total="+total);
             invoiceItemTotalEl.val(total);

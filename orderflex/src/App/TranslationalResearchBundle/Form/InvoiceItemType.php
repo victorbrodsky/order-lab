@@ -57,6 +57,15 @@ class InvoiceItemType extends AbstractType
             'attr' => array('class' => 'form-control invoiceitem-unitPrice')
         ));
 
+        $builder->add('additionalUnitPrice', NumberType::class, array(
+            'label' => "Additional Unit Price ($)",
+            'scale' => 2,
+            //'divisor' => 100,
+            //'currency' => false,
+            'required' => false,
+            'attr' => array('class' => 'form-control invoiceitem-additionalUnitPrice')
+        ));
+
         $builder->add('total', NumberType::class, array(
             'label' => "Total ($)",
             'scale' => 2,

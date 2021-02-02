@@ -114,15 +114,20 @@ class TransResRequestUtil
     public function getTransResRequestFeeHtml( $request ) {
         $subTotal = 0;
 
+        $priceList = $request->getPriceList();
+
         foreach($request->getProducts() as $product) {
             $requested = $product->getRequested();
             $completed = $product->getCompleted();
             $category = $product->getCategory();
             //echo "requested=$requested <br>";
             $fee = 0;
+            $feeAdditionalItem = 0;
             $units = 0;
             if( $category ) {
-                $fee = $category->getFee();
+                //$fee = $category->getFee();
+                $fee = $category->getPriceFee($priceList);
+                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
             }
             if( $requested ) {
                 $units = intval($requested);
@@ -132,7 +137,8 @@ class TransResRequestUtil
             }
             //echo "units=$units; fee=$fee <br>";
             if( $fee && $units ) {
-                $subTotal = $subTotal + ($units * intval($fee));
+                //$subTotal = $subTotal + ($units * intval($fee));
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$units);
             }
         }
 
@@ -143,6 +149,8 @@ class TransResRequestUtil
         $subTotal = 0;
         $totalProducts = 0;
         $productInfoArr = array();
+
+        $priceList = $request->getPriceList();
 
         foreach($request->getProducts() as $product) {
             $requested = $product->getRequested();
@@ -158,9 +166,12 @@ class TransResRequestUtil
             $note = $product->getNote();
             //echo "requested=$requested <br>";
             $fee = 0;
+            $feeAdditionalItem = 0;
             $units = 0;
             if( $category ) {
-                $fee = $category->getFee();
+                //$fee = $category->getFee();
+                $fee = $category->getPriceFee($priceList);
+                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
             }
             if( $requested ) {
                 $units = intval($requested);
@@ -170,7 +181,8 @@ class TransResRequestUtil
             }
             //echo "units=$units; fee=$fee <br>";
             if( $fee && $units ) {
-                $subTotal = $subTotal + ($units * intval($fee));
+                //$subTotal = $subTotal + ($units * intval($fee));
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$units);
             }
 
 //            'productRequested' => $requested,
@@ -203,209 +215,204 @@ class TransResRequestUtil
         return $res;
     }
 
-    //NOT USED
-    public function getTransResRequestFormnodeFeeHtml( $request ) {
-
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $formNodeUtil = $this->container->get('user_formnode_utility');
-
-        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Completed #",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service",
-            null,
-            true
-        );
-        //echo "completedEntities=".count($completedEntities)."<br>";
-//        $formNodeValues = $completedEntities['formNodeValue'];
+//    //NOT USED
+//    public function getTransResRequestFormnodeFeeHtml( $request ) {
+//
+//        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
+//
+//        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Completed #",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service",
+//            null,
+//            true
+//        );
+//        //echo "completedEntities=".count($completedEntities)."<br>";
+////        $formNodeValues = $completedEntities['formNodeValue'];
+////        foreach($formNodeValues as $resArr) {
+////            $formNodeValue = $resArr['formNodeValue'];
+////            echo "formNodeValue=".$formNodeValue."<br>";
+////            $arraySectionIndex = $resArr['arraySectionIndex'];
+////            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+////        }
+////        return 1;
+//
+//        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Requested #",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service",
+//            null,
+//            true
+//        );
+//        //echo "requestedEntities=".count($requestedEntities)."<br>";
+//
+//        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
+//            $request,
+//            "Category Type",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service"
+//        );
+//        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
+////        $res = array(
+////            'formNodeValue' => $formNodeValue,
+////            'formNodeId' => $formNode->getId(),
+////            'arraySectionId' => $result->getArraySectionId(),
+////            'arraySectionIndex' => $result->getArraySectionIndex(),
+////        );
+////        $resArr[] = $res;
+//
+//        $subTotal = 0;
+//
+//        //2) group by arraySectionIndex
+//        foreach($requestCategoryTypeComplexResults as $complexRes) {
+//
+//            $arraySectionIndex = $complexRes['arraySectionIndex'];
+//            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
+//            $dropdownObject = $complexRes['dropdownObject'];
+//
+//            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
+//            //echo "requested=".$requested."<br>";
+//            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
+//            //echo "completed=".$completed."<br>";
+//            //echo "###<br>";
+//
+//            $fee = $dropdownObject->getFee();
+//
+//            if( $fee ) {
+//                $subTotal = $subTotal + intval($completed) * intval($fee);
+//                //return $subTotal;
+//            }
+//        }
+//
+//        return $subTotal;
+//    }
+//    public function findByArraySectionIndex($entities, $arraySectionIndex) {
+//        $formNodeValues = $entities['formNodeValue'];
+//        if( !is_array($formNodeValues) ) {
+//            return null;
+//        }
 //        foreach($formNodeValues as $resArr) {
 //            $formNodeValue = $resArr['formNodeValue'];
-//            echo "formNodeValue=".$formNodeValue."<br>";
-//            $arraySectionIndex = $resArr['arraySectionIndex'];
-//            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+//            //echo "formNodeValue=".$formNodeValue."<br>";
+//            $thisArraySectionIndex = $resArr['arraySectionIndex'];
+//            //echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+//            if( $thisArraySectionIndex == $arraySectionIndex ) {
+//                return $formNodeValue;
+//            }
 //        }
-//        return 1;
-
-        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Requested #",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service",
-            null,
-            true
-        );
-        //echo "requestedEntities=".count($requestedEntities)."<br>";
-
-        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
-            $request,
-            "Category Type",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service"
-        );
-        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
-//        $res = array(
-//            'formNodeValue' => $formNodeValue,
-//            'formNodeId' => $formNode->getId(),
-//            'arraySectionId' => $result->getArraySectionId(),
-//            'arraySectionIndex' => $result->getArraySectionIndex(),
+//        return null;
+//    }
+//    public function getMultipleProjectFormNodeFieldByName(
+//        $entity,
+//        $fieldName,
+//        $parentNameStr = "HemePath Translational Research",
+//        $formNameStr = "HemePath Translational Research Project",
+//        $entityFormNodeSectionStr = "Project"
+//    )
+//    {
+//        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
+//
+//        $value = null;
+//        $receivingEntity = null;
+//
+//        //1) get FormNode by fieldName
+//        //echo "getting formnode <br>";
+//        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName, $parentNameStr, $formNameStr, $entityFormNodeSectionStr);
+//
+//        //2) get field for this particular project
+//        $class = new \ReflectionClass($entity);
+//        $className = $class->getShortName();
+//        $classNamespace = $class->getNamespaceName();
+//        $entityMapper = array(
+//            'entityNamespace' => $classNamespace,   //"App\\TranslationalResearchBundle\\Entity",
+//            'entityName' => $className, //"Project",
+//            'entityId' => $entity->getId(),
 //        );
-//        $resArr[] = $res;
-
-        $subTotal = 0;
-
-        //2) group by arraySectionIndex
-        foreach($requestCategoryTypeComplexResults as $complexRes) {
-
-            $arraySectionIndex = $complexRes['arraySectionIndex'];
-            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
-            $dropdownObject = $complexRes['dropdownObject'];
-
-            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
-            //echo "requested=".$requested."<br>";
-            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
-            //echo "completed=".$completed."<br>";
-            //echo "###<br>";
-
-            $fee = $dropdownObject->getFee();
-
-            if( $fee ) {
-                $subTotal = $subTotal + intval($completed) * intval($fee);
-                //return $subTotal;
-            }
-        }
-
-        return $subTotal;
-    }
-    public function findByArraySectionIndex($entities, $arraySectionIndex) {
-//        foreach($entities as $entity) {
-////            if( $entity->getArraySectionIndex() == $arraySectionIndex ) {
-////                return $entity;
-////            }
+//
+//        $resArr = array();
+//
+//        $results = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper,true);
+//        if( $results ) {
+//            foreach ($results as $result) {
+//                $arraySectionIndex = $result->getArraySectionIndex();
+//                //echo "result ID= ".$result->getId()." <br>";
+//                //$formNodeValue = $formNodeUtil->processFormNodeValue($fieldFormNode,$result,$result->getValue(),true);
+//                //echo "formNodeValue= $formNodeValue <br>";
+//                //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
+//                //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
+//                $dropdownObject = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
+//                //echo "category=".$dropdownObject."<br>";
+//                $thisRes = array(
+//                    'arraySectionIndex' => $arraySectionIndex,
+//                    'dropdownObject' => $dropdownObject
+//                );
+//                $resArr[] = $thisRes;
+//            }
 //        }
-        $formNodeValues = $entities['formNodeValue'];
-        if( !is_array($formNodeValues) ) {
-            return null;
-        }
-        foreach($formNodeValues as $resArr) {
-            $formNodeValue = $resArr['formNodeValue'];
-            //echo "formNodeValue=".$formNodeValue."<br>";
-            $thisArraySectionIndex = $resArr['arraySectionIndex'];
-            //echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
-            if( $thisArraySectionIndex == $arraySectionIndex ) {
-                return $formNodeValue;
-            }
-        }
-        return null;
-    }
-    public function getMultipleProjectFormNodeFieldByName(
-        $entity,
-        $fieldName,
-        $parentNameStr = "HemePath Translational Research",
-        $formNameStr = "HemePath Translational Research Project",
-        $entityFormNodeSectionStr = "Project"
-    )
-    {
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $formNodeUtil = $this->container->get('user_formnode_utility');
-
-        $value = null;
-        $receivingEntity = null;
-
-        //1) get FormNode by fieldName
-        //echo "getting formnode <br>";
-        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName, $parentNameStr, $formNameStr, $entityFormNodeSectionStr);
-
-        //2) get field for this particular project
-        $class = new \ReflectionClass($entity);
-        $className = $class->getShortName();
-        $classNamespace = $class->getNamespaceName();
-        $entityMapper = array(
-            'entityNamespace' => $classNamespace,   //"App\\TranslationalResearchBundle\\Entity",
-            'entityName' => $className, //"Project",
-            'entityId' => $entity->getId(),
-        );
-
-        $resArr = array();
-
-        $results = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper,true);
-        if( $results ) {
-            foreach ($results as $result) {
-                $arraySectionIndex = $result->getArraySectionIndex();
-                //echo "result ID= ".$result->getId()." <br>";
-                //$formNodeValue = $formNodeUtil->processFormNodeValue($fieldFormNode,$result,$result->getValue(),true);
-                //echo "formNodeValue= $formNodeValue <br>";
-                //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
-                //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
-                $dropdownObject = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
-                //echo "category=".$dropdownObject."<br>";
-                $thisRes = array(
-                    'arraySectionIndex' => $arraySectionIndex,
-                    'dropdownObject' => $dropdownObject
-                );
-                $resArr[] = $thisRes;
-            }
-        }
-
-        return $resArr;
-    }
-    public function getSingleTransResRequestFeeHtml_OLD( $request ) {
-
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-
-        $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Completed #",
-            "HemePath Translational Research",
-            "HemePath Translational Research Request",
-            "Request",
-            false
-        );
-
-        //
-        $completed = str_replace(" ","",$completed);
-
-        if( !$completed ) {
-            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-                $request,
-                "Requested #",
-                "HemePath Translational Research",
-                "HemePath Translational Research Request",
-                "Request",
-                false
-            );
-        }
-
-        $completed = str_replace(" ","",$completed);
-        //echo "completed=".$completed."<br>";
-
-        $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Category Type",
-            "HemePath Translational Research",
-            "HemePath Translational Research Request",
-            "Request",
-            true
-        );
-
-        if( $completed && $requestCategoryTypeDropdownObject ) {
-            //echo "requestCategoryTypeDropdownObject=".$requestCategoryTypeDropdownObject."<br>";
-            //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
-            //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
-
-            $fee = $requestCategoryTypeDropdownObject->getFee();
-
-            if( $fee ) {
-                $subTotal = intval($completed) * intval($fee);
-                return $subTotal;
-            }
-        }
-
-        return null;
-    }
+//
+//        return $resArr;
+//    }
+//    public function getSingleTransResRequestFeeHtml_OLD( $request ) {
+//
+//        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+//
+//        $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Completed #",
+//            "HemePath Translational Research",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            false
+//        );
+//
+//        //
+//        $completed = str_replace(" ","",$completed);
+//
+//        if( !$completed ) {
+//            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//                $request,
+//                "Requested #",
+//                "HemePath Translational Research",
+//                "HemePath Translational Research Request",
+//                "Request",
+//                false
+//            );
+//        }
+//
+//        $completed = str_replace(" ","",$completed);
+//        //echo "completed=".$completed."<br>";
+//
+//        $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Category Type",
+//            "HemePath Translational Research",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            true
+//        );
+//
+//        if( $completed && $requestCategoryTypeDropdownObject ) {
+//            //echo "requestCategoryTypeDropdownObject=".$requestCategoryTypeDropdownObject."<br>";
+//            //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
+//            //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
+//
+//            $fee = $requestCategoryTypeDropdownObject->getFee();
+//
+//            if( $fee ) {
+//                $subTotal = intval($completed) * intval($fee);
+//                return $subTotal;
+//            }
+//        }
+//
+//        return null;
+//    }
 
     public function getFilterPendingRequestArr($title=null) {
         $res = array(
@@ -1535,6 +1542,8 @@ class TransResRequestUtil
     public function getRequestItems($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $invoiceItemsArr = new ArrayCollection();
+        $priceList = $request->getPriceList();
+
         foreach( $request->getProducts() as $product ) {
             //Invoice's quantity field is pre-populated by the Request's "Requested #"
             $invoiceItem = new InvoiceItem($user);
@@ -1547,21 +1556,14 @@ class TransResRequestUtil
             if( !$quantity ) {
                 $quantity = $product->getRequested();
             }
-//            $requested = $product->getRequested();
-//            if( $requested ) {
-//                $quantity = $requested;
-//            } else {
-//                $completed = $product->getCompleted();
-//                if( $completed ) {
-//                    $quantity = $completed;
-//                }
-//            }
             $invoiceItem->setQuantity($quantity);
 
             //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
             //TODO: add "comment" from Work Request
 
             $category = $product->getCategory();
+            $fee = 0;
+            $feeAdditionalItem = 0;
 
             if( $category ) {
                 //ItemCode
@@ -1573,13 +1575,19 @@ class TransResRequestUtil
                 $invoiceItem->setDescription($name);
 
                 //UnitPrice
-                $fee = $category->getFee();
+                //$fee = $category->getFee();
+                $fee = $category->getPriceFee($priceList);
+                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+
                 $invoiceItem->setUnitPrice($fee);
+                $invoiceItem->setAdditionalUnitPrice($feeAdditionalItem);
             }
 
             if( $quantity && $fee ) {
                 //Total
-                $total = intval($quantity) * intval($fee);
+                //$total = intval($quantity) * intval($fee);
+                $total = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+
                 $invoiceItem->setTotal($total);
             }
 
@@ -1589,101 +1597,101 @@ class TransResRequestUtil
         return $invoiceItemsArr;
     }
 
-    //NOT USED
-    public function getRequestItemsFormNode($request) {
-        $user = $this->secTokenStorage->getToken()->getUser();
-        //$user = null; //testing
-        $invoiceItemsArr = new ArrayCollection();
-
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $formNodeUtil = $this->container->get('user_formnode_utility');
-
-        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Completed #",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service",
-            null,
-            true
-        );
-        //echo "completedEntities=".count($completedEntities)."<br>";
-//        $formNodeValues = $completedEntities['formNodeValue'];
-//        foreach($formNodeValues as $resArr) {
-//            $formNodeValue = $resArr['formNodeValue'];
-//            echo "formNodeValue=".$formNodeValue."<br>";
-//            $arraySectionIndex = $resArr['arraySectionIndex'];
-//            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+//    //NOT USED
+//    public function getRequestItemsFormNode($request) {
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        //$user = null; //testing
+//        $invoiceItemsArr = new ArrayCollection();
+//
+//        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
+//
+//        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Completed #",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service",
+//            null,
+//            true
+//        );
+//        //echo "completedEntities=".count($completedEntities)."<br>";
+////        $formNodeValues = $completedEntities['formNodeValue'];
+////        foreach($formNodeValues as $resArr) {
+////            $formNodeValue = $resArr['formNodeValue'];
+////            echo "formNodeValue=".$formNodeValue."<br>";
+////            $arraySectionIndex = $resArr['arraySectionIndex'];
+////            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+////        }
+////        return 1;
+//
+//        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//            $request,
+//            "Requested #",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service",
+//            null,
+//            true
+//        );
+//        //echo "requestedEntities=".count($requestedEntities)."<br>";
+//
+//        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
+//            $request,
+//            "Category Type",
+//            "HemePath Translational Research Request",
+//            "Request",
+//            "Product or Service"
+//        );
+//        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
+//
+//        //2) group by arraySectionIndex
+//        foreach($requestCategoryTypeComplexResults as $complexRes) {
+//
+//            $arraySectionIndex = $complexRes['arraySectionIndex'];
+//            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
+//            $dropdownObject = $complexRes['dropdownObject'];
+//
+//            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
+//            //echo "requested=".$requested."<br>";
+//            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
+//            //echo "completed=".$completed."<br>";
+//            //echo "###<br>";
+//
+//            //$fee = $dropdownObject->getFee();
+//
+////            if( $fee ) {
+////                $subTotal = $subTotal + intval($completed) * intval($fee);
+////                //return $subTotal;
+////            }
+//
+//            $invoiceItem = new InvoiceItem($user);
+//            $invoiceItem->setQuantity($completed);
+//
+//            //ItemCode
+//            $itemCode = $dropdownObject->getProductId();
+//            $invoiceItem->setItemCode($itemCode);
+//
+//            //Description
+//            $name = $dropdownObject->getName();
+//            $invoiceItem->setDescription($name);
+//
+//            //UnitPrice
+//            $fee = $dropdownObject->getFee();
+//            $invoiceItem->setUnitPrice($fee);
+//
+//            //Total
+//            $total = intval($completed) * intval($fee);
+//            $invoiceItem->setTotal($total);
+//
+//            $invoiceItemsArr->add($invoiceItem);
 //        }
-//        return 1;
-
-        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-            $request,
-            "Requested #",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service",
-            null,
-            true
-        );
-        //echo "requestedEntities=".count($requestedEntities)."<br>";
-
-        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
-            $request,
-            "Category Type",
-            "HemePath Translational Research Request",
-            "Request",
-            "Product or Service"
-        );
-        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
-
-        //2) group by arraySectionIndex
-        foreach($requestCategoryTypeComplexResults as $complexRes) {
-
-            $arraySectionIndex = $complexRes['arraySectionIndex'];
-            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
-            $dropdownObject = $complexRes['dropdownObject'];
-
-            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
-            //echo "requested=".$requested."<br>";
-            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
-            //echo "completed=".$completed."<br>";
-            //echo "###<br>";
-
-            //$fee = $dropdownObject->getFee();
-
-//            if( $fee ) {
-//                $subTotal = $subTotal + intval($completed) * intval($fee);
-//                //return $subTotal;
-//            }
-
-            $invoiceItem = new InvoiceItem($user);
-            $invoiceItem->setQuantity($completed);
-
-            //ItemCode
-            $itemCode = $dropdownObject->getProductId();
-            $invoiceItem->setItemCode($itemCode);
-
-            //Description
-            $name = $dropdownObject->getName();
-            $invoiceItem->setDescription($name);
-
-            //UnitPrice
-            $fee = $dropdownObject->getFee();
-            $invoiceItem->setUnitPrice($fee);
-
-            //Total
-            $total = intval($completed) * intval($fee);
-            $invoiceItem->setTotal($total);
-
-            $invoiceItemsArr->add($invoiceItem);
-        }
-
-        //$invoiceItemsArr->add(new InvoiceItem($user));
-        //$invoiceItemsArr->add(new InvoiceItem($user));
-        //$invoiceItemsArr->add(new InvoiceItem($user));
-        return $invoiceItemsArr;
-    }
+//
+//        //$invoiceItemsArr->add(new InvoiceItem($user));
+//        //$invoiceItemsArr->add(new InvoiceItem($user));
+//        //$invoiceItemsArr->add(new InvoiceItem($user));
+//        return $invoiceItemsArr;
+//    }
 
     public function getDefaultFile($fieldName, $invoice, $transresRequest=null) {
 
@@ -3051,6 +3059,28 @@ class TransResRequestUtil
     }
     public function toDecimal($number) {
         return number_format((float)$number, 2, '.', '');
+    }
+
+    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity) {
+        $quantity = intval($quantity);
+        $fee = intval($fee);
+        if( $feeAdditionalItem ) {
+            $feeAdditionalItem = intval($feeAdditionalItem);
+        } else {
+            $feeAdditionalItem = $fee;
+        }
+        $total = 0;
+        if( $quantity == 1 ) {
+            $total = $quantity * $fee;
+        } elseif ( $quantity > 1 ) {
+            $total = 1 * $fee;
+            $additionalFee = ($quantity-1) * $feeAdditionalItem;
+            $total = $total + $additionalFee;
+        }
+        if ($total > 0) {
+            $total = $this->toDecimal($total);
+        }
+        return $total;
     }
 
     //check if user allowed to access by the project's specialty

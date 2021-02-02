@@ -4050,6 +4050,21 @@ class TransResUtil
         return $invoicesInfos;
     }
 
+//    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity) {
+//        $quantity = intval($quantity);
+//        $fee = intval($fee);
+//        $feeAdditionalItem = intval($feeAdditionalItem);
+//        $total = 0;
+//        if( $quantity == 1 ) {
+//            $total = $quantity * $fee;
+//        } elseif ( $quantity > 1 ) {
+//            $total = 1 * $fee;
+//            $additionalFee = ($quantity-1) * $feeAdditionalItem;
+//            $total = $total + $additionalFee;
+//        }
+//        return $total;
+//    }
+
     //Create spreadsheet by Spout
     //http://opensource.box.com/spout/getting-started/
     //https://hotexamples.com/examples/box.spout.writer/WriterFactory/-/php-writerfactory-class-examples.html
