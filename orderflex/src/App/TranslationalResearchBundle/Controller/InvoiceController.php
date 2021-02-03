@@ -1173,6 +1173,9 @@ class InvoiceController extends OrderAbstractController
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
+        $showAdditionalUnitPrice = 0;
+        //$showAdditionalUnitPrice = 1;
+
         return array(
             //'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -1180,6 +1183,7 @@ class InvoiceController extends OrderAbstractController
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice ID ".$invoice->getOid(),
+            'showAdditionalUnitPrice' => $showAdditionalUnitPrice
         );
     }
 

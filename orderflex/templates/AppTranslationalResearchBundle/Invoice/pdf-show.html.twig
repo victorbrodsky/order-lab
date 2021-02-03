@@ -124,6 +124,15 @@
     <br><br>
 
     {#TODO: show additionalUnitPrice if exists on a new row#}
+    {% if showAdditionalUnitPrice is not defined %}
+        {% set showAdditionalUnitPrice = 0 %}
+    {% endif %}
+
+    {% set colspan = 3 %}
+    {% if showAdditionalUnitPrice %}
+        {% set colspan = 4 %}
+    {% endif %}
+
     <p>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -133,7 +142,11 @@
                 <th>Description</th>
                 {#<th>Unit Price ($)</th>#}
                 <th>Price per one item ($)</th>
-                <th>Price per additional item ($)</th>
+
+                {% if showAdditionalUnitPrice %}
+                    <th>Price per additional item ($)</th>
+                {% endif %}
+
                 <th>Total ($)</th>
             </tr>
             {% for invoiceItem in invoice.invoiceItems %}
@@ -149,19 +162,23 @@
                     <td>{{ descriptionStr }}</td>
 
                     <td>{{ invoiceItem.unitPrice }}</td>
-                    <td>{{ invoiceItem.additionalUnitPrice }}</td>
+
+                    {% if showAdditionalUnitPrice %}
+                        <td>{{ invoiceItem.additionalUnitPrice }}</td>
+                    {% endif %}
+
                     <td>{{ invoiceItem.total }}</td>
                 </tr>
             {% endfor %}
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Subtotal ($)</td>
                 <td>{{ invoice.subTotal }}</td>
             </tr>
 
             {% if invoice.discountNumeric %}
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Discount ($)</td>
                 <td>{{ invoice.discountNumeric }}</td>
             </tr>
@@ -169,21 +186,21 @@
 
             {% if invoice.discountPercent %}
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Discount (%)</td>
                 <td>{{ invoice.discountPercent|number_format(0,'','') }}</td>
             </tr>
             {% endif %}
 
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td><b>Total ($)</b></td>
                 <td>{{ invoice.total }}</td>
             </tr>
 
             {% if invoice.paid %}
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 {#<td><b>{{ invoice.status }}</b></td>#}
                 <td><b>Paid ($)</b></td>
                 <td>{{ invoice.paid }}</td>
@@ -191,7 +208,7 @@
             {% endif %}
 
             <tr>
-                <td COLSPAN=4 ALIGN=CENTER></td>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Balance Due ($)</td>
                 <td>{{ invoice.due }}</td>
             </tr>
