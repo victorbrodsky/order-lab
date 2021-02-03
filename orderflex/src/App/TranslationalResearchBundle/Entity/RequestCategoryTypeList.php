@@ -315,39 +315,18 @@ class RequestCategoryTypeList extends ListAbstract
             }
         }
         return $this->getFee();
-
-//        if( $priceList ) {
-//            foreach( $this->getPrices() as $price ) {
-//                $thisPriceList = $price->getPriceList();
-//                if( $thisPriceList ) {
-//                    if( $thisPriceList->getId() == $priceList->getId() ) {
-//                        return $price->getFee();
-//                    }
-//                }
-//            }
-//        }
-//        return $this->getFee();
     }
     public function getPriceFeeAdditionalItem($priceList=NULL) {
         $price = $this->getPrice($priceList);
         if( $price ) {
             $feeAdditionalItem = $price->getFeeAdditionalItem();
+            //echo "price FeeAdditionalItem=".$feeAdditionalItem."<br>";
             if( $feeAdditionalItem ) {
+                //echo "return price FeeAdditionalItem=".$feeAdditionalItem."<br>";
                 return $feeAdditionalItem;
             }
         }
         return $this->getFeeAdditionalItem();
-//        if( $priceList ) {
-//            foreach( $this->getPrices() as $price ) {
-//                $thisPriceList = $price->getPriceList();
-//                if( $thisPriceList ) {
-//                    if( $thisPriceList->getId() == $priceList->getId() ) {
-//                        return $price->getFeeAdditionalItem();
-//                    }
-//                }
-//            }
-//        }
-//        return $this->getFeeAdditionalItem();
     }
     public function getFeeStr($priceList=NULL) {
         $res = NULL;

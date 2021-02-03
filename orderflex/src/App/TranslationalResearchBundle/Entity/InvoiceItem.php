@@ -336,6 +336,7 @@ class InvoiceItem {
     {
         //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
         //if value is "" convert it to NULL
+        //echo "1set  AdditionalUnitPrice=".$additionalUnitPrice."<br>";
         if( $additionalUnitPrice ) {
             $additionalUnitPrice = trim($additionalUnitPrice);
             if( !$additionalUnitPrice ) {
@@ -345,7 +346,7 @@ class InvoiceItem {
             //if additionalUnitPrice is ""
             $additionalUnitPrice = NULL;
         }
-        
+        //echo "2set  AdditionalUnitPrice=".$additionalUnitPrice."<br>";
         $this->additionalUnitPrice = $additionalUnitPrice;
     }
     
