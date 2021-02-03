@@ -1026,7 +1026,7 @@
     {#prices#}
     {% if form.prices is defined %}
         {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
-        {{ userform.priceSection(form.prices, cycle, employees_sitename, "in", "Price(s)",true) }}
+        {{ userform.priceSection(form.prices, cycle, employees_sitename, "in", "Specific Prices",true) }}
     {% endif %}
 
     {% if form.feeUnit is defined %}
