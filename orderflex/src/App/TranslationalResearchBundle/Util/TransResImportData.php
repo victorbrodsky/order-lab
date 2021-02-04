@@ -3263,6 +3263,7 @@ class TransResImportData
                 //continue;
             } else {
                 echo "Price fee does not exist $code <br>";
+                continue;
             }
 
             $update = false;
