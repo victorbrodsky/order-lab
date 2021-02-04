@@ -3246,8 +3246,8 @@ class TransResImportData
             $externalFee = $this->getValueByHeaderName('FIRST ITEM (INTERNAL)', $rowData, $headers);
             $externalFeeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (INTERNAL)', $rowData, $headers);
 
-            if(0) {
-                echo $count . ": Code=[$code]";
+            if(1) {
+                echo "<br>".$count . ": Code=[$code]";
                 echo "; name=[$name]";
                 echo "; unit=[$unit]";
                 echo "; fee=[$fee]";
@@ -3284,19 +3284,19 @@ class TransResImportData
                 echo $code.': Difference<br>'.
                 'Old: "'.$name.'" $'.$feeDb.', unit= '.$unit.
                 '<br>New: "'.$priceFeeDb->getName().'" $'.$fee.', unit= '.$priceFeeDb->getFeeUnit().
-                    ' <br><br>';
+                ' <br>';
             }
 
             if( $fee != $feeDb ) {
                 $priceFeeDb->setFee($fee);
                 $update = true;
-                //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
             }
 
             if( $feeAdditionalItem != $feeAdditionalItemDb ) {
                 $priceFeeDb->setFeeAdditionalItem($feeAdditionalItem);
                 $update = true;
-                //echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+                echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
             }
 
             if( $update ) {
