@@ -2100,13 +2100,13 @@ class ProjectController extends OrderAbstractController
         }
 
         //set project price list
-        if( !$project->getPriceList() ) {
-            $priceListName = "External Pricing";
-            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
-            if ($priceList) {
-                $project->setPriceList($priceList);
-            }
-        }
+//        if( !$project->getPriceList() ) {
+//            $priceListName = "External Pricing";
+//            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+//            if ($priceList) {
+//                $project->setPriceList($priceList);
+//            }
+//        }
 
         return $project;
     }
@@ -2120,13 +2120,13 @@ class ProjectController extends OrderAbstractController
 
         //set project price list if not set
         //if( $cycle == "new" ) {
-            if (!$project->getPriceList()) {
-                $priceListName = "External Pricing";
-                $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
-                if ($priceList) {
-                    $project->setPriceList($priceList);
-                }
-            }
+//            if (!$project->getPriceList()) {
+//                $priceListName = "External Pricing";
+//                $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+//                if ($priceList) {
+//                    $project->setPriceList($priceList);
+//                }
+//            }
         //}
 
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
