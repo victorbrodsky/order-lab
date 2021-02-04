@@ -232,12 +232,19 @@ class RequestController extends OrderAbstractController
             $css = null;
             $personAway = $entity->getUser();
             $personAwayEmail = $personAway->getSingleEmail();
-            if( !$personAwayEmail ) {
-                throw $this->createNotFoundException("Person email is null: personAwayEmail=".$personAwayEmail);
-            }
+
             if( $personAway->getId() != $user->getId() ) {
                 //cc to submitter
                 $css = $user->getSingleEmail();
+            }
+
+            if( !$personAwayEmail ) {
+                //throw $this->createNotFoundException("Person email is null: personAway=".$personAway);
+                $personAwayEmail = $css;
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Away person's email is not set. Sent confirmation email to $personAwayEmail instead."
+                );
             }
 
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
