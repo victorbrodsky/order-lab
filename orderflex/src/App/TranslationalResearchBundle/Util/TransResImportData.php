@@ -3274,7 +3274,11 @@ class TransResImportData
             $feeAdditionalItem = intval($feeAdditionalItem);
             $feeAdditionalItemDb = intval($priceFeeDb->getFeeAdditionalItem());
 
-            if( strtolower($name) != strtolower($priceFeeDb->getName()."") || $fee != $feeDb || strtolower($unit) != strtolower($priceFeeDb->getFeeUnit()."") ) {
+            if(
+                strtolower($name) != strtolower($priceFeeDb->getName()."")
+                || $fee != $feeDb
+                //|| strtolower($unit) != strtolower($priceFeeDb->getFeeUnit()."")
+            ){
                 //$priceFeeDb->setFee($fee);
                 $update = true;
                 echo $code.': Difference<br>'.
