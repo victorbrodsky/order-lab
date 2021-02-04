@@ -3246,13 +3246,15 @@ class TransResImportData
             $externalFee = $this->getValueByHeaderName('FIRST ITEM (INTERNAL)', $rowData, $headers);
             $externalFeeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (INTERNAL)', $rowData, $headers);
 
-            echo $count.": Code=[$code]";
-            echo "; name=[$name]";
-            echo "; unit=[$unit]";
-            echo "; fee=[$fee]";
-            echo "; feeAdditionalItem=[$feeAdditionalItem]";
-            echo "; externalFee=[$externalFee]";
-            echo "; externalFeeAdditionalItem=[$externalFeeAdditionalItem] <br>";
+            if(0) {
+                echo $count . ": Code=[$code]";
+                echo "; name=[$name]";
+                echo "; unit=[$unit]";
+                echo "; fee=[$fee]";
+                echo "; feeAdditionalItem=[$feeAdditionalItem]";
+                echo "; externalFee=[$externalFee]";
+                echo "; externalFeeAdditionalItem=[$externalFeeAdditionalItem] <br>";
+            }
 
             //Check if already exists by $code
             $priceFeeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
@@ -3271,21 +3273,27 @@ class TransResImportData
             $feeAdditionalItem = intval($feeAdditionalItem);
             $feeAdditionalItemDb = intval($priceFeeDb->getFeeAdditionalItem());
 
+            if( strtolower($name) != strtolower($priceFeeDb->getName()."") || $fee != $feeDb ) {
+                //$priceFeeDb->setFee($fee);
+                $update = true;
+                echo $code.': Difference. old: "'.$name.'" $'.$feeDb.', new: "'.$priceFeeDb->getName().'" $'.$fee.' <br>';
+            }
+
             if( $fee != $feeDb ) {
                 $priceFeeDb->setFee($fee);
                 $update = true;
-                echo "!!! Fee different: [$fee] != [".$feeDb."] <br>";
+                //echo "!!! Fee different: [$fee] != [".$feeDb."] <br>";
             }
 
             if( $feeAdditionalItem != $feeAdditionalItemDb ) {
                 $priceFeeDb->setFeeAdditionalItem($feeAdditionalItem);
                 $update = true;
-                echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+                //echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
             }
 
             if( $update ) {
                 //echo "<br>########## fee=" . $fee . "#############<br>";
-                echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName()." <br><br>";
+                //echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName()." <br><br>";
                 $updateCount++;
                 //$this->em->persist($priceFeeDb);
                 //$this->em->flush();
