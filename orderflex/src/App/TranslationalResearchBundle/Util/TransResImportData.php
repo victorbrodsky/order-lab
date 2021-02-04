@@ -3320,7 +3320,10 @@ class TransResImportData
                 $updateArr[] = "new additional fee=[$feeAdditionalItem], old=[$feeAdditionalItemDb]";
             }
 
-            if( $internalFee && $internalFeeAdditionalItem ) {
+            if(
+                $internalFee && $internalFeeAdditionalItem
+                && is_numeric($internalFee) && is_numeric($internalFeeAdditionalItem)
+            ) {
                 $internalPriceObject = $priceFeeDb->getPrice($internalPriceList);
                 if( $internalPriceObject ) {
                     echo "Price already exist $internalPriceObject <br>";
@@ -3335,20 +3338,30 @@ class TransResImportData
                 $internalFeeDb = intval($internalPriceObject->getFee());
                 $internalFeeAdditionalItemDb = intval($internalPriceObject->getFeeAdditionalItem());
 
-                if( $internalFee && $internalFee != $internalFeeDb ) {
-                    $internalPriceObject->setFee($internalFee);
-                    $update = true;
-                    //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
-                    $updateArr[] = "new internal fee=[$internalFee], old=[$internalFeeDb]";
+                //echo "??? internal fee=[$internalFee], old=[$internalFeeDb] <br>";
+                if( $internalFee !== NULL && $internalFee !== $internalFeeDb ) {
+                    if( is_numeric($internalFee) ) {
+                        $internalPriceObject->setFee($internalFee);
+                        $update = true;
+                        //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                        $updateArr[] = "new internal fee=[$internalFee], old=[$internalFeeDb]";
+                    } else {
+                        $updateArr[] = "new internal fee is not integer [$internalFee], old=[$internalFeeDb]";
+                    }
                 }
 
-                if( $internalFeeAdditionalItem && $internalFeeAdditionalItem != $internalFeeAdditionalItemDb ) {
-                    $internalPriceObject->setFeeAdditionalItem($internalFeeAdditionalItem);
-                    $update = true;
-                    //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
-                    $updateArr[] = "new internal additional fee=[$internalFeeAdditionalItem], old=[$internalFeeAdditionalItemDb]";
+                if( $internalFeeAdditionalItem !== NULL && $internalFeeAdditionalItem !== $internalFeeAdditionalItemDb ) {
+                    if( is_numeric($internalFee) ) {
+                        $internalPriceObject->setFeeAdditionalItem($internalFeeAdditionalItem);
+                        $update = true;
+                        //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                        $updateArr[] = "new internal additional fee=[$internalFeeAdditionalItem], old=[$internalFeeAdditionalItemDb]";
+                    } else {
+                        $updateArr[] = "new internal additional fee is not integer [$internalFee], old=[$internalFeeDb]";
+                    }
                 }
-
+            } else {
+                $updateArr[] = "No internal additional fee set: internalFee=[$internalFee] internalFeeAdditionalItem=[$internalFeeAdditionalItem]";
             }
 
 
