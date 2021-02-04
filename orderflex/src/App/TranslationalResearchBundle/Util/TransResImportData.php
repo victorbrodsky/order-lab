@@ -3277,13 +3277,13 @@ class TransResImportData
             if( strtolower($name) != strtolower($priceFeeDb->getName()."") || $fee != $feeDb ) {
                 //$priceFeeDb->setFee($fee);
                 $update = true;
-                echo $code.': Difference. old: "'.$name.'" $'.$feeDb.', new: "'.$priceFeeDb->getName().'" $'.$fee.' <br>';
+                echo $code.': Difference. old: "'.$name.'" $'.$feeDb.', new: "'.$priceFeeDb->getName().'" $'.$fee.' <br><br>';
             }
 
             if( $fee != $feeDb ) {
                 $priceFeeDb->setFee($fee);
                 $update = true;
-                echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
             }
 
             if( $feeAdditionalItem != $feeAdditionalItemDb ) {
