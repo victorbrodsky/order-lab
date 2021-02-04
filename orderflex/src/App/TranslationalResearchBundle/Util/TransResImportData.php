@@ -3183,4 +3183,122 @@ class TransResImportData
         exit("Added $count fees");
     }
 
+
+    //http://127.0.0.1/order/translational-research/update-multiple-fees
+    public function addNewMultipleFees($inputFileName) {
+
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
+
+        $systemuser = $userSecUtil->findSystemUser();
+        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+        if( !$specialtyMisiObject ) {
+            exit("specialtyMisiObject misi is not found");
+        }
+
+        //$inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $inputFileName =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+
+        $count = 0;
+        $updateCount = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $code = $this->getValueByHeaderName('CODE', $rowData, $headers);
+            //$serviceCategory = $this->getValueByHeaderName('SERVICE CATEGORY', $rowData, $headers);
+            //$price = $this->getValueByHeaderName('PRICE', $rowData, $headers);
+            $unit = $this->getValueByHeaderName('UNIT', $rowData, $headers);
+            $name  = $this->getValueByHeaderName('Fee Schedule (1/1/2021 - 12/31/2021)', $rowData, $headers);
+
+            //regular fee (old)
+            $fee = $this->getValueByHeaderName('FIRST ITEM (EXTERNAL)', $rowData, $headers);
+            $feeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (EXTERNAL)', $rowData, $headers);
+
+            //secial internal fee (new)
+            $externalFee = $this->getValueByHeaderName('FIRST ITEM (INTERNAL)', $rowData, $headers);
+            $externalFeeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (INTERNAL)', $rowData, $headers);
+
+            echo $count.": Code=[$code]";
+            echo "; name=[$name]";
+            echo "; unit=[$unit]";
+            echo "; fee=[$fee]";
+            echo "; feeAdditionalItem=[$feeAdditionalItem]";
+            echo "; externalFee=[$externalFee]";
+            echo "; externalFeeAdditionalItem=[$externalFeeAdditionalItem] <br>";
+
+            //Check if already exists by $code
+            $priceFeeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
+            if( $priceFeeDb ) {
+                //echo "Fee already exists $feeDb <br>";
+                //continue;
+            } else {
+                echo "Price fee does not exist $code <br>";
+            }
+
+            $update = false;
+
+            $fee = intval($fee);
+            $feeDb = intval($priceFeeDb->getFee());
+
+            $feeAdditionalItem = intval($feeAdditionalItem);
+            $feeAdditionalItemDb = intval($priceFeeDb->getFeeAdditionalItem());
+
+            if( $fee != $feeDb ) {
+                $priceFeeDb->setFee($fee);
+                $update = true;
+                echo "!!! Fee different: [$fee] != [".$feeDb."] <br>";
+            }
+
+            if( $feeAdditionalItem != $feeAdditionalItemDb ) {
+                $priceFeeDb->setFeeAdditionalItem($feeAdditionalItem);
+                $update = true;
+                echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+            }
+
+            if( $update ) {
+                //echo "<br>########## fee=" . $fee . "#############<br>";
+                echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName()." <br><br>";
+                $updateCount++;
+                //$this->em->persist($priceFeeDb);
+                //$this->em->flush();
+            } else {
+                //echo "*** Not created <br>";
+            }
+
+            $count++;
+        }
+
+        exit("Processed $count, updated $updateCount price fees");
+
+        return $count;
+    }
+
 }

@@ -709,4 +709,45 @@ class DefaultController extends OrderAbstractController
 
         exit("mergeProjectInfoAction: processed projects=$count, updated projects=".$countUpdated);
     }
+
+
+    /**
+     * http://127.0.0.1/order/translational-research/update-multiple-fees
+     *
+     * @Route("/update-multiple-fees", name="translationalresearch_update_multiple_fees")
+     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
+     */
+    public function updateMultipleFeesAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateMultipleFeesAction: Not allowed");
+
+        //$em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+        $importUtil = $this->get('transres_import');
+
+        $form = $this->createFormBuilder()
+            ->add('file', FileType::class)
+            ->add('upload', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $inputFileName = $form['file']->getData();
+            echo "inputFileName1=" . $inputFileName . "<br>";
+            //exit('111');
+
+            $count = $importUtil->addNewMultipleFees($inputFileName);
+
+            exit("End updateMultipleFeesAction: count=".$count);
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
 }
