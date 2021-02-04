@@ -3282,7 +3282,7 @@ class TransResImportData
             if( $fee != $feeDb ) {
                 $priceFeeDb->setFee($fee);
                 $update = true;
-                //echo "!!! Fee different: [$fee] != [".$feeDb."] <br>";
+                echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
             }
 
             if( $feeAdditionalItem != $feeAdditionalItemDb ) {
