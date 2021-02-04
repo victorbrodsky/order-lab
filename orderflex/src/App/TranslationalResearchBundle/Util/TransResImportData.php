@@ -24,6 +24,8 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+use App\TranslationalResearchBundle\Entity\Prices;
+use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -3223,6 +3225,11 @@ class TransResImportData
         $count = 0;
         $updateCount = 0;
 
+        $internalPriceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName("Internal Pricing");
+        if( !$internalPriceList ) {
+            exit("Internal price list does not exist");
+        }
+
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
@@ -3242,9 +3249,9 @@ class TransResImportData
             $fee = $this->getValueByHeaderName('FIRST ITEM (EXTERNAL)', $rowData, $headers);
             $feeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (EXTERNAL)', $rowData, $headers);
 
-            //secial internal fee (new)
-            $externalFee = $this->getValueByHeaderName('FIRST ITEM (INTERNAL)', $rowData, $headers);
-            $externalFeeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (INTERNAL)', $rowData, $headers);
+            //special internal fee (new)
+            $internalFee = $this->getValueByHeaderName('FIRST ITEM (INTERNAL)', $rowData, $headers);
+            $internalFeeAdditionalItem = $this->getValueByHeaderName('ADDITIONAL ITEM (INTERNAL)', $rowData, $headers);
 
             if(1) {
                 echo "<br>".$count . ": Code=[$code]";
@@ -3252,8 +3259,8 @@ class TransResImportData
                 echo "; unit=[$unit]";
                 echo "; fee=[$fee]";
                 echo "; feeAdditionalItem=[$feeAdditionalItem]";
-                echo "; externalFee=[$externalFee]";
-                echo "; externalFeeAdditionalItem=[$externalFeeAdditionalItem] <br>";
+                echo "; internalFee=[$internalFee]";
+                echo "; internalFeeAdditionalItem=[$internalFeeAdditionalItem] <br>";
             }
 
             //Check if already exists by $code
@@ -3267,6 +3274,7 @@ class TransResImportData
             }
 
             $update = false;
+            $updateArr = array();
 
             $fee = intval($fee);
             $feeDb = intval($priceFeeDb->getFee());
@@ -3274,34 +3282,84 @@ class TransResImportData
             $feeAdditionalItem = intval($feeAdditionalItem);
             $feeAdditionalItemDb = intval($priceFeeDb->getFeeAdditionalItem());
 
+            $nameDb = $priceFeeDb->getName()."";
             if(
-                strtolower($name) != strtolower($priceFeeDb->getName()."")
+                strtolower($name) != strtolower($nameDb)
                 || $fee != $feeDb
                 //|| strtolower($unit) != strtolower($priceFeeDb->getFeeUnit()."")
             ){
                 //$priceFeeDb->setFee($fee);
                 $update = true;
-                echo $code.': Difference<br>'.
-                'Old: "'.$name.'" $'.$feeDb.', unit= '.$unit.
-                '<br>New: "'.$priceFeeDb->getName().'" $'.$fee.', unit= '.$priceFeeDb->getFeeUnit().
-                ' <br>';
+//                echo $code.': Difference<br>'.
+//                'Old: "'.$name.'" $'.$feeDb.', unit= '.$unit.
+//                '<br>New: "'.$priceFeeDb->getName().'" $'.$fee.', unit= '.$priceFeeDb->getFeeUnit().
+//                ' <br>';
+                $priceFeeDb->setName($name);
+                $updateArr[] = "new name=[".$priceFeeDb->getName()."], old=[".$nameDb."]";
+            }
+
+            $unitDb = $priceFeeDb->getFeeUnit()."";
+            if( strtolower($unit) != strtolower($unitDb) ) {
+                $priceFeeDb->setFeeUnit($unit);
+                $update = true;
+                //echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+                $updateArr[] = "new unit=[".$priceFeeDb->getFeeUnit()."], old=[".$unitDb."]";
             }
 
             if( $fee != $feeDb ) {
                 $priceFeeDb->setFee($fee);
                 $update = true;
-                echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                $updateArr[] = "new fee=[$fee], old=[$feeDb]";
             }
 
             if( $feeAdditionalItem != $feeAdditionalItemDb ) {
                 $priceFeeDb->setFeeAdditionalItem($feeAdditionalItem);
                 $update = true;
-                echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+                //echo "!!! feeAdditionalItem different: [$feeAdditionalItem] != [".$feeAdditionalItemDb."] <br>";
+                $updateArr[] = "new additional fee=[$feeAdditionalItem], old=[$feeAdditionalItemDb]";
             }
+
+            if( $internalFee && $internalFeeAdditionalItem ) {
+                $internalPriceObject = $priceFeeDb->getPrice($internalPriceList);
+                if( $internalPriceObject ) {
+                    echo "Price already exist $internalPriceObject <br>";
+                } else {
+                    $internalPriceObject = new Prices();
+                    $internalPriceObject->setPriceList($internalPriceObject);
+                    $priceFeeDb->addPrice($internalPriceObject);
+                    //$this->em->persist($internalPriceObject);
+                    $updateArr[] = "Created new internal specific price [$internalPriceList]";
+                }
+
+                $internalFeeDb = intval($internalPriceObject->getFee());
+                $internalFeeAdditionalItemDb = intval($internalPriceObject->getFeeAdditionalItem());
+
+                if( $internalFee && $internalFee != $internalFeeDb ) {
+                    $internalPriceObject->setFee($internalFee);
+                    $update = true;
+                    //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                    $updateArr[] = "new internal fee=[$internalFee], old=[$internalFeeDb]";
+                }
+
+                if( $internalFeeAdditionalItem && $internalFeeAdditionalItem != $internalFeeAdditionalItemDb ) {
+                    $internalPriceObject->setFeeAdditionalItem($internalFeeAdditionalItem);
+                    $update = true;
+                    //echo $code.": !!! Fee different: [$fee] != [".$feeDb."] <br>";
+                    $updateArr[] = "new internal additional fee=[$internalFeeAdditionalItem], old=[$internalFeeAdditionalItemDb]";
+                }
+
+            }
+
+
 
             if( $update ) {
                 //echo "<br>########## fee=" . $fee . "#############<br>";
-                //echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName()." <br><br>";
+                $updateStr = "No update";
+                if( count($updateArr) > 0 ) {
+                    $updateStr = "<br>".implode("<br>",$updateArr);
+                }
+                echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName().": ".$updateStr." <br><br>";
                 $updateCount++;
                 //$this->em->persist($priceFeeDb);
                 //$this->em->flush();
