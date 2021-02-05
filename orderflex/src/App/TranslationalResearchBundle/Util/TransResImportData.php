@@ -3283,6 +3283,31 @@ class TransResImportData
             } else {
                 echo "Price fee does not exist in DB $code <br>";
                 continue;
+
+                if(0) {
+                    $priceFeeDb = new RequestCategoryTypeList($systemuser);
+
+                    $priceFeeDb->setType('default');
+
+                    //Get orderinlist
+                    $classNamespaceShort = "AppTranslationalResearchBundle";
+                    $className = "RequestCategoryTypeList";
+                    $classFullName = $classNamespaceShort . ":" . $className;
+                    $orderinlist = $userSecUtil->getMaxField($classFullName);
+                    echo "Create a new orderinlist=$orderinlist<br>";
+
+                    if ($orderinlist) {
+                        $priceFeeDb->setOrderinlist($orderinlist);
+                    }
+
+                    //Name $serviceCategory
+                    if ($priceFeeDb->getName() != $name) {
+                        $priceFeeDb->setName($name);
+                        $update = true;
+                    }
+
+                    $this->em->persist($priceFeeDb);
+                }
             }
 
             $update = false;
@@ -3380,9 +3405,9 @@ class TransResImportData
             if( $updateInternalFee && $updateInternalAdditionalFee ) {
                 if( !$internalPriceObject ) {
                     $internalPriceObject = new Prices();
-                    $internalPriceObject->setPriceList($internalPriceObject);
+                    $internalPriceObject->setPriceList($internalPriceList);
                     $priceFeeDb->addPrice($internalPriceObject);
-                    //$this->em->persist($internalPriceObject);
+                    $this->em->persist($internalPriceObject);
                     $updateArr[] = "Created new internal specific price [$internalPriceList]";
                 }
 
@@ -3454,7 +3479,7 @@ class TransResImportData
                 echo "### Update price: ".$priceFeeDb->getOptimalAbbreviationName().": ".$updateStr." <br><br>";
                 $updateCount++;
                 //$this->em->persist($priceFeeDb);
-                //$this->em->flush();
+                $this->em->flush();
             } else {
                 //echo "*** Not created <br>";
             }
