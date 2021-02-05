@@ -107,7 +107,7 @@
             {% for product in transresRequest.products %}
                 <tr>
                     {#<td>{{ product.category.productId }} ({{ product.category.section }})</td>#}
-                    <td style="color:{{ headlineColor }}">{{ product.category.getShortInfo }}</td>
+                    <td style="color:{{ headlineColor }}">{{ product.category.getShortInfo(transresRequest) }}</td>
                     <td style="color:{{ headlineColor }}">{{ product.category.name }}</td>
 
                     <td style="color:{{ headlineColor }}">{{ product.requested }}</td>

@@ -231,8 +231,13 @@ class RequestCategoryTypeList extends ListAbstract
     /**
      * @return string
      */
-    public function getProductId()
+    public function getProductId($priceList=NULL)
     {
+        if( $priceList ) {
+            $priceListAbbreviation = $priceList->getAbbreviation();
+            return $this->productId.$priceListAbbreviation;
+        }
+
         return $this->productId;
     }
 
@@ -373,14 +378,18 @@ class RequestCategoryTypeList extends ListAbstract
 
     public function getOptimalAbbreviationName( $priceList=NULL ) {
         //return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
-        return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": " . $this->getFeeStr($priceList) . "/" . $this->getFeeUnit();
+        return $this->getProductId($priceList) . " (" .$this->getSection() . ") - " . $this->getName() . ": " . $this->getFeeStr($priceList) . "/" . $this->getFeeUnit();
     }
 
     public function getProductIdAndName() {
         return $this->getProductId() . " " . $this->getName();
     }
 
-    public function getShortInfo() {
-        return $this->getProductId() . " (" .$this->getSection() . ")";
+    public function getShortInfo($request=NULL) {
+        $priceList = NULL;
+        if( $request ) {
+            $priceList = $request->getPriceList();
+        }
+        return $this->getProductId($priceList) . " (" .$this->getSection() . ")";
     }
 }

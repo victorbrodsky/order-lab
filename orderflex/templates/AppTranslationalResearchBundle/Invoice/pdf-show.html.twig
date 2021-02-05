@@ -152,7 +152,7 @@
             {% for invoiceItem in invoice.invoiceItems %}
                 <tr>
                     <td>{{ invoiceItem.quantity }}</td>
-                    <td>{{ invoiceItem.itemCode }}{{ invoice.getPriceListAbbreviation() }}</td>
+                    <td>{{ invoiceItem.itemCode }}</td>
 
                     {% set strlimit = 60 %}
                     {% set descriptionStr = invoiceItem.description %}

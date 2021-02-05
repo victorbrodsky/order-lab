@@ -175,7 +175,7 @@
                 <td>
                     {% for product in transresRequest.products %}
                         {% if product.category %}
-                            {{ product.category.getShortInfo() }}<br>
+                            {{ product.category.getShortInfo(transresRequest) }}<br>
                         {% endif %}
                     {% endfor %}
                 </td>

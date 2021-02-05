@@ -159,7 +159,7 @@ class TransResRequestUtil
             $categoryStr = NULL;
             $category = $product->getCategory();
             if( $category ) {
-                $categoryStr = $category->getShortInfo();
+                $categoryStr = $category->getShortInfo($request);
             }
 
             $comment = $product->getComment();
@@ -1567,7 +1567,7 @@ class TransResRequestUtil
 
             if( $category ) {
                 //ItemCode
-                $itemCode = $category->getProductId();
+                $itemCode = $category->getProductId($priceList);
                 $invoiceItem->setItemCode($itemCode);
 
                 //Description
