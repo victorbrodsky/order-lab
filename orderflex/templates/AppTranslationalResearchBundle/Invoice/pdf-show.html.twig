@@ -140,11 +140,11 @@
                 <th>Quantity</th>
                 <th>Item Code</th>
                 <th>Description</th>
-                {#<th>Unit Price ($)</th>#}
-                <th>Price per one item ($)</th>
+                <th>Unit Price ($)</th>
+                {#<th>Price per one item ($)</th>#}
 
                 {% if showAdditionalUnitPrice %}
-                    <th>Price per additional item ($)</th>
+                    <th>Additional Item Price ($)</th>
                 {% endif %}
 
                 <th>Total ($)</th>
@@ -152,7 +152,7 @@
             {% for invoiceItem in invoice.invoiceItems %}
                 <tr>
                     <td>{{ invoiceItem.quantity }}</td>
-                    <td>{{ invoiceItem.itemCode }}</td>
+                    <td>{{ invoiceItem.itemCode }}{{ invoice.getPriceListAbbreviation() }}</td>
 
                     {% set strlimit = 60 %}
                     {% set descriptionStr = invoiceItem.description %}

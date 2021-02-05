@@ -9433,17 +9433,19 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "External Pricing",
-            "Internal Pricing"
+            "External Pricing"=>"e",
+            "Internal Pricing"=>"i"
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name=>$abbreviation ) {
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
+
+            $listEntity->setAbbreviation($abbreviation);
 
             $listEntity = new PriceTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);

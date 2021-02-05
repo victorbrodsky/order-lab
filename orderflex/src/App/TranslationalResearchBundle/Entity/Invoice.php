@@ -954,6 +954,15 @@ class Invoice {
         return $project->getProjectSpecialty();
     }
 
+    public function getPriceListAbbreviation() {
+        $transresRequest = $this->getTransresRequest();
+        $priceList = $transresRequest->getPriceList();
+        if( $priceList ) {
+            return $priceList->getAbbreviation();
+        }
+        return NULL;
+    }
+
     public function getSerializeStr() {
         //$str = serialize($this);
 

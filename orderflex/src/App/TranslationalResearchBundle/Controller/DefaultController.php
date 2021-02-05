@@ -722,7 +722,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateMultipleFeesAction: Not allowed");
+        exit("updateMultipleFeesAction: Not allowed");
 
         //$em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
