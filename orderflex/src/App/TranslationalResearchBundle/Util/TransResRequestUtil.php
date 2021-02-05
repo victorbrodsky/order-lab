@@ -3063,9 +3063,11 @@ class TransResRequestUtil
 
     public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity) {
         $quantity = intval($quantity);
-        $fee = intval($fee);
+        //$fee = intval($fee);
+        $fee = $this->toDecimal($fee);
         if( $feeAdditionalItem ) {
-            $feeAdditionalItem = intval($feeAdditionalItem);
+            //$feeAdditionalItem = intval($feeAdditionalItem);
+            $feeAdditionalItem = $this->toDecimal($feeAdditionalItem);
         } else {
             $feeAdditionalItem = $fee;
         }
