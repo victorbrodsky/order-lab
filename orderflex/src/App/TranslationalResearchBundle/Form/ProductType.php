@@ -160,15 +160,13 @@ class ProductType extends AbstractType
         //dump($projectSpecialtyIdsArr);
         //exit('111');
 
-        //TODO: do not show if fee is zero using $this->priceList
-        //$feeRestriction = "";
+        //do not show if fee is zero using $this->priceList
         $feeRestriction = "(list.fee IS NOT NULL AND list.fee <> '0')";
-        if( 0 && $this->priceList ) {
+        if( $this->priceList ) {
             $priceListId = $this->priceList->getId();
             if( $priceListId ) {
-                $specificFeeRestriction = "(prices.id = $priceListId AND prices.fee IS NOT NULL)";
-                $specificFeeRestriction = "(prices.id = $priceListId)";
-                //$feeRestriction = $feeRestriction . " OR ";
+                $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
+                $feeRestriction = $feeRestriction . " OR ";
                 $feeRestriction = $feeRestriction . $specificFeeRestriction;
                 //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
             }
@@ -176,10 +174,10 @@ class ProductType extends AbstractType
 
         if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
             //AppTranslationalResearchBundle:RequestCategoryTypeList
-
             $queryBuilder = $er->createQueryBuilder('list')
                 ->leftJoin('list.projectSpecialties','projectSpecialties')
                 ->leftJoin('list.prices','prices')
+                ->leftJoin('prices.priceList','priceList')
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 ->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
                 //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr) OR projectSpecialties.id IS NULL") //show categories with this specialty only OR categories without specialty
@@ -193,6 +191,7 @@ class ProductType extends AbstractType
         } else {
             $queryBuilder = $er->createQueryBuilder('list')
                 ->leftJoin('list.prices','prices')
+                ->leftJoin('prices.priceList','priceList')
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 ->andWhere($feeRestriction)
                 ->orderBy("list.orderinlist","ASC")
