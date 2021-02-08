@@ -62,14 +62,6 @@ class ProductType extends AbstractType
 
         $builder->add('id', HiddenType::class);
 
-//        $workRequest = NULL;
-//        if( isset($this->params['transresRequest']) ) {
-//            $workRequest = $this->params['transresRequest'];
-//            if ($workRequest) {
-//
-//            }
-//        }
-
 //        $builder->add('category', EntityType::class, array(
 //            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
 //            'choice_label' => 'getOptimalAbbreviationName',
@@ -113,16 +105,6 @@ class ProductType extends AbstractType
             },
         ));
 
-//        $builder->add('requested', IntegerType::class, array(
-//            'label' => "Requested Quantity:",
-//            'required' => false,
-//            //'attr' => array('class' => 'form-control')
-//        ));
-//        $builder->add('requested', null, array(
-//            'label' => "Requested Quantity:",
-//            'required' => false,
-//            'attr' => array('class' => 'product-requested-quantity')
-//        ));
         $builder->add('requested',TextType::class,array(
             'label' => "Requested Quantity:",
             'required' => true,
@@ -178,13 +160,30 @@ class ProductType extends AbstractType
         //dump($projectSpecialtyIdsArr);
         //exit('111');
 
+        //TODO: do not show if fee is zero using $this->priceList
+        //$feeRestriction = "";
+        $feeRestriction = "(list.fee IS NOT NULL AND list.fee <> '0')";
+        if( 0 && $this->priceList ) {
+            $priceListId = $this->priceList->getId();
+            if( $priceListId ) {
+                $specificFeeRestriction = "(prices.id = $priceListId AND prices.fee IS NOT NULL)";
+                $specificFeeRestriction = "(prices.id = $priceListId)";
+                //$feeRestriction = $feeRestriction . " OR ";
+                $feeRestriction = $feeRestriction . $specificFeeRestriction;
+                //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
+            }
+        }
+
         if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
             //AppTranslationalResearchBundle:RequestCategoryTypeList
+
             $queryBuilder = $er->createQueryBuilder('list')
                 ->leftJoin('list.projectSpecialties','projectSpecialties')
+                ->leftJoin('list.prices','prices')
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 ->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
                 //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr) OR projectSpecialties.id IS NULL") //show categories with this specialty only OR categories without specialty
+                ->andWhere($feeRestriction)
                 ->orderBy("list.orderinlist","ASC")
                 ->setParameters( array(
                     'typedef' => 'default',
@@ -193,7 +192,9 @@ class ProductType extends AbstractType
                 ));
         } else {
             $queryBuilder = $er->createQueryBuilder('list')
+                ->leftJoin('list.prices','prices')
                 ->where("list.type = :typedef OR list.type = :typeadd")
+                ->andWhere($feeRestriction)
                 ->orderBy("list.orderinlist","ASC")
                 ->setParameters( array(
                     'typedef' => 'default',

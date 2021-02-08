@@ -175,7 +175,10 @@ class Prices
         $this->priceList = $priceList;
     }
 
-    
+    public function getPriceInfo()
+    {
+        return $this->getPriceList().": ".$this->getFee()." (".$this->getFeeAdditionalItem().")";
+    }
 
 
     public function __toString() {

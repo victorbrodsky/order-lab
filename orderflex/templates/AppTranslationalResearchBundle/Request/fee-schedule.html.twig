@@ -34,7 +34,7 @@
     </div>
     <br>
 
-    {#{% set showInternalFee = 0 %}#}
+    {% set showSpecificFee = 1 %}
 
     <table class="table table-hover table-condensed text-left">
         <thead>
@@ -48,12 +48,12 @@
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
 
-                {#{% if showInternalFee %}#}
-                {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
-                    {#<th>{{ knp_pagination_sortable(fees, 'Internal Fee for one', 'list.internalFee') }}</th>#}
-                    {#<th>{{ knp_pagination_sortable(fees, 'Internal fee per additional item', 'list.internalFeeAdditionalItem') }}</th>#}
-                {#{% endif %}#}
-                {#{% endif %}#}
+                {% if showSpecificFee %}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                    {% set showSpecificFee = 1 %}
+                    <th>Specific Fees</th>
+                {% endif %}
+                {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Specialty', 'projectSpecialties.name') }}</th>
@@ -98,20 +98,13 @@
                     {% endif %}
                 </td>
 
-                {#{% if showInternalFee %}#}
-                {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
-                    {#<td>#}
-                        {#{% if fee.internalFee %}#}
-                            {#${{ fee.internalFee }}#}
-                        {#{% endif %}#}
-                    {#</td>#}
-                    {#<td>#}
-                        {#{% if fee.internalFeeAdditionalItem %}#}
-                            {#${{ fee.internalFeeAdditionalItem }}#}
-                        {#{% endif %}#}
-                    {#</td>#}
-                {#{% endif %}#}
-                {#{% endif %}#}
+                {% if showSpecificFee %}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                    <td>
+                        {{ fee.getSpecificPricesInfo()|raw }}
+                    </td>
+                {% endif %}
+                {% endif %}
 
                 <td>
                     {{ fee.getFeeUnitStr() }}

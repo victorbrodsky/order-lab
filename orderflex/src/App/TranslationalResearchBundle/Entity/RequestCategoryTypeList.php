@@ -392,4 +392,18 @@ class RequestCategoryTypeList extends ListAbstract
         }
         return $this->getProductId($priceList) . " (" .$this->getSection() . ")";
     }
+
+    public function getSpecificPricesInfo() {
+        $specificPriceInfo = "";
+        $specificPriceArr = array();
+        foreach($this->getPrices() as $specificPrice) {
+            $specificPriceArr[] = $specificPrice->getPriceInfo();
+        }
+
+        if( count($specificPriceArr) > 0 ) {
+            $specificPriceInfo = implode("<br>",$specificPriceArr);
+        }
+
+        return $specificPriceInfo;
+    }
 }
