@@ -379,4 +379,6 @@ class InvoiceItem {
         $this->total = $total;
     }
 
+    
+
 }

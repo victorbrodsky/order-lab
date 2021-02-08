@@ -244,7 +244,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">
-                    Invoice Items
+                    Invoice Items {{ transres_request_util.getSubsidyInfo(form.vars.value)|raw }}
                 </a>
             </h4>
         </div>

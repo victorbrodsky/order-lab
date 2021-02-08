@@ -1173,8 +1173,8 @@ class InvoiceController extends OrderAbstractController
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
-        //$showAdditionalUnitPrice = 0;
-        $showAdditionalUnitPrice = 1;
+        $showAdditionalUnitPrice = 0;
+        //$showAdditionalUnitPrice = 1;
 
         if( $showAdditionalUnitPrice ) {
             $pricesDifferent = false;

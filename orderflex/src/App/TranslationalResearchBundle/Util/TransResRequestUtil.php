@@ -4632,6 +4632,138 @@ class TransResRequestUtil
         return $productsCombobox;
     }
 
+    public function getInvoiceItemInfoHtml( $invoiceItem ) {
+//        <tr>
+//                    {% set strlimit = 60 %}
+//                    {% set descriptionStr = invoiceItem.description %}
+//                    {% if descriptionStr|length > strlimit %}
+//                        {% set descriptionStr = descriptionStr|slice(0, strlimit) ~ '...' %}
+//                    {% endif %}
+//                    <td>{{ descriptionStr }}</td>
+//
+//                    <td>{{ invoiceItem.quantity }}</td>
+//                    <td>{{ invoiceItem.itemCode }}</td>
+//
+//                    <td>{{ invoiceItem.unitPrice }}</td>
+//
+//                    {% if showAdditionalUnitPrice %}
+//                        <td>{{ invoiceItem.additionalUnitPrice }}</td>
+//                    {% endif %}
+//
+//                    <td>{{ invoiceItem.total }}</td>
+//                </tr>
+
+        $transresUtil = $this->container->get('transres_util');
+        $row = "";
+
+        //description
+        $maxLen = 60;
+        $descriptionStr = $invoiceItem->getDescription();
+        if( $descriptionStr && strlen($descriptionStr) > $maxLen ) {
+            $descriptionStr = $transresUtil->tokenTruncate($descriptionStr,$maxLen)."...";
+        }
+        //$row1 = $row1 . "<td>" . $descriptionStr . "</td>";
+
+        //quantity (integer), unitPrice (type="decimal", precision=15, scale=2), additionalUnitPrice (type="decimal", precision=15, scale=2)
+        $secondRaw = false;
+        $itemCode = $invoiceItem->getItemCode();
+        $quantity = $invoiceItem->getQuantity();
+        $unitPrice = $invoiceItem->getUnitPrice();
+        $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+        if( $quantity > 1 ) {
+            if( $unitPrice != $additionalUnitPrice ) {
+                $secondRaw = true;
+            }
+        }
+
+        if( $secondRaw ) {
+            $quantityFirst = 1;
+            $quantityAdditional = $quantity - 1;
+            $totalFeeFirst = $unitPrice*$quantityFirst;
+            $row1 =
+                  "<td>" . $descriptionStr . "</td>"
+                . "<td>" . $quantityFirst . "</td>"
+                . "<td>" . $itemCode . "f" . "</td>"
+                . "<td>" . $unitPrice . "</td>"
+                . "<td>" . $totalFeeFirst . "</td>"
+            ;
+
+            $totalFeeAdditional = $additionalUnitPrice*$quantityAdditional;
+            $row2 =
+                  //"<td>" . $descriptionStr . "</td>"
+                  "<td>" . "⎣" . "</td>"
+                . "<td>" . $quantityAdditional . "</td>"
+                . "<td>" . $itemCode . "a" . "</td>"
+                . "<td>" . $additionalUnitPrice . "</td>"
+                . "<td>" . $totalFeeAdditional . "</td>"
+            ;
+
+            $row = "<tr>" . $row1 . "</tr>" . "<tr>" . $row2 . "</tr>";
+        } else {
+            $totalFee = $unitPrice*$quantity;
+            $row1 =
+                  "<td>" . $descriptionStr . "</td>"
+                . "<td>" . $quantity . "</td>"
+                . "<td>" . $itemCode . "</td>"
+                . "<td>" . $unitPrice . "</td>"
+                . "<td>" . $totalFee . "</td>"
+            ;
+            $row = "<tr>" . $row1 . "</tr>";
+        }
+
+        return $row;
+    }
+
+    public function getSubsidy($invoice) {
+        $request = $invoice->getTransresRequest();
+        $priceList = $request->getPriceList($request);
+        $subsidy = 0.00;
+
+        foreach( $request->getProducts() as $product ) {
+
+            $quantity = $product->getCompleted();
+            if( !$quantity ) {
+                $quantity = $product->getRequested();
+            }
+
+            $category = $product->getCategory();
+
+            if( $category ) {
+
+                //default fee
+                $fee = $category->getPriceFee();
+                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
+                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+
+                //special fee
+                $specialFee = $category->getPriceFee($priceList);
+                $specialFeeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+                $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$quantity);
+
+                if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
+                    $subsidy = $subsidy + ($totalDefault - $totalSpecial);
+                }
+
+            }
+
+        }
+
+        return $subsidy;
+    }
+
+    //"[Internal pricing] has been used to generate this invoice. Subsidy: $[XX.XX]"
+    public function getSubsidyInfo($invoice) {
+        $res = "";
+        $request = $invoice->getTransresRequest();
+        $priceList = $request->getPriceList($request);
+        $subsidy = $this->getSubsidy($invoice);
+        if( $subsidy > 0 ) {
+            $res = "(".$priceList->getName()." has been used to generate this invoice. Subsidy: $$subsidy".")";
+        }
+        
+        return $res;
+    }
+
 }
 
 

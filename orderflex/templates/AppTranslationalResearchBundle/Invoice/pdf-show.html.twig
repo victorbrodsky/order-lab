@@ -137,9 +137,9 @@
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <tr>
+                <th>Description {{ transres_request_util.getSubsidyInfo(invoice)|raw }}</th>
                 <th>Quantity</th>
                 <th>Item Code</th>
-                <th>Description</th>
                 <th>Unit Price ($)</th>
                 {#<th>Price per one item ($)</th>#}
 
@@ -150,25 +150,26 @@
                 <th>Total ($)</th>
             </tr>
             {% for invoiceItem in invoice.invoiceItems %}
-                <tr>
-                    <td>{{ invoiceItem.quantity }}</td>
-                    <td>{{ invoiceItem.itemCode }}</td>
+                {#<tr>#}
+                    {#{% set strlimit = 60 %}#}
+                    {#{% set descriptionStr = invoiceItem.description %}#}
+                    {#{% if descriptionStr|length > strlimit %}#}
+                        {#{% set descriptionStr = descriptionStr|slice(0, strlimit) ~ '...' %}#}
+                    {#{% endif %}#}
+                    {#<td>{{ descriptionStr }}</td>#}
 
-                    {% set strlimit = 60 %}
-                    {% set descriptionStr = invoiceItem.description %}
-                    {% if descriptionStr|length > strlimit %}
-                        {% set descriptionStr = descriptionStr|slice(0, strlimit) ~ '...' %}
-                    {% endif %}
-                    <td>{{ descriptionStr }}</td>
+                    {#<td>{{ invoiceItem.quantity }}</td>#}
+                    {#<td>{{ invoiceItem.itemCode }}</td>#}
 
-                    <td>{{ invoiceItem.unitPrice }}</td>
+                    {#<td>{{ invoiceItem.unitPrice }}</td>#}
 
-                    {% if showAdditionalUnitPrice %}
-                        <td>{{ invoiceItem.additionalUnitPrice }}</td>
-                    {% endif %}
+                    {#{% if showAdditionalUnitPrice %}#}
+                        {#<td>{{ invoiceItem.additionalUnitPrice }}</td>#}
+                    {#{% endif %}#}
 
-                    <td>{{ invoiceItem.total }}</td>
-                </tr>
+                    {#<td>{{ invoiceItem.total }}</td>#}
+                {#</tr>#}
+                {{ transres_request_util.getInvoiceItemInfoHtml(invoiceItem)|raw }}
             {% endfor %}
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
