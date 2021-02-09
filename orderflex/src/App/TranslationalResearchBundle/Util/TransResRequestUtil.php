@@ -44,8 +44,6 @@ use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 
-
-
 /**
  * Created by PhpStorm.
  * User: ch3
@@ -4681,8 +4679,8 @@ class TransResRequestUtil
             $quantityAdditional = $quantity - 1;
             $totalFeeFirst = $this->toDecimal($unitPrice*$quantityFirst);
             $row1 =
-                  "<td rowspan='2'>" . $descriptionStr . "</td>"
-//                  "<td>" . $descriptionStr . "</td>"
+//                  "<td rowspan='2'>" . $descriptionStr . "</td>"
+                  "<td>" . $descriptionStr . "</td>"
                 . "<td class='text-center'>" . $quantityFirst . "</td>"
                 . "<td class='text-center'>" . $itemCode . "f" . "</td>"
                 . "<td class='text-right'>" . $unitPrice . "</td>"
@@ -4690,12 +4688,13 @@ class TransResRequestUtil
             ;
 
             //<img src="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
-//            $imageL = "orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png";
+            $imageL = "\\orderassets\\AppTranslationalResearchBundle\\images\\"."branch-char.jpeg";
+
             $totalFeeAdditional = $this->toDecimal($additionalUnitPrice*$quantityAdditional);
             $row2 =
                   //"<td>" . $descriptionStr . "</td>" .
                   //"<td>" . "L" . "</td>" .
-//                  "<td>" . '<img src="{{ asset('.$imageL.')}}>' . "</td>" .
+                  "<td>" . '<img src="'.$imageL.'" height="18" width="18">' . "</td>" .
                   "<td class='text-center'>" . $quantityAdditional . "</td>"
                 . "<td class='text-center'>" . $itemCode . "a" . "</td>"
                 . "<td class='text-right'>" . $additionalUnitPrice . "</td>"
@@ -4721,7 +4720,7 @@ class TransResRequestUtil
     public function getSubsidy($invoice) {
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
-        $subsidy = 0.00;
+        $subsidy = 0;
 
         foreach( $request->getProducts() as $product ) {
 
