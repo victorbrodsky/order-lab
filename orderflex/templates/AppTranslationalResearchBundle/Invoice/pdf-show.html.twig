@@ -217,13 +217,16 @@
                 <td class='text-right'>{{ invoice.due }}</td>
             </tr>
 
-            <tr>
-                <td COLSPAN={{ colspan+2 }} ALIGN=CENTER>
-                    <b>
-                        {{ transres_request_util.getSubsidyInfo(invoice)|raw }}
-                    </b>
-                </td>
-            </tr>
+            {% set subsidyInfo = transres_request_util.getSubsidyInfo(invoice) %}
+            {% if subsidyInfo %}
+                <tr>
+                    <td COLSPAN={{ colspan+2 }} ALIGN=CENTER>
+                        <b>
+                            {{ subsidyInfo|raw }}
+                        </b>
+                    </td>
+                </tr>
+            {% endif %}
 
         </table>
     </div>
