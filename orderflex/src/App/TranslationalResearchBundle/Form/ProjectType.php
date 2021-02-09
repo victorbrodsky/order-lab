@@ -135,25 +135,46 @@ class ProjectType extends AbstractType
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
             ) {
-                $builder->add('priceList', EntityType::class, array(
-                    'class' => 'AppTranslationalResearchBundle:PriceTypeList',
-                    'choice_label' => 'name',
-                    'label' => 'Utilize the following price list:',
-                    'disabled' => ($this->params['admin'] ? false : true),
-                    //'disabled' => true,
-                    'required' => false,
-                    'multiple' => false,
-                    'attr' => array('class' => 'combobox combobox-width'),
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist", "ASC")
-                            ->setParameters(array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
-                    },
-                ));
+                if( $this->params['cycle'] == "new" ) {
+                    $builder->add('priceList', EntityType::class, array(
+                        'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+                        'choice_label' => 'name',
+                        'label' => 'Utilize the following price list:',
+                        'disabled' => ($this->params['admin'] ? false : true),
+                        //'disabled' => true,
+                        'required' => false,
+                        'multiple' => false,
+                        'attr' => array('class' => 'combobox combobox-width'),
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('list')
+                                ->where("list.type = :typedef OR list.type = :typeadd")
+                                ->orderBy("list.orderinlist", "ASC")
+                                ->setParameters(array(
+                                    'typedef' => 'default',
+                                    'typeadd' => 'user-added',
+                                ))
+                                ;
+                        },
+                    ));
+                } else {
+                    $builder->add('priceList', EntityType::class, array(
+                        'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+                        'choice_label' => 'name',
+                        'label' => 'Utilize the following price list:',
+                        'disabled' => ($this->params['admin'] ? false : true),
+                        //'disabled' => true,
+                        'required' => false,
+                        'multiple' => false,
+                        'attr' => array('class' => 'combobox combobox-width'),
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('list')
+                                ->orderBy("list.orderinlist", "ASC")
+                                ;
+                        },
+                    ));
+                }
+
+
             }
         }
 
