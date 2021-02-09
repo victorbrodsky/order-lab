@@ -1188,6 +1188,8 @@ class InvoiceController extends OrderAbstractController
             }
         }
 
+        $showRemittance = 0;
+
         return array(
             //'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -1195,7 +1197,8 @@ class InvoiceController extends OrderAbstractController
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice ID ".$invoice->getOid(),
-            'showAdditionalUnitPrice' => $showAdditionalUnitPrice
+            'showAdditionalUnitPrice' => $showAdditionalUnitPrice,
+            'showRemittance' => $showRemittance
         );
     }
 

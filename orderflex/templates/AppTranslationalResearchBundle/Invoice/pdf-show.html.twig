@@ -39,7 +39,8 @@
         </div>
         <div class="col-xs-4" align="left">
             <p><h2><b>Invoice</b></h2></p>
-            <br><br>
+            {#<br>#}
+            {#<br>#}
             <p>
                 Date: {{ "now"|date("m/d/Y") }}
             </p>
@@ -121,7 +122,8 @@
     </div>
     </p>
 
-    <br><br>
+    {#<br>#}
+    {#<br>#}
 
     {#TODO: show additionalUnitPrice if exists on a new row#}
     {% if showAdditionalUnitPrice is not defined %}
@@ -134,10 +136,11 @@
     {% endif %}
 
     <p>
+    {#{{ transres_request_util.getSubsidyInfo(invoice)|raw }}#}
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <tr>
-                <th>Description {{ transres_request_util.getSubsidyInfo(invoice)|raw }}</th>
+                <th>Description</th>
                 <th>Quantity</th>
                 <th>Item Code</th>
                 <th>Unit Price ($)</th>
@@ -174,14 +177,14 @@
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Subtotal ($)</td>
-                <td>{{ invoice.subTotal }}</td>
+                <td class='text-right'>{{ invoice.subTotal }}</td>
             </tr>
 
             {% if invoice.discountNumeric %}
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Discount ($)</td>
-                <td>{{ invoice.discountNumeric }}</td>
+                <td class='text-right'>{{ invoice.discountNumeric }}</td>
             </tr>
             {% endif %}
 
@@ -189,14 +192,14 @@
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Discount (%)</td>
-                <td>{{ invoice.discountPercent|number_format(0,'','') }}</td>
+                <td class='text-right'>{{ invoice.discountPercent|number_format(0,'','') }}</td>
             </tr>
             {% endif %}
 
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td><b>Total ($)</b></td>
-                <td>{{ invoice.total }}</td>
+                <td class='text-right'>{{ invoice.total }}</td>
             </tr>
 
             {% if invoice.paid %}
@@ -204,23 +207,30 @@
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 {#<td><b>{{ invoice.status }}</b></td>#}
                 <td><b>Paid ($)</b></td>
-                <td>{{ invoice.paid }}</td>
+                <td class='text-right'>{{ invoice.paid }}</td>
             </tr>
             {% endif %}
 
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Balance Due ($)</td>
-                <td>{{ invoice.due }}</td>
+                <td class='text-right'>{{ invoice.due }}</td>
             </tr>
+
+            <tr>
+                <td COLSPAN={{ colspan+2 }} ALIGN=CENTER><b>{{ transres_request_util.getSubsidyInfo(invoice)|raw }}</b></td>
+            </tr>
+
         </table>
     </div>
     </p>
 
-    <br><br>
+    {#<br>#}
+    {#<br>#}
 
     <div class="col-xs-12 text-center">
-        <P>
+        {#<P>#}
+        <P style="font-size:12px">
             {{ invoice.footer }}
         </P>
 
@@ -234,72 +244,57 @@
     </div>
 
     <br><br>
-    <br><br>
+    {#<br><br>#}
 
     {#<p>Detach and return with payment</p>#}
-    <div class="row">
-        <div class="col-xs-4">
-            <hr style="height:1px;border:none;color:#333;background-color:#333;">
+    {% if showRemittance is not defined %}
+        {% set showRemittance = 1 %}
+    {% endif %}
+    {% if showRemittance %}
+        <div class="row">
+            <div class="col-xs-4">
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+            </div>
+            <div class="col-xs-4 text-center">
+                <p>Detach and return with payment</p>
+            </div>
+            <div class="col-xs-4">
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+            </div>
         </div>
-        <div class="col-xs-4 text-center">
-            <p>Detach and return with payment</p>
+
+        <div class="col-xs-12 text-center">
+            <p><b>REMITTANCE</b></p>
         </div>
-        <div class="col-xs-4">
-            <hr style="height:1px;border:none;color:#333;background-color:#333;">
-        </div>
-    </div>
 
-    <div class="col-xs-12 text-center">
-        <p><b>REMITTANCE</b></p>
-    </div>
+        <br><br>
 
-    {#<P>#}
-        {#Invoice No.: {{ invoice.oid }}#}
-    {#</P>#}
+        <table class="transres-noborder">
+            <tr>
+                <td>Invoice No.:</td>
+                <td>{{ invoice.oid }}</td>
+            </tr>
+            <tr>
+                <td>Customer Name:</td>
+                <td>
+                    {#{% for pi in invoice.principalInvestigators %}#}
+                        {#{{ pi.getUsernameOptimal() }}<br>#}
+                    {#{% endfor %}#}
+                    {{ invoice.principalInvestigator.getUsernameOptimal() }}
+                </td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Amount Enclosed:</td>
+                <td></td>
+            </tr>
+        </table>
 
-    {#<P>#}
-        {#Customer Name:#}
-        {#{% for pi in invoice.principalInvestigators %}#}
-            {#{{ pi.getUsernameOptimal() }}<br>#}
-        {#{% endfor %}#}
-    {#</P>#}
-
-    {#<P>#}
-        {#Date:#}
-    {#</P>#}
-
-    {#<P>#}
-        {#Amount Enclosed:#}
-    {#</P>#}
-
-    <br><br>
-
-    <table class="transres-noborder">
-        <tr>
-            <td>Invoice No.:</td>
-            <td>{{ invoice.oid }}</td>
-        </tr>
-        <tr>
-            <td>Customer Name:</td>
-            <td>
-                {#{% for pi in invoice.principalInvestigators %}#}
-                    {#{{ pi.getUsernameOptimal() }}<br>#}
-                {#{% endfor %}#}
-                {{ invoice.principalInvestigator.getUsernameOptimal() }}
-            </td>
-        </tr>
-        <tr>
-            <td>Date:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Amount Enclosed:</td>
-            <td></td>
-        </tr>
-    </table>
-
-    <hr style="height:1px;border:none;color:#333;background-color:#333;">
-
+        <hr style="height:1px;border:none;color:#333;background-color:#333;">
+    {% endif %}
 
 {% endblock %}
 

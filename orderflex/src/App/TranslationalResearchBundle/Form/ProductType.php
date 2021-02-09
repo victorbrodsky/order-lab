@@ -161,11 +161,13 @@ class ProductType extends AbstractType
         //exit('111');
 
         //do not show if fee is zero using $this->priceList
-        $feeRestriction = "(list.fee IS NOT NULL AND list.fee <> '0')";
+        //$feeRestriction = "(list.fee IS NOT NULL AND list.fee <> '0')";
+        $feeRestriction = "(list.fee IS NOT NULL)";
         if( $this->priceList ) {
             $priceListId = $this->priceList->getId();
             if( $priceListId ) {
-                $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
+                //$specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
+                $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
                 $feeRestriction = $feeRestriction . " OR ";
                 $feeRestriction = $feeRestriction . $specificFeeRestriction;
                 //echo $this->priceList.": feeRestriction = $feeRestriction<br>";

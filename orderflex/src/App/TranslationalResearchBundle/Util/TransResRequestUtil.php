@@ -4679,23 +4679,27 @@ class TransResRequestUtil
         if( $secondRaw ) {
             $quantityFirst = 1;
             $quantityAdditional = $quantity - 1;
-            $totalFeeFirst = $unitPrice*$quantityFirst;
+            $totalFeeFirst = $this->toDecimal($unitPrice*$quantityFirst);
             $row1 =
-                  "<td>" . $descriptionStr . "</td>"
-                . "<td>" . $quantityFirst . "</td>"
-                . "<td>" . $itemCode . "f" . "</td>"
-                . "<td>" . $unitPrice . "</td>"
-                . "<td>" . $totalFeeFirst . "</td>"
+                  "<td rowspan='2'>" . $descriptionStr . "</td>"
+//                  "<td>" . $descriptionStr . "</td>"
+                . "<td class='text-center'>" . $quantityFirst . "</td>"
+                . "<td class='text-center'>" . $itemCode . "f" . "</td>"
+                . "<td class='text-right'>" . $unitPrice . "</td>"
+                . "<td class='text-right'>" . $totalFeeFirst . "</td>"
             ;
 
-            $totalFeeAdditional = $additionalUnitPrice*$quantityAdditional;
+            //<img src="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">
+//            $imageL = "orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png";
+            $totalFeeAdditional = $this->toDecimal($additionalUnitPrice*$quantityAdditional);
             $row2 =
-                  //"<td>" . $descriptionStr . "</td>"
-                  "<td>" . "⎣" . "</td>"
-                . "<td>" . $quantityAdditional . "</td>"
-                . "<td>" . $itemCode . "a" . "</td>"
-                . "<td>" . $additionalUnitPrice . "</td>"
-                . "<td>" . $totalFeeAdditional . "</td>"
+                  //"<td>" . $descriptionStr . "</td>" .
+                  //"<td>" . "L" . "</td>" .
+//                  "<td>" . '<img src="{{ asset('.$imageL.')}}>' . "</td>" .
+                  "<td class='text-center'>" . $quantityAdditional . "</td>"
+                . "<td class='text-center'>" . $itemCode . "a" . "</td>"
+                . "<td class='text-right'>" . $additionalUnitPrice . "</td>"
+                . "<td class='text-right'>" . $totalFeeAdditional . "</td>"
             ;
 
             $row = "<tr>" . $row1 . "</tr>" . "<tr>" . $row2 . "</tr>";
@@ -4703,10 +4707,10 @@ class TransResRequestUtil
             $totalFee = $unitPrice*$quantity;
             $row1 =
                   "<td>" . $descriptionStr . "</td>"
-                . "<td>" . $quantity . "</td>"
-                . "<td>" . $itemCode . "</td>"
-                . "<td>" . $unitPrice . "</td>"
-                . "<td>" . $totalFee . "</td>"
+                . "<td class='text-center'>" . $quantity . "</td>"
+                . "<td class='text-center'>" . $itemCode . "</td>"
+                . "<td class='text-right'>" . $unitPrice . "</td>"
+                . "<td class='text-right'>" . $totalFee . "</td>"
             ;
             $row = "<tr>" . $row1 . "</tr>";
         }
@@ -4758,7 +4762,9 @@ class TransResRequestUtil
         $priceList = $request->getPriceList($request);
         $subsidy = $this->getSubsidy($invoice);
         if( $subsidy > 0 ) {
-            $res = "(".$priceList->getName()." has been used to generate this invoice. Subsidy: $$subsidy".")";
+            //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
+            $res = $priceList->getName()." applied to this invoice. Total subsidy: $".$subsidy;
+            //$res = "<b>".$res."</b>";
         }
         
         return $res;
