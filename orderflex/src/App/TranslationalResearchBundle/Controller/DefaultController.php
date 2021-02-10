@@ -813,7 +813,7 @@ class DefaultController extends OrderAbstractController
                 if( !$priceList || $priceList->getName() != $priceListName ) {
                     $count++;
                     $project->setPriceList($internalPriceList);
-                    //$em->flush();
+                    $em->flush();
                 } else {
                     echo "Price list already exists = $priceList <br>";
                 }
