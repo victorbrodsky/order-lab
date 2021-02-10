@@ -225,6 +225,7 @@
                 <th title="Total Amount of the most recent issued invoices">Total</th>
                 <th title="Paid Amount of the most recent issued invoices">Paid</th>
                 <th title="Due Amount of the most recent issued invoices">Due</th>
+                <th title="Subsidy of the most recent issued invoices">Subsidy</th>
 
                 <th>Actions</th>
             </tr>
@@ -278,7 +279,8 @@
 
             <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
                 <td>
-                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.oid }}</a>
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
+                       target="_blank">{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
                 </td>
 
                 <td>
@@ -393,6 +395,11 @@
                 <td>
                     {% if invoicesInfos.due is not null %}
                         ${{ invoicesInfos.due }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.subsidy is not null %}
+                        ${{ invoicesInfos.subsidy }}
                     {% endif %}
                 </td>
 

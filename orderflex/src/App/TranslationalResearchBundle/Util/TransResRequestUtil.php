@@ -3017,6 +3017,7 @@ class TransResRequestUtil
         $total = 0.00;
         $paid = 0.00;
         $due = 0.00;
+        $subsidy = 0.00;
 
         foreach( $transresRequest->getInvoices() as $invoice ) {
             if( $invoice->getLatestVersion() ) {
@@ -3029,6 +3030,7 @@ class TransResRequestUtil
                     $total = $total + $invoice->getTotal();
                     $paid = $paid + $invoice->getPaid();
                     $due = $due + $invoice->getDue();
+                    $subsidy = $subsidy + $invoice->getSubsidy();
 //                }
             }
         }
@@ -3046,10 +3048,14 @@ class TransResRequestUtil
             if ($due > 0) {
                 $due = $this->toDecimal($due);
             }
+            if ($subsidy > 0) {
+                $subsidy = $this->toDecimal($subsidy);
+            }
         } else {
             $total = null;
             $paid = null;
             $due = null;
+            $subsidy = null;
         }
 
         //echo "paid=$paid<br>";
@@ -3058,6 +3064,7 @@ class TransResRequestUtil
         $invoicesInfos['total'] = $total;
         $invoicesInfos['paid'] = $paid;
         $invoicesInfos['due'] = $due;
+        $invoicesInfos['subsidy'] = $subsidy;
 
         return $invoicesInfos;
     }

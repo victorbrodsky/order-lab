@@ -750,4 +750,72 @@ class DefaultController extends OrderAbstractController
             'form' => $form->createView()
         );
     }
+
+    /**
+     * http://127.0.0.1/order/translational-research/update-project-price-list
+     *
+     * @Route("/update-project-price-list", name="translationalresearch_update_project_list")
+     */
+    public function updateProjectPriceListAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateProjectPriceListAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $projectIds = array(
+            "APCP2182",
+            "APCP2230",
+            "APCP2268",
+            "APCP3335",
+            "APCP3409",
+            "APCP3421",
+            "APCP3421",
+            "APCP3457",
+            "APCP3500",
+            "APCP3500",
+            "APCP3501",
+            "APCP3501",
+            "APCP3503",
+            "APCP3504",
+            "APCP3505",
+            "APCP3506",
+            "APCP3512",
+            "APCP676",
+            "APCP756",
+            "APCP847",
+            "APCP870",
+            "APCP951",
+            "COVID3384",
+            "HP1061",
+            "HP2213",
+            "HP3429",
+            "HP464",
+            "HP584",
+            "HP99"
+        );
+
+        $priceListName = "Internal Pricing";
+        $internalPriceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+        if( !$internalPriceList ) {
+            exit("$priceListName list does not exist");
+        }
+
+        $count = 0;
+        foreach($projectIds as $projectOid) {
+            $project = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+            echo "project=".$project."<br>";
+            if( $project ) {
+                $count++;
+                //$project->setPriceList($internalPriceList);
+                //$em->flush();
+            } else {
+                echo "!!! project not found by id=".$projectOid."<br>";
+            }
+        }
+
+        exit("updated $count projects");
+    }
 }

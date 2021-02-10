@@ -91,6 +91,7 @@
                 <th title="Total amount of the most recent issued invoices">Invoice Total</th>
                 <th title="Paid amount of the most recent issued invoices">Invoice Paid</th>
                 <th title="Due amount of the most recent issued invoices">Invoice Due</th>
+                <th title="Subsidy of the most recent issued invoices">Invoice Subsidy</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -231,6 +232,11 @@
                 <td>
                     {% if invoicesInfos.due is not null %}
                         ${{ invoicesInfos.due }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.subsidy is not null %}
+                        ${{ invoicesInfos.subsidy }}
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}

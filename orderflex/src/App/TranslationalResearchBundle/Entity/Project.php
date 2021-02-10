@@ -1837,6 +1837,14 @@ class Project {
     {
         $this->priceList = $priceList;
     }
+
+    public function getPriceListAbbreviationPostfix() {
+        $priceList = $this->getPriceList();
+        if( $priceList ) {
+            return "-".$priceList->getAbbreviation();
+        }
+        return NULL;
+    }
     
 
 

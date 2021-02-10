@@ -349,19 +349,24 @@ class RequestCategoryTypeList extends ListAbstract
 
             $res = "$".$fee;
 
-            if( $feeAdditionalItem ) {
+            if( $feeAdditionalItem && $fee != $feeAdditionalItem ) {
                 $res = $res . " ($" .  $feeAdditionalItem . " per additional item)";
             }
 
-            if( $priceList ) {
-                $res = $res . "[" . $priceList . "]";
-            }
+//            if( $priceList ) {
+//                $res = $res . "[" . $priceList . "]";
+//            }
         }
 
         if( !$res ) {
             $fee = $this->getFee();
             $feeAdditionalItem = $this->getFeeAdditionalItem();
-            $res = "$".$fee . " ($" .  $feeAdditionalItem . " per additional item)";
+            //$res = "$".$fee . " ($" .  $feeAdditionalItem . " per additional item)";
+            $res = "$".$fee;
+
+            if( $feeAdditionalItem && $fee != $feeAdditionalItem ) {
+                $res = $res . " ($" .  $feeAdditionalItem . " per additional item)";
+            }
         }
         //echo $priceList.": res=$res <br>";
 

@@ -60,6 +60,7 @@
                 <th>{{ knp_pagination_sortable(invoices, 'Total', 'invoice.total') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Paid', 'invoice.paid') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Due', 'invoice.due') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Subsidy', 'invoice.subsidy') }}</th>
                 <th>PDFs</th>
                 <th>Actions</th>
             </tr>
@@ -112,6 +113,11 @@
                 <td>
                     {% if invoice.due %}
                         ${{ invoice.due }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoice.subsidy %}
+                        ${{ invoice.subsidy }}
                     {% endif %}
                 </td>
                 <td class="rowlink-skip">
