@@ -2326,7 +2326,7 @@ class TransResRequestUtil
         $invoice->setDue($total);
 
         //calculate subsidy
-        //$subsidy = $this->getSubsidy($invoice);
+        //$subsidy = $this->calculateSubsidy($invoice);
         //$invoice->setSubsidy($subsidy);
 
         return $invoice;
@@ -4684,12 +4684,12 @@ class TransResRequestUtil
             $totalFeeFirst = $this->toDecimal($unitPrice*$quantityFirst);
             $totalFeeAdditional = $this->toDecimal($additionalUnitPrice*$quantityAdditional);
 
-            //$useMergeCell = true;
-            $useMergeCell = false;
+            $useMergeCell = true;
+            //$useMergeCell = false;
 
             if( $useMergeCell ) {
                 $row1 =
-                      "<td rowspan='2'>" . $descriptionStr . "</td>"
+                      "<td rowspan='2' style='vertical-align: middle;'>" . $descriptionStr . "</td>"
                     . "<td class='text-center'>" . $quantityFirst . "</td>"
                     . "<td class='text-center'>" . $itemCode . "f" . "</td>"
                     . "<td class='text-right'>" . $unitPrice . "</td>"
@@ -4741,7 +4741,7 @@ class TransResRequestUtil
         return $row;
     }
 
-    public function getSubsidy($invoice) {
+    public function calculateSubsidy($invoice) {
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
         $subsidy = 0;
@@ -4785,7 +4785,12 @@ class TransResRequestUtil
         $res = "";
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
-        $subsidy = $this->getSubsidy($invoice);
+
+        $subsidy = $invoice->getSubsidy();
+        if( !$subsidy ) {
+            $subsidy = $this->calculateSubsidy($invoice);
+        }
+
         if( $subsidy > 0 ) {
             //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
             $res = $priceList->getName()." applied to this invoice. Total subsidy: $".$subsidy;
