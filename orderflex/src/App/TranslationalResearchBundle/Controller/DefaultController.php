@@ -761,7 +761,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateProjectPriceListAction: Not allowed");
+        exit("updateProjectPriceListAction: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
 
