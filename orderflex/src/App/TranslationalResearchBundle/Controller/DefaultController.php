@@ -802,15 +802,19 @@ class DefaultController extends OrderAbstractController
         if( !$internalPriceList ) {
             exit("$priceListName list does not exist");
         }
+        echo "internalPriceList=".$internalPriceList."<br>";
 
         $count = 0;
         foreach($projectIds as $projectOid) {
             $project = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
             echo "project=".$project."<br>";
             if( $project ) {
-                $count++;
-                //$project->setPriceList($internalPriceList);
-                //$em->flush();
+                $priceList = $project->getPriceList();
+                if( !$priceList ) {
+                    $count++;
+                    $project->setPriceList($internalPriceList);
+                    $em->flush();
+                }
             } else {
                 echo "!!! project not found by id=".$projectOid."<br>";
             }
