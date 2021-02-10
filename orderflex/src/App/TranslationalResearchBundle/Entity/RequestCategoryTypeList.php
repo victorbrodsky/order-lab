@@ -235,7 +235,7 @@ class RequestCategoryTypeList extends ListAbstract
     {
         if( $priceList ) {
             $priceListAbbreviation = $priceList->getAbbreviation();
-            return $this->productId.$priceListAbbreviation;
+            return $this->productId.'-'.$priceListAbbreviation;
         }
 
         return $this->productId;

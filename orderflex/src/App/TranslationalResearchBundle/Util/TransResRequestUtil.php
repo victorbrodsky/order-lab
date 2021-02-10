@@ -143,6 +143,7 @@ class TransResRequestUtil
         return $subTotal;
     }
 
+    //Used to generate spreadsheet
     public function getTransResRequestProductInfoArr( $request ) {
         $subTotal = 0;
         $totalProducts = 0;
@@ -1565,7 +1566,8 @@ class TransResRequestUtil
 
             if( $category ) {
                 //ItemCode
-                $itemCode = $category->getProductId($priceList);
+                $itemCode = $category->getProductId($priceList); //original productId can be obtained by $invoiceItem->getProduct()->getCategory()->getProductId()
+                //$itemCode = $category->getProductId();
                 $invoiceItem->setItemCode($itemCode);
 
                 //Description
@@ -2325,9 +2327,9 @@ class TransResRequestUtil
         $invoice->setTotal($total);
         $invoice->setDue($total);
 
-        //calculate subsidy
-        //$subsidy = $this->calculateSubsidy($invoice);
-        //$invoice->setSubsidy($subsidy);
+        //calculate subsidy based on the work request's products
+        $subsidy = $this->calculateSubsidy($invoice);
+        $invoice->setSubsidy($subsidy);
 
         return $invoice;
     }
@@ -4741,6 +4743,8 @@ class TransResRequestUtil
         return $row;
     }
 
+    //Calculate subsidy based only on the work request's products.
+    //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
     public function calculateSubsidy($invoice) {
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
