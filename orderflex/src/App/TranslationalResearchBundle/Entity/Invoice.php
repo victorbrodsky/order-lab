@@ -218,6 +218,11 @@ class Invoice {
     private $due;
 
     /**
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $subsidy;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice", cascade={"persist","remove"})
      */
     private $invoiceItems;
@@ -472,6 +477,22 @@ class Invoice {
         $dueDateStr = date('Y-m-d', strtotime("+30 days"));
         $dueDate = new \DateTime($dueDateStr);
         $this->setDueDate($dueDate);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubsidy()
+    {
+        return $this->subsidy;
+    }
+
+    /**
+     * @param mixed $subsidy
+     */
+    public function setSubsidy($subsidy)
+    {
+        $this->subsidy = $subsidy;
     }
 
     /**

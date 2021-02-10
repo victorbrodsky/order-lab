@@ -2324,6 +2324,9 @@ class TransResRequestUtil
         $invoice->setSubTotal($total);
         $invoice->setTotal($total);
         $invoice->setDue($total);
+        //TODO: calculate subsidy
+        $subsidy = $this->getSubsidy($invoice);
+        $invoice->setDue($subsidy);
 
         return $invoice;
     }
