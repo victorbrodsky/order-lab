@@ -4751,6 +4751,8 @@ class TransResRequestUtil
 
         }
 
+        $subsidy = $this->toDecimal($subsidy);
+
         return $subsidy;
     }
 
