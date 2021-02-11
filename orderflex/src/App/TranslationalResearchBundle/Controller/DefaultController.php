@@ -866,7 +866,7 @@ class DefaultController extends OrderAbstractController
             echo "project=".$project."<br>";
             if( $project ) {
                 $priceList = $project->getPriceList();
-                if( $priceList && $priceList->getName() != $priceListName ) {
+                if( $priceList && $priceList->getName() == $priceListName ) {
                     $count++;
                     $project->setPriceList(NULL);
                     //$em->flush();
