@@ -289,6 +289,13 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'form-control invoice-due', 'readonly'=>'readonly')
         ));
 
+//        $builder->add('subsidy', NumberType::class, array(
+//            'label' => "Subsidy ($):",
+//            'scale' => 2,
+//            'required' => false,
+//            'attr' => array('class' => 'form-control invoice-subsidy', 'readonly'=>'readonly')
+//        ));
+
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'PDF(s):',

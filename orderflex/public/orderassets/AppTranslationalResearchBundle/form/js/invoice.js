@@ -296,6 +296,18 @@ function transresUpdateTotal(thisEl) {
     holder.find(".invoice-total").val(total);
 
     transresUpdateDue(thisEl);
+
+    // //update subsidy
+    // var defaultTotal = $('#invoice-default-total').val();
+    // //TODO: get defaultTotal by ajax
+    // if( total && defaultTotal ) {
+    //     var subsidy = defaultTotal - total;
+    //     if( subsidy > 0 ) {
+    //         subsidy = transresRoundDecimal(subsidy);
+    //         holder.find(".invoice-subsidy").val(subsidy);
+    //     }
+    // }
+
 }
 
 function transresRoundDecimal(value) {

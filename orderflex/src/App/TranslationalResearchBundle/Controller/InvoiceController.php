@@ -735,6 +735,9 @@ class InvoiceController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
+//            //update subsidy for new invoice : done in createSubmitNewInvoice
+//            $transresRequestUtil->updateInvoiceSubsidy($invoice);
+
             if ($invoice->getStatus() == "Unpaid/Issued") {
                 $invoice->setIssuedDate(new \DateTime());
             }
@@ -760,12 +763,15 @@ class InvoiceController extends OrderAbstractController
             return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
         }
 
+        $invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotal($invoice);
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
             'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'invoiceDefaultTotal' => $invoiceDefaultTotal
         );
     }
 
@@ -913,6 +919,10 @@ class InvoiceController extends OrderAbstractController
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            //update subsidy for updated invoice
+            $subsidy = $transresRequestUtil->updateInvoiceSubsidy($invoice);
+            //exit("create new invoice: subsidy=$subsidy"); //testing
 
             //update user
             $invoice->setUpdateUser($user);
@@ -1687,6 +1697,9 @@ class InvoiceController extends OrderAbstractController
 //                $invoice->setDue(NULL);
 //            }
         }
+
+        //update subsidy for updated invoice by ajax
+        $transresRequestUtil->updateInvoiceSubsidy($invoice);
 
         $em->persist($invoice);
         $em->flush();
