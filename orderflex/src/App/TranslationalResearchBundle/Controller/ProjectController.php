@@ -281,6 +281,7 @@ class ProjectController extends OrderAbstractController
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
 
         $briefDescription = $filterform['briefDescription']->getData();
+        $priceLists = $filterform['priceList']->getData();
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
@@ -385,6 +386,17 @@ class ProjectController extends OrderAbstractController
         if( $briefDescription ) {
             $dql->andWhere("LOWER(project.description) LIKE LOWER(:description)");
             $dqlParameters["description"] = "%".$briefDescription."%";
+            $advancedFilter++;
+        }
+
+        if( $priceLists && count($priceLists) > 0 ) {
+            $dql->leftJoin('project.priceList','priceList');
+            $priceListIdsArr = array();
+            foreach($priceLists as $priceList) {
+                $priceListIdsArr[] = $priceList->getId();
+            }
+            $dql->andWhere("priceList.id IN (:priceListIdsArr)");
+            $dqlParameters["priceListIdsArr"] = $priceListIdsArr;
             $advancedFilter++;
         }
 

@@ -4644,6 +4644,9 @@ class TransResRequestUtil
     }
 
     public function getInvoiceItemInfoHtml( $invoiceItem ) {
+//        //test
+//        $testPrice = $this->toDecimal(NULL);
+//        echo "testPrice=$testPrice<br>"; //testPrice=0.00
 //        <tr>
 //                    {% set strlimit = 60 %}
 //                    {% set descriptionStr = invoiceItem.description %}
@@ -4679,8 +4682,8 @@ class TransResRequestUtil
         $secondRaw = false;
         $itemCode = $invoiceItem->getItemCode();
         $quantity = $invoiceItem->getQuantity();
-        $unitPrice = $invoiceItem->getUnitPrice();
-        $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+        $unitPrice = $this->toDecimal($invoiceItem->getUnitPrice());
+        $additionalUnitPrice = $this->toDecimal($invoiceItem->getAdditionalUnitPrice());
         if( $quantity > 1 ) {
             if( $unitPrice != $additionalUnitPrice ) {
                 $secondRaw = true;
@@ -4736,7 +4739,7 @@ class TransResRequestUtil
 
             $row = "<tr>" . $row1 . "</tr>" . "<tr>" . $row2 . "</tr>";
         } else {
-            $totalFee = $unitPrice*$quantity;
+            $totalFee = $this->toDecimal($unitPrice*$quantity);
             $row1 =
                   "<td>" . $descriptionStr . "</td>"
                 . "<td class='text-center'>" . $quantity . "</td>"
