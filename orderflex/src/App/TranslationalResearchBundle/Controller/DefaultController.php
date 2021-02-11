@@ -752,10 +752,10 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * http://127.0.0.1/order/translational-research/update-project-price-list
-     *
-     * @Route("/update-project-price-list", name="translationalresearch_update_project_list")
-     */
+ * http://127.0.0.1/order/translational-research/update-project-price-list
+ *
+ * @Route("/update-project-price-list", name="translationalresearch_update_project_list")
+ */
     public function updateProjectPriceListAction( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -819,6 +819,62 @@ class DefaultController extends OrderAbstractController
                 }
             } else {
                 echo "!!! project not found by id=".$projectOid."<br>";
+            }
+        }
+
+        exit("updated $count projects");
+    }
+
+    /**
+     * http://127.0.0.1/order/translational-research/update-remove-external-price-list
+     *
+     * @Route("/update-remove-external-price-list", name="translationalresearch_update_remove_external_price_list")
+     */
+    public function removeExternalPriceListAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("removeExternalPriceListAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+
+        $priceListName = "External Pricing";
+        $externalPriceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+        if( !$externalPriceList ) {
+            exit("$externalPriceList list does not exist");
+        }
+        echo "externalPriceList=".$externalPriceList."<br>";
+
+        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+        $dql->leftJoin('project.priceList','priceList');
+        $dql->where("priceList.id = :externalPriceList");
+        $params = array(
+            'externalPriceList' => $externalPriceList->getId(),
+        );
+        $query = $em->createQuery($dql);
+        $query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        $count = 0;
+        foreach($projects as $project) {
+            echo "project=".$project."<br>";
+            if( $project ) {
+                $priceList = $project->getPriceList();
+                if( $priceList && $priceList->getName() != $priceListName ) {
+                    $count++;
+                    $project->setPriceList(NULL);
+                    //$em->flush();
+                } else {
+                    echo "Price list does not exist = $priceList <br>";
+                }
+            } else {
+                echo "!!! project is null <br>";
             }
         }
 
