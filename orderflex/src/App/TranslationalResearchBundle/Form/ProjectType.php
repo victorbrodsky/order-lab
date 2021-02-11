@@ -135,7 +135,8 @@ class ProjectType extends AbstractType
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
                 $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
             ) {
-                if( $this->params['cycle'] == "new" ) {
+                //if( $this->params['cycle'] == "new" ) {
+                if( 1 ) {
                     $builder->add('priceList', EntityType::class, array(
                         'class' => 'AppTranslationalResearchBundle:PriceTypeList',
                         'choice_label' => 'name',

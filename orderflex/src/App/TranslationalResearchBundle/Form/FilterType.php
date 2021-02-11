@@ -279,12 +279,12 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width submit-on-enter-field', 'placeholder'=>'Price List'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ))
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ))
                     ;
             },
         ));
