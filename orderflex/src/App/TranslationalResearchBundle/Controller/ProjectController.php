@@ -285,7 +285,11 @@ class ProjectController extends OrderAbstractController
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
 
         $briefDescription = $filterform['briefDescription']->getData();
-        $priceList = $filterform['priceList']->getData();
+
+        $priceList = NULL;
+        if( isset($filterform['priceList']) ) {
+            $priceList = $filterform['priceList']->getData();
+        }
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();

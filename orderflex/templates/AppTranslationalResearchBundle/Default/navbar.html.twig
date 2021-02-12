@@ -150,6 +150,8 @@
                                 </li>
                                 {#EOF my projects#}
 
+                                {#add lists: “Projects utilizing external pricing” and “Projects utilizing internal pricing”#}
+
                                 {#all projects#}
                                 {#show it only to admin, primary reviewers and executives#}
                                 {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
