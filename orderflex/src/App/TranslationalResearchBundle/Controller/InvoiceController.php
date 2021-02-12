@@ -763,7 +763,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
         }
 
-        $invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotal($invoice);
+        //$invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotal($invoice);
 
         return array(
             'transresRequest' => $transresRequest,
@@ -771,7 +771,7 @@ class InvoiceController extends OrderAbstractController
             'form' => $form->createView(),
             'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
             'cycle' => $cycle,
-            'invoiceDefaultTotal' => $invoiceDefaultTotal
+            //'invoiceDefaultTotal' => $invoiceDefaultTotal
         );
     }
 
