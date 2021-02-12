@@ -193,7 +193,10 @@ class ProjectController extends OrderAbstractController
         //$stateChoiceArr["Closed"] = "Closed";
         //$stateChoiceArr["Canceled"] = "Canceled";
         //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
+        $transresPricesList = $transresUtil->getPricesList();
+
         $params = array(
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresUsers' => $transresUsers,
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
@@ -204,7 +207,8 @@ class ProjectController extends OrderAbstractController
             'fromImplicitExpDate' => null,
             'humanName' => $transresUtil->getHumanName(),
             'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
-            'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash")
+            'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash"),
+            'transresPricesList' => $transresPricesList
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -281,7 +285,7 @@ class ProjectController extends OrderAbstractController
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
 
         $briefDescription = $filterform['briefDescription']->getData();
-        $priceLists = $filterform['priceList']->getData();
+        $priceList = $filterform['priceList']->getData();
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
@@ -389,15 +393,26 @@ class ProjectController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( $priceLists && count($priceLists) > 0 ) {
-            $dql->leftJoin('project.priceList','priceList');
-            $priceListIdsArr = array();
-            foreach($priceLists as $priceList) {
-                $priceListIdsArr[] = $priceList->getId();
+        if( $priceList ) {
+            if( $priceList != 'all' ) {
+                $dql->leftJoin('project.priceList','priceList');
+                if( $priceList == 'default' ) {
+                    $dql->andWhere("priceList.id IS NULL");
+                } else {
+                    $dql->andWhere("priceList.id = :priceListId");
+                    $dqlParameters["priceListId"] = $priceList;
+                }
             }
-            $dql->andWhere("priceList.id IN (:priceListIdsArr)");
-            $dqlParameters["priceListIdsArr"] = $priceListIdsArr;
+
             $advancedFilter++;
+
+//            $priceListIdsArr = array();
+//            foreach($priceLists as $priceList) {
+//                $priceListIdsArr[] = $priceList->getId();
+//            }
+//            $dql->andWhere("priceList.id IN (:priceListIdsArr)");
+//            $dqlParameters["priceListIdsArr"] = $priceListIdsArr;
+//            $advancedFilter++;
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////

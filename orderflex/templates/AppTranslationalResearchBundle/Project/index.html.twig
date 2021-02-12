@@ -189,7 +189,9 @@
                     <br>
                     <div class="row">
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.priceList) }}
+                            {% if filterform.priceList is defined %}
+                                {{ form_widget(filterform.priceList) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                         </div>

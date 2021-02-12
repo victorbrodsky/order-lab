@@ -271,23 +271,37 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Brief Description'),
         ));
 
-        $builder->add('priceList', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:PriceTypeList',
-            'label'=> false,
-            'required'=> false,
-            'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width submit-on-enter-field', 'placeholder'=>'Price List'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ))
-                    ;
-            },
-        ));
+        if (
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            if(0) {
+                $builder->add('priceList', EntityType::class, array(
+                    'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+                    'label' => false,
+                    'required' => false,
+                    'multiple' => true,
+                    'attr' => array('class' => 'combobox combobox-width submit-on-enter-field', 'placeholder' => 'Price List'),
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->where("list.type = :typedef OR list.type = :typeadd")
+                            ->orderBy("list.orderinlist", "ASC")
+                            ->setParameters(array(
+                                'typedef' => 'default',
+                                'typeadd' => 'user-added',
+                            ));
+                    },
+                ));
+            } else {
+                $builder->add('priceList',ChoiceType::class, array(
+                    'label' => false,
+                    'required' => true,
+                    'multiple' => false,
+                    'choices' => $this->params['transresPricesList'],
+                    'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Price List'),
+                ));
+            }
+        }
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
