@@ -225,8 +225,8 @@ class TrpTest extends WebTestBase
 
         //Test Show
         $crawler = $this->client->request('GET', '/translational-research/invoice/show/'.$invoiceId);
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
