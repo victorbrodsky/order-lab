@@ -406,17 +406,8 @@ class ProjectController extends OrderAbstractController
                     $dql->andWhere("priceList.id = :priceListId");
                     $dqlParameters["priceListId"] = $priceList;
                 }
+                $advancedFilter++;
             }
-
-            $advancedFilter++;
-
-//            $priceListIdsArr = array();
-//            foreach($priceLists as $priceList) {
-//                $priceListIdsArr[] = $priceList->getId();
-//            }
-//            $dql->andWhere("priceList.id IN (:priceListIdsArr)");
-//            $dqlParameters["priceListIdsArr"] = $priceListIdsArr;
-//            $advancedFilter++;
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
