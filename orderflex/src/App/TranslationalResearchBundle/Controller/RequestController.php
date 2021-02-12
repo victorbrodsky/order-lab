@@ -1123,6 +1123,7 @@ class RequestController extends OrderAbstractController
         $project = null;
         $ids = array();
         $showOnlyMyProjects = false;
+        $priceList = null;
 
 
 
@@ -1151,36 +1152,29 @@ class RequestController extends OrderAbstractController
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
         $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
 
-//        if ($timer) {
-//            $stopwatch->start('FilterRequestType');
-//        }
-
         //shown list only to users with Site Administrator, Technologist, Platform Administrator, and Deputy Platform Administrator" roles
         $showCompletedByUser = false;
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
             $showCompletedByUser = true;
         }
 
+        $transresPricesList = $transresUtil->getPricesList();
+
         $params = array(
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresUsers' => $transresUsers,
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
             'routeName' => $routeName,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'availableProjects' => $availableProjects,
-            'showCompletedByUser' => $showCompletedByUser
+            'showCompletedByUser' => $showCompletedByUser,
+            'transresPricesList' => $transresPricesList
         );
         $filterform = $this->createForm(FilterRequestType::class, null, array(
             'method' => 'GET',
             'form_custom_value' => $params
         ));
-
-//        if ($timer) {
-//            $event = $stopwatch->stop('FilterRequestType');
-//            echo "FilterRequestType duration: " . ($event->getDuration() / 1000) . " sec<br>";
-//
-//            $stopwatch->start('handleRequest');
-//        }
 
         $filterform->handleRequest($request);
 
@@ -1255,6 +1249,9 @@ class RequestController extends OrderAbstractController
             }
             if(isset($filterform['projectSearch']) ) {
                 $projectSearch = $filterform['projectSearch']->getData();
+            }
+            if(isset($filterform['priceList']) ) {
+                $priceList = $filterform['priceList']->getData();
             }
         }
 
@@ -1843,6 +1840,19 @@ class RequestController extends OrderAbstractController
                 //echo "projectId=[".$projectId."] <br>";
                 $dql->andWhere("project.id = :projectId");
                 $dqlParameters["projectId"] = $projectId;
+            }
+        }
+
+        if( $priceList ) {
+            if( $priceList != 'all' ) {
+                $dql->leftJoin('project.priceList','priceList');
+                if( $priceList == 'default' ) {
+                    $dql->andWhere("priceList.id IS NULL");
+                } else {
+                    $dql->andWhere("priceList.id = :priceListId");
+                    $dqlParameters["priceListId"] = $priceList;
+                }
+                $advancedFilter++;
             }
         }
 

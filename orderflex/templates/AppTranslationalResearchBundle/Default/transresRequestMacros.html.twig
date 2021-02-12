@@ -835,6 +835,9 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-4">
+                            {% if filterform.priceList is defined %}
+                                {{ form_widget(filterform.priceList) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                         </div>
