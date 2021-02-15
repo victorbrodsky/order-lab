@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>\Oleg\UserdirectoryBundle\Entity\User</OriginalElement>
+  <nodes>
+    <node x="-520.4032921810699" y="-304.7530864197531">\Oleg\UserdirectoryBundle\Entity\MedicalTitle</node>
+    <node x="-129.98353909465004" y="70.20576131687244">\Oleg\UserdirectoryBundle\Entity\Lecture</node>
+    <node x="-1799.40329218107" y="-619.7530864197531">\Oleg\UserdirectoryBundle\Entity\Credentials</node>
+    <node x="-1375.148148148148" y="60.84362139917698">\Oleg\UserdirectoryBundle\Entity\EmploymentStatus</node>
+    <node x="-258.4032921810699" y="-319.7530864197531">\Oleg\UserdirectoryBundle\Entity\AppointmentTitle</node>
+    <node x="-1800.358024691358" y="55.884773662551424">\Oleg\UserdirectoryBundle\Entity\UserInfo</node>
+    <node x="-921.8683127572017" y="61.7901234567903">\Oleg\UserdirectoryBundle\Entity\Location</node>
+    <node x="-129.98353909465072" y="407.2427983539094">\Oleg\UserdirectoryBundle\Entity\Grant</node>
+    <node x="-1796.4444444444443" y="461.5432098765432">\Oleg\UserdirectoryBundle\Entity\Document</node>
+    <node x="459.8312757201643" y="442.8189300411524">\Oleg\UserdirectoryBundle\Entity\ResearchLab</node>
+    <node x="560.9423868312756" y="75.82304526748987">\Oleg\UserdirectoryBundle\Entity\Book</node>
+    <node x="-465.4403292181073" y="-1553.1893004115227">\Oleg\UserdirectoryBundle\Entity\AccessRequest</node>
+    <node x="-296.9032921810699" y="-619.7530864197531">\Oleg\UserdirectoryBundle\Entity\BaseTitle</node>
+    <node x="-1102.40329218107" y="-619.7530864197531">\Oleg\UserdirectoryBundle\Entity\Training</node>
+    <node x="231.39506172839538" y="79.56790123456813">\Oleg\UserdirectoryBundle\Entity\Publication</node>
+    <node x="-1257.1851851851852" y="465.2880658436213">\Oleg\UserdirectoryBundle\Entity\Permission</node>
+    <node x="-20.4032921810699" y="-319.7530864197531">\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle</node>
+    <node x="332.50617283950623" y="-308.0246913580247">\Oleg\UserdirectoryBundle\Entity\BaseComment</node>
+    <node x="-963.5061728395063" y="-944.650205761317">\Oleg\UserdirectoryBundle\Entity\PerSiteSettings</node>
+    <node x="-966.172839506173" y="-1372.7777777777778">\Oleg\UserdirectoryBundle\Entity\UserPreferences</node>
+    <node x="-1799.40329218107" y="-1544.7530864197531">\Oleg\UserdirectoryBundle\Entity\User</node>
+    <node x="-970.2962962962962" y="-1543.1687242798355">\Oleg\UserdirectoryBundle\Entity\UsernameType</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\AdministrativeTitle" target="\Oleg\UserdirectoryBundle\Entity\BaseTitle">
+      <point x="0.0" y="-95.0" />
+      <point x="107.0967078189301" y="-344.7530864197531" />
+      <point x="-51.06995884773664" y="-344.7530864197531" />
+      <point x="98.33333333333326" y="125.0" />
+    </edge>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\AppointmentTitle" target="\Oleg\UserdirectoryBundle\Entity\BaseTitle">
+      <point x="0.0" y="-95.0" />
+      <point x="0.0" y="125.0" />
+    </edge>
+    <edge source="\Oleg\UserdirectoryBundle\Entity\MedicalTitle" target="\Oleg\UserdirectoryBundle\Entity\BaseTitle">
+      <point x="0.0" y="-80.0" />
+      <point x="-399.4032921810699" y="-344.7530864197531" />
+      <point x="-247.73662551440316" y="-344.7530864197531" />
+      <point x="-98.33333333333326" y="125.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5340659340659341" x="306.29218106995904" y="-195.0" />
+  <SelectedNodes>
+    <node>\Oleg\UserdirectoryBundle\Entity\BaseComment</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
