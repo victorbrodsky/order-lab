@@ -2602,6 +2602,90 @@ class RequestController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/request/update-project-pricelist/", name="translationalresearch_update_project_pricelist", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function updateProjectPriceListAction( Request $request ) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = trim( $request->get('projectId') );
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $res = "NotOK";
+
+        if( $project ) {
+            $pricelistid = trim($request->get('pricelistid'));
+            //echo "pricelistid=".$pricelistid."<br>";
+
+            if( !$pricelistid ) {
+                $pricelistid = NULL;
+            }
+
+            $originalPriceListId = NULL; //"None";
+            $originalPriceList = $project->getPriceList();
+            if( $originalPriceList ) {
+                $originalPriceListId = $originalPriceList->getId();
+            }
+
+            //if( $pricelistid ) {
+                if( $originalPriceListId != $pricelistid ) {
+
+                    $priceList = NULL;
+                    if ($pricelistid) {
+                        $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+                    }
+
+                    //if( $priceList ) {
+                    if( $originalPriceListId != $pricelistid ) {
+                        $project->setPriceList($priceList);
+                        $em->flush();
+                    }
+
+                        if( !$priceList ) {
+                            $priceList = "Default";
+                        }
+
+                        if( !$originalPriceList ) {
+                            $originalPriceList = "Default";
+                        }
+
+                        //add eventlog changed Admin Review
+                        if( $originalPriceList != $priceList ) {
+                            $eventType = "Project Updated";
+                            $res = "Project ID " . $project->getOid() . " has been updated: " .
+                                " Price list changed from " .
+                                $originalPriceList . " to " . $priceList;
+                            $transresUtil->setEventLog($project,$eventType,$res);
+                        }
+                    //}
+                } else {
+                    if( !$originalPriceList ) {
+                        $originalPriceList = "Default";
+                    }
+                    $res = $originalPriceList. " price list for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
+
+                }
+            //}
+        }
+
+        $response = new Response($res);
+        return $response;
+    }
 
     /**
      * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list", methods={"GET"})
@@ -2625,6 +2709,7 @@ class RequestController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        $dql->leftJoin("list.prices", "prices");
 
         $dqlParameters = array();
 

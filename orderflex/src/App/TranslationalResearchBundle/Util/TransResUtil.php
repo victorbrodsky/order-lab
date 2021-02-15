@@ -5663,6 +5663,40 @@ class TransResUtil
     }
 
     public function getPricesList() {
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//
+//        $dql->where("list.type = :typedef OR list.type = :typeadd");
+//        $dql->orderBy("list.orderinlist","ASC");
+//
+//        $dqlParameters = array();
+//
+//        $dqlParameters["typedef"] = 'default';
+//        $dqlParameters["typeadd"] = 'user-added';
+//
+//        $query = $dql->getQuery();
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $prices = $query->getResult();
+        
+        $prices = $this->getDbPriceLists();
+
+        $transresPricesList = array();
+        $transresPricesList['All'] = 'all';
+        $transresPricesList['Default'] = 'default';
+
+        foreach($prices as $price) {
+            $transresPricesList[$price->getName()] = $price->getId();
+        }
+
+        return $transresPricesList;
+    }
+
+    public function getDbPriceLists() {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -5681,17 +5715,9 @@ class TransResUtil
             $query->setParameters($dqlParameters);
         }
 
-        $prices = $query->getResult();
+        $priceLists = $query->getResult();
 
-        $transresPricesList = array();
-        $transresPricesList['All'] = 'all';
-        $transresPricesList['Default'] = 'default';
-
-        foreach($prices as $price) {
-            $transresPricesList[$price->getName()] = $price->getId();
-        }
-
-        return $transresPricesList;
+        return $priceLists;
     }
 
     //show current review's reccomendations for committee review status for primary reviewer

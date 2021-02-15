@@ -4844,20 +4844,30 @@ class TransResRequestUtil
             $subsidy = $this->calculateSubsidy($invoice);
         }
 
-        if( $subsidy > 0 ) {
-            //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
-            $res = $priceList->getName()." applied to this invoice. Total subsidy: $".$subsidy;
+        if( $priceList ) {
             //This invoice utilizes internal pricing
             $priceListName = $priceList->getName();
-            if( $priceListName ) {
-                if( $cycle == 'new' || $cycle == 'edit' ) {
-                    $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy before changing: $" . $subsidy;
-                } else {
-                    $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy: $" . $subsidy;
-                }
-                $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy: $" . $subsidy;
-                //$res = "<b>".$res."</b>";
-            }
+            $res = "This invoice utilizes " . strtolower($priceListName).".";
+        }
+
+        if( $subsidy > 0 ) {
+            //If the price difference is equal to zero or below, DO NOT show the “Subsidy: $[XX.XX]” portion
+            //This invoice utilizes internal pricing. Total subsidy: $[XX.XX]
+            //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
+            $res = $res . " Total subsidy: $" . $subsidy;
+
+//            $res = $priceList->getName()." applied to this invoice. Total subsidy: $".$subsidy;
+//            //This invoice utilizes internal pricing
+//            $priceListName = $priceList->getName();
+//            if( $priceListName ) {
+//                if( $cycle == 'new' || $cycle == 'edit' ) {
+//                    $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy before changing: $" . $subsidy;
+//                } else {
+//                    $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy: $" . $subsidy;
+//                }
+//                $res = "This invoice utilizes " . strtolower($priceListName) . ". Total subsidy: $" . $subsidy;
+//                //$res = "<b>".$res."</b>";
+//            }
         }
         
         return $res;

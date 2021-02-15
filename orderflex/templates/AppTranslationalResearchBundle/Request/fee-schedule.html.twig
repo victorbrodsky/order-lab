@@ -49,10 +49,11 @@
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
 
                 {% if showSpecificFee %}
-                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                    {% set showSpecificFee = 1 %}
-                    <th>Specific Fees</th>
-                {% endif %}
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                        {% set showSpecificFee = 1 %}
+                            {#<th>Specific Fees</th>#}
+                            <th>{{ knp_pagination_sortable(fees, 'Specific Fees', 'prices.fee') }}</th>
+                    {% endif %}
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
@@ -99,11 +100,11 @@
                 </td>
 
                 {% if showSpecificFee %}
-                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                    <td>
-                        {{ fee.getSpecificPricesInfo()|raw }}
-                    </td>
-                {% endif %}
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                        <td>
+                            {{ fee.getSpecificPricesInfo()|raw }}
+                        </td>
+                    {% endif %}
                 {% endif %}
 
                 <td>

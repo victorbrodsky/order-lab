@@ -904,6 +904,20 @@
                 {{ transres.fieldDateLabel(irbExpDateStr,"Provided "~transres_util.getHumanName()~" Expiration Date (enter a new date to update it):",1) }}
             {% endif %}
 
+            {#Add field "Utilize the following price list:" (priceList) in the Admin Review page#}
+            {% if project.state == "admin_review" %}
+                {#"IRB with PI FirstName LastName expires on MM/DD/YYYY."#}
+                {{ project.getIrbInfo(transres_util.getHumanName())|raw }}
+
+                {% set priceList = project.getPriceList() %}
+                {% if priceList %}
+                    {% set priceListStr = priceList.getName() %}
+                {% else %}
+                    {% set priceListStr = null %}
+                {% endif %}
+                {{ transres.fieldPriceList(priceListStr,"Utilize the following price list:",1) }}
+            {% endif %}
+
             {#show current review's reccomendations for committee review status for primary reviewer#}
             {{ transres_util.showProjectReviewInfo(project)|raw }}
 
@@ -1460,7 +1474,48 @@
     </p>
 {% endmacro %}
 
+{% macro fieldPriceList( value, label, updateButton ) %}
+    <p>
+    <div class="row">
+        <div class="col-xs-3" align="right">
+        </div>
+        <div class="col-xs-3" align="right">
+            <strong>{{ label|raw }}</strong>
+        </div>
+        <div class="col-xs-3" align="left">
+            {#<div class="input-group input-group-reg date allow-future-date">#}
+                {#<input id="transres_irbExpirationDate"#}
+                       {#class="datepicker form-control submit-on-enter-field"#}
+                       {#placeholder="{{ transres_util.getHumanName() }} Expiration Date" type="text"#}
+                       {#value="{{ value }}"#}
+                {#>#}
+                {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
+            {#</div>#}
+            {% set priceLists = transres_util.getDbPriceLists() %}
+            <select
+                    id="transres_project_pricelist"
+                    name="priceList[]"
+                    class="combobox combobox-width" tabindex="-1"
+                    title="Utilize the following price list:"
+            >
+                <option value=""></option>
+                {% for priceList in priceLists %}
+                    <option value="{{ priceList.getId() }}">{{ priceList.getName() }}</option>
+                {% endfor %}
 
+                {#<option value=""></option>#}
+                {#<option value="2">Internal Pricing</option>#}
+                {#<option value="3">Low Manhattan Hospital</option>#}
+            </select>
+        </div>
+        <div class="col-xs-3" align="left">
+            {% if updateButton is defined and updateButton %}
+                <div class="btn btn-primary btn-sm transres-update-project-pricelist">Update Price List</div>
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
 
 {% macro siteSettings(form, cycle, sitename, specialty) %}
 

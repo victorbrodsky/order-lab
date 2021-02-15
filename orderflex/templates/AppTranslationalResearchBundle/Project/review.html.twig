@@ -168,6 +168,10 @@
             transresUpdateIrbExpDate();
         });
 
+        $('.transres-update-project-pricelist').click(function(event) {
+            transresUpdateProjectPriceList();
+        });
+
         //addCommentButtonClickListener();
 
     });
@@ -229,6 +233,49 @@
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
+
+        return false;
+    }
+
+    function transresUpdateProjectPriceList() {
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var priceListData = $('#transres_project_pricelist').select2('data');
+        var priceListId = null;
+        if( priceListData ) {
+            priceListId = priceListData.id;
+        }
+
+        //if( priceListId ) {
+            var projectId = $("#projectid").val();
+
+            var url = Routing.generate('translationalresearch_update_project_pricelist');
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "POST",
+                data: {projectId: projectId, pricelistid: priceListId },
+                //dataType: 'json',
+                //async: asyncflag
+                async: false
+            }).success(function(response) {
+                console.log(response);
+                if( response != "NotOK" ) {
+                    $(".transres-alert").find(".alert").html(response);
+                    $(".transres-alert").show();
+                    //$(".transres-project-priceList").val(irbExpDate);
+                    $(".transres-project-priceList").select2('val', priceListId);
+                }
+            }).done(function() {
+                //lbtn.stop();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+
+        //}
 
         return false;
     }

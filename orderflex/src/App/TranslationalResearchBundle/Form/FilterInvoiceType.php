@@ -215,6 +215,19 @@ class FilterInvoiceType extends AbstractType
 //            'attr' => array('class' => 'form-control', 'placeholder' => "Optional Complex Filter")
 //        ));
 
+        if (
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            $builder->add('priceList',ChoiceType::class, array(
+                'label' => false,
+                'required' => true,
+                'multiple' => false,
+                'choices' => $this->params['transresPricesList'],
+                'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Price List'),
+            ));
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

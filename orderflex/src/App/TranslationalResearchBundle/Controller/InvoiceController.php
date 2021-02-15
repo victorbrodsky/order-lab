@@ -67,6 +67,7 @@ class InvoiceController extends OrderAbstractController
         $status = NULL;
         $startDate = NULL;
         $endDate = NULL;
+        $priceList = NULL;
 
         $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
@@ -96,13 +97,16 @@ class InvoiceController extends OrderAbstractController
 
         //////// create filter //////////
         $versions = $transresRequestUtil->getInvoiceComplexVersions(100);
+        $transresPricesList = $transresUtil->getPricesList();
 
         $params = array(
             'routeName'=>$routeName,
             'transresRequest'=>$transresRequest,
             'versions'=>$versions,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
-            'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets")
+            'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets"),
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'transresPricesList' => $transresPricesList
         );
         $filterform = $this->createForm(FilterInvoiceType::class, null,array(
             'method' => 'GET',
@@ -428,6 +432,10 @@ class InvoiceController extends OrderAbstractController
             $endCreateDate = $filterform['endCreateDate']->getData();
             //echo "totalMin=".$totalMin."<br>";
             //$advancedWell = $filterform['well']->getData();
+
+            if( isset($filterform['priceList']) ) {
+                $priceList = $filterform['priceList']->getData();
+            }
         }
         ////// EOF create filter //////////
 
@@ -614,6 +622,20 @@ class InvoiceController extends OrderAbstractController
             $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
             $dqlParameters["irbNumber"] = "%".$irbNumber."%";
             $advancedFilter++;
+        }
+
+        if( $priceList ) {
+            if( $priceList != 'all' ) {
+                $dql->leftJoin('transresRequest.project','project');
+                $dql->leftJoin('project.priceList','priceList');
+                if( $priceList == 'default' ) {
+                    $dql->andWhere("priceList.id IS NULL");
+                } else {
+                    $dql->andWhere("priceList.id = :priceListId");
+                    $dqlParameters["priceListId"] = $priceList;
+                }
+                $advancedFilter++;
+            }
         }
 
         $limit = 30;
