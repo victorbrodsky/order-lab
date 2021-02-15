@@ -232,12 +232,39 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
         if( comboboxEl.hasClass('combobox-compositetree-postfix-level') ) {
             //console.log('rowElHtml='+rowElHtml);
             var level = treeArr[0].level;
-            var readonlyExclusionAfterLevel = comboboxEl.data("label-postfix-level");
-            //console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
-            if( parseInt(level) >= parseInt(readonlyExclusionAfterLevel) ) {
-                var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
-                label = label + "" + postfixValueLevel;
+            var readonlyExclusionAfterLevel = comboboxEl.data("label-postfix-level"); //'3' or '3,4'
+            console.log("readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel);
+            var readonlyExclusionAfterLevelArr = [];
+            if( readonlyExclusionAfterLevel.indexOf(',') !== -1 ) {
+                readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
+            } else {
+                readonlyExclusionAfterLevelArr.push(readonlyExclusionAfterLevel);
             }
+            //var readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
+            console.log("readonlyExclusionAfterLevelArr:");
+            console.log(readonlyExclusionAfterLevelArr);
+            for( var index = 0; index < readonlyExclusionAfterLevelArr.length; ++index ) {
+                readonlyExclusionAfterLevel = readonlyExclusionAfterLevelArr[index];
+                console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
+                if( parseInt(level) == parseInt(readonlyExclusionAfterLevel) ) {
+                    var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
+                    label = label + "" + postfixValueLevel;
+                }
+            }
+            // readonlyExclusionAfterLevelArr.forEach(
+            //     function(readonlyExclusionAfterLevel) {
+            //         console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
+            //         if( parseInt(level) == parseInt(readonlyExclusionAfterLevel) ) {
+            //             var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
+            //             label = label + "" + postfixValueLevel;
+            //         }
+            //     }
+            // );
+            // //console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
+            // if( parseInt(level) >= parseInt(readonlyExclusionAfterLevel) ) {
+            //     var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
+            //     label = label + "" + postfixValueLevel;
+            // }
         }
 
         var comboboxHtml = rowElHtml;

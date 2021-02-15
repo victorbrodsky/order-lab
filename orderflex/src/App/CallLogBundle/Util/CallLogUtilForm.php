@@ -410,7 +410,7 @@ class CallLogUtilForm
 
         //Message Status
         $messageStatus = $message->getMessageStatus()->getName();
-        $html .= $this->getTrField("Message Status ", $messageStatus);
+        //$html .= $this->getTrField("Message Status ", $messageStatus);
 
         //Signed
         $messageSigneeInfo = $message->getSigneeInfo();
