@@ -2642,45 +2642,44 @@ class RequestController extends OrderAbstractController
                 $originalPriceListId = $originalPriceList->getId();
             }
 
-            //if( $pricelistid ) {
+            if( $originalPriceListId != $pricelistid ) {
+
+                $priceList = NULL;
+                if ($pricelistid) {
+                    $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+                }
+
+                //if( $priceList ) {
                 if( $originalPriceListId != $pricelistid ) {
+                    $project->setPriceList($priceList);
+                    $em->flush();
+                }
 
-                    $priceList = NULL;
-                    if ($pricelistid) {
-                        $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+                    if( !$priceList ) {
+                        $priceList = "Default";
                     }
 
-                    //if( $priceList ) {
-                    if( $originalPriceListId != $pricelistid ) {
-                        $project->setPriceList($priceList);
-                        $em->flush();
-                    }
-
-                        if( !$priceList ) {
-                            $priceList = "Default";
-                        }
-
-                        if( !$originalPriceList ) {
-                            $originalPriceList = "Default";
-                        }
-
-                        //add eventlog changed Admin Review
-                        if( $originalPriceList != $priceList ) {
-                            $eventType = "Project Updated";
-                            $res = "Project ID " . $project->getOid() . " has been updated: " .
-                                " Price list changed from " .
-                                $originalPriceList . " to " . $priceList;
-                            $transresUtil->setEventLog($project,$eventType,$res);
-                        }
-                    //}
-                } else {
                     if( !$originalPriceList ) {
                         $originalPriceList = "Default";
                     }
-                    $res = $originalPriceList. " price list for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
 
+                    //add eventlog changed Admin Review
+                    if( $originalPriceList != $priceList ) {
+                        $eventType = "Project Updated";
+                        $res = "Project ID " . $project->getOid() . " has been updated: " .
+                            " Price list changed from " .
+                            $originalPriceList . " to " . $priceList;
+                        $transresUtil->setEventLog($project,$eventType,$res);
+                    }
+            } else {
+                if( !$originalPriceList ) {
+                    $originalPriceList = "Default";
                 }
-            //}
+                $res = $originalPriceList. " price list for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
+
+            }
+        } else {
+            $res = "Logical error: project not found by ID $projectId";
         }
 
         $response = new Response($res);
