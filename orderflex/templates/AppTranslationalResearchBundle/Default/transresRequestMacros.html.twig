@@ -991,7 +991,9 @@
                             {{ form_widget(filterform.fundingType) }}
                         </div>
                         <div class="col-xs-3">
-                            {{ form_widget(filterform.priceList) }}
+                            {% if filterform.priceList is defined %}
+                                {{ form_widget(filterform.priceList) }}
+                            {% endif %}
                         </div>
                     </div>
 

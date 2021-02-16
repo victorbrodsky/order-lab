@@ -237,8 +237,10 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
             var readonlyExclusionAfterLevelArr = [];
             if( readonlyExclusionAfterLevel.indexOf(',') !== -1 ) {
                 readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
+                console.log("readonlyExclusionAfterLevel has comma");
             } else {
                 readonlyExclusionAfterLevelArr.push(readonlyExclusionAfterLevel);
+                console.log("readonlyExclusionAfterLevel is single value");
             }
             //var readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
             console.log("readonlyExclusionAfterLevelArr:");
