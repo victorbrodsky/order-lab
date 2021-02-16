@@ -546,6 +546,10 @@ class CallLogUtilForm
 
     public function getCalllogAuthorRolesHtml( $message, $sitename ) {
 
+        if( false == $this->container->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN") ) {
+            return NULL;
+        }
+
         $router = $this->container->get('router');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecurityUtil = $this->container->get('user_security_utility');
@@ -557,9 +561,9 @@ class CallLogUtilForm
         if( $firstEditorInfo ) {
             if( count($firstEditorInfo->getModifierRoles()) > 0 ) {
                 $editorRoles = $userSecurityUtil->getRolesByRoleNames($firstEditorInfo->getModifierRoles());
-                $html .= $this->getTrField("Submitter role(s) at submission time ", $editorRoles);
+                $html .= $this->getTrField("Submitter role(s) at submission time: ", $editorRoles);
             } else {
-                $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
+                $html .= $this->getTrField("Submitter role(s) at submission time: ", "No Roles");
             }
 
 //            //Put a grey collapsed-by-default accordion around the “Entry” rows
@@ -588,9 +592,9 @@ class CallLogUtilForm
             }
             if (count($messageSigneeInfo->getModifierRoles()) > 0) {
                 $signeeRoles = $userSecurityUtil->getRolesByRoleNames($messageSigneeInfo->getModifierRoles());
-                $html .= $this->getTrField("Signee role(s) at signature time ", $signeeRoles);
+                $html .= $this->getTrField("Signee role(s) at signature time: ", $signeeRoles);
             } else {
-                $html .= $this->getTrField("Signee role(s) at signature time ", "No roles");
+                $html .= $this->getTrField("Signee role(s) at signature time: ", "No roles");
             }
         }
 
