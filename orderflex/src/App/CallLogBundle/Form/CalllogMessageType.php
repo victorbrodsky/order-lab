@@ -310,8 +310,8 @@ class CalllogMessageType extends AbstractType
                     'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
                     'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
                     //'data-label-postfix-level' => '3', //'3,4', //'3', //postfix after level "Message Group". Can be comma separated, for example 3,4=>level 3 and 4 will have postfix '*'
-                    //'data-label-postfix-level' => '3', //use only 3 level (service). Level start at index 0 (zero).
-                    'data-label-postfix-level' => '3,4', //use 3 and 4 levels (service and issue). Level start at index 0 (zero);
+                    //'data-label-postfix-level' => '3', //require only 3 level (service). Level start at index 0 (zero).
+                    'data-label-postfix-level' => '3,4', //require 3 and 4 levels (service and issue). Level start at index 0 (zero);
                 ),
                 'classtype' => 'messageCategory'
             ));

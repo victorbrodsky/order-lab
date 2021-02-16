@@ -1992,33 +1992,57 @@ function crnSubmitForm(btn,messageStatus) {
 
         if( firstMessageCategory.hasClass('combobox-compositetree-postfix-level') ) {
 
+            //1) Check if number of levels are equal or greater than
             var postfixMinLevel = firstMessageCategory.data("label-postfix-level");
-            postfixMinLevel = parseInt(postfixMinLevel);
-            postfixMinLevel = postfixMinLevel + 1;
-            //console.log("postfixMinLevel=" + postfixMinLevel);
-            //var treeNodes = $('.composite-tree-holder').find('.treenode');
+            //if '3,4' => get bigger number and use it as postfixMinLevel
 
-            var messageCategoriesLength = messageCategories.length;
-            //console.log("messageCategoriesLength=" + messageCategoriesLength);
+            var postfixMinLevelArr = [];
 
-            //console.log(parseInt(messageCategoriesLength) + " < " + parseInt(postfixMinLevel));
-            if( parseInt(messageCategoriesLength) < parseInt(postfixMinLevel) ) {
-                messageCategoryError = "Please select the appropriate service and issue to save your entry.";// + " [Service is not selected]";
+            if (postfixMinLevel.indexOf(',') !== -1) {
+                //console.log("postfixMinLevel has comma");
+                postfixMinLevelArr = postfixMinLevel.split(",");
+                postfixMinLevel = Math.max.apply(Math, postfixMinLevelArr);
             } else {
-                //console.log(messageCategories.last().find('.ajax-combobox-messageCategory'));
-                var messageCategoryData = messageCategories.last().find('.ajax-combobox-messageCategory').select2('data'); //'data'
-                if( messageCategoryData ) {
-                    //console.log("messageCategory text=" + messageCategoryData.text);
-                    if( !messageCategoryData.text ) {
-                        messageCategoryError = "Please select the appropriate issue to save your entry.";// + " [Issue is not selected]";
-                        //console.log("messageCategoryData.text=" + messageCategoryData.text);
-                    }
-                } else {
-                    //console.log("messageCategoryData is null");
-                    messageCategoryError = "Please select the appropriate issue to save your entry.";
-                }
+                //console.log("postfixMinLevel is single value");
+                postfixMinLevel = postfixMinLevel;
             }
 
+            postfixMinLevel = parseInt(postfixMinLevel);
+            postfixMinLevel = postfixMinLevel + 1;
+            var messageCategoriesLength = messageCategories.length;
+            //console.log("postfixMinLevel=" + postfixMinLevel+", messageCategoriesLength="+messageCategoriesLength);
+            if( parseInt(messageCategoriesLength) < parseInt(postfixMinLevel) ) {
+                messageCategoryError = "Please select the appropriate service and issue to save your entry. Please wait or reload the page if they are not visible under 'Message Group'";
+            }
+
+            //2) check if required message category with '*' not empty
+            //This based on the present of '*' in span in the message category label
+            messageCategories.each( function() {
+                //printF($(this),"messageCategory: ");
+                var messageCategoryData = $(this).find('.ajax-combobox-messageCategory').select2('data'); //'data'
+                if( messageCategoryData && messageCategoryData.text ) {
+                    //OK
+                    //console.log("messageCategoryData text="+messageCategoryData.text);
+                } else {
+                    //check if messageCategory has span *
+                    var spanRequired = $(this).find("span:contains('*')");
+                    //console.log("spanRequired="+spanRequired+":");
+                    //console.log(spanRequired);
+                    if( spanRequired.length > 0 ) {
+                        var labelText = $(this).find("label").text();
+                        //console.log("labelText="+labelText);
+                        //labelText = replaceAll(labelText, '<span style="color:red">*</span>', '');
+                        //labelText = labelText.replace('<span style="color:red">*</span>','');
+                        labelText = labelText.substr(0, labelText.indexOf('*'));
+                        //console.log("labelText clean="+labelText);
+                        //messageCategoryError = "Please select the required message category to save your entry. labelText="+labelText;
+                        messageCategoryError = "Please select the appropriate "+labelText+" to save your entry.";
+                    }
+                }
+
+            });
+
+            //messageCategoryError = "Testing: " + messageCategoryError;
             if( messageCategoryError ) {
                 $('#crn-msg-danger-box').html(messageCategoryError);
                 $('#crn-msg-danger-box').show();
@@ -2026,6 +2050,44 @@ function crnSubmitForm(btn,messageStatus) {
                 return false;
             }
         }
+
+        //Original method with fixed required fields
+        // if( firstMessageCategory.hasClass('combobox-compositetree-postfix-level') ) {
+        //
+        //     var postfixMinLevel = firstMessageCategory.data("label-postfix-level");
+        //     postfixMinLevel = parseInt(postfixMinLevel);
+        //     postfixMinLevel = postfixMinLevel + 1;
+        //     //console.log("postfixMinLevel=" + postfixMinLevel);
+        //     //var treeNodes = $('.composite-tree-holder').find('.treenode');
+        //
+        //     var messageCategoriesLength = messageCategories.length;
+        //     //console.log("messageCategoriesLength=" + messageCategoriesLength);
+        //
+        //     //console.log(parseInt(messageCategoriesLength) + " < " + parseInt(postfixMinLevel));
+        //     if( parseInt(messageCategoriesLength) < parseInt(postfixMinLevel) ) {
+        //         messageCategoryError = "Please select the appropriate service and issue to save your entry.";// + " [Service is not selected]";
+        //     } else {
+        //         //console.log(messageCategories.last().find('.ajax-combobox-messageCategory'));
+        //         var messageCategoryData = messageCategories.last().find('.ajax-combobox-messageCategory').select2('data'); //'data'
+        //         if( messageCategoryData ) {
+        //             //console.log("messageCategory text=" + messageCategoryData.text);
+        //             if( !messageCategoryData.text ) {
+        //                 messageCategoryError = "Please select the appropriate issue to save your entry.";// + " [Issue is not selected]";
+        //                 //console.log("messageCategoryData.text=" + messageCategoryData.text);
+        //             }
+        //         } else {
+        //             //console.log("messageCategoryData is null");
+        //             messageCategoryError = "Please select the appropriate issue to save your entry.";
+        //         }
+        //     }
+        //
+        //     if( messageCategoryError ) {
+        //         $('#crn-msg-danger-box').html(messageCategoryError);
+        //         $('#crn-msg-danger-box').show();
+        //         crnStopBtn(lbtn);
+        //         return false;
+        //     }
+        // }
     }
     //console.log("exit");
     //crnStopBtn(lbtn);

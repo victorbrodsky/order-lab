@@ -309,7 +309,8 @@ class CrnMessageType extends AbstractType
                     //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
                     'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
                     'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
-                    'data-label-postfix-level' => '3', //postfix after level "Message Group"
+                    //'data-label-postfix-level' => '3', //require level 3. postfix after level "Message Group". //postfix after level "Message Group". Can be comma separated, for example 3,4=>level 3 and 4 will have postfix '*'
+                    'data-label-postfix-level' => '3,4', //require 3 and 4 levels (service and issue). Level start at index 0 (zero);
                 ),
                 'classtype' => 'messageCategory'
             ));

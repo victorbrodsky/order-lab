@@ -87,7 +87,9 @@ class CallLogUtilForm
     {
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $html = $this->getTrSection("Encounter Info");
+        $panelName = "Encounter Info";
+        //$html = $this->getTrSection("Encounter Info");
+        $html = "";
 
         $html .= $this->getTrField("Encounter Number",$encounter->obtainEncounterNumber());
 
@@ -229,21 +231,35 @@ class CallLogUtilForm
 //            '</p><br>';
 //        return $html;
 
-        return $this->getTable($html);
+        $html = $this->getTable($html);
+
+        //Put a grey collapsed-by-default accordion around the “Entry” rows
+        $panelId = 'calllog-encounter-info-panel';
+        $html = $this->wrapInPanel($html,$panelName,$panelId);
+
+        return $html;
     }
 
     public function getAccessionInfoHtml( $message, $status )
     {
         //$userServiceUtil = $this->container->get('user_service_utility');
-
+        $panelName = "Accession Info";
         $html = $this->getTrSection("Accession Info");
 
         $accessions = $message->getAccession();
 
         if( count($accessions) > 0 ) {
+            $html = "";
             $accession = $accessions[0];
             $html .= $this->getTrField("Accession Number",$accession->obtainFullObjectName());
-            return $this->getTable($html);
+            //return $this->getTable($html);
+            $html = $this->getTable($html);
+
+            //Put a grey collapsed-by-default accordion around the “Entry” rows
+            $panelId = 'calllog-accession-info-panel';
+            $html = $this->wrapInPanel($html,$panelName,$panelId);
+
+            return $html;
         }
 
         return NULL;
@@ -251,7 +267,10 @@ class CallLogUtilForm
 
     public function getEntryHtml( $message, $status ) {
 
-        $html = $this->getTrSection("Entry");
+        $panelName = "Entry Info";
+
+        //$html = $this->getTrSection($panelName);
+        $html = "";
 
         $messageCategory = $message->getMessageCategory();
         if( $messageCategory ) {
@@ -316,7 +335,47 @@ class CallLogUtilForm
 //            '</p><br>';
 //        return $html;
 
-        return $this->getTable($html);
+        //return $this->getTable($html);
+
+        $html = $this->getTable($html);
+
+        //append the value from “Message Type” =>
+        //if the Message Type is “Note => Encounter Note => Pathology Call Log Entry => Transfusion Medicine => Other”,
+        //show the accordion title as “Entry Info (Other: Transfusion Medicine)”
+        //message.messageCategory.getNodeNameWithParents
+        $callIssue = $message->getMessageCategory()->getNodeNameWithParents();
+        if( $callIssue ) {
+            $panelName = $panelName . " (" . $callIssue . ")";
+        }
+
+        //Put a grey collapsed-by-default accordion around the “Entry” rows
+        $panelId = 'calllog-entry-info-panel';
+        $html = $this->wrapInPanel($html,$panelName,$panelId);
+
+        return $html;
+    }
+
+    public function wrapInPanel( $html, $panelName, $panelId, $panelType='panel-default', $collapseIn='' ) {
+        //$panelType='panel-primary';
+        $panelHtml = '<div class="panel '.$panelType.'">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#'.$panelId.'">
+                        '.$panelName.'
+                    </a>
+                </h4>
+            </div>
+            <div id="'.$panelId.'" class="panel-collapse collapse '.$collapseIn.'">
+                <div class="panel-body">';
+
+        $panelHtml = $panelHtml . $html;
+
+        $panelHtml = $panelHtml .
+            '</div> <!-- panel-body -->
+          </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-primary -->';
+
+        return $panelHtml;
     }
 
     public function getEntryTagsHtml( $message, $status ) {
@@ -326,6 +385,8 @@ class CallLogUtilForm
             return null;
         }
 
+        $panelName = "Search aides and time tracking";
+
         $html = "";
 
         //$html = $this->getTrSection("Cache (shown only to Administrator)");
@@ -333,7 +394,7 @@ class CallLogUtilForm
         //$html .= $this->getTrField("Cached patient mrn content", $message->getPatientMrnCache());
         //$html .= $this->getTrField("Cached patient name content", $message->getPatientNameCache());
 
-        $html .= $this->getTrSection("Search aides and time tracking");
+        //$html .= $this->getTrSection("Search aides and time tracking");
 
         //Deprecated (entry tags attached to calllogEntryMessage)
         if(0) {
@@ -365,7 +426,13 @@ class CallLogUtilForm
 //            '</p><br>';
 //        return $html;
 
-        return $this->getTable($html);
+        $html = $this->getTable($html);
+
+        //Put a grey collapsed-by-default accordion around the “Entry” rows
+        $panelId = 'calllog-search-aides-time-tracking-panel';
+        $html = $this->wrapInPanel($html,$panelName,$panelId);
+
+        return $html;
     }
 
     public function getCalllogAuthorsHtml( $message, $sitename ) {
@@ -406,6 +473,11 @@ class CallLogUtilForm
             } else {
                 $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
             }
+
+//            //Put a grey collapsed-by-default accordion around the “Entry” rows
+//            $panelId = 'calllog-submitter-role';
+//            $panelName = "Submitter roles at submission time";
+//            $html = $this->wrapInPanel($html,$panelName,$panelId);
         }
 
         //Message Status

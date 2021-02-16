@@ -34,7 +34,7 @@
         {{ titleBody|raw }}
     </h4>
 
-    <br>
+    {#<br>#}
 
     {#"Patient was added to the "xxxxxxxx" list via this entry."#}
     {% if complexPatientStr %}
@@ -66,19 +66,21 @@
     <div id="{{ holderId }}" style="display: none;">
         <input type="hidden" id="calllog-patient-id-{{ holderId }}" value="{{ patientId }}" />
     </div>
+
+    <p>
     <button id="calllog-list-previous-entries-btn"
             class="btn btn-primary" type="button"
             onclick="calllogListPreviousEntriesForPatient('{{ holderId }}')">Entries for this patient (including one currently shown)</button>
     <div id="calllog-list-previous-entries"></div>
-    <br>
+    {#<br>#}
 
     {#List previous tasks#}
     <button id="calllog-list-previous-tasks-btn"
             class="btn btn-primary" type="button"
             onclick="calllogListPreviousTasksForPatient('{{ holderId }}','show')">Outstanding/Pending To Do tasks for this patient (including one currently shown)</button>
     <div id="calllog-list-previous-tasks"></div>
-    <br>
-
+    {#<br>#}
+    </p>
 
     {% set mainPanelClass = "panel-primary" %}
     {% set oldVersion = false %}
