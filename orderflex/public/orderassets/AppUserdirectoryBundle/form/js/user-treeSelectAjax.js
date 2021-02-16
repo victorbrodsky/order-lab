@@ -232,41 +232,35 @@ function createNewTreenodeCombobox( bundleName, entityName, treeHolder, combobox
         if( comboboxEl.hasClass('combobox-compositetree-postfix-level') ) {
             //console.log('rowElHtml='+rowElHtml);
             var level = treeArr[0].level;
+            var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
             var readonlyExclusionAfterLevel = comboboxEl.data("label-postfix-level"); //'3' or '3,4'
-            console.log("readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel);
-            var readonlyExclusionAfterLevelArr = [];
-            if( readonlyExclusionAfterLevel.indexOf(',') !== -1 ) {
-                readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
-                console.log("readonlyExclusionAfterLevel has comma");
-            } else {
-                readonlyExclusionAfterLevelArr.push(readonlyExclusionAfterLevel);
-                console.log("readonlyExclusionAfterLevel is single value");
-            }
-            //var readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
-            console.log("readonlyExclusionAfterLevelArr:");
-            console.log(readonlyExclusionAfterLevelArr);
-            for( var index = 0; index < readonlyExclusionAfterLevelArr.length; ++index ) {
-                readonlyExclusionAfterLevel = readonlyExclusionAfterLevelArr[index];
-                console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
-                if( parseInt(level) == parseInt(readonlyExclusionAfterLevel) ) {
-                    var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
-                    label = label + "" + postfixValueLevel;
+            //console.log("readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel);
+
+            if( postfixValueLevel && readonlyExclusionAfterLevel ) {
+
+                readonlyExclusionAfterLevel = readonlyExclusionAfterLevel.toString();
+                var readonlyExclusionAfterLevelArr = [];
+
+                if (readonlyExclusionAfterLevel.indexOf(',') !== -1) {
+                    //if( readonlyExclusionAfterLevel.includes(',') ) {
+                    //console.log("readonlyExclusionAfterLevel has comma");
+                    readonlyExclusionAfterLevelArr = readonlyExclusionAfterLevel.split(",");
+                } else {
+                    //console.log("readonlyExclusionAfterLevel is single value");
+                    readonlyExclusionAfterLevelArr.push(readonlyExclusionAfterLevel);
                 }
+
+                //console.log("readonlyExclusionAfterLevelArr:");
+                //console.log(readonlyExclusionAfterLevelArr);
+                for (var index = 0; index < readonlyExclusionAfterLevelArr.length; ++index) {
+                    readonlyExclusionAfterLevel = readonlyExclusionAfterLevelArr[index];
+                    //console.log(label + ': level=' + level + " ?= readonlyExclusionAfterLevel=" + readonlyExclusionAfterLevel);
+                    if (parseInt(level) == parseInt(readonlyExclusionAfterLevel)) {
+                        label = label + "" + postfixValueLevel;
+                    }
+                }
+                
             }
-            // readonlyExclusionAfterLevelArr.forEach(
-            //     function(readonlyExclusionAfterLevel) {
-            //         console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
-            //         if( parseInt(level) == parseInt(readonlyExclusionAfterLevel) ) {
-            //             var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
-            //             label = label + "" + postfixValueLevel;
-            //         }
-            //     }
-            // );
-            // //console.log( label+': level='+ level + " ?= readonlyExclusionAfterLevel="+readonlyExclusionAfterLevel );
-            // if( parseInt(level) >= parseInt(readonlyExclusionAfterLevel) ) {
-            //     var postfixValueLevel = comboboxEl.data("label-postfix-value-level");
-            //     label = label + "" + postfixValueLevel;
-            // }
         }
 
         var comboboxHtml = rowElHtml;
