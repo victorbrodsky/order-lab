@@ -360,12 +360,6 @@
 
             <div class="{{ callLogViewClass }}">
 
-            {{ calllog_util_form.getEncounterPatientInfoHtml(encounter,status)|raw }}
-
-            {{ calllog_util_form.getAccessionInfoHtml(message,status)|raw }}
-
-            {{ calllog_util_form.getEntryHtml(message,status)|raw }}
-
             {#enrty form body#}
             {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
 
@@ -377,9 +371,17 @@
                 {{ calllogmacros.calllogTaskList(message,cycle) }}
             {% endif %}
 
-            {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}
-
             {{ calllog_util_form.getCalllogAuthorsHtml(message,sitename)|raw }}
+
+            {{ calllog_util_form.getCalllogAuthorRolesHtml(message,sitename)|raw }}
+
+            {{ calllog_util_form.getEntryHtml(message,status)|raw }}
+
+            {{ calllog_util_form.getEncounterPatientInfoHtml(encounter,status)|raw }}
+
+            {{ calllog_util_form.getAccessionInfoHtml(message,status)|raw }}
+
+            {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}
 
             </div>
 

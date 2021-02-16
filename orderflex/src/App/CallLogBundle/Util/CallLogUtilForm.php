@@ -464,45 +464,42 @@ class CallLogUtilForm
         //Submitted on
         $html .= $this->getTrField("Submitted on ", $userServiceUtil->getOrderDateStr($message));
 
-        //Submitter role(s) at submission time
-        $firstEditorInfo = $message->getEditorInfos()->first();
-        if( $firstEditorInfo ) {
-            if( count($firstEditorInfo->getModifierRoles()) > 0 ) {
-                $editorRoles = $userSecurityUtil->getRolesByRoleNames($firstEditorInfo->getModifierRoles());
-                $html .= $this->getTrField("Submitter role(s) at submission time ", $editorRoles);
-            } else {
-                $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
+        if(0) {
+            //Submitter role(s) at submission time
+            $firstEditorInfo = $message->getEditorInfos()->first();
+            if ($firstEditorInfo) {
+                if (count($firstEditorInfo->getModifierRoles()) > 0) {
+                    $editorRoles = $userSecurityUtil->getRolesByRoleNames($firstEditorInfo->getModifierRoles());
+                    $html .= $this->getTrField("Submitter role(s) at submission time ", $editorRoles);
+                } else {
+                    $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
+                }
             }
 
-//            //Put a grey collapsed-by-default accordion around the “Entry” rows
-//            $panelId = 'calllog-submitter-role';
-//            $panelName = "Submitter roles at submission time";
-//            $html = $this->wrapInPanel($html,$panelName,$panelId);
-        }
+            //Message Status
+            $messageStatus = $message->getMessageStatus()->getName();
+            //$html .= $this->getTrField("Message Status ", $messageStatus);
 
-        //Message Status
-        $messageStatus = $message->getMessageStatus()->getName();
-        //$html .= $this->getTrField("Message Status ", $messageStatus);
-
-        //Signed
-        $messageSigneeInfo = $message->getSigneeInfo();
-        if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
-            if ($messageSigneeInfo->getModifiedBy()) {
-                $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-                $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
-                $html .= $this->getTrField("Signed by ", $hreflink);
-            }
-            if ($messageSigneeInfo->getModifiedOn() ) {
-                $messageModifyDate = $messageSigneeInfo->getModifiedOn();
-                $messageModifyDateTz = $userServiceUtil->convertFromUtcToUserTimezone($messageModifyDate,$user);
-                $signedDate = $messageModifyDateTz->format('m/d/Y') . " at " . $messageModifyDateTz->format('h:i a (T)');
-                $html .= $this->getTrField("Signed on ", $signedDate);
-            }
-            if (count($messageSigneeInfo->getModifierRoles()) > 0) {
-                $signeeRoles = $userSecurityUtil->getRolesByRoleNames($messageSigneeInfo->getModifierRoles());
-                $html .= $this->getTrField("Signee role(s) at signature time ", $signeeRoles);
-            } else {
-                $html .= $this->getTrField("Signee role(s) at signature time ", "No roles");
+            //Signed
+            $messageSigneeInfo = $message->getSigneeInfo();
+            if (strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo) {
+                if ($messageSigneeInfo->getModifiedBy()) {
+                    $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+                    $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
+                    $html .= $this->getTrField("Signed by ", $hreflink);
+                }
+                if ($messageSigneeInfo->getModifiedOn()) {
+                    $messageModifyDate = $messageSigneeInfo->getModifiedOn();
+                    $messageModifyDateTz = $userServiceUtil->convertFromUtcToUserTimezone($messageModifyDate, $user);
+                    $signedDate = $messageModifyDateTz->format('m/d/Y') . " at " . $messageModifyDateTz->format('h:i a (T)');
+                    $html .= $this->getTrField("Signed on ", $signedDate);
+                }
+                if (count($messageSigneeInfo->getModifierRoles()) > 0) {
+                    $signeeRoles = $userSecurityUtil->getRolesByRoleNames($messageSigneeInfo->getModifierRoles());
+                    $html .= $this->getTrField("Signee role(s) at signature time ", $signeeRoles);
+                } else {
+                    $html .= $this->getTrField("Signee role(s) at signature time ", "No roles");
+                }
             }
         }
 
@@ -545,6 +542,64 @@ class CallLogUtilForm
 //        return $html;
 
         return $this->getTable($html);
+    }
+
+    public function getCalllogAuthorRolesHtml( $message, $sitename ) {
+
+        $router = $this->container->get('router');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecurityUtil = $this->container->get('user_security_utility');
+
+        $html = "";
+
+        //Submitter role(s) at submission time
+        $firstEditorInfo = $message->getEditorInfos()->first();
+        if( $firstEditorInfo ) {
+            if( count($firstEditorInfo->getModifierRoles()) > 0 ) {
+                $editorRoles = $userSecurityUtil->getRolesByRoleNames($firstEditorInfo->getModifierRoles());
+                $html .= $this->getTrField("Submitter role(s) at submission time ", $editorRoles);
+            } else {
+                $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
+            }
+
+//            //Put a grey collapsed-by-default accordion around the “Entry” rows
+//            $panelId = 'calllog-submitter-role';
+//            $panelName = "Submitter roles at submission time";
+//            $html = $this->wrapInPanel($html,$panelName,$panelId);
+        }
+
+        //Message Status
+        $messageStatus = $message->getMessageStatus()->getName();
+        //$html .= $this->getTrField("Message Status ", $messageStatus);
+
+        //Signed
+        $messageSigneeInfo = $message->getSigneeInfo();
+        if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
+            if ($messageSigneeInfo->getModifiedBy()) {
+                $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+                $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
+                $html .= $this->getTrField("Signed by ", $hreflink);
+            }
+            if ($messageSigneeInfo->getModifiedOn() ) {
+                $messageModifyDate = $messageSigneeInfo->getModifiedOn();
+                $messageModifyDateTz = $userServiceUtil->convertFromUtcToUserTimezone($messageModifyDate,$user);
+                $signedDate = $messageModifyDateTz->format('m/d/Y') . " at " . $messageModifyDateTz->format('h:i a (T)');
+                $html .= $this->getTrField("Signed on ", $signedDate);
+            }
+            if (count($messageSigneeInfo->getModifierRoles()) > 0) {
+                $signeeRoles = $userSecurityUtil->getRolesByRoleNames($messageSigneeInfo->getModifierRoles());
+                $html .= $this->getTrField("Signee role(s) at signature time ", $signeeRoles);
+            } else {
+                $html .= $this->getTrField("Signee role(s) at signature time ", "No roles");
+            }
+        }
+
+        //Put a grey collapsed-by-default accordion around the “Entry” rows
+        $panelId = 'calllog-submitter-role';
+        $panelName = "Submitter roles at submission time";
+        $html = $this->wrapInPanel($html,$panelName,$panelId);
+
+        return $html;
     }
 
 }
