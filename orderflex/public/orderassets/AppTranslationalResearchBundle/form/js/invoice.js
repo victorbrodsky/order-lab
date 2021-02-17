@@ -174,33 +174,76 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 
 function transresInvoiceItemListeneres(){
     //quantity or unit price update => update total
-    $('.invoiceitem-quantity, .invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
-        //console.log("update row total");
-        var invoiceItemRow = $(this).closest('.user-collection-holder');
-        var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
-        var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
-        var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
-        //console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
-        var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
-        if( quantity && unitPrice ) {
-            //var total = parseFloat(quantity) * parseFloat(unitPrice);
-            var total = 0;
-            if( !additionalUnitPrice ) {
-                additionalUnitPrice = unitPrice;
-            }
-            if( parseInt(quantity) == 1 ) {
-                total = parseFloat(quantity) * parseFloat(unitPrice);
-            } else if( parseInt(quantity) > 1 ) {
-                total = 1 * parseFloat(unitPrice);
-                total = total + (parseInt(quantity)-1) * additionalUnitPrice;
+    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity, .invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
+
+        if(0) {
+            //console.log("update row total");
+            var invoiceItemRow = $(this).closest('.user-collection-holder');
+            var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+            var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+            var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
+            var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
+            //console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
+            var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
+            var totalEl1 = invoiceItemRow.find(".invoiceitem-total1");
+            var totalEl2 = invoiceItemRow.find(".invoiceitem-total2");
+
+            var total1 = 0;
+            var total2 = 0;
+
+            if (quantity && unitPrice) {
+                total1 = parseFloat(quantity) * parseFloat(unitPrice);
+                total1 = transresRoundDecimal(total1);
+                //console.log("row total1="+total1);
+                totalEl1.val(total1);
+            } else {
+                totalEl1.val(null);
             }
 
-            total = transresRoundDecimal(total);
-            //console.log("row total="+total);
-            invoiceItemTotalEl.val(total);
-        } else {
-            invoiceItemTotalEl.val(null);
+            if (additionalQuantity && additionalUnitPrice) {
+                total2 = parseFloat(additionalQuantity) * parseFloat(additionalUnitPrice);
+                total2 = transresRoundDecimal(total2);
+                //console.log("row total2="+total2);
+                totalEl2.val(total2);
+            } else {
+                totalEl2.val(null);
+            }
+
+            var total = total1 + total2;
+            if (total) {
+                total = transresRoundDecimal(total);
+                invoiceItemTotalEl.val(total);
+            } else {
+                invoiceItemTotalEl.val(null);
+            }
         }
+
+
+        if(0) {
+            if (quantity && unitPrice) {
+                //var total = parseFloat(quantity) * parseFloat(unitPrice);
+                var total = 0;
+                if (!additionalUnitPrice) {
+                    additionalUnitPrice = unitPrice;
+                }
+                if (parseInt(quantity) == 1) {
+                    total = parseFloat(quantity) * parseFloat(unitPrice);
+                } else if (parseInt(quantity) > 1) {
+                    total = 1 * parseFloat(unitPrice);
+                    total = total + (parseInt(quantity) - 1) * additionalUnitPrice;
+                }
+
+                total = transresRoundDecimal(total);
+                //console.log("row total="+total);
+                invoiceItemTotalEl.val(total);
+            } else {
+                invoiceItemTotalEl.val(null);
+            }
+        }
+
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        transresCalculateTotals(invoiceItemRow);
+
         //console.log("transres UpdateSubTotal: triggered by claculated row total");
         transresUpdateSubTotal(this);
     });
@@ -235,6 +278,49 @@ function transresInvoiceItemListeneres(){
     });
 }
 
+function transresCalculateTotals( invoiceItemRow ) {
+    //var invoiceItemRow = invoiceItemRowEl.closest('.user-collection-holder');
+    var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+    var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+    var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
+    var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
+    console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
+    console.log("row additionalQuantity="+additionalQuantity+"; additionalUnitPrice="+additionalUnitPrice);
+    var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
+    var totalEl1 = invoiceItemRow.find(".invoiceitem-total1");
+    var totalEl2 = invoiceItemRow.find(".invoiceitem-total2");
+
+    var total1 = 0;
+    var total2 = 0;
+
+    if( quantity && unitPrice ) {
+        total1 = parseFloat(quantity) * parseFloat(unitPrice);
+        total1 = transresRoundDecimal(total1);
+        console.log("row total1="+total1);
+        totalEl1.val(total1);
+    } else {
+        totalEl1.val(null);
+    }
+
+    if( additionalQuantity && additionalUnitPrice ) {
+        total2 = parseFloat(additionalQuantity) * parseFloat(additionalUnitPrice);
+        total2 = transresRoundDecimal(total2);
+        console.log("row total2="+total2);
+        totalEl2.val(total2);
+    } else {
+        totalEl2.val(null);
+    }
+
+    var total = parseFloat(total1) + parseFloat(total2);
+    if( total ) {
+        total = transresRoundDecimal(total);
+        console.log("total="+total);
+        invoiceItemTotalEl.val(total);
+    } else {
+        invoiceItemTotalEl.val(null);
+    }
+}
+
 function transresDiscountNumericUpdate(thisEl) {
     var holder = $(thisEl).closest('.invoice-financial-fields');
     console.log("transres DiscountNumericUpdate holder:");
@@ -253,18 +339,24 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     //console.log("update subtotal and total");
     //var totals = invoiceItemTotalEl.closest('.invoice-financial-fields').find(".invoiceitem-total");
     var holder = $(thisEl).closest('.invoice-financial-fields');
+
+    var invoiceItemRows = holder.find('.user-collection-holder');
+    invoiceItemRows.each(function() {
+        transresCalculateTotals($(this));
+    });
+
     var totals = holder.find(".invoiceitem-total");
     var subTotal = 0;
     totals.each(function() {
         var total = $(this).val();
-        //console.log("total="+total);
+        console.log("get total="+total);
         if( !total ) {
             total = 0;
         }
         subTotal = subTotal + parseFloat(total);
     });
     subTotal = transresRoundDecimal(subTotal);
-    //console.log("subTotal="+subTotal);
+    console.log("subTotal="+subTotal);
     holder.find(".invoice-subTotal").val(subTotal);
     transresUpdateTotal(thisEl);
 }

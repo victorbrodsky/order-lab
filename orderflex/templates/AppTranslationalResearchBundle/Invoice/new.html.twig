@@ -75,21 +75,21 @@
 
     {{ form_start(form) }}
 
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-
-             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemFormOriginal(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
-        ></div>
-
         {#<div id="form-prototype-data"#}
              {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
              {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
              {#data-userid = "{{ app.user.id }}"#}
 
-             {#data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"#}
+             {#data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemFormOriginal(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"#}
         {#></div>#}
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+
+             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
+        ></div>
 
         {#{% if form.version is defined %}#}
             {#{{ formmacros.field_left(form.version) }}#}
@@ -198,8 +198,8 @@
         <div class="invoice-financial-fields">
 
 
-            {{ transresRequestMacros.invoiceItemSectionsOriginal(form,cycle,sitename) }}
-            {#{{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}#}
+            {#{{ transresRequestMacros.invoiceItemSectionsOriginal(form,cycle,sitename) }}#}
+            {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
 
             {#<hr />#}
 

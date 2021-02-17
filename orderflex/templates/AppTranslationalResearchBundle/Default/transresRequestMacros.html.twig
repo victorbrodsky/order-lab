@@ -259,7 +259,7 @@
 
                 {% if form.invoiceItems|length > 0 %}
                     <div class="row">
-                        <div class="col-xs-{{ descriptionCol }}">
+                        <div class="col-xs-6">
                             {{ form_label(form.invoiceItems|first.description) }}
                         </div>
                         <div class="col-xs-1">
@@ -274,10 +274,14 @@
                         {#<div class="col-xs-1">#}
                             {#{{ form_label(form.invoiceItems|first.additionalUnitPrice) }}#}
                         {#</div>#}
-                        <div class="col-xs-2">
-                            {{ form_label(form.invoiceItems|first.total) }}
-                        </div>
                         <div class="col-xs-1">
+                            <b>Total ($)</b>
+                        </div>
+                        {#<div class="col-xs-1">#}
+                            {#{{ form_label(form.invoiceItems|first.total) }}#}
+                        {#</div>#}
+                        <div class="col-xs-1">
+                            {#action delete#}
                         </div>
                     </div>
                 {% else %}
@@ -321,38 +325,52 @@
 
     {#{% set secondRaw = false %}#}
     {#{% set secondRaw = invoiceItem.hasSecondRaw() %}#}
-    {#{% set secondRaw = true %}#}
+    {% set secondRaw = true %}
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
         {% if secondRaw %}
 
-            {% if prototype == "prototype" %}
-                {% set forminvoiceItem = invoiceItem.vars.prototype %}
-            {% else %}
+            {#{% if prototype == "prototype" %}#}
+                {#{% set forminvoiceItem = invoiceItem.vars.prototype %}#}
+            {#{% else %}#}
                 {#$quantityFirst = 1;#}
                 {#$quantityAdditional = $quantity - 1;#}
-                {% set quantityFirst = 1 %}
-                {% set quantityAdditional = forminvoiceItem.quantity.vars.value - 1 %}
-            {% endif %}
+                {#{% set quantityFirst = 1 %}#}
+                {#{% set additionalQuantity = forminvoiceItem.quantity.vars.value - 1 %}#}
+            {#{% endif %}#}
 
             <div class="row">
-                <div class="col-xs-5">
+                <div class="col-xs-6">
                     {{ form_widget(forminvoiceItem.description) }}
                 </div>
                 <div class="col-xs-1">
                     {{ form_widget(forminvoiceItem.quantity) }}
+                    <br>
+                    {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
                 <div class="col-xs-2">
                     {{ form_widget(forminvoiceItem.itemCode) }}
+                    <br>
+                    {{ form_widget(forminvoiceItem.itemCodeNotMapped) }}
                 </div>
                 <div class="col-xs-1">
                     {{ form_widget(forminvoiceItem.unitPrice) }}
+                    <br>
+                    {{ form_widget(forminvoiceItem.additionalUnitPrice) }}
                 </div>
-                <div class="col-xs-2">
-                    {#calculated total#}
+                <div class="col-xs-1">
+                    {#sub total#}
+                    {{ form_widget(forminvoiceItem.total1) }}
+                    <br>
+                    {{ form_widget(forminvoiceItem.total2) }}
+
                     {{ form_widget(forminvoiceItem.total) }}
                 </div>
+                {#<div class="col-xs-1">#}
+                    {#calculated total#}
+                    {#{{ form_widget(forminvoiceItem.total) }}#}
+                {#</div>#}
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}
                         <button type="button" class="btn btn-default btn-sm"
@@ -362,34 +380,34 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-5">
-                    {{ form_widget(forminvoiceItem.description) }}
-                </div>
-                <div class="col-xs-1">
-                    {{ form_widget(forminvoiceItem.additionalQuantity) }}
-                </div>
-                <div class="col-xs-2">
-                    {{ form_widget(forminvoiceItem.itemCode) }}
-                </div>
+            {#<div class="row">#}
+                {#<div class="col-xs-5">#}
+                    {#{{ form_widget(forminvoiceItem.description) }}#}
+                {#</div>#}
+                {#<div class="col-xs-1">#}
+                    {#{{ form_widget(forminvoiceItem.additionalQuantity) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
+                {#</div>#}
                 {#<div class="col-xs-1">#}
                     {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
                 {#</div>#}
-                <div class="col-xs-1">
-                {{ form_widget(forminvoiceItem.additionalUnitPrice) }}
-                </div>
-                <div class="col-xs-2">
+                {#<div class="col-xs-1">#}
+                {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
                     {#calculated total#}
-                    {{ form_widget(forminvoiceItem.total) }}
-                </div>
-                <div class="col-xs-1">
+                    {#{{ form_widget(forminvoiceItem.total) }}#}
+                {#</div>#}
+                {#<div class="col-xs-1">#}
                     {#{% if cycle != "show" and showAddDeleteBtn %}#}
                         {#<button type="button" class="btn btn-default btn-sm"#}
                                 {#onClick="removeExistingObject(this,'{{ classname }}')" >#}
                             {#<span class="glyphicon glyphicon-remove"></span></button>#}
                     {#{% endif %}#}
-                </div>
-            </div>
+                {#</div>#}
+            {#</div>#}
 
         {% else %}
 
