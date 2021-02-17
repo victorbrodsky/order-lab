@@ -1538,6 +1538,7 @@ class TransResRequestUtil
         return $receivingObject;
     }
 
+    //Used in create New Invoice
     public function getRequestItems($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $invoiceItemsArr = new ArrayCollection();
@@ -1556,6 +1557,8 @@ class TransResRequestUtil
                 $quantity = $product->getRequested();
             }
             $invoiceItem->setQuantity($quantity);
+            
+            //TODO: setAdditionalQuantity 
 
             //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
             //TODO: add "comment" from Work Request
@@ -4683,17 +4686,18 @@ class TransResRequestUtil
         //$row1 = $row1 . "<td>" . $descriptionStr . "</td>";
 
         //quantity (integer), unitPrice (type="decimal", precision=15, scale=2), additionalUnitPrice (type="decimal", precision=15, scale=2)
-        $secondRaw = false;
+        //$secondRaw = false;
         $itemCode = $invoiceItem->getItemCode();
         $quantity = $invoiceItem->getQuantity();
         $unitPrice = $this->toDecimal($invoiceItem->getUnitPrice());
         $additionalUnitPrice = $this->toDecimal($invoiceItem->getAdditionalUnitPrice());
 
-        if( $quantity > 1 ) {
-            if( $unitPrice != $additionalUnitPrice ) {
-                $secondRaw = true;
-            }
-        }
+//        if( $quantity > 1 ) {
+//            if( $unitPrice != $additionalUnitPrice ) {
+//                $secondRaw = true;
+//            }
+//        }
+        $secondRaw = $invoiceItem->hasSecondRaw();
 
         if( $secondRaw ) {
             $quantityFirst = 1;

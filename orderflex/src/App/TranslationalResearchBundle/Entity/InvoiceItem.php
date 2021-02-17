@@ -81,11 +81,18 @@ class InvoiceItem {
 
     //////////// Invoice fields ///////////////////
     /**
-     * QTY
+     * QTY for the first item
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $quantity;
+
+    /**
+     * QTY for additional items
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $additionalQuantity;
 
     /**
      * Item Code (i.e. TRP-1003)
@@ -260,6 +267,22 @@ class InvoiceItem {
     /**
      * @return mixed
      */
+    public function getAdditionalQuantity()
+    {
+        return $this->additionalQuantity;
+    }
+
+    /**
+     * @param mixed $additionalQuantity
+     */
+    public function setAdditionalQuantity($additionalQuantity)
+    {
+        $this->additionalQuantity = $additionalQuantity;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getItemCode()
     {
         return $this->itemCode;
@@ -379,6 +402,23 @@ class InvoiceItem {
         $this->total = $total;
     }
 
+    public function hasSecondRaw() {
+        $secondRaw = false;
+        $unitPrice = $this->toDecimal($this->getUnitPrice());
+        $additionalUnitPrice = $this->toDecimal($this->getAdditionalUnitPrice());
+        $quantity = $this->getQuantity();
+
+        if( $quantity > 1 ) {
+            if( $unitPrice != $additionalUnitPrice ) {
+                $secondRaw = true;
+            }
+        }
+
+        return $secondRaw;
+    }
+    public function toDecimal($number) {
+        return number_format((float)$number, 2, '.', '');
+    }
     
 
 }

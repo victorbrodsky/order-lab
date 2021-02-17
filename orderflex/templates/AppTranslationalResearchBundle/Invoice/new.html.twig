@@ -80,8 +80,16 @@
              data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
              data-userid = "{{ app.user.id }}"
 
-             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
+             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemFormOriginal(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
         ></div>
+
+        {#<div id="form-prototype-data"#}
+             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+             {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+             {#data-userid = "{{ app.user.id }}"#}
+
+             {#data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"#}
+        {#></div>#}
 
         {#{% if form.version is defined %}#}
             {#{{ formmacros.field_left(form.version) }}#}
@@ -189,23 +197,11 @@
 
         <div class="invoice-financial-fields">
 
-        {#{% for invoiceItem in form.invoiceItems %}#}
-            {#<div class="well well-sm">#}
-            {#{{ formmacros.field(invoiceItem.quantity) }}#}
-            {#{{ formmacros.field(invoiceItem.itemCode) }}#}
-            {#{{ formmacros.field(invoiceItem.description) }}#}
-            {#{{ formmacros.field(invoiceItem.unitPrice) }}#}
-            {#{{ formmacros.field(invoiceItem.total) }}#}
-            {#</div>#}
-            {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
-        {#{% endfor %}#}
-            {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
 
-        {#{{ transresRequestMacros.invoiceAddItems(form,cycle) }}#}
-        {#Product or Service Panel +/-#}
-        {#{{ transresRequestMacros.productSections(form,cycle,sitename) }}#}
+            {{ transresRequestMacros.invoiceItemSectionsOriginal(form,cycle,sitename) }}
+            {#{{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}#}
 
-        {#<hr />#}
+            {#<hr />#}
 
 
             {#{{ formmacros.field(form.subTotal) }}#}
