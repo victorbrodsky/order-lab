@@ -60,6 +60,14 @@ class RequestCategoryTypeList extends ListAbstract
      */
     private $feeAdditionalItem;
 
+    /**
+     * Default quantity at initial price, 1 - by default
+     *
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $initialQuantity;
+
 //    /**
 //     * Price of Product or Service
 //     * Internal fee - "Internal fee for one"
@@ -163,6 +171,26 @@ class RequestCategoryTypeList extends ListAbstract
     {
         $this->feeAdditionalItem = $feeAdditionalItem;
     }
+
+    /**
+     * @return int
+     */
+    public function getInitialQuantity()
+    {
+        if( !$this->initialQuantity ) {
+            return 1;
+        }
+        return $this->initialQuantity;
+    }
+
+    /**
+     * @param int $initialQuantity
+     */
+    public function setInitialQuantity($initialQuantity)
+    {
+        $this->initialQuantity = $initialQuantity;
+    }
+
 
 //    /**
 //     * @return string
@@ -310,6 +338,16 @@ class RequestCategoryTypeList extends ListAbstract
             }
         }
         return NULL;
+    }
+    public function getPriceInitialQuantity($priceList=NULL) {
+        $price = $this->getPrice($priceList);
+        if( $price ) {
+            $initialQuantity = $price->getInitialQuantity();
+            if( $initialQuantity ) {
+                return $initialQuantity;
+            }
+        }
+        return $this->getInitialQuantity();
     }
     public function getPriceFee($priceList=NULL) {
         $price = $this->getPrice($priceList);

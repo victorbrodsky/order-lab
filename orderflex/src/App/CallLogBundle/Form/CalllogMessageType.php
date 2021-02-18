@@ -302,6 +302,8 @@ class CalllogMessageType extends AbstractType
                 'attr' => array(
                     'readonly' => true,
                     'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                    //'autocomplete'=>'off',
+                    //'aria-autocomplete' => 'off',
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'MessageCategory',

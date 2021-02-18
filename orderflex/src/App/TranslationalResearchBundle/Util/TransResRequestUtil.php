@@ -133,10 +133,25 @@ class TransResRequestUtil
             if( $completed ) {
                 $units = intval($completed);
             }
+            if( $category ) {
+                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+            }
+            if( $units > 0 ) {
+                if( !$initialQuantity ) {
+                    $initialQuantity = 1;
+                }
+                //1 > 1 => $units = 1, $initialQuantity = 1
+                if( $units > $initialQuantity ) {
+                    $units = $units - $initialQuantity;
+                } else {
+                    $initialQuantity = $units;
+                    $units = 0;
+                }
+            }
             //echo "units=$units; fee=$fee <br>";
             if( $fee && $units ) {
                 //$subTotal = $subTotal + ($units * intval($fee));
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$units);
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
             }
         }
 
@@ -167,6 +182,7 @@ class TransResRequestUtil
             $fee = 0;
             $feeAdditionalItem = 0;
             $units = 0;
+            $initialQuantity = 0;
             if( $category ) {
                 //$fee = $category->getFee();
                 $fee = $category->getPriceFee($priceList);
@@ -178,10 +194,25 @@ class TransResRequestUtil
             if( $completed ) {
                 $units = intval($completed);
             }
+            if( $category ) {
+                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+            }
+            if( $units > 0 ) {
+                if( !$initialQuantity ) {
+                    $initialQuantity = 1;
+                }
+                //1 > 1 => $units = 1, $initialQuantity = 1
+                if( $units > $initialQuantity ) {
+                    $units = $units - $initialQuantity;
+                } else {
+                    $initialQuantity = $units;
+                    $units = 0;
+                }
+            }
             //echo "units=$units; fee=$fee <br>";
             if( $fee && $units ) {
                 //$subTotal = $subTotal + ($units * intval($fee));
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$units);
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
             }
 
 //            'productRequested' => $requested,
@@ -1556,9 +1587,10 @@ class TransResRequestUtil
             if( !$quantity ) {
                 $quantity = $product->getRequested();
             }
-            $invoiceItem->setQuantity($quantity);
-            
-            //TODO: setAdditionalQuantity 
+            $initialQuantity = 1;
+            $thisQuantity = $quantity - $initialQuantity;
+            $invoiceItem->setQuantity($initialQuantity);
+            $invoiceItem->setAdditionalQuantity($thisQuantity);
 
             //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
             //TODO: add "comment" from Work Request
@@ -1568,6 +1600,7 @@ class TransResRequestUtil
             $feeAdditionalItem = 0;
 
             if( $category ) {
+
                 //ItemCode
                 $itemCode = $category->getProductId($priceList); //original productId can be obtained by $invoiceItem->getProduct()->getCategory()->getProductId()
                 //$itemCode = $category->getProductId();
@@ -1582,6 +1615,13 @@ class TransResRequestUtil
                 $fee = $category->getPriceFee($priceList);
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
 
+                //TODO: setQuantity and setAdditionalQuantity
+                //1) get initialQuantity
+                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+                $quantity = $quantity - $initialQuantity;
+                $invoiceItem->setQuantity($initialQuantity);
+                $invoiceItem->setAdditionalQuantity($quantity);
+
                 $invoiceItem->setUnitPrice($fee);
                 $invoiceItem->setAdditionalUnitPrice($feeAdditionalItem);
             }
@@ -1589,7 +1629,7 @@ class TransResRequestUtil
             if( $quantity && $fee ) {
                 //Total
                 //$total = intval($quantity) * intval($fee);
-                $total = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+                $total = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
 
                 $invoiceItem->setTotal($total);
             }
@@ -3079,7 +3119,7 @@ class TransResRequestUtil
         return number_format((float)$number, 2, '.', '');
     }
 
-    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity) {
+    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity) {
         $quantity = intval($quantity);
         //$fee = intval($fee);
         $fee = $this->toDecimal($fee);
@@ -4786,15 +4826,18 @@ class TransResRequestUtil
 
             if( $category ) {
 
+                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+                $quantity = $quantity - $initialQuantity;
+
                 //default fee
                 $fee = $category->getPriceFee();
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
 
                 //special fee
                 $specialFee = $category->getPriceFee($priceList);
                 $specialFeeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
-                $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$quantity);
+                $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$initialQuantity,$quantity);
 
                 if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
                     $subsidy = $subsidy + ($totalDefault - $totalSpecial);
@@ -4823,10 +4866,13 @@ class TransResRequestUtil
 
             if( $category ) {
 
+                $initialQuantity = $category->getInitialQuantity();
+                $quantity = $quantity - $initialQuantity;
+
                 //default fee
                 $fee = $category->getPriceFee();
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+                $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
 
             }
 
@@ -4879,8 +4925,8 @@ class TransResRequestUtil
 
     //Calculate subsidy based only on the invoice's invoiceItem.
     public function calculateSubsidyInvoiceItems($invoice) {
-        $request = $invoice->getTransresRequest();
-        $priceList = $request->getPriceList($request);
+        //$request = $invoice->getTransresRequest();
+        //$priceList = $request->getPriceList($request);
         $subsidy = 0;
 
         $totalInvoiceDefault = 0;
@@ -4889,7 +4935,8 @@ class TransResRequestUtil
 
         foreach( $invoiceItems as $invoiceItem ) {
 
-            $quantity = $invoiceItem->getQuantity();
+            $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
+            $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
             $itemCode = $invoiceItem->getItemCode();
             //$unitPrice = $invoiceItem->getUnitPrice();
             //$additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
@@ -4920,10 +4967,13 @@ class TransResRequestUtil
 
             if( $category ) {
 
+                //default quantity
+                //$initialQuantity = $category->getInitialQuantity();
+
                 //default fee
                 $fee = $category->getPriceFee();
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity);
+                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
 
                 if( !$totalDefault ) {
                     $totalDefault = $total;

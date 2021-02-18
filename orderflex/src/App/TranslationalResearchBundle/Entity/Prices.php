@@ -70,6 +70,13 @@ class Prices
      */
     private $feeAdditionalItem;
 
+    /**
+     * Default quantity at initial price, 1 - by default
+     *
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $initialQuantity;
     
     /**
      * Utilize the following price list
@@ -157,6 +164,25 @@ class Prices
     public function setFeeAdditionalItem($feeAdditionalItem)
     {
         $this->feeAdditionalItem = $feeAdditionalItem;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInitialQuantity()
+    {
+        if( !$this->initialQuantity ) {
+            return 1;
+        }
+        return $this->initialQuantity;
+    }
+
+    /**
+     * @param int $initialQuantity
+     */
+    public function setInitialQuantity($initialQuantity)
+    {
+        $this->initialQuantity = $initialQuantity;
     }
 
     /**
