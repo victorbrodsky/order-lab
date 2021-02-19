@@ -35,7 +35,7 @@ class PriceType extends AbstractType
         ));
 
         $builder->add('fee', null, array(
-            'label' => "Fee for one ($):",
+            'label' => "Fee per initial item ($):",
             'required' => false,
             'attr' => array('class' => 'form-control pricetype-fee')
         ));

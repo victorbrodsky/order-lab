@@ -87,6 +87,8 @@ class InvoiceItem {
      */
     private $quantity;
 
+    //TODO: add initialQuantity?
+
     /**
      * QTY for additional items (additional quantity)
      *
