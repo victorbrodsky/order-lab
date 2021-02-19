@@ -210,7 +210,7 @@ class Prices
     public function __toString() {
         $res = "Price ID " . $this->getId();
 
-        $res = $res . ", priceList=".$this->getPriceList().", fee=".$this->getFee().", feeAdditionalItem=".$this->getFeeAdditionalItem();
+        $res = $res . ", priceList=".$this->getPriceList().", fee=".$this->getFee().", feeAdditionalItem=".$this->getFeeAdditionalItem().", initialQuantity=".$this->getInitialQuantity();
         
         return $res;
     }

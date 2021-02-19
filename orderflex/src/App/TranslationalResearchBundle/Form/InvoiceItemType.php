@@ -71,9 +71,13 @@ class InvoiceItemType extends AbstractType
             $form = $event->getForm();
 
             $itemCode = NULL;
+            $total1 = NULL;
+            $total2 = NULL;
             if( $invoiceItem ) {
                 $itemCode = $invoiceItem->getItemCode();
                 //echo "itemCode exists <br>";
+                $total1 = $invoiceItem->getTotal1();
+                $total2 = $invoiceItem->getTotal2();
             }
             //echo "itemCode=$itemCode <br>";
 
@@ -83,6 +87,25 @@ class InvoiceItemType extends AbstractType
                 'mapped' => false,
                 "data" => $itemCode,
                 'attr' => array('class' => 'form-control invoiceitem-itemCodeNotMapped')
+            ));
+
+            $form->add('total1', NumberType::class, array(
+                'label' => false, //"Total ($)",
+                'scale' => 2,
+                'mapped' => false,
+                'required' => false,
+                'disabled' => true,
+                'data' => $total1,
+                'attr' => array('class' => 'form-control invoiceitem-total1')
+            ));
+            $form->add('total2', NumberType::class, array(
+                'label' => false, //"Total ($)",
+                'scale' => 2,
+                'mapped' => false,
+                'required' => false,
+                'disabled' => true,
+                'data' => $total2,
+                'attr' => array('class' => 'form-control invoiceitem-total2')
             ));
 
         });
@@ -126,23 +149,6 @@ class InvoiceItemType extends AbstractType
             //'currency' => false,
             'required' => false,
             'attr' => array('class' => 'form-control invoiceitem-total')
-        ));
-
-        $builder->add('total1', NumberType::class, array(
-            'label' => false, //"Total ($)",
-            'scale' => 2,
-            'mapped' => false,
-            'required' => false,
-            'disabled' => true,
-            'attr' => array('class' => 'form-control invoiceitem-total1')
-        ));
-        $builder->add('total2', NumberType::class, array(
-            'label' => false, //"Total ($)",
-            'scale' => 2,
-            'mapped' => false,
-            'required' => false,
-            'disabled' => true,
-            'attr' => array('class' => 'form-control invoiceitem-total2')
         ));
 
 

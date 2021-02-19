@@ -127,6 +127,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee per additional item', 'ent.feeAdditionalItem') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Initial Quantity', 'ent.initialQuantity') }}</th>
 
                 {#{% if showInternalFee %}#}
                 {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
@@ -372,6 +373,7 @@
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
                     <td>{{ entity.feeAdditionalItem }}</td>
+                    <td>{{ entity.initialQuantity }}</td>
 
                     {#{% if showInternalFee %}#}
                     {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
@@ -1016,6 +1018,9 @@
     {% endif %}
     {% if form.feeAdditionalItem is defined %}
         {{ formmacros.field(form.feeAdditionalItem) }}
+    {% endif %}
+    {% if form.initialQuantity is defined %}
+        {{ formmacros.field(form.initialQuantity) }}
     {% endif %}
     {#{% if form.internalFee is defined %}#}
         {#{{ formmacros.field(form.internalFee) }}#}

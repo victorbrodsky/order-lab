@@ -81,14 +81,14 @@ class InvoiceItem {
 
     //////////// Invoice fields ///////////////////
     /**
-     * QTY for the first item
+     * QTY for the first item (initial quantity)
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $quantity;
 
     /**
-     * QTY for additional items
+     * QTY for additional items (additional quantity)
      *
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -401,14 +401,28 @@ class InvoiceItem {
 
         $this->total = $total;
     }
+    
+    public function getTotalQuantity() {
+        $initialQuantity = $this->getQuantity();
+        $additionalQuantity = $this->getAdditionalQuantity();
+        return $initialQuantity + $additionalQuantity;
+    }
 
     public function hasSecondRaw() {
         $secondRaw = false;
         $unitPrice = $this->toDecimal($this->getUnitPrice());
         $additionalUnitPrice = $this->toDecimal($this->getAdditionalUnitPrice());
-        $quantity = $this->getQuantity();
 
-        if( $quantity > 1 ) {
+        $quantity = $this->getQuantity();
+        $additionalQuantity = $this->getAdditionalQuantity();
+
+//        if( $quantity > 1 ) {
+//            if( $unitPrice != $additionalUnitPrice ) {
+//                $secondRaw = true;
+//            }
+//        }
+
+        if( $additionalQuantity > $quantity ) {
             if( $unitPrice != $additionalUnitPrice ) {
                 $secondRaw = true;
             }
@@ -419,6 +433,20 @@ class InvoiceItem {
     public function toDecimal($number) {
         return number_format((float)$number, 2, '.', '');
     }
-    
 
+    //Initial total1
+    public function getTotal1() {
+        $unitPrice = $this->toDecimal($this->getUnitPrice());
+        $quantity = $this->getQuantity();
+        $total1 = $unitPrice*$quantity;
+        return $this->toDecimal($total1);
+    }
+
+    //Additional total2
+    public function getTotal2() {
+        $additionalUnitPrice = $this->toDecimal($this->getAdditionalUnitPrice());
+        $additionalQuantity = $this->getAdditionalQuantity();
+        $total2 = $additionalUnitPrice*$additionalQuantity;
+        return $this->toDecimal($total2);
+    }
 }

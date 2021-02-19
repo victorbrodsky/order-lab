@@ -233,10 +233,17 @@ class Product {
 
     public function getQuantity() {
         $quantity = $this->getCompleted();
+        //echo "completed quantity=$quantity <br>";
         if( !$quantity ) {
             $quantity = $this->getRequested();
+            //echo "requested quantity=$quantity <br>";
         }
         return $quantity;
+    }
+
+    public function __toString()
+    {
+        return $this->getCategory()." (ID#".$this->getId()."): requested=".$this->getRequested().", completed=".$this->getCompleted()."<br>";
     }
 
 }

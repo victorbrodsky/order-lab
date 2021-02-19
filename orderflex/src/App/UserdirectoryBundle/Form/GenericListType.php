@@ -638,6 +638,12 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
+
+            $builder->add('initialQuantity', TextType::class, array(
+                'label' => 'Initial Quantity:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
 //            if(0) {
 //                if (
 //                    $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||

@@ -1171,25 +1171,6 @@ class InvoiceController extends OrderAbstractController
             $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
         }
 
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-//            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
-
-        //$em = $this->getDoctrine()->getManager();
-        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        //if( !$invoice ) {
-        //    throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-        //}
-
-        // Check if user allowed to access by the project's specialty
-//        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to access this specialty"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',

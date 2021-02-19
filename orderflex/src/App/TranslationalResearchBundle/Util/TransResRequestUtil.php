@@ -1570,7 +1570,7 @@ class TransResRequestUtil
     }
 
     //Used in create New Invoice
-    public function getRequestItems($request) {
+    public function createRequestItems($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $invoiceItemsArr = new ArrayCollection();
         $priceList = $request->getPriceList();
@@ -1583,11 +1583,13 @@ class TransResRequestUtil
 
             //Invoice should pull the Quantity from the "Completed Quantity" field
             // (IF "Completed Quantity" field has a value; if it has no value, pull the number from the Requested Quantity field)
-            $quantity = $product->getCompleted();
-            if( !$quantity ) {
-                $quantity = $product->getRequested();
-            }
-            $initialQuantity = 1;
+//            $quantity = $product->getCompleted();
+//            if( !$quantity ) {
+//                $quantity = $product->getRequested();
+//            }
+            $quantity = $product->getQuantity();
+            //echo $product.": product quantity=".$quantity."<br>";
+            $initialQuantity = 1; //default initialQuantity
             $thisQuantity = $quantity - $initialQuantity;
             $invoiceItem->setQuantity($initialQuantity);
             $invoiceItem->setAdditionalQuantity($thisQuantity);
@@ -1617,8 +1619,9 @@ class TransResRequestUtil
 
                 //TODO: setQuantity and setAdditionalQuantity
                 //1) get initialQuantity
-                $initialQuantity = $category->getPriceInitialQuantity($priceList);
-                $quantity = $quantity - $initialQuantity;
+                $initialQuantity = $category->getPriceInitialQuantity($priceList);  //Initial quantity
+                $quantity = $quantity - $initialQuantity;                           //Additional quantity
+                //echo "initialQuantity=".$initialQuantity.", quantity=".$quantity."<br>";
                 $invoiceItem->setQuantity($initialQuantity);
                 $invoiceItem->setAdditionalQuantity($quantity);
 
@@ -2359,7 +2362,7 @@ class TransResRequestUtil
         }
 
         //populate invoice items corresponding to the multiple requests
-        $invoiceItems = $this->getRequestItems($transresRequest);
+        $invoiceItems = $this->createRequestItems($transresRequest);
         foreach( $invoiceItems as $invoiceItem ) {
             $invoice->addInvoiceItem($invoiceItem);
         }
@@ -2421,7 +2424,7 @@ class TransResRequestUtil
                 continue;
             }
             $requestQuant = $requestProduct->getCompleted();
-            $invoiceQuant = $invoiceItem->getQuantity();
+            $invoiceQuant = $invoiceItem->getTotalQuantity();
             if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
 
                 //eventLog changes
@@ -3130,13 +3133,19 @@ class TransResRequestUtil
             $feeAdditionalItem = $fee;
         }
         $total = 0;
-        if( $quantity == 1 ) {
-            $total = $quantity * $fee;
-        } elseif ( $quantity > 1 ) {
-            $total = 1 * $fee;
-            $additionalFee = ($quantity-1) * $feeAdditionalItem;
-            $total = $total + $additionalFee;
-        }
+//        if( $quantity == 1 ) {
+//            $total = $quantity * $fee;
+//        } elseif ( $quantity > 1 ) {
+//            $total = 1 * $fee;
+//            $additionalFee = ($quantity-1) * $feeAdditionalItem;
+//            $total = $total + $additionalFee;
+//        }
+
+        $initialTotal = $this->toDecimal($initialQuantity * $fee);
+        $additionalTotal = $this->toDecimal($quantity * $feeAdditionalItem);
+
+        $total = $initialTotal + $additionalTotal;
+
         if ($total > 0) {
             $total = $this->toDecimal($total);
         }
@@ -4729,19 +4738,26 @@ class TransResRequestUtil
         //$secondRaw = false;
         $itemCode = $invoiceItem->getItemCode();
         $quantity = $invoiceItem->getQuantity();
+        $additionalQuantity = $invoiceItem->getAdditionalQuantity();
         $unitPrice = $this->toDecimal($invoiceItem->getUnitPrice());
         $additionalUnitPrice = $this->toDecimal($invoiceItem->getAdditionalUnitPrice());
 
-//        if( $quantity > 1 ) {
+        //echo "quantity=$quantity, additionalQuantity=$additionalQuantity, unitPrice=$unitPrice, additionalUnitPrice=$additionalUnitPrice <br>";
+
+        //if( $quantity > 1 ) {
+//        if( $additionalQuantity > $quantity ) {
 //            if( $unitPrice != $additionalUnitPrice ) {
 //                $secondRaw = true;
 //            }
 //        }
         $secondRaw = $invoiceItem->hasSecondRaw();
+        //echo "secondRaw=$secondRaw <br>";
 
         if( $secondRaw ) {
-            $quantityFirst = 1;
-            $quantityAdditional = $quantity - 1;
+            //$quantityFirst = 1;
+            //$quantityAdditional = $quantity - 1;
+            $quantityFirst = $quantity;
+            $quantityAdditional = $additionalQuantity;
             $totalFeeFirst = $this->toDecimal($unitPrice*$quantityFirst);
             $totalFeeAdditional = $this->toDecimal($additionalUnitPrice*$quantityAdditional);
 
@@ -4794,6 +4810,7 @@ class TransResRequestUtil
 
             $row = "<tr>" . $row1 . "</tr>" . "<tr>" . $row2 . "</tr>";
         } else {
+            $quantity = $quantity + $additionalQuantity;
             $totalFee = $this->toDecimal($unitPrice*$quantity);
             $row1 =
                   "<td>" . $descriptionStr . "</td>"
@@ -4817,10 +4834,8 @@ class TransResRequestUtil
 
         foreach( $request->getProducts() as $product ) {
 
-            $quantity = $product->getCompleted();
-            if( !$quantity ) {
-                $quantity = $product->getRequested();
-            }
+            $quantity = $product->getQuantity();
+            //echo "quantity=$quantity <br>";
 
             $category = $product->getCategory();
 
@@ -4833,21 +4848,30 @@ class TransResRequestUtil
                 $fee = $category->getPriceFee();
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
                 $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
+                //echo $category->getProductId().": totalDefault=$totalDefault <br>";
 
                 //special fee
                 $specialFee = $category->getPriceFee($priceList);
                 $specialFeeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
                 $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$initialQuantity,$quantity);
+                //echo $category->getProductId().": totalSpecial=$totalSpecial <br>";
 
                 if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
-                    $subsidy = $subsidy + ($totalDefault - $totalSpecial);
+                    //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
+                    $diff = $this->toDecimal($totalDefault - $totalSpecial);
+                    $subsidy = $subsidy + $diff;
                 }
 
+                //echo "loop subsidy=$subsidy <br>";
+
+            } else {
+                //echo "Category null <br>";
             }
 
         }
 
         $subsidy = $this->toDecimal($subsidy);
+        //echo "res subsidy=$subsidy <br>";
 
         return $subsidy;
     }
@@ -4857,10 +4881,11 @@ class TransResRequestUtil
 
         foreach( $request->getProducts() as $product ) {
 
-            $quantity = $product->getCompleted();
-            if( !$quantity ) {
-                $quantity = $product->getRequested();
-            }
+//            $quantity = $product->getCompleted();
+//            if( !$quantity ) {
+//                $quantity = $product->getRequested();
+//            }
+            $quantity = $product->getQuantity();
 
             $category = $product->getCategory();
 
@@ -4890,9 +4915,12 @@ class TransResRequestUtil
         $priceList = $request->getPriceList($request);
 
         $subsidy = $invoice->getSubsidy();
+        //echo "Invoice subsidy=".$subsidy."<br>";
         if( !$subsidy ) {
             $subsidy = $this->calculateSubsidy($invoice);
+            //echo "Calculate subsidy=".$subsidy."<br>";
         }
+        //echo "Final subsidy=".$subsidy."<br>";
 
         if( $priceList ) {
             //This invoice utilizes internal pricing

@@ -47,6 +47,7 @@
 
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Initial Quantity', 'list.initialQuantity') }}</th>
 
                 {% if showSpecificFee %}
                     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
@@ -96,6 +97,12 @@
                 <td>
                     {% if fee.feeAdditionalItem %}
                         ${{ fee.feeAdditionalItem }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fee.initialQuantity %}
+                        {{ fee.initialQuantity }}
                     {% endif %}
                 </td>
 

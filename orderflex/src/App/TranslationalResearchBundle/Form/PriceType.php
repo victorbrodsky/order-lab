@@ -46,6 +46,12 @@ class PriceType extends AbstractType
             'attr' => array('class' => 'form-control pricetype-feeadditionalitem')
         ));
 
+        $builder->add('initialQuantity', null, array(
+            'label' => "Initial Quantity:",
+            'required' => false,
+            'attr' => array('class' => 'form-control pricetype-initialQuantity')
+        ));
+
 
         $builder->add('priceList', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:PriceTypeList',
