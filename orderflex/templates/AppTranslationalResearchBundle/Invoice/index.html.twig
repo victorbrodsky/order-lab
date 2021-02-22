@@ -70,9 +70,14 @@
 
             {{ transresRequestMacros.unpaidModal(invoice) }}
 
+            {% set idColor = transres_util.getPriceListColorByInvoice(invoice) %}
+
             <tr>
                 <td>
-                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
+                    <a target="_blank"
+                       href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}"
+                       style="color:{{ idColor }}"
+                    >{{ invoice.oid }}</a>
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.getProjectIrbIacucNumber()|raw }}</td>

@@ -451,4 +451,16 @@ class InvoiceItem {
         $total2 = $additionalUnitPrice*$additionalQuantity;
         return $this->toDecimal($total2);
     }
+
+    public function getProductId() {
+        $product = $this->getProduct();
+        if( $product ) {
+            $category = $product->getCategory();
+            if( $category ) {
+                $productId = $category->getProductId();
+                return $productId."";
+            }
+        }
+        return NULL;
+    }
 }

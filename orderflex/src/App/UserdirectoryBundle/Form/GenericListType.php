@@ -629,12 +629,12 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('fee', TextType::class, array(
-                'label' => 'Default Fee per initial item ($):',
+                'label' => 'Default fee per unit for initial quantity ($):',
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
             $builder->add('feeAdditionalItem', TextType::class, array(
-                'label' => 'Default Fee per additional item ($):',
+                'label' => 'Default fee per additional item ($):',
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));

@@ -329,6 +329,18 @@
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
+        {% set invoiceItemTotalQuantity = NULL %}
+        {% set invoiceItemProductId = NULL %}
+        {% set invoiceItemEntity = forminvoiceItem.vars.value %}
+        {% if invoiceItemEntity %}
+            {% set invoiceItemTotalQuantity = invoiceItemEntity.getTotalQuantity() %}
+            {% set invoiceItemProductId = invoiceItemEntity.getProductId() %}
+        {% endif %}
+
+        {#<input type="hidden" id="original-total-quantity" value="{{ transres_request_util.getTotalQuantity() }}" />#}
+        <input type="hidden" class="original-total-quantity" value="{{ invoiceItemTotalQuantity }}" />
+        <input type="hidden" class="invoiceitem-product-id" value="{{ invoiceItemProductId }}" />
+
         {% if secondRaw %}
 
             {#{% if prototype == "prototype" %}#}
@@ -339,6 +351,8 @@
                 {#{% set quantityFirst = 1 %}#}
                 {#{% set additionalQuantity = forminvoiceItem.quantity.vars.value - 1 %}#}
             {#{% endif %}#}
+
+            <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
             <div class="row">
                 <div class="col-xs-6">

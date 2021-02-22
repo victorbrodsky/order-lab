@@ -6258,4 +6258,14 @@ class TransResUtil
         $messageToUsers = $this->getTransresSiteProjectParameter('humanTissueFormNote',$project);
         return $messageToUsers;
     }
+    
+    public function getPriceListColorByInvoice($invoice) {
+        $request = $invoice->getTransresRequest();
+        $priceList = $request->getPriceList($request);
+        if( $priceList ) {
+            return "darkorange";
+        }
+        return NULL;
+    }
+    
 }

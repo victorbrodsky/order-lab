@@ -242,10 +242,16 @@ function transresInvoiceItemListeneres(){
         }
 
         var invoiceItemRow = $(this).closest('.user-collection-holder');
+
         transresCalculateTotals(invoiceItemRow);
 
         //console.log("transres UpdateSubTotal: triggered by claculated row total");
         transresUpdateSubTotal(this);
+    });
+
+    $('.invoiceitem-quantity').on('input', function(event) {
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        transresAdjustQuantity(invoiceItemRow);
     });
 
     //total update => update subtotal and total
@@ -276,6 +282,51 @@ function transresInvoiceItemListeneres(){
         //console.log("paid updated");
         transresUpdateDue(this);
     });
+
+    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function(event) {
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        transresValidateQuantity(invoiceItemRow);
+    });
+}
+
+//If the user edits initial quantity, when the cursor leaves the form field, update the remaining quantity for the same item
+function transresAdjustQuantity(invoiceItemRow) {
+    var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+    var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+    var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
+
+    var newAdditionalQuantity = parseInt(totalQuantity) - parseInt(quantity);
+
+    if( newAdditionalQuantity != additionalQuantity ) {
+        invoiceItemRow.find(".invoiceitem-additionalQuantity").val(newAdditionalQuantity);
+    }
+}
+
+function transresValidateQuantity(invoiceItemRow) {
+    var warningMessage = invoiceItemRow.find('.invoiceitem-warning-message');
+    warningMessage.html("").hide();
+
+    var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
+    //console.log("totalQuantity="+totalQuantity);
+    if( !totalQuantity ) {
+        return;
+    }
+
+    var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+    var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+    //console.log("quantity="+quantity +", additionalQuantity="+additionalQuantity);
+
+    var newTotalQuantity = parseInt(quantity) + parseInt(additionalQuantity);
+    //console.log("totalQuantity="+totalQuantity +", newTotalQuantity="+newTotalQuantity);
+
+    if( totalQuantity != newTotalQuantity ) {
+        var invoiceitemProductId = invoiceItemRow.find('.invoiceitem-product-id').val();
+        var warning = "The total quantity for item "+invoiceitemProductId+
+            " is not equal to the completed or requested quantity of "+totalQuantity+". " +
+            "Please ensure the quantities on this invoice are correct.";
+        warningMessage.html(warning).show();
+    }
+    
 }
 
 function transresCalculateTotals( invoiceItemRow ) {
@@ -484,4 +535,6 @@ function transresDisableWheelQuantity() {
         $(this).off('wheel.disableScroll')
     })
 }
+
+
 
