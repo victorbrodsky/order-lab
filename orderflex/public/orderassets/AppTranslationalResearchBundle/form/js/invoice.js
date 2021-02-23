@@ -291,8 +291,8 @@ function transresCalculateTotals( invoiceItemRow ) {
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
     var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
     var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
-    console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
-    console.log("row additionalQuantity="+additionalQuantity+"; additionalUnitPrice="+additionalUnitPrice);
+    //console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
+    //console.log("row additionalQuantity="+additionalQuantity+"; additionalUnitPrice="+additionalUnitPrice);
     var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
     var totalEl1 = invoiceItemRow.find(".invoiceitem-total1");
     var totalEl2 = invoiceItemRow.find(".invoiceitem-total2");
@@ -303,7 +303,7 @@ function transresCalculateTotals( invoiceItemRow ) {
     if( quantity && unitPrice ) {
         total1 = parseFloat(quantity) * parseFloat(unitPrice);
         total1 = transresRoundDecimal(total1);
-        console.log("row total1="+total1);
+        //console.log("row total1="+total1);
         totalEl1.val(total1);
     } else {
         totalEl1.val(null);
@@ -312,7 +312,7 @@ function transresCalculateTotals( invoiceItemRow ) {
     if( additionalQuantity && additionalUnitPrice ) {
         total2 = parseFloat(additionalQuantity) * parseFloat(additionalUnitPrice);
         total2 = transresRoundDecimal(total2);
-        console.log("row total2="+total2);
+        //console.log("row total2="+total2);
         totalEl2.val(total2);
     } else {
         totalEl2.val(null);
@@ -321,7 +321,7 @@ function transresCalculateTotals( invoiceItemRow ) {
     var total = parseFloat(total1) + parseFloat(total2);
     if( total ) {
         total = transresRoundDecimal(total);
-        console.log("total="+total);
+        //console.log("total="+total);
         invoiceItemTotalEl.val(total);
     } else {
         invoiceItemTotalEl.val(null);
@@ -330,8 +330,8 @@ function transresCalculateTotals( invoiceItemRow ) {
 
 function transresDiscountNumericUpdate(thisEl) {
     var holder = $(thisEl).closest('.invoice-financial-fields');
-    console.log("transres DiscountNumericUpdate holder:");
-    console.log(holder);
+    //console.log("transres DiscountNumericUpdate holder:");
+    //console.log(holder);
     holder.find('.invoice-discountPercent').val(null);
     transresUpdateTotal(thisEl);
 }
@@ -356,29 +356,29 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     var subTotal = 0;
     totals.each(function() {
         var total = $(this).val();
-        console.log("get total="+total);
+        //console.log("get total="+total);
         if( !total ) {
             total = 0;
         }
         subTotal = subTotal + parseFloat(total);
     });
     subTotal = transresRoundDecimal(subTotal);
-    console.log("subTotal="+subTotal);
+    //console.log("subTotal="+subTotal);
     holder.find(".invoice-subTotal").val(subTotal);
     transresUpdateTotal(thisEl);
 }
 
 function transresUpdateTotal(thisEl) {
     var holder = $(thisEl).closest('.invoice-financial-fields');
-    console.log("transresUpdateTotal holder:");
-    console.log(holder);
+    //console.log("transresUpdateTotal holder:");
+    //console.log(holder);
     var discount = 0;
     var discountNumeric = holder.find(".invoice-discountNumeric").val();
     var discountPercent = holder.find(".invoice-discountPercent").val();
     var subTotal = holder.find(".invoice-subTotal").val();
 
-    console.log("count="+$(".invoice-discountNumeric").length);
-    console.log("transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal);
+    //console.log("count="+$(".invoice-discountNumeric").length);
+    //console.log("transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal);
 
     if( subTotal ) {
         if( discountNumeric ) {
@@ -396,16 +396,19 @@ function transresUpdateTotal(thisEl) {
 
     transresUpdateDue(thisEl);
 
-    // //update subsidy
-    // var defaultTotal = $('#invoice-default-total').val();
-    // //TODO: get defaultTotal by ajax
-    // if( total && defaultTotal ) {
-    //     var subsidy = defaultTotal - total;
-    //     if( subsidy > 0 ) {
-    //         subsidy = transresRoundDecimal(subsidy);
-    //         holder.find(".invoice-subsidy").val(subsidy);
-    //     }
-    // }
+    //update subsidy
+    var defaultTotal = $('#invoice-default-total').val();
+    //console.log("total="+total+", defaultTotal="+defaultTotal);
+    if( total && defaultTotal ) {
+        var subsidy = defaultTotal - total;
+        //console.log("subsidy="+subsidy);
+        if( subsidy > 0 ) {
+            subsidy = transresRoundDecimal(subsidy);
+        } else {
+            subsidy = 0;
+        }
+        $("#invoice-subsidy-info").html(subsidy);
+    }
 
 }
 

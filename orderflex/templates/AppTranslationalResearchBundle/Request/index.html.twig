@@ -85,7 +85,7 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
-                <th title="Total calculated work request's fee">Total Fees</th>
+                <th title="Total calculated work request's default fee">Total Fees</th>
                 <th title="Number of all invoices">Invoices</th>
                 <th title="Status of the most recent invoice status">Invoice Status</th>
                 <th title="Total amount of the most recent issued invoices">Invoice Total</th>
@@ -190,7 +190,9 @@
 
                 {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
                 <td>
-                    {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
+                    {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
+                    {#Total fees should use external (default) pricing#}
+                    {% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
                     {% endif %}

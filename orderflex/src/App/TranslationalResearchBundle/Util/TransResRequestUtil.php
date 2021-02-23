@@ -5027,22 +5027,15 @@ class TransResRequestUtil
 //
 //        return $subsidy;
 //    }
-    public function calculateDefaultTotal($invoice) {
-        $request = $invoice->getTransresRequest();
+
+    public function calculateDefaultTotalByInvoice($invoice) {
+        $transresRequest = $invoice->getTransresRequest();
+        return $this->calculateDefaultTotalByRequest($transresRequest);
+    }
+    public function calculateDefaultTotalByRequest($transresRequest) {
         $totalDefault = 0;
 
-        foreach( $request->getProducts() as $product ) {
-
-//            $quantity = $product->getQuantity();
-//            $category = $product->getCategory();
-//            if( $category ) {
-//                $initialQuantity = $category->getInitialQuantity();
-//                $quantity = $quantity - $initialQuantity;
-//                //default fee
-//                $fee = $category->getPriceFee();
-//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-//                $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
-//            }
+        foreach( $transresRequest->getProducts() as $product ) {
 
             //default
             $quantitiesArr = $product->calculateQuantities(NULL);
@@ -5058,6 +5051,7 @@ class TransResRequestUtil
         return $totalDefault;
     }
 
+    //Used on the invoice new/edit page
     //"[Internal pricing] has been used to generate this invoice. Subsidy: $[XX.XX]"
     public function getSubsidyInfo($invoice,$cycle=NULL) {
         $res = "";
@@ -5082,7 +5076,8 @@ class TransResRequestUtil
             //If the price difference is equal to zero or below, DO NOT show the “Subsidy: $[XX.XX]” portion
             //This invoice utilizes internal pricing. Total subsidy: $[XX.XX]
             //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
-            $res = $res . " Total subsidy: $" . $subsidy;
+            $res = $res . " Total subsidy: $" .
+                "<span id='invoice-subsidy-info'>" . $subsidy . "</span>";
 
 //            $res = $priceList->getName()." applied to this invoice. Total subsidy: $".$subsidy;
 //            //This invoice utilizes internal pricing
