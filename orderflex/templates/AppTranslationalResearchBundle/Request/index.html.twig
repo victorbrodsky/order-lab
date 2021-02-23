@@ -124,10 +124,16 @@
                 {% set trclassname = "order-onhold-status" %}
             {% endif %}
 
+            {% set idColor = transres_util.getPriceListColorByRequest(transresRequest) %}
+
             <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
                 {% if hiderows is not defined or not hiderows %}
                 <td>
-                    <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
+                    <a
+                        href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                        target="_blank"
+                        style="color:{{ idColor }}"
+                    >{{ transresRequest.oid }}</a>
                 </td>
 
                 {#{% stopwatch "### transresRequest.project.getOid() ###" %}#}

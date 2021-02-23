@@ -290,10 +290,14 @@
 
             {% set projectTitle = project.getTitle() %}
 
+            {% set idColor = transres_util.getPriceListColorByProject(project) %}
+
             <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
-                       target="_blank">{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
+                       target="_blank"
+                       style="color:{{ idColor }}"
+                    >{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
                 </td>
 
                 <td>
