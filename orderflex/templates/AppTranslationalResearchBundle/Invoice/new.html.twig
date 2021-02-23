@@ -203,6 +203,14 @@
 
             {#<hr />#}
 
+            {#<div class="row">#}
+                {#<div class="col-xs-12">#}
+                    {#<button class = "btn btn-default" onclick="transresUpdateTotal(this);">#}
+                        {#Recalculate#}
+                    {#</button>#}
+                {#</div>#}
+            {#</div>#}
+
 
             {#{{ formmacros.field(form.subTotal) }}#}
             <p>
@@ -211,12 +219,13 @@
                     <strong>{{ form.subTotal.vars.label|raw }}</strong>
                 </div>
                 <div class="col-xs-6" align="left">
-                    <div class = "input-group">
-                        {{ form_widget(form.subTotal) }}
-                        <span class = "input-group-addon btn" onclick="transresUpdateSubTotal(this);">
-                            Recalculate
-                        </span>
-                    </div>
+                    {{ form_widget(form.subTotal) }}
+                    {#<div class = "input-group">#}
+                        {#{{ form_widget(form.subTotal) }}#}
+                        {#<span class = "input-group-addon btn" onclick="transresUpdateSubTotal(this);">#}
+                            {#Recalculate#}
+                        {#</span>#}
+                    {#</div>#}
                 </div>
                 <div class="col-xs-4" align="right">
                 </div>
@@ -242,6 +251,7 @@
                     <strong>{{ form.total.vars.label|raw }}</strong>
                 </div>
                 <div class="col-xs-6" align="left">
+                    {#{{ form_widget(form.total) }}#}
                     <div class = "input-group">
                         {{ form_widget(form.total) }}
                         <span class = "input-group-addon btn" onclick="transresUpdateTotal(this);">

@@ -109,54 +109,116 @@ class TransResRequestUtil
         return null;
     }
 
+    //Used to calculate fee on request list and dashboard
     public function getTransResRequestFeeHtml( $request ) {
         $subTotal = 0;
 
         $priceList = $request->getPriceList();
 
         foreach($request->getProducts() as $product) {
-            $requested = $product->getRequested();
-            $completed = $product->getCompleted();
-            $category = $product->getCategory();
+            //$requested = $product->getRequested();
+            //$completed = $product->getCompleted();
+            //$category = $product->getCategory();
             //echo "requested=$requested <br>";
-            $fee = 0;
-            $feeAdditionalItem = 0;
-            $units = 0;
-            if( $category ) {
-                //$fee = $category->getFee();
-                $fee = $category->getPriceFee($priceList);
-                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
-            }
-            if( $requested ) {
-                $units = intval($requested);
-            }
-            if( $completed ) {
-                $units = intval($completed);
-            }
-            if( $category ) {
-                $initialQuantity = $category->getPriceInitialQuantity($priceList);
-            }
-            if( $units > 0 ) {
-                if( !$initialQuantity ) {
-                    $initialQuantity = 1;
-                }
-                //1 > 1 => $units = 1, $initialQuantity = 1
-                if( $units > $initialQuantity ) {
-                    $units = $units - $initialQuantity;
-                } else {
-                    $initialQuantity = $units;
-                    $units = 0;
-                }
-            }
+            //$fee = 0;
+            //$feeAdditionalItem = 0;
+            //$units = 0;
+//            if( $category ) {
+//                //$fee = $category->getFee();
+//                $fee = $category->getPriceFee($priceList);
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+//            }
+//            if( $requested ) {
+//                $units = intval($requested);
+//            }
+//            if( $completed ) {
+//                $units = intval($completed);
+//            }
+//            if( $category ) {
+//                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//            }
+//            if( $units > 0 ) {
+//                if( !$initialQuantity ) {
+//                    $initialQuantity = 1;
+//                }
+//                //1 > 1 => $units = 1, $initialQuantity = 1
+//                if( $units > $initialQuantity ) {
+//                    $units = $units - $initialQuantity;
+//                } else {
+//                    $initialQuantity = $units;
+//                    $units = 0;
+//                }
+//            }
+
+            $quantitiesArr = $product->calculateQuantities($priceList);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
+            
             //echo "units=$units; fee=$fee <br>";
-            if( $fee && $units ) {
+            if( $initialFee && $initialQuantity ) {
                 //$subTotal = $subTotal + ($units * intval($fee));
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+                //$subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
             }
         }
 
         return $subTotal;
     }
+//    public function getTransResRequestFeeHtml_ORIG( $request ) {
+//        $subTotal = 0;
+//
+//        $priceList = $request->getPriceList();
+//
+//        foreach($request->getProducts() as $product) {
+//            $requested = $product->getRequested();
+//            $completed = $product->getCompleted();
+//            $category = $product->getCategory();
+//            //echo "requested=$requested <br>";
+//            $fee = 0;
+//            $feeAdditionalItem = 0;
+//            $units = 0;
+//            if( $category ) {
+//                //$fee = $category->getFee();
+//                $fee = $category->getPriceFee($priceList);
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+//            }
+//            if( $requested ) {
+//                $units = intval($requested);
+//            }
+//            if( $completed ) {
+//                $units = intval($completed);
+//            }
+//            if( $category ) {
+//                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//            }
+//            if( $units > 0 ) {
+//                if( !$initialQuantity ) {
+//                    $initialQuantity = 1;
+//                }
+//                //1 > 1 => $units = 1, $initialQuantity = 1
+//                if( $units > $initialQuantity ) {
+//                    $units = $units - $initialQuantity;
+//                } else {
+//                    $initialQuantity = $units;
+//                    $units = 0;
+//                }
+//            }
+//
+//            $quantitiesArr = $product->calculateQuantities($priceList);
+//            $initialQuantity = $quantitiesArr['initialQuantity'];
+//            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//
+//            //echo "units=$units; fee=$fee <br>";
+//            if( $fee && $units ) {
+//                //$subTotal = $subTotal + ($units * intval($fee));
+//                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+//            }
+//        }
+//
+//        return $subTotal;
+//    }
 
     //Used to generate spreadsheet
     public function getTransResRequestProductInfoArr( $request ) {
@@ -178,41 +240,50 @@ class TransResRequestUtil
 
             $comment = $product->getComment();
             $note = $product->getNote();
+
             //echo "requested=$requested <br>";
-            $fee = 0;
-            $feeAdditionalItem = 0;
-            $units = 0;
-            $initialQuantity = 0;
-            if( $category ) {
-                //$fee = $category->getFee();
-                $fee = $category->getPriceFee($priceList);
-                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
-            }
-            if( $requested ) {
-                $units = intval($requested);
-            }
-            if( $completed ) {
-                $units = intval($completed);
-            }
-            if( $category ) {
-                $initialQuantity = $category->getPriceInitialQuantity($priceList);
-            }
-            if( $units > 0 ) {
-                if( !$initialQuantity ) {
-                    $initialQuantity = 1;
-                }
-                //1 > 1 => $units = 1, $initialQuantity = 1
-                if( $units > $initialQuantity ) {
-                    $units = $units - $initialQuantity;
-                } else {
-                    $initialQuantity = $units;
-                    $units = 0;
-                }
-            }
+            //$fee = 0;
+            //$feeAdditionalItem = 0;
+            //$units = 0;
+            //$initialQuantity = 0;
+//            if( $category ) {
+//                //$fee = $category->getFee();
+//                $fee = $category->getPriceFee($priceList);
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+//            }
+//            if( $requested ) {
+//                $units = intval($requested);
+//            }
+//            if( $completed ) {
+//                $units = intval($completed);
+//            }
+//            if( $category ) {
+//                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//            }
+//            if( $units > 0 ) {
+//                if( !$initialQuantity ) {
+//                    $initialQuantity = 1;
+//                }
+//                //1 > 1 => $units = 1, $initialQuantity = 1
+//                if( $units > $initialQuantity ) {
+//                    $units = $units - $initialQuantity;
+//                } else {
+//                    $initialQuantity = $units;
+//                    $units = 0;
+//                }
+//            }
+
+            $quantitiesArr = $product->calculateQuantities($priceList);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
+
             //echo "units=$units; fee=$fee <br>";
-            if( $fee && $units ) {
+            if( $initialFee && $initialQuantity ) {
                 //$subTotal = $subTotal + ($units * intval($fee));
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+                //$subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+                $subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
             }
 
 //            'productRequested' => $requested,
@@ -1581,58 +1652,27 @@ class TransResRequestUtil
 
             $invoiceItem->setProduct($product);
 
-            //Invoice should pull the Quantity from the "Completed Quantity" field
-            // (IF "Completed Quantity" field has a value; if it has no value, pull the number from the Requested Quantity field)
-//            $quantity = $product->getCompleted();
-//            if( !$quantity ) {
-//                $quantity = $product->getRequested();
-//            }
-            $quantity = $product->getQuantity();
-            //echo $product.": product quantity=".$quantity."<br>";
-            $initialQuantity = 1; //default initialQuantity
-            $thisQuantity = $quantity - $initialQuantity;
+            $quantitiesArr = $product->calculateQuantities($priceList);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
+            $categoryItemCode = $quantitiesArr['categoryItemCode'];
+            $categoryName = $quantitiesArr['categoryName'];
+
             $invoiceItem->setQuantity($initialQuantity);
-            $invoiceItem->setAdditionalQuantity($thisQuantity);
+            $invoiceItem->setAdditionalQuantity($additionalQuantity);
+            $invoiceItem->setUnitPrice($initialFee);
+            $invoiceItem->setAdditionalUnitPrice($additionalFee);
+            $invoiceItem->setItemCode($categoryItemCode);
+            $invoiceItem->setDescription($categoryName);
 
             //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
             //TODO: add "comment" from Work Request
 
-            $category = $product->getCategory();
-            $fee = 0;
-            $feeAdditionalItem = 0;
-
-            if( $category ) {
-
-                //ItemCode
-                $itemCode = $category->getProductId($priceList); //original productId can be obtained by $invoiceItem->getProduct()->getCategory()->getProductId()
-                //$itemCode = $category->getProductId();
-                $invoiceItem->setItemCode($itemCode);
-
-                //Description
-                $name = $category->getName();
-                $invoiceItem->setDescription($name);
-
-                //UnitPrice
-                //$fee = $category->getFee();
-                $fee = $category->getPriceFee($priceList);
-                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
-
-                //TODO: setQuantity and setAdditionalQuantity
-                //1) get initialQuantity
-                $initialQuantity = $category->getPriceInitialQuantity($priceList);  //Initial quantity
-                $quantity = $quantity - $initialQuantity;                           //Additional quantity
-                //echo "initialQuantity=".$initialQuantity.", quantity=".$quantity."<br>";
-                $invoiceItem->setQuantity($initialQuantity);
-                $invoiceItem->setAdditionalQuantity($quantity);
-
-                $invoiceItem->setUnitPrice($fee);
-                $invoiceItem->setAdditionalUnitPrice($feeAdditionalItem);
-            }
-
-            if( $quantity && $fee ) {
+            if( $initialQuantity && $initialFee ) {
                 //Total
-                //$total = intval($quantity) * intval($fee);
-                $total = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
+                $total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
 
                 $invoiceItem->setTotal($total);
             }
@@ -1642,6 +1682,74 @@ class TransResRequestUtil
 
         return $invoiceItemsArr;
     }
+//    public function createRequestItems_ORIG($request) {
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $invoiceItemsArr = new ArrayCollection();
+//        $priceList = $request->getPriceList();
+//
+//        foreach( $request->getProducts() as $product ) {
+//            //Invoice's quantity field is pre-populated by the Request's "Requested #"
+//            $invoiceItem = new InvoiceItem($user);
+//
+//            $invoiceItem->setProduct($product);
+//
+//            //Invoice should pull the Quantity from the "Completed Quantity" field
+//            $quantity = $product->getQuantity();
+//            echo $product.": product quantity=".$quantity."<br>";
+//            $initialQuantity = 1; //default initialQuantity
+//            $thisQuantity = $quantity - $initialQuantity;
+//
+//            $invoiceItem->setQuantity($initialQuantity);
+//            $invoiceItem->setAdditionalQuantity($thisQuantity);
+//
+//            //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
+//            //TODO: add "comment" from Work Request
+//
+//            $category = $product->getCategory();
+//            $fee = 0;
+//            $feeAdditionalItem = 0;
+//
+//            if( $category ) {
+//
+//                //ItemCode
+//                $itemCode = $category->getProductId($priceList); //original productId can be obtained by $invoiceItem->getProduct()->getCategory()->getProductId()
+//                //$itemCode = $category->getProductId();
+//                $invoiceItem->setItemCode($itemCode);
+//
+//                //Description
+//                $name = $category->getName();
+//                $invoiceItem->setDescription($name);
+//
+//                //UnitPrice
+//                //$fee = $category->getFee();
+//                $fee = $category->getPriceFee($priceList);
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+//
+//                //TODO: setQuantity and setAdditionalQuantity
+//                //1) get initialQuantity
+//                $initialQuantity = $category->getPriceInitialQuantity($priceList);  //Initial quantity
+//                $quantity = $quantity - $initialQuantity;                           //Additional quantity
+//                echo "initialQuantity=".$initialQuantity.", quantity=".$quantity."<br>";
+//                $invoiceItem->setQuantity($initialQuantity);
+//                $invoiceItem->setAdditionalQuantity($quantity);
+//
+//                $invoiceItem->setUnitPrice($fee);
+//                $invoiceItem->setAdditionalUnitPrice($feeAdditionalItem);
+//            }
+//
+//            if( $quantity && $fee ) {
+//                //Total
+//                //$total = intval($quantity) * intval($fee);
+//                $total = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
+//
+//                $invoiceItem->setTotal($total);
+//            }
+//
+//            $invoiceItemsArr->add($invoiceItem);
+//        }
+//
+//        return $invoiceItemsArr;
+//    }
 
 //    //NOT USED
 //    public function getRequestItemsFormNode($request) {
@@ -4837,35 +4945,31 @@ class TransResRequestUtil
             $quantity = $product->getQuantity();
             //echo "quantity=$quantity <br>";
 
-            $category = $product->getCategory();
+            //default fee
+            $quantitiesArr = $product->calculateQuantities(NULL);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
 
-            if( $category ) {
+            $totalDefault = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
 
-                $initialQuantity = $category->getPriceInitialQuantity($priceList);
-                $quantity = $quantity - $initialQuantity;
+            //special fee
+            $quantitiesArr = $product->calculateQuantities($priceList);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
 
-                //default fee
-                $fee = $category->getPriceFee();
-                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
-                //echo $category->getProductId().": totalDefault=$totalDefault <br>";
+            $totalSpecial = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
 
-                //special fee
-                $specialFee = $category->getPriceFee($priceList);
-                $specialFeeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
-                $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$initialQuantity,$quantity);
-                //echo $category->getProductId().": totalSpecial=$totalSpecial <br>";
+            if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
+                //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
+                $diff = $this->toDecimal($totalDefault - $totalSpecial);
 
-                if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
-                    //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
-                    $diff = $this->toDecimal($totalDefault - $totalSpecial);
+                if( $diff > 0 ) {
                     $subsidy = $subsidy + $diff;
                 }
-
-                //echo "loop subsidy=$subsidy <br>";
-
-            } else {
-                //echo "Category null <br>";
             }
 
         }
@@ -4875,32 +4979,78 @@ class TransResRequestUtil
 
         return $subsidy;
     }
+//    public function calculateSubsidy_ORIG($invoice) {
+//        $request = $invoice->getTransresRequest();
+//        $priceList = $request->getPriceList($request);
+//        $subsidy = 0;
+//
+//        foreach( $request->getProducts() as $product ) {
+//
+//            $quantity = $product->getQuantity();
+//            //echo "quantity=$quantity <br>";
+//
+//            $category = $product->getCategory();
+//
+//            if( $category ) {
+//
+//                $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//                $quantity = $quantity - $initialQuantity;
+//
+//                //default fee
+//                $fee = $category->getPriceFee();
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
+//                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
+//                //echo $category->getProductId().": totalDefault=$totalDefault <br>";
+//
+//                //special fee
+//                $specialFee = $category->getPriceFee($priceList);
+//                $specialFeeAdditionalItem = $category->getPriceFeeAdditionalItem($priceList);
+//                $totalSpecial = $this->getTotalFeesByQuantity($specialFee,$specialFeeAdditionalItem,$initialQuantity,$quantity);
+//                //echo $category->getProductId().": totalSpecial=$totalSpecial <br>";
+//
+//                if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
+//                    //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
+//                    $diff = $this->toDecimal($totalDefault - $totalSpecial);
+//                    $subsidy = $subsidy + $diff;
+//                }
+//
+//                //echo "loop subsidy=$subsidy <br>";
+//
+//            } else {
+//                //echo "Category null <br>";
+//            }
+//
+//        }
+//
+//        $subsidy = $this->toDecimal($subsidy);
+//        //echo "res subsidy=$subsidy <br>";
+//
+//        return $subsidy;
+//    }
     public function calculateDefaultTotal($invoice) {
         $request = $invoice->getTransresRequest();
         $totalDefault = 0;
 
         foreach( $request->getProducts() as $product ) {
 
-//            $quantity = $product->getCompleted();
-//            if( !$quantity ) {
-//                $quantity = $product->getRequested();
+//            $quantity = $product->getQuantity();
+//            $category = $product->getCategory();
+//            if( $category ) {
+//                $initialQuantity = $category->getInitialQuantity();
+//                $quantity = $quantity - $initialQuantity;
+//                //default fee
+//                $fee = $category->getPriceFee();
+//                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
+//                $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
 //            }
-            $quantity = $product->getQuantity();
 
-            $category = $product->getCategory();
-
-            if( $category ) {
-
-                $initialQuantity = $category->getInitialQuantity();
-                $quantity = $quantity - $initialQuantity;
-
-                //default fee
-                $fee = $category->getPriceFee();
-                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity);
-
-            }
-
+            //default
+            $quantitiesArr = $product->calculateQuantities(NULL);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
+            $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
         }
 
         $totalDefault = $this->toDecimal($totalDefault);
