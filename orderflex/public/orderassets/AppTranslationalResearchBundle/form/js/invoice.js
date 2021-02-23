@@ -173,73 +173,28 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 
 
 function transresInvoiceItemListeneres(){
-    //quantity or unit price update => update total
-    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity, .invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
 
-        if(0) {
-            //console.log("update row total");
-            var invoiceItemRow = $(this).closest('.user-collection-holder');
-            var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
-            var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
-            var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
-            var additionalUnitPrice = invoiceItemRow.find(".invoiceitem-additionalUnitPrice").val();
-            //console.log("row quantity="+quantity+"; unitPrice="+unitPrice);
-            var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
-            var totalEl1 = invoiceItemRow.find(".invoiceitem-total1");
-            var totalEl2 = invoiceItemRow.find(".invoiceitem-total2");
+    $('.invoiceitem-quantity').on('input', function(event) {
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        transresAdjustQuantity(invoiceItemRow);
 
-            var total1 = 0;
-            var total2 = 0;
+        transresCalculateTotals(invoiceItemRow);
 
-            if (quantity && unitPrice) {
-                total1 = parseFloat(quantity) * parseFloat(unitPrice);
-                total1 = transresRoundDecimal(total1);
-                //console.log("row total1="+total1);
-                totalEl1.val(total1);
-            } else {
-                totalEl1.val(null);
-            }
+        //console.log("transres UpdateSubTotal: triggered by claculated row total");
+        transresUpdateSubTotal(this);
+    });
 
-            if (additionalQuantity && additionalUnitPrice) {
-                total2 = parseFloat(additionalQuantity) * parseFloat(additionalUnitPrice);
-                total2 = transresRoundDecimal(total2);
-                //console.log("row total2="+total2);
-                totalEl2.val(total2);
-            } else {
-                totalEl2.val(null);
-            }
+    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function(event) {
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        transresValidateQuantity(invoiceItemRow);
 
-            var total = total1 + total2;
-            if (total) {
-                total = transresRoundDecimal(total);
-                invoiceItemTotalEl.val(total);
-            } else {
-                invoiceItemTotalEl.val(null);
-            }
-        }
+        transresCalculateTotals(invoiceItemRow);
 
+        //console.log("transres UpdateSubTotal: triggered by claculated row total");
+        transresUpdateSubTotal(this);
+    });
 
-        if(0) {
-            if (quantity && unitPrice) {
-                //var total = parseFloat(quantity) * parseFloat(unitPrice);
-                var total = 0;
-                if (!additionalUnitPrice) {
-                    additionalUnitPrice = unitPrice;
-                }
-                if (parseInt(quantity) == 1) {
-                    total = parseFloat(quantity) * parseFloat(unitPrice);
-                } else if (parseInt(quantity) > 1) {
-                    total = 1 * parseFloat(unitPrice);
-                    total = total + (parseInt(quantity) - 1) * additionalUnitPrice;
-                }
-
-                total = transresRoundDecimal(total);
-                //console.log("row total="+total);
-                invoiceItemTotalEl.val(total);
-            } else {
-                invoiceItemTotalEl.val(null);
-            }
-        }
+    $('.invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
 
         var invoiceItemRow = $(this).closest('.user-collection-holder');
 
@@ -249,10 +204,15 @@ function transresInvoiceItemListeneres(){
         transresUpdateSubTotal(this);
     });
 
-    $('.invoiceitem-quantity').on('input', function(event) {
-        var invoiceItemRow = $(this).closest('.user-collection-holder');
-        transresAdjustQuantity(invoiceItemRow);
-    });
+    // $('.invoiceitem-quantity, .invoiceitem-additionalQuantity, .invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
+    //
+    //     var invoiceItemRow = $(this).closest('.user-collection-holder');
+    //
+    //     transresCalculateTotals(invoiceItemRow);
+    //
+    //     //console.log("transres UpdateSubTotal: triggered by claculated row total");
+    //     transresUpdateSubTotal(this);
+    // });
 
     //total update => update subtotal and total
     $('.invoiceitem-total').on('input', function(event) {
@@ -283,10 +243,6 @@ function transresInvoiceItemListeneres(){
         transresUpdateDue(this);
     });
 
-    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function(event) {
-        var invoiceItemRow = $(this).closest('.user-collection-holder');
-        transresValidateQuantity(invoiceItemRow);
-    });
 }
 
 //If the user edits initial quantity, when the cursor leaves the form field, update the remaining quantity for the same item
