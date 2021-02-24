@@ -224,7 +224,7 @@ function transresMakeColumnData() {
                 filter: false,
             }
         },
-        { header:'Accession ID', columns:{} },
+        { header:'Accession ID', columns:{} }, //TODO: add limit to 255 chars
         { header:'Part ID', columns:{} },
         { header:'Block ID', columns:{} },
         { header:'Slide ID', columns:{} },

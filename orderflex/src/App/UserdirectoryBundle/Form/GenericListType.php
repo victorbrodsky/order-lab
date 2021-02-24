@@ -631,18 +631,18 @@ class GenericListType extends AbstractType
             $builder->add('fee', TextType::class, array(
                 'label' => 'Default fee per unit for initial quantity ($):',
                 'required' => false,
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control currency-mask-without-prefix')
             ));
             $builder->add('feeAdditionalItem', TextType::class, array(
                 'label' => 'Default fee per additional item ($):',
                 'required' => false,
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control currency-mask-without-prefix')
             ));
 
             $builder->add('initialQuantity', TextType::class, array(
                 'label' => 'Initial Quantity:',
                 'required' => false,
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control digit-mask')
             ));
 //            if(0) {
 //                if (
@@ -879,13 +879,13 @@ class GenericListType extends AbstractType
             $builder->add('category',null,array(
                 'label' => "Category:",
                 'required' => false,
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'form-control', 'maxlength'=>"255"),
             ));
 
             $builder->add('altname',null,array(
                 'label' => "Alternative Name:",
                 'required' => false,
-                'attr' => array('class'=>'form-control'),
+                'attr' => array('class'=>'form-control', 'maxlength'=>"255"),
             ));
 
             $builder->add('company',null,array(

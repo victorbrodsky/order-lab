@@ -112,6 +112,9 @@ function fieldInputMask( holder ) {
     // });
 
     $(".currency-mask").inputmask({ alias: "currency"});
+
+    $(".currency-mask-without-prefix").inputmask({ alias: "currency", prefix: '', rightAlign: false});
+
     //$(".currency-mask").inputmask("currency");
 
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });

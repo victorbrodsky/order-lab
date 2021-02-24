@@ -188,14 +188,14 @@ class InvoiceType extends AbstractType
             'label' => "Discount ($):",
             //'disabled' => true,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-discountNumeric')
+            'attr' => array('class' => 'form-control invoice-discountNumeric currency-mask-without-prefix')
         ));
 
         $builder->add('discountPercent', null, array(
             'label' => "Discount (%):",
             //'disabled' => true,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-discountPercent')
+            'attr' => array('class' => 'form-control invoice-discountPercent digit-mask')
         ));
 
         $builder->add('footer', null, array(
@@ -263,14 +263,14 @@ class InvoiceType extends AbstractType
             'label' => "Subtotal ($):",
             'scale' => 2,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-subTotal') //'onclick'=>'transresUpdateSubTotal()'
+            'attr' => array('class' => 'form-control invoice-subTotal currency-mask-without-prefix') //'onclick'=>'transresUpdateSubTotal()'
         ));
 
         $builder->add('total', NumberType::class, array(
             'label' => "Total ($):",
             'scale' => 2,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-total')
+            'attr' => array('class' => 'form-control invoice-total currency-mask-without-prefix')
         ));
 
         if( $this->params['cycle'] != 'new' ) {

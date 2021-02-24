@@ -2,15 +2,18 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -35,16 +38,16 @@ class InvoiceItemType extends AbstractType
 
         $invoiceItem = $builder->getData();
 
-        $builder->add('quantity', null, array(
+        $builder->add('quantity', NumberType::class, array(
             'label' => "Quantity",
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-quantity', 'min'=>'0')
+            'attr' => array('class' => 'form-control invoiceitem-quantity digit-mask', 'min'=>'0')
         ));
 
-        $builder->add('additionalQuantity', null, array(
+        $builder->add('additionalQuantity', NumberType::class, array(
             'label' => "Additional Quantity",
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-additionalQuantity', 'min'=>'0')
+            'attr' => array('class' => 'form-control invoiceitem-additionalQuantity digit-mask', 'min'=>'0')
         ));
 
         $builder->add('itemCode', null, array(
@@ -116,22 +119,22 @@ class InvoiceItemType extends AbstractType
             'attr' => array('class' => 'textarea form-control', 'style' => 'min-height: 80px;')
         ));
 
-        $builder->add('unitPrice', NumberType::class, array(
+        $builder->add('unitPrice', null, array(
             'label' => "Unit Price ($)",
             'scale' => 2,
             //'divisor' => 100,
             //'currency' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-unitPrice')
+            'attr' => array('class' => 'form-control invoiceitem-unitPrice currency-mask-without-prefix')
         ));
 
-        $builder->add('additionalUnitPrice', NumberType::class, array(
+        $builder->add('additionalUnitPrice', null, array(
             'label' => "Additional Unit Price ($)",
             'scale' => 2,
             //'divisor' => 100,
             //'currency' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-additionalUnitPrice')
+            'attr' => array('class' => 'form-control invoiceitem-additionalUnitPrice currency-mask-without-prefix')
         ));
 
 //        $builder->add('total', NumberType::class, array(

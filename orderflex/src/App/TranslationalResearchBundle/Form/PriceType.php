@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,19 +38,19 @@ class PriceType extends AbstractType
         $builder->add('fee', null, array(
             'label' => "Fee per unit for initial quantity ($):",
             'required' => false,
-            'attr' => array('class' => 'form-control pricetype-fee')
+            'attr' => array('class' => 'form-control pricetype-fee currency-mask-without-prefix')
         ));
 
         $builder->add('feeAdditionalItem', null, array(
             'label' => "Fee per additional item ($):",
             'required' => false,
-            'attr' => array('class' => 'form-control pricetype-feeadditionalitem')
+            'attr' => array('class' => 'form-control pricetype-feeadditionalitem currency-mask-without-prefix')
         ));
 
-        $builder->add('initialQuantity', null, array(
+        $builder->add('initialQuantity', NumberType::class, array(
             'label' => "Initial Quantity:",
             'required' => false,
-            'attr' => array('class' => 'form-control pricetype-initialQuantity')
+            'attr' => array('class' => 'form-control pricetype-initialQuantity digit-mask')
         ));
 
 
