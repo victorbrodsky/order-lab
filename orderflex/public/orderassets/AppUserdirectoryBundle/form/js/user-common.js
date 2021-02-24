@@ -865,34 +865,6 @@ function initSingleDatepicker( datepickerElement ) {
 
 
 function expandTextarea(holder) {
-    //var elements = document.getElementsByClassName('textarea');
-
-    //http://www.jacklmoore.com/autosize/ v.2
-    //for downlaod it append lots of white space on the bottom
-//    if( cycle != 'download' ) {
-//        autosize(document.querySelectorAll('textarea'));
-////        $('textarea').each(function(){
-////            //$(this).autosize();  //v1
-////            autosize($(this));  //v2
-////        });
-////        $('textarea').autosize();
-//    }
-
-    //var elements = getElementTargetByHolder(holder,'.textarea');
-    //console.log('textarea count='+$(elements).length);
-    //if( $(elements).length == 0 ) {
-    //    return;
-    //} else {
-    //    elements = $(elements);
-    //}
-
-    //if( holder ) {
-    //    var elements = holder.find('.textarea');
-    //} else {
-    //    var elements = $('.textarea');
-    //}
-
-
     var targetid = ".textarea";
     var targetidHeight = [];
 
@@ -930,7 +902,7 @@ function expandTextarea(holder) {
         }
 
         if( domElement.id in targetidHeight && targetidHeight[domElement.id] ) {
-            if( targetidHeight[domElement.id] > 20 ) {
+            if( targetidHeight[domElement.id] > 40 ) {
                 //console.log("already set="+domElement.id+", h="+targetidHeight[domElement.id]);
                 return null;
             }

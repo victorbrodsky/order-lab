@@ -187,6 +187,14 @@ function ajaxFinishedCondition() {
     }
 }
 
+function string_max_length_validator(value, callback) {
+    if( value.length > 255 ) {
+        alert('Must be 255 character or less. Extra characters will be removed');
+        //this.instance.setDataAtCell(this.row, this.col, value.substring(0, 255), null);
+    }
+    callback(true);
+}
+
 function transresMakeColumnData() {
 
     var defaultAccessionTypeIndex = 0;
@@ -224,7 +232,8 @@ function transresMakeColumnData() {
                 filter: false,
             }
         },
-        { header:'Accession ID', columns:{} }, //TODO: add limit to 255 chars
+        { header:'Accession ID', columns:{} },
+        //{ header:'Accession ID', columns:{}, validator: string_max_length_validator }, //TODO: add limit to 255 chars
         { header:'Part ID', columns:{} },
         { header:'Block ID', columns:{} },
         { header:'Slide ID', columns:{} },

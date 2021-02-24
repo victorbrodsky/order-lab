@@ -348,7 +348,7 @@
 
             {% if patient == null %}
                 <p>No single patient is referenced by this entry</p>
-                <br>
+                {#<br>#}
             {% endif %}
 
             {{ calllogmacros.calllogWarningMessageWithLatestEncounterEntity(message,encounter) }}
@@ -359,6 +359,8 @@
             {% endif %}
 
             <div class="{{ callLogViewClass }}">
+
+            {{ calllog_util_form.getEntryHtml(message,status)|raw }}
 
             {#enrty form body#}
             {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
@@ -375,7 +377,7 @@
 
             {{ calllog_util_form.getCalllogAuthorRolesHtml(message,sitename)|raw }}
 
-            {{ calllog_util_form.getEntryHtml(message,status)|raw }}
+            {#{{ calllog_util_form.getEntryHtml(message,status)|raw }}#}
 
             {{ calllog_util_form.getEncounterPatientInfoHtml(encounter,status)|raw }}
 
