@@ -704,43 +704,6 @@
 
         }
 
-
-//        function transresTableBarcodeGeneration( barcodeField ) {
-//            console.log("generate barcode");
-//            //generate barcode
-//            var barcode = null;
-//            var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" alt="Smiley face" height="42" width="42">';
-//
-//            //put barcode image to '.table-barcode-image'
-//            barcodeField.closest(".table-barcode-image").html(image);
-//
-//            let canvas = document.createElement('canvas');
-//            bwipjs(canvas, options, function(err, cvs) {
-//                console.log("bwipjs function");
-//                if (err) {
-//                    // handle the error
-//                    console.log(err);
-//                } else {
-//                    console.log("set barcode image");
-//                    // Don't need the second param since we have the canvas in scope...
-//                    document.getElementById('test-barcode-image').src = canvas.toDataURL('image/png');
-//                }
-//            });
-//        }
-
-//        function transresProductCloneListener() {
-//            $(".transres-product-clone-btn").on("click", function(e) {
-//
-//                var addBtn = $(".transres-products-holder").find(".transres-add-product-btn");
-//                printF(addBtn,"addBtn:");
-//
-//                addBtn.click();
-//
-//                //populate visible fields
-//
-//            });
-//        }
-
         function transresCloneExistingObject(btn,classname,confirmationMessage) {
             var cloneBtnEl = $(btn);
 

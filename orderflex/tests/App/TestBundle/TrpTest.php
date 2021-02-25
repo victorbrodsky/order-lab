@@ -217,7 +217,7 @@ class TrpTest extends WebTestBase
         if( count($invoices) > 0 ) {
             $invoice = end($invoices);
             $invoiceId = $invoice->getOId();
-            //echo "invoiceId=$invoiceId";
+            echo "invoiceId=$invoiceId";
         } else {
             echo "Skip testShowInvoiceApplication; There are no available invoices found";
             return null;
