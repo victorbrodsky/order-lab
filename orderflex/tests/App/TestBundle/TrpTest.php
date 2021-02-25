@@ -217,7 +217,7 @@ class TrpTest extends WebTestBase
         if( count($invoices) > 0 ) {
             $invoice = end($invoices);
             $invoiceId = $invoice->getOId();
-            echo "invoiceId=$invoiceId";
+            //echo "invoiceId=$invoiceId";
         } else {
             echo "Skip testShowInvoiceApplication; There are no available invoices found";
             return null;
@@ -225,8 +225,8 @@ class TrpTest extends WebTestBase
 
         //Test Show
         $crawler = $this->client->request('GET', '/translational-research/invoice/show/'.$invoiceId);
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
