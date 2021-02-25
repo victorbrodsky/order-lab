@@ -412,7 +412,7 @@ function richTextInit(formNodeId) {
     });
 
     //$('#oleg_userdirectorybundle_formnode_'+formNodeId).find(".note-editable").css({"text-align": "justify"});
-    $(".note-editable").css({"text-align": "justify"});
+    $(".note-editable").css({"text-align": "justify", "min-height": "140px"});
 }
 
 ////NOT USED
