@@ -230,7 +230,7 @@ class TrpTest extends WebTestBase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Invoice ID ")')->count()
+            $crawler->filter('html:contains("Invoice ID")')->count()
         );
         $this->assertGreaterThan(
             0,
