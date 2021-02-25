@@ -198,6 +198,13 @@ class Invoice {
     private $discountPercent;
 
     /**
+     * Administrative Fee
+     *
+     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
+     */
+    private $administrativeFee;
+
+    /**
      * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $subTotal;
@@ -695,6 +702,22 @@ class Invoice {
     /**
      * @return mixed
      */
+    public function getAdministrativeFee()
+    {
+        return $this->administrativeFee;
+    }
+
+    /**
+     * @param mixed $administrativeFee
+     */
+    public function setAdministrativeFee($administrativeFee)
+    {
+        $this->administrativeFee = $administrativeFee;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSubTotal()
     {
         return $this->subTotal;
@@ -1000,6 +1023,7 @@ class Invoice {
             "Subtotal($)=".$this->toDecimal($this->getSubTotal())."; ".
             "Discount($)=".$this->toDecimal($this->getDiscountNumeric())."; ".
             "Discount(%)=".$this->getDiscountPercent()."; ".
+            "Administrative Fee($)=".$this->getAdministrativeFee()."; ".
             "Total($)=".$this->toDecimal($this->getTotal())."; ".
             "Paid($)=".$this->toDecimal($this->getPaid())."; ".
             "Balance Due($)=".$this->toDecimal($this->getDue()).";<br>".

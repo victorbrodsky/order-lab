@@ -198,6 +198,12 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'form-control invoice-discountPercent digit-mask')
         ));
 
+        $builder->add('administrativeFee', null, array(
+            'label' => "Administrative Fee ($):",
+            'required' => false,
+            'attr' => array('class' => 'form-control invoice-administrativeFee digit-mask')
+        ));
+
         $builder->add('footer', null, array(
             'label' => "Footer:",
             'required' => false,

@@ -1295,7 +1295,7 @@
                                     <div class="col-xs-6" align="left">
                                         <input
                                                 id="invoice-discountNumeric-{{ invoice.id }}"
-                                                class="form-control invoice-discountNumeric"
+                                                class="form-control invoice-discountNumeric currency-mask-without-prefix"
                                                 type="text"
                                                 oninput="transresDiscountNumericUpdate(this);"
                                                 value="{{ invoice.discountNumeric }}">
@@ -1313,7 +1313,7 @@
                                     <div class="col-xs-6" align="left">
                                         <input
                                                 id="invoice-discountPercent-{{ invoice.id }}"
-                                                class="form-control invoice-discountPercent"
+                                                class="form-control invoice-discountPercent digit-mask"
                                                 type="text"
                                                 oninput="transresDiscountPercentUpdate(this);"
                                                 value="{{ invoice.discountPercent }}">
@@ -1321,6 +1321,22 @@
                                 </div>
                                 </p>
                             {#{% endif %}#}
+
+                            <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Administrative Fee ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                                id="invoice-administrativeFee-{{ invoice.id }}"
+                                                class="form-control invoice-administrativeFee currency-mask-without-prefix"
+                                                type="text"
+                                                oninput="transresAdministrativeFeeUpdate(this);"
+                                                value="{{ invoice.administrativeFee }}">
+                                    </div>
+                                </div>
+                            </p>
 
                             <p>
                             <div class="row">
@@ -1343,7 +1359,7 @@
                                     <div class="col-xs-6" align="left">
                                         <input
                                             id="invoice-paid-{{ invoice.id }}"
-                                            class="form-control invoice-paid"
+                                            class="form-control invoice-paid currency-mask-without-prefix"
                                             type="text"
                                             oninput="transresUpdateDue(this);"
                                             value="{{ invoice.paid }}">
@@ -1359,7 +1375,7 @@
                                     <div class="col-xs-6" align="left">
                                         <input
                                                 id="invoice-due-{{ invoice.id }}"
-                                                class="form-control invoice-due"
+                                                class="form-control invoice-due currency-mask-without-prefix"
                                                 type="text"
                                                 value="{{ invoice.due }}">
                                     </div>

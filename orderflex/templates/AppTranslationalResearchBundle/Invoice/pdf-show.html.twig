@@ -196,6 +196,14 @@
             </tr>
             {% endif %}
 
+            {% if invoice.administrativeFee %}
+                <tr>
+                    <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                    <td>Administrative Fee ($)</td>
+                    <td class='text-right'>{{ invoice.administrativeFee|number_format(0,'','') }}</td>
+                </tr>
+            {% endif %}
+
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td><b>Total ($)</b></td>

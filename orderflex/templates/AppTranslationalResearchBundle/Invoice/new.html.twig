@@ -248,6 +248,12 @@
                 {{ formmacros.field_left(form.discountPercent) }}
             {% endif %}
 
+            {% if cycle == "show" and not form.administrativeFee %}
+                {#show nothing on show page when empty#}
+            {% else %}
+                {{ formmacros.field_left(form.administrativeFee) }}
+            {% endif %}
+
             {#{{ formmacros.field_left(form.total) }}#}
             <p>
             <div class="row">

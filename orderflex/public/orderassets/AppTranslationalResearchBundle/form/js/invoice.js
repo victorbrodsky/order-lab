@@ -1,44 +1,6 @@
 /**
- * Created by ch3 on 1/30/2018.
+ * Created by Oleg Ivanov on 1/30/2018.
  */
-
-
-// function transresUpdateInvoice(invoiceOid) {
-//     console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
-//
-//     //var form = $("#change_invoice_form_"+invoiceOid);
-//     //var paid = form.find("#invoice-paid").val();
-//
-//     var paid = $("#invoice-paid-"+invoiceOid).val();
-//     console.log("paid="+paid);
-//
-//     var discountNumeric = $("#invoice-discountNumeric-"+invoiceOid).val();
-//     var discountPercent = $("#invoice-discountPercent-"+invoiceOid).val();
-//
-//     var comment = $("#invoice-comment-"+invoiceOid).val();
-//     console.log("comment="+comment);
-//
-//     var url = Routing.generate('translationalresearch_invoice_update_ajax');
-//
-//     $.ajax({
-//         url: url,
-//         timeout: _ajaxTimeout,
-//         type: "POST",
-//         data: {invoiceOid:invoiceOid, paid:paid, comment:comment, discountNumeric:discountNumeric, discountPercent:discountPercent},
-//         async: false,
-//     }).success(function(response) {
-//         //console.log(response);
-//         if( response == "OK" ) {
-//             //reload parent page
-//             window.location.reload(true);
-//         }
-//     }).done(function() {
-//         //lbtn.stop();
-//     }).error(function(jqXHR, textStatus, errorThrown) {
-//         console.log('Error : ' + errorThrown);
-//     });
-//
-// }
 
 function transresUpdateInvoiceStatus(invoiceId,status) {
     //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
@@ -63,6 +25,7 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 
     var discountNumeric = $("#invoice-discountNumeric-"+invoiceId).val();
     var discountPercent = $("#invoice-discountPercent-"+invoiceId).val();
+    var administrativeFee = $("#invoice-administrativeFee-"+invoiceId).val();
     var total = $("#invoice-total-"+invoiceId).val();
     var due = $("#invoice-due-"+invoiceId).val();
 
@@ -148,6 +111,7 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
             invoiceId: invoiceId,
             discountNumeric: discountNumeric,
             discountPercent: discountPercent,
+            administrativeFee: administrativeFee,
             paid: paid,
             total: total,
             due: due,
@@ -235,6 +199,9 @@ function transresInvoiceItemListeneres(){
         //var holder = $(this).closest('.invoice-financial-fields');
         //console.log("discountPercent updated");
         transresDiscountPercentUpdate(this);
+    });
+    $('.invoice-administrativeFee').on('input', function(event) {
+        transresAdministrativeFeeUpdate(this);
     });
 
     $('.invoice-paid').on('input', function(event) {
@@ -342,6 +309,10 @@ function transresDiscountPercentUpdate(thisEl) {
     transresUpdateTotal(thisEl);
 }
 
+function transresAdministrativeFeeUpdate(thisEl) {
+    transresUpdateTotal(thisEl);
+}
+
 function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     //console.log("update subtotal and total");
     //var totals = invoiceItemTotalEl.closest('.invoice-financial-fields').find(".invoiceitem-total");
@@ -375,6 +346,7 @@ function transresUpdateTotal(thisEl) {
     var discount = 0;
     var discountNumeric = holder.find(".invoice-discountNumeric").val();
     var discountPercent = holder.find(".invoice-discountPercent").val();
+    var administrativeFee = holder.find(".invoice-administrativeFee").val();
     var subTotal = holder.find(".invoice-subTotal").val();
 
     //console.log("count="+$(".invoice-discountNumeric").length);
@@ -389,7 +361,11 @@ function transresUpdateTotal(thisEl) {
         }
     }
 
-    var total = subTotal - discount;
+    var total = parseFloat(subTotal) - parseFloat(discount);
+
+    if( administrativeFee ) {
+        total = parseFloat(total) + parseFloat(administrativeFee);
+    }
 
     total = transresRoundDecimal(total);
     holder.find(".invoice-total").val(total);

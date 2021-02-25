@@ -1024,7 +1024,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         $invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotalByInvoice($invoice);
-        
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -1615,6 +1615,7 @@ class InvoiceController extends OrderAbstractController
         $total = trim( $request->get('total') );
         $discountNumeric = trim( $request->get('discountNumeric') );
         $discountPercent = trim( $request->get('discountPercent') );
+        $administrativeFee = trim( $request->get('administrativeFee') );
         $due = trim( $request->get('due') );
         $comment = trim( $request->get('comment') );
         $status = trim( $request->get('status') );
@@ -1656,6 +1657,9 @@ class InvoiceController extends OrderAbstractController
         if( $discountPercent == 0 ) {
             $discountPercent = NULL;
         }
+        if( $administrativeFee == 0 ) {
+            $administrativeFee = NULL;
+        }
         if( $paid == 0 ) {
             $paid = NULL;
         }
@@ -1672,6 +1676,7 @@ class InvoiceController extends OrderAbstractController
 
         $invoice->setDiscountNumeric($discountNumeric);
         $invoice->setDiscountPercent($discountPercent);
+        $invoice->setAdministrativeFee($administrativeFee);
 
         $invoice->setTotal($total);
 
