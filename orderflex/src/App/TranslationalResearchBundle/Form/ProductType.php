@@ -115,14 +115,14 @@ class ProductType extends AbstractType
             $builder->add('completed', TextType::class, array(
                 'label' => "Completed Quantity:",
                 'required' => false,
-                'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
+                'attr' => array('class' => 'form-control digit-mask mask-text-align-left product-completed-quantity')
             ));
         }
 
         $builder->add('comment', null, array(
             'label' => "Comment:",
             'required' => false,
-            'attr' => array('class' => 'textarea form-control')
+            'attr' => array('class' => 'textarea form-control product-comment')
         ));
 
         if( $this->params['cycle'] != "new" ) {
@@ -136,7 +136,7 @@ class ProductType extends AbstractType
                 //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
                 //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
                 'required' => false,
-                'attr' => array('class' => 'textarea form-control')
+                'attr' => array('class' => 'textarea form-control product-note')
             ));
         }
 

@@ -845,7 +845,7 @@
                     {% endfor %}
 
                     {% if cycle != "show" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',null,null) }}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',"transres-add-product-btn",null) }}
                     {% endif %}
                 </div>
 
@@ -876,6 +876,7 @@
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm transres-product-clone-btn" onClick="transresCloneExistingObject(this,'{{ classname }}')">Clone</button>
             </div>
             <br>
         {% else %}

@@ -264,48 +264,6 @@
 
 {% block additionaljs %}
 
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
-
-    {#{% javascripts#}
-    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
-    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
-    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
-    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
-    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-    {#'@AppOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
-
-    {#{% javascripts#}
-    {#'@AppUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-
-    {#{% javascripts#}
-    {#'@AppTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
-    {#'@AppOrderformBundle/Resources/public/form/js/selectAjax.js'#}
-    {#'@AppOrderformBundle/Resources/public/form/js/masking.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/form/js/user-masking.js'#}
-    {#'@AppTranslationalResearchBundle/Resources/public/form/js/barcode.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/qrcode/qrcode.js'#}
-    {#'@AppUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-
     <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}" ></script>
@@ -380,6 +338,8 @@
                 //console.log("2 show showPackingSlip");
                 showPackingSlip.click();
             }
+
+            //transresProductCloneListener();
 
         });
 
@@ -768,6 +728,67 @@
 //            });
 //        }
 
+//        function transresProductCloneListener() {
+//            $(".transres-product-clone-btn").on("click", function(e) {
+//
+//                var addBtn = $(".transres-products-holder").find(".transres-add-product-btn");
+//                printF(addBtn,"addBtn:");
+//
+//                addBtn.click();
+//
+//                //populate visible fields
+//
+//            });
+//        }
+
+        function transresCloneExistingObject(btn,classname,confirmationMessage) {
+            var cloneBtnEl = $(btn);
+
+            var addBtn = $(".transres-products-holder").find(".transres-add-product-btn");
+            printF(addBtn,"addBtn:");
+
+            addBtn.click();
+
+            //populate visible fields
+            var holder = cloneBtnEl.closest('.user-collection-holder');
+
+            var newHolder = $('.transres-products-holder').find('.user-collection-holder').last();
+
+            if( newHolder.length == 0 ) {
+                return;
+            }
+
+            var requestedQuantity = holder.find('.product-requested-quantity').val();
+            //console.log("requestedQuantity="+requestedQuantity);
+            if( requestedQuantity ) {
+                newHolder.find('.product-requested-quantity').val(requestedQuantity);
+            }
+
+            var completedQuantity = holder.find('.product-completed-quantity').val();
+            //console.log("completedQuantity="+completedQuantity);
+            if( completedQuantity ) {
+                newHolder.find('.product-completed-quantity').val(completedQuantity);
+            }
+
+            var comment = holder.find('.product-comment').val();
+            //console.log("comment="+comment);
+            if( comment ) {
+                newHolder.find('.product-comment').val(comment);
+            }
+
+            var note = holder.find('.product-note').val();
+            //console.log("note="+note);
+            if( note ) {
+                newHolder.find('.product-note').val(note);
+            }
+
+            var category = holder.find('.product-category-combobox').select2('data');
+            //console.log("category="+category);
+            //console.log(category);
+            if( category ) {
+                newHolder.find('.product-category-combobox').select2('data',category);
+            }
+        }
 
     </script>
 
