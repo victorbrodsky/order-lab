@@ -218,6 +218,10 @@ function transresAdjustQuantity(invoiceItemRow) {
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
     var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
 
+    if( totalQuantity == 0 ) {
+        return;
+    }
+
     var newAdditionalQuantity = parseInt(totalQuantity) - parseInt(quantity);
 
     if( newAdditionalQuantity != additionalQuantity ) {
@@ -231,18 +235,26 @@ function transresValidateQuantity(invoiceItemRow) {
 
     var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
     //console.log("totalQuantity="+totalQuantity);
-    if( !totalQuantity ) {
-        return;
-    }
+    // if( totalQuantity == 0 ) {
+    //     return;
+    // }
 
     var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
     //console.log("quantity="+quantity +", additionalQuantity="+additionalQuantity);
 
+    if( !quantity ) {
+        quantity = 0;
+    }
+
+    if( !additionalQuantity ) {
+        additionalQuantity = 0;
+    }
+
     var newTotalQuantity = parseInt(quantity) + parseInt(additionalQuantity);
     //console.log("totalQuantity="+totalQuantity +", newTotalQuantity="+newTotalQuantity);
 
-    if( totalQuantity && newTotalQuantity && totalQuantity != newTotalQuantity ) {
+    if( newTotalQuantity && totalQuantity != newTotalQuantity ) {
         var invoiceitemProductId = invoiceItemRow.find('.invoiceitem-product-id').val();
         var warning = "The total quantity for item "+invoiceitemProductId+
             " is not equal to the completed or requested quantity of "+totalQuantity+". " +
