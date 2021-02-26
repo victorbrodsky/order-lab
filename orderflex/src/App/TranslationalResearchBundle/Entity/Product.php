@@ -234,7 +234,7 @@ class Product {
     public function getQuantity() {
         $quantity = $this->getCompleted();
         //echo "completed quantity=$quantity <br>";
-        if( !$quantity ) {
+        if( $quantity === NULL ) {
             $quantity = $this->getRequested();
             //echo "requested quantity=$quantity <br>";
         }
