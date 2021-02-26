@@ -321,41 +321,42 @@
             </div>
         </p>
 
-        {#<p id="invoice-warning-message" style="display: none;"></p>#}
-    <div id="invoice-confirmation-warning-message" class="alert alert-warning" role="alert" style="margin-top: 30px; margin-bottom: 5px; display: none;">
-        <input type="checkbox" id="invoice-confirmation-submit" name="confirm" value="confirm">
-        <label>I have verified the listed quantities.</label>
-    </div>
+        <div id="invoice-confirmation-warning-message" class="alert alert-warning" role="alert" style="margin-top: 30px; margin-bottom: 5px; display: none;">
+            <input type="checkbox" id="invoice-confirmation-submit" name="confirm" value="confirm">
+            <label>I have verified the listed quantities.</label>
+        </div>
 
-    <div id="invoiceError" class="alert alert-danger" style="display: none;"></div>
+        {#<div id="invoiceError" class="alert alert-danger" style="display: none;"></div>#}
 
-        <p id="submit-buttons-section">
-            {% if form.save is defined %}
-                <p>
-                {{ form_widget(form.save) }}
-                </p>
-            {% endif %}
-            {% if form.edit is defined %}
-                <p>
-                {{ form_widget(form.edit) }}
-                </p>
-            {% endif %}
-            {% if form.saveAndGeneratePdf is defined %}
-                <p>
-                {{ form_widget(form.saveAndGeneratePdf) }}
-                </p>
-            {% endif %}
-            {% if form.saveAndGeneratePdfAndSendByEmail is defined %}
-                <p>
-                {{ form_widget(form.saveAndGeneratePdfAndSendByEmail) }}
-                </p>
-            {% endif %}
-            {#{% if form.sendByEmail is defined %}#}
-                {#<p>#}
-                {#{{ form_widget(form.sendByEmail) }}#}
-                {#</p>#}
-            {#{% endif %}#}
-        </p>
+        <div id="submit-buttons-section">
+            <p>
+                {% if form.save is defined %}
+                    <p>
+                    {{ form_widget(form.save) }}
+                    </p>
+                {% endif %}
+                {% if form.edit is defined %}
+                    <p>
+                    {{ form_widget(form.edit) }}
+                    </p>
+                {% endif %}
+                {% if form.saveAndGeneratePdf is defined %}
+                    <p>
+                    {{ form_widget(form.saveAndGeneratePdf) }}
+                    </p>
+                {% endif %}
+                {% if form.saveAndGeneratePdfAndSendByEmail is defined %}
+                    <p>
+                    {{ form_widget(form.saveAndGeneratePdfAndSendByEmail) }}
+                    </p>
+                {% endif %}
+                {#{% if form.sendByEmail is defined %}#}
+                    {#<p>#}
+                    {#{{ form_widget(form.sendByEmail) }}#}
+                    {#</p>#}
+                {#{% endif %}#}
+            </p>
+        </div>
 
     {{ form_end(form) }}
 
@@ -490,7 +491,7 @@
 
             transresInvoicePiListeneres();
 
-            transresInvoiceSubmitListener();
+            transresInvoiceConfirmationListener();
 
             //transresInvoiceBtnOnClick();
 
