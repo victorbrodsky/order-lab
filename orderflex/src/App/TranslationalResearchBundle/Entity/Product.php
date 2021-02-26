@@ -243,6 +243,7 @@ class Product {
 
     public function calculateQuantities($priceList) {
         $units = $this->getQuantity();
+        //echo "units=".$units."<br>";
         $category = $this->getCategory();
         //$priceList = NULL;
 
@@ -268,6 +269,7 @@ class Product {
         }
 
         if( $units > 0 ) {
+            //echo "2units=".$units."<br>";
             if( !$initialQuantity ) {
                 $initialQuantity = 1;
             }
@@ -278,6 +280,9 @@ class Product {
                 $initialQuantity = $units;
                 $additionalQuantity = 0;
             }
+        } else {
+            $initialQuantity = 0;
+            $additionalQuantity = 0;
         }
 
         //echo "initialQuantity=$initialQuantity; additionalQuantity=$additionalQuantity <br>";
