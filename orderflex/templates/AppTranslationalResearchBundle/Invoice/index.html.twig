@@ -16,6 +16,13 @@
                 title="Download the spreadsheet with matching invoices">
                 <span class="fa fa-file-excel-o" aria-hidden="true"></span>
             </label>
+
+            <label
+                    for="download-spreadsheet-form-unpaid" tabindex="0"
+                    data-toggle="tooltip"
+                    title="Download unpaid billing summary spreadsheet with matching invoices">
+                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+            </label>
         {% endif %}
     </h4>
 
@@ -29,6 +36,16 @@
                 {#data-toggle="tooltip"#}
                 {#title="Download the spreadsheet with matching invoices"#}
         >Download the spreadsheet with matching invoices</button>
+    </form>
+
+    <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
+        <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
+        {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
+
+        <button type="submit"
+                id="download-spreadsheet-form-unpaid"
+                class="btn hidden"
+        >Export Unpaid Billing Summary</button>
     </form>
 
     <br>

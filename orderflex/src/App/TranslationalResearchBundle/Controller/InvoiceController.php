@@ -1766,6 +1766,33 @@ class InvoiceController extends OrderAbstractController
         exit();
     }
 
+    /**
+     * unpaid billing summary template.xlsx
+     *
+     * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"POST"})
+     */
+    public function downloadUnpaidInvoicesCsvAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $idsArr = explode('-', $ids);
+        $idsArr = array_reverse($idsArr);
+
+        //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
+        $fileName = "Unpaid-Billing-Summary-Invoices".".csv";
+
+        $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
+
+        exit();
+    }
+
 //    /**
 //     * @Route("/unpaid-invoice-reminder/show-summary", name="translationalresearch_unpaid_invoice_reminder_show", methods={"GET"})
 //     * @Route("/unpaid-invoice-reminder/send-emails", name="translationalresearch_unpaid_invoice_reminder_send", methods={"GET"})

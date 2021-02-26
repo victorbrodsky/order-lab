@@ -321,7 +321,15 @@
             </div>
         </p>
 
-        <p>
+        {#<p id="invoice-warning-message" style="display: none;"></p>#}
+    <div id="invoice-confirmation-warning-message" class="alert alert-warning" role="alert" style="margin-top: 30px; margin-bottom: 5px; display: none;">
+        <input type="checkbox" id="invoice-confirmation-submit" name="confirm" value="confirm">
+        <label>I have verified the listed quantities.</label>
+    </div>
+
+    <div id="invoiceError" class="alert alert-danger" style="display: none;"></div>
+
+        <p id="submit-buttons-section">
             {% if form.save is defined %}
                 <p>
                 {{ form_widget(form.save) }}
@@ -482,9 +490,11 @@
 
             transresInvoicePiListeneres();
 
+            transresInvoiceSubmitListener();
+
             //transresInvoiceBtnOnClick();
 
-            transresDisableWheelQuantity();
+            //transresDisableWheelQuantity();
 
         });
 

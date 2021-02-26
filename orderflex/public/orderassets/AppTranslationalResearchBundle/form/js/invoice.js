@@ -237,19 +237,68 @@ function transresValidateQuantity(invoiceItemRow) {
 
     var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
-    //console.log("quantity="+quantity +", additionalQuantity="+additionalQuantity);
+    console.log("quantity="+quantity +", additionalQuantity="+additionalQuantity);
 
     var newTotalQuantity = parseInt(quantity) + parseInt(additionalQuantity);
-    //console.log("totalQuantity="+totalQuantity +", newTotalQuantity="+newTotalQuantity);
+    console.log("totalQuantity="+totalQuantity +", newTotalQuantity="+newTotalQuantity);
 
-    if( totalQuantity != newTotalQuantity ) {
+    if( totalQuantity && newTotalQuantity && totalQuantity != newTotalQuantity ) {
         var invoiceitemProductId = invoiceItemRow.find('.invoiceitem-product-id').val();
         var warning = "The total quantity for item "+invoiceitemProductId+
             " is not equal to the completed or requested quantity of "+totalQuantity+". " +
             "Please ensure the quantities on this invoice are correct.";
         warningMessage.html(warning).show();
+
+        //append "I have verified the listed quantities." to the button title
+        //$('button').text();
+        //$("#myButton").html("Button New Text");
+        // $(".btn-with-wait").each(function() {
+        //     var title = $(this).text();
+        //     var title = $(this).text();
+        // });
+
+
+
     }
-    
+
+    //invoiceitem-warning-message
+    var visibleWarningMessages = $('.invoiceitem-warning-message:visible');
+    if( visibleWarningMessages.length > 0 ) {
+        //invoice-warning-message "I have verified the listed quantities."
+        $("#invoice-confirmation-warning-message").show();
+        $('#submit-buttons-section').hide();
+    } else {
+        $("#invoice-confirmation-warning-message").hide();
+        $('#submit-buttons-section').show();
+    }
+
+}
+
+function transresInvoiceSubmitListener() {
+    $('button[type=submit]').on('click', function(event) {
+        console.log("submit button clicked");
+
+        $("#invoiceError").hide();
+        $("#invoiceError").html(null);
+
+        var confirmationSubmit = $('#invoice-confirmation-warning-message');
+        if( confirmationSubmit.length ) {
+            if( confirmationSubmit.is(':checked') ) {
+                //ok confirmed
+                //console.log("ok confirmed");
+                $('#submit-buttons-section').show();
+            } else {
+                // var msg = "Please confirm the listed quantities in order to save this invoice.";
+                // $("#invoiceError").show();
+                // $("#invoiceError").html(msg);
+                // //console.log("not confirmed");
+                // return false;
+                $('#submit-buttons-section').hide();
+            }
+        }
+
+        return true;
+    });
 }
 
 function transresCalculateTotals( invoiceItemRow ) {
