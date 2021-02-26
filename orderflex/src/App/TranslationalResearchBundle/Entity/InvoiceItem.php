@@ -407,7 +407,9 @@ class InvoiceItem {
     public function getTotalQuantity() {
         $initialQuantity = $this->getQuantity();
         $additionalQuantity = $this->getAdditionalQuantity();
-        return $initialQuantity + $additionalQuantity;
+        $totalQuantity = intval($initialQuantity) + intval($additionalQuantity);
+        //echo "totalQuantity=".$totalQuantity."<br>";
+        return $totalQuantity;
     }
 
     public function hasSecondRaw() {

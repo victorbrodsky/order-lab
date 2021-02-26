@@ -402,6 +402,8 @@
                     {#{% if invoicesInfos.total is not null %}#}
                         {#${{ invoicesInfos.total }}#}
                     {#{% endif %}#}
+
+                    {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
                     {% if invoicesInfos.grandTotal is not null %}
                         ${{ invoicesInfos.grandTotal }}
                     {% endif %}
