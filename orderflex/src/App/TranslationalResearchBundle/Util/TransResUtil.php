@@ -4013,6 +4013,7 @@ class TransResUtil
         $due = 0.00;
         $subsidy = 0.00;
         $countRequest = 0;
+        $grandTotal = 0.00;
 
         foreach($project->getRequests() as $request) {
             $res = $transresRequestUtil->getInvoicesInfosByRequest($request);
@@ -4038,6 +4039,9 @@ class TransResUtil
             if ($subsidy > 0) {
                 $subsidy = $transresRequestUtil->toDecimal($subsidy);
             }
+
+            $grandTotal = $total + $subsidy;
+
             //echo "value<br>";
         } else {
             //echo "total=$total<br>";
@@ -4045,14 +4049,19 @@ class TransResUtil
             $paid = null;
             $due = null;
             $subsidy = null;
+            $grandTotal = null;
         }
         //echo "total=$total<br>";
+
+        //$this->toDecimal
+
 
         $invoicesInfos['count'] = $count;
         $invoicesInfos['total'] = $total;
         $invoicesInfos['paid'] = $paid;
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
+        $invoicesInfos['grandTotal'] = $grandTotal;
 
         return $invoicesInfos;
     }

@@ -399,8 +399,11 @@
 
                 {#Subtotal of Issued Invoices#}
                 <td>
-                    {% if invoicesInfos.total is not null %}
-                        ${{ invoicesInfos.total }}
+                    {#{% if invoicesInfos.total is not null %}#}
+                        {#${{ invoicesInfos.total }}#}
+                    {#{% endif %}#}
+                    {% if invoicesInfos.grandTotal is not null %}
+                        ${{ invoicesInfos.grandTotal }}
                     {% endif %}
                 </td>
                 {#Subtotal of Issued Paid Invoices#}
