@@ -235,7 +235,7 @@
                 <th>Work Requests</th>
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
-                <th title="Total Amount of the most recent issued invoices">Total</th>
+                <th title="Total Amount of the most recent issued invoices including subsidy">Total</th>
                 <th title="Paid Amount of the most recent issued invoices">Paid</th>
                 <th title="Due Amount of the most recent issued invoices">Due</th>
                 <th title="Subsidy of the most recent issued invoices">Subsidy</th>
@@ -397,7 +397,7 @@
                     {% endif %}
                 </td>
 
-                {#Subtotal of Issued Invoices#}
+                {#Total of Issued Invoices#}
                 <td>
                     {#{% if invoicesInfos.total is not null %}#}
                         {#${{ invoicesInfos.total }}#}
