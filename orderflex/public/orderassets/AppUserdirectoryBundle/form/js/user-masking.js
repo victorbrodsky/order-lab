@@ -120,8 +120,8 @@ function fieldInputMask( holder ) {
         //'groupSeparator': '',
         //'autoGroup': true,
         'digits': 2,
-        'digitsOptional': false,
-        'placeholder': '0.00',
+        //'digitsOptional': false,
+        //'placeholder': '0.00',
         rightAlign : false,
         //clearMaskOnLostFocus: !1
     });

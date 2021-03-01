@@ -372,11 +372,13 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     var subTotal = 0;
     totals.each(function() {
         var total = $(this).val();
-        //console.log("get total="+total);
+        //console.log("1 get total="+total);
         if( !total ) {
             total = 0;
         }
+        //console.log("2 get total="+total);
         subTotal = subTotal + parseFloat(total);
+        //console.log("get subTotal="+subTotal);
     });
     subTotal = transresRoundDecimal(subTotal);
     //console.log("subTotal="+subTotal);
@@ -388,6 +390,7 @@ function transresUpdateTotal(thisEl) {
     var holder = $(thisEl).closest('.invoice-financial-fields');
     //console.log("transresUpdateTotal holder:");
     //console.log(holder);
+    var total = 0;
     var discount = 0;
     var discountNumeric = holder.find(".invoice-discountNumeric").val();
     var discountPercent = holder.find(".invoice-discountPercent").val();
@@ -395,7 +398,7 @@ function transresUpdateTotal(thisEl) {
     var subTotal = holder.find(".invoice-subTotal").val();
 
     //console.log("count="+$(".invoice-discountNumeric").length);
-    //console.log("transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal);
+    //console.log("subTotal="+subTotal+", transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal+", administrativeFee="+administrativeFee);
 
     if( subTotal ) {
         if( discountNumeric ) {
@@ -406,13 +409,16 @@ function transresUpdateTotal(thisEl) {
         }
     }
 
-    var total = parseFloat(subTotal) - parseFloat(discount);
+    //if( subTotal && discount && subTotal > 0 && discount > 0 ) {
+        total = parseFloat(subTotal) - parseFloat(discount);
+    //}
 
     if( administrativeFee ) {
         total = parseFloat(total) + parseFloat(administrativeFee);
     }
 
     total = transresRoundDecimal(total);
+    //console.log("total="+total);
     holder.find(".invoice-total").val(total);
 
     transresUpdateDue(thisEl);
