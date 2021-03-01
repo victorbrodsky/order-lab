@@ -292,7 +292,7 @@ class InvoiceType extends AbstractType
             'label' => "Balance Due ($):",
             'scale' => 2,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-due currency-mask-without-prefix1', 'readonly'=>'readonly')
+            'attr' => array('class' => 'form-control invoice-due currency-mask-without-prefix', 'readonly'=>'readonly')
         ));
 
 //        $builder->add('subsidy', NumberType::class, array(
