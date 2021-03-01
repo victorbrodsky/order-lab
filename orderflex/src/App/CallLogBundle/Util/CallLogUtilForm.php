@@ -553,6 +553,7 @@ class CallLogUtilForm
         $router = $this->container->get('router');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecurityUtil = $this->container->get('user_security_utility');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $html = "";
 
