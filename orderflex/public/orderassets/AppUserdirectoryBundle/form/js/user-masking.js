@@ -113,7 +113,28 @@ function fieldInputMask( holder ) {
 
     $(".currency-mask").inputmask({ alias: "currency"});
 
-    $(".currency-mask-without-prefix").inputmask({ alias: "currency", prefix: '', rightAlign: false});
+    //$(".currency-mask-without-prefix").inputmask({ alias: "currency", prefix: '', rightAlign: false});
+    // $(".currency-mask-without-prefix2").inputmask({
+    //     mask: "99[.99]",
+    //     greedy: false,
+    //     definitions: {
+    //         '*': {
+    //             validator: "[0-9]"
+    //         }
+    //     },
+    //     rightAlign: true
+    // });
+    //$(".currency-mask-without-prefix2").inputmask('Regex', {regex: "^[0-9]{1,6}(\\.\\d{1,2})?$"});
+    $(".currency-mask-without-prefix").inputmask({
+        'alias': 'decimal',
+        //'groupSeparator': '',
+        //'autoGroup': true,
+        'digits': 2,
+        'digitsOptional': false,
+        'placeholder': '0.00',
+        rightAlign : false,
+        //clearMaskOnLostFocus: !1
+    });
 
     //$(".currency-mask").inputmask("currency");
 
