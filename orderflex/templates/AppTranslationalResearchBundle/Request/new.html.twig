@@ -751,6 +751,10 @@
             if( category ) {
                 newHolder.find('.product-category-combobox').select2('data',category);
             }
+
+            //change alert color of newHolder to primary
+            newHolder.addClass('alert-success').removeClass('alert-default').removeClass('well');
+
         }
 
     </script>
