@@ -1062,6 +1062,14 @@ class Invoice {
             return null;
         }
     }
+
+    public function getGrandTotal() {
+        $total = $this->getTotal();
+        $subsidy = $this->getSubsidy();
+        $grandTotal = (float)$total + (float)$subsidy;
+        $grandTotal = $this->toDecimal($grandTotal);
+        return $grandTotal;
+    }
     
     public function __toString() {
         return "".$this->getId();

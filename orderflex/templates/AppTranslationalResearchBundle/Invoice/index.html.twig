@@ -74,6 +74,7 @@
                 <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Bill To', 'invoice.invoiceTo') }}</th>
+                <th title="Invoice total including subsidy">Grand Total</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Total', 'invoice.total') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Paid', 'invoice.paid') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Due', 'invoice.due') }}</th>
@@ -120,6 +121,12 @@
                         {#{% set personurl = path(translationalresearch_sitename~'_showuser',{'id':invoice.invoiceTo.id}) %}#}
                         {#{% set personlink = '<a href="'~personurl~'" target="_blank">'~invoiceToStr~'</a>'  %}#}
                         {#{{ personlink|raw }}#}
+                    {% endif %}
+                </td>
+                <td>
+                    {% set grandTotal = invoice.getGrandTotal() %}
+                    {% if grandTotal %}
+                        ${{ grandTotal }}
                     {% endif %}
                 </td>
                 <td>

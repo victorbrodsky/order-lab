@@ -447,7 +447,7 @@ function transresUpdateTotal(thisEl) {
 
     //update subsidy
     var defaultTotal = $('#invoice-default-total').val();
-    //console.log("total="+total+", defaultTotal="+defaultTotal);
+    console.log("total="+total+", defaultTotal="+defaultTotal);
     if( total && defaultTotal ) {
         var subsidy = defaultTotal - total;
         //console.log("subsidy="+subsidy);
