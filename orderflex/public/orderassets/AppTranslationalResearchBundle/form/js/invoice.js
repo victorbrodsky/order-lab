@@ -133,7 +133,23 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 
 }
 
+// (function($){
+//     $.event.special.destroyed = {
+//         remove: function(o) {
+//             if (o.handler) {
+//                 o.handler()
+//             }
+//         }
+//     }
+// })(jQuery)
 
+function removeInvoiceItemExistingObject( delBtn, classname ) {
+    removeExistingObject(delBtn,classname);
+    //console.log("removeInvoiceItemExistingObject");
+
+    var thisEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
+    transresUpdateSubTotal(thisEl);
+}
 
 
 function transresInvoiceItemListeneres(){
@@ -175,8 +191,12 @@ function transresInvoiceItemListeneres(){
     //     transresCalculateTotals(invoiceItemRow);
     //
     //     //console.log("transres UpdateSubTotal: triggered by claculated row total");
-    //     transresUpdateSubTotal(this);
+    //     transres UpdateSubTotal(this);
     // });
+
+    $('.invoice-subTotal').on('input', function(event) {
+        transresUpdateTotal(this);
+    });
 
     //total update => update subtotal and total
     $('.invoiceitem-total').on('input', function(event) {
@@ -186,17 +206,9 @@ function transresInvoiceItemListeneres(){
     });
 
     $('.invoice-discountNumeric').on('input', function(event) {
-        // $('.invoice-discountPercent').val(null);
-        // transresUpdateTotal();
-        //var holder = $(this).closest('.invoice-financial-fields');
-        //console.log("discountNumeric updated");
-        //console.log(holder);
         transresDiscountNumericUpdate(this);
     });
     $('.invoice-discountPercent').on('input', function(event) {
-        // $('.invoice-discountNumeric').val(null);
-        // transresUpdateTotal();
-        //var holder = $(this).closest('.invoice-financial-fields');
         //console.log("discountPercent updated");
         transresDiscountPercentUpdate(this);
     });
@@ -210,6 +222,11 @@ function transresInvoiceItemListeneres(){
         transresUpdateDue(this);
     });
 
+    // $('.invoiceitem-total1').on('destroyed', function(event) {
+    //     console.log("invoiceItems destroyed");
+    //     var thisEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
+    //     transresUpdateSubTotal(thisEl);
+    // });
 }
 
 //If the user edits initial quantity, when the cursor leaves the form field, update the remaining quantity for the same item
@@ -235,9 +252,9 @@ function transresValidateQuantity(invoiceItemRow) {
 
     var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
     //console.log("totalQuantity="+totalQuantity);
-    // if( totalQuantity == 0 ) {
-    //     return;
-    // }
+    if( !totalQuantity ) {
+        return;
+    }
 
     var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
@@ -361,6 +378,11 @@ function transresAdministrativeFeeUpdate(thisEl) {
 function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     //console.log("update subtotal and total");
     //var totals = invoiceItemTotalEl.closest('.invoice-financial-fields').find(".invoiceitem-total");
+
+    if( !thisEl ) {
+        var thisEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
+    }
+
     var holder = $(thisEl).closest('.invoice-financial-fields');
 
     var invoiceItemRows = holder.find('.user-collection-holder');
@@ -388,7 +410,7 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
 
 function transresUpdateTotal(thisEl) {
     var holder = $(thisEl).closest('.invoice-financial-fields');
-    //console.log("transresUpdateTotal holder:");
+    //console.log("transres UpdateTotal holder:");
     //console.log(holder);
     var total = 0;
     var discount = 0;
@@ -398,7 +420,7 @@ function transresUpdateTotal(thisEl) {
     var subTotal = holder.find(".invoice-subTotal").val();
 
     //console.log("count="+$(".invoice-discountNumeric").length);
-    //console.log("subTotal="+subTotal+", transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal+", administrativeFee="+administrativeFee);
+    //console.log("subTotal="+subTotal+", transres UpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal+", administrativeFee="+administrativeFee);
 
     if( subTotal ) {
         if( discountNumeric ) {

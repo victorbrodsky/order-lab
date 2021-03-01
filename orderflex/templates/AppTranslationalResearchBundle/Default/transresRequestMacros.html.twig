@@ -387,41 +387,15 @@
                 {#</div>#}
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}
+                        {#<button type="button" class="btn btn-default btn-sm"#}
+                                {#onClick="removeExistingObject(this,'{{ classname }}')"#}
+                        {#><span class="glyphicon glyphicon-remove"></span></button>#}
                         <button type="button" class="btn btn-default btn-sm"
-                                onClick="removeExistingObject(this,'{{ classname }}')" >
-                            <span class="glyphicon glyphicon-remove"></span></button>
+                                onClick="removeInvoiceItemExistingObject(this,'{{ classname }}')"
+                        ><span class="glyphicon glyphicon-remove"></span></button>
                     {% endif %}
                 </div>
             </div>
-
-            {#<div class="row">#}
-                {#<div class="col-xs-5">#}
-                    {#{{ form_widget(forminvoiceItem.description) }}#}
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {#{{ form_widget(forminvoiceItem.additionalQuantity) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#calculated total#}
-                    {#{{ form_widget(forminvoiceItem.total) }}#}
-                {#</div>#}
-                {#<div class="col-xs-1">#}
-                    {#{% if cycle != "show" and showAddDeleteBtn %}#}
-                        {#<button type="button" class="btn btn-default btn-sm"#}
-                                {#onClick="removeExistingObject(this,'{{ classname }}')" >#}
-                            {#<span class="glyphicon glyphicon-remove"></span></button>#}
-                    {#{% endif %}#}
-                {#</div>#}
-            {#</div>#}
 
         {% else %}
 
@@ -446,9 +420,12 @@
                 </div>
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}
+                        {#<button type="button" class="btn btn-default btn-sm"#}
+                                {#onClick="removeExistingObject(this,'{{ classname }}')"#}
+                        {#><span class="glyphicon glyphicon-remove"></span></button>#}
                         <button type="button" class="btn btn-default btn-sm"
-                                onClick="removeExistingObject(this,'{{ classname }}')" >
-                            <span class="glyphicon glyphicon-remove"></span></button>
+                                onClick="removeInvoiceItemExistingObject(this,'{{ classname }}')"
+                        ><span class="glyphicon glyphicon-remove"></span></button>
                     {% endif %}
                 </div>
 
@@ -572,8 +549,8 @@
             <div class="col-xs-1">
                 {% if cycle != "show" and showAddDeleteBtn %}
                     <button type="button" class="btn btn-default btn-sm"
-                            onClick="removeExistingObject(this,'{{ classname }}')" >
-                        <span class="glyphicon glyphicon-remove"></span></button>
+                            onClick="removeExistingObject(this,'{{ classname }}')"
+                    ><span class="glyphicon glyphicon-remove"></span></button>
                 {% endif %}
             </div>
 
@@ -875,8 +852,8 @@
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
                 <button type="button" class="btn btn-success btn-sm transres-product-clone-btn" onClick="transresCloneExistingObject(this,'{{ classname }}')">Clone</button>
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
             <br>
         {% else %}

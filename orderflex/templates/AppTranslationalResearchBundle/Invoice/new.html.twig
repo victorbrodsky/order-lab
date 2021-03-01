@@ -264,7 +264,8 @@
                     {#{{ form_widget(form.total) }}#}
                     <div class = "input-group">
                         {{ form_widget(form.total) }}
-                        <span class = "input-group-addon btn" onclick="transresUpdateTotal(this);">
+                        {#<span class = "input-group-addon btn" onclick="transresUpdateTotal(this);">#}
+                        <span class = "input-group-addon btn" onclick="transresUpdateSubTotal(this);">
                             Recalculate
                         </span>
                     </div>
