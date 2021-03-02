@@ -127,26 +127,36 @@
                     {% set grandTotal = invoice.getGrandTotal() %}
                     {% if grandTotal %}
                         ${{ grandTotal }}
+                    {% else %}
+                        $0.00
                     {% endif %}
                 </td>
                 <td>
                     {% if invoice.total %}
                         ${{ invoice.total }}
+                    {% else %}
+                        $0.00
                     {% endif %}
                 </td>
                 <td>
                     {% if invoice.paid %}
                         ${{ invoice.paid }}
+                    {% else %}
+                        $0.00
                     {% endif %}
                 </td>
                 <td>
                     {% if invoice.due %}
                         ${{ invoice.due }}
+                    {% else %}
+                        $0.00
                     {% endif %}
                 </td>
                 <td>
                     {% if invoice.subsidy %}
                         ${{ invoice.subsidy }}
+                    {% else %}
+                        $0.00
                     {% endif %}
                 </td>
                 <td class="rowlink-skip">

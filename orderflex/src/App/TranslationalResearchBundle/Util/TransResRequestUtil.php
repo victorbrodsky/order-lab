@@ -2557,15 +2557,15 @@ class TransResRequestUtil
         //echo "paid=$paid<br>";
 
         if( $count > 0 ) {
-            if ($total > 0) {
+            //if ($total > 0) {
                 $total = $this->toDecimal($total);
-            }
-            if ($paid > 0) {
+            //}
+            //if ($paid > 0) {
                 $paid = $this->toDecimal($paid);
-            }
-            if ($due > 0) {
+            //}
+            //if ($due > 0) {
                 $due = $this->toDecimal($due);
-            }
+            //}
             //if ($subsidy > 0) {
                 $subsidy = $this->toDecimal($subsidy);
             //}
