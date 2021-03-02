@@ -4027,20 +4027,23 @@ class TransResUtil
         //echo $project->getOid().": countRequest=$countRequest: ";
 
         if( $count > 0 && $countRequest > 0 ) {
-            if ($total > 0) {
+            //if ($total > 0) {
                 $total = $transresRequestUtil->toDecimal($total);
-            }
-            if ($paid > 0) {
+            //}
+            //if ($paid > 0) {
                 $paid = $transresRequestUtil->toDecimal($paid);
-            }
-            if ($due > 0) {
+            //}
+            //if ($due > 0) {
                 $due = $transresRequestUtil->toDecimal($due);
-            }
-            if ($subsidy > 0) {
+            //}
+            //if ($subsidy > 0) {
                 $subsidy = $transresRequestUtil->toDecimal($subsidy);
-            }
+            //}
 
             $grandTotal = $total + $subsidy;
+            //if( $grandTotal > 0 ) {
+                $grandTotal = $transresRequestUtil->toDecimal($grandTotal);
+            //}
 
             //echo "value<br>";
         } else {
@@ -4057,11 +4060,11 @@ class TransResUtil
 
 
         $invoicesInfos['count'] = $count;
-        $invoicesInfos['total'] = $total;
+        $invoicesInfos['total'] = $total; //charge
         $invoicesInfos['paid'] = $paid;
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
-        $invoicesInfos['grandTotal'] = $grandTotal;
+        $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
 
         return $invoicesInfos;
     }

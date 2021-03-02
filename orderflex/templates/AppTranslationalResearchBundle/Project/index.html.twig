@@ -236,6 +236,7 @@
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
                 <th title="Total amount of the most recent issued invoices including subsidy">Total</th>
+                <th title="Total amount of the most recent issued invoices charge to the customer">Charge</th>
                 <th title="Paid amount of the most recent issued invoices">Paid</th>
                 <th title="Due amount of the most recent issued invoices">Due</th>
                 <th title="Subsidy of the most recent issued invoices">Subsidy</th>
@@ -397,15 +398,17 @@
                     {% endif %}
                 </td>
 
-                {#Total of Issued Invoices#}
+                {#Total of Issued Invoices including subsidy#}
                 <td>
-                    {#{% if invoicesInfos.total is not null %}#}
-                        {#${{ invoicesInfos.total }}#}
-                    {#{% endif %}#}
-
                     {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
                     {% if invoicesInfos.grandTotal is not null %}
                         ${{ invoicesInfos.grandTotal }}
+                    {% endif %}
+                </td>
+                {#Total charge of Issued Invoices#}
+                <td>
+                    {% if invoicesInfos.total is not null %}
+                        ${{ invoicesInfos.total }}
                     {% endif %}
                 </td>
                 {#Subtotal of Issued Paid Invoices#}
