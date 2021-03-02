@@ -2566,9 +2566,9 @@ class TransResRequestUtil
             if ($due > 0) {
                 $due = $this->toDecimal($due);
             }
-            if ($subsidy > 0) {
+            //if ($subsidy > 0) {
                 $subsidy = $this->toDecimal($subsidy);
-            }
+            //}
         } else {
             $total = null;
             $paid = null;

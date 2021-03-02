@@ -85,10 +85,10 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
-                <th title="Total calculated work request's default fee">Total Fees</th>
+                <th title="Total calculated work request's default fee">Total</th>
                 <th title="Number of all invoices">Invoices</th>
                 <th title="Status of the most recent invoice status">Invoice Status</th>
-                <th title="Total amount of the most recent issued invoices">Invoice Total</th>
+                <th title="Total amount of the most recent issued invoice charge to the customer">Invoice Charge</th>
                 <th title="Paid amount of the most recent issued invoices">Invoice Paid</th>
                 <th title="Due amount of the most recent issued invoices">Invoice Due</th>
                 <th title="Subsidy of the most recent issued invoices">Invoice Subsidy</th>
@@ -133,7 +133,7 @@
                         href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
                         target="_blank"
                         style="color:{{ idColor }}"
-                    >{{ transresRequest.oid }}</a>
+                    >{{ transresRequest.oid }}{{ transresRequest.project.getPriceListAbbreviationPostfix() }}</a>
                 </td>
 
                 {#{% stopwatch "### transresRequest.project.getOid() ###" %}#}
@@ -191,7 +191,7 @@
                 {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
                 <td>
                     {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
-                    {#Total fees should use external (default) pricing#}
+                    {#Bing: Total fees should use external (default) pricing#}
                     {% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
