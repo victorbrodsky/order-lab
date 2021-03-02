@@ -124,12 +124,13 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% set grandTotal = invoice.getGrandTotal() %}
-                    {% if grandTotal %}
-                        ${{ grandTotal }}
-                    {% else %}
-                        $0.00
-                    {% endif %}
+                    {#{% set grandTotal = invoice.getGrandTotal() %}#}
+                    {#{% if grandTotal %}#}
+                        {#${{ grandTotal }}#}
+                    {#{% else %}#}
+                        {#$0.00#}
+                    {#{% endif %}#}
+                    ${{ transres_request_util.getInvoiceTotalWithSubsidy(invoice) }}
                 </td>
                 <td>
                     {% if invoice.total %}
@@ -153,11 +154,12 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if invoice.subsidy %}
-                        ${{ invoice.subsidy }}
-                    {% else %}
-                        $0.00
-                    {% endif %}
+                    {#{% if invoice.subsidy %}#}
+                        {#${{ invoice.subsidy }}#}
+                    {#{% else %}#}
+                        {#$0.00#}
+                    {#{% endif %}#}
+                    ${{ transres_request_util.getInvoiceSubsidy(invoice) }}
                 </td>
                 <td class="rowlink-skip">
                     {#{{ invoice.documents|length }}#}

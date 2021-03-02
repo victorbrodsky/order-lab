@@ -362,7 +362,7 @@
     {{ form_end(form) }}
 
 
-    {% if cycle == "show" and invoice.latestVersion %}
+    {% if cycle == "show" and invoice.latestVersion and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
         <p>
             <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}"
             >Edit invoice</a>

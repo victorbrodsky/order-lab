@@ -136,7 +136,6 @@
     {% endif %}
 
     <p>
-    {#{{ transres_request_util.getSubsidyInfo(invoice)|raw }}#}
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <tr>
@@ -225,7 +224,7 @@
                 <td class='text-right'>{{ invoice.due }}</td>
             </tr>
 
-            {% set subsidyInfo = transres_request_util.getSubsidyInfo(invoice) %}
+            {% set subsidyInfo = transres_request_util.getSubsidyInfo(invoice,false) %}
             {% if subsidyInfo %}
                 <tr>
                     <td COLSPAN={{ colspan+2 }} ALIGN=CENTER>

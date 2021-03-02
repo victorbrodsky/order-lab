@@ -1989,10 +1989,6 @@ class TransResRequestUtil
         $invoice->setTotal($total);
         $invoice->setDue($total);
 
-//        //calculate subsidy based on the work request's products
-//        $subsidy = $this->calculateSubsidy($invoice);
-//        $invoice->setSubsidy($subsidy);
-
         return $invoice;
     }
     public function createSubmitNewInvoice( $transresRequest, $invoice ) {
@@ -2539,17 +2535,13 @@ class TransResRequestUtil
 
         foreach( $transresRequest->getInvoices() as $invoice ) {
             if( $invoice->getLatestVersion() ) {
-//                if(
-//                    $invoice->getStatus() == "Unpaid/Issued" ||
-//                    $invoice->getStatus() == "Paid in Full" ||
-//                    $invoice->getStatus() == "Paid Partially"
-//                ) {
-                    $count++;
-                    $total = $total + $invoice->getTotal();
-                    $paid = $paid + $invoice->getPaid();
-                    $due = $due + $invoice->getDue();
-                    $subsidy = $subsidy + $invoice->getSubsidy();
-//                }
+                $count++;
+                $total = $total + $invoice->getTotal();
+                $paid = $paid + $invoice->getPaid();
+                $due = $due + $invoice->getDue();
+
+                //$subsidy = $subsidy + $invoice->getSubsidy();
+                $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
             }
         }
 
@@ -3839,6 +3831,7 @@ class TransResRequestUtil
 
     //Calculate subsidy based only on the work request's products.
     //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
+    //Used only in getSubsidyInfo($invoice)
     public function calculateSubsidy($invoice) {
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
@@ -3871,9 +3864,12 @@ class TransResRequestUtil
                 //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
                 $diff = $this->toDecimal($totalDefault - $totalSpecial);
 
-                if( $diff > 0 ) {
-                    $subsidy = $subsidy + $diff;
-                }
+//                if( $diff > 0 ) {
+//                    $subsidy = $subsidy + $diff;
+//                }
+
+                //subsidy can be negative. Show negative subsidy only to admin
+                $subsidy = $subsidy + $diff;
             }
 
         }
@@ -3907,9 +3903,9 @@ class TransResRequestUtil
         return $totalDefault;
     }
 
-    //Used on the invoice new/edit page
+    //Used on the invoice new/edit, and pdf page
     //"[Internal pricing] has been used to generate this invoice. Subsidy: $[XX.XX]"
-    public function getSubsidyInfo($invoice,$cycle=NULL) {
+    public function getSubsidyInfo($invoice,$showNegativeSubsidy=true) {
         $res = "";
         $request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
@@ -3928,7 +3924,25 @@ class TransResRequestUtil
             $res = "This invoice utilizes " . strtolower($priceListName).".";
         }
 
-        if( $subsidy > 0 ) {
+        $showSubsidy = false;
+        if( $showNegativeSubsidy ) {
+            if( $subsidy > 0 ) {
+                $showSubsidy = true;
+            } else {
+                //negative subsidy: additional check if admin or technician
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                if( $transresRequestUtil->isUserHasInvoicePermission($invoice, "update") ) {
+                    $showSubsidy = true;
+                }
+            }
+        } else {
+            if( $subsidy > 0 ) {
+                $showSubsidy = true;
+            }
+        }
+
+        //if( $showNegativeSubsidy || (!$showNegativeSubsidy && $subsidy > 0) ) {
+        if( $showSubsidy ) {
             //If the price difference is equal to zero or below, DO NOT show the “Subsidy: $[XX.XX]” portion
             //This invoice utilizes internal pricing. Total subsidy: $[XX.XX]
             //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
@@ -3940,6 +3954,7 @@ class TransResRequestUtil
     }
 
     //Calculate subsidy based only on the invoice's invoiceItem.
+    //Used only in updateInvoiceSubsidy($invoice)
     public function calculateSubsidyInvoiceItems($invoice) {
         //$request = $invoice->getTransresRequest();
         //$priceList = $request->getPriceList($request);
@@ -4015,18 +4030,54 @@ class TransResRequestUtil
 
         return $subsidy;
     }
+    //Used when creating new invoice (via createSubmitNewInvoice), updating invoice (via edit or update-invoice-ajax)
     public function updateInvoiceSubsidy($invoice) {
         $subsidy = $this->calculateSubsidyInvoiceItems($invoice);
         //echo "subsidy=[".$subsidy."]<br>";
-        if( $subsidy > 0 ) {
-            //echo "update subsidy<br>";
-            $invoice->setSubsidy($subsidy);
-        } else {
-            //echo "Don't update subsidy<br>";
-        }
+
+//        if( $subsidy > 0 ) {
+//            //echo "update subsidy<br>";
+//            $invoice->setSubsidy($subsidy);
+//        } else {
+//            //echo "Don't update subsidy<br>";
+//        }
+
+        $invoice->setSubsidy($subsidy);
 
         //exit("update Invoice Subsidy: subsidy=$subsidy");
         return $subsidy;
+    }
+
+    public function getInvoiceSubsidy( $invoice ) {
+        $subsidy = $invoice->getSubsidy();
+
+        $showSubsidy = false;
+
+        if( $subsidy > 0 ) {
+            $showSubsidy = true;
+        } else {
+            //negative subsidy: additional check if admin or technician
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            if( $transresRequestUtil->isUserHasInvoicePermission($invoice, "update") ) {
+                $showSubsidy = true;
+            }
+        }
+
+        if( $showSubsidy ) {
+            $subsidy = $this->toDecimal($subsidy);
+        } else {
+            $subsidy = 0.00;
+        }
+
+        return $subsidy;
+    }
+    
+    public function getInvoiceTotalWithSubsidy($invoice) {
+        $total = $invoice->getTotal();
+        $subsidy = $this->getInvoiceSubsidy($invoice);
+        $grandTotal = (float)$total + (float)$subsidy;
+        $grandTotal = $this->toDecimal($grandTotal);
+        return $grandTotal;
     }
 
 }

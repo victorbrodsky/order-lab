@@ -679,7 +679,6 @@ class TransResRequest {
         return null;
     }
 
-
     public function getPrincipalInvestigators()
     {
         return $this->principalInvestigators;
