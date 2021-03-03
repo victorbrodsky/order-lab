@@ -202,7 +202,13 @@
                     {% if invoicesInfos.grandTotal %}
                         ${{ invoicesInfos.grandTotal }}
                     {% endif %}
-                    (value: ${{ requestValue }})
+                    {% if requestValue != invoicesInfos.grandTotal %}
+                        {% if requestValue > 0 or
+                            (requestValue < 0 and ( is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') ))
+                        %}
+                            (value: ${{ requestValue }})
+                        {% endif %}
+                    {% endif %}
                 </td>
                 {#{% endstopwatch %}#}
 
