@@ -2570,6 +2570,8 @@ class TransResRequestUtil
             //if ($subsidy > 0) {
                 $subsidy = $this->toDecimal($subsidy);
             //}
+
+            $grandTotal = $this->toDecimal($grandTotal);
         } else {
             $total = null;
             $paid = null;
