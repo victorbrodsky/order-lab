@@ -636,7 +636,7 @@ class DashboardSimpleController extends OrderAbstractController
             //"Total Fees" to be based on the work request's  "Product or Service" fields
             // (quantity * product/category's fees per unit = Subtotal fees) - the same way as it is shown
             // on the Request's list in the column "Total Fees". This "Total Fees" will not count any discounts.
-            $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+            $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
 
             $subtotalFees = $subtotalFees + $subtotalFee;
 

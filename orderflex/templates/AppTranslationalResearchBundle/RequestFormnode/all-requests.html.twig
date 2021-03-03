@@ -130,7 +130,7 @@
 
                 <td>
                     {#{{ principalInvestigator }}<br>#}
-                    {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
+                    {% set fee = transres_request_util.getTransResRequestSubTotal(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
                     {% endif %}

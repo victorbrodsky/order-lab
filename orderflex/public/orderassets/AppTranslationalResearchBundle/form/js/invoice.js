@@ -456,6 +456,11 @@ function transresUpdateTotal(thisEl) {
         // } else {
         //     subsidy = 0;
         // }
+
+        if( administrativeFee ) {
+            subsidy = parseFloat(subsidy) + parseFloat(administrativeFee);
+        }
+
         subsidy = transresRoundDecimal(subsidy);
         $("#invoice-subsidy-info").html(subsidy);
     }

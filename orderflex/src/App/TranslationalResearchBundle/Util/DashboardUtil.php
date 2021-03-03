@@ -2781,7 +2781,7 @@ class DashboardUtil
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $transRequest) {
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 $subtotalFees = $subtotalFees + $subtotalFee;
 
                 if( $transRequest->getFundedAccountNumber() ) {
@@ -2852,7 +2852,7 @@ class DashboardUtil
                     $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
                 }
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 //17. Funded Projects with the Highest Total Fees (Top 10)
@@ -2899,7 +2899,7 @@ class DashboardUtil
                     $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
                 }
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 //echo "projectIndex=[".$project->getOid()."] <br>";
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
@@ -2939,7 +2939,7 @@ class DashboardUtil
                     $investigatorIndex = $pi->getUsernameOptimal();
                 }
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 //15. Total Fees per Investigator (Top 10)
@@ -2976,7 +2976,7 @@ class DashboardUtil
                     $investigatorIndex = $pi->getUsernameOptimal();
                 }
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 if( $transRequest->getFundedAccountNumber() ) {
@@ -3013,7 +3013,7 @@ class DashboardUtil
                     $investigatorIndex = $pi->getUsernameOptimal();
                 }
 
-                $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
                 //$subtotalFees = $subtotalFees + $subtotalFee;
 
                 if( $transRequest->getFundedAccountNumber() ) {
@@ -3630,7 +3630,7 @@ class DashboardUtil
                     //do nothing
                 } else {
 
-                    $subtotalFee = intval($transresRequestUtil->getTransResRequestFeeHtml($transRequest));
+                    $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
 
                     $project = $transRequest->getProject();
                     $pathologists = $project->getPathologists();
@@ -5586,7 +5586,7 @@ class DashboardUtil
             $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
             foreach($requests as $thisTransRequest) {
 
-                $fee = $transresRequestUtil->getTransResRequestFeeHtml($thisTransRequest);
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($thisTransRequest);
                 if( !$fee || $fee == 0 ) {
                     continue;
                 }
@@ -5677,7 +5677,7 @@ class DashboardUtil
                     continue;
                 }
 
-                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($transRequest);
                 if( !$fee || $fee == 0 ) {
                     continue;
                 }
@@ -5753,7 +5753,7 @@ class DashboardUtil
                     continue;
                 }
 
-                $fee = $transresRequestUtil->getTransResRequestFeeHtml($transRequest);
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($transRequest);
                 if( !$fee || $fee == 0 ) {
                     continue;
                 }

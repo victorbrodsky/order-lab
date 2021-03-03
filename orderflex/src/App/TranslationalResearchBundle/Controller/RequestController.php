@@ -946,7 +946,7 @@ class RequestController extends OrderAbstractController
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
         $feeHtml = null;
-        $fee = $transresRequestUtil->getTransResRequestFeeHtml($transresRequest);
+        $fee = $transresRequestUtil->getTransResRequestSubTotal($transresRequest);
         if( $fee ) {
             $feeHtml = " (fee $".$fee.")";
         }

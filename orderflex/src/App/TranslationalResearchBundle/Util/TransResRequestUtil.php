@@ -94,7 +94,7 @@ class TransResRequestUtil
         $total = 0;
 
         foreach($requests as $request) {
-            $subTotal = $this->getTransResRequestFeeHtml($request);
+            $subTotal = $this->getTransResRequestSubTotal($request);
             if( $subTotal ) {
                 $total = $total + $subTotal;
             }
@@ -109,8 +109,8 @@ class TransResRequestUtil
         return null;
     }
 
-    //Used to calculate fee on request list and dashboard
-    public function getTransResRequestFeeHtml( $request ) {
+    //Used to calculate fee on request list and dashboard (used to be getTransResRequestFeeHtml)
+    public function getTransResRequestSubTotal( $request ) {
         $subTotal = 0;
 
         $priceList = $request->getPriceList();
@@ -1984,7 +1984,7 @@ class TransResRequestUtil
         }
 
         //calculate Subtotal and Total
-        $total = $this->getTransResRequestFeeHtml($transresRequest);
+        $total = $this->getTransResRequestSubTotal($transresRequest);
         $invoice->setSubTotal($total);
         $invoice->setTotal($total);
         $invoice->setDue($total);
@@ -2532,6 +2532,7 @@ class TransResRequestUtil
         $paid = 0.00;
         $due = 0.00;
         $subsidy = 0.00;
+        $grandTotal = 0.00;
 
         foreach( $transresRequest->getInvoices() as $invoice ) {
             if( $invoice->getLatestVersion() ) {
@@ -2542,6 +2543,14 @@ class TransResRequestUtil
 
                 //$subsidy = $subsidy + $invoice->getSubsidy();
                 $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
+
+                //subsidy does not include administrative fee
+//                $administrativeFee = $invoice->getAdministrativeFee();
+//                if( $administrativeFee ) {
+//                    $subsidy = $subsidy + $administrativeFee;
+//                }
+
+                $grandTotal = $total + $subsidy;
             }
         }
 
@@ -2566,6 +2575,7 @@ class TransResRequestUtil
             $paid = null;
             $due = null;
             $subsidy = null;
+            $grandTotal = null;
         }
 
         //echo "paid=$paid<br>";
@@ -2575,6 +2585,7 @@ class TransResRequestUtil
         $invoicesInfos['paid'] = $paid;
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
+        $invoicesInfos['grandTotal'] = $grandTotal;
 
         return $invoicesInfos;
     }
@@ -3831,15 +3842,15 @@ class TransResRequestUtil
 
     //Calculate subsidy based only on the work request's products.
     //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
-    //Used only in getSubsidyInfo($invoice)
-    public function calculateSubsidy($invoice) {
-        $request = $invoice->getTransresRequest();
+    //Used only in getSubsidyInfo($invoice) and 
+    public function calculateSubsidyByRequest($request) {
+        //$request = $invoice->getTransresRequest();
         $priceList = $request->getPriceList($request);
         $subsidy = 0;
 
         foreach( $request->getProducts() as $product ) {
 
-            $quantity = $product->getQuantity();
+            //$quantity = $product->getQuantity();
             //echo "quantity=$quantity <br>";
 
             //default fee
@@ -3913,7 +3924,7 @@ class TransResRequestUtil
         $subsidy = $invoice->getSubsidy();
         //echo "Invoice subsidy=".$subsidy."<br>";
         if( !$subsidy ) {
-            $subsidy = $this->calculateSubsidy($invoice);
+            $subsidy = $this->calculateSubsidyByRequest($request);
             //echo "Calculate subsidy=".$subsidy."<br>";
         }
         //echo "Final subsidy=".$subsidy."<br>";
@@ -4024,6 +4035,12 @@ class TransResRequestUtil
         if( $totalInvoiceDefault && $totalInvoiceFinal ) {
             //echo "calculate subsidy: totalInvoiceDefault=[$totalInvoiceDefault] - totalInvoiceFinal=[$totalInvoiceFinal]<br>";
             $subsidy = $totalInvoiceDefault - $totalInvoiceFinal;
+        }
+
+        //Subsidy does not include administrative fee
+        $administrativeFee = $invoice->getAdministrativeFee();
+        if( $administrativeFee ) {
+            $subsidy = $subsidy + $administrativeFee;
         }
 
         $subsidy = $this->toDecimal($subsidy);

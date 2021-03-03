@@ -85,13 +85,14 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
-                <th title="Total calculated work request's default fee">Total</th>
+                {#<th title="Total calculated work request's default fee">Total</th>#}
+                <th title="Total amount of the most recent invoice">Total</th>
                 <th title="Number of all invoices">Invoices</th>
-                <th title="Status of the most recent invoice status">Invoice Status</th>
-                <th title="Total amount of the most recent issued invoice charge to the customer">Invoice Charge</th>
-                <th title="Paid amount of the most recent issued invoices">Invoice Paid</th>
-                <th title="Due amount of the most recent issued invoices">Invoice Due</th>
-                <th title="Subsidy of the most recent issued invoices">Invoice Subsidy</th>
+                <th title="Status of the most recent invoice status">Status</th>
+                <th title="Total amount of the most recent issued invoice charge to the customer (or expected charge if invoice is not issued)">Charge</th>
+                <th title="Paid amount of the most recent issued invoices">Paid</th>
+                <th title="Due amount of the most recent issued invoices">Due</th>
+                <th title="Subsidy of the most recent issued invoices (or expected subsidy if invoice is not issued)">Subsidy</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -189,13 +190,19 @@
                 {#{% endstopwatch %}#}
 
                 {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
+                {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
+                {% set requestValue = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}
                 <td>
+                    {#Total#}
                     {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
                     {#Bing: Total fees should use external (default) pricing#}
-                    {% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}
-                    {% if fee %}
-                        ${{ fee|raw }}
+                    {#Total is equal to charge+subsidy, where subsidy does not include admin fee.#}
+                    {#If invoice is null, total is equal to expected total#}
+                    {#{% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}#}
+                    {% if invoicesInfos.grandTotal %}
+                        ${{ invoicesInfos.grandTotal }}
                     {% endif %}
+                    (value: ${{ requestValue }})
                 </td>
                 {#{% endstopwatch %}#}
 
@@ -226,10 +233,14 @@
 
                 {#{% stopwatch "### getInvoicesInfosByRequest ###" %}#}
                 {#Invoices #}
-                {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
+                {#{% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}#}
                 <td>
+                    {# Charge #}
                     {% if invoicesInfos.total is not null %}
                         ${{ invoicesInfos.total }}
+                    {% else %}
+                        {#if invoice does not exists, show expected charge calculated based on the request's products and price list#}
+                        ${{ transres_request_util.getTransResRequestSubTotal(transresRequest) }} (unbilled)
                     {% endif %}
                 </td>
                 <td>
@@ -245,6 +256,9 @@
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
                         ${{ invoicesInfos.subsidy }}
+                    {% else %}
+                        {#expected Subsidy amount calculated by work request#}
+                        ${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}
