@@ -123,24 +123,24 @@ class InvoiceController extends OrderAbstractController
         $invoicetypeLowerCase = strtolower($invoicetype);
         //echo "invoicetype=$invoicetype<br>";
 
-        if(
-            ($routeName == "translationalresearch_invoice_index_filter" && !$filterTitle)
-            ||
-            ($invoicetype && strpos(strtolower($invoicetype), 'all') !== false)
-        ) {
-            if(
-                $transresUtil->isAdminOrPrimaryReviewer() ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
-            ) {
-                //show
-            } else {
-                return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
-            }
-        }
+//        if(
+//            ($routeName == "translationalresearch_invoice_index_filter" && !$filterTitle)
+//            ||
+//            ($invoicetype && strpos(strtolower($invoicetype), 'all') !== false)
+//        ) {
+//            if(
+//                $transresUtil->isAdminOrPrimaryReviewer() ||
+//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//            ) {
+//                //show
+//            } else {
+//                return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+//            }
+//        }
 
         if( $invoicetype && $invoicetypeLowerCase == strtolower("All Invoices") ) {
             //filter nothing
@@ -457,6 +457,33 @@ class InvoiceController extends OrderAbstractController
             }
         }
         ////// EOF create filter //////////
+
+        //echo "filterTitle=$filterTitle, invoicetype=$invoicetype <br>";
+        $onlyForAdmin = false;
+        if( $invoicetype && strpos(strtolower($invoicetype), 'all') !== false ) {
+           $onlyForAdmin = true;
+        }
+        if( $routeName == "translationalresearch_invoice_index_filter" ) {
+            if( !$idSearch && !$filterTitle ) {
+                //echo "check: idSearch and filterTitle null <br>";
+                $onlyForAdmin = true;
+            }
+        }
+        if( $onlyForAdmin ) {
+            if(
+                $transresUtil->isAdminOrPrimaryReviewer() ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+            ) {
+                //show
+            } else {
+                //exit('no permission');
+                return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+            }
+        }
 
 //        if( $routeName == "translationalresearch_invoice_index_filter" ) {
 //            $title = "List of All Invoices";
