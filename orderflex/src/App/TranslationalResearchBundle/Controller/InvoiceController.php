@@ -1253,7 +1253,7 @@ class InvoiceController extends OrderAbstractController
 
         //$showRemittance = 0;
         $sitename = $this->getParameter('translationalresearch.sitename');
-        $showRemittance = $this->getSiteSettingParameter('showRemittance',$sitename);
+        $showRemittance = $userSecUtil->getSiteSettingParameter('showRemittance',$sitename);
 
         return array(
             //'transresRequest' => $transresRequest,
