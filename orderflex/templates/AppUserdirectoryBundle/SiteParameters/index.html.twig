@@ -173,6 +173,11 @@
                 <td>{{ entity.restartServerErrorCounter }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'restartServerErrorCounter'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Note Regarding Remote Access (https://its.weill.cornell.edu/services/wifi-networks/remote-access)</td>
+                <td>{{ entity.remoteAccessUrl }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'remoteAccessUrl'}) }}">Edit</a></td>
+            </tr>
 
             {#Maintenance#}
             <tr>

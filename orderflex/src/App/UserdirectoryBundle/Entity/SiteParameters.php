@@ -1229,6 +1229,13 @@ class SiteParameters {
     private $restartServerErrorCounter;
 
     /**
+     * Note Regarding Remote Access
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $remoteAccessUrl;
+
+    /**
      * @ORM\OneToOne(targetEntity="App\VacReqBundle\Entity\VacReqSiteParameter", cascade={"persist","remove"})
      */
     private $vacreqSiteParameter;
@@ -4218,6 +4225,22 @@ class SiteParameters {
     public function setRestartServerErrorCounter($restartServerErrorCounter)
     {
         $this->restartServerErrorCounter = $restartServerErrorCounter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemoteAccessUrl()
+    {
+        return $this->remoteAccessUrl;
+    }
+
+    /**
+     * @param mixed $remoteAccessUrl
+     */
+    public function setRemoteAccessUrl($remoteAccessUrl)
+    {
+        $this->remoteAccessUrl = $remoteAccessUrl;
     }
 
     public function getEmailCriticalErrorExceptionUsers()

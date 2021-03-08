@@ -405,6 +405,11 @@ class SiteParameterType extends AbstractType
         ));
         ////////// EOF Completed and Notified, without issued invoice work request reminder email ////////////
 
+        $builder->add('showRemittance', null, array(
+            'label' => "Show Remittance section in invoice PDF:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
     }
     
     /**

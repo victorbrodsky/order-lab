@@ -433,6 +433,13 @@ class TransResSiteParameters {
     private $completedNoInvoiceRequestReminderBody;
     ////////////// EOF Completed Work Requests reminder email //////////////
 
+    /**
+     * showRemittance section
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showRemittance;
+
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
@@ -1440,6 +1447,21 @@ class TransResSiteParameters {
         $this->humanTissueFormNote = $humanTissueFormNote;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShowRemittance()
+    {
+        return $this->showRemittance;
+    }
+
+    /**
+     * @param mixed $showRemittance
+     */
+    public function setShowRemittance($showRemittance)
+    {
+        $this->showRemittance = $showRemittance;
+    }
     
 
 

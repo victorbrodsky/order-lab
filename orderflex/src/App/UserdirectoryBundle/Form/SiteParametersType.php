@@ -1144,6 +1144,14 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
+        
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'remoteAccessUrl' ) {
+            $builder->add('remoteAccessUrl', null, array(
+                'label' => 'Note Regarding Remote Access (https://its.weill.cornell.edu/services/wifi-networks/remote-access):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'emailCriticalErrorExceptionUsers' ) {
 //            $builder->add('emailCriticalErrorExceptionUsers', null, array(
 //                'label' => 'Do not send critical error notifications to the following users:',
