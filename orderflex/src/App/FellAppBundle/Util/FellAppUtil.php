@@ -765,7 +765,7 @@ class FellAppUtil {
         $populatedBodyFellApp .= $linkToList;
 
         //If you are off site, please connect via VPN first ( https://its.weill.cornell.edu/services/wifi-networks/vpn ) and then follow the links above.
-        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first (https://webvpn.med.cornell.edu/) and then follow the links above.";
+        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first (https://its.weill.cornell.edu/services/wifi-networks/remote-access) and then follow the links above.";
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
