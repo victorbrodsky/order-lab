@@ -290,7 +290,7 @@ class TransResPermissionUtil
 
         //Invoice's billing contact (salesperson)
         $salesperson = $invoice->getSalesperson();
-        if( $salesperson->getId() == $user->getId() ) {
+        if( $salesperson && $salesperson->getId() == $user->getId() ) {
             return true;
         }
 

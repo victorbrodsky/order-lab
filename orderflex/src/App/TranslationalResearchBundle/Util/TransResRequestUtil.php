@@ -21,6 +21,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -4100,7 +4101,54 @@ class TransResRequestUtil
     }
 
     public function exportUnpaidInvoices( $idsArr, $fileName, $template ) {
-        
+        $reader = ReaderEntityFactory::createXLSXReader();
+
+        $reader->open($template);
+
+        $headerRowIndex = 6;
+
+        $counterCol = 0;        //Counter
+        $companyCodeCol = 1;    //Company Code
+        $glAccountCol = 2;      //GL Account
+        $debitAmountCol = 3;    //Debit Amount
+        $creditAmountCol = 4;   //Credit Amount
+        $fundCol = 5;           //Fund
+        $wbsCol = 6;            //WBS
+        $wbsDocNumberCol = 7;   //WBS Exp - Original Doc Number
+        $wbsPastExpenseCol = 8; //WBS Exp - Reason for 90 days past original Expense
+        $internalOrderCol = 9;  //Internal Order
+        $personnelNoCol = 10;    //Personnel No
+        $textCol = 11;           //Text
+
+        $sheet = NULL;
+        foreach ($reader->getSheetIterator() as $thisSheet) {
+            $sheet = $thisSheet;
+            break;
+        }
+
+        $rowIndex = 0;
+        foreach ($sheet->getRowIterator() as $row) {
+
+            $rowIndex++;
+
+            if( $rowIndex < $headerRowIndex ) {
+                continue;
+            }
+
+            //dump($row);
+            //exit('111');
+            // do stuff with the row
+            $cells = $row->getCells();
+            //dump($cells);
+            //exit('111');
+            $cellIndex = 0;
+            foreach( $cells as $cell ) {
+                echo '('.$rowIndex.','.$cellIndex.')'.": cell=".$cell."<br>";
+                $cellIndex++;
+            }
+        }
+
+        $reader->close();
     }
 
 }
