@@ -23,6 +23,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
@@ -4100,25 +4101,51 @@ class TransResRequestUtil
         return $grandTotal;
     }
 
-    public function exportUnpaidInvoices( $idsArr, $fileName, $template ) {
-        $reader = ReaderEntityFactory::createXLSXReader();
+    public function exportUnpaidInvoicesSpout( $idsArr, $fileName, $template ) {
 
+        //http://opensource.box.com/spout/guides/edit-existing-spreadsheet/
+
+        // we need a reader to read the existing file...
+        $reader = ReaderEntityFactory::createXLSXReader();
         $reader->open($template);
+        $reader->setShouldFormatDates(true); // this is to be able to copy dates
+
+        // ... and a writer to create the new file
+        $writer = WriterEntityFactory::createWriterFromFile($fileName);
+        $writer->openToFile($fileName);
+
+        //$writer = WriterEntityFactory::createCSVWriter();
+        //$writer->openToBrowser($fileName);
 
         $headerRowIndex = 6;
 
-        $counterCol = 0;        //Counter
-        $companyCodeCol = 1;    //Company Code
-        $glAccountCol = 2;      //GL Account
-        $debitAmountCol = 3;    //Debit Amount
-        $creditAmountCol = 4;   //Credit Amount
-        $fundCol = 5;           //Fund
-        $wbsCol = 6;            //WBS
-        $wbsDocNumberCol = 7;   //WBS Exp - Original Doc Number
-        $wbsPastExpenseCol = 8; //WBS Exp - Reason for 90 days past original Expense
-        $internalOrderCol = 9;  //Internal Order
-        $personnelNoCol = 10;    //Personnel No
-        $textCol = 11;           //Text
+//        $counterCol = 0;        //Counter
+//        $companyCodeCol = 1;    //Company Code
+//        $glAccountCol = 2;      //GL Account
+//        $debitAmountCol = 3;    //Debit Amount
+//        $creditAmountCol = 4;   //Credit Amount
+//        $fundCol = 5;           //Fund
+//        $wbsCol = 6;            //WBS
+//        $wbsDocNumberCol = 7;   //WBS Exp - Original Doc Number
+//        $wbsPastExpenseCol = 8; //WBS Exp - Reason for 90 days past original Expense
+//        $internalOrderCol = 9;  //Internal Order
+//        $personnelNoCol = 10;    //Personnel No
+//        $textCol = 11;           //Text
+
+        $colArr = array(
+            "Counter",
+            "Company Code",
+            "GL Account",
+            "Debit Amount",
+            "Credit Amount",
+            "Fund",
+            "WBS",
+            "WBS Exp - Original Doc Number",
+            "WBS Exp - Reason for 90 days past original Expense",
+            "Internal Order",
+            "Personnel No",
+            "Text"
+        );
 
         $sheet = NULL;
         foreach ($reader->getSheetIterator() as $thisSheet) {
@@ -4131,24 +4158,183 @@ class TransResRequestUtil
 
             $rowIndex++;
 
-            if( $rowIndex < $headerRowIndex ) {
-                continue;
+            // ... and copy each row into the new spreadsheet
+            $writer->addRow($row);
+
+            //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
+            if( $rowIndex == $headerRowIndex ) {
+
+                // do stuff with the row
+                $cells = $row->getCells();
+                //dump($cells);
+                //exit('111');
+
+                //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
+                $colIndexArr = $this->generateColIndexArray($cells,$colArr,$rowIndex);
             }
 
             //dump($row);
             //exit('111');
-            // do stuff with the row
-            $cells = $row->getCells();
-            //dump($cells);
-            //exit('111');
-            $cellIndex = 0;
-            foreach( $cells as $cell ) {
-                echo '('.$rowIndex.','.$cellIndex.')'.": cell=".$cell."<br>";
-                $cellIndex++;
-            }
+
+//            $colIndex = 0;
+//            foreach( $cells as $cell ) {
+//                echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
+//                $colIndex++;
+//            }
+
+            //$colArr = $this->assignColIndex($cells,$colArr,$rowIndex);
         }
 
+        //dump($colIndexArr);
+        //exit('exit colIndexArr');
+
         $reader->close();
+        $writer->close();
+    }
+    public function generateColIndexArray($cells,$colArr,$rowIndex=null) {
+        $colIndexArr = array();
+        $colIndex = 0;
+        foreach( $cells as $cell ) {
+            //echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
+            foreach($colArr as $colTitle) {
+                if( $colTitle ) {
+                    if ($cell . "" == $colTitle . "") {
+                        //$colArr[$colTitle] = $colIndex;
+                        $colIndexArr[$colTitle] = $colIndex;
+                    } else {
+                        //$colArr[$colTitle] = null;
+                    }
+                }
+            }
+            $colIndex++;
+        }
+        return $colIndexArr;
+    }
+    public function exportUnpaidInvoices( $idsArr, $fileName, $template ) {
+
+        $colArr = array(
+            "Counter",
+            "Company Code",
+            "GL Account",
+            "Debit Amount",
+            "Credit Amount",
+            "Fund",
+            "WBS",
+            "WBS Exp - Original Doc Number",
+            "WBS Exp - Reason for 90 days past original Expense",
+            "Internal Order",
+            "Personnel No",
+            "Text"
+        );
+
+        //load spreadsheet
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($template);
+
+        //change it
+        $sheet = $spreadsheet->getActiveSheet();
+        //$sheet->setCellValue('A1', 'New Value');
+
+        //get column index
+        $headerRowIndex = 7;
+        $highestColumn = $sheet->getHighestColumn(); //AD
+        echo "highestColumn=$highestColumn <br>";
+        $rowData = $sheet->rangeToArray(
+            'A' . $headerRowIndex . ':' . $highestColumn . $headerRowIndex,
+            NULL, // Value that should be returned for empty cells
+            TRUE, // Should formulas be calculated (the equivalent of getCalculatedValue() for each cell)
+            FALSE // Should values be formatted (the equivalent of getFormattedValue() for each cell)
+                  //TRUE - Should the array be indexed by cell row and cell column
+        );
+
+        $colIndexArr = $this->generateColIndexArrayFromRow($rowData,$highestColumn,$colArr);
+        dump($colIndexArr);
+        exit('111');
+
+        //write it again to Filesystem with the same name (=replace)
+        //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        //$writer->save($fileName);
+
+        //$ea = new Spreadsheet(); // ea is short for Excel Application
+        //$ea->addSheet($sheet);
+        //$ews = $sheet->getSheet(0);
+        //$ews = $ea->getSheet(0);
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+        exit();
+
+    }
+    public function generateColIndexArrayFromRow($rowData,$highestColumn,$colArr) {
+        $colIndexArr = array();
+        $colIndex = 0;
+
+        //dump($rowData);
+        //exit('111');
+
+        foreach( $rowData[0] as $cell ) {
+            foreach($colArr as $colTitle) {
+                if( $colTitle ) {
+                    if ($cell . "" == $colTitle . "") {
+                        //$colArr[$colTitle] = $colIndex;
+                        $colIndexArr[$colTitle] = $colIndex;
+                    } else {
+                        //$colArr[$colTitle] = null;
+                    }
+                }
+            }
+            $colIndex++;
+        }
+
+        //dump($colIndexArr);
+        //exit('111');
+        return $colIndexArr;
+
+//        $cellIterator = $rowData->getCellIterator();
+
+//        $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
+        //    even if a cell value is not set.
+        // For 'TRUE', we loop through cells
+        //    only when their value is set.
+        // If this method is not called,
+        //    the default value is 'false'.
+//        foreach ($cellIterator as $cell) {
+//            echo '<td>' .
+//                $cell->getValue() .
+//                '</td>' . PHP_EOL;
+//        }
+
+//        for( $colIndex = 0; $colIndex <= $highestColumn; $colIndex++ ) {
+//            echo "The number is: $colIndex <br>";
+//            $cell = $rowData[0][$colIndex];
+//            echo $colIndex.": cell=".$cell."<br>";
+//
+//            //if( $colTitle ) {
+//            //    $colIndexArr[$colTitle] = $colIndex;
+//            //}
+//        }
+
+//        foreach( $rowData[0] as $cell ) {
+//            dump($cell);
+//            //echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
+//            foreach($colArr as $colTitle) {
+//                if( $colTitle ) {
+//                    if ($cell . "" == $colTitle . "") {
+//                        //$colArr[$colTitle] = $colIndex;
+//                        $colIndexArr[$colTitle] = $colIndex;
+//                    } else {
+//                        //$colArr[$colTitle] = null;
+//                    }
+//                }
+//            }
+//            $colIndex++;
+//        }
+
+        return $colIndexArr;
     }
 
 }
