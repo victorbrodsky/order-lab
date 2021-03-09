@@ -320,25 +320,25 @@ class TransResPermissionUtil
 
         //Invoice's billing contact
         $billingPerson = $invoice->getBillingContact();
-        if( $billingPerson->getId() == $user->getId() ) {
+        if( $billingPerson && $billingPerson->getId() == $user->getId() ) {
             return true;
         }
 
         //salesperson
         $salesperson = $invoice->getSalesperson();
-        if( $salesperson->getId() == $user->getId() ) {
+        if( $salesperson && $salesperson->getId() == $user->getId() ) {
             return true;
         }
 
         //Invoice's PI
         $pi = $invoice->getPrincipalInvestigator();
-        if( $pi->getId() == $user->getId() ) {
+        if( $pi && $pi->getId() == $user->getId() ) {
             return true;
         }
 
         //Invoice's Submitter
         $submitter = $invoice->getSubmitter();
-        if( $submitter->getId() == $user->getId() ) {
+        if( $submitter && $submitter->getId() == $user->getId() ) {
             return true;
         }
 

@@ -1834,9 +1834,10 @@ class InvoiceController extends OrderAbstractController
         $idsArr = array_reverse($idsArr);
 
         //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
+        $template = null;
         $fileName = "Unpaid-Billing-Summary-Invoices".".csv";
-
-        $transresRequestUtil->createtInvoicesCsvSpout( $idsArr, $fileName );
+        
+        $transresRequestUtil->exportUnpaidInvoices( $idsArr, $fileName, $template );
 
         exit();
     }

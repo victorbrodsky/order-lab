@@ -4099,6 +4099,10 @@ class TransResRequestUtil
         return $grandTotal;
     }
 
+    public function exportUnpaidInvoices( $idsArr, $fileName, $template ) {
+        
+    }
+
 }
 
 
