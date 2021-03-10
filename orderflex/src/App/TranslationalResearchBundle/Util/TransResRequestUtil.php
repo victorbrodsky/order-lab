@@ -4234,6 +4234,8 @@ class TransResRequestUtil
         $sheet = $spreadsheet->getActiveSheet();
         //$sheet->setCellValue('A1', 'New Value');
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $user = $this->secTokenStorage->getToken()->getUser();
         //get column index
         $headerRowIndex = 7;
         $highestColumn = $sheet->getHighestColumn(); //AD
@@ -4249,6 +4251,10 @@ class TransResRequestUtil
         $colIndexArr = $this->generateColIndexArrayFromRow($rowData,$highestColumn,$colArr);
         //dump($colIndexArr);
         //exit('111');
+
+        $totalDue = 0;
+        $piArr = array();
+        $projectIdArr = array();
 
         //Start row
         $row = 9;
@@ -4280,12 +4286,19 @@ class TransResRequestUtil
                 continue;
             }
 
-            //Questions:
-            //Total 5xxxxx
-            //Total 7xxxxx
+            $pi = $invoice->getPrincipalInvestigator();
+            if( $pi ) {
+                $piArr[] = $pi->getUsernameShortest();
+            }
 
-            //Total 94xxxx
-            //Total 96xxxx
+            $transresRequest = $invoice->getTransresRequest();
+            if( $transresRequest ) {
+                $project = $transresRequest->getProject();
+                if( $project ) {
+                    $projectIdArr[] = $project->getOid();
+                }
+            }
+
 
             /////////// 1 row: GL Account = 700031 ////////////
 
@@ -4346,6 +4359,7 @@ class TransResRequestUtil
             $due = $invoice->getDue();
             if ($due) {
                 $cell->setValue($due);
+                $totalDue = $totalDue + $due;
             }
 
             //Fund -  please request JV fund transfer to TRP account 61211820
@@ -4365,9 +4379,41 @@ class TransResRequestUtil
             /////////// EOF 2 row: GL Account = 500031 ///////////
         }
 
+        //Questions:
+        if(0) {
+            if ($totalDue) {
+                //Total 5xxxxx (1,198.00)
+                $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 4);
+                $cell->setValue($totalDue);
+
+                //Total 7xxxxx 1,198.00
+                $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 5);
+                $cell->setValue($totalDue);
+            }
+        }
+
+        //Total 94xxxx
+        //Total 96xxxx
+
         //write it again to Filesystem with the same name (=replace)
         //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         //$writer->save($fileName);
+
+        if( count($piArr) > 0 ) {
+            $piStr = "-PI-".implode("-",$piArr);
+        }
+        if( count($projectIdArr) > 0 ) {
+            $projectIds = "-Project-".implode("-",$projectIdArr);
+        }
+        $generatedStr = NULL;
+        $now = new \DateTime();
+        $dateTimeUser = $userServiceUtil->convertFromUtcToUserTimezone($now,$user);
+        $generatedStr = "-Generated-on-".$dateTimeUser->format('m-d-Y \a\t H-i-s');
+        $generatedStr = str_replace(" ", "-", $generatedStr);
+
+        //Unpaid-Billing-Summary-PI-FirstName-LastName-Project-ID-ID1-ID2-ID3-Generated-on-MM-DD-YYYY-at-HH-MM-SS.xlsx
+        $fileName = "Unpaid-Billing-Summary-Invoices".$piStr.$projectIds.$generatedStr.".csv";
+        $fileName = str_replace(" ", "-", $fileName);
 
         //$ea = new Spreadsheet(); // ea is short for Excel Application
         //$ea->addSheet($sheet);
