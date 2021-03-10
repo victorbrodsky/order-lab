@@ -35,7 +35,7 @@
 /src/App/FellAppBundle/Util/*.xml
 /src/App/OrderformBundle/Security/AperioLdap
 /src/App/OrderformBundle/SDK
-/src/App/TranslationalResearchBundle/Util/*.xlsx
+### /src/App/TranslationalResearchBundle/Util/*.xlsx ###
 
 /src/App/*/Util/*.xlsx
 /src/App/*/Util/*.xls
