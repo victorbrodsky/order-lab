@@ -4237,7 +4237,7 @@ class TransResRequestUtil
         //get column index
         $headerRowIndex = 7;
         $highestColumn = $sheet->getHighestColumn(); //AD
-        echo "highestColumn=$highestColumn <br>";
+        //echo "highestColumn=$highestColumn <br>";
         $rowData = $sheet->rangeToArray(
             'A' . $headerRowIndex . ':' . $highestColumn . $headerRowIndex,
             NULL, // Value that should be returned for empty cells
@@ -4247,13 +4247,113 @@ class TransResRequestUtil
         );
 
         $colIndexArr = $this->generateColIndexArrayFromRow($rowData,$highestColumn,$colArr);
-        dump($colIndexArr);
-        exit('111');
+        //dump($colIndexArr);
+        //exit('111');
+
+        //Start row
+        $row = 9;
 
         //TODO:
         //1) get unpaid invoice
 
         //2) populate cell as //$sheet->setCellValue('A1', 'New Value');
+
+        foreach( $idsArr as $invoiceId ) {
+            if( !$invoiceId ) {
+                continue;
+            }
+
+            //if( $limit && ($count++ > $limit) ) {
+            //    break;
+            //}
+
+            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+            if( !$invoice ) {
+                continue;
+            }
+
+            //|| $invoice->getStatus() == 'Pending'
+            if( $invoice->getStatus() != 'Unpaid/Issued' ) {
+                continue;
+            }
+
+            /////////// 1 row: GL Account = 700031 ////////////
+
+            //Company Code
+            $col = $colIndexArr['Company Code']; //1 - B
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $cell->setValue('WCMC');
+
+            //GL Account = 700031
+            $col = $colIndexArr['GL Account']; //2
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $cell->setValue('700031');
+
+            //Debit Amount
+            $col = $colIndexArr['Debit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $due = $invoice->getDue();
+            if( $due ) {
+                $cell->setValue($due);
+            }
+
+            //WBS (fundedAccountNumber)
+            $col = $colIndexArr['WBS'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $wbs = $invoice->getFundedAccountNumber();
+            if( $wbs ) {
+                $cell->setValue($wbs);
+            }
+
+            //TEXT (invoice ID)
+            $col = $colIndexArr['Text'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $text = $invoice->getOid();
+            if( $text ) {
+                $cell->setValue($text);
+            }
+
+            $row++;
+            /////////// EOF 1 row: GL Account = 700031 ////////////
+
+
+
+            /////////// 2 row: GL Account = 500031 ///////////
+
+            //Company Code
+            $col = $colIndexArr['Company Code'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $cell->setValue('WCMC');
+
+            //GL Account = 500031
+            $col = $colIndexArr['GL Account'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $cell->setValue('500031');
+
+            //Credit Amount
+            $col = $colIndexArr['Credit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $due = $invoice->getDue();
+            if ($due) {
+                $cell->setValue($due);
+            }
+
+            //Fund -  please request JV fund transfer to TRP account 61211820
+            $col = $colIndexArr['Fund'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $cell->setValue("61211820");
+
+            //TEXT (invoice ID)
+            $col = $colIndexArr['Text'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $text = $invoice->getOid();
+            if ($text) {
+                $cell->setValue($text);
+            }
+
+            $row++;
+            /////////// EOF 2 row: GL Account = 500031 ///////////
+        }
 
         //write it again to Filesystem with the same name (=replace)
         //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -4282,11 +4382,12 @@ class TransResRequestUtil
         //exit('111');
 
         foreach( $rowData[0] as $cell ) {
+
             foreach($colArr as $colTitle) {
                 if( $colTitle ) {
                     if ($cell . "" == $colTitle . "") {
                         //$colArr[$colTitle] = $colIndex;
-                        $colIndexArr[$colTitle] = $colIndex;
+                        $colIndexArr[$colTitle] = $colIndex+1;
                     } else {
                         //$colArr[$colTitle] = null;
                     }

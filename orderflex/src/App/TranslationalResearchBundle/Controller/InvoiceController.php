@@ -41,8 +41,8 @@ class InvoiceController extends OrderAbstractController
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -70,26 +70,26 @@ class InvoiceController extends OrderAbstractController
         $priceList = NULL;
 
         $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
-        $dql =  $repository->createQueryBuilder("invoice");
+        $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
-        $dql->leftJoin('invoice.submitter','submitter');
-        $dql->leftJoin('invoice.salesperson','salesperson');
-        $dql->leftJoin('salesperson.infos','salespersonInfos');
-        $dql->leftJoin('invoice.transresRequest','transresRequest');
-        $dql->leftJoin('invoice.principalInvestigator','principalInvestigator');
-        $dql->leftJoin('invoice.billingContact','billingContact');
+        $dql->leftJoin('invoice.submitter', 'submitter');
+        $dql->leftJoin('invoice.salesperson', 'salesperson');
+        $dql->leftJoin('salesperson.infos', 'salespersonInfos');
+        $dql->leftJoin('invoice.transresRequest', 'transresRequest');
+        $dql->leftJoin('invoice.principalInvestigator', 'principalInvestigator');
+        $dql->leftJoin('invoice.billingContact', 'billingContact');
 
         $dqlParameters = array();
 
-        if( $routeName == "translationalresearch_invoice_index" ) {
+        if ($routeName == "translationalresearch_invoice_index") {
 
             //Title
-            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest,false);
-            $thisLink = "<a href=".$requestUrl.">"."Request ID ".$transresRequest->getOid()."</a>";
+            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest, false);
+            $thisLink = "<a href=" . $requestUrl . ">" . "Request ID " . $transresRequest->getOid() . "</a>";
             //$title = "List of Invoices for Request ID ".$transresRequest->getOid();
             $title = "List of Invoices for " . $thisLink;
-            $metaTitle = "List of Invoices for Request ID ".$transresRequest->getOid();
+            $metaTitle = "List of Invoices for Request ID " . $transresRequest->getOid();
 
             $dql->where("transresRequest.id = :transresRequestId");
             $dqlParameters["transresRequestId"] = $transresRequest->getId();
@@ -100,26 +100,26 @@ class InvoiceController extends OrderAbstractController
         $transresPricesList = $transresUtil->getPricesList();
 
         $params = array(
-            'routeName'=>$routeName,
-            'transresRequest'=>$transresRequest,
-            'versions'=>$versions,
+            'routeName' => $routeName,
+            'transresRequest' => $transresRequest,
+            'versions' => $versions,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets"),
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresPricesList' => $transresPricesList
         );
-        $filterform = $this->createForm(FilterInvoiceType::class, null,array(
+        $filterform = $this->createForm(FilterInvoiceType::class, null, array(
             'method' => 'GET',
-            'form_custom_value'=>$params
+            'form_custom_value' => $params
         ));
 
         $filterform->handleRequest($request);
 
-        $filterTitle = trim( $request->get('title') );
+        $filterTitle = trim($request->get('title'));
         //$filterwell = trim( $request->get('filterwell') );
 
         //$filterType = trim( $request->get('type') );
-        $invoicetype = str_replace("-"," ",$invoicetype);
+        $invoicetype = str_replace("-", " ", $invoicetype);
         $invoicetypeLowerCase = strtolower($invoicetype);
         //echo "invoicetype=$invoicetype<br>";
 
@@ -142,18 +142,18 @@ class InvoiceController extends OrderAbstractController
 //            }
 //        }
 
-        if( $invoicetype && $invoicetypeLowerCase == strtolower("All Invoices") ) {
+        if ($invoicetype && $invoicetypeLowerCase == strtolower("All Invoices")) {
             //filter nothing
             $title = "All Invoices";
         }
 
-        if( $invoicetype && $invoicetypeLowerCase != strtolower("All Invoices") ) {
+        if ($invoicetype && $invoicetypeLowerCase != strtolower("All Invoices")) {
 //            if( $invoicetype == "All Invoices" ) {
 //                //filter nothing
 //                $title = "All Invoices";
 //            }
 
-            if( $invoicetypeLowerCase == strtolower("All Issued Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("All Issued Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -166,7 +166,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("All Pending Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("All Pending Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -214,7 +214,7 @@ class InvoiceController extends OrderAbstractController
 //                    )
 //                );
 //            }
-            if( $invoicetypeLowerCase == strtolower("My Outstanding Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("My Outstanding Invoices")) {
                 //all outstanding Invoices for all Work Requests issued, but not paid for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -233,7 +233,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Issued invoices I generated") ) {
+            if ($invoicetypeLowerCase == strtolower("Issued invoices I generated")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -247,7 +247,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Invoices where I am the salesperson") ) {
+            if ($invoicetypeLowerCase == strtolower("Invoices where I am the salesperson")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -256,7 +256,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Invoices where I am the PI") ) {
+            if ($invoicetypeLowerCase == strtolower("Invoices where I am the PI")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -266,7 +266,7 @@ class InvoiceController extends OrderAbstractController
                 );
             }
             //"Unpaid Invoices where I am a PI", "Unpaid Invoices sent to Me"
-            if( $invoicetypeLowerCase == strtolower("Unpaid Invoices where I am the PI") ) {
+            if ($invoicetypeLowerCase == strtolower("Unpaid Invoices where I am the PI")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -278,7 +278,7 @@ class InvoiceController extends OrderAbstractController
             }
 
             //Latest
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of All Invoices Except Canceled") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of All Invoices Except Canceled")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -289,7 +289,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of All Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of All Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -298,7 +298,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Issued (Unpaid) Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Issued (Unpaid) Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -308,7 +308,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Pending (Unissued) Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Pending (Unissued) Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -318,7 +318,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -328,7 +328,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Partially Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Partially Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -338,7 +338,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Paid and Partially Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Paid and Partially Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -349,7 +349,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Latest Versions of Canceled Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Latest Versions of Canceled Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -361,7 +361,7 @@ class InvoiceController extends OrderAbstractController
             }
 
             //Old
-            if( $invoicetypeLowerCase == strtolower("Old Versions of All Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of All Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -370,7 +370,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Issued (Unpaid) Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Issued (Unpaid) Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -380,7 +380,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Pending (Unissued) Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Pending (Unissued) Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -390,7 +390,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -400,7 +400,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Partially Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Partially Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -410,7 +410,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Paid and Partially Paid Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Paid and Partially Paid Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -421,7 +421,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if( $invoicetypeLowerCase == strtolower("Old Versions of Canceled Invoices") ) {
+            if ($invoicetypeLowerCase == strtolower("Old Versions of Canceled Invoices")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -452,7 +452,7 @@ class InvoiceController extends OrderAbstractController
             //echo "totalMin=".$totalMin."<br>";
             //$advancedWell = $filterform['well']->getData();
 
-            if( isset($filterform['priceList']) ) {
+            if (isset($filterform['priceList'])) {
                 $priceList = $filterform['priceList']->getData();
             }
         }
@@ -460,17 +460,17 @@ class InvoiceController extends OrderAbstractController
 
         //echo "filterTitle=$filterTitle, invoicetype=$invoicetype <br>";
         $onlyForAdmin = false;
-        if( $invoicetype && strpos(strtolower($invoicetype), 'all') !== false ) {
-           $onlyForAdmin = true;
+        if ($invoicetype && strpos(strtolower($invoicetype), 'all') !== false) {
+            $onlyForAdmin = true;
         }
-        if( $routeName == "translationalresearch_invoice_index_filter" ) {
-            if( !$idSearch && !$filterTitle ) {
+        if ($routeName == "translationalresearch_invoice_index_filter") {
+            if (!$idSearch && !$filterTitle) {
                 //echo "check: idSearch and filterTitle null <br>";
                 $onlyForAdmin = true;
             }
         }
-        if( $onlyForAdmin ) {
-            if(
+        if ($onlyForAdmin) {
+            if (
                 $transresUtil->isAdminOrPrimaryReviewer() ||
                 $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
                 $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
@@ -481,7 +481,7 @@ class InvoiceController extends OrderAbstractController
                 //show
             } else {
                 //exit('no permission');
-                return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+                return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
             }
         }
 
@@ -502,7 +502,7 @@ class InvoiceController extends OrderAbstractController
 //            $status = "Pending";
 //        }
 
-        if( $invoicetypeLowerCase == strtolower("My Invoices") ) {
+        if ($invoicetypeLowerCase == strtolower("My Invoices")) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
@@ -518,7 +518,7 @@ class InvoiceController extends OrderAbstractController
             //exit($title);
         }
 
-        if( $filterTitle == "My Outstanding Invoices" ) {
+        if ($filterTitle == "My Outstanding Invoices") {
             //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
             $dqlParameters["userId"] = $user->getId();
@@ -533,28 +533,28 @@ class InvoiceController extends OrderAbstractController
             //exit($title);
         }
 
-        if( $submitter ) {
+        if ($submitter) {
             //echo "Submitter=$submitter<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
             $advancedFilter++;
         }
 
-        if( $status && count($status) > 0 ) {
+        if ($status && count($status) > 0) {
             $allExceptCanceled = "";
-            if( in_array("All Invoices Except Canceled",$status) ) {
+            if (in_array("All Invoices Except Canceled", $status)) {
                 $allExceptCanceled = "invoice.status != 'Canceled'";
             }
-            foreach($status as $statusKey=>$statusName) {
+            foreach ($status as $statusKey => $statusName) {
                 //echo "status=".$statusName."<br>";
-                if( $statusName == "All Invoices Except Canceled" ) {
+                if ($statusName == "All Invoices Except Canceled") {
                     unset($status[$statusKey]);
                 }
             }
             //print_r($status);
 
-            if( count($status) > 0 ) {
-                if( $allExceptCanceled ) {
+            if (count($status) > 0) {
+                if ($allExceptCanceled) {
                     $allExceptCanceled = " AND " . $allExceptCanceled;
                 }
                 $dql->andWhere("invoice.status IN (:statuses)" . $allExceptCanceled);
@@ -564,9 +564,9 @@ class InvoiceController extends OrderAbstractController
             }
         }
 
-        if( $idSearch ) {
+        if ($idSearch) {
             $dql->andWhere("invoice.oid LIKE :idSearch");
-            $dqlParameters["idSearch"] = "%".$idSearch."%";
+            $dqlParameters["idSearch"] = "%" . $idSearch . "%";
         }
 
 //        if( $principalInvestigators && count($principalInvestigators)>0 ) {
@@ -578,66 +578,66 @@ class InvoiceController extends OrderAbstractController
 //            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
 //            $advancedFilter++;
 //        }
-        if( $principalInvestigator ) {
+        if ($principalInvestigator) {
             //echo "PI=$principalInvestigator <br>";
             $dql->andWhere("principalInvestigator.id = :principalInvestigatorId");
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             //$advancedFilter++;
         }
 
-        if( $startDate ) {
+        if ($startDate) {
             $dql->andWhere('invoice.dueDate >= :startDate');
             $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $endDate ) {
+        if ($endDate) {
             $endDate->modify('+1 day');
             $dql->andWhere('invoice.dueDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
-        if( $startCreateDate ) {
+        if ($startCreateDate) {
             $dql->andWhere('invoice.createDate >= :startCreateDate');
             $dqlParameters['startCreateDate'] = $startCreateDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $endCreateDate ) {
+        if ($endCreateDate) {
             $endCreateDate->modify('+1 day');
             $dql->andWhere('invoice.createDate <= :endCreateDate');
             $dqlParameters['endCreateDate'] = $endCreateDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
-        if( $salesperson ) {
+        if ($salesperson) {
             //echo "salesperson=$salesperson<br>";
             $dql->andWhere("salesperson.id = :salespersonId");
             $dqlParameters["salespersonId"] = $salesperson->getId();
             $advancedFilter++;
         }
 
-        if( $billingContact ) {
+        if ($billingContact) {
             $dql->andWhere("billingContact.id = :billingContact");
             $dqlParameters["billingContact"] = $billingContact->getId();
             $advancedFilter++;
         }
 
-        if( $totalMin ) {
+        if ($totalMin) {
             $dql->andWhere('invoice.total >= :totalMin');
             $dqlParameters['totalMin'] = $totalMin;
             $advancedFilter++;
         }
 
-        if( $totalMax ) {
+        if ($totalMax) {
             $dql->andWhere('invoice.total <= :totalMax');
             $dqlParameters['totalMax'] = $totalMax;
             $advancedFilter++;
         }
 
-        if( $version ) {
-            if( $version == "Latest" ) {
+        if ($version) {
+            if ($version == "Latest") {
                 $dql->andWhere('invoice.latestVersion = TRUE');
-            } elseif( $version == "Old" ) {
+            } elseif ($version == "Old") {
                 $dql->andWhere('invoice.latestVersion != TRUE ');
             } else {
                 $dql->andWhere('invoice.version = :version');
@@ -646,35 +646,35 @@ class InvoiceController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( $fundingNumber ) {
+        if ($fundingNumber) {
             $dql->andWhere("invoice.fundedAccountNumber LIKE :fundedAccountNumber");
-            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
+            $dqlParameters["fundedAccountNumber"] = "%" . $fundingNumber . "%";
             $advancedFilter++;
         }
 
-        if( $fundingType ) {
-            if( $fundingType == "Funded" ) {
+        if ($fundingType) {
+            if ($fundingType == "Funded") {
                 $dql->andWhere("invoice.fundedAccountNumber IS NOT NULL");
                 $advancedFilter++;
             }
-            if( $fundingType == "Non-Funded" ) {
+            if ($fundingType == "Non-Funded") {
                 $dql->andWhere("invoice.fundedAccountNumber IS NULL");
                 $advancedFilter++;
             }
         }
 
-        if( $irbNumber ) {
-            $dql->leftJoin('transresRequest.project','project');
+        if ($irbNumber) {
+            $dql->leftJoin('transresRequest.project', 'project');
             $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
-            $dqlParameters["irbNumber"] = "%".$irbNumber."%";
+            $dqlParameters["irbNumber"] = "%" . $irbNumber . "%";
             $advancedFilter++;
         }
 
-        if( $priceList ) {
-            if( $priceList != 'all' ) {
-                $dql->leftJoin('transresRequest.project','project');
-                $dql->leftJoin('project.priceList','priceList');
-                if( $priceList == 'default' ) {
+        if ($priceList) {
+            if ($priceList != 'all') {
+                $dql->leftJoin('transresRequest.project', 'project');
+                $dql->leftJoin('project.priceList', 'priceList');
+                if ($priceList == 'default') {
                     $dql->andWhere("priceList.id IS NULL");
                 } else {
                     $dql->andWhere("priceList.id = :priceListId");
@@ -687,7 +687,7 @@ class InvoiceController extends OrderAbstractController
         $limit = 30;
         $query = $em->createQuery($dql);
 
-        if( count($dqlParameters) > 0 ) {
+        if (count($dqlParameters) > 0) {
             $query->setParameters($dqlParameters);
         }
 
@@ -699,7 +699,7 @@ class InvoiceController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $invoices = $paginator->paginate(
             $query,
             $request->query->get('page', 1),    /*page number*/
@@ -711,40 +711,62 @@ class InvoiceController extends OrderAbstractController
 
         //echo "invoicetype=".$invoicetype."<br>";
         //echo "title=".$title."<br>";
-        if( $filterTitle ) {
+        if ($filterTitle) {
             $title = $filterTitle;
         }
-        if( !$metaTitle ) {
+        if (!$metaTitle) {
             $metaTitle = $title;
         }
 
         $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Invoice");
-        if( $eventObjectType ) {
+        if ($eventObjectType) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
             $eventObjectTypeId = null;
         }
         //echo "eventObjectTypeId=".$eventObjectTypeId."<br>";
 
-        $matchingStrInvoice = $transresRequestUtil->getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters);
+        $matchingStrInvoice = $transresRequestUtil->getMatchingStrInvoiceByDqlParameters($dql, $dqlParameters);
         $matchingStrInvoiceStr = $matchingStrInvoice['resultStr'];
         $matchingStrInvoiceIds = $matchingStrInvoice['ids'];
         //$totalStrInvoice = $transresRequestUtil->getTotalStrInvoice();
         //$title = $title . " (" . $matchingStrInvoiceStr . "; " . $totalStrInvoice . ")";
         $title = $title . " (" . $matchingStrInvoiceStr . ")";
 
-        $matchingStrInvoiceIds = implode("-",$matchingStrInvoiceIds);
+        $matchingStrInvoiceIds = implode("-", $matchingStrInvoiceIds);
 
 //        if( $filterwell && $filterwell == 'closed' ) {
 //            //$advancedFilter = 0;
 //        }
-        if( $filterTitle ) {
+        if ($filterTitle) {
             $advancedFilter = 0;
         }
+
+        //check if the filter well is set to show either a
+        // single project ID’s invoices ($idSearch)
+        // OR
+        // a single PI’s invoices ($principalInvestigator) ($principalInvestigator)
+        // (or both of these filter well fields have values)
+        $exportUnpaidSummary = 0;
+        if(
+            $routeName == "translationalresearch_invoice_index_filter" ||
+            $routeName == "translationalresearch_invoice_index_type"
+        ) {
+            if ($principalInvestigator) {
+                $exportUnpaidSummary = 1;
+            }
+            if ($idSearch) {
+                //$idSearch does not have '-REQ'
+                if (strpos($idSearch, '-REQ') === false) {
+                    $exportUnpaidSummary = 1;
+                }
+            }
+         }
 
         return array(
             'invoices' => $invoices,
             'matchingStrInvoiceIds' => $matchingStrInvoiceIds,
+            'exportUnpaidSummary' => $exportUnpaidSummary,
             'transresRequest' => $transresRequest,
             'title' => $title,
             'metaTitle' => $metaTitle,
@@ -1816,6 +1838,7 @@ class InvoiceController extends OrderAbstractController
 
     /**
      * unpaid billing summary template.xlsx
+     * http://127.0.0.1/order/index_dev.php/translational-research/invoice/download-unpaid-spreadsheet/
      *
      * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"POST"})
      */

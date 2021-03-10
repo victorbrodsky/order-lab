@@ -17,12 +17,46 @@
                 <span class="fa fa-file-excel-o" aria-hidden="true"></span>
             </label>
 
-            <label
-                    for="download-spreadsheet-form-unpaid" tabindex="0"
-                    data-toggle="tooltip"
-                    title="Download unpaid billing summary spreadsheet with matching invoices">
-                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
-            </label>
+            {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                {% if exportUnpaidSummary %}
+                    <label
+                            for="download-spreadsheet-form-unpaid" tabindex="0"
+                            data-toggle="tooltip"
+                            title="Download unpaid billing summary spreadsheet with matching invoices">
+                        <span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                    </label>
+                {% else %}
+
+                    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Export Unpaid Billing Summary</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please filter invoices by project or PI first.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {#onclick="transresWarningDownloadSpreadsheetFormUnpaid()"#}
+                    {#id="warning-download-spreadsheet-form-unpaid"#}
+                    {#for="warning-download-spreadsheet-form-unpaid" tabindex="0"#}
+                    <label
+                            data-toggle="modal" data-target="#warningModal"
+                            data-toggle="tooltip"
+                            title="Download unpaid billing summary spreadsheet with matching invoices"
+                        ><span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+                    </label>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </h4>
 
@@ -38,15 +72,17 @@
         >Download the spreadsheet with matching invoices</button>
     </form>
 
-    <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
-        <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
-        {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
+    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+        <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
+            <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
+            {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
 
-        <button type="submit"
-                id="download-spreadsheet-form-unpaid"
-                class="btn hidden"
-        >Export Unpaid Billing Summary</button>
-    </form>
+            <button type="submit"
+                    id="download-spreadsheet-form-unpaid"
+                    class="btn hidden"
+            >Export Unpaid Billing Summary</button>
+        </form>
+    {% endif %}
 
     <br>
 
