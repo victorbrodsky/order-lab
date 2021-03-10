@@ -4288,7 +4288,7 @@ class TransResRequestUtil
 
             $pi = $invoice->getPrincipalInvestigator();
             if( $pi ) {
-                $piArr[] = $pi->getUsernameShortest();
+                $piArr[$pi->getUsernameShortest()] = $pi->getUsernameShortest();
             }
 
             $transresRequest = $invoice->getTransresRequest();
@@ -4412,7 +4412,7 @@ class TransResRequestUtil
         $generatedStr = str_replace(" ", "-", $generatedStr);
 
         //Unpaid-Billing-Summary-PI-FirstName-LastName-Project-ID-ID1-ID2-ID3-Generated-on-MM-DD-YYYY-at-HH-MM-SS.xlsx
-        $fileName = "Unpaid-Billing-Summary-".$piStr.$projectIds.$generatedStr.".xlsx";
+        $fileName = "Unpaid-Billing-Summary".$piStr.$projectIds.$generatedStr.".xlsx";
         $fileName = str_replace(" ", "-", $fileName);
 
         //$ea = new Spreadsheet(); // ea is short for Excel Application
