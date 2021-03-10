@@ -27,6 +27,11 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
+/src/App/*/Util/*.xlsx
+/src/App/*/Util/*.xls
+/src/App/*/Util/*.xml
+/src/App/*/Util/*.p12
+
 /src/App/UserdirectoryBundle/Util/Users*.xlsx
 /src/App/UserdirectoryBundle/Util/users.xlsx
 /src/App/VacReqBundle/Util/*.xls
@@ -36,11 +41,7 @@
 /src/App/OrderformBundle/Security/AperioLdap
 /src/App/OrderformBundle/SDK
 /src/App/TranslationalResearchBundle/Util/*.xlsx
-
-/src/App/*/Util/*.xlsx
-/src/App/*/Util/*.xls
-/src/App/*/Util/*.xml
-/src/App/*/Util/*.p12
+!/src/App/TranslationalResearchBundle/Util/JV*.xlsx
 
 ### Certificate ###
 /src/App/UserdirectoryBundle/Cert/*
