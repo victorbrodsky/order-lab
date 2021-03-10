@@ -4380,7 +4380,7 @@ class TransResRequestUtil
         }
 
         //Questions:
-        if(0) {
+        if(1) {
             if ($totalDue) {
                 //Total 5xxxxx (1,198.00)
                 $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 4);
@@ -4412,7 +4412,7 @@ class TransResRequestUtil
         $generatedStr = str_replace(" ", "-", $generatedStr);
 
         //Unpaid-Billing-Summary-PI-FirstName-LastName-Project-ID-ID1-ID2-ID3-Generated-on-MM-DD-YYYY-at-HH-MM-SS.xlsx
-        $fileName = "Unpaid-Billing-Summary-Invoices".$piStr.$projectIds.$generatedStr.".csv";
+        $fileName = "Unpaid-Billing-Summary-Invoices".$piStr.$projectIds.$generatedStr.".xlsx";
         $fileName = str_replace(" ", "-", $fileName);
 
         //$ea = new Spreadsheet(); // ea is short for Excel Application
