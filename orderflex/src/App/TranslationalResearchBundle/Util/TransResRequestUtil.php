@@ -4276,10 +4276,16 @@ class TransResRequestUtil
                 continue;
             }
 
-            //|| $invoice->getStatus() == 'Pending'
-            if( $invoice->getStatus() != 'Unpaid/Issued' ) {
+            if( $invoice->getStatus() != 'Unpaid/Issued' && $invoice->getStatus() != 'Paid Partially' ) {
                 continue;
             }
+
+            //Questions:
+            //Total 5xxxxx
+            //Total 7xxxxx
+
+            //Total 94xxxx
+            //Total 96xxxx
 
             /////////// 1 row: GL Account = 700031 ////////////
 
