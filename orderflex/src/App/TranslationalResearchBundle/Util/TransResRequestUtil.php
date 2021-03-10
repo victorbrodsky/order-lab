@@ -4291,11 +4291,13 @@ class TransResRequestUtil
                 $piArr[$pi->getUsernameShortest()] = $pi->getUsernameShortest();
             }
 
-            $transresRequest = $invoice->getTransresRequest();
-            if( $transresRequest ) {
-                $project = $transresRequest->getProject();
-                if( $project ) {
-                    $projectIdArr[] = $project->getOid();
+            if(0) {
+                $transresRequest = $invoice->getTransresRequest();
+                if ($transresRequest) {
+                    $project = $transresRequest->getProject();
+                    if ($project) {
+                        $projectIdArr[] = $project->getOid();
+                    }
                 }
             }
 
@@ -4399,12 +4401,16 @@ class TransResRequestUtil
         //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         //$writer->save($fileName);
 
+        $piStr = NULL;
         if( count($piArr) > 0 ) {
             $piStr = "-PI-".implode("-",$piArr);
         }
+
+        $projectIds = NULL;
         if( count($projectIdArr) > 0 ) {
             $projectIds = "-Project-".implode("-",$projectIdArr);
         }
+
         $generatedStr = NULL;
         $now = new \DateTime();
         $dateTimeUser = $userServiceUtil->convertFromUtcToUserTimezone($now,$user);
