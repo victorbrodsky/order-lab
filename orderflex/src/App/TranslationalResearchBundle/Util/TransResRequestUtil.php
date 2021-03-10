@@ -4272,6 +4272,10 @@ class TransResRequestUtil
                 continue;
             }
 
+            if( $invoice->getLatestVersion() !== true ) {
+                continue;
+            }
+
             //|| $invoice->getStatus() == 'Pending'
             if( $invoice->getStatus() != 'Unpaid/Issued' ) {
                 continue;
