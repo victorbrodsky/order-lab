@@ -4314,13 +4314,13 @@ class TransResRequestUtil
             $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
             $cell->setValue('700031');
 
-            //Debit Amount
-            $col = $colIndexArr['Debit Amount'];
-            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
-            $due = $invoice->getDue();
-            if( $due ) {
-                $cell->setValue($due);
-            }
+//            //Debit Amount
+//            $col = $colIndexArr['Debit Amount'];
+//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+//            $due = $invoice->getDue();
+//            if( $due ) {
+//                $cell->setValue($due);
+//            }
 
             //WBS (fundedAccountNumber)
             $col = $colIndexArr['WBS'];
@@ -4355,14 +4355,14 @@ class TransResRequestUtil
             $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
             $cell->setValue('500031');
 
-            //Credit Amount
-            $col = $colIndexArr['Credit Amount'];
-            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
-            $due = $invoice->getDue();
-            if ($due) {
-                $cell->setValue($due);
-                $totalDue = $totalDue + $due;
-            }
+//            //Credit Amount
+//            $col = $colIndexArr['Credit Amount'];
+//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+//            $due = $invoice->getDue();
+//            if ($due) {
+//                $cell->setValue($due);
+//                $totalDue = $totalDue + $due;
+//            }
 
             //Fund -  please request JV fund transfer to TRP account 61211820
             $col = $colIndexArr['Fund'];
@@ -4377,12 +4377,31 @@ class TransResRequestUtil
                 $cell->setValue($text);
             }
 
+
+            //Debit Amount ($row-1)
+            $col = $colIndexArr['Debit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row-1);
+            $due = $invoice->getDue();
+            if( $due ) {
+                $cell->setValue($due);
+            }
+
+            //Credit Amount
+            $col = $colIndexArr['Credit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $due = $invoice->getDue();
+            if ($due) {
+                $cell->setValue($due);
+                $totalDue = $totalDue + $due;
+            }
+
             $row++;
             /////////// EOF 2 row: GL Account = 500031 ///////////
         }
 
         //Questions:
-        if(1) {
+        //Auto calculated fields
+        if(0) {
             if ($totalDue) {
                 //Total 5xxxxx (1,198.00)
                 $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 4);
@@ -4393,7 +4412,6 @@ class TransResRequestUtil
                 $cell->setValue($totalDue);
             }
         }
-
         //Total 94xxxx
         //Total 96xxxx
 
