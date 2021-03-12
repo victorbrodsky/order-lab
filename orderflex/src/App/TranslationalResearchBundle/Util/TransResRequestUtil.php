@@ -4324,14 +4324,14 @@ class TransResRequestUtil
 //                \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC
 //            );
 
-//            //Debit Amount
-//            $col = $colIndexArr['Debit Amount'];
-//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
-//            $due = $invoice->getDue();
-//            if( $due ) {
-//                $due = $this->toDecimal($due);
-//                $cell->setValue($due);
-//            }
+            //Debit Amount
+            $col = $colIndexArr['Debit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row);
+            $due = $invoice->getDue();
+            if( $due ) {
+                $due = $this->toDecimal($due);
+                $cell->setValue($due);
+            }
 
             //WBS (fundedAccountNumber)
             $col = $colIndexArr['WBS'];
@@ -4372,6 +4372,14 @@ class TransResRequestUtil
                 $cell->setValue($calculatedValue);
             }
 
+            if(1) {
+                $cell = $sheet->getCell('M'.$row);
+                $cell->setValue(7);
+
+                //$cell = $sheet->getCell('N9');
+                //$cell->setValue($due * -1);
+            }
+
             $row++;
             /////////// EOF 1 row: GL Account = 700031 ////////////
 
@@ -4395,15 +4403,15 @@ class TransResRequestUtil
 //                \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC
 //            );
 
-//            //Credit Amount
-//            $col = $colIndexArr['Credit Amount'];
-//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
-//            $due = $invoice->getDue();
-//            if ($due) {
-//                $due = $this->toDecimal($due);
-//                $cell->setValue($due);
-//                $totalDue = $totalDue + $due;
-//            }
+            //Credit Amount
+            $col = $colIndexArr['Credit Amount'];
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+            $due = $invoice->getDue();
+            if ($due) {
+                $due = $this->toDecimal($due);
+                $cell->setValue($due);
+                $totalDue = $totalDue + $due;
+            }
 
             //Fund -  please request JV fund transfer to TRP account 61211820
             $col = $colIndexArr['Fund'];
@@ -4418,6 +4426,14 @@ class TransResRequestUtil
                 $cell->setValue($text);
             }
 
+            if(1) {
+                $cell = $sheet->getCell('M'.$row);
+                $cell->setValue(5);
+
+                //$cell = $sheet->getCell('N9');
+                //$cell->setValue($due * -1);
+            }
+
             //////////////////////////////////////////////////
 //            //GL Account = 700031
 //            $col = $colIndexArr['GL Account']; //2
@@ -4430,24 +4446,24 @@ class TransResRequestUtil
 //            $cell->setValue(500031);
 
 
-            //Debit Amount ($row-1)
-            $col = $colIndexArr['Debit Amount'];
-            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row-1);
-            $due = $invoice->getDue();
-            if( $due ) {
-                $due = $this->toDecimal($due);
-                $cell->setValue($due);
-            }
-
-            //Credit Amount
-            $col = $colIndexArr['Credit Amount'];
-            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
-            $due = $invoice->getDue();
-            if ($due) {
-                $due = $this->toDecimal($due);
-                $cell->setValue($due);
-                $totalDue = $totalDue + $due;
-            }
+//            //Debit Amount ($row-1)
+//            $col = $colIndexArr['Debit Amount'];
+//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col,$row-1);
+//            $due = $invoice->getDue();
+//            if( $due ) {
+//                $due = $this->toDecimal($due);
+//                $cell->setValue($due);
+//            }
+//
+//            //Credit Amount
+//            $col = $colIndexArr['Credit Amount'];
+//            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($col, $row);
+//            $due = $invoice->getDue();
+//            if ($due) {
+//                $due = $this->toDecimal($due);
+//                $cell->setValue($due);
+//                $totalDue = $totalDue + $due;
+//            }
             //////////////////////////////////////////////////
 
             $row++;
@@ -4483,8 +4499,50 @@ class TransResRequestUtil
             //$cell->setValue($calculatedValue);
             $cell->setValue('=SUMIF(M9:M958,"7",N9:N958)');
         }
+        if(0) {
+            $cell = $sheet->getCell('M9');
+            $cell->setValue(5);
+        }
+
         //Total 94xxxx
         //Total 96xxxx
+
+        if(0) {
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(10, 2);
+            echo "10,2=".$cell->getCalculatedValue()."<br>";
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(11, 2);
+            echo "11,2=".$cell->getCalculatedValue()."<br>";
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(12, 2);
+            echo "12,2=".$cell->getCalculatedValue()."<br>";
+
+
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(4, 9);
+            echo "4,9=".$cell->getCalculatedValue()."<br>";
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 10);
+            echo "5,10=".$cell->getCalculatedValue()."<br>";
+
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(13, 9);
+            echo "M9:".$cell->getCalculatedValue()."<br>";
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(13, 9);
+            echo "N9:".$cell->getCalculatedValue()."<br>";
+
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 4);
+            //echo "E4=".$cell->getCalculatedValue()."<br>";
+            $cell = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5, 5);
+            //echo "E5=".$cell->getCalculatedValue()."<br>";
+            exit('111');
+        }
+        if(0) {
+            $cell = $sheet->getCell('M9');
+            echo "M9:".$cell->getCalculatedValue()."<br>";  //=IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
+            echo "M9:".$cell->getValue()."<br>";            //=IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
+
+            $cell = $sheet->getCell('N9');
+            echo "N9:".$cell->getCalculatedValue()."<br>";  //N9:90
+            echo "N9:".$cell->getValue()."<br>";            //N9:=IF(ISNUMBER(D9),D9,E9*-1)
+
+            exit('111');
+        }
 
         //write it again to Filesystem with the same name (=replace)
         //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
@@ -4512,6 +4570,8 @@ class TransResRequestUtil
 
 //        Calculation::getInstance($spreadsheet)->disableCalculationCache();
 //        Calculation::getInstance($spreadsheet)->clearCalculationCache();
+//        spreadSheet.WorkbookPart.Workbook.CalculationProperties.ForceFullCalculation = true;
+//        spreadSheet.WorkbookPart.Workbook.CalculationProperties.FullCalculationOnLoad = true;
 
         //$ea = new Spreadsheet(); // ea is short for Excel Application
         //$ea->addSheet($sheet);
@@ -4522,6 +4582,8 @@ class TransResRequestUtil
 
         header('Content-Disposition: attachment;filename="' . $fileName . '"');
         //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        //$writer->writeAttribute('calcMode', 'auto');
 
         // Write file to the browser
         $writer->save('php://output');
