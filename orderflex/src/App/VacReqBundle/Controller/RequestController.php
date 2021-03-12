@@ -149,11 +149,17 @@ class RequestController extends OrderAbstractController
 
         //check for overlapped date range
         if( $routeName != "vacreq_carryoverrequest" ) {
-            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for newAction
+            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for newAction
+
+            $vacreqUser = $entity->getUser();
+            if( !$vacreqUser ) {
+                $vacreqUser = $user;
+            }
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($vacreqUser, $entity); //check for newAction
             if (count($overlappedRequests) > 0) {
                 //exit('error: count overlappedRequests='.count($overlappedRequests));
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
+                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //new
                 //$form->addError(new FormError($errorMsg));
                 $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
                 //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
@@ -491,21 +497,17 @@ class RequestController extends OrderAbstractController
         //$overallStatus = $entity->getStatus();
         //$routeName = $request->get('_route');
         if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
-//            if (
-//                $routeName == "vacreq_edit"
-//                ||
-//                $routeName == "vacreq_review" && $overallStatus == "completed"
-//            ) {
-            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity);    //check for editAction
-                if (count($overlappedRequests) > 0) {
-                    //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true );
-                    $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
-                    //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
-                } else {
-                    //exit('no overlaps found');
-                }
-//            }
+
+            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity);    //check for editAction, bug: $user is not an approver!
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
+            if (count($overlappedRequests) > 0) {
+                //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //edit, review
+                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
+            } else {
+                //exit('no overlaps found');
+            }
         }
 
         //check carry over days limit (edit). Should we have this only for "new" request?
@@ -814,7 +816,9 @@ class RequestController extends OrderAbstractController
 
         //check for overlapped date range if a new status is approved
         if( $status == "approved" ) {
-            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for statusAction
+            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for statusAction. bug: $user is not an approver!
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity); //check for statusAction
+            //exit("count=".count($overlappedRequests));
             if (count($overlappedRequests) > 0) {
 
                 //If the dates overlap with the dates of another APPROVED request EXACTLY =>
@@ -824,7 +828,7 @@ class RequestController extends OrderAbstractController
                     //set status to cancel
                     $status = 'canceled';
 
-                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true );
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true ); //change status: approved, rejected, pending, canceled
                     $errorMsg .= "<br>This request has been canceled as a duplicate.<br>";
 
                     $this->get('session')->getFlashBag()->add(
@@ -832,7 +836,7 @@ class RequestController extends OrderAbstractController
                         $errorMsg
                     );
                 } else {
-                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
                     $this->get('session')->getFlashBag()->add(
                         'warning',
                         $errorMsg
