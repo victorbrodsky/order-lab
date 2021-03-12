@@ -374,7 +374,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( false == $this->get('security.authorization_checker')->isGranted("read", $entity) ) {
-            exit('show: no permission');
+            //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
@@ -1695,7 +1695,7 @@ class RequestController extends OrderAbstractController
         }
 
 
-        exit('2');
+        //exit('2');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
     public function findUniqueUserRequests() {
