@@ -4242,19 +4242,11 @@ class TransResRequestUtil
 //        $spreadsheet->getActiveSheet()->getProtection()->setInsertRows(true);
 //        $spreadsheet->getActiveSheet()->getProtection()->setFormatCells(true);
 
-        //$spreadsheet->getSecurity()->setLockWindows(false);
-        //$spreadsheet->getSecurity()->setLockStructure(false);
-        //$spreadsheet->getSecurity()->setWorkbookPassword('secret');
-        //$spreadsheet->getActiveSheet()->getProtection()->setSheet(false);
-        //$spreadsheet->getActiveSheet()->getProtection()->setSort(false);
-        //$spreadsheet->getActiveSheet()->getProtection()->setInsertRows(true);
-        //$spreadsheet->getActiveSheet()->getProtection()->setFormatCells(true);
-
-
         //change it
         $sheet = $spreadsheet->getActiveSheet();
         //$sheet->setCellValue('A1', 'New Value');
 
+        //Somehow column M is not calculated.
         //To enable the formula in column M, overwrite style in column M by style from column N.
         $spreadsheet->getActiveSheet()
             ->duplicateStyle(
@@ -4290,7 +4282,6 @@ class TransResRequestUtil
         $replacedColumn = NULL;
         //$replacedColumn = 'O';
         //$replacedColumn = 'M';
-        //$replacedColumn = 'P';
 
         $manuallyPopulateM = false;
         //$manuallyPopulateM = true;
@@ -4301,19 +4292,10 @@ class TransResRequestUtil
         $testing = false;
         //$testing = true;
 
-        //TODO:
-        //1) get unpaid invoice
-
-        //2) populate cell as //$sheet->setCellValue('A1', 'New Value');
-
         foreach( $idsArr as $invoiceId ) {
             if( !$invoiceId ) {
                 continue;
             }
-
-            //if( $limit && ($count++ > $limit) ) {
-            //    break;
-            //}
 
             $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
             if( !$invoice ) {
@@ -4379,29 +4361,6 @@ class TransResRequestUtil
             $text = $invoice->getOid();
             if( $text ) {
                 $cell->setValue($text);
-            }
-
-            //Auto calculated M,N
-            if(0) {
-                $col = $colIndexArr['Text'];
-                //M9 (col=next after 'Text')
-                $cell = $sheet->getCellByColumnAndRow($col + 1, $row);
-                $cell->setValue(1);
-                //N9 (col=next, next after 'Text')
-                $cell = $sheet->getCellByColumnAndRow($col + 2, $row);
-                $due = $invoice->getDue();
-                $cell->setValue($due * -1);
-            }
-            if(0) {
-                $col = $colIndexArr['Text'];
-                //M9 (col=next after 'Text')
-                $cell = $sheet->getCellByColumnAndRow($col + 1, $row);
-                $calculatedValue = $cell->getCalculatedValue();
-                $cell->setValue($calculatedValue);
-
-                $cell = $sheet->getCellByColumnAndRow($col + 2, $row);
-                $calculatedValue = $cell->getCalculatedValue();
-                $cell->setValue($calculatedValue);
             }
 
             //Set the first digit of the account manually
@@ -4498,45 +4457,6 @@ class TransResRequestUtil
                 //$cell->setValue('=SUMIF(MID(C'.$row.',1,1),"5",N9:N958)');
                 $cell->setValue('=SUMIF(MID(C9,1,1),"5",N9:N958)');
             }
-            if(0) {
-                //M9:=IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
-                $cell = $sheet->getCell('M'.$row);
-                //$cell->setValue('=IF(MID(C'.$row.',1,1)="9",MID(C'.$row.',1,2),MID(C'.$row.',1,1))');
-                //$cell->setValue("=IF(MID(C$row,1,1)='9',MID(C'.$row.',1,2),MID(C$row,1,1))");
-                $cell->setValue('=SUM(D1:D2)');
-            }
-
-            //////////////////////////////////////////////////
-//            //GL Account = 700031
-//            $col = $colIndexArr['GL Account']; //2
-//            $cell = $sheet->getCellByColumnAndRow($col,$row-1);
-//            $cell->setValue(700031);
-//
-//            //GL Account = 500031
-//            $col = $colIndexArr['GL Account'];
-//            $cell = $sheet->getCellByColumnAndRow($col, $row);
-//            $cell->setValue(500031);
-
-
-//            //Debit Amount ($row-1)
-//            $col = $colIndexArr['Debit Amount'];
-//            $cell = $sheet->getCellByColumnAndRow($col,$row-1);
-//            $due = $invoice->getDue();
-//            if( $due ) {
-//                $due = $this->toDecimal($due);
-//                $cell->setValue($due);
-//            }
-//
-//            //Credit Amount
-//            $col = $colIndexArr['Credit Amount'];
-//            $cell = $sheet->getCellByColumnAndRow($col, $row);
-//            $due = $invoice->getDue();
-//            if ($due) {
-//                $due = $this->toDecimal($due);
-//                $cell->setValue($due);
-//                $totalDue = $totalDue + $due;
-//            }
-            //////////////////////////////////////////////////
 
             //Somehow column M is not calculated.
             //Solution: Create new column 'O' instead of 'M'. Use 'O' instead of 'M' in calculation E4, E5, H4, H5
@@ -4548,82 +4468,8 @@ class TransResRequestUtil
             $row++;
             /////////// EOF 2 row: GL Account = 500031 ///////////
 
-            //Somehow column M is not calculated.
-            //Solution: Create new column 'O' instead of 'M'. Use 'O' instead of 'M' in calculation E4, E5, H4, H5
-            if(0) {
-                $row1 = $row-1;
-                $cell = $sheet->getCell('O'.$row1);
-                $cell->setValue("=IF(MID(C$row1,1,1)='9',MID(C'.$row1.',1,2),MID(C$row1,1,1))");
-
-                $row2 = $row-2;
-                $cell = $sheet->getCell('O'.$row2);
-                $cell->setValue("=IF(MID(C$row2,1,1)='9',MID(C'.$row2.',1,2),MID(C$row2,1,1))");
-            }
-
         } //foreach $invoiceId
 
-        //Questions:
-        //Auto calculated fields
-        if(0) {
-            if ($totalDue) {
-                //M9 = IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
-                //N9 = IF(ISNUMBER(D9),D9,E9*-1)
-
-                //Total 5xxxxx (1,198.00)
-                //SUMIF(M9:M958,"5",N9:N958)
-                $cell = $sheet->getCellByColumnAndRow(5, 4);
-                $cell->setValue($totalDue * -1);
-
-                //Total 7xxxxx 1,198.00
-                //SUMIF(M9:M958,"7",N9:N958)
-                $cell = $sheet->getCellByColumnAndRow(5, 5);
-                $cell->setValue($totalDue);
-            }
-        }
-        if(0) {
-            $cell = $sheet->getCellByColumnAndRow(5, 4);
-            //$calculatedValue = $cell->getCalculatedValue();
-            //$cell->setValue($calculatedValue);
-            $cell->setValue('=SUMIF(M9:M958,"5",N9:N958)');
-
-            $cell = $sheet->getCellByColumnAndRow(5, 5);
-            //$calculatedValue = $cell->getCalculatedValue();
-            //$cell->setValue($calculatedValue);
-            $cell->setValue('=SUMIF(M9:M958,"7",N9:N958)');
-        }
-        if(0) {
-            $cell = $sheet->getCell('M9');
-            $cell->setValue(5);
-        }
-
-        //Total 94xxxx
-        //Total 96xxxx
-
-        if(0) {
-            $cell = $sheet->getCellByColumnAndRow(10, 2);
-            echo "10,2=".$cell->getCalculatedValue()."<br>";
-            $cell = $sheet->getCellByColumnAndRow(11, 2);
-            echo "11,2=".$cell->getCalculatedValue()."<br>";
-            $cell = $sheet->getCellByColumnAndRow(12, 2);
-            echo "12,2=".$cell->getCalculatedValue()."<br>";
-
-
-            $cell = $sheet->getCellByColumnAndRow(4, 9);
-            echo "4,9=".$cell->getCalculatedValue()."<br>";
-            $cell = $sheet->getCellByColumnAndRow(5, 10);
-            echo "5,10=".$cell->getCalculatedValue()."<br>";
-
-            $cell = $sheet->getCellByColumnAndRow(13, 9);
-            echo "M9:".$cell->getCalculatedValue()."<br>";
-            $cell = $sheet->getCellByColumnAndRow(13, 9);
-            echo "N9:".$cell->getCalculatedValue()."<br>";
-
-            $cell = $sheet->getCellByColumnAndRow(5, 4);
-            //echo "E4=".$cell->getCalculatedValue()."<br>";
-            $cell = $sheet->getCellByColumnAndRow(5, 5);
-            //echo "E5=".$cell->getCalculatedValue()."<br>";
-            exit('111');
-        }
         if($testing) {
             $cell = $sheet->getCell('C9');
             echo "C9:".$cell->getValue()."<br>"; //700031
@@ -4705,12 +4551,7 @@ class TransResRequestUtil
 //        spreadSheet.WorkbookPart.Workbook.CalculationProperties.ForceFullCalculation = true;
 //        spreadSheet.WorkbookPart.Workbook.CalculationProperties.FullCalculationOnLoad = true;
 
-        //$ea = new Spreadsheet(); // ea is short for Excel Application
-        //$ea->addSheet($sheet);
-        //$ews = $sheet->getSheet(0);
-        //$ews = $ea->getSheet(0);
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Excel2007');
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $fileName . '"');
