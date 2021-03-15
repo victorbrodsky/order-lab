@@ -1899,6 +1899,73 @@ class FellAppController extends OrderAbstractController {
         return $event;
     }
 
+    /**
+     * @Route("/move-year/{id}/{year}", name="fellapp_application_move_year", methods={"GET"})
+     */
+    public function moveYearAction( Request $request, $id, $year ) {
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        if( false == $this->get('security.authorization_checker')->isGranted("update","FellowshipApplication") ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        //echo "id=$id <br>";
+        //echo "moveYear=$year <br>";
+        //exit('eof year move');
+
+        //Set Start/End date +1 year
+        $startDate = $entity->getStartDate();
+        $startDatePlusOne = clone $startDate;
+
+        $endDate = $entity->getEndDate();
+        $endDatePlusOne = clone $endDate;
+
+        $year = intval($year);
+
+        if( $year > 0 ) {
+            $year = abs($year);
+            $modifyStr = '+'.$year.' year';
+        } else {
+            $year = abs($year);
+            $modifyStr = '-'.$year.' year';
+        }
+
+        $startDatePlusOne->modify($modifyStr);
+        $endDatePlusOne->modify($modifyStr);
+        //echo "Date2=".$startDatePlusOne->format('Y-m-d').", ".$endDatePlusOne->format('Y-m-d')."<br>";
+
+        $entity->setStartDate($startDatePlusOne);
+        $entity->setEndDate($endDatePlusOne);
+
+        $em->flush();
+
+        $event = $entity->getApplicantFullName()."’s application for ".$entity->getFellowshipSubspecialty()." has been moved from ".$startDate->format('Y')." to ".$startDatePlusOne->format('Y');
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
+
+        //Event Log
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+
+        //return $this->redirect( $this->generateUrl('fellapp_home') );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode("ok"));
+        return $response;
+    }
+
 
 //    /**
 //     * @Route("/status-sync/", name="fellapp_sincstatus", methods={"GET"})
@@ -2193,7 +2260,7 @@ class FellAppController extends OrderAbstractController {
                     ' has been submitted on behalf of ' . $interviewer->getUsernameOptimal() .
                     ' by ' . $user->getUsernameOptimal();
             }
-            
+
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
             ////// EOF Event Log //////
             
