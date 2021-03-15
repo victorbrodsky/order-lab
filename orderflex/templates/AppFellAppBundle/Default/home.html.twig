@@ -1238,7 +1238,7 @@
                                         <li>
                                             {#Are you sure you would like to move FirstName LastName’s application for [Specialty] from [application year] to [target application year]?#}
                                             <a
-                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }} for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear+1 }}?"
+                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear+1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': +1}, true) }}">
                                                 Move to {{ startYear+1 }} year
@@ -1246,7 +1246,7 @@
                                         </li>
                                         <li>
                                             <a
-                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }} for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear-1 }}?"
+                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear-1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': -1}, true) }}">
                                                 Move to {{ startYear-1 }} year
