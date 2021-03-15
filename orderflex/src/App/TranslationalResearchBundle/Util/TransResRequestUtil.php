@@ -4102,116 +4102,116 @@ class TransResRequestUtil
         return $grandTotal;
     }
 
-    public function exportUnpaidInvoicesSpout( $idsArr, $fileName, $template ) {
-
-        //http://opensource.box.com/spout/guides/edit-existing-spreadsheet/
-
-        // we need a reader to read the existing file...
-        $reader = ReaderEntityFactory::createXLSXReader();
-        $reader->open($template);
-        $reader->setShouldFormatDates(true); // this is to be able to copy dates
-
-        // ... and a writer to create the new file
-        $writer = WriterEntityFactory::createWriterFromFile($fileName);
-        $writer->openToFile($fileName);
-
-        //$writer = WriterEntityFactory::createCSVWriter();
-        //$writer->openToBrowser($fileName);
-
-        $headerRowIndex = 6;
-
-//        $counterCol = 0;        //Counter
-//        $companyCodeCol = 1;    //Company Code
-//        $glAccountCol = 2;      //GL Account
-//        $debitAmountCol = 3;    //Debit Amount
-//        $creditAmountCol = 4;   //Credit Amount
-//        $fundCol = 5;           //Fund
-//        $wbsCol = 6;            //WBS
-//        $wbsDocNumberCol = 7;   //WBS Exp - Original Doc Number
-//        $wbsPastExpenseCol = 8; //WBS Exp - Reason for 90 days past original Expense
-//        $internalOrderCol = 9;  //Internal Order
-//        $personnelNoCol = 10;    //Personnel No
-//        $textCol = 11;           //Text
-
-        $colArr = array(
-            "Counter",
-            "Company Code",
-            "GL Account",
-            "Debit Amount",
-            "Credit Amount",
-            "Fund",
-            "WBS",
-            "WBS Exp - Original Doc Number",
-            "WBS Exp - Reason for 90 days past original Expense",
-            "Internal Order",
-            "Personnel No",
-            "Text"
-        );
-
-        $sheet = NULL;
-        foreach ($reader->getSheetIterator() as $thisSheet) {
-            $sheet = $thisSheet;
-            break;
-        }
-
-        $rowIndex = 0;
-        foreach ($sheet->getRowIterator() as $row) {
-
-            $rowIndex++;
-
-            // ... and copy each row into the new spreadsheet
-            $writer->addRow($row);
-
-            //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
-            if( $rowIndex == $headerRowIndex ) {
-
-                // do stuff with the row
-                $cells = $row->getCells();
-                //dump($cells);
-                //exit('111');
-
-                //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
-                $colIndexArr = $this->generateColIndexArray($cells,$colArr,$rowIndex);
-            }
-
-            //dump($row);
-            //exit('111');
-
-//            $colIndex = 0;
-//            foreach( $cells as $cell ) {
-//                echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
-//                $colIndex++;
+//    public function exportUnpaidInvoicesSpout( $idsArr, $fileName, $template ) {
+//
+//        //http://opensource.box.com/spout/guides/edit-existing-spreadsheet/
+//
+//        // we need a reader to read the existing file...
+//        $reader = ReaderEntityFactory::createXLSXReader();
+//        $reader->open($template);
+//        $reader->setShouldFormatDates(true); // this is to be able to copy dates
+//
+//        // ... and a writer to create the new file
+//        $writer = WriterEntityFactory::createWriterFromFile($fileName);
+//        $writer->openToFile($fileName);
+//
+//        //$writer = WriterEntityFactory::createCSVWriter();
+//        //$writer->openToBrowser($fileName);
+//
+//        $headerRowIndex = 6;
+//
+////        $counterCol = 0;        //Counter
+////        $companyCodeCol = 1;    //Company Code
+////        $glAccountCol = 2;      //GL Account
+////        $debitAmountCol = 3;    //Debit Amount
+////        $creditAmountCol = 4;   //Credit Amount
+////        $fundCol = 5;           //Fund
+////        $wbsCol = 6;            //WBS
+////        $wbsDocNumberCol = 7;   //WBS Exp - Original Doc Number
+////        $wbsPastExpenseCol = 8; //WBS Exp - Reason for 90 days past original Expense
+////        $internalOrderCol = 9;  //Internal Order
+////        $personnelNoCol = 10;    //Personnel No
+////        $textCol = 11;           //Text
+//
+//        $colArr = array(
+//            "Counter",
+//            "Company Code",
+//            "GL Account",
+//            "Debit Amount",
+//            "Credit Amount",
+//            "Fund",
+//            "WBS",
+//            "WBS Exp - Original Doc Number",
+//            "WBS Exp - Reason for 90 days past original Expense",
+//            "Internal Order",
+//            "Personnel No",
+//            "Text"
+//        );
+//
+//        $sheet = NULL;
+//        foreach ($reader->getSheetIterator() as $thisSheet) {
+//            $sheet = $thisSheet;
+//            break;
+//        }
+//
+//        $rowIndex = 0;
+//        foreach ($sheet->getRowIterator() as $row) {
+//
+//            $rowIndex++;
+//
+//            // ... and copy each row into the new spreadsheet
+//            $writer->addRow($row);
+//
+//            //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
+//            if( $rowIndex == $headerRowIndex ) {
+//
+//                // do stuff with the row
+//                $cells = $row->getCells();
+//                //dump($cells);
+//                //exit('111');
+//
+//                //echo "rowIndex=$rowIndex, headerRowIndex=$headerRowIndex<br>";
+//                $colIndexArr = $this->generateColIndexArray($cells,$colArr,$rowIndex);
 //            }
-
-            //$colArr = $this->assignColIndex($cells,$colArr,$rowIndex);
-        }
-
-        //dump($colIndexArr);
-        //exit('exit colIndexArr');
-
-        $reader->close();
-        $writer->close();
-    }
-    public function generateColIndexArray($cells,$colArr,$rowIndex=null) {
-        $colIndexArr = array();
-        $colIndex = 0;
-        foreach( $cells as $cell ) {
-            //echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
-            foreach($colArr as $colTitle) {
-                if( $colTitle ) {
-                    if ($cell . "" == $colTitle . "") {
-                        //$colArr[$colTitle] = $colIndex;
-                        $colIndexArr[$colTitle] = $colIndex;
-                    } else {
-                        //$colArr[$colTitle] = null;
-                    }
-                }
-            }
-            $colIndex++;
-        }
-        return $colIndexArr;
-    }
-    public function exportUnpaidInvoices( $idsArr, $fileName, $template ) {
+//
+//            //dump($row);
+//            //exit('111');
+//
+////            $colIndex = 0;
+////            foreach( $cells as $cell ) {
+////                echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
+////                $colIndex++;
+////            }
+//
+//            //$colArr = $this->assignColIndex($cells,$colArr,$rowIndex);
+//        }
+//
+//        //dump($colIndexArr);
+//        //exit('exit colIndexArr');
+//
+//        $reader->close();
+//        $writer->close();
+//    }
+//    public function generateColIndexArray($cells,$colArr,$rowIndex=null) {
+//        $colIndexArr = array();
+//        $colIndex = 0;
+//        foreach( $cells as $cell ) {
+//            //echo '('.$rowIndex.','.$colIndex.')'.": cell=".$cell."<br>";
+//            foreach($colArr as $colTitle) {
+//                if( $colTitle ) {
+//                    if ($cell . "" == $colTitle . "") {
+//                        //$colArr[$colTitle] = $colIndex;
+//                        $colIndexArr[$colTitle] = $colIndex;
+//                    } else {
+//                        //$colArr[$colTitle] = null;
+//                    }
+//                }
+//            }
+//            $colIndex++;
+//        }
+//        return $colIndexArr;
+//    }
+    public function exportUnpaidInvoices( $idsArr, $template ) {
 
         $colArr = array(
             "Counter",

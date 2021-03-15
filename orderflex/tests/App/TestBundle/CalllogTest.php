@@ -181,7 +181,7 @@ class CalllogTest extends WebTestBase
         );
 
         $links = $crawler->filter('.formnode-field-notempty-value');
-        $this->assertGreaterThan(
+        $this->assertGreaterThanOrEqual(
             10, //19, //we should have 2 (history, outcome) per entry entries per page
             $links->count()
         );

@@ -1860,14 +1860,10 @@ class InvoiceController extends OrderAbstractController
         //$template = null;
         $template = __DIR__ . '/../Util/JV_eForm_Trans_Upload_Template.xlsx';
 
-        //$projectRoot = $this->get('kernel')->getProjectDir(); //...\order-lab\orderflex
-        //exit($projectRoot);
-        //$template = $projectRoot.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."importLists".DIRECTORY_SEPARATOR."JV_eForm_Trans_Upload_Template.xlsx";
-
         //Unpaid-Billing-Summary-PI-FirstName-LastName-Project-ID-ID1-ID2-ID3-Generated-on-MM-DD-YYYY-at-HH-MM-SS.xlsx
-        $fileName = "Unpaid-Billing-Summary-Invoices".".csv";
+        //$fileName = "Unpaid-Billing-Summary-Invoices".".csv";
         
-        $transresRequestUtil->exportUnpaidInvoices( $idsArr, $fileName, $template );
+        $transresRequestUtil->exportUnpaidInvoices( $idsArr, $template );
 
         exit();
     }
