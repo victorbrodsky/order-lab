@@ -4231,12 +4231,36 @@ class TransResRequestUtil
         //load spreadsheet
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($template);
 
-//        Calculation::getInstance($spreadsheet)->disableCalculationCache();
-//        Calculation::getInstance($spreadsheet)->clearCalculationCache();
+        //Calculation::getInstance($spreadsheet)->disableCalculationCache();
+        //Calculation::getInstance($spreadsheet)->clearCalculationCache();
+
+//        $spreadsheet->getSecurity()->setLockWindows(true);
+//        $spreadsheet->getSecurity()->setLockStructure(true);
+//        $spreadsheet->getSecurity()->setWorkbookPassword('secret');
+//        $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+//        $spreadsheet->getActiveSheet()->getProtection()->setSort(true);
+//        $spreadsheet->getActiveSheet()->getProtection()->setInsertRows(true);
+//        $spreadsheet->getActiveSheet()->getProtection()->setFormatCells(true);
+
+        //$spreadsheet->getSecurity()->setLockWindows(false);
+        //$spreadsheet->getSecurity()->setLockStructure(false);
+        //$spreadsheet->getSecurity()->setWorkbookPassword('secret');
+        //$spreadsheet->getActiveSheet()->getProtection()->setSheet(false);
+        //$spreadsheet->getActiveSheet()->getProtection()->setSort(false);
+        //$spreadsheet->getActiveSheet()->getProtection()->setInsertRows(true);
+        //$spreadsheet->getActiveSheet()->getProtection()->setFormatCells(true);
+
 
         //change it
         $sheet = $spreadsheet->getActiveSheet();
         //$sheet->setCellValue('A1', 'New Value');
+
+        //To enable the formula in column M, overwrite style in column M by style from column N.
+        $spreadsheet->getActiveSheet()
+            ->duplicateStyle(
+                $spreadsheet->getActiveSheet()->getStyle('N9'),
+                'M9:M958'
+            );
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -4266,8 +4290,16 @@ class TransResRequestUtil
         $replacedColumn = NULL;
         //$replacedColumn = 'O';
         //$replacedColumn = 'M';
+        //$replacedColumn = 'P';
 
-        $manuallyPopulateM = true;
+        $manuallyPopulateM = false;
+        //$manuallyPopulateM = true;
+
+        $overwriteFormula = false;
+        //$overwriteFormula = true;
+
+        $testing = false;
+        //$testing = true;
 
         //TODO:
         //1) get unpaid invoice
@@ -4378,6 +4410,18 @@ class TransResRequestUtil
                 $cell->setValue(7);
                 //$cell->setCalculatedValue(7);
             }
+            if( $overwriteFormula ) {
+                $cell = $sheet->getCell('N'.$row);
+
+                //M: =IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
+                //N: =IF(ISNUMBER(D9),D9,E9*-1)
+
+                //E4: =SUMIF(M9:M958,"5",N9:N958)
+                //E5: =SUMIF(M9:M958,"7",N9:N958)
+
+                $cell = $sheet->getCell('N'.$row);
+                $cell->setValue('=SUMIF(MID(C'.$row.',1,1),"5",N9:N958)');
+            }
             if(0) {
                 //M9:=IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
                 $cell = $sheet->getCell('M'.$row);
@@ -4390,7 +4434,9 @@ class TransResRequestUtil
             //Solution: Create new column 'O' instead of 'M'. Use 'O' instead of 'M' in calculation E4, E5, H4, H5
             if($replacedColumn) {
                 $cell = $sheet->getCell($replacedColumn.$row);
-                $cell->setValue("=IF(MID(C$row,1,1)='9',MID(C'.$row.',1,2),MID(C$row,1,1))");
+                //$cell->setValue("=IF(MID(C$row,1,1)='9',MID(C'.$row.',1,2),MID(C$row,1,1))");
+                $cell->setValue("=SUM(C9:C11)");
+                //$cell->setValue('{IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))}');
             }
 
             $row++;
@@ -4438,6 +4484,19 @@ class TransResRequestUtil
                 $cell = $sheet->getCell('M'.$row);
                 $cell->setValue(5);
                 //$cell->setCalculatedValue(5);
+            }
+            if( $overwriteFormula ) {
+                $cell = $sheet->getCell('N'.$row);
+
+                //M: =IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
+                //N: =IF(ISNUMBER(D9),D9,E9*-1)
+
+                //E4: =SUMIF(M9:M958,"5",N9:N958)
+                //E5: =SUMIF(M9:M958,"7",N9:N958)
+
+                $cell = $sheet->getCell('N'.$row);
+                //$cell->setValue('=SUMIF(MID(C'.$row.',1,1),"5",N9:N958)');
+                $cell->setValue('=SUMIF(MID(C9,1,1),"5",N9:N958)');
             }
             if(0) {
                 //M9:=IF(MID(C9,1,1)="9",MID(C9,1,2),MID(C9,1,1))
@@ -4565,7 +4624,7 @@ class TransResRequestUtil
             //echo "E5=".$cell->getCalculatedValue()."<br>";
             exit('111');
         }
-        if(0) {
+        if($testing) {
             $cell = $sheet->getCell('C9');
             echo "C9:".$cell->getValue()."<br>"; //700031
 
@@ -4654,7 +4713,6 @@ class TransResRequestUtil
         //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Excel2007');
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
         header('Content-Disposition: attachment;filename="' . $fileName . '"');
         //header('Content-Disposition: attachment;filename="fileres.xlsx"');
 
