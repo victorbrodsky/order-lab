@@ -227,6 +227,10 @@
 
                     {{ formmacros.field(form.totalCost) }}
 
+                    {% if form.approvedProjectBudget is defined %}
+                        {{ formmacros.field(form.approvedProjectBudget) }}
+                    {% endif %}
+
                     {{ transres.projectDocument(form,project,cycle) }}
 
                     {% if cycle != "new" %}

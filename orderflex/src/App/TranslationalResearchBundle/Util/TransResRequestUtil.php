@@ -4239,11 +4239,25 @@ class TransResRequestUtil
             }
 
             //WBS (fundedAccountNumber)
-            $col = $colIndexArr['WBS'];
-            $cell = $sheet->getCellByColumnAndRow($col,$row);
-            $wbs = $invoice->getFundedAccountNumber();
-            if( $wbs ) {
-                $cell->setValue($wbs);
+//            $col = $colIndexArr['WBS'];
+//            $cell = $sheet->getCellByColumnAndRow($col,$row);
+//            $wbs = $invoice->getFundedAccountNumber();
+//            if( $wbs ) {
+//                $cell->setValue($wbs);
+//            }
+            //If the fund number length is 8 => F column (Fund), if 10 => G column (WBS)
+            $accountNumber = $invoice->getFundedAccountNumber();
+            if( $accountNumber ) {
+                $accountNumberLength = strlen($accountNumber);
+                if( $accountNumberLength == 8 ) {
+                    $col = $colIndexArr['Fund'];
+                    $cell = $sheet->getCellByColumnAndRow($col, $row);
+                    $cell->setValue($accountNumber);
+                } else {
+                    $col = $colIndexArr['WBS'];
+                    $cell = $sheet->getCellByColumnAndRow($col,$row);
+                    $cell->setValue($accountNumber);
+                }
             }
 
             //TEXT (invoice ID)

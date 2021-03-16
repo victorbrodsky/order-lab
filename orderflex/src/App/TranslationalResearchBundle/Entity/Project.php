@@ -314,6 +314,13 @@ class Project {
      */
     private $totalCost;
 
+    /**
+     * Approved Project Budget
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $approvedProjectBudget;
+
     /////////// EOF Project fields /////////////
 
     /**
@@ -854,6 +861,37 @@ class Project {
     public function setTotalCost($totalCost)
     {
         $this->totalCost = $totalCost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovedProjectBudget()
+    {
+        if( $this->approvedProjectBudget === NULL ) {
+            return $this->getTotalCost();
+        }
+        return $this->approvedProjectBudget;
+    }
+
+    /**
+     * @param mixed $approvedProjectBudget
+     */
+    public function setApprovedProjectBudget($approvedProjectBudget)
+    {
+        $this->approvedProjectBudget = $approvedProjectBudget;
+    }
+
+    //auto-populate the "Approved Budget" field with the same value as the value submitted in "Estimated Total Costs" field
+    //If approvedProjectBudget is NULL, set it as totalCost
+    public function autoPopulateApprovedProjectBudget()
+    {
+        if( $this->approvedProjectBudget === NULL ) {
+            $totalCost = $this->getTotalCost();
+            if( $totalCost ) {
+                $this->setApprovedProjectBudget($totalCost);
+            }
+        }
     }
 
 

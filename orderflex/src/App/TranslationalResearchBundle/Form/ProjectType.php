@@ -262,12 +262,22 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('totalCost',null, array(
+
+        $builder->add('totalCost', null, array(
             'label' => 'Estimated Total Costs ($):',
-            'required' => false,
+            'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
         ));
+
+
+        if( $this->params['cycle'] != "new" ) {
+            $builder->add('approvedProjectBudget', null, array(
+                'label' => 'Approved Project Budget ($):',
+                'required' => false,
+                'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
+            ));
+        }
 
         $builder->add('projectType', CustomSelectorType::class, array(
             'label' => 'Project Type:',
