@@ -2054,6 +2054,14 @@ class ResidencyApplication extends BaseUserAttributes {
         return $msg;
     }
 
+    public function getStartYear() {
+        $startDate = $this->getStartDate();
+        if( $startDate ) {
+            return $startDate->format('Y');
+        }
+        return NULL;
+    }
+
     public function __toString() {
         return "ResidencyApplication";
     }

@@ -1198,6 +1198,25 @@
                                             </a>
                                         </li>
 
+                                        {% set startYear = entity.getStartYear() %}
+                                        <li>
+                                            {#Are you sure you would like to move FirstName LastName’s application for [Specialty] from [application year] to [target application year]?#}
+                                            <a
+                                                    general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getResidencyTrack() }} from {{ startYear }} to {{ startYear+1 }}?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_application_move_year', {'id': entity.id, 'year': +1}, true) }}">
+                                                Move to {{ startYear+1 }} year
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                    general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getResidencyTrack() }} from {{ startYear }} to {{ startYear-1 }}?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('resapp_application_move_year', {'id': entity.id, 'year': -1}, true) }}">
+                                                Move to {{ startYear-1 }} year
+                                            </a>
+                                        </li>
+
                                         <li>
                                             <a
                                                 href="{{ path('resapp_application_edit', { 'id': entity.id}) }}" target="_blank">Submit evaluation on behalf of an interviewer

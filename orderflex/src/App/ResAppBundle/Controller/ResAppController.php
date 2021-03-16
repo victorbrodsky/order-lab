@@ -2070,6 +2070,89 @@ class ResAppController extends OrderAbstractController {
         return $event;
     }
 
+    /**
+     * @Route("/move-year/{id}/{year}", name="resapp_application_move_year", methods={"GET"})
+     */
+    public function moveYearAction( Request $request, $id, $year ) {
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
+        }
+
+        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ) {
+            return $this->redirect( $this->generateUrl('resapp-nopermission') );
+        }
+
+        //echo "id=$id <br>";
+        //echo "moveYear=$year <br>";
+        //exit('eof year move');
+
+        $year = intval($year);
+
+        if( $year > 0 ) {
+            $year = abs($year);
+            $modifyStr = '+'.$year.' year';
+        } else {
+            $year = abs($year);
+            $modifyStr = '-'.$year.' year';
+        }
+
+        //////////////// Set Start/End date +/- year ////////////////
+        $startDate = $entity->getStartDate();
+        $startDatePlusOne = clone $startDate;
+
+        $endDate = $entity->getEndDate();
+        $endDatePlusOne = clone $endDate;
+
+        $startDatePlusOne->modify($modifyStr);
+        $endDatePlusOne->modify($modifyStr);
+        //echo "Date2=".$startDatePlusOne->format('Y-m-d').", ".$endDatePlusOne->format('Y-m-d')."<br>";
+
+        $entity->setStartDate($startDatePlusOne);
+        $entity->setEndDate($endDatePlusOne);
+        //////////////// EOF Set Start/End date +/- year ////////////////
+
+
+        //////////////// Set Season Start Start/Date +/- year ////////////////
+        $seasonStartDate = $entity->getApplicationSeasonStartDate();
+        $seasonStartDatePlusOne = clone $seasonStartDate;
+
+        $seasonEndDate = $entity->getApplicationSeasonEndDate();
+        $seasonEndDatePlusOne = clone $seasonEndDate;
+
+        $seasonStartDatePlusOne->modify($modifyStr);
+        $seasonEndDatePlusOne->modify($modifyStr);
+        //echo "Date2=".$startDatePlusOne->format('Y-m-d').", ".$endDatePlusOne->format('Y-m-d')."<br>";
+
+        $entity->setApplicationSeasonStartDate($seasonStartDatePlusOne);
+        $entity->setApplicationSeasonEndDate($seasonEndDatePlusOne);
+        //////////////// EOF Set Season Start Start/Date +/- year ////////////////
+
+        $em->flush();
+
+        $event = $entity->getApplicantFullName()."’s application for ".$entity->getResidencyTrack()." has been moved from ".$startDate->format('Y')." to ".$startDatePlusOne->format('Y');
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $event
+        );
+
+        //Event Log
+        $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
+
+        //return $this->redirect( $this->generateUrl('resapp_home') );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode("ok"));
+        return $response;
+    }
 
 //    /**
 //     * @Route("/status-sync/", name="resapp_sincstatus", methods={"GET"})
