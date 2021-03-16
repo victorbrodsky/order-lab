@@ -767,7 +767,8 @@ c) Run command:
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
 		RewriteCond %{REQUEST_URI} /order/		
-		RewriteRule "^/order/(.+)"  "https://view.med.cornell.edu/$1"  [R,L]
+		RewriteRule "^/order(.+)"  "https://view.med.cornell.edu$1"  [R,L]	
+		RewriteRule "^/order"  "https://view.med.cornell.edu$1"  [R,L]	
 	</IfModule>
 
 2. Example: c.med.cornell.edu/order/vacation-request to view.med.cornell.edu/order/vacation-request
@@ -775,5 +776,5 @@ c) Run command:
 	<IfModule mod_rewrite.c>
 		RewriteEngine On
 		RewriteCond %{REQUEST_URI} /order/
-		RewriteRule (.*) https://view.med.cornell.edu$1 [R=301,L]		
+		RewriteRule (.*) https://view.med.cornell.edu$1 [R=301,L]			
 	</IfModule>
