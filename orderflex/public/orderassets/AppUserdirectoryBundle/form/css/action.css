@@ -205,6 +205,9 @@
 .table-row-lightyellow {
     background: #FFFACD;
 }
+.table-row-budget-negative {
+    background: #F89C9C;
+}
 
 .res-app-status-legend-add {
     background: lightgreen;
