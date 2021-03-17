@@ -852,7 +852,8 @@ class Project {
      */
     public function getTotalCost()
     {
-        return $this->totalCost;
+        //return $this->totalCost;
+        return $this->strToDecimal($this->totalCost);
     }
 
     /**
@@ -860,6 +861,7 @@ class Project {
      */
     public function setTotalCost($totalCost)
     {
+        $totalCost = $this->strToDecimal($totalCost);
         $this->totalCost = $totalCost;
     }
 
@@ -869,9 +871,13 @@ class Project {
     public function getApprovedProjectBudget()
     {
         if( $this->approvedProjectBudget === NULL ) {
-            return $this->getTotalCost();
+            $approvedProjectBudget = $this->getTotalCost();
+        } else {
+            $approvedProjectBudget = $this->approvedProjectBudget;
         }
-        return $this->approvedProjectBudget;
+        $approvedProjectBudget = $this->strToDecimal($approvedProjectBudget);
+
+        return $approvedProjectBudget;
     }
 
     /**
@@ -896,36 +902,60 @@ class Project {
     
     public function getRemainingBalance( $total ) {
 
-        return NULL; //testing
+        //return NULL; //testing
 
-        if( $this->getApprovedProjectBudget() === NULL ) {
+        $approvedProjectBudget = $this->getApprovedProjectBudget();
+
+        if( $approvedProjectBudget === NULL ) {
             $remainingBudget = NULL; //"No Info";
         } else {
             if( $total ) {
-                $remainingBudget = $this->toDecimal($this->getApprovedProjectBudget()) - $this->toDecimal($total);
+                $remainingBudget = $this->toDecimal($approvedProjectBudget) - $this->toDecimal($total);
             } else {
-                $remainingBudget = $this->toDecimal($this->getApprovedProjectBudget());
+                $remainingBudget = $this->toDecimal($approvedProjectBudget);
             }
         }
-        
+
+        //echo "total=$total, approvedProjectBudget=$approvedProjectBudget, remainingBudget=$remainingBudget<br>";
         return $remainingBudget;
-        
-//        if project.getApprovedProjectBudget() is not null %}
-//        {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
-//            {% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}
-//            {% if remainingBudget < 0 %}
-//            {##F89C9C#}
-//                {% set trclassname = "table-row-budget-negative" %}
-//                {% endif %}
-//                {% else %}
-//                {% set remainingBudget = "No Info" %}
-//                {% endif %}
     }
     public function toDecimal($number) {
         if( !$number ) {
             return $number;
         }
         return number_format((float)$number, 2, '.', '');
+    }
+    //$1,160.98 => 1160.98
+    public function strToDecimal($str) {
+        //$str = "-$1,160.98"; //testing
+        //$str = "$-1,160.98"; //testing
+        //$str = "-$-1 ,160"; //testing
+        //echo "str=$str<br>";
+        if( $str ) {
+            //$str = $this->toInt($str);
+            $str = $this->getAmount($str);
+            return number_format((float)$str, 2, '.', '');
+        }
+
+        return NULL;
+    }
+    //https://stackoverflow.com/questions/5139793/unformat-money-when-parsing-in-php
+    function toInt($str)
+    {
+        return preg_replace("/([^0-9\\.])/i", "", $str);
+    }
+    //https://stackoverflow.com/questions/5139793/unformat-money-when-parsing-in-php
+    public function getAmount($money)
+    {
+        $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
+        $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
+
+        $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
+
+        $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
+        $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
+
+        return (float) str_replace(',', '.', $removedThousandSeparator);
     }
 
 
