@@ -1806,6 +1806,22 @@
 
 {% endmacro %}
 
+{#  9800.33 =>  $9,800.33 #}
+{# -9800.33 => -$9,800.33 #}
+{% macro dollarSignValue( value ) %}
+    {% spaceless %}
+        {% if value is defined and value != null %}
+            {% if value >= 0 %}
+                {#${{value}}#}
+                ${{value|number_format(2, '.', ',')}}
+            {% else %}
+                {#-${{value|abs}}#}
+                {#-9800.333|number_format(2, '.', ',') => -9,800.33#}
 
+                -${{value|abs|number_format(2, '.', ',')}}
+            {% endif %}
+        {% endif %}
+    {% endspaceless %}
+{% endmacro %}
 
 

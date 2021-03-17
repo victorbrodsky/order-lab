@@ -893,6 +893,37 @@ class Project {
             }
         }
     }
+    
+    public function getRemainingBalance( $total ) {
+        if( $this->getApprovedProjectBudget() === NULL ) {
+            $remainingBudget = NULL; //"No Info";
+        } else {
+            if( $total ) {
+                $remainingBudget = $this->toDecimal($this->getApprovedProjectBudget()) - $this->toDecimal($total);
+            } else {
+                $remainingBudget = $this->toDecimal($this->getApprovedProjectBudget());
+            }
+        }
+        
+        return $remainingBudget;
+        
+//        if project.getApprovedProjectBudget() is not null %}
+//        {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
+//            {% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}
+//            {% if remainingBudget < 0 %}
+//            {##F89C9C#}
+//                {% set trclassname = "table-row-budget-negative" %}
+//                {% endif %}
+//                {% else %}
+//                {% set remainingBudget = "No Info" %}
+//                {% endif %}
+    }
+    public function toDecimal($number) {
+        if( !$number ) {
+            return $number;
+        }
+        return number_format((float)$number, 2, '.', '');
+    }
 
 
     public function getPrincipalInvestigators()

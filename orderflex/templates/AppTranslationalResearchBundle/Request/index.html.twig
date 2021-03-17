@@ -4,6 +4,7 @@
 {#{% endstopwatch %}#}
 
 {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
 {% block title %}
     {% if project %}
@@ -200,13 +201,15 @@
                     {#If invoice is null, total is equal to expected total#}
                     {#{% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}#}
                     {% if invoicesInfos.grandTotal %}
-                        ${{ invoicesInfos.grandTotal }}
+                        {#${{ invoicesInfos.grandTotal }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
                     {% endif %}
                     {% if requestValue != invoicesInfos.grandTotal %}
                         {% if requestValue > 0 or
                             (requestValue < 0 and ( is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') ))
                         %}
-                            (value: ${{ requestValue }})
+                            {#(value: ${{ requestValue }})#}
+                            (value: {{transres.dollarSignValue(requestValue)}})
                         {% endif %}
                     {% endif %}
                 </td>
@@ -243,28 +246,34 @@
                 <td>
                     {# Charge #}
                     {% if invoicesInfos.total is not null %}
-                        ${{ invoicesInfos.total }}
+                        {#${{ invoicesInfos.total }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.total) }}
                     {% else %}
                         {#if invoice does not exists, show expected charge calculated based on the request's products and price list#}
-                        ${{ transres_request_util.getTransResRequestSubTotal(transresRequest) }} (unbilled)
+                        {#${{ transres_request_util.getTransResRequestSubTotal(transresRequest) }} (unbilled)#}
+                        {{ transres.dollarSignValue(transres_request_util.getTransResRequestSubTotal(transresRequest)) }} (unbilled)
                     {% endif %}
                 </td>
                 <td>
                     {% if invoicesInfos.paid is not null %}
-                        ${{ invoicesInfos.paid }}
+                        {#${{ invoicesInfos.paid }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.paid) }}
                     {% endif %}
                 </td>
                 <td>
                     {% if invoicesInfos.due is not null %}
-                        ${{ invoicesInfos.due }}
+                        {#${{ invoicesInfos.due }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.due) }}
                     {% endif %}
                 </td>
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
-                        ${{ invoicesInfos.subsidy }}
+                        {#${{ invoicesInfos.subsidy }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.subsidy) }}
                     {% else %}
                         {#expected Subsidy amount calculated by work request#}
-                        ${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}
+                        {#${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}#}
+                        {{ transres.dollarSignValue(transres_request_util.calculateSubsidyByRequest(transresRequest)) }}
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}

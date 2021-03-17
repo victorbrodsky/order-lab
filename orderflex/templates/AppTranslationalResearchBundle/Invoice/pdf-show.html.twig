@@ -125,7 +125,7 @@
     {#<br>#}
     {#<br>#}
 
-    {#TODO: show additionalUnitPrice if exists on a new row#}
+    {#show additionalUnitPrice if exists on a new row#}
     {% if showAdditionalUnitPrice is not defined %}
         {% set showAdditionalUnitPrice = 0 %}
     {% endif %}
@@ -176,7 +176,9 @@
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Subtotal ($)</td>
-                <td class='text-right'>{{ invoice.subTotal }}</td>
+                {#<td class='text-right'>{{ invoice.subTotal }}</td>#}
+                {#<td class='text-right'>{{ 100000000.76|number_format(2, '.', ',') }}</td>#}
+                <td class='text-right'>{{ invoice.subTotal|number_format(2, '.', ',') }}</td>
             </tr>
 
             {% if invoice.discountNumeric %}
@@ -199,14 +201,15 @@
                 <tr>
                     <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                     <td>Administrative Fee ($)</td>
-                    <td class='text-right'>{{ invoice.administrativeFee|number_format(0,'','') }}</td>
+                    {#<td class='text-right'>{{ invoice.administrativeFee|number_format(0,'','') }}</td>#}
+                    <td class='text-right'>{{ invoice.administrativeFee|number_format(2, '.', ',') }}</td>
                 </tr>
             {% endif %}
 
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td><b>Total ($)</b></td>
-                <td class='text-right'>{{ invoice.total }}</td>
+                <td class='text-right'>{{ invoice.total|number_format(2, '.', ',') }}</td>
             </tr>
 
             {% if invoice.paid %}
@@ -214,14 +217,14 @@
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 {#<td><b>{{ invoice.status }}</b></td>#}
                 <td><b>Paid ($)</b></td>
-                <td class='text-right'>{{ invoice.paid }}</td>
+                <td class='text-right'>{{ invoice.paid|number_format(2, '.', ',') }}</td>
             </tr>
             {% endif %}
 
             <tr>
                 <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
                 <td>Balance Due ($)</td>
-                <td class='text-right'>{{ invoice.due }}</td>
+                <td class='text-right'>{{ invoice.due|number_format(2, '.', ',') }}</td>
             </tr>
 
             {% set subsidyInfo = transres_request_util.getSubsidyInfo(invoice,false) %}

@@ -3932,6 +3932,8 @@ class TransResRequestUtil
             $subsidy = $this->calculateSubsidyByRequest($request);
             //echo "Calculate subsidy=".$subsidy."<br>";
         }
+        //$showNegativeSubsidy = true; //testing
+        //$subsidy = -100000000.98; //testing
         //echo "Final subsidy=".$subsidy."<br>";
 
         if( $priceList ) {
@@ -3959,11 +3961,29 @@ class TransResRequestUtil
 
         //if( $showNegativeSubsidy || (!$showNegativeSubsidy && $subsidy > 0) ) {
         if( $showSubsidy ) {
+
             //If the price difference is equal to zero or below, DO NOT show the “Subsidy: $[XX.XX]” portion
             //This invoice utilizes internal pricing. Total subsidy: $[XX.XX]
             //$res = $priceList->getName()." has been used to generate this invoice. Subsidy: $".$subsidy;
-            $res = $res . " Total subsidy: $" .
-                "<span id='invoice-subsidy-info'>" . $subsidy . "</span>";
+
+            //$-20
+//            $subsidy = number_format($subsidy, 2, '.', ',');
+//            $res = $res . " Total subsidy: $" .
+//                "<span id='invoice-subsidy-info'>" . $subsidy . "</span>";
+
+            //-$20
+            if( $subsidy >= 0 ) {
+                //$20,000.98
+                $subsidy = number_format($subsidy, 2, '.', ',');
+                $res = $res . " Total subsidy: " .
+                    "<span id='invoice-subsidy-info'>$" . $subsidy . "</span>";
+            } else {
+                //-$20,000.98
+                $subsidy = abs($subsidy);
+                $subsidy = number_format($subsidy, 2, '.', ',');
+                $res = $res . " Total subsidy: " .
+                    "<span id='invoice-subsidy-info'>-$" . $subsidy . "</span>";
+            }
         }
         
         return $res;

@@ -1,6 +1,7 @@
 {% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
 {% block title %}
     {{ title }}
@@ -296,15 +297,19 @@
 
             {% set invoicesInfos = transres_util.getInvoicesInfosByProject(project) %}
 
-            {% if project.getApprovedProjectBudget() is not NULL %}
+            {#{% if project.getApprovedProjectBudget() is not null %}#}
                 {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
-                {% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}
-                {% if remainingBudget < 0 %}
+                {#{% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}#}
+                {#{% if remainingBudget < 0 %}#}
                     {##F89C9C#}
-                    {% set trclassname = "table-row-budget-negative" %}
-                {% endif %}
-            {% else %}
-                {% set remainingBudget = "No Info" %}
+                    {#{% set trclassname = "table-row-budget-negative" %}#}
+                {#{% endif %}#}
+            {#{% else %}#}
+                {#{% set remainingBudget = "No Info" %}#}
+            {#{% endif %}#}
+            {% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}
+            {% if remainingBudget < 0 %}
+                {% set trclassname = "table-row-budget-negative" %}
             {% endif %}
 
             <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
@@ -413,36 +418,46 @@
 
                 {#Remaining Budget#}
                 <td>
-                    ${{ remainingBudget }}
+                    {% if remainingBudget %}
+                        {#${{ remainingBudget }}#}
+                        {{ transres.dollarSignValue(remainingBudget) }}
+                    {% else %}
+                        No Info
+                    {% endif %}
                 </td>
 
                 {#Total of Issued Invoices including subsidy#}
                 <td>
                     {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
                     {% if invoicesInfos.grandTotal is not null %}
-                        ${{ invoicesInfos.grandTotal }}
+                        {#${{ invoicesInfos.grandTotal }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
                     {% endif %}
                 </td>
                 {#Total charge of Issued Invoices#}
                 <td>
                     {% if invoicesInfos.total is not null %}
-                        ${{ invoicesInfos.total }}
+                        {#${{ invoicesInfos.total }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.total) }}
                     {% endif %}
                 </td>
                 {#Subtotal of Issued Paid Invoices#}
                 <td>
                     {% if invoicesInfos.paid is not null %}
-                        ${{ invoicesInfos.paid }}
+                        {#${{ invoicesInfos.paid }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.paid) }}
                     {% endif %}
                 </td>
                 <td>
                     {% if invoicesInfos.due is not null %}
-                        ${{ invoicesInfos.due }}
+                        {#${{ invoicesInfos.due }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.due) }}
                     {% endif %}
                 </td>
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
-                        ${{ invoicesInfos.subsidy }}
+                        {#${{ invoicesInfos.subsidy }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.subsidy) }}
                     {% endif %}
                 </td>
 

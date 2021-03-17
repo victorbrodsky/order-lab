@@ -462,6 +462,15 @@ function transresUpdateTotal(thisEl) {
         }
 
         subsidy = transresRoundDecimal(subsidy);
+
+        if( subsidy >= 0 ) {
+            subsidy = "$"+subsidy;
+        } else {
+            subsidy = Math.abs(subsidy);
+            subsidy = transresRoundDecimal(subsidy);
+            subsidy = "-$"+subsidy;
+        }
+
         $("#invoice-subsidy-info").html(subsidy);
     }
 
