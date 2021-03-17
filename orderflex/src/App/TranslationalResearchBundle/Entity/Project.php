@@ -895,6 +895,9 @@ class Project {
     }
     
     public function getRemainingBalance( $total ) {
+
+        return NULL; //testing
+
         if( $this->getApprovedProjectBudget() === NULL ) {
             $remainingBudget = NULL; //"No Info";
         } else {
