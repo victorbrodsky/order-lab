@@ -276,7 +276,7 @@ class ProjectType extends AbstractType
             $builder->add('approvedProjectBudget', null, array(
                 'label' => 'Approved Project Budget ($):',
                 'required' => false,
-                'attr' => array('class' => 'form-control currency-mask-without-prefix'),
+                'attr' => array('class' => 'form-control currency-mask-without-prefix transres-project-approvedProjectBudget'),
             ));
         }
 

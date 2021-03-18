@@ -2676,7 +2676,6 @@ class RequestController extends OrderAbstractController
                     $originalPriceList = "Default";
                 }
                 $res = $originalPriceList. " price list for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
-
             }
         } else {
             $res = "Logical error: project not found by ID $projectId";
@@ -2686,6 +2685,59 @@ class RequestController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/request/update-project-approvedprojectbudget/", name="translationalresearch_update_project_approvedprojectbudget", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function updateApprovedProjectBudgetAction( Request $request ) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = trim( $request->get('projectId') );
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $res = "NotOK";
+
+        if( $project ) {
+            $approvedProjectBudget = trim($request->get('approvedProjectBudget'));
+            //echo "approvedProjectBudget=".$approvedProjectBudget."<br>";
+
+            $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
+
+            if( $originalApprovedProjectBudget != $approvedProjectBudget ) {
+                
+                $project->setApprovedProjectBudget($approvedProjectBudget);
+                $em->flush();
+                
+                $eventType = "Project Updated";
+                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                    "Approved Project Budget changed from " .
+                    $originalApprovedProjectBudget . " to " . $approvedProjectBudget;
+                $transresUtil->setEventLog($project,$eventType,$res);
+            } else {
+                $res = "Approved Project Budget for project ID " . $project->getOid() . " is unchanged.";
+            }
+        } else {
+            //$res = "Logical error: project not found by ID $projectId";
+        }
+
+        $response = new Response($res);
+        return $response;
+    }
+    
     /**
      * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/fee-schedule.html.twig")

@@ -184,7 +184,7 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'textarea form-control transres-invoice-invoiceTo')
         ));
 
-        $builder->add('discountNumeric', null, array(
+        $builder->add('discountNumeric', NumberType::class, array(
             'label' => "Discount ($):",
             //'disabled' => true,
             'required' => false,
@@ -198,7 +198,7 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'form-control invoice-discountPercent digit-mask')
         ));
 
-        $builder->add('administrativeFee', null, array(
+        $builder->add('administrativeFee', NumberType::class, array(
             'label' => "Administrative Fee ($):",
             'required' => false,
             'attr' => array('class' => 'form-control invoice-administrativeFee currency-mask-without-prefix')

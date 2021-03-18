@@ -200,7 +200,7 @@ class Invoice {
     /**
      * Administrative Fee
      *
-     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $administrativeFee;
 
