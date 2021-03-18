@@ -2537,25 +2537,34 @@ class TransResRequestUtil
         $subsidy = 0.00;
         $grandTotal = 0.00;
 
-        foreach( $transresRequest->getInvoices() as $invoice ) {
-            if( $invoice->getLatestVersion() ) {
-                $count++;
-                $total = $total + $invoice->getTotal();
-                $paid = $paid + $invoice->getPaid();
-                $due = $due + $invoice->getDue();
+        //check if progressState != draft, canceled
+        $progressState = $transresRequest->getProgressState();
+        //check if billingState != draft, canceled
+        $billingState = $transresRequest->getBillingState();
 
-                //$subsidy = $subsidy + $invoice->getSubsidy();
-                $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
-
-                //subsidy does not include administrative fee
-//                $administrativeFee = $invoice->getAdministrativeFee();
-//                if( $administrativeFee ) {
-//                    $subsidy = $subsidy + $administrativeFee;
-//                }
-
-                $grandTotal = $total + $subsidy;
-            }
+        $skip = false;
+        if( $progressState == 'draft' || $progressState == 'canceled' ) {
+            $skip = true;
         }
+        if( $billingState == 'draft' || $billingState == 'canceled' ) {
+            $skip = true;
+        }
+
+        if( $skip == false ) {
+            foreach ($transresRequest->getInvoices() as $invoice) {
+                if ($invoice->getLatestVersion()) {
+                    $count++;
+                    $total = $total + $invoice->getTotal();
+                    $paid = $paid + $invoice->getPaid();
+                    $due = $due + $invoice->getDue();
+
+                    //$subsidy = $subsidy + $invoice->getSubsidy();
+                    $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
+
+                    $grandTotal = $total + $subsidy;
+                }//if invoice latest
+            }//foreach invoice
+        }//$skip == false
 
         //echo "total=$total<br>";
         //echo "paid=$paid<br>";

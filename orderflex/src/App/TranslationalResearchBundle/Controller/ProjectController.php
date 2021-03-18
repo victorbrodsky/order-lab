@@ -80,6 +80,7 @@ class ProjectController extends OrderAbstractController
      *
      * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index", methods={"GET"})
      * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index", methods={"GET"})
+     * @Route("/active-project-requests-non-funded-over-budget/", name="translationalresearch_active_non_funded_over_budget_project_index", methods={"GET"})
      *
      * @Template("AppTranslationalResearchBundle/Project/index.html.twig")
      */
@@ -235,7 +236,15 @@ class ProjectController extends OrderAbstractController
             $params['toImplicitExpDate'] = $today->modify('+3 months');
             $title = "Active Project Requests with $humanName Expiring Soon";
         }
-
+        if( $routeName == "translationalresearch_active_non_funded_over_budget_project_index" ) {
+            $params['defaultStatesArr'] = array(
+                'irb_review','irb_missinginfo',
+                'admin_review','admin_missinginfo',
+                'committee_review','final_review','final_approved'
+            );
+            //$params['overBudget'] = true;
+            $title = "Active Non-Funded Projects Over Budget or With No Budget";
+        }
 
         $filterform = $this->createForm(FilterType::class, null,array(
             'method' => 'GET',
@@ -778,6 +787,9 @@ class ProjectController extends OrderAbstractController
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
             $title = "Active Projects with $humanName Expiring Soon";
+        }
+        if( $routeName == "translationalresearch_active_non_funded_over_budget_project_index" ) {
+            $title = "Active Non-Funded Projects Over Budget or With No Budget";
         }
 
         //////////////////// EOF Start Filter ////////////////////

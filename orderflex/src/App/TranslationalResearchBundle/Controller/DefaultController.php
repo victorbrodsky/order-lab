@@ -97,7 +97,8 @@ class DefaultController extends OrderAbstractController
      */
     public function downloadNewStudyIntakeFormAction( Request $request ) {
 
-        $originalname = "trp_new_study_intake_form.pdf";
+        //$originalname = "trp_new_study_intake_form.pdf";
+        $originalname = "ctp_new_study_intake_form.docx";
 
         //orderassets\AppTranslationalResearchBundle\downloads
         $abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;

@@ -150,6 +150,13 @@
                                 </li>
                                 {#EOF my projects#}
 
+                                {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                                    <li id="nav-bar-translationalresearch-home">
+                                        <a href="{{ path(translationalresearch_sitename~'_active_non_funded_over_budget_project_index') }}"
+                                        >Active Non-Funded Projects Over Budget or With No Budget</a>
+                                    </li>
+                                {% endif %}
+
                                 {#add lists: “Projects utilizing external pricing” and “Projects utilizing internal pricing”#}
 
                                 {#all projects#}
