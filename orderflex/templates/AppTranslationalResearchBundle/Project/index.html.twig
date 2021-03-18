@@ -195,6 +195,9 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-4">
+                            {% if filterform.overBudget is defined %}
+                                {{ form_widget(filterform.overBudget) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                         </div>

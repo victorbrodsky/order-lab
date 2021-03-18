@@ -303,6 +303,25 @@ class FilterType extends AbstractType
             }
         }
 
+//        $overBudgetArr = array(
+//            'All' => 'All',
+//            'Over Budget or With No Budget' => 'Over Budget or With No Budget'
+//        );
+        $overBudgetArr = array();
+        $overBudgetArr['All'] = 'all';
+        $overBudgetArr['Over Budget or With No Budget'] = 'over-budget-or-with-no-budget';
+        $builder->add('overBudget',ChoiceType::class, array(
+            'label' => false,
+            'required' => false,
+            'choices' => $overBudgetArr,
+            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Over Budget or With No Budget'),
+        ));
+//        $builder->add('overBudget', CheckboxType::class, array(
+//            'label' => false,
+//            'required' => false,
+//            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+//        ));
+
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => true,

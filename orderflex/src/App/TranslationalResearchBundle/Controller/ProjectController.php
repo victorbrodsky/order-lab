@@ -242,7 +242,8 @@ class ProjectController extends OrderAbstractController
                 'admin_review','admin_missinginfo',
                 'committee_review','final_review','final_approved'
             );
-            //$params['overBudget'] = true;
+            $params['overBudget'] = true;
+            $params['fundingType'] = "Non-Funded";
             $title = "Active Non-Funded Projects Over Budget or With No Budget";
         }
 
@@ -299,6 +300,8 @@ class ProjectController extends OrderAbstractController
         if( isset($filterform['priceList']) ) {
             $priceList = $filterform['priceList']->getData();
         }
+
+        $overBudget = $filterform['overBudget']->getData();
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
@@ -415,6 +418,16 @@ class ProjectController extends OrderAbstractController
                     $dql->andWhere("priceList.id = :priceListId");
                     $dqlParameters["priceListId"] = $priceList;
                 }
+                $advancedFilter++;
+            }
+        }
+
+        //TODO: use approvedProjectBudget and $grandTotal (Total) from work requests ($invoice->getTotal(), $grandTotal = $total + $subsidy;)
+        //How to: Add overBudget to the project entity. Update overBudget when invoice is created/updated
+        //echo "overBudget=$overBudget<br>";
+        if( $overBudget ) {
+            if( $overBudget != 'all' ) {
+
                 $advancedFilter++;
             }
         }
