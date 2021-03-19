@@ -834,7 +834,7 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
-            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user);
+            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user); //new
 
             $invoiceStatus = $invoice->getStatus();
             if( $invoiceStatus != $originalInvoiceStatus ) {
@@ -1063,7 +1063,7 @@ class InvoiceController extends OrderAbstractController
                 $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
             }
 
-            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user);
+            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
 
@@ -1585,6 +1585,8 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
+     * NOT USED
+     *
      * @Route("/change-status/{oid}", name="translationalresearch_invoice_change_status", methods={"GET"})
      */
     public function changeStatusAction( Request $request, $oid ) {

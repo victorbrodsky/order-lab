@@ -314,12 +314,25 @@ class Project {
      */
     private $totalCost;
 
+//    /**
+//     * Approved Project Budget
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $approvedProjectBudget;
     /**
      * Approved Project Budget
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $approvedProjectBudget;
+
+    /**
+     * Total with Subsidy
+     *
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $grandTotal;
 
     /////////// EOF Project fields /////////////
 
@@ -868,6 +881,22 @@ class Project {
     /**
      * @return mixed
      */
+    public function getGrandTotal()
+    {
+        return $this->grandTotal;
+    }
+
+    /**
+     * @param mixed $grandTotal
+     */
+    public function setGrandTotal($grandTotal)
+    {
+        $this->grandTotal = $grandTotal;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getApprovedProjectBudget()
     {
         if( $this->approvedProjectBudget === NULL ) {
@@ -920,9 +949,11 @@ class Project {
         return $remainingBudget;
     }
     public function toDecimal($number) {
-        if( !$number ) {
-            return $number;
-        }
+//        if( !$number ) {
+//            return $number;
+//        }
+
+        //return $this->strToDecimal($number);
         return number_format((float)$number, 2, '.', '');
     }
     //$1,160.98 => 1160.98
@@ -2248,6 +2279,58 @@ class Project {
         }
 
         return $mergeInfo;
+    }
+
+    //get Issued Invoices
+    public function getInvoicesInfosByProject($admin=true) {
+        //$transresRequestUtil = $this->container->get('transres_request_util');
+        $invoicesInfos = array();
+        $count = 0;
+        $total = 0.00;
+        $paid = 0.00;
+        $due = 0.00;
+        $subsidy = 0.00;
+        $countRequest = 0;
+        $grandTotal = 0.00;
+
+        foreach($this->getRequests() as $request) {
+            //$res = $transresRequestUtil->getInvoicesInfosByRequest($request);
+            $res = $request->getInvoicesInfosByRequest($admin);
+            $count = $count + $res['count'];
+            $total = $total + $res['total'];
+            $paid = $paid + $res['paid'];
+            $due = $due + $res['due'];
+            $subsidy = $subsidy + $res['subsidy'];
+            $grandTotal = $grandTotal + $res['grandTotal'];
+            $countRequest++;
+        }
+        //echo $project->getOid().": countRequest=$countRequest: ";
+
+        if( $count > 0 && $countRequest > 0 ) {
+            $total = $this->toDecimal($total);
+            $paid = $this->toDecimal($paid);
+            $due = $this->toDecimal($due);
+            $subsidy = $this->toDecimal($subsidy);
+            $grandTotal = $this->toDecimal($grandTotal);
+            //echo "value<br>";
+        } else {
+            //echo "total=$total<br>";
+            $total = null;
+            $paid = null;
+            $due = null;
+            $subsidy = null;
+            $grandTotal = null;
+        }
+        //echo "total=$total<br>";
+
+        $invoicesInfos['count'] = $count;
+        $invoicesInfos['total'] = $total; //charge
+        $invoicesInfos['paid'] = $paid;
+        $invoicesInfos['due'] = $due;
+        $invoicesInfos['subsidy'] = $subsidy;
+        $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
+
+        return $invoicesInfos;
     }
 
     public function getEntityName() {

@@ -239,7 +239,14 @@
                 <th>Work Requests</th>
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
-                <th title="Difference between approved project budget and project's total">Remaining Budget</th>
+
+                {% if transres_util.isAdminOrPrimaryReviewer() %}
+                    <th title="Difference between approved project budget and project's total">Remaining Budget</th>
+                    {% set showRemainingBudget = true %}
+                {% else %}
+                    {% set showRemainingBudget = false %}
+                {% endif %}
+
                 <th title="Total amount of the most recent issued invoices including subsidy">Total</th>
                 <th title="Total amount of the most recent issued invoices charge to the customer">Charge</th>
                 <th title="Paid amount of the most recent issued invoices">Paid</th>
@@ -300,19 +307,21 @@
 
             {% set invoicesInfos = transres_util.getInvoicesInfosByProject(project) %}
 
-            {#{% if project.getApprovedProjectBudget() is not null %}#}
-                {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
-                {#{% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}#}
-                {#{% if remainingBudget < 0 %}#}
-                    {##F89C9C#}
-                    {#{% set trclassname = "table-row-budget-negative" %}#}
+            {% if showRemainingBudget %}
+                {#{% if project.getApprovedProjectBudget() is not null %}#}
+                    {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
+                    {#{% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}#}
+                    {#{% if remainingBudget < 0 %}#}
+                        {##F89C9C#}
+                        {#{% set trclassname = "table-row-budget-negative" %}#}
+                    {#{% endif %}#}
+                {#{% else %}#}
+                    {#{% set remainingBudget = "No Info" %}#}
                 {#{% endif %}#}
-            {#{% else %}#}
-                {#{% set remainingBudget = "No Info" %}#}
-            {#{% endif %}#}
-            {% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}
-            {% if remainingBudget < 0 %}
-                {% set trclassname = "table-row-budget-negative" %}
+                {% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}
+                {% if remainingBudget < 0 %}
+                    {% set trclassname = "table-row-budget-negative" %}
+                {% endif %}
             {% endif %}
 
             <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
@@ -420,14 +429,16 @@
                 </td>
 
                 {#Remaining Budget#}
-                <td>
-                    {% if remainingBudget %}
-                        {#${{ remainingBudget }}#}
-                        {{ transres.dollarSignValue(remainingBudget) }}
-                    {% else %}
-                        No Info
-                    {% endif %}
-                </td>
+                {% if showRemainingBudget %}
+                    <td>
+                        {% if remainingBudget %}
+                            {#${{ remainingBudget }}#}
+                            {{ transres.dollarSignValue(remainingBudget) }}
+                        {% else %}
+                            No Info
+                        {% endif %}
+                    </td>
+                {% endif %}
 
                 {#Total of Issued Invoices including subsidy#}
                 <td>

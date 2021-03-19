@@ -1033,9 +1033,9 @@ class Invoice {
         return $str;
     }
     public function toDecimal($number) {
-        if( !$number ) {
-            return $number;
-        }
+//        if( !$number ) {
+//            return $number;
+//        }
         return number_format((float)$number, 2, '.', '');
     }
 

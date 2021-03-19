@@ -936,6 +936,111 @@ class TransResRequest {
         return $title;
     }
 
+    //get Issued Invoices
+    public function getInvoicesInfosByRequest($admin=true) {
+
+        //$transresRequest = $this->getTransresRequest();
+
+        $invoicesInfos = array();
+        $count = 0;
+        $total = 0.00;
+        $paid = 0.00;
+        $due = 0.00;
+        $subsidy = 0.00;
+        $grandTotal = 0.00;
+
+        //check if progressState != draft, canceled
+        $progressState = $this->getProgressState();
+        //check if billingState != draft, canceled
+        $billingState = $this->getBillingState();
+
+        $skip = false;
+        if( $progressState == 'draft' || $progressState == 'canceled' ) {
+            $skip = true;
+        }
+        if( $billingState == 'draft' || $billingState == 'canceled' ) {
+            $skip = true;
+        }
+
+        if( $skip == false ) {
+            foreach ($this->getInvoices() as $invoice) {
+                if ($invoice->getLatestVersion() && $invoice->getStatus() != 'Canceled') {
+                    $count++;
+                    $total = $total + $invoice->getTotal();
+                    $paid = $paid + $invoice->getPaid();
+                    //echo "paid=$paid <br>";
+                    $due = $due + $invoice->getDue();
+
+                    //$subsidy = $subsidy + $invoice->getSubsidy();
+                    $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice, $admin);
+
+                    $grandTotal = $total + $subsidy;
+                }//if invoice latest
+            }//foreach invoice
+        }//$skip == false
+
+        //echo "total=$total<br>";
+        //echo "paid=$paid<br>";
+
+        if( $count > 0 ) {
+            $total = $this->toDecimal($total);
+            $paid = $this->toDecimal($paid);
+            $due = $this->toDecimal($due);
+            $subsidy = $this->toDecimal($subsidy);
+            $grandTotal = $this->toDecimal($grandTotal);
+        } else {
+            $total = null;
+            $paid = null;
+            $due = null;
+            $subsidy = null;
+            $grandTotal = null;
+        }
+
+        //echo "paid=$paid<br>";
+
+        $invoicesInfos['count'] = $count;
+        $invoicesInfos['total'] = $total;
+        $invoicesInfos['paid'] = $paid;
+        $invoicesInfos['due'] = $due;
+        $invoicesInfos['subsidy'] = $subsidy;
+        $invoicesInfos['grandTotal'] = $grandTotal;
+
+        return $invoicesInfos;
+    }
+    public function getInvoiceSubsidy( $invoice, $admin=true ) {
+        $subsidy = $invoice->getSubsidy();
+
+        $showSubsidy = false;
+
+        if( $subsidy > 0 ) {
+            $showSubsidy = true;
+        } else {
+            //negative subsidy: additional check if admin or technician
+//            $transresRequestUtil = $this->container->get('transres_request_util');
+//            if( $transresRequestUtil->isUserHasInvoicePermission($invoice, "update") ) {
+//                $showSubsidy = true;
+//            }
+            if( $admin ) {
+                $showSubsidy = true;
+            }
+        }
+
+        if( $showSubsidy ) {
+            $subsidy = $this->toDecimal($subsidy);
+        } else {
+            $subsidy = 0.00;
+        }
+
+        return $subsidy;
+    }
+
+    public function toDecimal($number) {
+//        if( !$number ) {
+//            return $number;
+//        }
+        return number_format((float)$number, 2, '.', '');
+    }
+
     public function isEditable() {
         return true;
     }

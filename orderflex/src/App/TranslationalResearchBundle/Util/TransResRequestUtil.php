@@ -2528,7 +2528,7 @@ class TransResRequestUtil
     }
 
     //get Issued Invoices
-    public function getInvoicesInfosByRequest($transresRequest) {
+    public function getInvoicesInfosByRequest_ORIG($transresRequest) {
         $invoicesInfos = array();
         $count = 0;
         $total = 0.00;
@@ -2552,7 +2552,7 @@ class TransResRequestUtil
 
         if( $skip == false ) {
             foreach ($transresRequest->getInvoices() as $invoice) {
-                if ($invoice->getLatestVersion()) {
+                if( $invoice->getLatestVersion() && $invoice->getStatus() != 'Canceled' ) {
                     $count++;
                     $total = $total + $invoice->getTotal();
                     $paid = $paid + $invoice->getPaid();
@@ -2603,6 +2603,15 @@ class TransResRequestUtil
 
         return $invoicesInfos;
     }
+    public function getInvoicesInfosByRequest($transresRequest) {
+        $admin = false;
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice = NULL, "update") ) {
+            $admin = true;
+        }
+        return $transresRequest->getInvoicesInfosByRequest($admin);
+    }
+
     public function toDecimal($number) {
         return number_format((float)$number, 2, '.', '');
     }

@@ -423,10 +423,27 @@ class ProjectController extends OrderAbstractController
         }
 
         //TODO: use approvedProjectBudget and $grandTotal (Total) from work requests ($invoice->getTotal(), $grandTotal = $total + $subsidy;)
-        //How to: Add overBudget to the project entity. Update overBudget when invoice is created/updated
+        //1 way) How to: Add overBudget to the project entity. Update overBudget when invoice is created/updated
+        //2 way) Add "Total" (GrandTotal) with subsidy (positive or negative),
+        //Update Total when create/edit invoice, change invoice status (Canceled) and change Work Request status (draft, canceled)
+        //Then make a query to get approvedProjectBudget-Total
+        //3 way) use DoctrineListener, when invoice or work request is updated, update project's total
         //echo "overBudget=$overBudget<br>";
         if( $overBudget ) {
             if( $overBudget != 'all' ) {
+
+                if( $overBudget == 'over-budget-with-no-budget' ) {
+                    //$dql->andWhere("project.approvedProjectBudget IS NULL OR (project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
+                }
+
+                if( $overBudget == 'over-budget' ) {
+                    //$dql->andWhere("project.approvedProjectBudget IS NOT NULL OR project.grandTotal > project.approvedProjectBudget");
+                    //$dql->andWhere("project.grandTotal > CAST(project.approvedProjectBudget AS integer)");
+                }
+
+                if( $overBudget == 'with-no-budget' ) {
+                    //$dql->andWhere("project.approvedProjectBudget IS NULL");
+                }
 
                 $advancedFilter++;
             }

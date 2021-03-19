@@ -4004,7 +4004,7 @@ class TransResUtil
 
 
     //get Issued Invoices
-    public function getInvoicesInfosByProject($project) {
+    public function getInvoicesInfosByProject_ORIG($project) {
         $transresRequestUtil = $this->container->get('transres_request_util');
         $invoicesInfos = array();
         $count = 0;
@@ -4067,6 +4067,14 @@ class TransResUtil
         $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
 
         return $invoicesInfos;
+    }
+    public function getInvoicesInfosByProject($project) {
+        $admin = false;
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice = NULL, "update") ) {
+            $admin = true;
+        }
+        return $project->getInvoicesInfosByProject($admin);
     }
 
 //    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$quantity) {
