@@ -301,7 +301,10 @@ class ProjectController extends OrderAbstractController
             $priceList = $filterform['priceList']->getData();
         }
 
-        $overBudget = $filterform['overBudget']->getData();
+        $overBudget = NULL;
+        if( isset($filterform['overBudget']) ) {
+            $overBudget = $filterform['overBudget']->getData();
+        }
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();

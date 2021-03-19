@@ -303,27 +303,27 @@ class FilterType extends AbstractType
             }
         }
 
+        if (
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
 //        $overBudgetArr = array(
 //            'All' => 'All',
 //            'Over Budget or With No Budget' => 'Over Budget or With No Budget'
 //        );
-        $overBudgetArr = array();
-        $overBudgetArr['All'] = 'all';
-        //$overBudgetArr['Over Budget or With No Budget'] = 'over-budget-with-no-budget';
-        //$overBudgetArr['Over Budget'] = 'over-budget';
-        //$overBudgetArr['With No Budget'] = 'with-no-budget';
-        $builder->add('overBudget',ChoiceType::class, array(
-            'label' => false,
-            'required' => false,
-            'choices' => $overBudgetArr,
-            'data' => 'all',
-            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Over Budget Filter'),
-        ));
-//        $builder->add('overBudget', CheckboxType::class, array(
-//            'label' => false,
-//            'required' => false,
-//            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
-//        ));
+            $overBudgetArr = array();
+            $overBudgetArr['All'] = 'all';
+            //$overBudgetArr['Over Budget or With No Budget'] = 'over-budget-with-no-budget';
+            //$overBudgetArr['Over Budget'] = 'over-budget';
+            //$overBudgetArr['With No Budget'] = 'with-no-budget';
+            $builder->add('overBudget', ChoiceType::class, array(
+                'label' => false,
+                'required' => false,
+                'choices' => $overBudgetArr,
+                'data' => 'all',
+                'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => 'Over Budget Filter'),
+            ));
+        }
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
