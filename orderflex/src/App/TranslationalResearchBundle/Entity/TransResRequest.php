@@ -1151,6 +1151,58 @@ class TransResRequest {
         return $total;
     }
 
+//    /**
+//     * Create new: update project's grandTotal ("Total" in the project list)
+//     *
+//     * @ORM\PostPersist
+//     */
+//    public function updatePostPersistProjectTotal()
+//    {
+//        //exit("request->PostPersist->updateProjectTotal");
+//        $this->updateProjectTotal();
+//    }
+    /**
+     * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
+     * update project's grandTotal ("Total" in the project list)
+     *
+     * @ORM\PostUpdate
+     */
+    public function updatePostUpdateProjectTotal()
+    {
+        //exit("request->PostUpdate->updateProjectTotal");
+        $this->updateProjectTotal();
+    }
+    public function updateProjectTotal()
+    {
+        $grandTotal = NULL;
+
+        //check if progressState != draft, canceled
+        $progressState = $this->getProgressState();
+        //check if billingState != draft, canceled
+        $billingState = $this->getBillingState();
+
+        $skip = false;
+        if( $progressState == 'draft' || $progressState == 'canceled' ) {
+            $skip = true;
+        }
+        if( $billingState == 'draft' || $billingState == 'canceled' ) {
+            $skip = true;
+        }
+        if( $skip ) {
+            return $grandTotal;
+        }
+
+        $project = $this->getProject();
+        $invoicesInfos = $project->getInvoicesInfosByProject();
+        $grandTotal = $invoicesInfos['grandTotal'];
+        if( $grandTotal !== NULL ) {
+            //exit("setGrandTotal=".$grandTotal);
+            $project->setGrandTotal($grandTotal);
+        }
+
+        return $grandTotal;
+    }
+
     public function toDecimal($number) {
 //        if( !$number ) {
 //            return $number;

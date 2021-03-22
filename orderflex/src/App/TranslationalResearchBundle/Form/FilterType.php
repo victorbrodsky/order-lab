@@ -313,7 +313,7 @@ class FilterType extends AbstractType
 //        );
             $overBudgetArr = array();
             $overBudgetArr['All'] = 'all';
-            //$overBudgetArr['Over Budget or With No Budget'] = 'over-budget-with-no-budget';
+            $overBudgetArr['Over Budget or With No Budget'] = 'over-budget-with-no-budget';
             //$overBudgetArr['Over Budget'] = 'over-budget';
             //$overBudgetArr['With No Budget'] = 'with-no-budget';
             $builder->add('overBudget', ChoiceType::class, array(

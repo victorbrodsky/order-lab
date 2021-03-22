@@ -2348,11 +2348,11 @@ class Project {
             //echo "value<br>";
         } else {
             //echo "total=$total<br>";
-            $total = null;
-            $paid = null;
-            $due = null;
-            $subsidy = null;
-            $grandTotal = null;
+            $total = NULL;
+            $paid = NULL;
+            $due = NULL;
+            $subsidy = NULL;
+            $grandTotal = NULL;
         }
         //echo "total=$total<br>";
 

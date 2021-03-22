@@ -1070,6 +1070,53 @@ class Invoice {
 //        $grandTotal = $this->toDecimal($grandTotal);
 //        return $grandTotal;
 //    }
+
+//    /**
+//     * Create new: update project's grandTotal ("Total" in the project list)
+//     *
+//     * @ORM\PostPersist
+//     */
+//    public function updatePostPersistProjectTotal()
+//    {
+//        //exit("invoice->PostPersist->updateProjectTotal");
+//        $this->updateProjectTotal();
+//    }
+    /**
+     * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
+     * update project's grandTotal ("Total" in the project list)
+     *
+     * @ORM\PostUpdate
+     */
+    public function updatePostUpdateProjectTotal()
+    {
+        //exit("invoice->PostUpdate->updateProjectTotal");
+        $this->updateProjectTotal();
+    }
+    public function updateProjectTotal()
+    {
+        $grandTotal = NULL;
+
+        if( $this->getStatus() == 'Canceled' ) {
+            return $grandTotal;
+        }
+
+        $request = $this->getTransresRequest();
+        if( $request ) {
+            $grandTotal = $request->updateProjectTotal();
+        }
+
+//        if( $request ) {
+//            $project = $request->getProject();
+//            $invoicesInfos = $project->getInvoicesInfosByProject();
+//            $grandTotal = $invoicesInfos['grandTotal'];
+//            if( $grandTotal !== NULL ) {
+//                //exit("setGrandTotal=".$grandTotal);
+//                $project->setGrandTotal($grandTotal);
+//            }
+//        }
+
+        return $grandTotal;
+    }
     
     public function __toString() {
         return "".$this->getId();
