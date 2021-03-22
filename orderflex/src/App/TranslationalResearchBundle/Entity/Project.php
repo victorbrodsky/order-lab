@@ -2282,6 +2282,8 @@ class Project {
     }
 
     //get Issued Invoices
+    //Used in project index.php
+    //Used in Dashboard
     public function getInvoicesInfosByProject($admin=true) {
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $invoicesInfos = array();
@@ -2294,14 +2296,45 @@ class Project {
         $grandTotal = 0.00;
 
         foreach($this->getRequests() as $request) {
+
+            //check if $request progressState != draft, canceled
+            $progressState = $request->getProgressState();
+            //check if $request billingState != draft, canceled
+            $billingState = $request->getBillingState();
+
+            $skip = false;
+            if( $progressState == 'draft' || $progressState == 'canceled' ) {
+                $skip = true;
+            }
+            if( $billingState == 'draft' || $billingState == 'canceled' ) {
+                $skip = true;
+            }
+
+            if( $skip ) {
+                continue;
+            }
+
             //$res = $transresRequestUtil->getInvoicesInfosByRequest($request);
             $res = $request->getInvoicesInfosByRequest($admin);
-            $count = $count + $res['count'];
-            $total = $total + $res['total'];
-            $paid = $paid + $res['paid'];
-            $due = $due + $res['due'];
-            $subsidy = $subsidy + $res['subsidy'];
-            $grandTotal = $grandTotal + $res['grandTotal'];
+            if( $res['count'] > 0 ) {
+                $count = $count + $res['count'];
+                $total = $total + $res['total'];
+                $paid = $paid + $res['paid'];
+                $due = $due + $res['due'];
+                $subsidy = $subsidy + $res['subsidy'];
+                $grandTotal = $grandTotal + $res['grandTotal'];
+            } else {
+                //No invoice. Use work request value instead.
+                $subTotal = $request->getTransResRequestSubTotal();
+                $count++;
+                //$total = $total + $subTotal; //"Charged" in the project list
+                //$paid
+                $due = $due + $subTotal; //Include
+                //$subsidy = $subsidy + $res['subsidy'];
+                $subsidy = $subsidy + $request->calculateSubsidyByRequest();
+                //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
+                $grandTotal = $subTotal + $subsidy; //"Total" in the project list
+            }
             $countRequest++;
         }
         //echo $project->getOid().": countRequest=$countRequest: ";

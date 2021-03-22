@@ -4003,71 +4003,71 @@ class TransResUtil
 //    }
 
 
-    //get Issued Invoices
-    public function getInvoicesInfosByProject_ORIG($project) {
-        $transresRequestUtil = $this->container->get('transres_request_util');
-        $invoicesInfos = array();
-        $count = 0;
-        $total = 0.00;
-        $paid = 0.00;
-        $due = 0.00;
-        $subsidy = 0.00;
-        $countRequest = 0;
-        $grandTotal = 0.00;
-
-        foreach($project->getRequests() as $request) {
-            $res = $transresRequestUtil->getInvoicesInfosByRequest($request);
-            $count = $count + $res['count'];
-            $total = $total + $res['total'];
-            $paid = $paid + $res['paid'];
-            $due = $due + $res['due'];
-            $subsidy = $subsidy + $res['subsidy'];
-            $grandTotal = $grandTotal + $res['grandTotal'];
-            $countRequest++;
-        }
-        //echo $project->getOid().": countRequest=$countRequest: ";
-
-        if( $count > 0 && $countRequest > 0 ) {
-            //if ($total > 0) {
-                $total = $transresRequestUtil->toDecimal($total);
-            //}
-            //if ($paid > 0) {
-                $paid = $transresRequestUtil->toDecimal($paid);
-            //}
-            //if ($due > 0) {
-                $due = $transresRequestUtil->toDecimal($due);
-            //}
-            //if ($subsidy > 0) {
-                $subsidy = $transresRequestUtil->toDecimal($subsidy);
-            //}
-
-            //if( $grandTotal > 0 ) {
-                $grandTotal = $transresRequestUtil->toDecimal($grandTotal);
-            //}
-
-            //echo "value<br>";
-        } else {
-            //echo "total=$total<br>";
-            $total = null;
-            $paid = null;
-            $due = null;
-            $subsidy = null;
-            $grandTotal = null;
-        }
-        //echo "total=$total<br>";
-
-        //$this->toDecimal
-
-
-        $invoicesInfos['count'] = $count;
-        $invoicesInfos['total'] = $total; //charge
-        $invoicesInfos['paid'] = $paid;
-        $invoicesInfos['due'] = $due;
-        $invoicesInfos['subsidy'] = $subsidy;
-        $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
-
-        return $invoicesInfos;
-    }
+//    //get Issued Invoices
+//    public function getInvoicesInfosByProject_ORIG($project) {
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        $invoicesInfos = array();
+//        $count = 0;
+//        $total = 0.00;
+//        $paid = 0.00;
+//        $due = 0.00;
+//        $subsidy = 0.00;
+//        $countRequest = 0;
+//        $grandTotal = 0.00;
+//
+//        foreach($project->getRequests() as $request) {
+//            $res = $transresRequestUtil->getInvoicesInfosByRequest($request);
+//            $count = $count + $res['count'];
+//            $total = $total + $res['total'];
+//            $paid = $paid + $res['paid'];
+//            $due = $due + $res['due'];
+//            $subsidy = $subsidy + $res['subsidy'];
+//            $grandTotal = $grandTotal + $res['grandTotal'];
+//            $countRequest++;
+//        }
+//        //echo $project->getOid().": countRequest=$countRequest: ";
+//
+//        if( $count > 0 && $countRequest > 0 ) {
+//            //if ($total > 0) {
+//                $total = $transresRequestUtil->toDecimal($total);
+//            //}
+//            //if ($paid > 0) {
+//                $paid = $transresRequestUtil->toDecimal($paid);
+//            //}
+//            //if ($due > 0) {
+//                $due = $transresRequestUtil->toDecimal($due);
+//            //}
+//            //if ($subsidy > 0) {
+//                $subsidy = $transresRequestUtil->toDecimal($subsidy);
+//            //}
+//
+//            //if( $grandTotal > 0 ) {
+//                $grandTotal = $transresRequestUtil->toDecimal($grandTotal);
+//            //}
+//
+//            //echo "value<br>";
+//        } else {
+//            //echo "total=$total<br>";
+//            $total = null;
+//            $paid = null;
+//            $due = null;
+//            $subsidy = null;
+//            $grandTotal = null;
+//        }
+//        //echo "total=$total<br>";
+//
+//        //$this->toDecimal
+//
+//
+//        $invoicesInfos['count'] = $count;
+//        $invoicesInfos['total'] = $total; //charge
+//        $invoicesInfos['paid'] = $paid;
+//        $invoicesInfos['due'] = $due;
+//        $invoicesInfos['subsidy'] = $subsidy;
+//        $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
+//
+//        return $invoicesInfos;
+//    }
     public function getInvoicesInfosByProject($project) {
         $admin = false;
         $transresRequestUtil = $this->container->get('transres_request_util');

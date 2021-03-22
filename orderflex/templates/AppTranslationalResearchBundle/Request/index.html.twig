@@ -192,7 +192,7 @@
 
                 {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
                 {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
-                {% set requestValue = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}
+                {% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}
                 <td>
                     {#Total#}
                     {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
@@ -273,7 +273,8 @@
                     {% else %}
                         {#expected Subsidy amount calculated by work request#}
                         {#${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}#}
-                        {{ transres.dollarSignValue(transres_request_util.calculateSubsidyByRequest(transresRequest)) }}
+                        {#{{ transres.dollarSignValue(transres_request_util.calculateSubsidyByRequest(transresRequest)) }}#}
+                        {{ transres.dollarSignValue(transresRequest.calculateSubsidyByRequest()) }}
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}

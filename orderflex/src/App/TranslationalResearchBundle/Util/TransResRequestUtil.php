@@ -112,28 +112,34 @@ class TransResRequestUtil
         return null;
     }
 
+//    //Unbilled work request total amount
+//    //Used to calculate fee on request list and dashboard (used to be getTransResRequestFeeHtml)
+//    public function getTransResRequestSubTotal_ORIG( $request ) {
+//        $subTotal = 0;
+//
+//        $priceList = $request->getPriceList();
+//
+//        foreach($request->getProducts() as $product) {
+//            $quantitiesArr = $product->calculateQuantities($priceList);
+//            $initialQuantity = $quantitiesArr['initialQuantity'];
+//            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//            $initialFee = $quantitiesArr['initialFee'];
+//            $additionalFee = $quantitiesArr['additionalFee'];
+//
+//            //echo "units=$units; fee=$fee <br>";
+//            if( $initialFee && $initialQuantity ) {
+//                //$subTotal = $subTotal + ($units * intval($fee));
+//                //$subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
+//                $subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+//            }
+//        }
+//
+//        return $subTotal;
+//    }
+    //Unbilled work request total amount
     //Used to calculate fee on request list and dashboard (used to be getTransResRequestFeeHtml)
     public function getTransResRequestSubTotal( $request ) {
-        $subTotal = 0;
-
-        $priceList = $request->getPriceList();
-
-        foreach($request->getProducts() as $product) {
-            $quantitiesArr = $product->calculateQuantities($priceList);
-            $initialQuantity = $quantitiesArr['initialQuantity'];
-            $additionalQuantity = $quantitiesArr['additionalQuantity'];
-            $initialFee = $quantitiesArr['initialFee'];
-            $additionalFee = $quantitiesArr['additionalFee'];
-            
-            //echo "units=$units; fee=$fee <br>";
-            if( $initialFee && $initialQuantity ) {
-                //$subTotal = $subTotal + ($units * intval($fee));
-                //$subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
-            }
-        }
-
-        return $subTotal;
+        return $request->getTransResRequestSubTotal();
     }
 
     //Used to generate spreadsheet
@@ -167,7 +173,8 @@ class TransResRequestUtil
             if( $initialFee && $initialQuantity ) {
                 //$subTotal = $subTotal + ($units * intval($fee));
                 //$subTotal = $subTotal + $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$units);
-                $subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                //$subTotal = $subTotal + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                $subTotal = $subTotal + $request->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
             }
 
             $productInfoArr[] = array(
@@ -1347,7 +1354,8 @@ class TransResRequestUtil
 
             if( $initialQuantity && $initialFee ) {
                 //Total
-                $total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                //$total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                $total = $request->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
 
                 $invoiceItem->setTotal($total);
             }
@@ -2527,82 +2535,82 @@ class TransResRequestUtil
         return $statuses;
     }
 
-    //get Issued Invoices
-    public function getInvoicesInfosByRequest_ORIG($transresRequest) {
-        $invoicesInfos = array();
-        $count = 0;
-        $total = 0.00;
-        $paid = 0.00;
-        $due = 0.00;
-        $subsidy = 0.00;
-        $grandTotal = 0.00;
-
-        //check if progressState != draft, canceled
-        $progressState = $transresRequest->getProgressState();
-        //check if billingState != draft, canceled
-        $billingState = $transresRequest->getBillingState();
-
-        $skip = false;
-        if( $progressState == 'draft' || $progressState == 'canceled' ) {
-            $skip = true;
-        }
-        if( $billingState == 'draft' || $billingState == 'canceled' ) {
-            $skip = true;
-        }
-
-        if( $skip == false ) {
-            foreach ($transresRequest->getInvoices() as $invoice) {
-                if( $invoice->getLatestVersion() && $invoice->getStatus() != 'Canceled' ) {
-                    $count++;
-                    $total = $total + $invoice->getTotal();
-                    $paid = $paid + $invoice->getPaid();
-                    $due = $due + $invoice->getDue();
-
-                    //$subsidy = $subsidy + $invoice->getSubsidy();
-                    $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
-
-                    $grandTotal = $total + $subsidy;
-                }//if invoice latest
-            }//foreach invoice
-        }//$skip == false
-
-        //echo "total=$total<br>";
-        //echo "paid=$paid<br>";
-
-        if( $count > 0 ) {
-            //if ($total > 0) {
-                $total = $this->toDecimal($total);
-            //}
-            //if ($paid > 0) {
-                $paid = $this->toDecimal($paid);
-            //}
-            //if ($due > 0) {
-                $due = $this->toDecimal($due);
-            //}
-            //if ($subsidy > 0) {
-                $subsidy = $this->toDecimal($subsidy);
-            //}
-
-            $grandTotal = $this->toDecimal($grandTotal);
-        } else {
-            $total = null;
-            $paid = null;
-            $due = null;
-            $subsidy = null;
-            $grandTotal = null;
-        }
-
-        //echo "paid=$paid<br>";
-
-        $invoicesInfos['count'] = $count;
-        $invoicesInfos['total'] = $total;
-        $invoicesInfos['paid'] = $paid;
-        $invoicesInfos['due'] = $due;
-        $invoicesInfos['subsidy'] = $subsidy;
-        $invoicesInfos['grandTotal'] = $grandTotal;
-
-        return $invoicesInfos;
-    }
+//    //get Issued Invoices
+//    public function getInvoicesInfosByRequest_ORIG($transresRequest) {
+//        $invoicesInfos = array();
+//        $count = 0;
+//        $total = 0.00;
+//        $paid = 0.00;
+//        $due = 0.00;
+//        $subsidy = 0.00;
+//        $grandTotal = 0.00;
+//
+//        //check if progressState != draft, canceled
+//        $progressState = $transresRequest->getProgressState();
+//        //check if billingState != draft, canceled
+//        $billingState = $transresRequest->getBillingState();
+//
+//        $skip = false;
+//        if( $progressState == 'draft' || $progressState == 'canceled' ) {
+//            $skip = true;
+//        }
+//        if( $billingState == 'draft' || $billingState == 'canceled' ) {
+//            $skip = true;
+//        }
+//
+//        if( $skip == false ) {
+//            foreach ($transresRequest->getInvoices() as $invoice) {
+//                if( $invoice->getLatestVersion() && $invoice->getStatus() != 'Canceled' ) {
+//                    $count++;
+//                    $total = $total + $invoice->getTotal();
+//                    $paid = $paid + $invoice->getPaid();
+//                    $due = $due + $invoice->getDue();
+//
+//                    //$subsidy = $subsidy + $invoice->getSubsidy();
+//                    $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice);
+//
+//                    $grandTotal = $total + $subsidy;
+//                }//if invoice latest
+//            }//foreach invoice
+//        }//$skip == false
+//
+//        //echo "total=$total<br>";
+//        //echo "paid=$paid<br>";
+//
+//        if( $count > 0 ) {
+//            //if ($total > 0) {
+//                $total = $this->toDecimal($total);
+//            //}
+//            //if ($paid > 0) {
+//                $paid = $this->toDecimal($paid);
+//            //}
+//            //if ($due > 0) {
+//                $due = $this->toDecimal($due);
+//            //}
+//            //if ($subsidy > 0) {
+//                $subsidy = $this->toDecimal($subsidy);
+//            //}
+//
+//            $grandTotal = $this->toDecimal($grandTotal);
+//        } else {
+//            $total = null;
+//            $paid = null;
+//            $due = null;
+//            $subsidy = null;
+//            $grandTotal = null;
+//        }
+//
+//        //echo "paid=$paid<br>";
+//
+//        $invoicesInfos['count'] = $count;
+//        $invoicesInfos['total'] = $total;
+//        $invoicesInfos['paid'] = $paid;
+//        $invoicesInfos['due'] = $due;
+//        $invoicesInfos['subsidy'] = $subsidy;
+//        $invoicesInfos['grandTotal'] = $grandTotal;
+//
+//        return $invoicesInfos;
+//    }
     public function getInvoicesInfosByRequest($transresRequest) {
         $admin = false;
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -2616,27 +2624,27 @@ class TransResRequestUtil
         return number_format((float)$number, 2, '.', '');
     }
 
-    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity) {
-        $quantity = intval($quantity);
-        //$fee = intval($fee);
-        $fee = $this->toDecimal($fee);
-        if( $feeAdditionalItem ) {
-            //$feeAdditionalItem = intval($feeAdditionalItem);
-            $feeAdditionalItem = $this->toDecimal($feeAdditionalItem);
-        } else {
-            $feeAdditionalItem = $fee;
-        }
-
-        $initialTotal = $this->toDecimal($initialQuantity * $fee);
-        $additionalTotal = $this->toDecimal($quantity * $feeAdditionalItem);
-
-        $total = $initialTotal + $additionalTotal;
-
-        if ($total > 0) {
-            $total = $this->toDecimal($total);
-        }
-        return $total;
-    }
+//    public function getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$quantity) {
+//        $quantity = intval($quantity);
+//        //$fee = intval($fee);
+//        $fee = $this->toDecimal($fee);
+//        if( $feeAdditionalItem ) {
+//            //$feeAdditionalItem = intval($feeAdditionalItem);
+//            $feeAdditionalItem = $this->toDecimal($feeAdditionalItem);
+//        } else {
+//            $feeAdditionalItem = $fee;
+//        }
+//
+//        $initialTotal = $this->toDecimal($initialQuantity * $fee);
+//        $additionalTotal = $this->toDecimal($quantity * $feeAdditionalItem);
+//
+//        $total = $initialTotal + $additionalTotal;
+//
+//        if ($total > 0) {
+//            $total = $this->toDecimal($total);
+//        }
+//        return $total;
+//    }
 
     //check if user allowed to access by the project's specialty
     public function isUserAllowedAccessInvoiceBySpecialty($invoice) {
@@ -3863,91 +3871,102 @@ class TransResRequestUtil
         return $row;
     }
 
-    //Calculate subsidy based only on the work request's products.
-    //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
-    //Used only in getSubsidyInfo($invoice) and 
-    public function calculateSubsidyByRequest($request) {
-        //$request = $invoice->getTransresRequest();
-        $priceList = $request->getPriceList($request);
-        $subsidy = 0;
+//    //Calculate subsidy based only on the work request's products.
+//    //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
+//    //Used only in getSubsidyInfo($invoice) and
+//    public function calculateSubsidyByRequest_ORIG($request) {
+//        //$request = $invoice->getTransresRequest();
+//        $priceList = $request->getPriceList($request);
+//        $subsidy = 0;
+//
+//        foreach( $request->getProducts() as $product ) {
+//
+//            //$quantity = $product->getQuantity();
+//            //echo "quantity=$quantity <br>";
+//
+//            //default fee
+//            $quantitiesArr = $product->calculateQuantities(NULL);
+//            $initialQuantity = $quantitiesArr['initialQuantity'];
+//            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//            $initialFee = $quantitiesArr['initialFee'];
+//            $additionalFee = $quantitiesArr['additionalFee'];
+//
+//            $totalDefault = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+//
+//            //special fee
+//            $quantitiesArr = $product->calculateQuantities($priceList);
+//            $initialQuantity = $quantitiesArr['initialQuantity'];
+//            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//            $initialFee = $quantitiesArr['initialFee'];
+//            $additionalFee = $quantitiesArr['additionalFee'];
+//
+//            $totalSpecial = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+//
+//            if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
+//                //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
+//                $diff = $this->toDecimal($totalDefault - $totalSpecial);
+//
+////                if( $diff > 0 ) {
+////                    $subsidy = $subsidy + $diff;
+////                }
+//
+//                //subsidy can be negative. Show negative subsidy only to admin
+//                $subsidy = $subsidy + $diff;
+//            }
+//
+//        }
+//
+//        $subsidy = $this->toDecimal($subsidy);
+//        //echo "res subsidy=$subsidy <br>";
+//
+//        return $subsidy;
+//    }
+//    //Calculate subsidy based only on the work request's products.
+//    //If invoice is edited manually (products added or removed, price changed, discount applied), subsidy will not be changed.
+//    //Used only in getSubsidyInfo($invoice) and
+//    public function calculateSubsidyByRequest($request) {
+//        return $request->calculateSubsidyByRequest();
+//    }
 
-        foreach( $request->getProducts() as $product ) {
-
-            //$quantity = $product->getQuantity();
-            //echo "quantity=$quantity <br>";
-
-            //default fee
-            $quantitiesArr = $product->calculateQuantities(NULL);
-            $initialQuantity = $quantitiesArr['initialQuantity'];
-            $additionalQuantity = $quantitiesArr['additionalQuantity'];
-            $initialFee = $quantitiesArr['initialFee'];
-            $additionalFee = $quantitiesArr['additionalFee'];
-
-            $totalDefault = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
-
-            //special fee
-            $quantitiesArr = $product->calculateQuantities($priceList);
-            $initialQuantity = $quantitiesArr['initialQuantity'];
-            $additionalQuantity = $quantitiesArr['additionalQuantity'];
-            $initialFee = $quantitiesArr['initialFee'];
-            $additionalFee = $quantitiesArr['additionalFee'];
-
-            $totalSpecial = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
-
-            if( $totalDefault && $totalSpecial && $totalDefault != $totalSpecial ) {
-                //echo "totalDefault=$totalDefault totalSpecial=$totalSpecial <br>";
-                $diff = $this->toDecimal($totalDefault - $totalSpecial);
-
-//                if( $diff > 0 ) {
-//                    $subsidy = $subsidy + $diff;
-//                }
-
-                //subsidy can be negative. Show negative subsidy only to admin
-                $subsidy = $subsidy + $diff;
-            }
-
-        }
-
-        $subsidy = $this->toDecimal($subsidy);
-        //echo "res subsidy=$subsidy <br>";
-
-        return $subsidy;
-    }
-
-    public function calculateDefaultTotalByInvoice($invoice) {
-        $transresRequest = $invoice->getTransresRequest();
-        return $this->calculateDefaultTotalByRequest($transresRequest);
-    }
-    public function calculateDefaultTotalByRequest($transresRequest) {
-        $totalDefault = 0;
-
-        foreach( $transresRequest->getProducts() as $product ) {
-
-            //default
-            $quantitiesArr = $product->calculateQuantities(NULL);
-            $initialQuantity = $quantitiesArr['initialQuantity'];
-            $additionalQuantity = $quantitiesArr['additionalQuantity'];
-            $initialFee = $quantitiesArr['initialFee'];
-            $additionalFee = $quantitiesArr['additionalFee'];
-            $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
-        }
-
-        $totalDefault = $this->toDecimal($totalDefault);
-
-        return $totalDefault;
-    }
+//    public function calculateDefaultTotalByInvoice($invoice) {
+//        $transresRequest = $invoice->getTransresRequest();
+//        return $transresRequest->calculateDefaultTotalByRequest();
+//    }
+//    public function calculateDefaultTotalByRequest_ORIG($transresRequest) {
+//        $totalDefault = 0;
+//
+//        foreach( $transresRequest->getProducts() as $product ) {
+//
+//            //default
+//            $quantitiesArr = $product->calculateQuantities(NULL);
+//            $initialQuantity = $quantitiesArr['initialQuantity'];
+//            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//            $initialFee = $quantitiesArr['initialFee'];
+//            $additionalFee = $quantitiesArr['additionalFee'];
+//            $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+//        }
+//
+//        $totalDefault = $this->toDecimal($totalDefault);
+//
+//        return $totalDefault;
+//    }
+//    public function calculateDefaultTotalByRequest($transresRequest) {
+//        return $transresRequest->calculateDefaultTotalByRequest();
+//    }
 
     //Used on the invoice new/edit, and pdf page
     //"[Internal pricing] has been used to generate this invoice. Subsidy: $[XX.XX]"
     public function getSubsidyInfo($invoice,$showNegativeSubsidy=true) {
         $res = "";
         $request = $invoice->getTransresRequest();
-        $priceList = $request->getPriceList($request);
+        //$priceList = $request->getPriceList($request);
+        $priceList = $request->getPriceList();
 
         $subsidy = $invoice->getSubsidy();
         //echo "Invoice subsidy=".$subsidy."<br>";
         if( !$subsidy ) {
-            $subsidy = $this->calculateSubsidyByRequest($request);
+            //$subsidy = $this->calculateSubsidyByRequest($request);
+            $subsidy = $request->calculateSubsidyByRequest();
             //echo "Calculate subsidy=".$subsidy."<br>";
         }
         //$showNegativeSubsidy = true; //testing
@@ -4010,8 +4029,8 @@ class TransResRequestUtil
     //Calculate subsidy based only on the invoice's invoiceItem.
     //Used only in updateInvoiceSubsidy($invoice)
     public function calculateSubsidyInvoiceItems($invoice) {
-        //$request = $invoice->getTransresRequest();
-        //$priceList = $request->getPriceList($request);
+        $request = $invoice->getTransresRequest();
+
         $subsidy = 0;
 
         $totalInvoiceDefault = 0;
@@ -4058,7 +4077,8 @@ class TransResRequestUtil
                 //default fee
                 $fee = $category->getPriceFee();
                 $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
-                $totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
+                //$totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
+                $totalDefault = $request->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
 
                 if( !$totalDefault ) {
                     $totalDefault = $total;
@@ -4068,7 +4088,6 @@ class TransResRequestUtil
                 //echo "category $itemCode default total=".$totalDefault.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
 
             } else {
-                //$totalDefault = $this->getTotalFeesByQuantity($unitPrice,$additionalUnitPrice,$quantity);
                 $totalInvoiceDefault = $totalInvoiceDefault + $total;
                 //echo "invoice item total=".$total.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
             }
