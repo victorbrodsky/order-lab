@@ -2329,7 +2329,7 @@ class Project {
                 $count++;
                 //$total = $total + $subTotal; //"Charged" in the project list
                 //$paid
-                $due = $due + $subTotal; //Include
+                //$due = $due + $subTotal; //Include
                 //$subsidy = $subsidy + $res['subsidy'];
                 $subsidy = $subsidy + $request->calculateSubsidyByRequest();
                 //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
