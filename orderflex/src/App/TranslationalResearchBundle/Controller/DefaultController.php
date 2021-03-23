@@ -881,4 +881,46 @@ class DefaultController extends OrderAbstractController
 
         exit("updated $count projects");
     }
+
+    /**
+     * http://127.0.0.1/order/translational-research/update-project-budget
+     *
+     * @Route("/update-project-budget", name="translationalresearch_update_project_budget")
+     */
+    public function updateProjectBudgetAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateProjectBudgetAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+        $dql->where("project.noBudgetLimit IS NULL");
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        $count = 0;
+        foreach($projects as $project) {
+            //echo "project=".$project."<br>";
+            if( $project ) {
+                //For “Non-funded” projects already in the system,
+                // set the “No budget limit” to UNchecked,
+                // and copy a valid value from the Estimated Costs to Approved Budget.
+                $project->autoPopulateApprovedProjectBudget();
+                //$em->flush();
+                $count++;
+            } else {
+                echo "!!! project is null <br>";
+            }
+        }
+
+        exit("updated $count projects");
+    }
 }

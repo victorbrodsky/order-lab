@@ -1106,7 +1106,7 @@ class ProjectController extends OrderAbstractController
 
             $transresUtil->assignMinimumProjectRoles($project); //new
 
-            $project->autoPopulateApprovedProjectBudget();
+            $project->autoPopulateApprovedProjectBudget(); //new
 
             $project->calculateAndSetImplicitExpirationDate();
 
@@ -1343,7 +1343,7 @@ class ProjectController extends OrderAbstractController
 
             $transresUtil->assignMinimumProjectRoles($project); //edit
 
-            $project->autoPopulateApprovedProjectBudget();
+            //$project->autoPopulateApprovedProjectBudget(); //edit
 
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "document");
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
