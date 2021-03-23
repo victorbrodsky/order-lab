@@ -278,6 +278,12 @@ class ProjectType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'form-control currency-mask-without-prefix transres-project-approvedProjectBudget'),
             ));
+
+            $builder->add('noBudgetLimit', CheckboxType::class, array(
+                'label' => 'No Budget Limit:',
+                'required' => false,
+                'attr' => array('class' => 'form-control transres-project-noBudgetLimit'),
+            ));
         }
 
         $builder->add('projectType', CustomSelectorType::class, array(

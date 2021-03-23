@@ -2737,7 +2737,77 @@ class RequestController extends OrderAbstractController
         $response = new Response($res);
         return $response;
     }
-    
+
+    /**
+     * @Route("/request/update-project-nobudgetlimit/", name="translationalresearch_update_project_nobudgetlimit", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function updateNoBudgetLimitAction( Request $request ) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = trim( $request->get('projectId') );
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $res = "NotOK";
+
+        if( $project ) {
+            $noBudgetLimit = trim($request->get('noBudgetLimit'));
+            //echo "noBudgetLimit=".$noBudgetLimit."<br>";
+
+            $originalNoBudgetLimit = $project->getNoBudgetLimit();
+
+            if( $originalNoBudgetLimit != $noBudgetLimit ) {
+
+                if( $noBudgetLimit ) {
+                    $noBudgetLimit = true;
+                } else {
+                    $noBudgetLimit = false;
+                }
+
+                $project->setNoBudgetLimit($noBudgetLimit);
+                $em->flush();
+
+                $originalNoBudgetLimitStr = "No";
+                if( $originalNoBudgetLimit ) {
+                    $originalNoBudgetLimitStr = "Yes";
+                }
+
+                $noBudgetLimitStr = "No";
+                if( $noBudgetLimit ) {
+                    $noBudgetLimitStr = "Yes";
+                }
+
+                $eventType = "Project Updated";
+                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                    "No Budget Limit changed from " .
+                    $originalNoBudgetLimitStr . " to " . $noBudgetLimitStr;
+                $transresUtil->setEventLog($project,$eventType,$res);
+            } else {
+                $res = "No Budget Limit for project ID " . $project->getOid() . " is unchanged.";
+            }
+        } else {
+            //$res = "Logical error: project not found by ID $projectId";
+        }
+
+        $response = new Response($res);
+        return $response;
+    }
+
+
     /**
      * @Route("/request/fee-schedule", name="translationalresearchfeesschedule-list", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/fee-schedule.html.twig")

@@ -176,6 +176,10 @@
             transresUpdateApprovedProjectBudget();
         });
 
+        $('.transres-update-project-noBudgetLimit').click(function(event) {
+            transresUpdateNoBudgetLimit();
+        });
+
         //addCommentButtonClickListener();
 
     });
@@ -266,7 +270,7 @@
                 //async: asyncflag
                 async: false
             }).success(function(response) {
-                console.log(response);
+                //console.log(response);
                 if( response != "NotOK" ) {
                     $(".transres-alert").find(".alert").html(response);
                     $(".transres-alert").show();
@@ -305,12 +309,67 @@
             //async: asyncflag
             async: false
         }).success(function(response) {
-            console.log(response);
+            //console.log(response);
             if( response != "NotOK" ) {
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
                 //$(".transres-project-priceList").val(irbExpDate);
                 $(".transres-project-approvedProjectBudget").val(approvedProjectBudget);
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        //}
+
+        return false;
+    }
+
+    function transresUpdateNoBudgetLimit() {
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
+        var noBudgetLimit = 0;
+        if( $('#transres_update_project_noBudgetLimit').is(":checked") ) {
+            // it is checked
+            noBudgetLimit = 1;
+        }
+
+        //if( priceListId ) {
+        var projectId = $("#projectid").val();
+
+        var url = Routing.generate('translationalresearch_update_project_nobudgetlimit');
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, noBudgetLimit: noBudgetLimit },
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function(response) {
+            //console.log(response);
+            if( response != "NotOK" ) {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                //$(".transres-project-priceList").val(irbExpDate);
+                //$(".transres-project-noBudgetLimit").val(noBudgetLimit);
+
+                //console.log("noBudgetLimit="+noBudgetLimit);
+                if( noBudgetLimit ) {
+                    //console.log("checked");
+                    $('.transres-project-noBudgetLimit').attr('checked', true); //Deprecated
+                    $('.transres-project-noBudgetLimit').prop('checked', true); //modern Jquery
+                } else {
+                    //console.log("un-checked");
+                    $('.transres-project-noBudgetLimit').attr('checked', false); //Deprecated
+                    $('.transres-project-noBudgetLimit').prop('checked', false); //modern Jquery
+                }
             }
         }).done(function() {
             //lbtn.stop();

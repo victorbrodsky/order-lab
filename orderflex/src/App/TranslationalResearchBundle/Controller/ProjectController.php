@@ -436,7 +436,17 @@ class ProjectController extends OrderAbstractController
             if( $overBudget != 'all' ) {
 
                 if( $overBudget == 'over-budget-with-no-budget' ) {
+//                    $dql->andWhere(
+//                        "
+//                        project.approvedProjectBudget IS NULL OR
+//                        (project.approvedProjectBudget IS NOT NULL AND project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)
+//                        OR
+//                        (project.totalCost IS NOT NULL AND project.grandTotal IS NOT NULL AND project.grandTotal > CAST(project.totalCost as NUMERIC))
+//                        "
+//                    );
+                    //populate approvedProjectBudget according to the totalCost
                     $dql->andWhere("project.approvedProjectBudget IS NULL OR (project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
+                    //$dql->andWhere("(project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
                 }
 
                 if( $overBudget == 'over-budget' ) {

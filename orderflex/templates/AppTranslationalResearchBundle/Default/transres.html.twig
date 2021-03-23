@@ -227,6 +227,10 @@
 
                     {{ formmacros.field(form.totalCost) }}
 
+                    {% if form.noBudgetLimit is defined %}
+                        {{ formmacros.checkbox(form.noBudgetLimit) }}
+                    {% endif %}
+
                     {% if form.approvedProjectBudget is defined %}
                         {{ formmacros.field(form.approvedProjectBudget) }}
                     {% endif %}
@@ -921,6 +925,8 @@
                 {% endif %}
                 {{ transres.fieldPriceList(priceListStr,"Utilize the following price list:",1) }}
 
+                {% set noBudgetLimit = project.getNoBudgetLimit() %}
+                {{ transres.fieldNoBudgetLimit(noBudgetLimit,"No Budget Limit:",1) }}
                 {#Show this "Approved Project Budget" field#}
                 {% set approvedProjectBudget = project.getApprovedProjectBudget() %}
                 {% set totalCost = transres.dollarSignValue(project.getTotalCost()) %}
@@ -1545,6 +1551,30 @@
         <div class="col-xs-3" align="left">
             {% if updateButton is defined and updateButton %}
                 <div class="btn btn-primary btn-sm transres-update-project-approvedProjectBudget">Update Approved Project Budget</div>
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+{% macro fieldNoBudgetLimit( value, label, updateButton ) %}
+    <p>
+    <div class="row">
+        {#<div class="col-xs-3" align="right">#}
+        {#</div>#}
+        <div class="col-xs-6" align="right">
+            <strong>{{ label|raw }}</strong>
+        </div>
+        <div class="col-xs-3" style="width: 50px;" align="left">
+            <input id="transres_update_project_noBudgetLimit"
+                   type="checkbox"
+                   class="form-control"
+                   placeholder="No Budget Limit"
+                   value="{{ value }}"
+            >
+        </div>
+        <div class="col-xs-3" style="width: 50px;" align="left">
+            {% if updateButton is defined and updateButton %}
+                <div class="btn btn-primary btn-sm transres-update-project-noBudgetLimit">Update "No Budget Limit"</div>
             {% endif %}
         </div>
     </div>

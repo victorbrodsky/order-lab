@@ -1083,7 +1083,7 @@ class Invoice {
 //    }
     /**
      * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
-     * update project's grandTotal ("Total" in the project list)
+     * update project's total ("Total" in the project list)
      *
      * @ORM\PostUpdate
      */
@@ -1094,28 +1094,18 @@ class Invoice {
     }
     public function updateProjectTotal()
     {
-        $grandTotal = NULL;
+        $total = NULL;
 
         if( $this->getStatus() == 'Canceled' ) {
-            return $grandTotal;
+            return $total;
         }
 
         $request = $this->getTransresRequest();
         if( $request ) {
-            $grandTotal = $request->updateProjectTotal();
+            $total = $request->updateProjectTotal();
         }
 
-//        if( $request ) {
-//            $project = $request->getProject();
-//            $invoicesInfos = $project->getInvoicesInfosByProject();
-//            $grandTotal = $invoicesInfos['grandTotal'];
-//            if( $grandTotal !== NULL ) {
-//                //exit("setGrandTotal=".$grandTotal);
-//                $project->setGrandTotal($grandTotal);
-//            }
-//        }
-
-        return $grandTotal;
+        return $total;
     }
     
     public function __toString() {

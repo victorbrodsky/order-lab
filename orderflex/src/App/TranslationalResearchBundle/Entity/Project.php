@@ -313,13 +313,7 @@ class Project {
      * @ORM\Column(type="string", nullable=true)
      */
     private $totalCost;
-
-//    /**
-//     * Approved Project Budget
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $approvedProjectBudget;
+    
     /**
      * Approved Project Budget
      *
@@ -328,11 +322,18 @@ class Project {
     private $approvedProjectBudget;
 
     /**
-     * Total with Subsidy
+     * Total including Subsidy
      *
      * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
-    private $grandTotal;
+    private $total;
+
+    /**
+     * No Budget Limit
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $noBudgetLimit;
 
     /////////// EOF Project fields /////////////
 
@@ -881,18 +882,50 @@ class Project {
     /**
      * @return mixed
      */
-    public function getGrandTotal()
+    public function getTotal()
     {
-        return $this->grandTotal;
+        return $this->total;
     }
 
     /**
-     * @param mixed $grandTotal
+     * @param mixed $total
      */
-    public function setGrandTotal($grandTotal)
+    public function setTotal($total)
     {
-        $this->grandTotal = $grandTotal;
+        $this->total = $total;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNoBudgetLimit()
+    {
+        return $this->noBudgetLimit;
+    }
+
+    /**
+     * @param mixed $noBudgetLimit
+     */
+    public function setNoBudgetLimit($noBudgetLimit)
+    {
+        $this->noBudgetLimit = $noBudgetLimit;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getGrandTotal()
+//    {
+//        return $this->grandTotal;
+//    }
+//
+//    /**
+//     * @param mixed $grandTotal
+//     */
+//    public function setGrandTotal($grandTotal)
+//    {
+//        $this->grandTotal = $grandTotal;
+//    }
 
     /**
      * @return mixed

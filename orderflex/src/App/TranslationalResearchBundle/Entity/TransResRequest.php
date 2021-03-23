@@ -1163,7 +1163,7 @@ class TransResRequest {
 //    }
     /**
      * postUpdate - The postUpdate event occurs after the database update operations to entity data. It is not called for a DQL UPDATE statement.
-     * update project's grandTotal ("Total" in the project list)
+     * update project's total ("Total" in the project list)
      *
      * @ORM\PostUpdate
      */
@@ -1174,7 +1174,7 @@ class TransResRequest {
     }
     public function updateProjectTotal()
     {
-        $grandTotal = NULL;
+        $total = NULL;
 
         //check if progressState != draft, canceled
         $progressState = $this->getProgressState();
@@ -1189,18 +1189,18 @@ class TransResRequest {
             $skip = true;
         }
         if( $skip ) {
-            return $grandTotal;
+            return $total;
         }
 
         $project = $this->getProject();
         $invoicesInfos = $project->getInvoicesInfosByProject();
-        $grandTotal = $invoicesInfos['grandTotal'];
-        if( $grandTotal !== NULL ) {
-            //exit("setGrandTotal=".$grandTotal);
-            $project->setGrandTotal($grandTotal);
+        $total = $invoicesInfos['grandTotal'];
+        if( $total !== NULL ) {
+            //exit("total=".$total);
+            $project->setTotal($total);
         }
 
-        return $grandTotal;
+        return $total;
     }
 
     public function toDecimal($number) {
