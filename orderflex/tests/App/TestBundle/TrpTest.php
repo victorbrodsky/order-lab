@@ -32,8 +32,8 @@ class TrpTest extends WebTestBase
         unset($_GET['sort']);
         $crawler = $this->client->request('GET', '/translational-research/projects/');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Project Requests")')->count()
