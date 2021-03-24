@@ -973,7 +973,7 @@ class Project {
             if( $this->getApprovedProjectBudget() === NULL ) { //not required, added for uniformity
                 $this->setApprovedProjectBudget(NULL);
             }
-            echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
+            echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
         } else {
             //Non-Funded
             //For “Non-Funded” project requests,
@@ -991,7 +991,7 @@ class Project {
                 }
             }
 
-            echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
+            echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
         }
 
 //        if( $this->approvedProjectBudget === NULL ) {
@@ -1000,6 +1000,15 @@ class Project {
 //                $this->setApprovedProjectBudget($totalCost);
 //            }
 //        }
+    }
+    public function getNoBudgetLimitYesNo() {
+        if( $this->getNoBudgetLimit() === true ) {
+            return "Yes";
+        }
+        if( $this->getNoBudgetLimit() === false ) {
+            return "No";
+        }
+        return NULL;
     }
     
     public function getRemainingBalance( $total ) {

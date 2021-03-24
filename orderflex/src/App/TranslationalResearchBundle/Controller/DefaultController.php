@@ -914,7 +914,7 @@ class DefaultController extends OrderAbstractController
                 // set the “No budget limit” to UNchecked,
                 // and copy a valid value from the Estimated Costs to Approved Budget.
                 $project->autoPopulateApprovedProjectBudget();
-                //$em->flush();
+                $em->flush();
                 $count++;
             } else {
                 echo "!!! project is null <br>";
