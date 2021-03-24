@@ -934,7 +934,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateProjectTotalAction: Not allowed");
+        exit("updateProjectTotalAction: Not allowed");
 
         ini_set('max_execution_time', '600'); //600 seconds = 10 minutes
 
