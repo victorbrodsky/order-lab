@@ -207,9 +207,10 @@ class TransResRequestType extends AbstractType
 
         //////////////// fields /////////////////////////
         $fundedAccountNumberAttr = array('class' => 'form-control tarnsresrequest-fundedAccountNumber');
-        if( !$this->params['admin'] ) {
-            $fundedAccountNumberAttr['readonly'] = true;
-        }
+        //In the new request page, users should be able to change the default fund number to a different fund number in case the funding source is different.
+        //if( !$this->params['admin'] ) {
+        //    $fundedAccountNumberAttr['readonly'] = true;
+        //}
         $builder->add('fundedAccountNumber',null, array(
             'label' => $this->params['fundedNumberLabel'],
             'required' => false,

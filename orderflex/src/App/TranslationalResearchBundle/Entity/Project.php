@@ -952,8 +952,9 @@ class Project {
         $this->approvedProjectBudget = $approvedProjectBudget;
     }
 
-    //auto-populate the "Approved Budget" field with the same value as the value submitted in "Estimated Total Costs" field
-    //If approvedProjectBudget is NULL, set it as totalCost
+    //Used on the submitting a new project
+    //approvedProjectBudget and projectType are not visible/editable on new page
+    //Auto populate if these fields have not been edited (fields are NULL)
     public function autoPopulateApprovedProjectBudget()
     {
         //For all existing "Funded" projects:
@@ -965,23 +966,32 @@ class Project {
             //For “Funded” project requests,
             // preset the “No Budget Limit” to checked by default,
             // AND do not populate “Approved Budget” from Estimated costs
-            $this->setNoBudgetLimit(true);
-            $this->setApprovedProjectBudget(NULL);
-            echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
+            if( $this->getNoBudgetLimit() === NULL ) {
+                $this->setNoBudgetLimit(true);
+            }
+
+            if( $this->getApprovedProjectBudget() === NULL ) { //not required, added for uniformity
+                $this->setApprovedProjectBudget(NULL);
+            }
+            //echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
         } else {
             //Non-Funded
             //For “Non-Funded” project requests,
             // preset the “No Budget limit” to Unchecked,
             // and DO populate the “approved budget” with a valid value from Estimated costs
-            $this->setNoBudgetLimit(false);
-
-            $totalCost = $this->getTotalCost();
-            if( $totalCost ) {
-                $totalCost = $this->strToDecimal($totalCost);
-                $this->setApprovedProjectBudget($totalCost);
+            if( $this->getNoBudgetLimit() === NULL ) {
+                $this->setNoBudgetLimit(false);
             }
 
-            echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
+            if( $this->getApprovedProjectBudget() === NULL ) {
+                $totalCost = $this->getTotalCost();
+                if ($totalCost) {
+                    $totalCost = $this->strToDecimal($totalCost);
+                    $this->setApprovedProjectBudget($totalCost);
+                }
+            }
+
+            //echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimit().", budget=".$this->getApprovedProjectBudget()." <br>";
         }
 
 //        if( $this->approvedProjectBudget === NULL ) {
