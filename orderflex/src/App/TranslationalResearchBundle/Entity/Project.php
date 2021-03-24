@@ -973,7 +973,7 @@ class Project {
             if( $this->getApprovedProjectBudget() === NULL ) { //not required, added for uniformity
                 $this->setApprovedProjectBudget(NULL);
             }
-            echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
+            //echo $this->getId().": funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
         } else {
             //Non-Funded
             //For “Non-Funded” project requests,
@@ -991,7 +991,7 @@ class Project {
                 }
             }
 
-            echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
+            //echo $this->getId().": un-funded: noBudgetLimit=".$this->getNoBudgetLimitYesNo().", budget=".$this->getApprovedProjectBudget()." <br>";
         }
 
 //        if( $this->approvedProjectBudget === NULL ) {
@@ -1011,9 +1011,13 @@ class Project {
         return NULL;
     }
     
-    public function getRemainingBalance( $total ) {
+    public function getRemainingBalance( $total=NULL ) {
 
         //return NULL; //testing
+
+        if( $total === NULL ) {
+            $total = $this->getTotal();
+        }
 
         $approvedProjectBudget = $this->getApprovedProjectBudget();
 
@@ -1027,7 +1031,7 @@ class Project {
             }
         }
 
-        //echo "total=$total, approvedProjectBudget=$approvedProjectBudget, remainingBudget=$remainingBudget<br>";
+        //echo $this->getId().": approvedProjectBudget=$approvedProjectBudget, total=$total, remainingBudget=$remainingBudget<br>";
         return $remainingBudget;
     }
     public function toDecimal($number) {
@@ -2446,6 +2450,18 @@ class Project {
         $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
 
         return $invoicesInfos;
+    }
+
+    public function updateProjectTotal()
+    {
+        $invoicesInfos = $this->getInvoicesInfosByProject();
+        $total = $invoicesInfos['grandTotal'];
+        if( $total !== NULL ) {
+            //exit("total=".$total);
+            $this->setTotal($total);
+        }
+
+        return $total;
     }
 
     public function getEntityName() {

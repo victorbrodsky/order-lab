@@ -445,17 +445,30 @@ class ProjectController extends OrderAbstractController
 //                        "
 //                    );
                     //populate approvedProjectBudget according to the totalCost
-                    $dql->andWhere("project.approvedProjectBudget IS NULL OR (project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
+                    //$dql->andWhere("project.approvedProjectBudget IS NULL OR (project.total IS NOT NULL AND project.total > project.approvedProjectBudget)");
                     //$dql->andWhere("(project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
+                    $dql->andWhere("
+                        (project.approvedProjectBudget IS NULL AND project.noBudgetLimit = FALSE) 
+                        OR 
+                        (project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget)
+                    ");
                 }
 
                 if( $overBudget == 'over-budget' ) {
                     //$dql->andWhere("project.approvedProjectBudget IS NOT NULL OR project.grandTotal > project.approvedProjectBudget");
                     //$dql->andWhere("project.grandTotal > CAST(project.approvedProjectBudget AS integer)");
+
+//                    $dql->andWhere("
+//                        project.approvedProjectBudget IS NOT NULL AND project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget
+//                    ");
+
+                    $dql->andWhere("
+                        project.total > project.approvedProjectBudget                   
+                    ");
                 }
 
                 if( $overBudget == 'with-no-budget' ) {
-                    //$dql->andWhere("project.approvedProjectBudget IS NULL");
+                    $dql->andWhere("project.approvedProjectBudget IS NULL OR project.noBudgetLimit = FALSE");
                 }
 
                 $advancedFilter++;

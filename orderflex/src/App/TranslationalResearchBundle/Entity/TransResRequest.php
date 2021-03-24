@@ -1192,12 +1192,16 @@ class TransResRequest {
             return $total;
         }
 
+//        $project = $this->getProject();
+//        $invoicesInfos = $project->getInvoicesInfosByProject();
+//        $total = $invoicesInfos['grandTotal'];
+//        if( $total !== NULL ) {
+//            //exit("total=".$total);
+//            $project->setTotal($total);
+//        }
         $project = $this->getProject();
-        $invoicesInfos = $project->getInvoicesInfosByProject();
-        $total = $invoicesInfos['grandTotal'];
-        if( $total !== NULL ) {
-            //exit("total=".$total);
-            $project->setTotal($total);
+        if( $project ) {
+            $project->updateProjectTotal();
         }
 
         return $total;

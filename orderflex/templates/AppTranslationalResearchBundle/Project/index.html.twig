@@ -318,7 +318,8 @@
                 {#{% else %}#}
                     {#{% set remainingBudget = "No Info" %}#}
                 {#{% endif %}#}
-                {% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}
+                {#{% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}#}
+                {% set remainingBudget = project.getRemainingBalance() %}
                 {% if remainingBudget < 0 %}
                     {% set trclassname = "table-row-budget-negative" %}
                 {% endif %}

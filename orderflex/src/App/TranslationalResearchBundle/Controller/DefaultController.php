@@ -923,4 +923,53 @@ class DefaultController extends OrderAbstractController
 
         exit("updated $count projects");
     }
+
+    /**
+     * http://127.0.0.1/order/translational-research/update-project-total
+     *
+     * @Route("/update-project-total", name="translationalresearch_update_project_total")
+     */
+    public function updateProjectTotalAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateProjectTotalAction: Not allowed");
+
+        ini_set('max_execution_time', '600'); //600 seconds = 10 minutes
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+        $dql->where("project.total IS NULL");
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        $batchSize = 20;
+        $count = 0;
+        foreach($projects as $project) {
+            //echo "project=".$project."<br>";
+            if( $project ) {
+                
+                $total = $project->updateProjectTotal();
+                echo $project->getId().": total=$total <br>";
+
+                if (($count % $batchSize) === 0) {
+                    $em->flush();
+                }
+                $count++;
+            } else {
+                echo "!!! project is null <br>";
+            }
+        }
+
+        $em->flush(); //Persist objects that did not make up an entire batch
+
+        exit("updated $count projects");
+    }
 }

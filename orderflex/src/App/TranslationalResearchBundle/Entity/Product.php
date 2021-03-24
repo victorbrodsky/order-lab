@@ -253,6 +253,9 @@ class Product {
         $initialFee = 0;
         $additionalFee = 0;
 
+        $categoryItemCode = NULL;
+        $categoryName = NULL;
+
 //        if( !$priceList ) {
 //            $request = $this->getTransresRequest();
 //            if( $request ) {
