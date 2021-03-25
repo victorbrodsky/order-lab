@@ -1158,13 +1158,16 @@ function generalConfirmAction() {
 
         //add listnere to ok button to "Please wait ..." and disable button on click
         $('.general-data-confirm-ok').on('click', function(event){
-            alert("on modal js: dataConfirmOK clicked");
+            //alert("on modal js: dataConfirmOK clicked");
 
             //post process function, for example click all buttons on transres review page to update specific fields
-            var postprocessfn = $(this).attr('general-post-process'); //for example: "refreshpage"
-            if( postprocessfn ) {
-                var fn = window[postprocessfn];
-                fn($(this));
+            if(0) {
+                var postprocessfn = $(this).attr('general-post-process'); //for example: "refreshpage"
+                if (postprocessfn) {
+                    var fn = window[postprocessfn];
+                    console.log("postprocessfn!");
+                    fn($(this));
+                }
             }
 
             var footer = $(this).closest('.modal-footer');
