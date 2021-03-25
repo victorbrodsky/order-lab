@@ -138,6 +138,13 @@
 
             var reviewHolder = $(this).closest('.transres-review-holder');
 
+//            //click all transres-update-project-specific-btn buttons
+//            reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
+//                //console.log( index + ": " + $( this ).text() );
+//                $( this ).click();
+//                //alert("index="+index);
+//            });
+
             var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
             console.log("comment="+comment);
 
@@ -183,6 +190,16 @@
         //addCommentButtonClickListener();
 
     });
+
+    function transresUpdateProjectSpecificBtn(btnEl) {
+        var reviewHolder = $(btnEl).closest('.transres-review-holder');
+        //click all transres-update-project-specific-btn buttons
+        reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
+            //console.log( index + ": " + $( this ).text() );
+            $( this ).click();
+            //alert("index="+index);
+        });
+    }
 
 
     function transresUpdateIrbExpDate() {

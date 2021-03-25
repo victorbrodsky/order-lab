@@ -192,8 +192,11 @@ class TransResUtil
                     //$generalDataConfirmation = "";
                 //}
 
+                $callBackFunction = ' general-post-process="transresUpdateProjectSpecificBtn" ';
+
                 $thisLink = "<a ".
                     $generalDataConfirmation.
+                    //$callBackFunction.
                     "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
 
