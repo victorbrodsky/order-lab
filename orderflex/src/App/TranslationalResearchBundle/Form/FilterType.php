@@ -167,6 +167,7 @@ class FilterType extends AbstractType
                 'Funded' => 'Funded',
                 'Non-Funded' => 'Non-Funded'
             ),
+            'data' => $this->params['fundingType'],
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));
 
@@ -307,10 +308,6 @@ class FilterType extends AbstractType
             $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
-//        $overBudgetArr = array(
-//            'All' => 'All',
-//            'Over Budget or With No Budget' => 'Over Budget or With No Budget'
-//        );
             $overBudgetArr = array();
             $overBudgetArr['All'] = 'all';
             $overBudgetArr['Over Budget or With No Budget'] = 'over-budget-with-no-budget';
@@ -319,8 +316,10 @@ class FilterType extends AbstractType
             $builder->add('overBudget', ChoiceType::class, array(
                 'label' => false,
                 'required' => false,
+                'multiple' => false,
                 'choices' => $overBudgetArr,
-                'data' => 'all',
+                //'data' => 'all',
+                'data' => $this->params['overBudget'],
                 'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => 'Over Budget Filter'),
             ));
         }

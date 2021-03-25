@@ -209,7 +209,9 @@ class ProjectController extends OrderAbstractController
             'humanName' => $transresUtil->getHumanName(),
             'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash"),
-            'transresPricesList' => $transresPricesList
+            'transresPricesList' => $transresPricesList,
+            'overBudget' => 'all',
+            'fundingType' => null
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -237,12 +239,31 @@ class ProjectController extends OrderAbstractController
             $title = "Active Project Requests with $humanName Expiring Soon";
         }
         if( $routeName == "translationalresearch_active_non_funded_over_budget_project_index" ) {
+            //?filter[projectSpecialty][]=2&filter[projectSpecialty][]=1&filter[projectSpecialty][]=5&
+            //filter[projectSpecialty][]=4&filter[searchId]=&filter[state][]=irb_review&filter[state][]=irb_missinginfo&
+            //filter[state][]=admin_review&filter[state][]=admin_missinginfo&filter[state][]=committee_review&
+            //filter[state][]=final_review&filter[state][]=final_approved&
+            //filter[startDate]=&filter[endDate]=&
+            //filter[searchIrbNumber]=&filter[searchTitle]=&filter[submitter]=&filter[fundingNumber]=&
+            //filter[fundingType]=&filter[searchProjectType]=&filter[exportId]=&
+            //filter[humanTissue]=&filter[exemptIrbApproval]=&
+            //filter[fromExpectedCompletionDate]=&filter[toExpectedCompletionDate]=&
+            //filter[briefDescription]=&filter[fromImplicitExpDate]=&
+            //filter[toImplicitExpDate]=&filter[priceList]=all&
+            //filter[overBudget]=over-budget-with-no-budget
+
+            //do not show all project that have “No Budget Limit” checked
+            //list all projects that are also active and non-funded,
+            // and that have the “Remaining Budget” amount less than zero
+            //AND all projects that have unspent amount of “No Info” (Approved Project Budget is NULL)
+
+            //echo "routeName=$routeName <br>";
             $params['defaultStatesArr'] = array(
                 'irb_review','irb_missinginfo',
                 'admin_review','admin_missinginfo',
                 'committee_review','final_review','final_approved'
             );
-            $params['overBudget'] = true;
+            $params['overBudget'] = 'over-budget-with-no-budget'; //'Over Budget or With No Budget';
             $params['fundingType'] = "Non-Funded";
             $title = "Active Non-Funded Projects Over Budget or With No Budget";
         }
@@ -436,6 +457,10 @@ class ProjectController extends OrderAbstractController
             if( $overBudget != 'all' ) {
 
                 if( $overBudget == 'over-budget-with-no-budget' ) {
+                    //do not show all project that have “No Budget Limit” checked
+                    //list all projects that are also active and non-funded,
+                    // and that have the “Remaining Budget” amount less than zero
+                    //AND all projects that have unspent amount of “No Info” (Approved Project Budget is NULL)
 //                    $dql->andWhere(
 //                        "
 //                        project.approvedProjectBudget IS NULL OR
@@ -447,11 +472,23 @@ class ProjectController extends OrderAbstractController
                     //populate approvedProjectBudget according to the totalCost
                     //$dql->andWhere("project.approvedProjectBudget IS NULL OR (project.total IS NOT NULL AND project.total > project.approvedProjectBudget)");
                     //$dql->andWhere("(project.grandTotal IS NOT NULL AND project.grandTotal > project.approvedProjectBudget)");
-                    $dql->andWhere("
-                        (project.approvedProjectBudget IS NULL AND project.noBudgetLimit = FALSE) 
-                        OR 
-                        (project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget)
-                    ");
+//                    $dql->andWhere("
+//                        project.approvedProjectBudget IS NULL
+//                        OR
+//                        (project.approvedProjectBudget IS NOT NULL AND project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget)
+//                    ");
+
+                    $dql->andWhere(
+                        "project.noBudgetLimit = FALSE".
+                        " AND".
+                        //" project.funded != TRUE"
+                        //." AND".
+                        " (".
+                            "project.approvedProjectBudget IS NULL".
+                            " OR".
+                            " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)".
+                        ")"
+                    );
                 }
 
                 if( $overBudget == 'over-budget' ) {
@@ -462,13 +499,22 @@ class ProjectController extends OrderAbstractController
 //                        project.approvedProjectBudget IS NOT NULL AND project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget
 //                    ");
 
-                    $dql->andWhere("
-                        project.total > project.approvedProjectBudget                   
-                    ");
+//                    $dql->andWhere("
+//                        project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.noBudgetLimit = FALSE AND project.total > project.approvedProjectBudget
+//                    ");
+
+                    $dql->andWhere(
+                        "project.noBudgetLimit = FALSE".
+                        " AND".
+                        " (".
+                        " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)".
+                        ")"
+                    );
                 }
 
                 if( $overBudget == 'with-no-budget' ) {
-                    $dql->andWhere("project.approvedProjectBudget IS NULL OR project.noBudgetLimit = FALSE");
+                    //$dql->andWhere("project.approvedProjectBudget IS NULL OR project.noBudgetLimit = FALSE");
+                    $dql->andWhere("project.approvedProjectBudget IS NULL");
                 }
 
                 $advancedFilter++;
