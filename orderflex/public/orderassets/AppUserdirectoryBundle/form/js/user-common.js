@@ -1171,9 +1171,27 @@ function generalConfirmAction() {
             //post process function, for example click all buttons on transres review page to update specific fields
             if(1) {
                 if( postprocessfn ) {
-                    var fn = window[postprocessfn];
+
+                    // if ($.isFunction(window[postprocessfn])) {
+                    //     alert("Exists: postprocessfn="+postprocessfn);
+                    // } else {
+                    //     alert("Does not exist: postprocessfn="+postprocessfn);
+                    // }
+
+                    //var fn = window[postprocessfn];
                     //console.log("postprocessfn="+postprocessfn);
-                    fn(generalDataConfirmBtn);
+                    //fn(generalDataConfirmBtn);
+
+                    if ($.isFunction(window[postprocessfn])) {
+                        //execute it
+                        console.log("function exists: postprocessfn="+postprocessfn);
+                        //alert("Exists: postprocessfn="+postprocessfn);
+                        var fn = window[postprocessfn];
+                        fn(generalDataConfirmBtn);
+                    } else {
+                        //alert("Does not exist: postprocessfn="+postprocessfn);
+                        console.log("function "+postprocessfn+" does not exist");
+                    }
                 }
             }
         });

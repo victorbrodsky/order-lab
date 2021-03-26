@@ -145,12 +145,12 @@
 //                //alert("index="+index);
 //            });
 
-            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
-            //console.log("comment="+comment);
-
-            if( comment ) {
-                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
-            }
+            //Submit Comment on review btn click
+//            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+//            //console.log("comment="+comment);
+//            if( comment ) {
+//                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+//            }
 
             //get alert if the additional info button clicked and no comment is provided
 //            if( $(this).hasClass('transres-missinginfo') && !comment ) {
@@ -205,6 +205,15 @@
         }
 
         //console.log( "transresUpdateProjectSpecificBtn!" );
+
+        //Submit Comment on review btn click
+        var reviewHolder = $('.transres-review-holder');
+        var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+        //console.log("comment="+comment);
+        if( comment ) {
+            reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+        }
+
         transresUpdateIrbExpDate();
         transresUpdateProjectPriceList();
         transresUpdateApprovedProjectBudget();

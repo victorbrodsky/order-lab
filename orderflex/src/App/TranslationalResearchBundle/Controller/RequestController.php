@@ -169,22 +169,20 @@ class RequestController extends OrderAbstractController
             }
 
             //set project's funded account number
-            //$break = "\r\n"; //text/plain
             $break = "<br>"; //text/html
             $changedMsg = "";
-            //$changedProjectFundNumber = false;
-            $originalFundedAccountNumber = $project->getFundedAccountNumber();
-            $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
-            if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
-                $project->setFundedAccountNumber($fundedAccountNumber);
-                //set formnode field
-//                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
-                $project->setFundedAccountNumber($fundedAccountNumber);
-                //$changedProjectFundNumber = true;
-                $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
-                $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
-                $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
-                $changedMsg = $break.$break . $changedMsg;
+
+            //turn off update "do not update project's fund number related by work request fund number
+            if(0) {
+                $originalFundedAccountNumber = $project->getFundedAccountNumber();
+                $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
+                if ($fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber) {
+                    $project->setFundedAccountNumber($fundedAccountNumber);
+                    $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
+                    $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
+                    $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
+                    $changedMsg = $break . $break . $changedMsg;
+                }
             }
 
             //set submitter to product
@@ -421,20 +419,18 @@ class RequestController extends OrderAbstractController
 
             //set project's funded account number
             $changedMsg = "";
-            //$break = "\r\n";
             $break = "<br>";
-            //$changedProjectFundNumber = false;
-            $originalFundedAccountNumber = $project->getFundedAccountNumber();
-            $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
-            if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
-                $project->setFundedAccountNumber($fundedAccountNumber);
-                //set formnode field
-//                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
-                $project->setFundedAccountNumber($fundedAccountNumber);
-                //$changedProjectFundNumber = true;
-                $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
-                $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
-                $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
+
+            //turn off update "do not update project's fund number related by work request fund number
+            if(0) {
+                $originalFundedAccountNumber = $project->getFundedAccountNumber();
+                $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
+                if ($fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber) {
+                    $project->setFundedAccountNumber($fundedAccountNumber);
+                    $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
+                    $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
+                    $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
+                }
             }
 
             //update updateBy
