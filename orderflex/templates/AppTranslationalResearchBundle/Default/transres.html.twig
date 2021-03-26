@@ -927,6 +927,7 @@
 
                 {% set noBudgetLimit = project.getNoBudgetLimit() %}
                 {{ transres.fieldNoBudgetLimit(noBudgetLimit,"No Budget Limit:",1) }}
+
                 {#Show this "Approved Project Budget" field#}
                 {% set approvedProjectBudget = project.getApprovedProjectBudget() %}
                 {% set totalCost = transres.dollarSignValue(project.getTotalCost()) %}
@@ -1516,7 +1517,11 @@
             >
                 <option value=""></option>
                 {% for priceList in priceLists %}
-                    <option value="{{ priceList.getId() }}">{{ priceList.getName() }}</option>
+                    {% if priceList.getName() == value %}
+                        <option value="{{ priceList.getId() }}" selected>{{ priceList.getName() }}</option>
+                    {% else %}
+                        <option value="{{ priceList.getId() }}">{{ priceList.getName() }}</option>
+                    {% endif %}
                 {% endfor %}
 
                 {#<option value=""></option>#}
@@ -1557,6 +1562,13 @@
     </p>
 {% endmacro %}
 {% macro fieldNoBudgetLimit( value, label, updateButton ) %}
+
+    {% if value %}
+        {% set checked = "checked" %}
+    {% else %}
+        {% set checked = "" %}
+    {% endif %}
+
     <p>
     <div class="row">
         {#<div class="col-xs-3" align="right">#}
@@ -1565,11 +1577,12 @@
             <strong>{{ label|raw }}</strong>
         </div>
         <div class="col-xs-3" style="width: 50px;" align="left">
+            {#value="{{ value }}"#}
             <input id="transres_update_project_noBudgetLimit"
                    type="checkbox"
                    class="form-control"
                    placeholder="No Budget Limit"
-                   value="{{ value }}"
+                   {{ checked }}
             >
         </div>
         <div class="col-xs-3" style="width: 50px;" align="left">

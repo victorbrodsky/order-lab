@@ -196,7 +196,7 @@ class TransResUtil
 
                 $thisLink = "<a ".
                     $generalDataConfirmation.
-                    //$callBackFunction.
+                    $callBackFunction.
                     "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
 

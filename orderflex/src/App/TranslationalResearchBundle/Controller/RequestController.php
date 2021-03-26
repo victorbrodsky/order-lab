@@ -2596,6 +2596,11 @@ class RequestController extends OrderAbstractController
                 $transresUtil->getHumanName()." Expiration Date changed from ".
                 $originalIrbExpDateStr." to ".$value;
             $transresUtil->setEventLog($project,$eventType,$res);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $res
+            );
         }
 
         $response = new Response($res);
@@ -2670,6 +2675,11 @@ class RequestController extends OrderAbstractController
                             " Price list changed from " .
                             $originalPriceList . " to " . $priceList;
                         $transresUtil->setEventLog($project,$eventType,$res);
+
+                        $this->get('session')->getFlashBag()->add(
+                            'notice',
+                            $res
+                        );
                     }
             } else {
                 if( !$originalPriceList ) {
@@ -2725,8 +2735,13 @@ class RequestController extends OrderAbstractController
                 $eventType = "Project Updated";
                 $res = "Project ID " . $project->getOid() . " has been updated: " .
                     "Approved Project Budget changed from " .
-                    $originalApprovedProjectBudget . " to " . $approvedProjectBudget;
+                    $originalApprovedProjectBudget . " to " . $project->getApprovedProjectBudget();
                 $transresUtil->setEventLog($project,$eventType,$res);
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $res
+                );
             } else {
                 $res = "Approved Project Budget for project ID " . $project->getOid() . " is unchanged.";
             }
@@ -2796,6 +2811,11 @@ class RequestController extends OrderAbstractController
                     "No Budget Limit changed from " .
                     $originalNoBudgetLimitStr . " to " . $noBudgetLimitStr;
                 $transresUtil->setEventLog($project,$eventType,$res);
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $res
+                );
             } else {
                 $res = "No Budget Limit for project ID " . $project->getOid() . " is unchanged.";
             }

@@ -949,6 +949,7 @@ class Project {
      */
     public function setApprovedProjectBudget($approvedProjectBudget)
     {
+        $approvedProjectBudget = $this->strToDecimal($approvedProjectBudget);
         $this->approvedProjectBudget = $approvedProjectBudget;
     }
 

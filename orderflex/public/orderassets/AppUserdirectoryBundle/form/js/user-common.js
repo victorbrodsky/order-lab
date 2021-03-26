@@ -1156,22 +1156,26 @@ function generalConfirmAction() {
 
         $('#generalDataConfirmModal').modal({show:true});
 
+        //post process function, for example click all buttons on transres review page to update specific fields
+        var generalDataConfirmBtn = $(this);
+        var postprocessfn = generalDataConfirmBtn.attr('general-post-process'); //general-post-process=transresUpdateProjectSpecificBtn
+
         //add listnere to ok button to "Please wait ..." and disable button on click
         $('.general-data-confirm-ok').on('click', function(event){
-            //alert("on modal js: dataConfirmOK clicked");
-
-            //post process function, for example click all buttons on transres review page to update specific fields
-            if(0) {
-                var postprocessfn = $(this).attr('general-post-process'); //for example: "refreshpage"
-                if (postprocessfn) {
-                    var fn = window[postprocessfn];
-                    console.log("postprocessfn!");
-                    fn($(this));
-                }
-            }
+            //console.log("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
+            //alert("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
 
             var footer = $(this).closest('.modal-footer');
             footer.html('Please wait ...');
+
+            //post process function, for example click all buttons on transres review page to update specific fields
+            if(1) {
+                if( postprocessfn ) {
+                    var fn = window[postprocessfn];
+                    //console.log("postprocessfn="+postprocessfn);
+                    fn(generalDataConfirmBtn);
+                }
+            }
         });
 
         return false;

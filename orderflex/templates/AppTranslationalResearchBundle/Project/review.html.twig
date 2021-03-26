@@ -146,7 +146,7 @@
 //            });
 
             var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
-            console.log("comment="+comment);
+            //console.log("comment="+comment);
 
             if( comment ) {
                 reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
@@ -160,9 +160,9 @@
 //            }
 
             ////////// Update IRB Expiration Date by transres-irb_review //////////
-            if( $(this).hasClass('transres-irb_review') ) {
-                transresUpdateIrbExpDate();
-            }
+//            if( $(this).hasClass('transres-irb_review') ) {
+//                transresUpdateIrbExpDate();
+//            }
             ////////// EOF Update IRB Expiration Date //////////
 
             console.log("done review");
@@ -193,13 +193,22 @@
 
     //TODO: use 'general-post-process=transresUpdateProjectSpecificBtn' on modal to call this function after modal's "OK" clicked
     function transresUpdateProjectSpecificBtn(btnEl) {
-        var reviewHolder = $(btnEl).closest('.transres-review-holder');
-        //click all transres-update-project-specific-btn buttons
-        reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
-            //console.log( index + ": " + $( this ).text() );
-            $( this ).click();
-            //alert("index="+index);
-        });
+
+        if(0) {
+            var reviewHolder = $(btnEl).closest('.transres-review-holder');
+            //click all transres-update-project-specific-btn buttons
+            reviewHolder.find('.transres-update-project-specific-btn').each(function (index) {
+                //console.log( index + ": " + $( this ).text() );
+                $(this).click();
+                //alert("index="+index);
+            });
+        }
+
+        //console.log( "transresUpdateProjectSpecificBtn!" );
+        transresUpdateIrbExpDate();
+        transresUpdateProjectPriceList();
+        transresUpdateApprovedProjectBudget();
+        transresUpdateNoBudgetLimit();
     }
 
 
@@ -213,25 +222,27 @@
         var irbExpDateEl = $('#transres_irbExpirationDate');
         if( irbExpDateEl && irbExpDateEl.length > 0 ) {
             irbExpDate = irbExpDateEl.val();
-            console.log("transres-review-submit: irbExpDate=" + irbExpDate);
+            //console.log("transres-review-submit: irbExpDate=" + irbExpDate);
             if( !irbExpDate ) {
                 return false;
             }
 
             projectId = $("#projectid").val();
             var irbExpirationDate = $("#project-irbExpirationDate").val(); //MM/dd/yyyy
-            console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
+            //console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
             if( irbExpDate == irbExpirationDate ) {
                 return false;
             }
             //return false;
             //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+        } else {
+            return false;
         }
 
-        console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+        //console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
 
         if( projectId == null || irbExpDate == null ) {
-            console.log("return false: projectId or irbExpDate is null");
+            //console.log("return false: projectId or irbExpDate is null");
             return false;
         }
 
@@ -248,7 +259,7 @@
             //async: asyncflag
             async: false
         }).success(function(response) {
-            console.log(response);
+            //console.log(response);
             if( response != "NotOK" ) { //if( response == "NotOK" ) ???
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
@@ -267,7 +278,16 @@
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
-        var priceListData = $('#transres_project_pricelist').select2('data');
+        var priceListEl = $('#transres_project_pricelist');
+
+        if( priceListEl && priceListEl.length > 0 ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
+        var priceListData = priceListEl.select2('data');
         var priceListId = null;
         if( priceListData ) {
             priceListId = priceListData.id;
@@ -310,7 +330,16 @@
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
-        var approvedProjectBudget = $('#transres_update_project_approvedProjectBudget').val();
+        var approvedProjectBudgetEl = $('#transres_update_project_approvedProjectBudget');
+
+        if( approvedProjectBudgetEl && approvedProjectBudgetEl.length > 0 ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
+        var approvedProjectBudget = approvedProjectBudgetEl.val();
 
         //if( priceListId ) {
         var projectId = $("#projectid").val();
@@ -349,9 +378,18 @@
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
+        var noBudgetLimitEl = $('#transres_update_project_noBudgetLimit');
+
+        if( noBudgetLimitEl && noBudgetLimitEl.length > 0 ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
         //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
         var noBudgetLimit = 0;
-        if( $('#transres_update_project_noBudgetLimit').is(":checked") ) {
+        if( noBudgetLimitEl.is(":checked") ) {
             // it is checked
             noBudgetLimit = 1;
         }
