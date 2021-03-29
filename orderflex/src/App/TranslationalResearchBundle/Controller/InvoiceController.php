@@ -195,25 +195,25 @@ class InvoiceController extends OrderAbstractController
 //                    )
 //                );
 //            }
-//            if( $invoicetype == "My Invoices" ) {
-//                //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
-//                return $this->redirectToRoute(
-//                    'translationalresearch_invoice_index_filter',
-//                    array(
-//                        //'filter[submitter]' => $user->getId(),
-//                        //'filter[salesperson]' => $user->getId(),
-//                        //'filter[principalInvestigator]' => $user->getId(),
-//
-//                        //'filter[status][0]' => "Unpaid/Issued",
-//                        //'filter[status][1]' => "Paid in Full",
-//                        //'filter[status][2]' => "Paid Partially",
-//                        //'filter[status][3]' => 'Refunded Fully',
-//                        //'filter[status][4]' => 'Refunded Partially',
-//
-//                        'title' => $invoicetype,
-//                    )
-//                );
-//            }
+            if( $invoicetypeLowerCase == strtolower("My Invoices") ) {
+                //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        //'filter[submitter]' => $user->getId(),
+                        //'filter[salesperson]' => $user->getId(),
+                        //'filter[principalInvestigator]' => $user->getId(),
+
+                        //'filter[status][0]' => "Unpaid/Issued",
+                        //'filter[status][1]' => "Paid in Full",
+                        //'filter[status][2]' => "Paid Partially",
+                        //'filter[status][3]' => 'Refunded Fully',
+                        //'filter[status][4]' => 'Refunded Partially',
+
+                        'title' => $invoicetype,
+                    )
+                );
+            }
             if ($invoicetypeLowerCase == strtolower("My Outstanding Invoices")) {
                 //all outstanding Invoices for all Work Requests issued, but not paid for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
@@ -502,7 +502,8 @@ class InvoiceController extends OrderAbstractController
 //            $status = "Pending";
 //        }
 
-        if ($invoicetypeLowerCase == strtolower("My Invoices")) {
+        //if ($invoicetypeLowerCase == strtolower("My Invoices")) {
+        if( strtolower($filterTitle) == strtolower("My Invoices") ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
