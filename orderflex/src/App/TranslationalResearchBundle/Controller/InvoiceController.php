@@ -519,7 +519,7 @@ class InvoiceController extends OrderAbstractController
             //exit($title);
         }
 
-        if ($filterTitle == "My Outstanding Invoices") {
+        if( strtolower($filterTitle) == strtolower("My Outstanding Invoices") ) {
             //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
             $dqlParameters["userId"] = $user->getId();
