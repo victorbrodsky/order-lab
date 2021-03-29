@@ -981,7 +981,7 @@ class TransResRequest {
                     //$subsidy = $subsidy + $invoice->getSubsidy();
                     $subsidy = $subsidy + $invoiceSubsidy;
 
-                    $grandTotal = $grandTotal + $total + $invoiceSubsidy;
+                    $grandTotal = $grandTotal + $invoiceTotal + $invoiceSubsidy;
 
                     if( $invoiceSubsidy > 0 ) {
                         //sum of the “Paid”, “Due” and “Subsidy”
