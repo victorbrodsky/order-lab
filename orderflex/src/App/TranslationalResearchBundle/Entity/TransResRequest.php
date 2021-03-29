@@ -947,8 +947,8 @@ class TransResRequest {
         $paid = 0.00;
         $due = 0.00;
         $subsidy = 0.00;
-        $grandTotal = 0.00;
-        $sumTotal = 0.00;       //real financial total: //Paid+Due+Positive Subsidy
+        $grandTotal = 0.00;     //Value
+        $sumTotal = 0.00;       //real financial Total: //Paid+Due+Positive Subsidy
 
         //check if progressState != draft, canceled
         $progressState = $this->getProgressState();
@@ -981,7 +981,7 @@ class TransResRequest {
                     //$subsidy = $subsidy + $invoice->getSubsidy();
                     $subsidy = $subsidy + $invoiceSubsidy;
 
-                    $grandTotal = $grandTotal + $invoiceTotal + $invoiceSubsidy;
+                    $grandTotal = $grandTotal + $invoiceTotal + $invoiceSubsidy; //Value
 
                     if( $invoiceSubsidy > 0 ) {
                         //sum of the “Paid”, “Due” and “Subsidy”

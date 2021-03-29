@@ -69,6 +69,12 @@
 
     <br>
 
+    {% if transres_util.isAdminOrPrimaryReviewer() %}
+        {% set showValue = true %}
+    {% else %}
+        {% set showValue = false %}
+    {% endif %}
+
     {#{% stopwatch "### table ###" %}#}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="table table-hover table-condensed text-left">
@@ -86,6 +92,10 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
+                {% if showValue %}
+                    {#grandTotal#}
+                    <th title="Work Request's value (billed and unbilled)">Value</th>
+                {% endif %}
                 {#<th title="Total calculated work request's default fee">Total</th>#}
                 <th title="Total amount of the most recent invoice">Total</th>
                 <th title="Number of all invoices">Invoices</th>
@@ -192,25 +202,52 @@
 
                 {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
                 {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
-                {% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}
-                <td>
-                    {#Total#}
-                    {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
-                    {#Bing: Total fees should use external (default) pricing#}
-                    {#Total is equal to charge+subsidy, where subsidy does not include admin fee.#}
-                    {#If invoice is null, total is equal to expected total#}
-                    {#{% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}#}
-                    {% if invoicesInfos.grandTotal %}
-                        {#${{ invoicesInfos.grandTotal }}#}
-                        {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
-                    {% endif %}
-                    {% if requestValue != invoicesInfos.grandTotal %}
-                        {% if requestValue > 0 or
-                            (requestValue < 0 and ( is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') ))
-                        %}
-                            {#(value: ${{ requestValue }})#}
-                            (value: {{transres.dollarSignValue(requestValue)}})
+                {#{% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}#}
+
+                {#{% if 0 %}#}
+                    {#<td>#}
+                        {#Total#}
+                        {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
+                        {#Bing: Total fees should use external (default) pricing#}
+                        {#Total is equal to charge+subsidy, where subsidy does not include admin fee.#}
+                        {#If invoice is null, total is equal to expected total#}
+                        {#{% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}#}
+                        {#{% if invoicesInfos.grandTotal %}#}
+                            {#${{ invoicesInfos.grandTotal }}#}
+                            {#{{ transres.dollarSignValue(invoicesInfos.grandTotal) }}#}
+                        {#{% endif %}#}
+                        {#{% if requestValue != invoicesInfos.grandTotal %}#}
+                            {#{% if requestValue > 0 or#}
+                            {#(requestValue < 0 and ( is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') ))#}
+                            {#%}#}
+                                {#(value: ${{ requestValue }})#}
+                                {#(value: {{transres.dollarSignValue(requestValue)}})#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                {#{% endif %}#}
+
+                {#Value - only for TRP admin role#}
+                {% if showValue %}
+                    <td>
+                        {% if invoicesInfos.grandTotal is not null %}
+                            {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
+                            {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
+                        {% else %}
+                            {% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}
+                            {{transres.dollarSignValue(requestValue)}}
                         {% endif %}
+                    </td>
+                {% endif %}
+
+                {#
+                Total (Paid+Due+Subsidy): sum of the “Paid”, “Due” and “Subsidy” columns,
+                except, when the Subsidy is negative - in that case show the value in this column as a
+                sum of only “Paid” and “Due” columns (not the Subsidy)
+                #}
+                <td>
+                    {% if invoicesInfos.sumTotal is not null %}
+                        {{ transres.dollarSignValue(invoicesInfos.sumTotal) }}
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}
