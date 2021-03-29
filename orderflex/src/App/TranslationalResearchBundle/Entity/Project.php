@@ -911,22 +911,6 @@ class Project {
         $this->noBudgetLimit = $noBudgetLimit;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getGrandTotal()
-//    {
-//        return $this->grandTotal;
-//    }
-//
-//    /**
-//     * @param mixed $grandTotal
-//     */
-//    public function setGrandTotal($grandTotal)
-//    {
-//        $this->grandTotal = $grandTotal;
-//    }
-
     /**
      * @return mixed
      */
@@ -1012,7 +996,7 @@ class Project {
         return NULL;
     }
     
-    public function getRemainingBalance( $total=NULL ) {
+    public function getRemainingBudget( $total=NULL ) {
 
         //return NULL; //testing
 
@@ -2381,6 +2365,7 @@ class Project {
         $subsidy = 0.00;
         $countRequest = 0;
         $grandTotal = 0.00;
+        $sumTotal = 0.00;
 
         foreach($this->getRequests() as $request) {
 
@@ -2409,7 +2394,16 @@ class Project {
                 $paid = $paid + $res['paid'];
                 $due = $due + $res['due'];
                 $subsidy = $subsidy + $res['subsidy'];
-                $grandTotal = $grandTotal + $res['grandTotal'];
+                $grandTotal = $grandTotal + $res['grandTotal']; //Value
+
+//                if( $res['subsidy'] > 0 ) {
+//                    //sum of the “Paid”, “Due” and “Subsidy”
+//                    $sumTotal = $sumTotal + $res['paid'] + $res['due'] + $res['subsidy']; //Paid+Due+Subsidy
+//                } else {
+//                    //when the Subsidy is negative - sum of only “Paid” and “Due” columns (not the Subsidy).
+//                    $sumTotal = $sumTotal + $res['paid'] + $res['due']; //Paid+Due+Positive Subsidy
+//                }
+                $sumTotal = $sumTotal + $res['sumTotal'];
             } else {
                 //No invoice. Use work request value instead.
                 $subTotal = $request->getTransResRequestSubTotal();
@@ -2418,10 +2412,24 @@ class Project {
                 //$paid
                 //$due = $due + $subTotal; //Include
                 //$subsidy = $subsidy + $res['subsidy'];
-                $subsidy = $subsidy + $request->calculateSubsidyByRequest();
+                $requestSubsidy = $request->calculateSubsidyByRequest();
+                $subsidy = $subsidy + $requestSubsidy;
+
                 //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
-                $grandTotal = $subTotal + $subsidy; //"Total" in the project list
+                $grandTotal = $grandTotal + $subTotal + $requestSubsidy; //"Value" in the project list
+
+                //$sumTotal is a real financial total. Do not calculate $sumTotal if invoice is not issued.
+//                if( $requestSubsidy > 0 ) {
+//                    //sum of the “Paid”, “Due” and “Subsidy”
+//                    $sumTotal = $sumTotal + $subTotal + $requestSubsidy; //Paid+Due+Subsidy
+//                } else {
+//                    //when the Subsidy is negative - sum of only “Paid” and “Due” columns (not the Subsidy).
+//                    $sumTotal = $sumTotal + $subTotal; //Paid+Due+Subsidy
+//                }
             }
+
+
+
             $countRequest++;
         }
         //echo $project->getOid().": countRequest=$countRequest: ";
@@ -2440,6 +2448,7 @@ class Project {
             $due = NULL;
             $subsidy = NULL;
             $grandTotal = NULL;
+            $sumTotal = NULL;
         }
         //echo "total=$total<br>";
 
@@ -2449,6 +2458,7 @@ class Project {
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
         $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
+        $invoicesInfos['sumTotal'] = $sumTotal;
 
         return $invoicesInfos;
     }

@@ -213,6 +213,15 @@
 
     {#check performance   scan_perSiteSettings?     #}
     {% if projectsTableDisable is not defined %}
+
+        {% if transres_util.isAdminOrPrimaryReviewer() %}
+            {% set showRemainingBudget = true %}
+            {% set showValue = true %}
+        {% else %}
+            {% set showRemainingBudget = false %}
+            {% set showValue = false %}
+        {% endif %}
+
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     {#<table class="records_list table table-condensed table-hover text-left my-table-class">#}
     <table class="table table-condensed table-hover text-left">
@@ -240,14 +249,16 @@
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
 
-                {% if transres_util.isAdminOrPrimaryReviewer() %}
+                {% if showRemainingBudget %}
                     <th title="Difference between approved project budget and project's total">Remaining Budget</th>
-                    {% set showRemainingBudget = true %}
-                {% else %}
-                    {% set showRemainingBudget = false %}
                 {% endif %}
 
-                <th title="Total amount of the most recent issued invoices including subsidy">Total</th>
+                {% if showValue %}
+                    {#grandTotal#}
+                    <th title="Project's value (billed and unbilled amount)">Value</th>
+                {% endif %}
+
+                <th title="Total amount of the most recent issued invoices including subsidy (Paid + Due + Positive Subsidy)">Total</th>
                 <th title="Total amount of the most recent issued invoices charge to the customer">Charge</th>
                 <th title="Paid amount of the most recent issued invoices">Paid</th>
                 <th title="Due amount of the most recent issued invoices">Due</th>
@@ -308,18 +319,8 @@
             {% set invoicesInfos = transres_util.getInvoicesInfosByProject(project) %}
 
             {% if showRemainingBudget %}
-                {#{% if project.getApprovedProjectBudget() is not null %}#}
-                    {#Remaining Budget = project.approvedProjectBudget - invoicesInfos.grandTotal#}
-                    {#{% set remainingBudget = project.getApprovedProjectBudget() - invoicesInfos.grandTotal %}#}
-                    {#{% if remainingBudget < 0 %}#}
-                        {##F89C9C#}
-                        {#{% set trclassname = "table-row-budget-negative" %}#}
-                    {#{% endif %}#}
-                {#{% else %}#}
-                    {#{% set remainingBudget = "No Info" %}#}
-                {#{% endif %}#}
-                {#{% set remainingBudget = project.getRemainingBalance(invoicesInfos.grandTotal) %}#}
-                {% set remainingBudget = project.getRemainingBalance() %}
+                {#{% set remainingBudget = project.getRemainingBudget(invoicesInfos.grandTotal) %}#}
+                {% set remainingBudget = project.getRemainingBudget() %}
                 {% if remainingBudget < 0 %}
                     {% set trclassname = "table-row-budget-negative" %}
                 {% endif %}
@@ -441,34 +442,49 @@
                     </td>
                 {% endif %}
 
-                {#Total of Issued Invoices including subsidy#}
+                {#Value - only for TRP admin role#}
+                {% if showValue %}
+                    <td>
+                        {% if invoicesInfos.grandTotal is not null %}
+                            {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
+                            {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {#
+                Total (Paid+Due+Subsidy): sum of the “Paid”, “Due” and “Subsidy” columns,
+                except, when the Subsidy is negative - in that case show the value in this column as a
+                sum of only “Paid” and “Due” columns (not the Subsidy)
+                #}
                 <td>
-                    {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
-                    {% if invoicesInfos.grandTotal is not null %}
-                        {#${{ invoicesInfos.grandTotal }}#}
-                        {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
+                    {% if invoicesInfos.sumTotal is not null %}
+                        {{ transres.dollarSignValue(invoicesInfos.sumTotal) }}
                     {% endif %}
                 </td>
-                {#Total charge of Issued Invoices#}
+
+                {#Charge#}
                 <td>
                     {% if invoicesInfos.total is not null %}
                         {#${{ invoicesInfos.total }}#}
                         {{ transres.dollarSignValue(invoicesInfos.total) }}
                     {% endif %}
                 </td>
-                {#Subtotal of Issued Paid Invoices#}
+                {#Paid#}
                 <td>
                     {% if invoicesInfos.paid is not null %}
                         {#${{ invoicesInfos.paid }}#}
                         {{ transres.dollarSignValue(invoicesInfos.paid) }}
                     {% endif %}
                 </td>
+                {#Due#}
                 <td>
                     {% if invoicesInfos.due is not null %}
                         {#${{ invoicesInfos.due }}#}
                         {{ transres.dollarSignValue(invoicesInfos.due) }}
                     {% endif %}
                 </td>
+                {#Subsidy#}
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
                         {#${{ invoicesInfos.subsidy }}#}

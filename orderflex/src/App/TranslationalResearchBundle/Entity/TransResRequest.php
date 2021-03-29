@@ -948,6 +948,7 @@ class TransResRequest {
         $due = 0.00;
         $subsidy = 0.00;
         $grandTotal = 0.00;
+        $sumTotal = 0.00;       //real financial total: //Paid+Due+Positive Subsidy
 
         //check if progressState != draft, canceled
         $progressState = $this->getProgressState();
@@ -966,15 +967,30 @@ class TransResRequest {
             foreach ($this->getInvoices() as $invoice) {
                 if ($invoice->getLatestVersion() && $invoice->getStatus() != 'Canceled') {
                     $count++;
-                    $total = $total + $invoice->getTotal();
-                    $paid = $paid + $invoice->getPaid();
+
+                    $invoiceTotal = $invoice->getTotal();
+                    $invoicePaid = $invoice->getPaid();
+                    $invoiceDue = $invoice->getDue();
+                    $invoiceSubsidy = $this->getInvoiceSubsidy($invoice, $admin);
+
+                    $total = $total + $invoiceTotal;
+                    $paid = $paid + $invoicePaid;
                     //echo "paid=$paid <br>";
-                    $due = $due + $invoice->getDue();
+                    $due = $due + $invoiceDue;
 
                     //$subsidy = $subsidy + $invoice->getSubsidy();
-                    $subsidy = $subsidy + $this->getInvoiceSubsidy($invoice, $admin);
+                    $subsidy = $subsidy + $invoiceSubsidy;
 
-                    $grandTotal = $total + $subsidy;
+                    $grandTotal = $grandTotal + $total + $invoiceSubsidy;
+
+                    if( $invoiceSubsidy > 0 ) {
+                        //sum of the “Paid”, “Due” and “Subsidy”
+                        $sumTotal = $sumTotal + $invoicePaid + $invoiceDue + $invoiceSubsidy; //real financial total: //Paid+Due+Positive Subsidy
+                    } else {
+                        //when the Subsidy is negative - sum of only “Paid” and “Due” columns (not the Subsidy).
+                        $sumTotal = $sumTotal + $invoicePaid + $invoiceDue; //Paid+Due
+                    }
+
                 }//if invoice latest
             }//foreach invoice
         }//$skip == false
@@ -987,13 +1003,15 @@ class TransResRequest {
             $paid = $this->toDecimal($paid);
             $due = $this->toDecimal($due);
             $subsidy = $this->toDecimal($subsidy);
-            $grandTotal = $this->toDecimal($grandTotal);
+            $grandTotal = $this->toDecimal($grandTotal);    //Value: total + subsidy (?)
+            $sumTotal = $this->toDecimal($sumTotal);
         } else {
             $total = null;
             $paid = null;
             $due = null;
             $subsidy = null;
             $grandTotal = null;
+            $sumTotal = null;
         }
 
         //echo "paid=$paid<br>";
@@ -1004,6 +1022,7 @@ class TransResRequest {
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
         $invoicesInfos['grandTotal'] = $grandTotal;
+        $invoicesInfos['sumTotal'] = $sumTotal;
 
         return $invoicesInfos;
     }
