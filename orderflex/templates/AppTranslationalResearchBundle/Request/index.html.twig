@@ -274,7 +274,13 @@
                         {#expected Subsidy amount calculated by work request#}
                         {#${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}#}
                         {#{{ transres.dollarSignValue(transres_request_util.calculateSubsidyByRequest(transresRequest)) }}#}
-                        {{ transres.dollarSignValue(transresRequest.calculateSubsidyByRequest()) }}
+                        {% set calculatedSubsidy = transresRequest.calculateSubsidyByRequest() %}
+                        {% if calculatedSubsidy != 0 %}
+                            {{ transres.dollarSignValue(transresRequest.calculateSubsidyByRequest()) }} (expected)
+                        {% else %}
+                            {#show nothing#}
+                        {% endif %}
+
                     {% endif %}
                 </td>
                 {#{% endstopwatch %}#}
