@@ -995,30 +995,7 @@ class Project {
         }
         return NULL;
     }
-    
-    public function getRemainingBudget( $total=NULL ) {
 
-        //return NULL; //testing
-
-        if( $total === NULL ) {
-            $total = $this->getTotal();
-        }
-
-        $approvedProjectBudget = $this->getApprovedProjectBudget();
-
-        if( $approvedProjectBudget === NULL ) {
-            $remainingBudget = NULL; //"No Info";
-        } else {
-            if( $total ) {
-                $remainingBudget = $this->toDecimal($approvedProjectBudget) - $this->toDecimal($total);
-            } else {
-                $remainingBudget = $this->toDecimal($approvedProjectBudget);
-            }
-        }
-
-        //echo $this->getId().": approvedProjectBudget=$approvedProjectBudget, total=$total, remainingBudget=$remainingBudget<br>";
-        return $remainingBudget;
-    }
     public function toDecimal($number) {
 //        if( !$number ) {
 //            return $number;
@@ -2401,15 +2378,13 @@ class Project {
                 $subTotal = $request->getTransResRequestSubTotal();
                 $count++;
                 $requestSubsidy = $request->calculateSubsidyByRequest();
-                $subsidy = $subsidy + $requestSubsidy;
+                //$subsidy = $subsidy + $requestSubsidy;
 
                 //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
                 $grandTotal = $grandTotal + $subTotal + $requestSubsidy; //"Value" in the project list
 
                 //$sumTotal is a real financial total. Do not calculate $sumTotal if invoice is not issued.
             }
-
-
 
             $countRequest++;
         }
@@ -2442,6 +2417,30 @@ class Project {
         $invoicesInfos['sumTotal'] = $sumTotal;
 
         return $invoicesInfos;
+    }
+
+    public function getRemainingBudget( $total=NULL ) {
+
+        //return NULL; //testing
+
+        if( $total === NULL ) {
+            $total = $this->getTotal();
+        }
+
+        $approvedProjectBudget = $this->getApprovedProjectBudget();
+
+        if( $approvedProjectBudget === NULL ) {
+            $remainingBudget = NULL; //"No Info";
+        } else {
+            if( $total ) {
+                $remainingBudget = $this->toDecimal($approvedProjectBudget) - $this->toDecimal($total);
+            } else {
+                $remainingBudget = $this->toDecimal($approvedProjectBudget);
+            }
+        }
+
+        //echo $this->getId().": approvedProjectBudget=$approvedProjectBudget, total=$total, remainingBudget=$remainingBudget<br>";
+        return $remainingBudget;
     }
 
     public function updateProjectTotal()
