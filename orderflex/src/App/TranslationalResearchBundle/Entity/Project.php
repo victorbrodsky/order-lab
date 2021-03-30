@@ -2366,44 +2366,40 @@ class Project {
             //$res = $transresRequestUtil->getInvoicesInfosByRequest($request);
             $res = $request->getInvoicesInfosByRequest($admin);
             if( $res['count'] > 0 ) {
-                $count = $count + $res['count'];
-                $total = $total + $res['total'];
-                $paid = $paid + $res['paid'];
-                $due = $due + $res['due'];
-                $subsidy = $subsidy + $res['subsidy'];
-                $grandTotal = $grandTotal + $res['grandTotal']; //Value
-                $sumTotal = $sumTotal + $res['sumTotal'];
+                $count = $count + $res['count'];                //invoice count
+                $total = $total + $res['total'];                //invoice total (Charge)
+                $paid = $paid + $res['paid'];                   //invoice paid
+                $due = $due + $res['due'];                      //invoice due
+                $subsidy = $subsidy + $res['subsidy'];          //invoice subsidy
+                $grandTotal = $grandTotal + $res['grandTotal']; //Project Value
+                $sumTotal = $sumTotal + $res['sumTotal'];       //Project Total including subsidy (Paid+Due+Positive Subsidy)
             } else {
                 //No invoice. Use work request value instead.
                 $subTotal = $request->getTransResRequestSubTotal();
-                $count++;
+                //$count++;
                 $requestSubsidy = $request->calculateSubsidyByRequest();
-                //$subsidy = $subsidy + $requestSubsidy;
-
                 //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
                 $grandTotal = $grandTotal + $subTotal + $requestSubsidy; //"Value" in the project list
-
-                //$sumTotal is a real financial total. Do not calculate $sumTotal if invoice is not issued.
             }
 
             $countRequest++;
         }
         //echo $project->getOid().": countRequest=$countRequest: ";
 
-        if( $count > 0 && $countRequest > 0 ) {
+        $grandTotal = $this->toDecimal($grandTotal);
+
+        if( $count > 0 ) {
             $total = $this->toDecimal($total);
             $paid = $this->toDecimal($paid);
             $due = $this->toDecimal($due);
             $subsidy = $this->toDecimal($subsidy);
-            $grandTotal = $this->toDecimal($grandTotal);
-            //echo "value<br>";
+            $sumTotal = $this->toDecimal($sumTotal);
         } else {
             //echo "total=$total<br>";
             $total = NULL;
             $paid = NULL;
             $due = NULL;
             $subsidy = NULL;
-            $grandTotal = NULL;
             $sumTotal = NULL;
         }
         //echo "total=$total<br>";

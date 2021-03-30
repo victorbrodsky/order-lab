@@ -943,7 +943,7 @@ class TransResRequest {
 
         $invoicesInfos = array();
         $count = 0;
-        $total = 0.00;
+        $total = 0.00;          //Charge
         $paid = 0.00;
         $due = 0.00;
         $subsidy = 0.00;

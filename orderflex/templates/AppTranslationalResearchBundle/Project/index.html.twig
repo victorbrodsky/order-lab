@@ -409,9 +409,6 @@
                 </td>
 
                 {#Invoices #}
-                {#<td>#}
-                    {#{{ invoicesInfos.count }}#}
-                {#</td>#}
                 {#all issued invoices associated with the project#}
                 <td class="rowlink-skip">
                     {% if invoicesInfos.count > 0 and transres_permission_util.areInvoicesShowableToUser(project) %}
