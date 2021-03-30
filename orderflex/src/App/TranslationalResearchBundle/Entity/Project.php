@@ -2419,6 +2419,12 @@ class Project {
 
         //return NULL; //testing
 
+        $remainingBudget = NULL; //"No Info";
+
+        if( $this->getNoBudgetLimit() === true ) {
+            return $remainingBudget;
+        }
+
         if( $total === NULL ) {
             $total = $this->getTotal();
         }
@@ -2426,7 +2432,7 @@ class Project {
         $approvedProjectBudget = $this->getApprovedProjectBudget();
 
         if( $approvedProjectBudget === NULL ) {
-            $remainingBudget = NULL; //"No Info";
+            //null
         } else {
             if( $total ) {
                 $remainingBudget = $this->toDecimal($approvedProjectBudget) - $this->toDecimal($total);

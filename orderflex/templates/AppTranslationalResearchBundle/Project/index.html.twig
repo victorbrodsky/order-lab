@@ -484,8 +484,12 @@
                 {#Subsidy#}
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
-                        {#${{ invoicesInfos.subsidy }}#}
-                        {{ transres.dollarSignValue(invoicesInfos.subsidy) }}
+                        {{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}
+                        {#{% if invoicesInfos.subsidy > 0 %}#}
+                            {#{{ transres.dollarSignValue(invoicesInfos.subsidy) }}#}
+                        {#{% else %}#}
+                            {#{{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}#}
+                        {#{% endif %}#}
                     {% endif %}
                 </td>
 
