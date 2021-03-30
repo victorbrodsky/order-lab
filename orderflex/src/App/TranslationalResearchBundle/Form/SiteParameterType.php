@@ -410,6 +410,12 @@ class SiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
+
+        $builder->add('updateProjectFundNumber', null, array(
+            'label' => "Update parent Project Request’s Fund Number when New Work request’s number is submitted:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
     }
     
     /**

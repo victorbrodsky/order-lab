@@ -173,6 +173,7 @@ class RequestController extends OrderAbstractController
             $changedMsg = "";
 
             //turn off update "do not update project's fund number related by work request fund number
+            //use updateProjectFundNumber
             if(0) {
                 $originalFundedAccountNumber = $project->getFundedAccountNumber();
                 $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
@@ -422,6 +423,7 @@ class RequestController extends OrderAbstractController
             $break = "<br>";
 
             //turn off update "do not update project's fund number related by work request fund number
+            //use updateProjectFundNumber
             if(0) {
                 $originalFundedAccountNumber = $project->getFundedAccountNumber();
                 $fundedAccountNumber = $transresRequest->getFundedAccountNumber();

@@ -440,6 +440,12 @@ class TransResSiteParameters {
      */
     private $showRemittance;
 
+    /**
+     * Update parent Project Request’s Fund Number when New Work request’s number is submitted
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $updateProjectFundNumber;
 
 //    /**
 //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
@@ -1461,6 +1467,22 @@ class TransResSiteParameters {
     public function setShowRemittance($showRemittance)
     {
         $this->showRemittance = $showRemittance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateProjectFundNumber()
+    {
+        return $this->updateProjectFundNumber;
+    }
+
+    /**
+     * @param mixed $updateProjectFundNumber
+     */
+    public function setUpdateProjectFundNumber($updateProjectFundNumber)
+    {
+        $this->updateProjectFundNumber = $updateProjectFundNumber;
     }
     
 
