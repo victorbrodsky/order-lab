@@ -225,7 +225,17 @@
                     {% endif %}
                     {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
 
-                    {{ formmacros.field(form.totalCost) }}
+                    {#{{ formmacros.field(form.totalCost) }}#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <label class="required">{{ form.totalCost.vars.label|raw }}</label>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            {{ form_widget(form.totalCost) }}
+                        </div>
+                    </div>
+                    </p>
 
                     {% if form.noBudgetLimit is defined %}
                         {{ formmacros.checkbox(form.noBudgetLimit) }}

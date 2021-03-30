@@ -1120,7 +1120,7 @@ class ProjectController extends OrderAbstractController
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
-        $form = $this->createProjectForm($project,$cycle,$request);
+        $form = $this->createProjectForm($project,$cycle,$request); //new
 
         $messageTypeId = true;//testing
         $formnodetrigger = 1;
@@ -1333,7 +1333,7 @@ class ProjectController extends OrderAbstractController
         $originalProjectState = $project->getState();
         ///////////// EOF get originals /////////////
 
-        $form = $this->createProjectForm($project,$cycle,$request);
+        $form = $this->createProjectForm($project,$cycle,$request); //edit
 
         $messageTypeId = true;//testing
         $formnodetrigger = 1;
@@ -2275,6 +2275,13 @@ class ProjectController extends OrderAbstractController
 
         $institutionName = $transresUtil->getTransresSiteProjectParameter('institutionName',$project);
 
+        $feeScheduleUrl = $this->container->get('router')->generate(
+            'translationalresearchfeesschedule-list',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $feeScheduleLink = " <a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -2293,7 +2300,8 @@ class ProjectController extends OrderAbstractController
             'submitIrbReview' => false,
             'reSubmitReview' => false,
             'stateChoiceArr'=>$stateChoiceArr,
-            'institutionName'=>$institutionName
+            'institutionName'=>$institutionName,
+            'feeScheduleLink' => $feeScheduleLink
         );
 
         $params['admin'] = false;

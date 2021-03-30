@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProjectType extends AbstractType
 {
@@ -262,9 +263,8 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-
         $builder->add('totalCost', null, array(
-            'label' => 'Estimated Total Costs ($):',
+            'label' => 'Estimated Total Costs ($) ('.$this->params['feeScheduleLink'].'):',
             'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             //'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
