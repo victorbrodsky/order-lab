@@ -447,6 +447,18 @@ class TransResSiteParameters {
      */
     private $updateProjectFundNumber;
 
+    /**
+     * Intake form
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_transResSiteParameters_transresIntakeForm",
+     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="transresIntakeForm_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $transresIntakeForms;
+
 //    /**
 //     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
 //     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
@@ -460,6 +472,7 @@ class TransResSiteParameters {
 
         $this->transresLogos = new ArrayCollection();
         $this->transresPackingSlipLogos = new ArrayCollection();
+        $this->transresIntakeForms = new ArrayCollection();
 
         $this->setEnableNewProjectAccessPage(true);
         $this->setEnableNewProjectOnNavbar(true);
@@ -729,6 +742,27 @@ class TransResSiteParameters {
     public function removeTransresPackingSlipLogo($item)
     {
         $this->transresPackingSlipLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresIntakeForms()
+    {
+        return $this->transresIntakeForms;
+    }
+    public function addTransresIntakeForm($item)
+    {
+        if( $item && !$this->transresIntakeForms->contains($item) ) {
+            $this->transresIntakeForms->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeTransresIntakeForm($item)
+    {
+        $this->transresIntakeForms->removeElement($item);
         $item->clearUseObject();
     }
 

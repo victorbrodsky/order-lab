@@ -9398,6 +9398,7 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
+            "Default" => "default", //Used for default site settings
             "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp",
             "COVID-19" => "covid19",

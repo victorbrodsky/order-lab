@@ -1664,6 +1664,20 @@
                 {{ formmacros.checkbox(form.enableNewProjectAccessPage) }}
 
                 {{ formmacros.checkbox(form.updateProjectFundNumber) }}
+
+                {% if form.transresIntakeForms is defined %}
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Intake Form(s) - the most recent will be used</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.transresIntakeForms,cycle,'noprototype',8,'default','Intake Form','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                {% endif %}
+
             </div>
         </div>
     </div>
