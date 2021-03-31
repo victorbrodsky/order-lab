@@ -103,6 +103,18 @@ class DefaultController extends OrderAbstractController
         //orderassets\AppTranslationalResearchBundle\downloads
         $abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;
 
+        if(1) {
+            $transresUtil = $this->get('transres_util');
+            $transresIntakeForm = $transresUtil->getTransresSiteParameterFile("transresIntakeForms");
+            if ($transresIntakeForm) {
+                //$abspath = $transresIntakeForm->getAbsoluteUploadFullPath();
+                //$abspath = $transresIntakeForm->getRelativeUploadFullPath();
+                $abspath = $transresIntakeForm->getServerPath();
+                $originalname = $transresIntakeForm->getOriginalnameClean();
+                //echo $originalname.": abspath=$abspath <br>";
+            }
+        }
+
         $size = null;//$document->getSize();
 
         $downloader = new LargeFileDownloader();

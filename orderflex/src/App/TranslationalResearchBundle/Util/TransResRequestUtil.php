@@ -1365,7 +1365,7 @@ class TransResRequestUtil
 
         return $invoiceItemsArr;
     }
-
+    
     public function getDefaultFile($fieldName, $invoice, $transresRequest=null) {
 
         //Get $transresRequest if null
@@ -2710,15 +2710,21 @@ class TransResRequestUtil
         return null;
     }
 
-    public function getTransresSiteParameter($fieldName,$transresRequest) {
+    public function getTransresSiteParameter( $fieldName, $transresRequest=NULL, $projectSpecialtyAbbreviation=NULL ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
         }
 
-        $project = $transresRequest->getProject();
-        $projectSpecialty = $project->getProjectSpecialty();
-        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        if( $transresRequest ) {
+            $project = $transresRequest->getProject();
+            $projectSpecialty = $project->getProjectSpecialty();
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        }
+
+        if( !$projectSpecialtyAbbreviation ) {
+            return NULL;
+        }
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
         if( !$siteParameter ) {
@@ -2728,6 +2734,19 @@ class TransResRequestUtil
         $getMethod = "get".$fieldName;
 
         $value = $siteParameter->$getMethod();
+
+        //if $value is NULL try to get default value
+        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
+            $projectSpecialtyAbbreviation = 'default';
+//            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//            if( !$siteParameter ) {
+//                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//            }
+            $value = $this->getTransresSiteParameter($fieldName,NULL,$projectSpecialtyAbbreviation);
+            if( $value ) {
+                return $value;
+            }
+        }
 
         return $value;
     }

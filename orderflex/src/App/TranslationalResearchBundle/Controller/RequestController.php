@@ -174,7 +174,8 @@ class RequestController extends OrderAbstractController
 
             //turn off update "do not update project's fund number related by work request fund number
             //use updateProjectFundNumber
-            if(0) {
+            $updateProjectFundNumber = $transresRequestUtil->getTransresSiteParameter('updateProjectFundNumber',$transresRequest);
+            if( $updateProjectFundNumber ) {
                 $originalFundedAccountNumber = $project->getFundedAccountNumber();
                 $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
                 if ($fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber) {
@@ -424,8 +425,8 @@ class RequestController extends OrderAbstractController
 
             //turn off update "do not update project's fund number related by work request fund number
             //use updateProjectFundNumber
-            $updateProjectFundNumber = false;
-            //$updateProjectFundNumber = $transresRequestUtil->getDefaultFile("updateProjectFundNumber",null,$transresRequest);
+            //$updateProjectFundNumber = false;
+            $updateProjectFundNumber = $transresRequestUtil->getTransresSiteParameter('updateProjectFundNumber',$transresRequest);
             if( $updateProjectFundNumber ) {
                 $originalFundedAccountNumber = $project->getFundedAccountNumber();
                 $fundedAccountNumber = $transresRequest->getFundedAccountNumber();

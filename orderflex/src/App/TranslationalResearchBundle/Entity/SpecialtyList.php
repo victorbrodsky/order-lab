@@ -100,7 +100,14 @@ class SpecialtyList extends ListAbstract
         if( $this->getAbbreviation() == "misi" ) {
             return "MISI";
         }
-        throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+        //throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+
+        $abbreviation = $this->getAbbreviation();
+        if( $abbreviation ) {
+            $abbreviation = strtoupper($abbreviation);
+        }
+
+        return $abbreviation;
     }
 
     public function getUppercaseShortName() {
@@ -116,7 +123,15 @@ class SpecialtyList extends ListAbstract
         if( $this->getAbbreviation() == "misi" ) {
             return "MISI";
         }
-        throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+
+        //throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+
+        $abbreviation = $this->getAbbreviation();
+        if( $abbreviation ) {
+            $abbreviation = strtoupper($abbreviation);
+        }
+
+        return $abbreviation;
     }
 
     public function getUppercaseFullName() {
@@ -133,7 +148,10 @@ class SpecialtyList extends ListAbstract
         if( $this->getAbbreviation() == "misi" ) {
             return "MISI";
         }
-        throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+
+        //throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+
+        return $this->getAbbreviation();
     }
 
     //new-ap-cp-project

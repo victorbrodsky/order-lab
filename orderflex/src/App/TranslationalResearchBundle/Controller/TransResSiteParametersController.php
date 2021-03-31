@@ -196,6 +196,8 @@ class TransResSiteParametersController extends OrderAbstractController
 
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresPackingSlipLogo");
 
+            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresIntakeForm");
+
             $em->flush();
 
             $msg = $siteParameter." have been updated.";

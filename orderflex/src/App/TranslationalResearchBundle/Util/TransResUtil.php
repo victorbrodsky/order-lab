@@ -5811,7 +5811,7 @@ class TransResUtil
         return $humanTissueFormsViewLink;
     }
 
-    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
+    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null, $projectSpecialtyAbbreviation=null ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
@@ -5837,7 +5837,13 @@ class TransResUtil
             }
         }
 
-        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        if( $projectSpecialty ) {
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        }
+
+        if( !$projectSpecialtyAbbreviation ) {
+            return NULL;
+        }
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
         if( !$siteParameter ) {
@@ -5847,6 +5853,15 @@ class TransResUtil
         $getMethod = "get".$fieldName;
 
         $value = $siteParameter->$getMethod();
+
+        //if $value is NULL try to get default value
+        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
+            $projectSpecialtyAbbreviation = 'default';
+            $value = $this->getTransresSiteProjectParameter($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
+            if( $value ) {
+                return $value;
+            }
+        }
 
         return $value;
     }
@@ -5907,6 +5922,72 @@ class TransResUtil
         }
 
         return null;
+    }
+
+    public function getTransresSiteParameterFile( $fieldName, $project=null, $projectSpecialty=null, $projectSpecialtyAbbreviation=null ) {
+
+        if( !$fieldName ) {
+            throw new \Exception("Field name is empty");
+        }
+
+        if( !$projectSpecialty ) {
+            if( $project ) {
+                $projectSpecialty = $project->getProjectSpecialty();
+            } else {
+                //use the first project specialty as default
+                $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+                    array(
+                        'type' => array("default","user-added")
+                    ),
+                    array('orderinlist' => 'ASC')
+                );
+                if( count($specialties) > 0 ) {
+                    $projectSpecialty = $specialties[0];
+                    //exit("projectSpecialty=$projectSpecialty ");
+                } else {
+                    throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                }
+            }
+        }
+
+        if( $projectSpecialty ) {
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        }
+
+        if( !$projectSpecialtyAbbreviation ) {
+            return NULL;
+        }
+
+        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+
+        $getMethod = "get".$fieldName;
+
+        $documents = $siteParameter->$getMethod();
+
+        if( count($documents) == 0 && $projectSpecialtyAbbreviation != 'default' ) {
+            $projectSpecialtyAbbreviation = 'default';
+            $document = $this->getTransresSiteParameterFile($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
+            if( $document ) {
+                return $document;
+            }
+        }
+
+        if( count($documents) > 0 ) {
+            $document = $documents->first(); //DESC order => the most recent first
+            return $document;
+
+//            $docPath = $document->getAbsoluteUploadFullPath();
+//            //$docPath = $document->getRelativeUploadFullPath();
+//            //echo "docPath=" . $docPath . "<br>";
+//            if( $docPath ) {
+//                return $docPath;
+//            }
+        }
+
+        return NULL;
     }
 
     //$type: slash-"IRB/IACUC", brackets-"IRB (IACUC)"
