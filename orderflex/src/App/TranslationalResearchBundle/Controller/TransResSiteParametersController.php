@@ -212,8 +212,14 @@ class TransResSiteParametersController extends OrderAbstractController
             $msg = $siteParameter." have been updated.";
             $transresUtil->setEventLog($siteParameter,$eventType,$msg);
 
+            $projectSpecialtyAbbreviation = NULL;
+            $projectSpecialty = $siteParameter->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+            }
+
             return $this->redirectToRoute('translationalresearch_standalone_siteparameters_show', array(
-                'specialtyStr' => $siteParameter->getProjectSpecialty()->getAbbreviation()
+                'specialtyStr' => $projectSpecialtyAbbreviation
             ));
         }
 
