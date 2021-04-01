@@ -16,7 +16,7 @@
 
     {#<div id="form-prototype-data"#}
          {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-         {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_ vendpoint('transres_gallery') }}"#}
          {#data-userid = "{{ app.user.id }}"#}
     {#></div>#}
 
@@ -27,6 +27,10 @@
     <br>
 
     {% set sitename = translationalresearch_sitename %}
+
+    {% if siteParameter.getProjectSpecialty().getDescription() %}
+        <p> {{ siteParameter.getProjectSpecialty().getDescription() }} </p>
+    {% endif %}
 
     {{ transres.siteSettings(form,cycle,sitename,siteParameter.getProjectSpecialty()) }}
 

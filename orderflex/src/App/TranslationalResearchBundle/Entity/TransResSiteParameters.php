@@ -64,7 +64,7 @@ class TransResSiteParameters {
      * Hematopathology or AP/CP
      *
      * @ORM\ManyToOne(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
-     * @ORM\JoinColumn(name="projectSpecialty_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="projectSpecialty_id", referencedColumnName="id", nullable=true)
      */
     private $projectSpecialty;
 
@@ -317,6 +317,11 @@ class TransResSiteParameters {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableNewProjectAccessPage;
+//    /**
+//     * Hide everywhere
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $hideEverywhere;
 
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:

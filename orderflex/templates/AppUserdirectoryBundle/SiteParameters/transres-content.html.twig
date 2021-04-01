@@ -38,6 +38,9 @@
                                 <div class="col-xs-6" align="left">
                                     <a data-toggle="collapse" href="#transres-content-{{ specialty.id }}" style="color: white">
                                         {{ specialty.getName() }}
+                                        {% if specialty.getDescription() %}
+                                            <br> {{ specialty.getDescription() }}
+                                        {% endif %}
                                     </a>
                                 </div>
                                 <div class="col-xs-6" align="left">
