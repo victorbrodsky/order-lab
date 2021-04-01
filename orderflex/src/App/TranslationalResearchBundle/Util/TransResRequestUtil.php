@@ -2720,38 +2720,32 @@ class TransResRequestUtil
         return $value;
     }
     public function getTransresSiteParameterSingle( $fieldName, $transresRequest=NULL ) {
+        $transresUtil = $this->container->get('transres_util');
+        $project = $transresRequest->getProject();
+        return $transresUtil->getTransresSiteProjectParameter($fieldName,$project);
 
-        if( !$fieldName ) {
-            throw new \Exception("Field name is empty");
-        }
-
-        $projectSpecialtyAbbreviation = NULL;
-
-        if( $transresRequest ) {
-            $project = $transresRequest->getProject();
-            $projectSpecialty = $project->getProjectSpecialty();
-            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
-        }
-
-        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-        if( !$siteParameter ) {
-            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-        }
-
-        $getMethod = "get".$fieldName;
-
-        $value = $siteParameter->$getMethod();
-
-        //if $value is NULL try to get default value
-//        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
-//            $projectSpecialtyAbbreviation = 'default';
-//            $value = $this->getTransresSiteParameter($fieldName,NULL,$projectSpecialtyAbbreviation);
-//            if( $value ) {
-//                return $value;
-//            }
+//        if( !$fieldName ) {
+//            throw new \Exception("Field name is empty");
 //        }
-
-        return $value;
+//
+//        $projectSpecialtyAbbreviation = NULL;
+//
+//        if( $transresRequest ) {
+//            $project = $transresRequest->getProject();
+//            $projectSpecialty = $project->getProjectSpecialty();
+//            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+//        }
+//
+//        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//        if( !$siteParameter ) {
+//            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//        }
+//
+//        $getMethod = "get".$fieldName;
+//
+//        $value = $siteParameter->$getMethod();
+//
+//        return $value;
     }
 
     //E-Mail Packing Slip to PIs and Submitter

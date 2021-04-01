@@ -5853,13 +5853,6 @@ class TransResUtil
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
         }
 
-//        if( !$projectSpecialtyAbbreviation ) {
-//            return NULL;
-//        }
-//        if( $projectSpecialtyAbbreviation == 'default' ) {
-//            $projectSpecialtyAbbreviation = NULL;
-//        }
-
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
         if( !$siteParameter ) {
             throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
@@ -5868,15 +5861,6 @@ class TransResUtil
         $getMethod = "get".$fieldName;
 
         $value = $siteParameter->$getMethod();
-
-        //if $value is NULL try to get default value
-//        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
-//            $projectSpecialtyAbbreviation = 'default';
-//            $value = $this->getTransresSiteProjectParameter($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
-//            if( $value ) {
-//                return $value;
-//            }
-//        }
 
         return $value;
     }
@@ -6004,14 +5988,6 @@ class TransResUtil
         $getMethod = "get".$fieldName;
 
         $documents = $siteParameter->$getMethod();
-
-//        if( count($documents) == 0 && $projectSpecialtyAbbreviation != 'default' ) {
-//            $projectSpecialtyAbbreviation = 'default';
-//            $document = $this->getTransresSiteParameterFile($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
-//            if( $document ) {
-//                return $document;
-//            }
-//        }
 
         if( count($documents) > 0 ) {
             $document = $documents->first(); //DESC order => the most recent first
