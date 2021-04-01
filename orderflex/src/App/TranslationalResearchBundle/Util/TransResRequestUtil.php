@@ -2714,7 +2714,7 @@ class TransResRequestUtil
         $value = $this->getTransresSiteParameterSingle($fieldName,$transresRequest);
 
         if( $value === NULL ) {
-            $value = $this->getTransresSiteParameterFileSingle($fieldName,NULL);
+            $value = $this->getTransresSiteParameterSingle($fieldName,NULL);
         }
 
         return $value;
