@@ -5811,7 +5811,15 @@ class TransResUtil
         return $humanTissueFormsViewLink;
     }
 
-    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null, $projectSpecialtyAbbreviation=null ) {
+    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
+        $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty);
+        if( $value === NULL ) {
+            $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL);
+        }
+
+        return $value;
+    }
+    public function getTransresSiteProjectParameterSingle( $fieldName, $project=null, $projectSpecialty=null ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
@@ -5821,29 +5829,36 @@ class TransResUtil
             if( $project ) {
                 $projectSpecialty = $project->getProjectSpecialty();
             } else {
-                //use the first project specialty as default
-                $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
-                    array(
-                        'type' => array("default","user-added")
-                    ),
-                    array('orderinlist' => 'ASC')
-                );
-                if( count($specialties) > 0 ) {
-                    $projectSpecialty = $specialties[0];
-                    //exit("projectSpecialty=$projectSpecialty ");
-                } else {
-                    throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                if(0) {
+                    //use the first project specialty as default
+                    $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+                        array(
+                            'type' => array("default", "user-added")
+                        ),
+                        array('orderinlist' => 'ASC')
+                    );
+                    if (count($specialties) > 0) {
+                        $projectSpecialty = $specialties[0];
+                        //exit("projectSpecialty=$projectSpecialty ");
+                    } else {
+                        throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                    }
                 }
             }
         }
+
+        $projectSpecialtyAbbreviation = NULL;
 
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
         }
 
-        if( !$projectSpecialtyAbbreviation ) {
-            return NULL;
-        }
+//        if( !$projectSpecialtyAbbreviation ) {
+//            return NULL;
+//        }
+//        if( $projectSpecialtyAbbreviation == 'default' ) {
+//            $projectSpecialtyAbbreviation = NULL;
+//        }
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
         if( !$siteParameter ) {
@@ -5855,17 +5870,17 @@ class TransResUtil
         $value = $siteParameter->$getMethod();
 
         //if $value is NULL try to get default value
-        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
-            $projectSpecialtyAbbreviation = 'default';
-            $value = $this->getTransresSiteProjectParameter($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
-            if( $value ) {
-                return $value;
-            }
-        }
+//        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
+//            $projectSpecialtyAbbreviation = 'default';
+//            $value = $this->getTransresSiteProjectParameter($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
+//            if( $value ) {
+//                return $value;
+//            }
+//        }
 
         return $value;
     }
-    public function findCreateSiteParameterEntity($specialtyStr) {
+    public function findCreateSiteParameterEntity($specialtyStr=NULL) {
         $em = $this->em;
 
         //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
@@ -5877,9 +5892,12 @@ class TransResUtil
 
         $dqlParameters = array();
 
-        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
-
-        $dqlParameters["specialtyStr"] = $specialtyStr;
+        if( $specialtyStr ) {
+            $dql->where("projectSpecialty.abbreviation = :specialtyStr");
+            $dqlParameters["specialtyStr"] = $specialtyStr;
+        } else {
+            $dql->where("projectSpecialty IS NULL");
+        }
 
         $query = $em->createQuery($dql);
 
@@ -5896,9 +5914,10 @@ class TransResUtil
 
         //Create New
         $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
-        if( !$specialty ) {
-            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
-        } else {
+
+//        if( !$specialty ) {
+//            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
+//        } else {
             if( $this->secTokenStorage->getToken() ) {
                 $user = $this->secTokenStorage->getToken()->getUser();
             } else {
@@ -5919,61 +5938,80 @@ class TransResUtil
             $em->flush($entity);
 
             return $entity;
-        }
+        //}
 
         return null;
     }
+    public function getTransresSiteParameterFile( $fieldName, $project=null, $projectSpecialty=null) {
+        $value = $this->getTransresSiteParameterFileSingle($fieldName, $project, $projectSpecialty);
 
-    public function getTransresSiteParameterFile( $fieldName, $project=null, $projectSpecialty=null, $projectSpecialtyAbbreviation=null ) {
+        if( $value === NULL ) {
+            //echo $fieldName.": no specific file <br>";
+            //$projectSpecialtyAbbreviation = NULL;
+            $value = $this->getTransresSiteParameterFileSingle($fieldName,NULL,NULL);
+//            if( $value ) {
+//                echo $fieldName.": file value <br>";
+//            } else {
+//                echo $fieldName.": no file value <br>";
+//            }
+        }
+
+        return $value;
+    }
+    public function getTransresSiteParameterFileSingle( $fieldName, $project=null, $projectSpecialty=null ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
         }
 
         if( !$projectSpecialty ) {
+            //echo "NO projectSpecialty <br>";
             if( $project ) {
                 $projectSpecialty = $project->getProjectSpecialty();
             } else {
-                //use the first project specialty as default
-                $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
-                    array(
-                        'type' => array("default","user-added")
-                    ),
-                    array('orderinlist' => 'ASC')
-                );
-                if( count($specialties) > 0 ) {
-                    $projectSpecialty = $specialties[0];
-                    //exit("projectSpecialty=$projectSpecialty ");
-                } else {
-                    throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                if(0) {
+                    //use the first project specialty as default
+                    $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+                        array(
+                            'type' => array("default", "user-added")
+                        ),
+                        array('orderinlist' => 'ASC')
+                    );
+                    if (count($specialties) > 0) {
+                        $projectSpecialty = $specialties[0];
+                        //exit("projectSpecialty=$projectSpecialty ");
+                    } else {
+                        throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
+                    }
                 }
             }
         }
 
+        $projectSpecialtyAbbreviation = NULL;
+
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
         }
-
-        if( !$projectSpecialtyAbbreviation ) {
-            return NULL;
-        }
+        //echo "projectSpecialtyAbbreviation=$projectSpecialtyAbbreviation <br>";
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
         if( !$siteParameter ) {
             throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        } else {
+            //echo "siteParameterId=".$siteParameter->getId()."<br>";
         }
 
         $getMethod = "get".$fieldName;
 
         $documents = $siteParameter->$getMethod();
 
-        if( count($documents) == 0 && $projectSpecialtyAbbreviation != 'default' ) {
-            $projectSpecialtyAbbreviation = 'default';
-            $document = $this->getTransresSiteParameterFile($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
-            if( $document ) {
-                return $document;
-            }
-        }
+//        if( count($documents) == 0 && $projectSpecialtyAbbreviation != 'default' ) {
+//            $projectSpecialtyAbbreviation = 'default';
+//            $document = $this->getTransresSiteParameterFile($fieldName,NULL,NULL,$projectSpecialtyAbbreviation);
+//            if( $document ) {
+//                return $document;
+//            }
+//        }
 
         if( count($documents) > 0 ) {
             $document = $documents->first(); //DESC order => the most recent first

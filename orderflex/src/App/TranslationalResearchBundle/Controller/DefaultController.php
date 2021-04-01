@@ -112,8 +112,11 @@ class DefaultController extends OrderAbstractController
                 $abspath = $transresIntakeForm->getServerPath();
                 $originalname = $transresIntakeForm->getOriginalnameClean();
                 //echo $originalname.": abspath=$abspath <br>";
+            } else {
+                //echo "no transresIntakeForm <br>";
             }
         }
+        //exit('111');
 
         $size = null;//$document->getSize();
 

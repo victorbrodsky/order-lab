@@ -2710,20 +2710,27 @@ class TransResRequestUtil
         return null;
     }
 
-    public function getTransresSiteParameter( $fieldName, $transresRequest=NULL, $projectSpecialtyAbbreviation=NULL ) {
+    public function getTransresSiteParameter( $fieldName, $transresRequest=NULL ) {
+        $value = $this->getTransresSiteParameterSingle($fieldName,$transresRequest);
+
+        if( $value === NULL ) {
+            $value = $this->getTransresSiteParameterFileSingle($fieldName,NULL);
+        }
+
+        return $value;
+    }
+    public function getTransresSiteParameterSingle( $fieldName, $transresRequest=NULL ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
         }
 
+        $projectSpecialtyAbbreviation = NULL;
+
         if( $transresRequest ) {
             $project = $transresRequest->getProject();
             $projectSpecialty = $project->getProjectSpecialty();
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
-        }
-
-        if( !$projectSpecialtyAbbreviation ) {
-            return NULL;
         }
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
@@ -2736,17 +2743,13 @@ class TransResRequestUtil
         $value = $siteParameter->$getMethod();
 
         //if $value is NULL try to get default value
-        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
-            $projectSpecialtyAbbreviation = 'default';
-//            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-//            if( !$siteParameter ) {
-//                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//        if( $value === NULL && $projectSpecialtyAbbreviation != 'default' ) {
+//            $projectSpecialtyAbbreviation = 'default';
+//            $value = $this->getTransresSiteParameter($fieldName,NULL,$projectSpecialtyAbbreviation);
+//            if( $value ) {
+//                return $value;
 //            }
-            $value = $this->getTransresSiteParameter($fieldName,NULL,$projectSpecialtyAbbreviation);
-            if( $value ) {
-                return $value;
-            }
-        }
+//        }
 
         return $value;
     }

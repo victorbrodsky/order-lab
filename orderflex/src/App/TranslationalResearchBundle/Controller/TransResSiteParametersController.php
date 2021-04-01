@@ -132,7 +132,7 @@ class TransResSiteParametersController extends OrderAbstractController
      * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/show-content.html.twig")
      */
-    public function showContentAction(Request $request, $specialtyStr)
+    public function showContentAction(Request $request, $specialtyStr=NULL)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -163,7 +163,7 @@ class TransResSiteParametersController extends OrderAbstractController
      * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      */
-    public function editAction(Request $request, $specialtyStr)
+    public function editAction(Request $request, $specialtyStr=NULL)
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {

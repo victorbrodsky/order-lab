@@ -1640,14 +1640,18 @@
         {#</div>#}
     {#</div>#}
 
+    {% set specialtyId = 'default' %}
+    {% if specialty %}
+        {% set specialtyId = specialty.getId() %}
+    {% endif %}
 
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-project-content-{{ specialty.id }}">Project Request Settings</a>
+                <a data-toggle="collapse" href="#transres-project-content-{{ specialtyId }}">Project Request Settings</a>
             </h4>
         </div>
-        <div id="transres-project-content-{{ specialty.id }}" class="panel-collapse collapse">
+        <div id="transres-project-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
                 {{ formmacros.field(form.specimenDetailsComment) }}
                 {{ formmacros.field(form.institutionName) }}
@@ -1686,10 +1690,10 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-request-content-{{ specialty.id }}">Work Request Default Settings</a>
+                <a data-toggle="collapse" href="#transres-request-content-{{ specialtyId }}">Work Request Default Settings</a>
             </h4>
         </div>
-        <div id="transres-request-content-{{ specialty.id }}" class="panel-collapse collapse">
+        <div id="transres-request-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
                 <p>
                     Please use naming notation:
@@ -1715,10 +1719,10 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-packingslip-content-{{ specialty.id }}">Packing Slip Default Settings</a>
+                <a data-toggle="collapse" href="#transres-packingslip-content-{{ specialtyId }}">Packing Slip Default Settings</a>
             </h4>
         </div>
-        <div id="transres-packingslip-content-{{ specialty.id }}" class="panel-collapse collapse">
+        <div id="transres-packingslip-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
                 {% if form.transresPackingSlipLogos is defined %}
                     <p>
@@ -1753,10 +1757,10 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-invoice-content-{{ specialty.id }}">Invoice Default Settings</a>
+                <a data-toggle="collapse" href="#transres-invoice-content-{{ specialtyId }}">Invoice Default Settings</a>
             </h4>
         </div>
-        <div id="transres-invoice-content-{{ specialty.id }}" class="panel-collapse collapse">
+        <div id="transres-invoice-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
 
                 {% if form.transresLogos is defined %}
@@ -1817,10 +1821,10 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-reminder-email-{{ specialty.id }}">Reminder Email Settings</a>
+                <a data-toggle="collapse" href="#transres-reminder-email-{{ specialtyId }}">Reminder Email Settings</a>
             </h4>
         </div>
-        <div id="transres-reminder-email-{{ specialty.id }}" class="panel-collapse collapse">
+        <div id="transres-reminder-email-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
 
                 <hr>
