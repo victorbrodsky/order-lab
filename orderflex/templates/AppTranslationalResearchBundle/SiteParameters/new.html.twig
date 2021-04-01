@@ -28,21 +28,30 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {% if siteParameter.getProjectSpecialty().getDescription() %}
-        <p> {{ siteParameter.getProjectSpecialty().getDescription() }} </p>
+    {% set projectSpecialtyDescription =  null %}
+    {% set projectSpecialtyAbbreviation =  null %}
+    {% if siteParameter.getProjectSpecialty() %}
+        {% if siteParameter.getProjectSpecialty().getDescription() %}
+            {% set projectSpecialtyDescription =  siteParameter.getProjectSpecialty().getDescription()%}
+        {% endif %}
+        {% set projectSpecialtyAbbreviation =  siteParameter.getProjectSpecialty().getAbbreviation() %}
+    {% endif %}
+
+    {% if projectSpecialtyDescription %}
+        <p> {{ projectSpecialtyDescription }} </p>
     {% endif %}
 
     {{ transres.siteSettings(form,cycle,sitename,siteParameter.getProjectSpecialty()) }}
 
     {% if cycle == "show" %}
         <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_edit',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation()}) }}">Edit Site Parameters</a>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_edit',{'specialtyStr':projectSpecialtyAbbreviation}) }}">Edit Site Parameters</a>
         </p>
     {% endif %}
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation() }) }}">Cancel</a>
+            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':projectSpecialtyAbbreviation }) }}">Cancel</a>
         </p>
     {% endif %}
 
