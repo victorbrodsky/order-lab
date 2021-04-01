@@ -1528,8 +1528,12 @@ class TransResSiteParameters {
 
 
     public function __toString(){
-        //return "Site Parameters ID ".$this->getId()." for ".$this->getProjectSpecialty();
-        return "Site Parameters for ".$this->getProjectSpecialty()->getName();
+        if( $this->getProjectSpecialty() ) {
+            $name = $this->getProjectSpecialty()->getName();
+        } else {
+            $name = "Default";
+        }
+        return "Site Parameters for ".$name;
     }
 
 
