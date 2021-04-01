@@ -100,7 +100,7 @@ class TransResSiteParametersController extends OrderAbstractController
      * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/SiteParameters/new.html.twig")
      */
-    public function showAction(Request $request, $specialtyStr)
+    public function showAction(Request $request, $specialtyStr=NULL)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
