@@ -93,20 +93,24 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/download/new-study-intake-form", name="translationalresearch_download_new_study_intake_form")
+     * @Route("/download/new-study-intake-form/{specialtyId}", name="translationalresearch_download_new_study_intake_form")
      */
-    public function downloadNewStudyIntakeFormAction( Request $request ) {
+    public function downloadNewStudyIntakeFormAction( Request $request, $specialtyId=NULL ) {
 
         //$originalname = "trp_new_study_intake_form.pdf";
-        $originalname = "ctp_new_study_intake_form.docx";
+        //$originalname = "ctp_new_study_intake_form.docx";
 
         //orderassets\AppTranslationalResearchBundle\downloads
-        $abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;
+        //$abspath = "orderassets\\AppTranslationalResearchBundle\\downloads\\".$originalname;
 
         if(1) {
+
+            $em = $this->getDoctrine()->getManager();
+            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+
             $transresUtil = $this->get('transres_util');
-            $transresIntakeForm = $transresUtil->getTransresSiteParameterFile("transresIntakeForms");
-            if ($transresIntakeForm) {
+            $transresIntakeForm = $transresUtil->getTransresSiteParameterFile("transresIntakeForms",NULL,$projectSpecialtyObject);
+            if( $transresIntakeForm ) {
                 //$abspath = $transresIntakeForm->getAbsoluteUploadFullPath();
                 //$abspath = $transresIntakeForm->getRelativeUploadFullPath();
                 $abspath = $transresIntakeForm->getServerPath();
@@ -114,6 +118,8 @@ class DefaultController extends OrderAbstractController
                 //echo $originalname.": abspath=$abspath <br>";
             } else {
                 //echo "no transresIntakeForm <br>";
+                $abspath = NULL;
+                $originalname = NULL;
             }
         }
         //exit('111');

@@ -434,6 +434,11 @@
         {#{% set humanTissueForms = project.humanTissueForms %}#}
     {% endif %}
 
+    {% set specialtyId = NULL %}
+    {% if project.getProjectSpecialty() %}
+        {% set specialtyId = project.getProjectSpecialty().getId() %}
+    {% endif %}
+
     {#involveHumanTissue "Will this project involve human tissue?"#}
     {#{% set humanTissueFormStyle = "display: none;" %}#}
     {#{% if project.involveHumanTissue == "Yes" %}#}
@@ -458,7 +463,7 @@
     <div class="well form-element-holder user-documents">
         <label class="col-xs-12 control-label">Project Documents
             <br>Please submit completed New Project Intake Form here. The form is required for non-funded projects.</label>
-        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form') }}" target="_blank">download the blank form here.</a></p>
+        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}" target="_blank">download the blank form here.</a></p>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
                 {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
