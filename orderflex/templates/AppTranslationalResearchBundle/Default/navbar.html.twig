@@ -596,6 +596,7 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                {#{% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}#}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
