@@ -9398,7 +9398,6 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            //"Default" => "default", //Used to keep the default site settings
             "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp",
             "COVID-19" => "covid19",
@@ -9417,11 +9416,6 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
-
-//            if( $abbreviation == 'default' ) {
-//                $description = "This is used to keep the default site settings. Each non-empty project specialty's site setting field will overwrite each field in this default site settings.";
-//                $listEntity->setDescription($description);
-//            }
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
