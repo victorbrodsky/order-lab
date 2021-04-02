@@ -306,7 +306,8 @@
                 <td>
                     {% if invoicesInfos.subsidy is not null %}
                         {#${{ invoicesInfos.subsidy }}#}
-                        {{ transres.dollarSignValue(invoicesInfos.subsidy) }}
+                        {#{{ transres.dollarSignValue(invoicesInfos.subsidy) }}#}
+                        {{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}
                     {% else %}
                         {#expected Subsidy amount calculated by work request#}
                         {#${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}#}

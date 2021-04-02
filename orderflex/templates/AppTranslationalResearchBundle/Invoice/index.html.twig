@@ -193,7 +193,8 @@
                 </td>
                 <td>
                     {#${{ transres_request_util.getInvoiceSubsidy(invoice) }}<br>#}
-                    {{ transres.dollarSignValue(transres_request_util.getInvoiceSubsidy(invoice)) }}
+                    {#{{ transres.dollarSignValue(transres_request_util.getInvoiceSubsidy(invoice)) }}#}
+                    {{ transres.dollarAbsValue(transres_request_util.getInvoiceSubsidy(invoice), "Surcharge: ") }}
                 </td>
                 <td class="rowlink-skip">
                     {#{{ invoice.documents|length }}#}

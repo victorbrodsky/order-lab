@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Form\CustomType;
 
 
 use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\StringItemCodeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -202,6 +203,11 @@ class CustomSelectorType extends AbstractType {
 
             case "transresprojecttypes":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'ProjectTypeList', 'TranslationalResearchBundle');
+                break;
+
+            case "transresitemcodes":
+                //$transformer = new GenericTreeTransformer($this->om, $username, 'RequestCategoryTypeList', 'TranslationalResearchBundle');
+                $transformer = new StringItemCodeTransformer($this->om, $username);
                 break;
 
             //grants

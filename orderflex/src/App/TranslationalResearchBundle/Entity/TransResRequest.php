@@ -911,6 +911,13 @@ class TransResRequest {
         }
         return NULL;
     }
+    public function getPriceListAbbreviation() {
+        $priceList = $this->getPriceList();
+        if( $priceList ) {
+            return $priceList->getAbbreviation();
+        }
+        return NULL;
+    }
 
     /**
      * projectOid + "-RED-" + ID; Example: "HP8-REQ1" or "APCP7-REQ1"

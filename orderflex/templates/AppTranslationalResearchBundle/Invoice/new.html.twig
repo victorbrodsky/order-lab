@@ -18,6 +18,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="invoice-default-total" value="{{ invoiceDefaultTotal }}" />
+    <input type="hidden" id="pricelist-abbreviation" value="{{ transresRequest.getPriceListAbbreviation() }}" />
 
     {#<div id="form-prototype-data"#}
          {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
@@ -479,6 +480,8 @@
 
     <script type="text/javascript">
 
+        _transresitemcodes = [];
+
         $(document).ready(function() {
 
             //console.log("cycle="+cycle);
@@ -497,6 +500,18 @@
             //transresInvoiceBtnOnClick();
 
             //transresDisableWheelQuantity();
+
+            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
+            if( !pricelistAbbreviation ) {
+                pricelistAbbreviation = 'trp-default-pricelist';
+            }
+
+            console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
+            //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
+            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
+            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
+            //pricelistAbbreviation
+            getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
 
         });
 

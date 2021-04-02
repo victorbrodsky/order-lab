@@ -360,7 +360,10 @@
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
                 <div class="col-xs-2">
+                    <p>
                     {{ form_widget(forminvoiceItem.itemCode) }}
+                    </p>
+                    {#{{ formmacros.field(forminvoiceItem.itemCode) }}#}
                     <br>
                     {{ form_widget(forminvoiceItem.itemCodeNotMapped) }}
                 </div>

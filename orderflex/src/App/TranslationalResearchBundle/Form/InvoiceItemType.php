@@ -3,6 +3,7 @@
 namespace App\TranslationalResearchBundle\Form;
 
 
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -50,11 +51,21 @@ class InvoiceItemType extends AbstractType
             'attr' => array('class' => 'form-control invoiceitem-additionalQuantity digit-mask', 'min'=>'0')
         ));
 
-        $builder->add('itemCode', null, array(
-            'label' => "Item Code",
-            'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-itemCode')
-        ));
+        if(0) {
+            $builder->add('itemCode', null, array(
+                'label' => "Item Code",
+                'required' => false,
+                'attr' => array('class' => 'form-control invoiceitem-itemCode')
+            ));
+        } else {
+            //InvoiceItem -> itemCode (String) <=> product (Product) -> category (RequestCategoryTypeList) -> productId (String)
+            $builder->add('itemCode', CustomSelectorType::class, array(
+                'label' => false, //"Item Code",
+                'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden'),
+                'required' => false,
+                'classtype' => 'transresitemcodes'
+            ));
+        }
 
 //        $itemCode = NULL;
 //        if( $invoiceItem ) {
@@ -84,13 +95,24 @@ class InvoiceItemType extends AbstractType
             }
             //echo "itemCode=$itemCode <br>";
 
-            $form->add('itemCodeNotMapped', null, array(
-                'label' => false, //"Item Code",
-                'required' => false,
-                'mapped' => false,
-                "data" => $itemCode,
-                'attr' => array('class' => 'form-control invoiceitem-itemCodeNotMapped')
-            ));
+            if(0) {
+                $form->add('itemCodeNotMapped', null, array(
+                    'label' => false, //"Item Code",
+                    'required' => false,
+                    'mapped' => false,
+                    "data" => $itemCode,
+                    'attr' => array('class' => 'form-control invoiceitem-itemCodeNotMapped')
+                ));
+            } else {
+                $form->add('itemCodeNotMapped', CustomSelectorType::class, array(
+                    'label' => false, //"Item Code",
+                    'required' => false,
+                    'mapped' => false,
+                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden'),
+                    "data" => $itemCode,
+                    'classtype' => 'transresitemcodes'
+                ));
+            }
 
             $form->add('total1', NumberType::class, array(
                 'label' => false, //"Total ($)",

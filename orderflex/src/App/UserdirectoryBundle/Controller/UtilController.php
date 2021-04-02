@@ -1685,8 +1685,48 @@ class UtilController extends OrderAbstractController {
         return $response;
     }
 
+    /**
+     * @Route("/common/{abbreviation}/transresitemcodes", name="employees_get_transresitemcodes", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getTransResItemCodesAction(Request $request, $abbreviation=NULL) {
 
-    
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $categories = $query->getQuery()->getResult();
+
+        if( $abbreviation == 'trp-default-pricelist' ) {
+            $abbreviation = '';
+        }
+
+        if( $abbreviation ) {
+            $abbreviation = "-".$abbreviation;
+        }
+
+        $output = array();
+        foreach ($categories as $category) {
+            $output[] = array(
+                //'id' => $category->getId(),
+                'id' => $category->getProductId().$abbreviation,
+                'text' => $category->getProductId().$abbreviation
+            );
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+
+
+
     public function getClassBundleByName($name) {
         $bundleName = "UserdirectoryBundle";
         //$filterType = array('default'); //change to array('default','user-added')
@@ -1787,6 +1827,11 @@ class UtilController extends OrderAbstractController {
                 $className = "ProjectTypeList";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+
+//            case "transresitemcodes":
+//                $className = "RequestCategoryTypeList";
+//                $bundleName = "TranslationalResearchBundle";
+//                break;
 
             case "usernametype":
                 $className = "UsernameType";

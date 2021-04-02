@@ -16,6 +16,7 @@
  */
 
 _transresprojecttypes = [];
+//_transresitemcodes = [];
 
 $(document).ready(function() {
 
@@ -55,6 +56,9 @@ $(document).ready(function() {
     }
 
     getComboboxGeneric(null,'transresprojecttypes',_transresprojecttypes,false);
+
+    //console.log("get _transresitemcodes");
+    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
 
     // $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
     //     //return; //testing
