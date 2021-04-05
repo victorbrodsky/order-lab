@@ -18,7 +18,8 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="invoice-default-total" value="{{ invoiceDefaultTotal }}" />
-    <input type="hidden" id="pricelist-abbreviation" value="{{ transresRequest.getPriceListAbbreviation() }}" />
+    {#<input type="hidden" id="pricelist-abbreviation" value="{{ transresRequest.getPriceListAbbreviation() }}" />#}
+    <input type="hidden" id="pricelist-id" value="{{ transresRequest.getPriceListId() }}" />
 
     {#<div id="form-prototype-data"#}
          {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
@@ -480,6 +481,7 @@
 
     <script type="text/javascript">
 
+        _productArr = [];
         _transresitemcodes = [];
 
         $(document).ready(function() {
@@ -501,17 +503,29 @@
 
             //transresDisableWheelQuantity();
 
-            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
-            if( !pricelistAbbreviation ) {
-                pricelistAbbreviation = 'trp-default-pricelist';
+
+            _productArr = {{ productArr|json_encode }};
+            console.log("_productArr:");
+            console.log(_productArr);
+
+//            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
+//            if( !pricelistAbbreviation ) {
+//                pricelistAbbreviation = 'trp-default-pricelist';
+//            }
+            var pricelistId = $('#pricelist-id').val();
+            if( !pricelistId ) {
+                pricelistId = 'trp-default-pricelist';
             }
 
-            console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
+            //console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
             //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
             //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
             //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
             //pricelistAbbreviation
-            getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
+            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
+
+            console.log("get _transresitemcodes. pricelistId="+pricelistId);
+            getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
 
         });
 

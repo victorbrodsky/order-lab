@@ -1686,9 +1686,9 @@ class UtilController extends OrderAbstractController {
     }
 
     /**
-     * @Route("/common/{abbreviation}/transresitemcodes", name="employees_get_transresitemcodes", methods={"GET","POST"}, options={"expose"=true})
+     * @Route("/common/{pricelistid}/transresitemcodes", name="employees_get_transresitemcodes", methods={"GET","POST"}, options={"expose"=true})
      */
-    public function getTransResItemCodesAction(Request $request, $abbreviation=NULL) {
+    public function getTransResItemCodesAction(Request $request, $pricelistid=NULL) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1701,9 +1701,21 @@ class UtilController extends OrderAbstractController {
 
         $categories = $query->getQuery()->getResult();
 
-        if( $abbreviation == 'trp-default-pricelist' ) {
+        $abbreviation = '';
+
+        if( $pricelistid == 'trp-default-pricelist' ) {
             $abbreviation = '';
+            $priceList = NULL;
+        } else {
+            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+
+            if( $priceList ) {
+                $abbreviation = $priceList->getAbbreviation();
+            }
+
+            //$quantitiesArr = $product->calculateQuantities($priceList);
         }
+
 
         if( $abbreviation ) {
             $abbreviation = "-".$abbreviation;
@@ -1711,10 +1723,18 @@ class UtilController extends OrderAbstractController {
 
         $output = array();
         foreach ($categories as $category) {
+
+//            $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//            $initialFee = $category->getPriceFee($priceList);
+//            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
+//            $categoryItemCode = $category->getProductId($priceList);
+//            $categoryName = $category->getName();
+
             $output[] = array(
-                //'id' => $category->getId(),
-                'id' => $category->getProductId().$abbreviation,
-                'text' => $category->getProductId().$abbreviation
+                'id' => $category->getId(),
+                //'id' => $category->getProductId().$abbreviation,
+                'text' => $category->getProductId().$abbreviation,
+//                'initialFee' => $initialFee
             );
         }
 

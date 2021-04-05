@@ -24,6 +24,7 @@ class InvoiceItemType extends AbstractType
 {
 
     protected $params;
+    protected $itemCodeString = true;
 
     public function formConstructor( $params )
     {
@@ -51,43 +52,45 @@ class InvoiceItemType extends AbstractType
             'attr' => array('class' => 'form-control invoiceitem-additionalQuantity digit-mask', 'min'=>'0')
         ));
 
+        ///////////// Item Code /////////////////
+        //$this->itemCodeString = true;
+        $this->itemCodeString = false;
+
         if(0) {
-            $builder->add('itemCode', null, array(
-                'label' => "Item Code",
-                'required' => false,
-                'attr' => array('class' => 'form-control invoiceitem-itemCode')
-            ));
-        } else {
-            //InvoiceItem -> itemCode (String) <=> product (Product) -> category (RequestCategoryTypeList) -> productId (String)
-            $builder->add('itemCode', CustomSelectorType::class, array(
-                'label' => false, //"Item Code",
-                'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'transresitemcodes'
-            ));
+            if ($this->itemCodeString) {
+                $builder->add('itemCode', null, array(
+                    'label' => "Item Code",
+                    'required' => false,
+                    'attr' => array('class' => 'form-control invoiceitem-itemCode')
+                ));
+            } else {
+                //InvoiceItem -> itemCode (String) <=> product (Product) -> category (RequestCategoryTypeList) -> productId (String)
+                $builder->add('itemCode', CustomSelectorType::class, array(
+                    'label' => "Item Code",
+                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden'),
+                    'required' => false,
+                    'classtype' => 'transresitemcodes'
+                ));
+            }
         }
 
-//        $itemCode = NULL;
-//        if( $invoiceItem ) {
-//            $itemCode = $invoiceItem->getItemCode();
-//            echo "itemCode exists <br>";
-//        }
-//        echo "itemCode=$itemCode <br>";
-//        $builder->add('itemCodeNotMapped', null, array(
-//            'label' => false, //"Item Code",
-//            'required' => false,
-//            'mapped' => false,
-//            "data" => $itemCode,
-//            'attr' => array('class' => 'form-control invoiceitem-itemCodeNotMapped')
-//        ));
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $invoiceItem = $event->getData();
             $form = $event->getForm();
 
             $itemCode = NULL;
+            $categoryId = NULL;
             $total1 = NULL;
             $total2 = NULL;
             if( $invoiceItem ) {
+                $product = $invoiceItem->getProduct();
+                if( $product ) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryId = $category->getId();
+                    }
+                }
+
                 $itemCode = $invoiceItem->getItemCode();
                 //echo "itemCode exists <br>";
                 $total1 = $invoiceItem->getTotal1();
@@ -95,7 +98,14 @@ class InvoiceItemType extends AbstractType
             }
             //echo "itemCode=$itemCode <br>";
 
-            if(0) {
+            if($this->itemCodeString) {
+                $form->add('itemCode', null, array(
+                    'label' => "Item Code",
+                    'required' => false,
+                    "data" => $itemCode,
+                    'attr' => array('class' => 'form-control invoiceitem-itemCode')
+                ));
+
                 $form->add('itemCodeNotMapped', null, array(
                     'label' => false, //"Item Code",
                     'required' => false,
@@ -104,12 +114,21 @@ class InvoiceItemType extends AbstractType
                     'attr' => array('class' => 'form-control invoiceitem-itemCodeNotMapped')
                 ));
             } else {
+
+                $form->add('itemCode', CustomSelectorType::class, array(
+                    'label' => "Item Code",
+                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden'),
+                    'required' => false,
+                    "data" => $categoryId,
+                    'classtype' => 'transresitemcodes'
+                ));
+
                 $form->add('itemCodeNotMapped', CustomSelectorType::class, array(
                     'label' => false, //"Item Code",
                     'required' => false,
                     'mapped' => false,
                     'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden'),
-                    "data" => $itemCode,
+                    "data" => $categoryId,
                     'classtype' => 'transresitemcodes'
                 ));
             }
@@ -134,6 +153,7 @@ class InvoiceItemType extends AbstractType
             ));
 
         });
+        ///////////// Items /////////////////
 
         $builder->add('description', null, array(
             'label' => "Description",

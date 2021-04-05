@@ -207,7 +207,8 @@ class CustomSelectorType extends AbstractType {
 
             case "transresitemcodes":
                 //$transformer = new GenericTreeTransformer($this->om, $username, 'RequestCategoryTypeList', 'TranslationalResearchBundle');
-                $transformer = new StringItemCodeTransformer($this->om, $username);
+                //$transformer = new StringItemCodeTransformer($this->om, $username);
+                $transformer = new GenericSelectTransformer($this->om, $username, 'RequestCategoryTypeList', 'TranslationalResearchBundle');
                 break;
 
             //grants

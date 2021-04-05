@@ -426,11 +426,14 @@ class InvoiceItem {
 //            }
 //        }
 
-        if( $additionalQuantity > $quantity ) {
+        //echo "$quantity, $additionalQuantity; $unitPrice, $additionalUnitPrice <br>";
+        //if( $additionalQuantity > $quantity ) {
+        if( $additionalQuantity > 0 ) {
             if( $unitPrice != $additionalUnitPrice ) {
                 $secondRaw = true;
             }
         }
+        //$secondRaw = true;
 
         return $secondRaw;
     }

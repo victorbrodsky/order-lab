@@ -3761,6 +3761,69 @@ class TransResRequestUtil
         return $productsCombobox;
     }
 
+    public function getFeeSchedule( $transresRequest ) {
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $dqlParameters = array();
+
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $categories = $query->getResult();
+
+        $priceList = $transresRequest->getPriceList();
+
+        $productsArr = array();
+        foreach($categories as $category) {
+
+            $categoryName = $category->getName();
+
+            $initialQuantityDefault = $category->getPriceInitialQuantity(NULL);
+            $initialFeeDefault = $category->getPriceFee(NULL);
+            $additionalFeeDefault = $category->getPriceFeeAdditionalItem(NULL);
+            $categoryItemCodeDefault = $category->getProductId(NULL);
+
+            $initialQuantity = $category->getPriceInitialQuantity($priceList);
+            $initialFee = $category->getPriceFee($priceList);
+            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
+            $categoryItemCode = $category->getProductId($priceList);
+
+            $productsArr[] = array(
+                'id'=>$category->getId(),
+                //'text'=>$category->getOptimalAbbreviationName(),
+
+                'initialQuantityDefault' => $initialQuantityDefault,
+                'initialFeeDefault' => $initialFeeDefault,
+                'additionalFeeDefault' => $additionalFeeDefault,
+                'categoryItemCodeDefault' => $categoryItemCodeDefault,
+
+                'initialQuantity' => $initialQuantity,
+                'initialFee' => $initialFee,
+                'additionalFee' => $additionalFee,
+                'categoryItemCode' => $categoryItemCode,
+            );
+        }
+
+        $productsJson = NULL;
+        if( count($productsArr) > 0 ) {
+            $productsJson = json_encode($productsArr);
+        }
+
+        return $productsJson;
+    }
+
     public function getInvoiceItemInfoHtml( $invoiceItem ) {
 //        //test
 //        $testPrice = $this->toDecimal(NULL);

@@ -857,13 +857,17 @@ class InvoiceController extends OrderAbstractController
         //$invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotalByInvoice($invoice);
         $invoiceDefaultTotal = $transresRequest->calculateDefaultTotalByRequest();
 
+        //list of RequestCategoryTypeList
+        $productArr = $transresRequestUtil->getFeeSchedule($transresRequest);
+        
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
             'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
             'cycle' => $cycle,
-            'invoiceDefaultTotal' => $invoiceDefaultTotal
+            'invoiceDefaultTotal' => $invoiceDefaultTotal,
+            'productArr' => $productArr
         );
     }
 
