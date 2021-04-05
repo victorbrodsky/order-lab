@@ -936,7 +936,8 @@ class InvoiceController extends OrderAbstractController
             'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice ID ".$invoice->getOid(),
-            'invoiceDefaultTotal' => NULL
+            'invoiceDefaultTotal' => NULL,
+            'productArr' => NULL
         );
     }
 
@@ -1100,6 +1101,8 @@ class InvoiceController extends OrderAbstractController
         //$invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotalByInvoice($invoice);
         $invoiceDefaultTotal = $transresRequest->calculateDefaultTotalByRequest();
 
+        $productArr = $transresRequestUtil->getFeeSchedule($transresRequest);
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -1107,7 +1110,8 @@ class InvoiceController extends OrderAbstractController
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice ID ".$invoice->getOid(),
-            'invoiceDefaultTotal' => $invoiceDefaultTotal
+            'invoiceDefaultTotal' => $invoiceDefaultTotal,
+            'productArr' => $productArr
         );
     }
 

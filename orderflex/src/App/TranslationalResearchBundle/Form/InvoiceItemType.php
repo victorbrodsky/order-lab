@@ -127,6 +127,7 @@ class InvoiceItemType extends AbstractType
                     'label' => false, //"Item Code",
                     'required' => false,
                     'mapped' => false,
+                    'disabled' => true,
                     'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden'),
                     "data" => $categoryId,
                     'classtype' => 'transresitemcodes'
@@ -158,7 +159,7 @@ class InvoiceItemType extends AbstractType
         $builder->add('description', null, array(
             'label' => "Description",
             'required' => false,
-            'attr' => array('class' => 'textarea form-control', 'style' => 'min-height: 80px;')
+            'attr' => array('class' => 'textarea form-control invoiceitem-description', 'style' => 'min-height: 80px;')
         ));
 
         $builder->add('unitPrice', null, array(

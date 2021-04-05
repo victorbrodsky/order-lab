@@ -563,5 +563,49 @@ function transresDisableWheelQuantity() {
 //     alert("Please filter invoices by project or PI first.");
 // }
 
+function transresInvoiceItemCodeListeneres(){
 
+    console.log("transresInvoiceItemCodeListeneres");
 
+    $('.invoiceitem-itemCode').on('change', function(event) {
+        var invoiceItemRow = $(this).closest('.user-collection-holder');
+        var categoryId = $(this).select2('val');
+        console.log("invoiceitem-itemCode changed: categoryId="+categoryId);
+
+        var categoryInfoArr = _productArr[categoryId];
+        console.log("categoryInfoArr:");
+        console.log(categoryInfoArr);
+        console.log("initialQuantityDefault="+categoryInfoArr.initialQuantityDefault);
+
+        transresPopulateItem(categoryInfoArr,invoiceItemRow);
+        transresUpdateSubTotal(this);
+
+        transresRecalculateSubsidy();
+
+    });
+
+    // $('.invoiceitem-itemCodeNotMapped').on('change', function(event) {
+    //     var invoiceItemRow = $(this).closest('.user-collection-holder');
+    //
+    //     var categoryId = $(this).select2('val');
+    //     var categoryInfoArr = _productArr[categoryId];
+    //
+    //     console.log("invoiceitem-itemCodeNotMapped changed: categoryId="+categoryId);
+    //
+    //     transresPopulateItem(categoryInfoArr,invoiceItemRow);
+    // });
+}
+
+function transresPopulateItem(categoryInfoArr,invoiceItemRow) {
+    invoiceItemRow.find('.invoiceitem-description').val(categoryInfoArr.name);
+    invoiceItemRow.find('.invoiceitem-unitPrice').val(categoryInfoArr.initialFee);
+    invoiceItemRow.find('.invoiceitem-additionalUnitPrice').val(categoryInfoArr.additionalFee);
+    //invoiceItemRow.find('.invoiceitem-quantity').val(categoryInfoArr.initialQuantityDefault);
+    //invoiceItemRow.find('.invoiceitem-additionalQuantity').val(categoryInfoArr.initialQuantityDefault);
+
+    invoiceItemRow.find('.invoiceitem-itemCodeNotMapped').select2('val',categoryInfoArr.id);
+}
+
+function transresRecalculateSubsidy() {
+
+}

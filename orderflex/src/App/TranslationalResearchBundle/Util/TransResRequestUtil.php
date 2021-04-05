@@ -3800,9 +3800,10 @@ class TransResRequestUtil
             $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
             $categoryItemCode = $category->getProductId($priceList);
 
-            $productsArr[] = array(
-                'id'=>$category->getId(),
+            $productsArr[$category->getId()] = array(
+                'id' => $category->getId(),
                 //'text'=>$category->getOptimalAbbreviationName(),
+                'name' => $category->getName(),
 
                 'initialQuantityDefault' => $initialQuantityDefault,
                 'initialFeeDefault' => $initialFeeDefault,
@@ -3816,12 +3817,13 @@ class TransResRequestUtil
             );
         }
 
-        $productsJson = NULL;
-        if( count($productsArr) > 0 ) {
-            $productsJson = json_encode($productsArr);
-        }
+//        $productsJson = NULL;
+//        if( count($productsArr) > 0 ) {
+//            $productsJson = json_encode($productsArr);
+//        }
+//        return $productsJson;
 
-        return $productsJson;
+        return $productsArr;
     }
 
     public function getInvoiceItemInfoHtml( $invoiceItem ) {

@@ -481,7 +481,7 @@
 
     <script type="text/javascript">
 
-        _productArr = [];
+        var _productArr = [];
         _transresitemcodes = [];
 
         $(document).ready(function() {
@@ -503,10 +503,12 @@
 
             //transresDisableWheelQuantity();
 
+            transresInvoiceItemCodeListeneres();
 
-            _productArr = {{ productArr|json_encode }};
-            console.log("_productArr:");
-            console.log(_productArr);
+            //pass array similar to handsometableData
+            _productArr = {{ productArr|json_encode|raw }};
+            //console.log("_productArr:");
+            //console.log(_productArr);
 
 //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
 //            if( !pricelistAbbreviation ) {
@@ -524,8 +526,10 @@
             //pricelistAbbreviation
             //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
 
-            console.log("get _transresitemcodes. pricelistId="+pricelistId);
+            //console.log("get _transresitemcodes. pricelistId="+pricelistId);
             getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
+
+
 
         });
 
