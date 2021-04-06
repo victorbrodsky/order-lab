@@ -3483,7 +3483,7 @@ class TransResImportData
         $count = 0;
 
         //for each request in excel (start at row 2)
-        for( $row = 2; $row <= $highestRow; $row++ ) {
+        for( $row = 1; $row <= $highestRow; $row++ ) {
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
