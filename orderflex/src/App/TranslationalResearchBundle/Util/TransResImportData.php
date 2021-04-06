@@ -3453,7 +3453,7 @@ class TransResImportData
 
         //$logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
-        //$transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 
         //$systemuser = $userSecUtil->findSystemUser();
 
@@ -3518,7 +3518,7 @@ class TransResImportData
 
                 $project->setState($to);
 
-                //$em->flush($project);
+                $this->em->flush($project);
 
                 $projectOids[] = $project->getOid()." (original state=".$originalStateStr.")";
 
@@ -3527,17 +3527,18 @@ class TransResImportData
                 echo "!!! project is null <br>";
             }
 
+            //exit();
         }
 
         //event log
         $resultMsg = $count." projects are closed in batch by a script: " . implode(", ",$projectOids);
 
-//        $eventType = "Project Updated";
-        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            $resultMsg
-//        );
+        $eventType = "Project Updated";
+        $transresUtil->setEventLog(NULL,$eventType,$resultMsg);
+        $this->container->get('session')->getFlashBag()->add(
+            'notice',
+            $resultMsg
+        );
 
         exit("Processed $count projects: $resultMsg");
 
