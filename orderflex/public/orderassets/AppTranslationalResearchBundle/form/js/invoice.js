@@ -154,6 +154,12 @@ function removeInvoiceItemExistingObject( delBtn, classname ) {
 
 function transresInvoiceItemListeneres(){
 
+    console.log("transresInvoiceItemListeneres");
+
+    //populate select2 item code: invoiceitem-itemCode invoiceitem-itemCodeNotMapped
+    transresPopulateItemCodeAsSelect();
+    transresInvoiceItemCodeListeneres();
+
     $('.invoiceitem-quantity').on('input', function(event) {
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         transresAdjustQuantity(invoiceItemRow);

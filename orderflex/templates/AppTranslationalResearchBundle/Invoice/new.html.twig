@@ -510,7 +510,33 @@
             //console.log("_productArr:");
             //console.log(_productArr);
 
-//            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
+            transresPopulateItemCodeAsSelect();
+
+////            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
+////            if( !pricelistAbbreviation ) {
+////                pricelistAbbreviation = 'trp-default-pricelist';
+////            }
+//            var pricelistId = $('#pricelist-id').val();
+//            if( !pricelistId ) {
+//                pricelistId = 'trp-default-pricelist';
+//            }
+//
+//            //console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
+//            //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
+//            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
+//            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
+//            //pricelistAbbreviation
+//            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
+//
+//            //console.log("get _transresitemcodes. pricelistId="+pricelistId);
+//            getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
+
+
+
+        });
+
+        function transresPopulateItemCodeAsSelect() {
+            //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
 //            if( !pricelistAbbreviation ) {
 //                pricelistAbbreviation = 'trp-default-pricelist';
 //            }
@@ -528,10 +554,7 @@
 
             //console.log("get _transresitemcodes. pricelistId="+pricelistId);
             getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
-
-
-
-        });
+        }
 
     </script>
 
