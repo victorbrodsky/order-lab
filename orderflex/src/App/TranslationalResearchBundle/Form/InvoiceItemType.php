@@ -54,7 +54,7 @@ class InvoiceItemType extends AbstractType
 
         ///////////// Item Code /////////////////
         //$this->itemCodeString = true;
-        $this->itemCodeString = false;
+        //$this->itemCodeString = false;
 
         if(0) {
             if ($this->itemCodeString) {

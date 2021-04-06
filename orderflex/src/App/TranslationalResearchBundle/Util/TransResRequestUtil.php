@@ -3800,21 +3800,25 @@ class TransResRequestUtil
             $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
             $categoryItemCode = $category->getProductId($priceList);
 
-            $productsArr[$category->getId()] = array(
-                'id' => $category->getId(),
-                //'text'=>$category->getOptimalAbbreviationName(),
-                'name' => $category->getName(),
+            //if( $initialFeeDefault ) {
 
-                'initialQuantityDefault' => $initialQuantityDefault,
-                'initialFeeDefault' => $initialFeeDefault,
-                'additionalFeeDefault' => $additionalFeeDefault,
-                'categoryItemCodeDefault' => $categoryItemCodeDefault,
+                $productsArr[$category->getId()] = array(
+                    'id' => $category->getId(),
+                    //'text'=>$category->getOptimalAbbreviationName(),
+                    'name' => $category->getName(),
 
-                'initialQuantity' => $initialQuantity,
-                'initialFee' => $initialFee,
-                'additionalFee' => $additionalFee,
-                'categoryItemCode' => $categoryItemCode,
-            );
+                    'initialQuantityDefault' => $initialQuantityDefault,
+                    'initialFeeDefault' => $initialFeeDefault,
+                    'additionalFeeDefault' => $additionalFeeDefault,
+                    'categoryItemCodeDefault' => $categoryItemCodeDefault,
+
+                    'initialQuantity' => $initialQuantity,
+                    'initialFee' => $initialFee,
+                    'additionalFee' => $additionalFee,
+                    'categoryItemCode' => $categoryItemCode,
+                );
+
+            //}
         }
 
 //        $productsJson = NULL;

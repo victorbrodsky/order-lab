@@ -577,11 +577,10 @@ function transresInvoiceItemCodeListeneres(){
         console.log(categoryInfoArr);
         console.log("initialQuantityDefault="+categoryInfoArr.initialQuantityDefault);
 
+        transresRecalculateInvoiceDefaultTotal();
+
         transresPopulateItem(categoryInfoArr,invoiceItemRow);
         transresUpdateSubTotal(this);
-
-        transresRecalculateSubsidy();
-
     });
 
     // $('.invoiceitem-itemCodeNotMapped').on('change', function(event) {
@@ -606,6 +605,81 @@ function transresPopulateItem(categoryInfoArr,invoiceItemRow) {
     invoiceItemRow.find('.invoiceitem-itemCodeNotMapped').select2('val',categoryInfoArr.id);
 }
 
-function transresRecalculateSubsidy() {
+function transresRecalculateInvoiceDefaultTotal() {
+    //1) get default and update #invoice-default-total
+    //default
+    //foreach product
+    // $quantitiesArr = $product->calculateQuantities(NULL);
+    // $initialQuantity = $quantitiesArr['initialQuantity'];
+    // $additionalQuantity = $quantitiesArr['additionalQuantity'];
+    // $initialFee = $quantitiesArr['initialFee'];
+    // $additionalFee = $quantitiesArr['additionalFee'];
+    // $totalDefault = $totalDefault + $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
 
+    var totalDefault = 0;
+
+    $('.transres-invoiceItems-holder').each(function() {
+
+        var categoryId = $(this).find('.invoiceitem-itemCode').select2('val');
+        console.log("transresRecalculateInvoiceDefaultTotal: categoryId="+categoryId);
+
+        var categoryInfoArr = _productArr[categoryId];
+        //console.log("categoryInfoArr:");
+        //console.log(categoryInfoArr);
+
+        //var initialQuantity = categoryInfoArr.initialQuantityDefault;
+        //var additionalQuantity = categoryInfoArr.additionalQuantity;
+        var initialFeeDefault = categoryInfoArr.initialFeeDefault;
+        var additionalFeeDefault = categoryInfoArr.additionalFeeDefault;
+        console.log("initialFeeDefault="+initialFeeDefault+"; additionalFeeDefault="+additionalFeeDefault);
+
+        var initialQuantity = parseInt($(this).find('.invoiceitem-quantity').val());
+        var additionalQuantity = parseInt($(this).find('.invoiceitem-additionalQuantity').val());
+
+        var thisTotalDefault = transresRoundDecimal(transresGetTotalFeesByQuantity(initialFeeDefault,additionalFeeDefault,initialQuantity,additionalQuantity));
+
+        totalDefault = (+totalDefault) + (+thisTotalDefault);
+        totalDefault = transresRoundDecimal(totalDefault);
+
+        console.log("transresRecalculateInvoiceDefaultTotal: totalDefault="+totalDefault);
+
+    });
+
+    if( totalDefault > 0 ) {
+        totalDefault = transresRoundDecimal(totalDefault);
+    }
+
+    $('#invoice-default-total').val(totalDefault);
+
+    return totalDefault;
+}
+function transresGetTotalFeesByQuantity(fee,feeAdditionalItem,initialQuantity,quantity) {
+    //console.log("1transresRecalculateInvoiceDefaultTotal: fee=" + fee + ", feeAdditionalItem=" + feeAdditionalItem + ", initialQuantity=" + initialQuantity + ", quantity=" + quantity);
+
+    quantity = parseInt(quantity);
+
+    if( !fee ) {
+        fee = 0;
+    }
+
+    fee = transresRoundDecimal(fee);
+
+    if( feeAdditionalItem ) {
+        feeAdditionalItem = transresRoundDecimal(feeAdditionalItem);
+    } else {
+        feeAdditionalItem = fee;
+    }
+    console.log("2transresRecalculateInvoiceDefaultTotal: fee=" + fee + ", feeAdditionalItem=" + feeAdditionalItem + ", initialQuantity=" + initialQuantity + ", quantity=" + quantity);
+
+    var initialTotal = transresRoundDecimal(initialQuantity * fee);
+    var additionalTotal = transresRoundDecimal(quantity * feeAdditionalItem);
+
+    var total = (+initialTotal) + (+additionalTotal);
+
+    if( total > 0 ) {
+        total = transresRoundDecimal(total);
+    }
+    console.log("transresGetTotalFeesByQuantity: total="+total);
+
+    return total;
 }

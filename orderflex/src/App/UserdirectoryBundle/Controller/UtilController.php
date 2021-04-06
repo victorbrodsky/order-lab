@@ -1730,6 +1730,12 @@ class UtilController extends OrderAbstractController {
 //            $categoryItemCode = $category->getProductId($priceList);
 //            $categoryName = $category->getName();
 
+            $initialFee = $category->getPriceFee($priceList);
+            //echo "initialFee=[$initialFee] <br>";
+            if( $initialFee === NULL ) {
+                continue;
+            }
+
             $output[] = array(
                 'id' => $category->getId(),
                 //'id' => $category->getProductId().$abbreviation,
