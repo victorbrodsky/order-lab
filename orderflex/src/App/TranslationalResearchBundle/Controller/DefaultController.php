@@ -993,4 +993,106 @@ class DefaultController extends OrderAbstractController
 
         exit("updated $count projects");
     }
+
+//    /**
+//     * http://127.0.0.1/order/translational-research/batch-close-projects
+//     *
+//     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
+//     */
+//    public function closeProjectsAction1( Request $request ) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+//        }
+//
+//        exit("closeProjectsAction: Not allowed");
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+//        $dql =  $repository->createQueryBuilder("project");
+//        $dql->select('project');
+//        $dql->where("project.noBudgetLimit IS NULL");
+//        $query = $em->createQuery($dql);
+//        //echo "query=".$query->getSql()."<br>";
+//        $projects = $query->getResult();
+//        echo "projects=".count($projects)."<br>";
+//
+//
+//
+//        $projectOids = array();
+//
+//        $count = 0;
+//        foreach($projects as $project) {
+//            //echo "project=".$project."<br>";
+//            if( $project ) {
+//
+//                //$testing = false;
+//                $originalStateStr = $project->getState();
+//                $to = "closed";
+//
+//                $project->setState($to);
+//
+//                //$em->flush($project);
+//
+//                $projectOids[] = $project->getOid()." (original state=".$originalStateStr.")";
+//
+//                $count++;
+//            } else {
+//                echo "!!! project is null <br>";
+//            }
+//        }
+//
+//        //event log
+//        $eventType = "Project Updated";
+//        $resultMsg = $count." projects are closed in batch by a script: " . implode(", ",$projectOids);
+//
+//        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
+//
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $resultMsg
+//        );
+//
+//        exit("updated $count projects");
+//    }
+    /**
+     * http://127.0.0.1/order/translational-research/batch-close-projects
+     *
+     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
+     * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
+     */
+    public function closeProjectsAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("closeProjectsAction: Not allowed");
+
+        //$em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+        $importUtil = $this->get('transres_import');
+
+        $form = $this->createFormBuilder()
+            ->add('file', FileType::class)
+            ->add('upload', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $inputFileName = $form['file']->getData();
+            echo "inputFileName=" . $inputFileName . "<br>";
+            //exit('111');
+
+            $count = $importUtil->closeProjectsFromSpreadsheet($inputFileName);
+
+            exit("End closeProjectsAction: count=".$count);
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
 }

@@ -3448,6 +3448,102 @@ class TransResImportData
         return $count;
     }
 
+    //http://127.0.0.1/order/translational-research/batch-close-projects
+    public function closeProjectsFromSpreadsheet($inputFileName) {
+
+        //$logger = $this->container->get('logger');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$transresUtil = $this->container->get('transres_util');
+
+        //$systemuser = $userSecUtil->findSystemUser();
+
+        //$inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $inputFileName =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            //$logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+//        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+//            NULL,
+//            TRUE,
+//            FALSE);
+
+        $projectOids = array();
+        $count = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //print_r($rowData);
+            //exit('111');
+
+            $projectId = $rowData[0][0];
+            //echo "1projectId=$projectId <br>";
+
+            if( !$projectId ) {
+                continue;
+            }
+
+            //convert APCP41 (10880) to APCP41
+            if( strpos($projectId, " (") !== false ) {
+                $projectIdSplit = explode(" (", $projectId);
+                $projectId = $projectIdSplit[0];
+            }
+
+            echo "projectId=[$projectId] <br>";
+            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectId);
+
+            if( $project ) {
+
+                //$testing = false;
+                $originalStateStr = $project->getState();
+                $to = "closed";
+
+                $project->setState($to);
+
+                //$em->flush($project);
+
+                $projectOids[] = $project->getOid()." (original state=".$originalStateStr.")";
+
+                $count++;
+            } else {
+                echo "!!! project is null <br>";
+            }
+
+        }
+
+        //event log
+        $resultMsg = $count." projects are closed in batch by a script: " . implode(", ",$projectOids);
+
+//        $eventType = "Project Updated";
+        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $resultMsg
+//        );
+
+        exit("Processed $count projects: $resultMsg");
+
+        return $count;
+    }
+
 
     public function toDecimal($number) {
         return number_format((float)$number, 2, '.', '');
