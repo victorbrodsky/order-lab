@@ -415,6 +415,7 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     subTotal = transresRoundDecimal(subTotal);
     //console.log("subTotal="+subTotal);
     holder.find(".invoice-subTotal").val(subTotal);
+
     transresUpdateTotal(thisEl);
 }
 
@@ -494,7 +495,12 @@ function transerUpdateSubsidyInfo() {
     console.log("transer UpdateSubsidyInfo");
 
     var holder = $('.invoice-financial-fields');
-    var total = holder.find(".invoice-total").val();
+
+    //var total = holder.find(".invoice-total").val();
+    var total = tarnsresCalculateCleanTotal();
+    if( !total ) {
+        total = holder.find(".invoice-total").val();
+    }
 
     //update subsidy
     $("#invoice-subsidy-info").html("unknown (default total = 0)");
@@ -529,6 +535,50 @@ function transerUpdateSubsidyInfo() {
 
         $("#invoice-subsidy-info").html(subsidy);
     }
+}
+function tarnsresCalculateCleanTotal() {
+    //$("#invoice-clean-subtotal").val(subTotalClean);
+
+    var holder = $('.invoice-financial-fields');
+
+    var subTotalClean = 0;
+
+    holder.find('.transres-invoiceItems').each(function() {
+
+        //console.log($(this).find('.invoiceitem-itemCode'));
+        var categoryId = $(this).find('.invoiceitem-itemCode').select2('val');
+        console.log("transres CalculateCleanTotal: categoryId="+categoryId);
+
+        if( categoryId && categoryId in _productArr ) {
+
+            var total = $(this).find(".invoiceitem-total").val();
+            console.log("transres CalculateCleanTotal: total="+total);
+            subTotalClean = (+subTotalClean) + (+total);
+        }
+
+    });
+
+    $("#invoice-clean-subtotal").val(subTotalClean);
+
+    var discount = 0;
+    var discountNumeric = holder.find(".invoice-discountNumeric").val();
+    var discountPercent = holder.find(".invoice-discountPercent").val();
+
+    //console.log("subTotalClean="+subTotalClean+", transres UpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent);
+
+    if( subTotalClean ) {
+        if( discountNumeric ) {
+            discount = parseFloat(discountNumeric);
+        }
+        if( discountPercent ) {
+            discount = subTotalClean * (parseFloat(discountPercent)/100);
+        }
+    }
+
+    subTotalClean = parseFloat(subTotalClean) - parseFloat(discount);
+    console.log("transres CalculateCleanTotal: subTotalClean="+subTotalClean);
+
+    return subTotalClean;
 }
 
 function transresRoundDecimal(value) {
@@ -642,7 +692,7 @@ function transresInvoiceItemCodeListeneres(){
         transresPopulateItem(categoryInfoArr, invoiceItemRow);
         transresUpdateSubTotal(this);
 
-        transerUpdateSubsidyInfo();
+        transerUpdateSubsidyInfo(true);
     });
 
     // $('.invoiceitem-itemCodeNotMapped').on('change', function(event) {

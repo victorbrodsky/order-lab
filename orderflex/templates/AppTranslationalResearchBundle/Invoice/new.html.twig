@@ -21,6 +21,9 @@
     {#<input type="hidden" id="pricelist-abbreviation" value="{{ transresRequest.getPriceListAbbreviation() }}" />#}
     <input type="hidden" id="pricelist-id" value="{{ transresRequest.getPriceListId() }}" />
 
+    <input type="hidden" id="invoice-clean-total" value="0" />
+    <input type="hidden" id="invoice-clean-subtotal" value="0" />
+
     {#<div id="form-prototype-data"#}
          {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
          {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
@@ -486,6 +489,13 @@
 
         $(document).ready(function() {
 
+            //pass array similar to handsometableData
+            _productArr = {{ productArr|json_encode|raw }};
+            //console.log("_productArr:");
+            //console.log(_productArr);
+
+            transresPopulateItemCodeAsSelect();
+
             //console.log("cycle="+cycle);
             if( cycle == "new" ) {
                 var subtotalEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
@@ -505,12 +515,12 @@
 
             transresInvoiceItemCodeListeneres();
 
-            //pass array similar to handsometableData
-            _productArr = {{ productArr|json_encode|raw }};
-            //console.log("_productArr:");
-            //console.log(_productArr);
+            {#//pass array similar to handsometableData#}
+            {#_productArr = {{ productArr|json_encode|raw }};#}
+            {#//console.log("_productArr:");#}
+            {#//console.log(_productArr);#}
 
-            transresPopulateItemCodeAsSelect();
+            {#transresPopulateItemCodeAsSelect();#}
 
 ////            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
 ////            if( !pricelistAbbreviation ) {
