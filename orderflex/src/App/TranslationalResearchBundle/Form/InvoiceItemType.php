@@ -87,6 +87,8 @@ class InvoiceItemType extends AbstractType
                     if( $category ) {
                         $categoryId = $category->getId();
                     }
+                } else {
+                    $categoryId = $invoiceItem->getItemCode();
                 }
 
                 $itemCode = $invoiceItem->getItemCode();

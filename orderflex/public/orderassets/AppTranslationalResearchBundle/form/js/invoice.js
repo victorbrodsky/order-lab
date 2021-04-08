@@ -157,7 +157,7 @@ function transresInvoiceItemListeneres(){
     console.log("transresInvoiceItemListeneres");
 
     //populate select2 item code: invoiceitem-itemCode invoiceitem-itemCodeNotMapped
-    transresPopulateItemCodeAsSelect();
+    transresInitItemCodeAsSelect();
     transresInvoiceItemCodeListeneres();
 
     $('.invoiceitem-quantity').on('input', function(event) {
@@ -689,7 +689,7 @@ function transresInvoiceItemCodeListeneres(){
 
         transresRecalculateInvoiceDefaultTotal();
 
-        transresPopulateItem(categoryInfoArr, invoiceItemRow);
+        transresPopulateItem(categoryInfoArr,invoiceItemRow,categoryId);
         transresUpdateSubTotal(this);
 
         transerUpdateSubsidyInfo(true);
@@ -707,9 +707,9 @@ function transresInvoiceItemCodeListeneres(){
     // });
 }
 
-function transresPopulateItem(categoryInfoArr,invoiceItemRow) {
+function transresPopulateItem( categoryInfoArr, invoiceItemRow, categoryId ) {
 
-    var categoryId = null;
+    //var categoryId = null;
 
     if( categoryInfoArr ) {
         invoiceItemRow.find('.invoiceitem-description').val(categoryInfoArr.name);
@@ -814,3 +814,58 @@ function transresGetTotalFeesByQuantity(fee,feeAdditionalItem,initialQuantity,qu
 
     return total;
 }
+
+//'transresitemcodes',_transresitemcodes,pricelistId
+function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
+
+    //console.log('get Combobox Generic: name='+name);
+
+    var targetid = ".ajax-combobox-"+name;
+
+    var placeholder = "Select an option or type in a new value";
+
+    var thisAsyncflag = asyncflag;
+
+    if( $(targetid).length == 0 ) {
+        return;
+    }
+
+    // if( typeof cycle === 'undefined' ) {
+    //     cycle = 'new';
+    // }
+    // var cycleStr = "?cycle="+cycle;
+
+    // var sitenameStr = getSitename();
+    // if( sitenameStr ) {
+    //     sitenameStr = "&sitename="+sitenameStr;
+    // }
+
+    var invoiceId = $('#invoice-id').val();
+
+    //translationalresearch_get_transresitemcodes_ajax
+    var url = Routing.generate('translationalresearch_get_transresitemcodes_ajax');
+        
+    //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
+    //console.log('get Combobox Generic: url='+url);
+
+    if( globalDataArray.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: thisAsyncflag,
+            data: {pricelistId: pricelistId, invoiceId: invoiceId },
+        }).done(function(data) {
+            $.each(data, function(key, val) {
+                //console.log("val="+val);
+                globalDataArray.push(val);
+                //console.log(data);
+            });
+            populateSelectCombobox( targetid, globalDataArray, placeholder, false );
+        });
+    } else {
+        populateSelectCombobox( targetid, globalDataArray, placeholder, false );
+    }
+
+    //console.log("EOF getComboboxGeneric");
+}
+

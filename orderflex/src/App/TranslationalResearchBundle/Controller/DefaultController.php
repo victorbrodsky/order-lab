@@ -9,6 +9,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -131,6 +132,101 @@ class DefaultController extends OrderAbstractController
 
         exit;
     }
+
+    /**
+     * @Route("/transresitemcodes", name="translationalresearch_get_transresitemcodes_ajax", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getTransResItemCodesAjaxAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $pricelistId = $request->query->get('pricelistId');
+        $invoiceId = $request->query->get('invoiceId');
+
+        $query = $em->createQueryBuilder()
+            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+        $categories = $query->getQuery()->getResult();
+
+        $abbreviation = '';
+
+        if( $pricelistId == 'trp-default-pricelist' ) {
+            $abbreviation = '';
+            $priceList = NULL;
+        } else {
+            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistId);
+
+            if( $priceList ) {
+                $abbreviation = $priceList->getAbbreviation();
+            }
+
+            //$quantitiesArr = $product->calculateQuantities($priceList);
+        }
+
+
+        if( $abbreviation ) {
+            $abbreviation = "-".$abbreviation;
+        }
+
+        $output = array();
+        foreach ($categories as $category) {
+
+//            $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//            $initialFee = $category->getPriceFee($priceList);
+//            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
+//            $categoryItemCode = $category->getProductId($priceList);
+//            $categoryName = $category->getName();
+
+            $initialFee = $category->getPriceFee($priceList);
+            //echo "initialFee=[$initialFee] <br>";
+            if( $initialFee === NULL ) {
+                continue;
+            }
+
+            $output[] = array(
+                'id' => $category->getId(),
+                //'id' => $category->getProductId().$abbreviation,
+                'text' => $category->getProductId().$abbreviation,
+//                'initialFee' => $initialFee
+            );
+        }
+
+        //testing, add: new code item 1
+//        $output[] = array(
+//            'id' => "new code item 1",
+//            'text' => "new code item 1",
+//        );
+
+        //add not existed item code for invoiceItems without product
+        if( $invoiceId ) {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+            if ($invoice) {
+                foreach ($invoice->getInvoiceItems() as $invoiceItem) {
+                    $product = $invoiceItem->getProduct();
+                    if (!$product) {
+
+                        $itemCode = $invoiceItem->getItemCode();
+                        //echo $invoiceItem->getId().": itemCode=".$itemCode."<br>";
+
+                        $output[] = array(
+                            'id' => $itemCode,
+                            'text' => $itemCode,
+                        );
+                    }
+                }
+            }
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     /**
      * http://localhost/order/translational-research/import-old-data/0

@@ -1416,6 +1416,12 @@ class InvoiceController extends OrderAbstractController
         }
         //echo "pi count=".count($principalInvestigators)."<br>";
         
+        //testing
+//        foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo $invoiceItem->getId().": itemCode=".$itemCode."<br>";
+//        }
+        
         $params = array(
             'cycle' => $cycle,
             'em' => $em,

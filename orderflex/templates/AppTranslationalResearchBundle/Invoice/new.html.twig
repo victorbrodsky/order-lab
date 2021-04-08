@@ -20,6 +20,7 @@
     <input type="hidden" id="invoice-default-total" value="{{ invoiceDefaultTotal }}" />
     {#<input type="hidden" id="pricelist-abbreviation" value="{{ transresRequest.getPriceListAbbreviation() }}" />#}
     <input type="hidden" id="pricelist-id" value="{{ transresRequest.getPriceListId() }}" />
+    <input type="hidden" id="invoice-id" value="{{ invoice.getId() }}" />
 
     <input type="hidden" id="invoice-clean-total" value="0" />
     <input type="hidden" id="invoice-clean-subtotal" value="0" />
@@ -494,7 +495,7 @@
             //console.log("_productArr:");
             //console.log(_productArr);
 
-            transresPopulateItemCodeAsSelect();
+            transresInitItemCodeAsSelect();
 
             //console.log("cycle="+cycle);
             if( cycle == "new" ) {
@@ -520,7 +521,7 @@
             {#//console.log("_productArr:");#}
             {#//console.log(_productArr);#}
 
-            {#transresPopulateItemCodeAsSelect();#}
+            {#transresInitItemCodeAsSelect();#}
 
 ////            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
 ////            if( !pricelistAbbreviation ) {
@@ -545,7 +546,7 @@
 
         });
 
-        function transresPopulateItemCodeAsSelect() {
+        function transresInitItemCodeAsSelect() {
             //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
 //            if( !pricelistAbbreviation ) {
 //                pricelistAbbreviation = 'trp-default-pricelist';
@@ -555,6 +556,8 @@
                 pricelistId = 'trp-default-pricelist';
             }
 
+            //add custom added "Item Code" not existing in _transresitemcodes
+
             //console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
             //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
             //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
@@ -563,7 +566,9 @@
             //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
 
             //console.log("get _transresitemcodes. pricelistId="+pricelistId);
-            getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
+            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
+
+            transresGetComboboxGeneric('transresitemcodes',_transresitemcodes,pricelistId);
         }
 
     </script>

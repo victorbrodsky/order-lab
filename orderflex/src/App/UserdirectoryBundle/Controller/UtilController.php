@@ -1685,70 +1685,76 @@ class UtilController extends OrderAbstractController {
         return $response;
     }
 
-    /**
-     * @Route("/common/{pricelistid}/transresitemcodes", name="employees_get_transresitemcodes", methods={"GET","POST"}, options={"expose"=true})
-     */
-    public function getTransResItemCodesAction(Request $request, $pricelistid=NULL) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
-            ->select("list")
-            ->orderBy("list.orderinlist","ASC");
-
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-        $categories = $query->getQuery()->getResult();
-
-        $abbreviation = '';
-
-        if( $pricelistid == 'trp-default-pricelist' ) {
-            $abbreviation = '';
-            $priceList = NULL;
-        } else {
-            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
-
-            if( $priceList ) {
-                $abbreviation = $priceList->getAbbreviation();
-            }
-
-            //$quantitiesArr = $product->calculateQuantities($priceList);
-        }
-
-
-        if( $abbreviation ) {
-            $abbreviation = "-".$abbreviation;
-        }
-
-        $output = array();
-        foreach ($categories as $category) {
-
-//            $initialQuantity = $category->getPriceInitialQuantity($priceList);
+//    /**
+//     * @Route("/common/{pricelistid}/transresitemcodes", name="employees_get_transresitemcodes", methods={"GET","POST"}, options={"expose"=true})
+//     */
+//    public function getTransResItemCodesAction(Request $request, $pricelistid=NULL) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $query = $em->createQueryBuilder()
+//            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+//            ->select("list")
+//            ->orderBy("list.orderinlist","ASC");
+//
+//        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+//
+//        $categories = $query->getQuery()->getResult();
+//
+//        $abbreviation = '';
+//
+//        if( $pricelistid == 'trp-default-pricelist' ) {
+//            $abbreviation = '';
+//            $priceList = NULL;
+//        } else {
+//            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+//
+//            if( $priceList ) {
+//                $abbreviation = $priceList->getAbbreviation();
+//            }
+//
+//            //$quantitiesArr = $product->calculateQuantities($priceList);
+//        }
+//
+//
+//        if( $abbreviation ) {
+//            $abbreviation = "-".$abbreviation;
+//        }
+//
+//        $output = array();
+//        foreach ($categories as $category) {
+//
+////            $initialQuantity = $category->getPriceInitialQuantity($priceList);
+////            $initialFee = $category->getPriceFee($priceList);
+////            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
+////            $categoryItemCode = $category->getProductId($priceList);
+////            $categoryName = $category->getName();
+//
 //            $initialFee = $category->getPriceFee($priceList);
-//            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
-//            $categoryItemCode = $category->getProductId($priceList);
-//            $categoryName = $category->getName();
-
-            $initialFee = $category->getPriceFee($priceList);
-            //echo "initialFee=[$initialFee] <br>";
-            if( $initialFee === NULL ) {
-                continue;
-            }
-
-            $output[] = array(
-                'id' => $category->getId(),
-                //'id' => $category->getProductId().$abbreviation,
-                'text' => $category->getProductId().$abbreviation,
-//                'initialFee' => $initialFee
-            );
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+//            //echo "initialFee=[$initialFee] <br>";
+//            if( $initialFee === NULL ) {
+//                continue;
+//            }
+//
+//            $output[] = array(
+//                'id' => $category->getId(),
+//                //'id' => $category->getProductId().$abbreviation,
+//                'text' => $category->getProductId().$abbreviation,
+////                'initialFee' => $initialFee
+//            );
+//        }
+//
+//        //testing, add: new code item 1
+////        $output[] = array(
+////            'id' => "new code item 1",
+////            'text' => "new code item 1",
+////        );
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
 
 

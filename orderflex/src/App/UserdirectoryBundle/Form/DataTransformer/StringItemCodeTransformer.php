@@ -38,47 +38,105 @@ class StringItemCodeTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
+    protected $className;
+    protected $bundleName;
+    protected $params;
 
     /**
-     * @param ObjectManager $em
+     * @param ObjectManager $om
      */
-    public function __construct(EntityManagerInterface $em=null, $user=null)
+    public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;
+        $this->className = $className;
+        $this->params = $params;
+
+        if( $bundleName ) {
+            $this->bundleName = $bundleName;
+        } else {
+            $this->bundleName = "UserdirectoryBundle";
+        }
     }
 
     /**
-     * Transforms an object to a string.
-     *
-     * @param  Issue|null $issue
-     * @return string
+     * Transforms an object or name string to id.
      */
-    public function transform($entity)
+    public function transform_ORIGINAL($entity)
     {
-        //echo "string data transformer: ".$entity."<br>";
-        if (null === $entity) {
-            //echo "return empty <br>";
+        if( null === $entity || $entity == "" ) {
             return "";
         }
 
-//        if( $entity instanceof RequestCategoryTypeList ) {
-//            return $entity->getProductId();
-//            //return $entity->getProductId()."-i";
-//        }
+        //echo "data transformer entity=".$entity."<br>";
+        //echo "data transformer entity id=".$entity->getId()."<br>";
 
-        //echo "return entity:".$entity." <br>";
-        return $entity;  //Scan Region: entity is a string
+        if( is_int($entity) ) {
+            //echo "transform by name=".$entity." !!!<br>";
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //echo "findOneById entity=".$entity."<br>";
+        }
+        else {
+            //echo "transform by name=".$entity." ????????????????<br>";
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+            $entity = $this->findEntityByString($entity);
+        }
+
+        if( null === $entity ) {
+            return "";
+        }
+
+        //return $entity->getId();
+
+        //echo "count=".count($entity)."<br>";
+
+        return $entity->getId();
     }
 
     /**
-     * Transforms a string (number) to an object (i.e. stain).
-     *
-     * @param  string $number
-     *
-     * @return Stain|null
-     *
-     * @throws TransformationFailedException if object (stain) is not found.
+     * New/Show/Edit
+     * Transforms an object or name string to id.
+     */
+    public function transform($entity)
+    {
+        //echo "data transformer entity=".$entity."<br>";
+
+        if( null === $entity || $entity == "" ) {
+            return "";
+        }
+
+        //testing
+        //$entity = "new code item 1";
+        //return $entity;
+
+        //echo "data transformer entity=[".$entity."]<br>";
+        //echo "data transformer entity id=".$entity->getId()."<br>";
+
+        if( is_int($entity) ) {
+            //echo "transform by name=".$entity." !!!<br>";
+            $entityFound = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //echo "findOneById entity=".$entity."<br>";
+        }
+        else {
+            //echo "transform by name=".$entity." ????????????????<br>";
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+            $entityFound = $this->findEntityByString($entity);
+        }
+
+        if( null === $entityFound ) {
+            return $entity;
+        }
+
+        //return $entity->getId();
+
+        //echo "count=".count($entity)."<br>";
+
+        return $entityFound->getId();
+    }
+
+    /**
+     * Submit New/Edit
+     * Transforms a string (number) to an object.
      */
     public function reverseTransform($text)
     {
@@ -89,12 +147,43 @@ class StringItemCodeTransformer implements DataTransformerInterface
             return null;
         }
 
-//        if( $text instanceof RequestCategoryTypeList ) {
-//            return $text->getProductId();
-//            //return $text->getProductId()."-i";
-//        }
+        if( is_numeric($text) ) {    //number => most probably it is id
+            //echo 'text is id <br>';
+            $entity = $this->em->getRepository('App' . $this->bundleName . ':' . $this->className)->findOneById($text);
+
+            if ($entity) {
+                //return $entity->getBlockPrefix();
+                //return $entity->getProductId();
+            } else {
+                $entity = $this->findEntityByString($text);
+            }
+        } else {
+            $entity = $this->findEntityByString($text);
+        }
+
+        if ($entity) {
+            return $entity->getProductId();
+        }
+
+        //echo "data reverseTransform text=".$text."<br>";
+        //exit();
 
         return $text;
     }
+
+
+    public function findEntityByString($string) {
+        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+
+        if( null === $entity ) {
+            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+        }
+
+        return $entity;
+    }
+//    public function findEntityById($id) {
+//        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
+//        return $entity;
+//    }
 
 }
