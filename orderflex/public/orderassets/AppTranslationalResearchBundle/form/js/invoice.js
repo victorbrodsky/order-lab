@@ -2,7 +2,7 @@
  * Created by Oleg Ivanov on 1/30/2018.
  */
 
-//_transresitemcodes = [];
+var _transresitemcodes = [];
 
 function transresUpdateInvoiceStatus(invoiceId,status) {
     //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
