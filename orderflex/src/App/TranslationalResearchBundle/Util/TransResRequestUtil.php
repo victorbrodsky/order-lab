@@ -3847,6 +3847,12 @@ class TransResRequestUtil
         //quantity (integer), unitPrice (type="decimal", precision=15, scale=2), additionalUnitPrice (type="decimal", precision=15, scale=2)
         //$secondRaw = false;
         $itemCode = $invoiceItem->getItemCodeWithPriceListAbbreviation(); //getItemCode();
+
+        //limit item code length
+        if (strlen($itemCode) > 30) {
+            $itemCode = substr($itemCode, 0, 27) . '...';
+        }
+
         $quantity = $invoiceItem->getQuantity();
         $additionalQuantity = $invoiceItem->getAdditionalQuantity();
         $unitPrice = $this->toDecimal($invoiceItem->getUnitPrice());
