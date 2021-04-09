@@ -2,6 +2,8 @@
  * Created by Oleg Ivanov on 1/30/2018.
  */
 
+_transresitemcodes = [];
+
 function transresUpdateInvoiceStatus(invoiceId,status) {
     //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
 
@@ -692,7 +694,7 @@ function transresInvoiceItemCodeListeneres(){
         transresPopulateItem(categoryInfoArr,invoiceItemRow,categoryId);
         transresUpdateSubTotal(this);
 
-        transerUpdateSubsidyInfo(true);
+        transerUpdateSubsidyInfo();
     });
 
     // $('.invoiceitem-itemCodeNotMapped').on('change', function(event) {
@@ -868,4 +870,30 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
 
     //console.log("EOF getComboboxGeneric");
 }
+
+function transresInitItemCodeAsSelect() {
+    //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
+//            if( !pricelistAbbreviation ) {
+//                pricelistAbbreviation = 'trp-default-pricelist';
+//            }
+    var pricelistId = $('#pricelist-id').val();
+    if( !pricelistId ) {
+        pricelistId = 'trp-default-pricelist';
+    }
+
+    //add custom added "Item Code" not existing in _transresitemcodes
+
+    //console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
+    //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
+    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
+    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
+    //pricelistAbbreviation
+    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
+
+    //console.log("get _transresitemcodes. pricelistId="+pricelistId);
+    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
+
+    transresGetComboboxGeneric('transresitemcodes',_transresitemcodes,pricelistId);
+}
+
 

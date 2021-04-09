@@ -486,7 +486,6 @@
     <script type="text/javascript">
 
         var _productArr = [];
-        _transresitemcodes = [];
 
         $(document).ready(function() {
 
@@ -545,31 +544,6 @@
 
 
         });
-
-        function transresInitItemCodeAsSelect() {
-            //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
-//            if( !pricelistAbbreviation ) {
-//                pricelistAbbreviation = 'trp-default-pricelist';
-//            }
-            var pricelistId = $('#pricelist-id').val();
-            if( !pricelistId ) {
-                pricelistId = 'trp-default-pricelist';
-            }
-
-            //add custom added "Item Code" not existing in _transresitemcodes
-
-            //console.log("get _transresitemcodes. pricelistAbbreviation="+pricelistAbbreviation);
-            //function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag)
-            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,'transresitemcodes/');
-            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
-            //pricelistAbbreviation
-            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistAbbreviation+'/');
-
-            //console.log("get _transresitemcodes. pricelistId="+pricelistId);
-            //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
-
-            transresGetComboboxGeneric('transresitemcodes',_transresitemcodes,pricelistId);
-        }
 
     </script>
 

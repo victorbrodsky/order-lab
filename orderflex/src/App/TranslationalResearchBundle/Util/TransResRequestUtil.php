@@ -21,6 +21,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 
+use App\TranslationalResearchBundle\Entity\Product;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
@@ -4152,6 +4153,11 @@ class TransResRequestUtil
                 //try to find category by itemCode
                 $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
                 //echo "found category=[".$category."] by itemCode=$itemCode"."<br>";
+
+                //create and add product to InvoiceItem without Product by ItemCode
+                if( !$invoiceItem->getProduct() ) {
+                    $this->createAndAddProductToInvoiceItemByItemCode($invoiceItem, $category);
+                }
             }
 
             if( $category ) {
@@ -4210,6 +4216,41 @@ class TransResRequestUtil
 
         //exit("update Invoice Subsidy: subsidy=$subsidy");
         return $subsidy;
+    }
+
+    public function createAndAddProductToInvoiceItemByItemCode( $invoiceItem, $category ) {
+        if( $invoiceItem->getProduct() ) {
+            return $invoiceItem->getProduct();
+        }
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( !$invoiceItem->getSubmitter() ) {
+            $invoiceItem->setSubmitter($user);
+        }
+
+        $product = new Product($user);
+
+        $product->setCategory($category);
+
+        $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
+        $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
+        $totalQuantity = $initialQuantity + $additionalQuantity;
+
+        $product->setRequested($totalQuantity);
+        $product->setCompleted($totalQuantity);
+
+        $description = $invoiceItem->getDescription();
+
+        if( $description ) {
+            $product->setNote($description);
+            $product->setComment($description);
+        }
+
+        $invoiceItem->setProduct($product);
+        $this->em->persist($product);
+
+        return $product;
     }
 
     public function getInvoiceSubsidy( $invoice ) {
