@@ -216,6 +216,7 @@ class DefaultController extends OrderAbstractController
                 'id' => $category->getId(),
                 //'id' => $category->getProductId().$abbreviation,
                 'text' => $category->getProductId().$abbreviation,
+                //'text' => $category->getProductId().", ".$category->getName().$abbreviation,
 //                'initialFee' => $initialFee
             );
         }

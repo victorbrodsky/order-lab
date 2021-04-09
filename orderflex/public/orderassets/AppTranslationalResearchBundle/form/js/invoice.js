@@ -166,7 +166,7 @@ function transresInvoiceItemListeneres(){
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         transresAdjustQuantity(invoiceItemRow);
 
-        transresRecalculateInvoiceDefaultTotal();
+        //transresRecalculateInvoiceDefaultTotal();
 
         transresCalculateTotals(invoiceItemRow);
 
@@ -178,7 +178,7 @@ function transresInvoiceItemListeneres(){
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         transresValidateQuantity(invoiceItemRow);
 
-        transresRecalculateInvoiceDefaultTotal();
+        //transresRecalculateInvoiceDefaultTotal();
 
         transresCalculateTotals(invoiceItemRow);
 
@@ -459,37 +459,6 @@ function transresUpdateTotal(thisEl) {
     transresUpdateDue(thisEl);
 
     transerUpdateSubsidyInfo();
-
-    // //update subsidy
-    // //$("#invoice-subsidy-info").html("unknown");
-    // var defaultTotal = $('#invoice-default-total').val();
-    // //console.log("total="+total+", defaultTotal="+defaultTotal);
-    // if( total && defaultTotal ) {
-    //     var subsidy = defaultTotal - total;
-    //     //console.log("subsidy="+subsidy);
-    //     // if( subsidy > 0 ) {
-    //     //     subsidy = transresRoundDecimal(subsidy);
-    //     // } else {
-    //     //     subsidy = 0;
-    //     // }
-    //
-    //     if( administrativeFee ) {
-    //         subsidy = parseFloat(subsidy) + parseFloat(administrativeFee);
-    //     }
-    //
-    //     subsidy = transresRoundDecimal(subsidy);
-    //
-    //     if( subsidy >= 0 ) {
-    //         subsidy = "$"+subsidy;
-    //     } else {
-    //         subsidy = Math.abs(subsidy);
-    //         subsidy = transresRoundDecimal(subsidy);
-    //         subsidy = "-$"+subsidy;
-    //     }
-    //
-    //     $("#invoice-subsidy-info").html(subsidy);
-    // }
-
 }
 
 function transerUpdateSubsidyInfo() {
@@ -505,9 +474,14 @@ function transerUpdateSubsidyInfo() {
     }
 
     //update subsidy
-    $("#invoice-subsidy-info").html("unknown (default total = 0)");
+    //$("#invoice-subsidy-info").html("unknown (default total = 0)");
 
-    var defaultTotal = $('#invoice-default-total').val();
+    //var defaultTotal = $('#invoice-default-total').val();
+    var defaultTotal = transresRecalculateInvoiceDefaultTotal();
+
+    if( !defaultTotal ) {
+        var defaultTotal = $('#invoice-default-total').val();
+    }
 
     console.log("total="+total+", defaultTotal="+defaultTotal);
     if( total && defaultTotal && defaultTotal != 0 ) {
@@ -519,11 +493,10 @@ function transerUpdateSubsidyInfo() {
         //     subsidy = 0;
         // }
 
-        var administrativeFee = holder.find(".invoice-administrativeFee").val();
-
-        if( administrativeFee ) {
-            subsidy = parseFloat(subsidy) + parseFloat(administrativeFee);
-        }
+        // var administrativeFee = holder.find(".invoice-administrativeFee").val();
+        // if( administrativeFee ) {
+        //     subsidy = parseFloat(subsidy) + parseFloat(administrativeFee);
+        // }
 
         subsidy = transresRoundDecimal(subsidy);
 
@@ -536,6 +509,8 @@ function transerUpdateSubsidyInfo() {
         }
 
         $("#invoice-subsidy-info").html(subsidy);
+    } else {
+        $("#invoice-subsidy-info").html("unknown (default total is zero)");
     }
 }
 function tarnsresCalculateCleanTotal() {
@@ -689,7 +664,7 @@ function transresInvoiceItemCodeListeneres(){
             //console.log("initialQuantityDefault=" + categoryInfoArr.initialQuantityDefault);
         }
 
-        transresRecalculateInvoiceDefaultTotal();
+        //transresRecalculateInvoiceDefaultTotal();
 
         transresPopulateItem(categoryInfoArr,invoiceItemRow,categoryId);
         transresUpdateSubTotal(this);
@@ -782,7 +757,7 @@ function transresRecalculateInvoiceDefaultTotal() {
         totalDefault = transresRoundDecimal(totalDefault);
     }
 
-    $('#invoice-default-total').val(totalDefault);
+    //$('#invoice-default-total').val(totalDefault);
 
     return totalDefault;
 }
