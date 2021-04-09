@@ -468,4 +468,24 @@ class InvoiceItem {
         }
         return NULL;
     }
+
+    public function getItemCodeWithPriceListAbbreviation() {
+        $itemCode = $this->getItemCode();
+        if( $itemCode ) {
+            $invoice = $this->getInvoice();
+            if ($invoice) {
+                $transresRequest = $invoice->getTransresRequest();
+                if ($transresRequest) {
+                    $project = $transresRequest->getProject();
+                    if ($project) {
+                        $priceListAbbreviationPostfix = $project->getPriceListAbbreviationPostfix(); //"-i"
+                        $itemCode = $itemCode . $priceListAbbreviationPostfix;
+                    }
+                }
+            }
+        }
+
+        return $itemCode;
+    }
+
 }

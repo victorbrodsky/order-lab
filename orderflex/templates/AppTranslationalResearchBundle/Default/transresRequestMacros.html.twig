@@ -360,9 +360,6 @@
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
                 <div class="col-xs-2">
-                    {#{% if forminvoiceItem.vars.value %}#}
-                        {#itemCode={{ forminvoiceItem.vars.value.itemCode }}#}
-                    {#{% endif %}#}
                     <p>
                     {{ form_widget(forminvoiceItem.itemCode) }}
                     </p>
@@ -440,123 +437,123 @@
 {% endmacro %}
 
 {#Original#}
-{% macro invoiceItemSectionsOriginal(form, cycle, sitename) %}
+{#{% macro invoiceItemSectionsOriginal(form, cycle, sitename) %}#}
 
-    {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
-    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {#{% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}#}
+    {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+    {#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
 
     {#{% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}#}
-    <div class="panel panel-default">
+    {#<div class="panel panel-default">#}
 
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">
-                    Invoice Items
-                </a>
-            </h4>
-            {{ transres_request_util.getSubsidyInfo(form.vars.value)|raw }}
-        </div>
+        {#<div class="panel-heading">#}
+            {#<h4 class="panel-title">#}
+                {#<a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">#}
+                    {#Invoice Items#}
+                {#</a>#}
+            {#</h4>#}
+            {#{{ transres_request_util.getSubsidyInfo(form.vars.value)|raw }}#}
+        {#</div>#}
 
-        <div id="invoiceItems" class="panel-collapse collapse in">
-            <div class="panel-body">
+        {#<div id="invoiceItems" class="panel-collapse collapse in">#}
+            {#<div class="panel-body">#}
 
-                {% if form.invoiceItems|length > 0 %}
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {{ form_label(form.invoiceItems|first.description) }}
-                        </div>
-                        <div class="col-xs-1">
-                            {{ form_label(form.invoiceItems|first.quantity) }}
-                        </div>
-                        <div class="col-xs-2">
-                            {{ form_label(form.invoiceItems|first.itemCode) }}
-                        </div>
-                        <div class="col-xs-1">
-                            {{ form_label(form.invoiceItems|first.unitPrice) }}
-                        </div>
-                        <div class="col-xs-1">
-                            {{ form_label(form.invoiceItems|first.additionalUnitPrice) }}
-                        </div>
-                        <div class="col-xs-2">
-                            {{ form_label(form.invoiceItems|first.total) }}
-                        </div>
-                        <div class="col-xs-1">
-                        </div>
-                    </div>
-                {% else %}
-                    <p>There are no Invoice Items</p>
-                {% endif %}
+                {#{% if form.invoiceItems|length > 0 %}#}
+                    {#<div class="row">#}
+                        {#<div class="col-xs-4">#}
+                            {#{{ form_label(form.invoiceItems|first.description) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-1">#}
+                            {#{{ form_label(form.invoiceItems|first.quantity) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-2">#}
+                            {#{{ form_label(form.invoiceItems|first.itemCode) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-1">#}
+                            {#{{ form_label(form.invoiceItems|first.unitPrice) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-1">#}
+                            {#{{ form_label(form.invoiceItems|first.additionalUnitPrice) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-2">#}
+                            {#{{ form_label(form.invoiceItems|first.total) }}#}
+                        {#</div>#}
+                        {#<div class="col-xs-1">#}
+                        {#</div>#}
+                    {#</div>#}
+                {#{% else %}#}
+                    {#<p>There are no Invoice Items</p>#}
+                {#{% endif %}#}
 
-                <div class="transres-invoiceItems-holder">
-                    {% for invoiceItem in form.invoiceItems %}
-                        {{ transresRequestMacros.invoiceItemFormOriginal(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
-                    {% endfor %}
+                {#<div class="transres-invoiceItems-holder">#}
+                    {#{% for invoiceItem in form.invoiceItems %}#}
+                        {#{{ transresRequestMacros.invoiceItemFormOriginal(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}#}
+                    {#{% endfor %}#}
 
-                    {% if cycle != "show" and cycle != "download" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}
-                    {% endif %}
-                </div>
+                    {#{% if cycle != "show" and cycle != "download" %}#}
+                        {#{{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}#}
+                    {#{% endif %}#}
+                {#</div>#}
 
-            </div> <!-- panel-body -->
-        </div> <!-- panel-collapse -->
-    </div> <!-- panel panel-info -->
+            {#</div> <!-- panel-body -->#}
+        {#</div> <!-- panel-collapse -->#}
+    {#</div> <!-- panel panel-info -->#}
 
     {#{% else %}#}
     {#<p>There are no invoice items</p>#}
     {#{% endif %}#}
 
-{% endmacro %}
-{% macro invoiceItemFormOriginal( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{#{% endmacro %}#}
+{#{% macro invoiceItemFormOriginal( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}#}
 
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 
-    {% if showAddDeleteBtn is not defined %}
-        {% set showAddDeleteBtn = 0 %}
-    {% endif %}
+    {#{% if showAddDeleteBtn is not defined %}#}
+        {#{% set showAddDeleteBtn = 0 %}#}
+    {#{% endif %}#}
 
-    {% if prototype == "prototype" %}
-        {% set forminvoiceItem = invoiceItem.vars.prototype %}
-    {% else %}
-        {% set forminvoiceItem = invoiceItem %}
-    {% endif %}
+    {#{% if prototype == "prototype" %}#}
+        {#{% set forminvoiceItem = invoiceItem.vars.prototype %}#}
+    {#{% else %}#}
+        {#{% set forminvoiceItem = invoiceItem %}#}
+    {#{% endif %}#}
 
-    {% set wellclass = "alert-default well well-sm" %}
+    {#{% set wellclass = "alert-default well well-sm" %}#}
 
-    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+    {#<div class="user-collection-holder alert {{ classname }} {{ wellclass }}">#}
 
-        <div class="row">
-            <div class="col-xs-4">
-                {{ form_widget(forminvoiceItem.description) }}
-            </div>
-            <div class="col-xs-1">
-                {{ form_widget(forminvoiceItem.quantity) }}
-            </div>
-            <div class="col-xs-2">
-                {{ form_widget(forminvoiceItem.itemCode) }}
-            </div>
-            <div class="col-xs-1">
-                {{ form_widget(forminvoiceItem.unitPrice) }}
-            </div>
-            <div class="col-xs-1">
-                {{ form_widget(forminvoiceItem.additionalUnitPrice) }}
-            </div>
-            <div class="col-xs-2">
-                {{ form_widget(forminvoiceItem.total) }}
-            </div>
-            <div class="col-xs-1">
-                {% if cycle != "show" and showAddDeleteBtn %}
-                    <button type="button" class="btn btn-default btn-sm"
-                            onClick="removeExistingObject(this,'{{ classname }}')"
-                    ><span class="glyphicon glyphicon-remove"></span></button>
-                {% endif %}
-            </div>
+        {#<div class="row">#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(forminvoiceItem.description) }}#}
+            {#</div>#}
+            {#<div class="col-xs-1">#}
+                {#{{ form_widget(forminvoiceItem.quantity) }}#}
+            {#</div>#}
+            {#<div class="col-xs-2">#}
+                {#{{ form_widget(forminvoiceItem.itemCode) }}#}
+            {#</div>#}
+            {#<div class="col-xs-1">#}
+                {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
+            {#</div>#}
+            {#<div class="col-xs-1">#}
+                {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
+            {#</div>#}
+            {#<div class="col-xs-2">#}
+                {#{{ form_widget(forminvoiceItem.total) }}#}
+            {#</div>#}
+            {#<div class="col-xs-1">#}
+                {#{% if cycle != "show" and showAddDeleteBtn %}#}
+                    {#<button type="button" class="btn btn-default btn-sm"#}
+                            {#onClick="removeExistingObject(this,'{{ classname }}')"#}
+                    {#><span class="glyphicon glyphicon-remove"></span></button>#}
+                {#{% endif %}#}
+            {#</div>#}
 
-        </div>
+        {#</div>#}
 
-    </div>
+    {#</div>#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 {#EOF Original#}
 
 {% macro visualInfoSimpleSections(form, cycle, sitename) %}

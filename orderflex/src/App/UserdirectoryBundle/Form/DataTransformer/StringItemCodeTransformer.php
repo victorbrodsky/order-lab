@@ -38,7 +38,7 @@ class StringItemCodeTransformer implements DataTransformerInterface
      */
     private $em;
     private $user;
-    protected $className;
+    protected $className;   //RequestCategoryTypeList
     protected $bundleName;
     protected $params;
 
@@ -59,39 +59,39 @@ class StringItemCodeTransformer implements DataTransformerInterface
         }
     }
 
-    /**
-     * Transforms an object or name string to id.
-     */
-    public function transform_ORIGINAL($entity)
-    {
-        if( null === $entity || $entity == "" ) {
-            return "";
-        }
-
-        //echo "data transformer entity=".$entity."<br>";
-        //echo "data transformer entity id=".$entity->getId()."<br>";
-
-        if( is_int($entity) ) {
-            //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
-            //echo "findOneById entity=".$entity."<br>";
-        }
-        else {
-            //echo "transform by name=".$entity." ????????????????<br>";
-            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
-            $entity = $this->findEntityByString($entity);
-        }
-
-        if( null === $entity ) {
-            return "";
-        }
-
-        //return $entity->getId();
-
-        //echo "count=".count($entity)."<br>";
-
-        return $entity->getId();
-    }
+//    /**
+//     * Transforms an object or name string to id.
+//     */
+//    public function transform_ORIGINAL($entity)
+//    {
+//        if( null === $entity || $entity == "" ) {
+//            return "";
+//        }
+//
+//        //echo "data transformer entity=".$entity."<br>";
+//        //echo "data transformer entity id=".$entity->getId()."<br>";
+//
+//        if( is_int($entity) ) {
+//            //echo "transform by name=".$entity." !!!<br>";
+//            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity); //RequestCategoryTypeList
+//            //echo "findOneById entity=".$entity."<br>";
+//        }
+//        else {
+//            //echo "transform by name=".$entity." ????????????????<br>";
+//            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
+//            $entity = $this->findEntityByString($entity);
+//        }
+//
+//        if( null === $entity ) {
+//            return "";
+//        }
+//
+//        //return $entity->getId();
+//
+//        //echo "count=".count($entity)."<br>";
+//
+//        return $entity->getId();
+//    }
 
     /**
      * New/Show/Edit
@@ -124,6 +124,9 @@ class StringItemCodeTransformer implements DataTransformerInterface
         }
 
         if( null === $entityFound ) {
+
+            //$entity - RequestCategoryTypeList
+
             return $entity;
         }
 

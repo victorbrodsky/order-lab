@@ -3832,31 +3832,17 @@ class TransResRequestUtil
     }
 
     public function getInvoiceItemInfoHtml( $invoiceItem ) {
-//        //test
-//        $testPrice = $this->toDecimal(NULL);
-//        echo "testPrice=$testPrice<br>"; //testPrice=0.00
-//        <tr>
-//                    {% set strlimit = 60 %}
-//                    {% set descriptionStr = invoiceItem.description %}
-//                    {% if descriptionStr|length > strlimit %}
-//                        {% set descriptionStr = descriptionStr|slice(0, strlimit) ~ '...' %}
-//                    {% endif %}
-//                    <td>{{ descriptionStr }}</td>
-//
-//                    <td>{{ invoiceItem.quantity }}</td>
-//                    <td>{{ invoiceItem.itemCode }}</td>
-//
-//                    <td>{{ invoiceItem.unitPrice }}</td>
-//
-//                    {% if showAdditionalUnitPrice %}
-//                        <td>{{ invoiceItem.additionalUnitPrice }}</td>
-//                    {% endif %}
-//
-//                    <td>{{ invoiceItem.total }}</td>
-//                </tr>
-
         $transresUtil = $this->container->get('transres_util');
         $row = "";
+        $priceList = NULL;
+
+//        $invoice = $invoiceItem->getInvoice();
+//        if( $invoice ) {
+//            $transresRequest = $invoice->getTransresRequest();
+//            if( $transresRequest ) {
+//                $priceList = $transresRequest->getPriceList();
+//            }
+//        }
 
         //description
         $maxLen = 60;
@@ -3868,7 +3854,7 @@ class TransResRequestUtil
 
         //quantity (integer), unitPrice (type="decimal", precision=15, scale=2), additionalUnitPrice (type="decimal", precision=15, scale=2)
         //$secondRaw = false;
-        $itemCode = $invoiceItem->getItemCode();
+        $itemCode = $invoiceItem->getItemCodeWithPriceListAbbreviation(); //getItemCode();
         $quantity = $invoiceItem->getQuantity();
         $additionalQuantity = $invoiceItem->getAdditionalQuantity();
         $unitPrice = $this->toDecimal($invoiceItem->getUnitPrice());
