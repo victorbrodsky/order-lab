@@ -99,6 +99,7 @@ class StringItemCodeTransformer implements DataTransformerInterface
      */
     public function transform($entity)
     {
+        //$entity = "delivery fee";
         //echo "data transformer entity=".$entity."<br>";
 
         if( null === $entity || $entity == "" ) {

@@ -3836,14 +3836,6 @@ class TransResRequestUtil
         $row = "";
         $priceList = NULL;
 
-//        $invoice = $invoiceItem->getInvoice();
-//        if( $invoice ) {
-//            $transresRequest = $invoice->getTransresRequest();
-//            if( $transresRequest ) {
-//                $priceList = $transresRequest->getPriceList();
-//            }
-//        }
-
         //description
         $maxLen = 60;
         $descriptionStr = $invoiceItem->getDescription();

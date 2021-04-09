@@ -173,6 +173,31 @@ class DefaultController extends OrderAbstractController
         }
 
         $output = array();
+
+        //add not existed item code for invoiceItems without product
+        if( $invoiceId ) {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+            if ($invoice) {
+                foreach ($invoice->getInvoiceItems() as $invoiceItem) {
+                    $product = $invoiceItem->getProduct();
+                    if( $product ) {
+
+                        $category = $product->getCategory();
+
+                        if( !$category ) {
+                            $itemCode = $invoiceItem->getItemCode();
+                            //echo $invoiceItem->getId().": itemCode=".$itemCode."<br>";
+
+                            $output[] = array(
+                                'id' => $itemCode,
+                                'text' => $itemCode,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
         foreach ($categories as $category) {
 
 //            $initialQuantity = $category->getPriceInitialQuantity($priceList);
@@ -200,26 +225,6 @@ class DefaultController extends OrderAbstractController
 //            'id' => "new code item 1",
 //            'text' => "new code item 1",
 //        );
-
-        //add not existed item code for invoiceItems without product
-        if( $invoiceId ) {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
-            if ($invoice) {
-                foreach ($invoice->getInvoiceItems() as $invoiceItem) {
-                    $product = $invoiceItem->getProduct();
-                    if (!$product) {
-
-                        $itemCode = $invoiceItem->getItemCode();
-                        //echo $invoiceItem->getId().": itemCode=".$itemCode."<br>";
-
-                        $output[] = array(
-                            'id' => $itemCode,
-                            'text' => $itemCode,
-                        );
-                    }
-                }
-            }
-        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

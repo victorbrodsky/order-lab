@@ -87,7 +87,9 @@ class InvoiceItemType extends AbstractType
                     if( $category ) {
                         $categoryId = $category->getId();
                     }
-                } else {
+                }
+
+                if( !$categoryId ) {
                     $categoryId = $invoiceItem->getItemCode();
                 }
 
@@ -96,7 +98,8 @@ class InvoiceItemType extends AbstractType
                 $total1 = $invoiceItem->getTotal1();
                 $total2 = $invoiceItem->getTotal2();
             }
-            //echo "itemCode=$itemCode <br>";
+            //$itemCode = "delivery fee";
+            //echo "itemCode=[$itemCode]<br>";
 
             if($this->itemCodeString) {
                 $form->add('itemCode', null, array(

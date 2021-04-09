@@ -360,6 +360,9 @@
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
                 <div class="col-xs-2">
+                    {#{% if forminvoiceItem and forminvoiceItem.vars.value %}#}
+                        {#itemCode=[{{ forminvoiceItem.vars.value.itemCode }}]#}
+                    {#{% endif %}#}
                     <p>
                     {{ form_widget(forminvoiceItem.itemCode) }}
                     </p>
