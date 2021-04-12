@@ -337,9 +337,9 @@
             {% set remainingBudgetInfo = "" %}
             {% set appendRemainingBudget = transres_util.appendRemainingBudget(project) %}
             {% if appendRemainingBudget %}
-                {% set thisRemainingBudget = project.getRemainingBudget() %}
-                {% if thisRemainingBudget %}
-                    {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(project.getRemainingBudget())~")" %}
+                {% set thisApprovedProjectBudget = project.getApprovedProjectBudget() %}
+                {% if thisApprovedProjectBudget %}
+                    {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(project.thisApprovedProjectBudget())~")" %}
                 {% endif %}
             {% endif %}
 
