@@ -442,11 +442,11 @@
                 {#Value - only for TRP admin role#}
                 {% if showValue %}
                     <td>
-                        {% if invoicesInfos.grandTotal is not null %}
+                        {#{% if invoicesInfos.grandTotal is not null %}#}
                             {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
-                            {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
-                        {% endif %}
-                        <br>PTotal:{{ transres.dollarSignValue(project.getTotal()) }}
+                            {#{{ transres.dollarSignValue(invoicesInfos.grandTotal) }}#}
+                        {#{% endif %}#}
+                        {{ transres.dollarSignValue(project.getTotal()) }}
                     </td>
                 {% endif %}
 
