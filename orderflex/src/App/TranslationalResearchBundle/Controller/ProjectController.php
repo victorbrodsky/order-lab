@@ -1558,7 +1558,7 @@ class ProjectController extends OrderAbstractController
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
         $approvedProjectBudgetInfo = "";
-        if( $transresUtil->appendRemainingBudget($project) ) {
+        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
                 $approvedProjectBudget = $project->toMoney($approvedProjectBudget);
@@ -1653,7 +1653,7 @@ class ProjectController extends OrderAbstractController
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
         $approvedProjectBudgetInfo = "";
-        if( $transresUtil->appendRemainingBudget($project) ) {
+        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
                 $approvedProjectBudget = $project->toMoney($approvedProjectBudget);

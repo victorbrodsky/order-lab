@@ -217,12 +217,14 @@
         {#isAdminOrPrimaryReviewerOrExecutive#}
         {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
         {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
-            {% set showRemainingBudget = true %}
+            {#{% set showRemainingBudget = true %}#}
             {% set showValue = true %}
         {% else %}
-            {% set showRemainingBudget = false %}
+            {#{% set showRemainingBudget = false %}#}
             {% set showValue = false %}
         {% endif %}
+
+        {% set showRemainingBudget = transres_util.showRemainingBudgetForProjects(projects) %}
 
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     {#<table class="records_list table table-condensed table-hover text-left my-table-class">#}
@@ -334,16 +336,16 @@
             Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
             ONLY for projects with status = Final Approved or Closed
             #}
-            {% set remainingBudgetInfo = "" %}
-            {% set appendRemainingBudget = transres_util.appendRemainingBudget(project) %}
-            {% if appendRemainingBudget %}
+            {% set approvedBudgetInfo = "" %}
+            {% set appendApprovedBudget = transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+            {% if appendApprovedBudget %}
                 {% set thisApprovedProjectBudget = project.getApprovedProjectBudget() %}
                 {% if thisApprovedProjectBudget %}
-                    {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(thisApprovedProjectBudget)~")" %}
+                    {% set approvedBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(thisApprovedProjectBudget)~")" %}
                 {% endif %}
             {% endif %}
 
-            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}{{ remainingBudgetInfo }}">
+            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}{{ approvedBudgetInfo }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
                        target="_blank"
@@ -448,10 +450,9 @@
                 {% if showRemainingBudget %}
                     <td>
                         {% if remainingBudget %}
-                            {#${{ remainingBudget }}#}
-                            {{ transres.dollarSignValue(remainingBudget) }}
-                        {% else %}
-                            {#No Info#}
+                            {% if transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+                                {{ transres.dollarSignValue(remainingBudget) }}
+                            {% endif %}
                         {% endif %}
                     </td>
                 {% endif %}

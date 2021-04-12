@@ -583,25 +583,6 @@ class TransResUtil
             return true;
         }
 
-//        if(
-//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
-//
-//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
-//
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
-//        ) {
-//            return true;
-//        }
-
         return false;
     }
     public function isAdminOrPrimaryReviewerOrExecutive_ORIG( $project=null ) {
@@ -626,13 +607,14 @@ class TransResUtil
         return false;
     }
 
-    //append “ Approved Budget: $xx.xx” at the end of the title again,
-    //only for users listed as PIs or Billing contacts or
+    //check if user:
+    //listed as PIs or Billing contacts or
     //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
     //ONLY for projects with status = Final Approved or Closed
-    public function appendRemainingBudget( $project ) {
+    public function isAdminPiBillingAndApprovedClosed( $project ) {
 
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin)
+        //TRP Admin/Executive Committee/Deputy/Platform Admin should always see it regardless of the project status
         if( $this->isAdminOrPrimaryReviewerOrExecutive($project) ) {
             return true;
         }
@@ -655,6 +637,18 @@ class TransResUtil
         }
 
         return false;
+    }
+
+    public function showRemainingBudgetForProjects( $projects ) {
+        //echo "projects=".count($projects)."<br>";
+        $showRemainingBudget = false;
+        foreach( $projects as $project ) {
+            if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
+                $showRemainingBudget = true;
+                break;
+            }
+        }
+        return $showRemainingBudget;
     }
 
     public function printTransition($transition) {
