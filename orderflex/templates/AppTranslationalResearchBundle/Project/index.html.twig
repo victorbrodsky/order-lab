@@ -339,7 +339,7 @@
             {% if appendRemainingBudget %}
                 {% set thisApprovedProjectBudget = project.getApprovedProjectBudget() %}
                 {% if thisApprovedProjectBudget %}
-                    {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(project.thisApprovedProjectBudget())~")" %}
+                    {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(thisApprovedProjectBudget)~")" %}
                 {% endif %}
             {% endif %}
 
