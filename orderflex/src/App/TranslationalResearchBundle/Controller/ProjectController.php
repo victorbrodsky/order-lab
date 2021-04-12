@@ -1553,12 +1553,23 @@ class ProjectController extends OrderAbstractController
 
         $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
+        //append “ Approved Budget: $xx.xx” at the end of the title again,
+        //only for users listed as PIs or Billing contacts or
+        //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
+        //ONLY for projects with status = Final Approved or Closed
+        $remainingBudgetInfo = "";
+        if( $transresUtil->appendRemainingBudget($project) ) {
+            $remainingBudget = $project->getRemainingBudget();
+            $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
+            $remainingBudgetInfo = " (Approved Budget: $remainingBudget)";
+        }
+
         return array(
             'project' => $project,
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit ".$project->getProjectInfoName(),
+            'title' => "Edit ".$project->getProjectInfoName().$remainingBudgetInfo, //edit
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -1634,11 +1645,22 @@ class ProjectController extends OrderAbstractController
             $eventObjectTypeId = null;
         }
 
+        //append “ Approved Budget: $xx.xx” at the end of the title again,
+        //only for users listed as PIs or Billing contacts or
+        //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
+        //ONLY for projects with status = Final Approved or Closed
+        $remainingBudgetInfo = "";
+        if( $transresUtil->appendRemainingBudget($project) ) {
+            $remainingBudget = $project->getRemainingBudget();
+            $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
+            $remainingBudgetInfo = " (Approved Budget: $remainingBudget)";
+        }
+
         return array(
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $project->getProjectInfoName(), //"Project request ".$project->getOid(),
+            'title' => $project->getProjectInfoName().$remainingBudgetInfo, //show: "Project request ".$project->getOid(),
             //'delete_form' => $deleteForm->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             //'review_forms' => $reviewFormViews
@@ -2280,7 +2302,7 @@ class ProjectController extends OrderAbstractController
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $feeScheduleLink = " <a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
+        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
 
         $params = array(
             'cycle' => $cycle,

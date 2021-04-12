@@ -552,6 +552,59 @@ class TransResUtil
         return false;
     }
     public function isAdminOrPrimaryReviewerOrExecutive( $project=null ) {
+        //check only if user is admin, executive for the project specialty
+        //or user is a primary (final) reviewer of this particular project
+
+        $projectSpecialty = null;
+        $specialtyStr = null;
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
+        if( $projectSpecialty ) {
+            $specialtyStr = $projectSpecialty->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
+
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+//        if(
+//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
+//
+//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
+//
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//        ) {
+//            return true;
+//        }
+
+        return false;
+    }
+    public function isAdminOrPrimaryReviewerOrExecutive_ORIG( $project=null ) {
         //TODO: implement check only if user is admin, executive for the project specialty
         //TODO: or user is a primary (final) reviewer of this particular project
         if(
@@ -570,6 +623,37 @@ class TransResUtil
         ) {
             return true;
         }
+        return false;
+    }
+
+    //append “ Approved Budget: $xx.xx” at the end of the title again,
+    //only for users listed as PIs or Billing contacts or
+    //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
+    //ONLY for projects with status = Final Approved or Closed
+    public function appendRemainingBudget( $project ) {
+
+        //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin)
+        if( $this->isAdminOrPrimaryReviewerOrExecutive($project) ) {
+            return true;
+        }
+
+        //ONLY for projects with status = Final Approved or Closed
+        if( $project->getState() == "final_approved" || $project->getState() == "closed" ) {
+            //Continue
+        } else {
+            return false;
+        }
+
+        //only for users listed as PIs or Billing contacts or
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( $project->getPrincipalInvestigators()->contains($user) ) {
+            return true;
+        }
+        if( $project->getBillingContacts()->contains($user) ) {
+            return true;
+        }
+
         return false;
     }
 
@@ -6396,5 +6480,17 @@ class TransResUtil
         $priceList = $request->getPriceList();
         return $this->getPriceListColor($priceList);
     }
-    
+
+    public function dollarSignValue($value) {
+        if( $value !== NULL ) {
+            if( $value >= 0 ) {
+                $value = "$".$value;
+            } else {
+                $value = "-$".abs($value);
+            }
+        }
+
+        return $value;
+    }
+
 }

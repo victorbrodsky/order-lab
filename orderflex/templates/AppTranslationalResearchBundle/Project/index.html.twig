@@ -214,7 +214,9 @@
     {#check performance   scan_perSiteSettings?     #}
     {% if projectsTableDisable is not defined %}
 
-        {% if transres_util.isAdminOrPrimaryReviewer() %}
+        {#isAdminOrPrimaryReviewerOrExecutive#}
+        {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
+        {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
             {% set showRemainingBudget = true %}
             {% set showValue = true %}
         {% else %}
@@ -326,7 +328,19 @@
                 {% endif %}
             {% endif %}
 
-            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}">
+            {#
+            append “ Approved Budget: $xx.xx” at the end of the title again,
+            only for users listed as PIs or Billing contacts or
+            Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
+            ONLY for projects with status = Final Approved or Closed
+            #}
+            {% set remainingBudgetInfo = "" %}
+            {% set appendRemainingBudget = transres_util.appendRemainingBudget(project) %}
+            {% if appendRemainingBudget %}
+                {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(remainingBudget)~")" %}
+            {% endif %}
+
+            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}{{ remainingBudgetInfo }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
                        target="_blank"
