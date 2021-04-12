@@ -1092,20 +1092,22 @@ class DefaultController extends OrderAbstractController
                 //echo $project->getId().": totals: $total != $grandTotal <br>";
 
                 if( $total !== NULL && $grandTotal != $total ) {
-                    echo $project->getId().": Project total different: current=$total, correct=$grandTotal <br>";
+                    echo $project->getId() . ": Project total different: current=$total, correct=$grandTotal <br>";
                     $countDiff++;
-                }
 
-                if (($count % $batchSize) === 0) {
-                    //$em->flush();
+                    $project->updateProjectTotal();
+
+                    if (($count % $batchSize) === 0) {
+                        $em->flush();
+                    }
+                    $count++;
                 }
-                $count++;
             } else {
                 echo "!!! project is null <br>";
             }
         }
 
-        //$em->flush(); //Persist objects that did not make up an entire batch
+        $em->flush(); //Persist objects that did not make up an entire batch
 
         exit("Project diff count = $countDiff");
 

@@ -254,8 +254,8 @@
                 {% endif %}
 
                 {% if showValue %}
-                    {#grandTotal#}
-                    <th title="Project's value (billed and unbilled)">Value</th>
+                    {#grandTotal -> Value#}
+                    <th title="Project's value (billed and unbilled)">{{ knp_pagination_sortable(projects, 'Value', 'project.total') }}</th>
                 {% endif %}
 
                 <th title="Total amount of the most recent issued invoices including subsidy (Paid + Due + Positive Subsidy)">Total</th>
