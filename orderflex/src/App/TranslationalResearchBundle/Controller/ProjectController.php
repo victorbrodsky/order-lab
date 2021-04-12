@@ -1560,8 +1560,10 @@ class ProjectController extends OrderAbstractController
         $approvedProjectBudgetInfo = "";
         if( $transresUtil->appendRemainingBudget($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
-            $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-            $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+            if( $approvedProjectBudget ) {
+                $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+            }
         }
 
         return array(
@@ -1652,8 +1654,10 @@ class ProjectController extends OrderAbstractController
         $approvedProjectBudgetInfo = "";
         if( $transresUtil->appendRemainingBudget($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
-            $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-            $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+            if( $approvedProjectBudget ) {
+                $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+            }
         }
 
         return array(
