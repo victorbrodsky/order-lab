@@ -1004,6 +1004,9 @@ class Project {
         //return $this->strToDecimal($number);
         return number_format((float)$number, 2, '.', '');
     }
+    public function toMoney($number) {
+        return number_format((float)$number, 2, '.', ',');
+    }
     //$1,160.98 => 1160.98
     public function strToDecimal($str) {
         //$str = "-$1,160.98"; //testing

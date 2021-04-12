@@ -1561,6 +1561,7 @@ class ProjectController extends OrderAbstractController
         if( $transresUtil->appendRemainingBudget($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
+                $approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
                 $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
             }
@@ -1655,6 +1656,7 @@ class ProjectController extends OrderAbstractController
         if( $transresUtil->appendRemainingBudget($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
+                $approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
                 $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
             }
