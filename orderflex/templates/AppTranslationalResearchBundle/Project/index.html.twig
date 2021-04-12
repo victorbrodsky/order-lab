@@ -337,7 +337,7 @@
             {% set remainingBudgetInfo = "" %}
             {% set appendRemainingBudget = transres_util.appendRemainingBudget(project) %}
             {% if appendRemainingBudget %}
-                {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(remainingBudget)~")" %}
+                {% set remainingBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(project.getRemainingBudget())~")" %}
             {% endif %}
 
             <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}{{ remainingBudgetInfo }}">
