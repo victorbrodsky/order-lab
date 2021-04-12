@@ -1092,7 +1092,7 @@ class DefaultController extends OrderAbstractController
                 //echo $project->getId().": totals: $total != $grandTotal <br>";
 
                 if( $total !== NULL && $grandTotal != $total ) {
-                    echo $project->getId().": Project total different: $total != $grandTotal <br>";
+                    echo $project->getId().": Project total different: current=$total, correct=$grandTotal <br>";
                     $countDiff++;
                 }
 
