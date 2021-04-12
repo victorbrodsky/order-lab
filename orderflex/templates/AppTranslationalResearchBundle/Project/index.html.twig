@@ -446,6 +446,7 @@
                             {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
                             {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
                         {% endif %}
+                        {#<br>PTotal:{{ transres.dollarSignValue(project.getTotal()) }}#}
                     </td>
                 {% endif %}
 
@@ -458,6 +459,7 @@
                     {% if invoicesInfos.sumTotal is not null %}
                         {{ transres.dollarSignValue(invoicesInfos.sumTotal) }}
                     {% endif %}
+                    {#<br>PTotal:{{ transres.dollarSignValue(project.getTotal()) }}#}
                 </td>
 
                 {#Charge#}

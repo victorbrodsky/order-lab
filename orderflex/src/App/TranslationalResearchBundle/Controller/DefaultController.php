@@ -1057,7 +1057,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        exit("updateProjectTotalAction: Not allowed");
+        //exit("updateProjectTotalAction: Not allowed");
 
         ini_set('max_execution_time', '600'); //600 seconds = 10 minutes
 
@@ -1067,7 +1067,9 @@ class DefaultController extends OrderAbstractController
         $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
-        $dql->where("project.total IS NULL");
+        $dql->orderBy("project.id","DESC");
+        //$dql->where("project.total IS NULL");
+        //$dql->where("project.total IS NOT NULL");
         $query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
         $projects = $query->getResult();
@@ -1075,15 +1077,27 @@ class DefaultController extends OrderAbstractController
 
         $batchSize = 20;
         $count = 0;
+        $countDiff = 0;
+
         foreach($projects as $project) {
             //echo "project=".$project."<br>";
             if( $project ) {
-                
-                $total = $project->updateProjectTotal();
-                echo $project->getId().": total=$total <br>";
+
+                $invoicesInfos = $project->getInvoicesInfosByProject();
+                $grandTotal = $invoicesInfos['grandTotal'];
+
+                //$total = $project->updateProjectTotal();
+                $total = $project->getTotal();
+                //echo $project->getId().": total=$total <br>";
+                //echo $project->getId().": totals: $total != $grandTotal <br>";
+
+                if( $total !== NULL && $grandTotal != $total ) {
+                    echo $project->getId().": Project total different: $total != $grandTotal <br>";
+                    $countDiff++;
+                }
 
                 if (($count % $batchSize) === 0) {
-                    $em->flush();
+                    //$em->flush();
                 }
                 $count++;
             } else {
@@ -1091,7 +1105,9 @@ class DefaultController extends OrderAbstractController
             }
         }
 
-        $em->flush(); //Persist objects that did not make up an entire batch
+        //$em->flush(); //Persist objects that did not make up an entire batch
+
+        exit("Project diff count = $countDiff");
 
         exit("updated $count projects");
     }
