@@ -1557,11 +1557,11 @@ class ProjectController extends OrderAbstractController
         //only for users listed as PIs or Billing contacts or
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
-        $remainingBudgetInfo = "";
+        $approvedProjectBudgetInfo = "";
         if( $transresUtil->appendRemainingBudget($project) ) {
-            $remainingBudget = $project->getRemainingBudget();
-            $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
-            $remainingBudgetInfo = " (Approved Budget: $remainingBudget)";
+            $approvedProjectBudget = $project->getApprovedProjectBudget();
+            $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+            $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
         }
 
         return array(
@@ -1569,7 +1569,7 @@ class ProjectController extends OrderAbstractController
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit ".$project->getProjectInfoName().$remainingBudgetInfo, //edit
+            'title' => "Edit ".$project->getProjectInfoName().$approvedProjectBudgetInfo, //edit
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -1649,18 +1649,18 @@ class ProjectController extends OrderAbstractController
         //only for users listed as PIs or Billing contacts or
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
-        $remainingBudgetInfo = "";
+        $approvedProjectBudgetInfo = "";
         if( $transresUtil->appendRemainingBudget($project) ) {
-            $remainingBudget = $project->getRemainingBudget();
-            $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
-            $remainingBudgetInfo = " (Approved Budget: $remainingBudget)";
+            $approvedProjectBudget = $project->getApprovedProjectBudget();
+            $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+            $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
         }
 
         return array(
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $project->getProjectInfoName().$remainingBudgetInfo, //show: "Project request ".$project->getOid(),
+            'title' => $project->getProjectInfoName().$approvedProjectBudgetInfo, //show: "Project request ".$project->getOid(),
             //'delete_form' => $deleteForm->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             //'review_forms' => $reviewFormViews
