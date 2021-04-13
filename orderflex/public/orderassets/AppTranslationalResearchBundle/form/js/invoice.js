@@ -162,17 +162,17 @@ function transresInvoiceItemListeneres(){
     transresInitItemCodeAsSelect();
     transresInvoiceItemCodeListeneres();
 
-    $('.invoiceitem-quantity').on('input', function(event) {
-        var invoiceItemRow = $(this).closest('.user-collection-holder');
-        transresAdjustQuantity(invoiceItemRow);
-
-        //transresRecalculateInvoiceDefaultTotal();
-
-        transresCalculateTotals(invoiceItemRow);
-
-        //console.log("transres UpdateSubTotal: triggered by claculated row total");
-        transresUpdateSubTotal(this);
-    });
+    // $('.invoiceitem-quantity').on('input', function(event) {
+    //     var invoiceItemRow = $(this).closest('.user-collection-holder');
+    //     transresAdjustQuantity(invoiceItemRow);
+    //
+    //     //transresRecalculateInvoiceDefaultTotal();
+    //
+    //     transresCalculateTotals(invoiceItemRow);
+    //
+    //     //console.log("transres UpdateSubTotal: triggered by claculated row total");
+    //     transresUpdateSubTotal(this);
+    // });
 
     $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function(event) {
         var invoiceItemRow = $(this).closest('.user-collection-holder');
@@ -184,6 +184,8 @@ function transresInvoiceItemListeneres(){
 
         //console.log("transres UpdateSubTotal: triggered by claculated row total");
         transresUpdateSubTotal(this);
+
+        transresLockUnlockPriceField(invoiceItemRow);
     });
 
     $('.invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
@@ -871,4 +873,27 @@ function transresInitItemCodeAsSelect() {
     transresGetComboboxGeneric('transresitemcodes',_transresitemcodes,pricelistId);
 }
 
+function transresLockUnlockPriceField(invoiceItemRow) {
+    var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+    if( quantity && quantity != 0 ) {
+        //unlock
+        invoiceItemRow.find(".invoiceitem-unitPrice").prop( "disabled", false );
+        //invoiceItemRow.find(".invoiceitem-unitPrice").removeAttr( "disabled" );
+    } else {
+        //lock
+        invoiceItemRow.find(".invoiceitem-unitPrice").prop( "disabled", true );
+        //invoiceItemRow.find(".invoiceitem-unitPrice").attr( "disabled", true );
+    }
+
+    var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+    if( additionalQuantity && additionalQuantity != 0 ) {
+        //unlock
+        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop( "disabled", false );
+        //invoiceItemRow.find(".invoiceitem-additionalUnitPrice").removeAttr( "disabled" );
+    } else {
+        //lock
+        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop( "disabled", true );
+        //invoiceItemRow.find(".invoiceitem-additionalUnitPrice").attr( "disabled", true );
+    }
+}
 

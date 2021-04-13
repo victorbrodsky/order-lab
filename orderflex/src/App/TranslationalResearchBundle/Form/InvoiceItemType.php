@@ -44,13 +44,13 @@ class InvoiceItemType extends AbstractType
         $builder->add('quantity', NumberType::class, array(
             'label' => "Quantity",
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-quantity digit-mask', 'min'=>'0')
+            'attr' => array('class' => 'form-control invoiceitem-quantity digit-mask', 'min'=>'0', 'data-toggle'=>'tooltip', 'title' => 'Initial')
         ));
 
         $builder->add('additionalQuantity', NumberType::class, array(
             'label' => "Additional Quantity",
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-additionalQuantity digit-mask', 'min'=>'0')
+            'attr' => array('class' => 'form-control invoiceitem-additionalQuantity digit-mask', 'min'=>'0', 'data-toggle'=>'tooltip', 'title' => 'Additional')
         ));
 
         ///////////// Item Code /////////////////
@@ -119,7 +119,7 @@ class InvoiceItemType extends AbstractType
             } else {
                 $form->add('itemCode', CustomSelectorType::class, array(
                     'label' => "Item Code",
-                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden'),
+                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCode', 'type' => 'hidden', 'data-toggle'=>'tooltip', 'title' => 'Initial'),
                     'required' => false,
                     "data" => $categoryId,
                     'classtype' => 'transresitemcodes'
@@ -130,7 +130,7 @@ class InvoiceItemType extends AbstractType
                     'required' => false,
                     'mapped' => false,
                     'disabled' => true,
-                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden'),
+                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden', 'data-toggle'=>'tooltip', 'title' => 'Additional'),
                     "data" => $categoryId,
                     'classtype' => 'transresitemcodes'
                 ));
@@ -143,7 +143,7 @@ class InvoiceItemType extends AbstractType
                 'required' => false,
                 'disabled' => true,
                 'data' => $total1,
-                'attr' => array('class' => 'form-control invoiceitem-total1')
+                'attr' => array('class' => 'form-control invoiceitem-total1', 'data-toggle'=>'tooltip', 'title' => 'Initial')
             ));
             $form->add('total2', NumberType::class, array(
                 'label' => false, //"Total ($)",
@@ -152,7 +152,7 @@ class InvoiceItemType extends AbstractType
                 'required' => false,
                 'disabled' => true,
                 'data' => $total2,
-                'attr' => array('class' => 'form-control invoiceitem-total2')
+                'attr' => array('class' => 'form-control invoiceitem-total2', 'data-toggle'=>'tooltip', 'title' => 'Additional')
             ));
 
         });
@@ -170,7 +170,7 @@ class InvoiceItemType extends AbstractType
             //'divisor' => 100,
             //'currency' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-unitPrice currency-mask-without-prefix')
+            'attr' => array('class' => 'form-control invoiceitem-unitPrice currency-mask-without-prefix', 'data-toggle'=>'tooltip', 'title' => 'Initial')
         ));
 
         $builder->add('additionalUnitPrice', null, array(
@@ -179,7 +179,7 @@ class InvoiceItemType extends AbstractType
             //'divisor' => 100,
             //'currency' => false,
             'required' => false,
-            'attr' => array('class' => 'form-control invoiceitem-additionalUnitPrice currency-mask-without-prefix')
+            'attr' => array('class' => 'form-control invoiceitem-additionalUnitPrice currency-mask-without-prefix', 'data-toggle'=>'tooltip', 'title' => 'Additional')
         ));
 
 //        $builder->add('total', NumberType::class, array(
