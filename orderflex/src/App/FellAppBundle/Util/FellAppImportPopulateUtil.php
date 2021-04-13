@@ -144,38 +144,49 @@ class FellAppImportPopulateUtil {
                 //echo "Ok, Number of DB applications is equal or more than on Google drive <br>";
             } else {
 
-                $body = "Warning: number of the fellowship applications on google drive is more than imported to the order's DB: 
-                filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
+                //TODO: compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
+                $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
+                if( count($notExistedApplications) > 0 ) {
 
-                $result = $result . "<br><br>" . $body;
+                    $notExistedApplicationsStr = implode("; ",$notExistedApplications);
 
-                //echo $body."<br>";
+                    //$body = "Warning: number of the fellowship applications on google drive for $currentYear is more than imported to the order's DB: ".
+                    //        "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
 
-                ////////////////// ERROR //////////////////
-                $logger->error($body);
+                    $body = "Warning: the following fellowship applications on google drive for $currentYear have not imported to the order's DB:".
+                        "<br>".
+                        "$notExistedApplicationsStr";
 
-                //Create error notification email
-                $subject = "[ORDER] Warning: Number of Fellowship Application on Google Drive is more than imported to order";
-                //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
-                //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+                    $result = $result . "<br><br>" . $body;
 
-                $userSecUtil = $this->container->get('user_security_utility');
-                $systemUser = $userSecUtil->findSystemUser();
+                    //echo $body."<br>";
 
-                $userSecUtil->sendEmailToSystemEmail($subject, $body);
+                    ////////////////// ERROR //////////////////
+                    $logger->error($body);
 
-                //Send email to admins
-                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-                if (!$emails) {
-                    $emails = $ccs;
-                    $ccs = null;
+                    //Create error notification email
+                    $subject = "[ORDER] Warning: Number of Fellowship Application on Google Drive is more than imported to order";
+                    //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
+                    //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $systemUser = $userSecUtil->findSystemUser();
+
+                    $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+                    //Send email to admins
+                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                    if (!$emails) {
+                        $emails = $ccs;
+                        $ccs = null;
+                    }
+                    $emailUtil = $this->container->get('user_mailer_utility');
+                    $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
+                    ////////////////// EOF ERROR //////////////////
                 }
-                $emailUtil = $this->container->get('user_mailer_utility');
-                $emailUtil->sendEmail($emails, $subject, $body, $ccs);
-
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
-                ////////////////// EOF ERROR //////////////////
 
             }
 
@@ -183,6 +194,24 @@ class FellAppImportPopulateUtil {
         }
 
         return $result;
+    }
+
+    //Return array of not existed fellowship applications on DB
+    public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
+
+        $notExistedArr = array();
+
+        foreach($filesGoogleDrive as $file) {
+            $fileTitle = $file->getTitle();
+            if( $fileTitle ) {
+                $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
+                if( !$fellowshipApplicationDb ) {
+                    $notExistedArr[] = $file->getTitle();
+                }
+            }
+        }
+
+        return $notExistedArr;
     }
 
     //1)  Import sheets from Google Drive
