@@ -118,7 +118,7 @@ class FellAppImportPopulateUtil {
             //compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
             $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
             if( count($notExistedApplications) > 0 ) {
-                $notExistedApplicationsStr = "The following fellowship applications on google drive have not imported to the order's DB".
+                $notExistedApplicationsStr = "The following fellowship applications on google drive have not been imported to the order's DB".
                     "<br>".
                     implode("; ",$notExistedApplications);
             }
@@ -144,7 +144,7 @@ class FellAppImportPopulateUtil {
 
         ///////////////// get not existed fellowship applications on DB //////////////////////
         if( count($notExistedApplications) > 0 ) {
-            $notExistedApplicationsStr = "The following fellowship applications on google drive have not imported to the order's DB".
+            $notExistedApplicationsStr = "The following fellowship applications on google drive have not been imported to the order's DB".
                 "<br>".
                 implode("; ",$notExistedApplications);
 
@@ -207,7 +207,7 @@ class FellAppImportPopulateUtil {
                         //$body = "Warning: number of the fellowship applications on google drive for $currentYear is more than imported to the order's DB: ".
                         //        "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
 
-                        $body = "Warning: the following fellowship applications on google drive for $currentYear have not imported to the order's DB:" .
+                        $body = "Warning: the following fellowship applications on google drive for $currentYear have not been imported to the order's DB:" .
                             "<br>" .
                             "$notExistedApplicationsStr";
 
