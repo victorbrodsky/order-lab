@@ -268,6 +268,8 @@ class FellAppImportPopulateUtil {
             }
         }
 
+        $notExistedArr[] = "Test Application"; //testing
+
         //$logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
 
         return $notExistedArr;
