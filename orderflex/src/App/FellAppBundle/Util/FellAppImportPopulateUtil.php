@@ -111,15 +111,17 @@ class FellAppImportPopulateUtil {
 
         //exit('eof processFellAppFromGoogleDrive');
 
+        $notExistedApplicationsStr = "All fellapp applications in Google Drive have a corresponding fellapp in DB";
+        $notExistedApplications = array();
         if( $filesGoogleDrive ) {
             //get number of not existing fellapp in DB
             //compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
             $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
-            $notExistedApplicationsStr = "the following fellowship applications on google drive have not imported to the order's DB".
-                "<br>".
-                implode("; ",$notExistedApplications);
-        } else {
-            $notExistedApplicationsStr = "All fellapp applications in Google Drive have a corresponding fellapp in DB";
+            if( count($notExistedApplications) > 0 ) {
+                $notExistedApplicationsStr = "The following fellowship applications on google drive have not imported to the order's DB".
+                    "<br>".
+                    implode("; ",$notExistedApplications);
+            }
         }
 
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
@@ -139,86 +141,125 @@ class FellAppImportPopulateUtil {
             $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
         }
+
+        ///////////////// get not existed fellowship applications on DB //////////////////////
+        if( count($notExistedApplications) > 0 ) {
+            $notExistedApplicationsStr = "The following fellowship applications on google drive have not imported to the order's DB".
+                "<br>".
+                implode("; ",$notExistedApplications);
+
+            $body = "Warning: ".$notExistedApplicationsStr;
+
+            $result = $result . "<br><br>" . $body;
+
+            ////////////////// ERROR //////////////////
+            $logger->error($body);
+
+            //Create error notification email
+            $subject = "[ORDER] Warning: Some of the Fellowship Applications on Google Drive are not imported to the order's DB";
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemUser = $userSecUtil->findSystemUser();
+
+            $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+            //Send email to admins
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+            if (!$emails) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
+            ////////////////// EOF ERROR //////////////////
+        }
+        ///////////////// EOF: get not existed fellowship applications on DB //////////////////////
         
-        //Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications
-        $fellappUtil = $this->container->get('fellapp_util');
-        //$currentYear = date("Y")+2;
-        $currentYear = $fellappUtil->getDefaultAcademicStartYear();
-        $currentYear = $currentYear + 2;
-        $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
+        //////////////// Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications /////////////
+        if(0) {
+            //Disable this logic: Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications
+            //is not reliable because we can move the fellapp between the years
+            $fellappUtil = $this->container->get('fellapp_util');
+            //$currentYear = date("Y")+2;
+            $currentYear = $fellappUtil->getDefaultAcademicStartYear();
+            $currentYear = $currentYear + 2;
+            $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null, null, $currentYear);
 
-        if( $filesGoogleDrive ) {
-            $fellowshipDbApplicationsCount = (int)count($fellowshipDbApplications);
-            $filesGoogleDriveCount = (int)count($filesGoogleDrive);
-            //echo "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount <br>";
+            if ($filesGoogleDrive) {
+                $fellowshipDbApplicationsCount = (int)count($fellowshipDbApplications);
+                $filesGoogleDriveCount = (int)count($filesGoogleDrive);
+                //echo "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount <br>";
 
-            if( $fellowshipDbApplicationsCount >= $filesGoogleDriveCount ) {
-                //echo "Ok, Number of DB applications is equal or more than on Google drive <br>";
-            } else {
+                if ($fellowshipDbApplicationsCount >= $filesGoogleDriveCount) {
+                    //echo "Ok, Number of DB applications is equal or more than on Google drive <br>";
+                } else {
 
-                //TODO: compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
-                $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
+                    //TODO: compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
+                    $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
 
-                if( count($notExistedApplications) > 0 ) {
+                    if (count($notExistedApplications) > 0) {
 
-                    $notExistedApplicationsStr = implode("; ",$notExistedApplications);
+                        $notExistedApplicationsStr = implode("; ", $notExistedApplications);
 
-                    //$body = "Warning: number of the fellowship applications on google drive for $currentYear is more than imported to the order's DB: ".
-                    //        "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
+                        //$body = "Warning: number of the fellowship applications on google drive for $currentYear is more than imported to the order's DB: ".
+                        //        "filesGoogleDriveCount=$filesGoogleDriveCount, fellowshipDbApplicationsCount=$fellowshipDbApplicationsCount";
 
-                    $body = "Warning: the following fellowship applications on google drive for $currentYear have not imported to the order's DB:".
-                        "<br>".
-                        "$notExistedApplicationsStr";
+                        $body = "Warning: the following fellowship applications on google drive for $currentYear have not imported to the order's DB:" .
+                            "<br>" .
+                            "$notExistedApplicationsStr";
 
-                    $result = $result . "<br><br>" . $body;
+                        $result = $result . "<br><br>" . $body;
 
-                    //echo $body."<br>";
+                        //echo $body."<br>";
 
-                    ////////////////// ERROR //////////////////
-                    $logger->error($body);
+                        ////////////////// ERROR //////////////////
+                        $logger->error($body);
 
-                    //Create error notification email
-                    $subject = "[ORDER] Warning: Number of Fellowship Application on Google Drive is more than imported to order";
-                    //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
-                    //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+                        //Create error notification email
+                        $subject = "[ORDER] Warning: Number of Fellowship Application on Google Drive is more than imported to order";
+                        //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
+                        //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
 
-                    $userSecUtil = $this->container->get('user_security_utility');
-                    $systemUser = $userSecUtil->findSystemUser();
+                        $userSecUtil = $this->container->get('user_security_utility');
+                        $systemUser = $userSecUtil->findSystemUser();
 
-                    $userSecUtil->sendEmailToSystemEmail($subject, $body);
+                        $userSecUtil->sendEmailToSystemEmail($subject, $body);
 
-                    //Send email to admins
-                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-                    if (!$emails) {
-                        $emails = $ccs;
-                        $ccs = null;
+                        //Send email to admins
+                        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                        if (!$emails) {
+                            $emails = $ccs;
+                            $ccs = null;
+                        }
+                        $emailUtil = $this->container->get('user_mailer_utility');
+                        $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
+                        ////////////////// EOF ERROR //////////////////
                     }
-                    $emailUtil = $this->container->get('user_mailer_utility');
-                    $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
-                    ////////////////// EOF ERROR //////////////////
                 }
 
             }
-
-
         }
+        //////////////// EOF Compare the total of spreadsheet files on Google drive (count($filesGoogleDrive)) with DB applications /////////////
 
         return $result;
     }
 
     //Return array of not existed fellowship applications on DB
     public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
-
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         $notExistedArr = array();
 
         foreach($filesGoogleDrive as $file) {
             $fileTitle = $file->getTitle();
-            $logger->notice("Checking fellapp by title: ".$fileTitle);
+            //$logger->notice("Checking fellapp by title: ".$fileTitle);
             if( $fileTitle ) {
                 $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
                 if( !$fellowshipApplicationDb ) {
@@ -227,7 +268,7 @@ class FellAppImportPopulateUtil {
             }
         }
 
-        $logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
+        //$logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
 
         return $notExistedArr;
     }
