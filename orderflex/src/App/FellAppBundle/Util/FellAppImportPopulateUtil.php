@@ -111,10 +111,22 @@ class FellAppImportPopulateUtil {
 
         //exit('eof processFellAppFromGoogleDrive');
 
+        if( $filesGoogleDrive ) {
+            //get number of not existing fellapp in DB
+            //compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
+            $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
+            $notExistedApplicationsStr = "the following fellowship applications on google drive have not imported to the order's DB".
+                "<br>".
+                implode("; ",$notExistedApplications);
+        } else {
+            $notExistedApplicationsStr = "All fellapp applications in Google Drive have a corresponding fellapp in DB";
+        }
+
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
             "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".$populatedBackupApplications.
-            ", First generated report in queue=".$generatedReport;
+            ", First generated report in queue=[".$generatedReport."]".
+            ", $notExistedApplicationsStr";
 
         $logger = $this->container->get('logger');
         $logger->notice($result);
@@ -146,6 +158,7 @@ class FellAppImportPopulateUtil {
 
                 //TODO: compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
                 $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
+
                 if( count($notExistedApplications) > 0 ) {
 
                     $notExistedApplicationsStr = implode("; ",$notExistedApplications);
@@ -199,10 +212,13 @@ class FellAppImportPopulateUtil {
     //Return array of not existed fellowship applications on DB
     public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
 
+        $logger = $this->container->get('logger');
+
         $notExistedArr = array();
 
         foreach($filesGoogleDrive as $file) {
             $fileTitle = $file->getTitle();
+            $logger->notice("Checking fellapp by title: ".$fileTitle);
             if( $fileTitle ) {
                 $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
                 if( !$fellowshipApplicationDb ) {
@@ -210,6 +226,8 @@ class FellAppImportPopulateUtil {
                 }
             }
         }
+
+        $logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
 
         return $notExistedArr;
     }
