@@ -5604,7 +5604,7 @@ class TransResUtil
 
         if( !$msg ) {
             $user = $this->secTokenStorage->getToken()->getUser();
-            $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'.";
+            $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'";
             $msg = $msg . " by " . $user;
         }
 

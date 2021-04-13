@@ -654,6 +654,13 @@
                                        href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                     >Close project request</a>
                                 </li>
+                                {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
+                                           href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
+                                        >Close project request without notifications</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                             {% if transres_permission_util.hasProjectPermission("approve",project) and project.state != 'final_approved' %}

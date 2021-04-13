@@ -1975,6 +1975,7 @@ class ProjectController extends OrderAbstractController
      * Close project
      *
      * @Route("/close-project/{id}", name="translationalresearch_project_close", methods={"GET"})
+     * @Route("/close-project-without-notifications/{id}", name="translationalresearch_project_close_without_notifications", methods={"GET"})
      */
     public function closeAction(Request $request, Project $project)
     {
@@ -1986,7 +1987,7 @@ class ProjectController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $testing = false;
         $originalStateStr = $project->getState();
@@ -2028,8 +2029,20 @@ class ProjectController extends OrderAbstractController
         /////////////////////// EOF email and logger ////////////////////////
 
 
-        //Send transition emails
-        $resultMsg = $transresUtil->sendTransitionEmail($project,$originalStateStr,$testing);
+        $routeName = $request->get('_route');
+        $resultMsg = "Project request ".$project->getOid()." has been closed by $user";
+        $sessionNotice = $resultMsg;
+
+        if( $routeName == "translationalresearch_project_close" ) {
+            //Send transition emails
+            $resultMsg = $transresUtil->sendTransitionEmail($project, $originalStateStr, $testing);
+            $sessionNotice = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
+        }
+
+        if( $routeName == "translationalresearch_project_close_without_notifications" ) {
+            $resultMsg = "Project request ".$project->getOid()." has been closed by $user without sending any email notifications";
+            $sessionNotice = $resultMsg;
+        }
 
         //event log
         $eventType = "Review Submitted";
@@ -2037,7 +2050,8 @@ class ProjectController extends OrderAbstractController
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
+            $sessionNotice
+            //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
         );
 
         return $this->redirectToRoute('translationalresearch_project_index');
