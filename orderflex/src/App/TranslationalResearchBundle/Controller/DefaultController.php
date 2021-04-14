@@ -212,13 +212,12 @@ class DefaultController extends OrderAbstractController
                 continue;
             }
 
+            //show not just the item codes, but item codes followed by both the Description and Initial/Additional prices
             $output[] = array(
                 'id' => $category->getId(),
                 //'id' => $category->getProductId().$abbreviation,
                 //'text' => $category->getProductId().$abbreviation,
-                //'text' => $category->getProductId().", ".$category->getName().$abbreviation,
                 'text' => $category->getOptimalAbbreviationName($priceList), //Use the same as in ProductType.php -> category
-//                'initialFee' => $initialFee
             );
         }
 

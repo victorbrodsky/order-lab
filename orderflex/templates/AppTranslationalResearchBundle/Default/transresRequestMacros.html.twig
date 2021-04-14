@@ -359,16 +359,23 @@
                     <br>
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-2" style="margin-top: 2%;">
                     {#{% if forminvoiceItem and forminvoiceItem.vars.value %}#}
                         {#itemCode=[{{ forminvoiceItem.vars.value.itemCode }}]#}
                     {#{% endif %}#}
-                    <p>
+                    {#<p class="align-middle">#}
+                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
+                    {#</p>#}
+
+                    {#<span class="align-middle">{{ form_widget(forminvoiceItem.itemCode) }}</span>#}
+
+                    {#<div  class="center">#}
                     {{ form_widget(forminvoiceItem.itemCode) }}
-                    </p>
+                    {#</div >#}
+
                     {#{{ formmacros.field(forminvoiceItem.itemCode) }}#}
-                    <br>
-                    {{ form_widget(forminvoiceItem.itemCodeNotMapped) }}
+                    {#<br>#}
+                    {#{{ form_widget(forminvoiceItem.itemCodeNotMapped) }}#}
                 </div>
                 <div class="col-xs-1 text-left">
                     {{ form_widget(forminvoiceItem.unitPrice) }}

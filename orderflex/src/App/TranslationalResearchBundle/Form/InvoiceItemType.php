@@ -125,15 +125,15 @@ class InvoiceItemType extends AbstractType
                     'classtype' => 'transresitemcodes'
                 ));
 
-                $form->add('itemCodeNotMapped', CustomSelectorType::class, array(
-                    'label' => false, //"Item Code",
-                    'required' => false,
-                    'mapped' => false,
-                    'disabled' => true,
-                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden', 'data-toggle'=>'tooltip', 'title' => 'Additional'),
-                    "data" => $categoryId,
-                    'classtype' => 'transresitemcodes'
-                ));
+//                $form->add('itemCodeNotMapped', CustomSelectorType::class, array(
+//                    'label' => false, //"Item Code",
+//                    'required' => false,
+//                    'mapped' => false,
+//                    'disabled' => true,
+//                    'attr' => array('class' => 'combobox ajax-combobox-transresitemcodes invoiceitem-itemCodeNotMapped', 'type' => 'hidden', 'data-toggle'=>'tooltip', 'title' => 'Additional'),
+//                    "data" => $categoryId,
+//                    'classtype' => 'transresitemcodes'
+//                ));
             }
 
             $form->add('total1', NumberType::class, array(
