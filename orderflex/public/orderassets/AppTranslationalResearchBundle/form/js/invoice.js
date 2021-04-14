@@ -158,7 +158,7 @@ function transresInvoiceItemListeneres(){
 
     console.log("transresInvoiceItemListeneres");
 
-    //populate select2 item code: invoiceitem-itemCode invoiceitem-itemCodeNotMapped
+    //populate select2 item code: invoiceitem-itemCode
     transresInitItemCodeAsSelect();
     transresInvoiceItemCodeListeneres();
 
@@ -186,6 +186,8 @@ function transresInvoiceItemListeneres(){
         transresUpdateSubTotal(this);
 
         transresLockUnlockPriceField(invoiceItemRow);
+
+        transresQuantityValidation(invoiceItemRow);
     });
 
     $('.invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
@@ -673,17 +675,6 @@ function transresInvoiceItemCodeListeneres(){
 
         transerUpdateSubsidyInfo();
     });
-
-    // $('.invoiceitem-itemCodeNotMapped').on('change', function(event) {
-    //     var invoiceItemRow = $(this).closest('.user-collection-holder');
-    //
-    //     var categoryId = $(this).select2('val');
-    //     var categoryInfoArr = _productArr[categoryId];
-    //
-    //     console.log("invoiceitem-itemCodeNotMapped changed: categoryId="+categoryId);
-    //
-    //     transresPopulateItem(categoryInfoArr,invoiceItemRow);
-    // });
 }
 
 function transresPopulateItem( categoryInfoArr, invoiceItemRow, categoryId ) {
@@ -700,7 +691,7 @@ function transresPopulateItem( categoryInfoArr, invoiceItemRow, categoryId ) {
         categoryId = categoryInfoArr.id;
     }
 
-    invoiceItemRow.find('.invoiceitem-itemCodeNotMapped').select2('val',categoryId);
+    //invoiceItemRow.find('.invoiceitem-itemCodeNotMapped').select2('val',categoryId);
 }
 
 function transresRecalculateInvoiceDefaultTotal() {
@@ -895,5 +886,41 @@ function transresLockUnlockPriceField(invoiceItemRow) {
         invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop( "disabled", true );
         //invoiceItemRow.find(".invoiceitem-additionalUnitPrice").attr( "disabled", true );
     }
+}
+
+function transresQuantityValidation(invoiceItemRow) {
+    //“One or more items above have a quantity of zero. Please remove such items or update the quantity.”
+
+    var warningQuantityMessage = invoiceItemRow.find('.invoiceitem-quantity-warning-message');
+    warningQuantityMessage.html("").hide();
+
+    var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
+    var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
+
+    if( (!quantity || quantity == 0) && (!additionalQuantity || additionalQuantity == 0) ) {
+        // invoiceitem-quantity-warning-message
+
+        var invoiceitemProductId = invoiceItemRow.find('.invoiceitem-product-id').val();
+        var warning = "The total quantity for this item "+invoiceitemProductId+
+            " is zero. " +
+            "Please remove such items or update the quantity.";
+        warningQuantityMessage.html(warning).show();
+    }
+
+    //disable submit button
+    // if( typeof cycle === 'undefined' ) {
+    //     cycle = 'new';
+    // }
+    // if( cycle == "new" || cycle == "edit" ) {
+    //     var visibleQuantityWarningMessages = $('.invoiceitem-quantity-warning-message:visible');
+    //     if (visibleQuantityWarningMessages.length > 0) {
+    //         //invoice-warning-message "I have verified the listed quantities."
+    //         $("#invoice-confirmation-warning-message").show();
+    //         $('#submit-buttons-section').hide();
+    //     } else {
+    //         $("#invoice-confirmation-warning-message").hide();
+    //         $('#submit-buttons-section').show();
+    //     }
+    // }
 }
 

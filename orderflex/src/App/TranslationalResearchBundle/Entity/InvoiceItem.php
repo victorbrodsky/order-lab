@@ -469,8 +469,20 @@ class InvoiceItem {
         return NULL;
     }
 
+    //Used only in getInvoiceItemInfoHtml (get invoice items for PDF view)
     public function getItemCodeWithPriceListAbbreviation() {
         $itemCode = $this->getItemCode();
+
+        //do not append "-i" for products without fee schedule (custom entered itemcode on the invoice item)
+        $product = $this->getProduct();
+        if( $product ) {
+            $category = $product->getCategory();
+            if( !$category ) {
+                //if category is NULL => return itemCode without $priceListAbbreviationPostfix
+                return $itemCode;
+            }
+        }
+
         if( $itemCode ) {
             $invoice = $this->getInvoice();
             if ($invoice) {

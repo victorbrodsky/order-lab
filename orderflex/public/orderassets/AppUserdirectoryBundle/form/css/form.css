@@ -686,27 +686,4 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     border-color: #7a7a7a;
 }
 
-/*.vcenter {*/
-    /*display: inline-block;*/
-    /*vertical-align: middle;*/
-    /*float: none;*/
-/*}*/
-/*.vcenter-item{*/
-    /*display: flex;*/
-    /*align-items: center;*/
-/*}*/
-/*.vertical-center {*/
-    /*margin: 0;*/
-    /*position: absolute;*/
-    /*top: 50%;*/
-    /*-ms-transform: translateY(-50%);*/
-    /*transform: translateY(-50%);*/
-/*}*/
-.vcenter-item {
-    margin: auto;
-    /*width: 60%;*/
-    padding-top: 15%;
-    padding-bottom: 15%;
-    /*height: 100%;*/
-}
 

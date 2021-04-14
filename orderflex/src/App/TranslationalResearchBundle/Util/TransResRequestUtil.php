@@ -3926,6 +3926,7 @@ class TransResRequestUtil
 
             $row = "<tr>" . $row1 . "</tr>" . "<tr>" . $row2 . "</tr>";
         } else {
+            //always as a single row
             $quantity = $quantity + $additionalQuantity;
             $totalFee = $this->toDecimal($unitPrice*$quantity);
             $row1 =

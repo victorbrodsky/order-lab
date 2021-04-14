@@ -349,6 +349,7 @@
             {#{% endif %}#}
 
             <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
+            <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
             <div class="row">
                 <div class="col-xs-6">
@@ -367,11 +368,7 @@
                     {#{{ form_widget(forminvoiceItem.itemCode) }}#}
                     {#</p>#}
 
-                    {#<span class="align-middle">{{ form_widget(forminvoiceItem.itemCode) }}</span>#}
-
-                    {#<div  class="center">#}
                     {{ form_widget(forminvoiceItem.itemCode) }}
-                    {#</div >#}
 
                     {#{{ formmacros.field(forminvoiceItem.itemCode) }}#}
                     {#<br>#}
