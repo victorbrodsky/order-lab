@@ -78,6 +78,14 @@ class Product {
      */
     private $note;
 
+    /**
+     * "Not on the invoice" to indicated deleted products on the invoice
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $notInInvoice;
+
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -230,6 +238,25 @@ class Product {
     {
         $this->note = $note;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNotInInvoice()
+    {
+        return $this->notInInvoice;
+    }
+
+    /**
+     * @param mixed $notInInvoice
+     */
+    public function setNotInInvoice($notInInvoice)
+    {
+        $this->notInInvoice = $notInInvoice;
+    }
+
+
+
 
     public function getQuantity() {
         $quantity = $this->getCompleted();

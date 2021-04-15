@@ -4655,6 +4655,98 @@ class TransResRequestUtil
         return $colIndexArr;
     }
 
+    public function getInvoiceItemInfo( $product, $cycle ) {
+        $productId = NULL;
+        if( $product ) {
+            $productId = $product->getId();
+        } else {
+            return NULL;
+        }
+        //echo "productId=$productId <br>";
+
+        $transresRequest = $product->getTransresRequest();
+        if( !$transresRequest ) {
+            return NULL;
+        }
+
+        $invoiceItem = NULL;
+
+        //$invoiceItems = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem')->findByProduct($productId);
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
+        $dql =  $repository->createQueryBuilder("invoiceItem");
+        $dql->select('invoiceItem');
+
+        $dql->leftJoin('invoiceItem.invoice','invoice');
+        $dql->leftJoin('invoiceItem.product','product');
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+        //$dql->leftJoin('submitter.infos','submitterInfos');
+
+        $dqlParameters = array();
+
+        $dql->where("product.id = :productId");
+        $dql->andWhere("transresRequest.id = :transresRequestId");
+
+        //sort by ID and get the most recent invoice. The largest ID will be the first
+        $dql->orderBy("invoiceItem.id","DESC");
+
+        $dqlParameters["productId"] = $productId;
+        $dqlParameters["transresRequestId"] = $transresRequest->getId();
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $invoiceItems = $query->getResult();
+
+        //echo "invoiceItems=".count($invoiceItems)."<br>";
+        if( count($invoiceItems) > 0 ) {
+            $invoiceItem = $invoiceItems[0];
+        }
+
+        if( !$invoiceItem ) {
+            return NULL;
+        }
+        //echo "invoiceItem Id=".$invoiceItem->getId()."<br>";
+
+        $invoice = $invoiceItem->getInvoice();
+
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_invoice_show',
+            array(
+                'oid'=>$invoice->getOid()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $link = "<a target='_blank' " .
+            "href=" . $url . ">" . $invoice->getOid() . "</a>";
+
+        $itemInfo = "The latest invoice ID ".$link;
+        $itemInfo .= "<br>";
+
+        $description = $invoiceItem->getDescription();
+        $quantity = $invoiceItem->getQuantity();
+        $additionalQuantity = $invoiceItem->getAdditionalQuantity();
+        $unitPrice = $invoiceItem->getUnitPrice();
+        $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+
+        $itemInfo .= "Description: ".$description;
+
+        $itemInfo .= "<br>";
+
+        $itemInfo .= "Quantity: ".$quantity."; ";
+        $itemInfo .= "Additional Quantity: ".$additionalQuantity;
+
+        $itemInfo .= "<br>";
+
+        $itemInfo .= "Unit Price ($): ".$unitPrice."; ";
+        $itemInfo .= "Additional Unit Price ($): ".$additionalUnitPrice;
+        
+        return $itemInfo;
+    }
+
 }
 
 

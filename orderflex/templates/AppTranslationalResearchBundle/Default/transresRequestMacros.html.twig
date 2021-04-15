@@ -821,6 +821,13 @@
 
                         {{ transresRequestMacros.productForm(product, cycle, 'transres-products', 'noprototype', sitename, 1) }}
 
+                        {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(product.vars.value,cycle) %}
+                        {% if invoiceItemInfo %}
+                            <div class="well">
+                                {{ invoiceItemInfo|raw }}
+                            </div>
+                        {% endif %}
+
                     {% endfor %}
 
                     {% if cycle != "show" %}
