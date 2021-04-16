@@ -1350,7 +1350,6 @@ class TransResRequestUtil
             $invoiceItem->setItemCode($categoryItemCode);
             $invoiceItem->setDescription($categoryName);
 
-            //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
             //TODO: add "comment" from Work Request
 
             if( $initialQuantity && $initialFee ) {
@@ -2012,6 +2011,9 @@ class TransResRequestUtil
         //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
         $this->updateRequestCompletedFieldsByInvoice($invoice);
 
+        //update parent work request products by invoice's invoiceItems
+        $this->updateWorkRequestProductsByInvoice($invoice);
+        
         $this->updateInvoiceStatus($invoice);
 
         //update subsidy for new invoice
@@ -2034,8 +2036,16 @@ class TransResRequestUtil
         return $msg;
     }
 
+    //Used in create new invoice (createSubmitNewInvoice) by "Create new invoice" action
+    // or by changing status of work request to "invoiced"
+    // or by update invoice
+    //TODO: issue 228: update parent work requests fields by invoice if status is not "canceled"
     public function updateRequestCompletedFieldsByInvoice($invoice) {
         $transresUtil = $this->container->get('transres_util');
+
+        if( strtolower($invoice->getStatus()) == strtolower("Canceled") ) {
+            return null;
+        }
 
         $transresRequest = $invoice->getTransresRequest();
         if( !$transresRequest ) {
@@ -2047,6 +2057,7 @@ class TransResRequestUtil
             if( !$requestProduct ) {
                 continue;
             }
+
             $requestQuant = $requestProduct->getCompleted();
             $invoiceQuant = $invoiceItem->getTotalQuantity();
             if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
@@ -2059,8 +2070,87 @@ class TransResRequestUtil
 
                 $requestProduct->setCompleted($invoiceQuant);
             }
+
         }
 
+        return $transresRequest;
+    }
+
+    //update parent work request products by invoice's invoiceItems
+    public function updateWorkRequestProductsByInvoice( $invoice ) {
+
+        return null;
+
+        if( strtolower($invoice->getStatus()) == strtolower("Canceled") ) {
+            return null;
+        }
+
+        $transresRequest = $invoice->getTransresRequest();
+        if( !$transresRequest ) {
+            return null;
+        }
+
+//        $originalProducts = new ArrayCollection();
+//        foreach ($transresRequest->getProducts() as $product) {
+//            $originalProducts->add($product);
+//        }
+
+        $invoiceItemProducts = array();
+
+        //detect adding (case 8D) or editing existing product (case E, F)
+        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+            $requestProduct = $invoiceItem->getProduct();
+            if (!$requestProduct) {
+                continue;
+            }
+
+            $invoiceItemProducts[$requestProduct->getId()] = $requestProduct->getId();
+
+            //Case D: adding new invoice item
+            //itemCode existed (Case D) => add as new Product
+
+            //itemCode not existed (Case E) => info
+
+
+            //Case F: edited invoice item: itemCode changed => EventLog
+
+            //Case F2: edited invoice item: itemCode the same => info
+            //to make it easier, just always show a locked/uneditable “Invoiced Description” field (plus quantities and prices, cases A, B)
+            //for each item on the Work Request View and Edit pages, pulled from the lates invoice
+
+            //Missing case in 8:
+            //if the invoice item is removed from the invoice and
+            // then a new invoice item is added with the same values (item code, description, quantities and prices).
+            // In this case, I will identify the matching product from the parent work request
+            // and do not add this invoice item to the work request again to avoid duplication.
+
+        }
+
+        //detect removal (228: 8, Case C)
+        foreach( $transresRequest->getProducts() as $product ) {
+
+            if( !isset($invoiceItemProducts[$product->getId()]) ) {
+                //product does not exists anymore in the invoice via $invoiceItemProducts
+                $product->setNotInInvoice(true);
+            }
+
+//            if( false === $currentProducts->contains($originalProduct) ) {
+//                // remove the Task from the Tag
+//                //$currentReviews->removeElement($originalReview);
+//                //$project->$removeMethod($originalReview);
+//
+//                // if it was a many-to-one relationship, remove the relationship like this
+//                //$originalReview->setProject(null);
+//
+//                //$this->em->persist($originalReview);
+//
+//                // if you wanted to delete the Tag entirely, you can also do that
+//                //$this->em->remove($originalReview);
+//
+//                $originalProduct->setNotInInvoice(true);
+//            }
+        }
+        
         return $transresRequest;
     }
     
@@ -2354,7 +2444,7 @@ class TransResRequestUtil
 
         //Change Invoice status to Unpaid/Issued
         $invoice->setStatus("Unpaid/Issued");
-        //TODO: what if paid == total? Should we use $transresRequestUtil->updateInvoiceStatus($invoice);
+        //if paid == total =>
         //overwrite status if paid is not null: "Paid Partially" or "Paid in Full"
         $this->updateInvoiceStatus($invoice);
         $this->em->persist($invoice);

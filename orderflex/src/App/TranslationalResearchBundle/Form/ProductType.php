@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -138,6 +139,12 @@ class ProductType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control product-note')
             ));
+
+//            $builder->add('notInInvoice', CheckboxType::class, array(
+//                'label' => 'Not In Invoice:',
+//                'required' => false,
+//                'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+//            ));
         }
 
     }

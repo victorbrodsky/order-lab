@@ -894,6 +894,15 @@
         {% if formproduct.note is defined %}
             {{ formmacros.field(formproduct.note) }}
         {% endif %}
+
+        {#{% if formproduct.notInInvoice is defined %}#}
+            {#{{ formmacros.checkbox(formproduct.notInInvoice) }}#}
+        {#{% endif %}#}
+        {#Show as info#}
+        {% if formproduct.vars.value.notInInvoice is defined %}
+            {{ formmacros.simplefield_checkbox( "Not In Invoice:", formproduct.vars.value.notInInvoice, "", "disabled" ) }}
+        {% endif %}
+
     </div>
 
 {% endmacro %}
