@@ -821,12 +821,12 @@
 
                         {{ transresRequestMacros.productForm(product, cycle, 'transres-products', 'noprototype', sitename, 1) }}
 
-                        {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(product.vars.value,cycle) %}
-                        {% if invoiceItemInfo %}
-                            <div class="well">
-                                {{ invoiceItemInfo|raw }}
-                            </div>
-                        {% endif %}
+                        {#{% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(product.vars.value,cycle) %}#}
+                        {#{% if invoiceItemInfo %}#}
+                            {#<div class="well">#}
+                                {#{{ invoiceItemInfo|raw }}#}
+                            {#</div>#}
+                        {#{% endif %}#}
 
                     {% endfor %}
 
@@ -904,6 +904,13 @@
             {% if formproduct.vars.value.notInInvoice is defined %}
                 {{ formmacros.simplefield_checkbox( "Not In Invoice:", formproduct.vars.value.notInInvoice, "", "disabled" ) }}
             {% endif %}
+        {% endif %}
+
+        {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(formproduct.vars.value,cycle) %}
+        {% if invoiceItemInfo %}
+            <div class="well">
+                {{ invoiceItemInfo|raw }}
+            </div>
         {% endif %}
 
     </div>

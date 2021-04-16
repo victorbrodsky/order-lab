@@ -2079,7 +2079,7 @@ class TransResRequestUtil
     //update parent work request products by invoice's invoiceItems
     public function updateWorkRequestProductsByInvoice( $invoice ) {
 
-        return null;
+        //return null;
 
         if( strtolower($invoice->getStatus()) == strtolower("Canceled") ) {
             return null;
@@ -2108,6 +2108,7 @@ class TransResRequestUtil
 
             //Case D: adding new invoice item
             //itemCode existed (Case D) => add as new Product
+            //1) find product and 2) if not found => create new Product
 
             //itemCode not existed (Case E) => info
 
@@ -4763,6 +4764,7 @@ class TransResRequestUtil
 
         //$invoiceItems = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem')->findByProduct($productId);
 
+        //////////////////// Find InvoiceItem ////////////////////
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
         $dql =  $repository->createQueryBuilder("invoiceItem");
         $dql->select('invoiceItem');
@@ -4795,6 +4797,7 @@ class TransResRequestUtil
         if( count($invoiceItems) > 0 ) {
             $invoiceItem = $invoiceItems[0];
         }
+        //////////////////// EOF Find InvoiceItem ////////////////////
 
         if( !$invoiceItem ) {
             return NULL;
@@ -4822,17 +4825,17 @@ class TransResRequestUtil
         $unitPrice = $invoiceItem->getUnitPrice();
         $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
 
-        $itemInfo .= "Description: ".$description;
+        $itemInfo .= "<label>Description</label>: ".$description;
 
         $itemInfo .= "<br>";
 
-        $itemInfo .= "Quantity: ".$quantity."; ";
-        $itemInfo .= "Additional Quantity: ".$additionalQuantity;
+        $itemInfo .= "<label>Initial Quantity</label>: ".$quantity."; ";
+        $itemInfo .= "<label>Additional Quantity</label>: ".$additionalQuantity;
 
         $itemInfo .= "<br>";
 
-        $itemInfo .= "Unit Price ($): ".$unitPrice."; ";
-        $itemInfo .= "Additional Unit Price ($): ".$additionalUnitPrice;
+        $itemInfo .= "<label>Unit Price ($)</label>: ".$unitPrice."; ";
+        $itemInfo .= "<label>Additional Unit Price ($)</label>: ".$additionalUnitPrice;
         
         return $itemInfo;
     }
