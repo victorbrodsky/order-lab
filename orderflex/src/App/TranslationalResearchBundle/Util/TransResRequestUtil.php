@@ -2063,9 +2063,19 @@ class TransResRequestUtil
             if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
 
                 //eventLog changes
-                $eventType = "Request Updated";
-                $msg = "Request's (".$transresRequest->getOid(). ") completed value ".$requestQuant.
-                    " has been updated by the invoice's (".$invoice->getOid() . ") quantity value " . $invoiceQuant;
+                $eventType = "Work Request Quantity Updated by Invoice"; //"Request Updated";
+
+                $categoryStr = "Unknown category";
+                $category = $requestProduct->getCategory();
+                if( $category ) {
+                    $categoryStr = $category->getOptimalAbbreviationName();
+                }
+                
+                //$msg = "Request's (".$transresRequest->getOid(). ") completed value ".$requestQuant.
+                //    " has been updated by the invoice's (".$invoice->getOid() . ") quantity value " . $invoiceQuant;
+                $msg = "Quantity of $categoryStr for Work Request ".$transresRequest->getOid().
+                    " changed from old value $requestQuant to new value $invoiceQuant";
+                
                 $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
                 $requestProduct->setCompleted($invoiceQuant);
@@ -4819,6 +4829,7 @@ class TransResRequestUtil
         $itemInfo = "The latest invoice ID ".$link;
         $itemInfo .= "<br>";
 
+        $administrativeFee = $invoice->getAdministrativeFee();
         $description = $invoiceItem->getDescription();
         $quantity = $invoiceItem->getQuantity();
         $additionalQuantity = $invoiceItem->getAdditionalQuantity();
@@ -4836,7 +4847,12 @@ class TransResRequestUtil
 
         $itemInfo .= "<label>Unit Price ($)</label>: ".$unitPrice."; ";
         $itemInfo .= "<label>Additional Unit Price ($)</label>: ".$additionalUnitPrice;
-        
+
+        if( $administrativeFee ) {
+            $itemInfo .= "<br>";
+            $itemInfo .= "<label>Administrative Fee ($)</label>: " . $administrativeFee;
+        }
+
         return $itemInfo;
     }
 

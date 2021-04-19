@@ -908,9 +908,25 @@
 
         {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(formproduct.vars.value,cycle) %}
         {% if invoiceItemInfo %}
-            <div class="well">
-                {{ invoiceItemInfo|raw }}
+            {#<div class="well">#}
+                {#{{ invoiceItemInfo|raw }}#}
+            {#</div>#}
+
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">
+                            Additional Info from the Invoice
+                        </a>
+                    </h4>
+                </div>
+                <div id="invoiceItemInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body text-center">
+                        {{ invoiceItemInfo|raw }}
+                    </div>
+                </div>
             </div>
+
         {% endif %}
 
     </div>
