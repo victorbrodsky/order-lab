@@ -830,6 +830,28 @@
 
                     {% endfor %}
 
+                    {#get added invoice items without or with non existed category#}
+                    {% set newInvoiceItems = transres_request_util.getNewInvoiceItemWithoutCategory(form.vars.value,cycle) %}
+                    {% if newInvoiceItems and newInvoiceItems|length > 0 %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne">
+                                <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">
+                                    Additional Info from the Invoice
+                                </a>
+                                </h4>
+                            </div>
+                            <div id="invoiceItemInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body text-center">
+                                    {% for newInvoiceItem in newInvoiceItems %}
+                                        {#{{ newInvoiceItem|raw }}#}
+                                        {{ transresRequestMacros.invoiceItemSimpleForm( newInvoiceItem ) }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
                     {% if cycle != "show" %}
                         {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',"transres-add-product-btn",null) }}
                     {% endif %}
@@ -845,6 +867,7 @@
 {% macro productForm( product, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -908,29 +931,54 @@
 
         {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(formproduct.vars.value,cycle) %}
         {% if invoiceItemInfo %}
-            {#<div class="well">#}
+            <div class="well">
                 {#{{ invoiceItemInfo|raw }}#}
-            {#</div>#}
-
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">
-                            Additional Info from the Invoice
-                        </a>
-                    </h4>
-                </div>
-                <div id="invoiceItemInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-body text-center">
-                        {{ invoiceItemInfo|raw }}
-                    </div>
-                </div>
+                {#The latest invoice ID {{ invoiceItemInfo.invoiceLink|raw }}<br>#}
+                {#{{ formmacros.simplefield( "Invoiced Total Quantity:", invoiceItemInfo.totalQuantity, "", "disabled" ) }}#}
+                {#{{ formmacros.simplefield( "Invoiced Initial Quantity:", invoiceItemInfo.quantity, "", "disabled" ) }}#}
+                {#{{ formmacros.simplefield( "Invoiced Additional Quantity:", invoiceItemInfo.additionalQuantity, "", "disabled" ) }}#}
+                {#{{ formmacros.simplefield( "Invoiced Unit Price:", invoiceItemInfo.unitPrice, "", "disabled" ) }}#}
+                {#{{ formmacros.simplefield( "Invoiced Additional Unit Price:", invoiceItemInfo.additionalUnitPrice, "", "disabled" ) }}#}
+                {#{% if invoiceItemInfo.administrativeFee %}#}
+                    {#{{ formmacros.simplefield( "Invoiced Administrative Fee:", invoiceItemInfo.administrativeFee, "", "disabled" ) }}#}
+                {#{% endif %}#}
+                {{ transresRequestMacros.invoiceItemSimpleForm( invoiceItemInfo ) }}
             </div>
+
+            {#<div class="panel panel-default">#}
+                {#<div class="panel-heading" role="tab" id="headingOne">#}
+                    {#<h4 class="panel-title">#}
+                        {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">#}
+                            {#Additional Info from the Invoice#}
+                        {#</a>#}
+                    {#</h4>#}
+                {#</div>#}
+                {#<div id="invoiceItemInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">#}
+                    {#<div class="panel-body text-center">#}
+                        {#{{ invoiceItemInfo|raw }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
 
         {% endif %}
 
     </div>
 
+{% endmacro %}
+{% macro invoiceItemSimpleForm( invoiceItemInfo ) %}
+    {% if invoiceItemInfo and invoiceItemInfo|length > 0 %}
+        {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+        {#{{ invoiceItemInfo|raw }}#}
+        The latest invoice ID {{ invoiceItemInfo.invoiceLink|raw }}<br>
+        {{ formmacros.simplefield( "Invoiced Total Quantity:", invoiceItemInfo.totalQuantity, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Initial Quantity:", invoiceItemInfo.quantity, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Additional Quantity:", invoiceItemInfo.additionalQuantity, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Unit Price:", invoiceItemInfo.unitPrice, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Additional Unit Price:", invoiceItemInfo.additionalUnitPrice, "", "disabled" ) }}
+        {% if invoiceItemInfo.administrativeFee %}
+            {{ formmacros.simplefield( "Invoiced Administrative Fee:", invoiceItemInfo.administrativeFee, "", "disabled" ) }}
+        {% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro transresRequestsFilter( filterform, advancedFilter ) %}
