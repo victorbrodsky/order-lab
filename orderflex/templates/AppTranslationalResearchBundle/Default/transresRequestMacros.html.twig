@@ -821,7 +821,7 @@
 
                         {{ transresRequestMacros.productForm(product, cycle, 'transres-products', 'noprototype', sitename, 1) }}
 
-                        {#{% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(product.vars.value,cycle) %}#}
+                        {#{% set invoiceItemInfo = transres_request_util.getInvoiceItemInfoByProduct(product.vars.value,cycle) %}#}
                         {#{% if invoiceItemInfo %}#}
                             {#<div class="well">#}
                                 {#{{ invoiceItemInfo|raw }}#}
@@ -929,7 +929,7 @@
             {% endif %}
         {% endif %}
 
-        {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfo(formproduct.vars.value,cycle) %}
+        {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfoByProduct(formproduct.vars.value,cycle) %}
         {% if invoiceItemInfo %}
             <div class="well">
                 {#{{ invoiceItemInfo|raw }}#}
@@ -970,6 +970,8 @@
         {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
         {#{{ invoiceItemInfo|raw }}#}
         The latest invoice ID {{ invoiceItemInfo.invoiceLink|raw }}<br>
+        {{ formmacros.simplefield( "Description:", invoiceItemInfo.description, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Item Code:", invoiceItemInfo.itemCode, "", "disabled" ) }}
         {{ formmacros.simplefield( "Invoiced Total Quantity:", invoiceItemInfo.totalQuantity, "", "disabled" ) }}
         {{ formmacros.simplefield( "Invoiced Initial Quantity:", invoiceItemInfo.quantity, "", "disabled" ) }}
         {{ formmacros.simplefield( "Invoiced Additional Quantity:", invoiceItemInfo.additionalQuantity, "", "disabled" ) }}

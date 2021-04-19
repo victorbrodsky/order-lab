@@ -4757,59 +4757,7 @@ class TransResRequestUtil
     }
 
     //$product - work request product
-    public function getInvoiceItemInfo( $product, $cycle=NULL ) {
-//        //////////////////// Find InvoiceItem ////////////////////
-//        $productId = NULL;
-//        if( $product ) {
-//            $productId = $product->getId();
-//        } else {
-//            return NULL;
-//        }
-//        //echo "productId=$productId <br>";
-//
-//        $transresRequest = $product->getTransresRequest();
-//        if( !$transresRequest ) {
-//            return NULL;
-//        }
-//
-//        $invoiceItem = NULL;
-//
-//        //$invoiceItems = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem')->findByProduct($productId);
-//
-//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
-//        $dql =  $repository->createQueryBuilder("invoiceItem");
-//        $dql->select('invoiceItem');
-//
-//        $dql->leftJoin('invoiceItem.invoice','invoice');
-//        $dql->leftJoin('invoiceItem.product','product');
-//        $dql->leftJoin('invoice.transresRequest','transresRequest');
-//        //$dql->leftJoin('submitter.infos','submitterInfos');
-//
-//        $dqlParameters = array();
-//
-//        $dql->where("product.id = :productId");
-//        $dql->andWhere("transresRequest.id = :transresRequestId");
-//
-//        //sort by ID and get the most recent invoice. The largest ID will be the first
-//        $dql->orderBy("invoiceItem.id","DESC");
-//
-//        $dqlParameters["productId"] = $productId;
-//        $dqlParameters["transresRequestId"] = $transresRequest->getId();
-//
-//        $query = $this->em->createQuery($dql);
-//
-//        if( count($dqlParameters) > 0 ) {
-//            $query->setParameters($dqlParameters);
-//        }
-//
-//        $invoiceItems = $query->getResult();
-//
-//        //echo "invoiceItems=".count($invoiceItems)."<br>";
-//        if( count($invoiceItems) > 0 ) {
-//            $invoiceItem = $invoiceItems[0];
-//        }
-//        //////////////////// EOF Find InvoiceItem ////////////////////
-
+    public function getInvoiceItemInfoByProduct( $product, $cycle=NULL ) {
         $invoiceItem = $this->findInvoiceItemByProduct($product);
 
         if( !$invoiceItem ) {
@@ -4817,6 +4765,73 @@ class TransResRequestUtil
         }
         //echo "invoiceItem Id=".$invoiceItem->getId()."<br>";
 
+//        $invoice = $invoiceItem->getInvoice();
+//
+//        $url = $this->container->get('router')->generate(
+//            'translationalresearch_invoice_show',
+//            array(
+//                'oid'=>$invoice->getOid()
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $link = "<a target='_blank' " .
+//            "href=" . $url . ">" . $invoice->getOid() . "</a>";
+//
+//        $administrativeFee = $invoice->getAdministrativeFee();
+//        $description = $invoiceItem->getDescription();
+//        $quantity = $thisQuantity = $invoiceItem->getQuantity();
+//        $additionalQuantity = $thisAdditionalQuantity = $invoiceItem->getAdditionalQuantity();
+//        $unitPrice = $invoiceItem->getUnitPrice();
+//        $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+//
+//        if( $quantity === NULL ) {
+//            $thisQuantity = 0;
+//        }
+//        if( $thisAdditionalQuantity === NULL ) {
+//            $thisAdditionalQuantity = 0;
+//        }
+//        $totalQuantity = $thisQuantity + $thisAdditionalQuantity;
+//
+//        $itemInfo = array(
+//            "invoiceLink" => $link,
+//            "administrativeFee" => $administrativeFee,
+//            "description" => $description,
+//            "totalQuantity" => $totalQuantity,
+//            "quantity" => $quantity,
+//            "additionalQuantity" => $additionalQuantity,
+//            "unitPrice" => $unitPrice,
+//            "additionalUnitPrice" => $additionalUnitPrice,
+//        );
+
+        $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
+
+//        if(0) {
+//            $itemInfo = "The latest invoice ID ".$link;
+//            $itemInfo .= "<br>";
+//
+//            $itemInfo .= "<label>Description</label>: " . $description;
+//
+//            $itemInfo .= "<br>";
+//
+//            $itemInfo .= "<label>Initial Quantity</label>: " . $quantity . "; ";
+//            $itemInfo .= "<label>Additional Quantity</label>: " . $additionalQuantity;
+//
+//            $itemInfo .= "<br>";
+//
+//            $itemInfo .= "<label>Unit Price ($)</label>: " . $unitPrice . "; ";
+//            $itemInfo .= "<label>Additional Unit Price ($)</label>: " . $additionalUnitPrice;
+//
+//            if ($administrativeFee) {
+//                $itemInfo .= "<br>";
+//                $itemInfo .= "<label>Administrative Fee ($)</label>: " . $administrativeFee;
+//            }
+//        }
+
+        //dump($itemInfo);
+
+        return $itemInfo;
+    }
+    public function getInvoiceItemInfoArr($invoiceItem) {
         $invoice = $invoiceItem->getInvoice();
 
         $url = $this->container->get('router')->generate(
@@ -4829,10 +4844,8 @@ class TransResRequestUtil
         $link = "<a target='_blank' " .
             "href=" . $url . ">" . $invoice->getOid() . "</a>";
 
-        $itemInfo = "The latest invoice ID ".$link;
-        $itemInfo .= "<br>";
-
         $administrativeFee = $invoice->getAdministrativeFee();
+        $itemCode = $invoiceItem->getItemCode();
         $description = $invoiceItem->getDescription();
         $quantity = $thisQuantity = $invoiceItem->getQuantity();
         $additionalQuantity = $thisAdditionalQuantity = $invoiceItem->getAdditionalQuantity();
@@ -4849,6 +4862,7 @@ class TransResRequestUtil
 
         $itemInfo = array(
             "invoiceLink" => $link,
+            "itemCode" => $itemCode,
             "administrativeFee" => $administrativeFee,
             "description" => $description,
             "totalQuantity" => $totalQuantity,
@@ -4857,27 +4871,6 @@ class TransResRequestUtil
             "unitPrice" => $unitPrice,
             "additionalUnitPrice" => $additionalUnitPrice,
         );
-
-        if(0) {
-            $itemInfo .= "<label>Description</label>: " . $description;
-
-            $itemInfo .= "<br>";
-
-            $itemInfo .= "<label>Initial Quantity</label>: " . $quantity . "; ";
-            $itemInfo .= "<label>Additional Quantity</label>: " . $additionalQuantity;
-
-            $itemInfo .= "<br>";
-
-            $itemInfo .= "<label>Unit Price ($)</label>: " . $unitPrice . "; ";
-            $itemInfo .= "<label>Additional Unit Price ($)</label>: " . $additionalUnitPrice;
-
-            if ($administrativeFee) {
-                $itemInfo .= "<br>";
-                $itemInfo .= "<label>Administrative Fee ($)</label>: " . $administrativeFee;
-            }
-        }
-
-        //$itemInfo .= '{{ formmacros.simplefield( "Description ($):", '.$description.', "", "disabled" ) }}';
 
         return $itemInfo;
     }
@@ -4893,10 +4886,11 @@ class TransResRequestUtil
         foreach($latestInvoice->getInvoiceItems() as $invoiceItem ) {
             $invoiceProduct = $invoiceItem->getProduct();
             if( $invoiceProduct ) {
+                //echo "invoiceProduct=".$invoiceProduct->getId()."<br>";
                 $category = $invoiceProduct->getCategory();
                 if( !$category ) {
-
-                    $itemInfo = $this->getInvoiceItemInfo($invoiceProduct);
+                    //echo "No category invoiceProduct=".$invoiceProduct->getId()."<br>";
+                    $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
 
                     $newInvoiceItems[] = $itemInfo;
                 }
@@ -4907,9 +4901,13 @@ class TransResRequestUtil
 //        foreach($transresRequest->getProducts() as $product) {
 //        }
 
+        //echo "newInvoiceItems=".count($newInvoiceItems)."<br>";
+
         return $newInvoiceItems;
     }
 
+    //Find corresponding Invoice Item by a work request product
+    //$product - work request product
     public function findInvoiceItemByProduct($product) {
 
         $productId = NULL;
