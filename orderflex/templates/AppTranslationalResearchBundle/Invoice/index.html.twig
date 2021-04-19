@@ -20,12 +20,14 @@
 
             {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
                 {% if exportUnpaidSummary %}
+
                     <label
                             for="download-spreadsheet-form-unpaid" tabindex="0"
                             data-toggle="tooltip"
                             title="Download unpaid billing summary spreadsheet with matching invoices">
                         <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                     </label>
+
                 {% else %}
 
                     <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
@@ -56,7 +58,9 @@
                             title="Download unpaid billing summary spreadsheet with matching invoices"
                         ><span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                     </label>
+
                 {% endif %}
+
             {% endif %}
         {% endif %}
     </h4>
@@ -74,6 +78,7 @@
     </form>
 
     {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+        {#JV spreadsheet#}
         <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
             <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
             {#<input type="hidden" name="projectId" value="{{ projectId }}">#}

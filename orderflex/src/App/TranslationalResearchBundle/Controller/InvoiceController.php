@@ -82,8 +82,7 @@ class InvoiceController extends OrderAbstractController
 
         $dqlParameters = array();
 
-        if ($routeName == "translationalresearch_invoice_index") {
-
+        if ($routeName == 'translationalresearch_invoice_index') { // /list-request/{id}
             //Title
             $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest, false);
             $thisLink = "<a href=" . $requestUrl . ">" . "Request ID " . $transresRequest->getOid() . "</a>";
@@ -91,8 +90,17 @@ class InvoiceController extends OrderAbstractController
             $title = "List of Invoices for " . $thisLink;
             $metaTitle = "List of Invoices for Request ID " . $transresRequest->getOid();
 
-            $dql->where("transresRequest.id = :transresRequestId");
-            $dqlParameters["transresRequestId"] = $transresRequest->getId();
+            return $this->redirectToRoute(
+                'translationalresearch_invoice_index_filter',
+                array(
+                    'id' => $transresRequest->getId(),
+                    'filter[idSearch]' => $transresRequest->getOid(),
+                    'title' => $title,
+                )
+            );
+
+            //$dql->where("transresRequest.id = :transresRequestId");
+            //$dqlParameters["transresRequestId"] = $transresRequest->getId();
         }
 
         //////// create filter //////////
@@ -757,10 +765,11 @@ class InvoiceController extends OrderAbstractController
                 $exportUnpaidSummary = 1;
             }
             if ($idSearch) {
-                //$idSearch does not have '-REQ'
-                if (strpos($idSearch, '-REQ') === false) {
-                    $exportUnpaidSummary = 1;
-                }
+                $exportUnpaidSummary = 1;
+//                //$idSearch does not have '-REQ'
+//                if (strpos($idSearch, '-REQ') === false) {
+//                    $exportUnpaidSummary = 1;
+//                }
             }
          }
 
@@ -1859,7 +1868,7 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
-     * unpaid billing summary template.xlsx
+     * JV unpaid billing summary template.xlsx
      * http://127.0.0.1/order/index_dev.php/translational-research/invoice/download-unpaid-spreadsheet/
      *
      * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"POST"})
