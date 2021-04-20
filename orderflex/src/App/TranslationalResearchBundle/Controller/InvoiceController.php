@@ -1040,7 +1040,7 @@ class InvoiceController extends OrderAbstractController
             $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice); //edit
 
             //update parent work request products by invoice's invoiceItems
-            $this->updateWorkRequestProductsByInvoice($invoice);
+            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             $transresRequestUtil->updateInvoiceStatus($invoice);
             

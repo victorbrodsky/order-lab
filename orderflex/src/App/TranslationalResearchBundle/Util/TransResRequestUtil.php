@@ -2100,6 +2100,9 @@ class TransResRequestUtil
             return null;
         }
 
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
 //        $originalProducts = new ArrayCollection();
 //        foreach ($transresRequest->getProducts() as $product) {
 //            $originalProducts->add($product);
@@ -2111,17 +2114,80 @@ class TransResRequestUtil
         foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
             $requestProduct = $invoiceItem->getProduct();
             if (!$requestProduct) {
+                exit("skip: no request product with item code=".$invoiceItem->getItemCode());
                 continue;
             }
 
             $invoiceItemProducts[$requestProduct->getId()] = $requestProduct->getId();
 
-            //Case D: adding new invoice item
+            //////////////////// Case D: adding new invoice item with existing category ////////////////////
             //itemCode existed (Case D) => add as new Product
             //1) find product and 2) if not found => create new Product
+            //for each invoice item in invoice => check if product does not exist in the work request
+            //foreach invoice item: detect if this invoice item does not exists in the original work request
+            $invoiceProduct = $invoiceItem->getProduct();
 
-            //itemCode not existed (Case E) => info
+            if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
+                //$itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
 
+                //get $category by item code
+                $category = NULL;
+                $itemCode = $invoiceItem->getItemCode();
+                if( $itemCode ) {
+                    $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                } else {
+                    $itemCode = "Empty Item Code";
+                }
+
+                if( $category ) {
+                    echo "found by $itemCode: category=".$category."<br>";
+                    //exit(111);
+
+                    $newProduct = new Product($user);
+                    $newProduct->setCategory($category);
+
+                    $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
+                    $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
+                    if ($initialQuantity === NULL) {
+                        $initialQuantity = 0;
+                    }
+                    if ($additionalQuantity === NULL) {
+                        $additionalQuantity = 0;
+                    }
+
+                    $totalQuantity = $initialQuantity + $additionalQuantity;
+
+                    $newProduct->setRequested($totalQuantity);
+                    $newProduct->setCompleted($totalQuantity);
+
+//                  $description = $invoiceItem->getDescription();
+//                  if( $description ) {
+//                      //$newProduct->setNote($description);
+//                      $description = "This product has been added by invoice ID ".$invoice->getOid()." with the description: ".$description;
+//                      $newProduct->setComment($description);
+//                  }
+
+                    $transresRequest->addProduct($newProduct);
+                    $invoiceItem->setProduct($newProduct);
+
+                    $msg = "New product with the item code '$itemCode' with existing fee schedule ".
+                        "'".$category->getOptimalAbbreviationName()."' has been added to the Work Request ID ".
+                        $transresRequest->getOid()." via Invoice by ".$user;
+                } else {
+                    //itemCode not existed (Case E) => info
+                    $msg = "New invoice item with the item code '$itemCode' without existing fee schedule has been added in the latest invoice ".
+                        $invoice->getOid()." for the Work Request ID ".$transresRequest->getOid()." by ".$user;
+                }
+
+                //eventLog changes
+                $eventType = "Work Request Item Updated via Invoice"; //"Work Request Quantity Updated by Invoice"; //"Request Updated";
+
+                $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+            } else {
+                exit("Product with ID=".$invoiceProduct->getId()." already exists in work request");
+            }
+            //////////////////// EOF Case D: adding new invoice item with existing category ////////////////////
 
             //Case F: edited invoice item: itemCode changed => EventLog
 
@@ -2134,6 +2200,9 @@ class TransResRequestUtil
             // then a new invoice item is added with the same values (item code, description, quantities and prices).
             // In this case, I will identify the matching product from the parent work request
             // and do not add this invoice item to the work request again to avoid duplication.
+
+            //Missing case in 8:
+            //All fields in the existing invoice item are changed
 
         }
 
@@ -4321,6 +4390,14 @@ class TransResRequestUtil
 
         $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
         $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
+
+        if( $initialQuantity === NULL ) {
+            $initialQuantity = 0;
+        }
+        if( $additionalQuantity === NULL ) {
+            $additionalQuantity = 0;
+        }
+
         $totalQuantity = $initialQuantity + $additionalQuantity;
 
         $product->setRequested($totalQuantity);
@@ -4882,25 +4959,35 @@ class TransResRequestUtil
         //get latest invoice
         $latestInvoice = $this->getLatestInvoice($transresRequest);
 
+        if( !$latestInvoice ) {
+            return NULL;
+        }
+
         //foreach invoice item: detect if this invoice item does not exists in the original work request
         foreach($latestInvoice->getInvoiceItems() as $invoiceItem ) {
             $invoiceProduct = $invoiceItem->getProduct();
-            if( $invoiceProduct ) {
-                //echo "invoiceProduct=".$invoiceProduct->getId()."<br>";
-                $category = $invoiceProduct->getCategory();
-                if( !$category ) {
-                    //echo "No category invoiceProduct=".$invoiceProduct->getId()."<br>";
-                    $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
+            
+//            if( $invoiceProduct ) {
+//                //echo "invoiceProduct=".$invoiceProduct->getId()."<br>";
+//                $category = $invoiceProduct->getCategory();
+//                if( !$category ) {
+//                    //echo "No category invoiceProduct=".$invoiceProduct->getId()."<br>";
+//                    $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
+//
+//                    $newInvoiceItems[] = $itemInfo;
+//                }
+//            }
 
-                    $newInvoiceItems[] = $itemInfo;
-                }
+            if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
+                $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
+                $newInvoiceItems[] = $itemInfo;
             }
+            
         }
 
 //        //foreach product: detect if this product does not exists in the latest invoice
 //        foreach($transresRequest->getProducts() as $product) {
 //        }
-
         //echo "newInvoiceItems=".count($newInvoiceItems)."<br>";
 
         return $newInvoiceItems;
@@ -4959,6 +5046,58 @@ class TransResRequestUtil
         }
 
         return $invoiceItem;
+    }
+
+    //Find if the invoice item's product exists in the corresponding work request and invoice
+    //$product - work request product
+    public function findProductInWorkRequestAndInvoice($product,$transresRequest,$invoice) {
+        
+        if( $product ) {
+            $productId = $product->getId();
+        } else {
+            return NULL;
+        }
+        //echo "productId=$productId <br>";
+
+        if( !$transresRequest ) {
+            return NULL;
+        }
+
+        //$invoiceItem = NULL;
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql =  $repository->createQueryBuilder("product");
+        $dql->select('product');
+
+        $dql->leftJoin('product.transresRequest','transresRequest');
+
+        $dqlParameters = array();
+
+        $dql->where("product.id = :productId");
+        $dql->andWhere("transresRequest.id = :transresRequestId");
+
+        //sort by ID and get the most recent invoice. The largest ID will be the first
+        $dql->orderBy("product.id","DESC");
+
+        $dqlParameters["productId"] = $productId;
+        $dqlParameters["transresRequestId"] = $transresRequest->getId();
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $products = $query->getResult();
+
+        //echo "products=".count($products)."<br>";
+
+        $product = NULL;
+        if( count($products) > 0 ) {
+            $product = $products[0];
+        }
+
+        return $product;
     }
 }
 
