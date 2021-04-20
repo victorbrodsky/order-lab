@@ -2131,40 +2131,73 @@ class TransResRequestUtil
             //foreach invoice item: detect if this invoice item does not exists in the original work request
             $invoiceProduct = $invoiceItem->getProduct();
 
-            //Check if
-            //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
-            if( $this->findProductInWorkRequestAndInvoiceItem($invoiceProduct,$transresRequest,$invoiceItem) === FALSE ) {
-                //$itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
-
-                //get $category by item code
-                $category = NULL;
+            //Check if $invoiceProduct exists in work request:
+            //if exists => skip
+            //if does not exist => add $invoiceProduct to Work Request
+            if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) ) {
+                //skip
+            } else {
+                $category = $invoiceProduct->getCategory();
                 $itemCode = $invoiceItem->getItemCode();
-                if( $itemCode ) {
-                    $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
-                } else {
+                if( !$itemCode ) {
                     $itemCode = "Empty Item Code";
                 }
 
                 if( $category ) {
-                    echo "Adding new found by $itemCode: category=".$category."<br>";
-                    //exit(111);
+                    //Case D: itemCode exists in the fee schedule
+                    $transresRequest->addProduct($invoiceProduct);
+                    $this->em->flush();
 
-                    $newProduct = new Product($user);
-                    $newProduct->setCategory($category);
+                    $msg = "Product from Invoice ".$invoice->getOid()." with the item code '$itemCode' (existed in the fee schedule " .
+                        "'" . $category->getOptimalAbbreviationName() . "') has been added to the Work Request ID " .
+                        $transresRequest->getOid() . " by " . $user;
+                } else {
+                    //Case E: itemCode does not existed in the fee schedule => don’t push it back to the parent work request => eventLog
+                    $msg = "New invoice item with the item code '$itemCode' (not existed in the fee schedule) has been added in the latest invoice " .
+                        $invoice->getOid() . " for the Work Request ID " . $transresRequest->getOid() . " by " . $user;
+                }
 
-                    $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
-                    $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
-                    if ($initialQuantity === NULL) {
-                        $initialQuantity = 0;
+                //eventLog changes
+                $eventType = "Work Request Item Updated via Invoice"; //"Work Request Quantity Updated by Invoice"; //"Request Updated";
+
+                $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+            }
+
+
+            if(0) {
+                //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
+                if ($this->findProductInWorkRequestAndInvoiceItem($invoiceProduct, $transresRequest, $invoiceItem) === FALSE) {
+                    //$itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
+
+                    //get $category by item code
+                    $category = NULL;
+                    $itemCode = $invoiceItem->getItemCode();
+                    if ($itemCode) {
+                        $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                    } else {
+                        $itemCode = "Empty Item Code";
                     }
-                    if ($additionalQuantity === NULL) {
-                        $additionalQuantity = 0;
-                    }
 
-                    $totalQuantity = $initialQuantity + $additionalQuantity;
+                    if ($category) {
+                        echo "Adding new found by $itemCode: category=" . $category . "<br>";
+                        //exit(111);
 
-                    $newProduct->setRequested($totalQuantity);
-                    $newProduct->setCompleted($totalQuantity);
+                        $newProduct = new Product($user);
+                        $newProduct->setCategory($category);
+
+                        $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
+                        $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
+                        if ($initialQuantity === NULL) {
+                            $initialQuantity = 0;
+                        }
+                        if ($additionalQuantity === NULL) {
+                            $additionalQuantity = 0;
+                        }
+
+                        $totalQuantity = $initialQuantity + $additionalQuantity;
+
+                        $newProduct->setRequested($totalQuantity);
+                        $newProduct->setCompleted($totalQuantity);
 
 //                  $description = $invoiceItem->getDescription();
 //                  if( $description ) {
@@ -2173,28 +2206,29 @@ class TransResRequestUtil
 //                      $newProduct->setComment($description);
 //                  }
 
-                    $transresRequest->addProduct($newProduct);
-                    $invoiceItem->setProduct($newProduct);
+                        $transresRequest->addProduct($newProduct);
+                        $invoiceItem->setProduct($newProduct);
 
-                    $this->em->persist($newProduct);
-                    $this->em->flush();
+                        $this->em->persist($newProduct);
+                        $this->em->flush();
 
-                    $msg = "New product with the item code '$itemCode' with existing fee schedule ".
-                        "'".$category->getOptimalAbbreviationName()."' has been added to the Work Request ID ".
-                        $transresRequest->getOid()." via Invoice by ".$user;
+                        $msg = "New product with the item code '$itemCode' with existing fee schedule " .
+                            "'" . $category->getOptimalAbbreviationName() . "' has been added to the Work Request ID " .
+                            $transresRequest->getOid() . " via Invoice by " . $user;
+                    } else {
+                        //itemCode not existed (Case E) => info
+                        $msg = "New invoice item with the item code '$itemCode' without existing fee schedule has been added in the latest invoice " .
+                            $invoice->getOid() . " for the Work Request ID " . $transresRequest->getOid() . " by " . $user;
+                    }
+
+                    //eventLog changes
+                    $eventType = "Work Request Item Updated via Invoice"; //"Work Request Quantity Updated by Invoice"; //"Request Updated";
+
+                    $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+
                 } else {
-                    //itemCode not existed (Case E) => info
-                    $msg = "New invoice item with the item code '$itemCode' without existing fee schedule has been added in the latest invoice ".
-                        $invoice->getOid()." for the Work Request ID ".$transresRequest->getOid()." by ".$user;
+                    echo "Product with ID=" . $invoiceProduct->getId() . " already exists in work request. InvoiceID=" . $invoice->getId() . ", workRequestId=" . $transresRequest->getId() . ", invoiceItemId=" . $invoiceItem->getId() . "<br>";
                 }
-
-                //eventLog changes
-                $eventType = "Work Request Item Updated via Invoice"; //"Work Request Quantity Updated by Invoice"; //"Request Updated";
-
-                $transresUtil->setEventLog($transresRequest,$eventType,$msg);
-
-            } else {
-                echo "Product with ID=".$invoiceProduct->getId()." already exists in work request. InvoiceID=".$invoice->getId().", workRequestId=".$transresRequest->getId().", invoiceItemId=".$invoiceItem->getId()."<br>";
             }
             //////////////////// EOF Case D: adding new invoice item with existing category ////////////////////
 
@@ -2214,7 +2248,7 @@ class TransResRequestUtil
             //All fields in the existing invoice item are changed
 
         } //foreach invoiceItem in invoice
-        exit("foreach invoiceItem in invoice");
+        //exit("foreach invoiceItem in invoice");
 
         //detect removal (228: 8, Case C)
         foreach( $transresRequest->getProducts() as $product ) {
