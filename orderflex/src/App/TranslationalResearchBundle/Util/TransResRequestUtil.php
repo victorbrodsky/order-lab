@@ -2011,8 +2011,8 @@ class TransResRequestUtil
         //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
         $this->updateRequestCompletedFieldsByInvoice($invoice);
 
-        //update parent work request products by invoice's invoiceItems
-        $this->updateWorkRequestProductsByInvoice($invoice);
+//        //update parent work request products by invoice's invoiceItems
+//        $this->updateWorkRequestProductsByInvoice($invoice);
         
         $this->updateInvoiceStatus($invoice);
 
@@ -2022,6 +2022,9 @@ class TransResRequestUtil
 
         $this->em->persist($invoice);
         $this->em->flush();
+
+        //update parent work request products by invoice's invoiceItems
+        $this->updateWorkRequestProductsByInvoice($invoice);
 
 //        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 //        $this->get('session')->getFlashBag()->add(
@@ -2086,6 +2089,7 @@ class TransResRequestUtil
         return $transresRequest;
     }
 
+    //Run after invoice is flushed
     //update parent work request products by invoice's invoiceItems
     public function updateWorkRequestProductsByInvoice( $invoice ) {
 
@@ -2114,7 +2118,7 @@ class TransResRequestUtil
         foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
             $requestProduct = $invoiceItem->getProduct();
             if (!$requestProduct) {
-                exit("skip: no request product with item code=".$invoiceItem->getItemCode());
+                exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
                 continue;
             }
 
@@ -2127,7 +2131,9 @@ class TransResRequestUtil
             //foreach invoice item: detect if this invoice item does not exists in the original work request
             $invoiceProduct = $invoiceItem->getProduct();
 
-            if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
+            //Check if
+            //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
+            if( $this->findProductInWorkRequestAndInvoiceItem($invoiceProduct,$transresRequest,$invoiceItem) === FALSE ) {
                 //$itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
 
                 //get $category by item code
@@ -2140,7 +2146,7 @@ class TransResRequestUtil
                 }
 
                 if( $category ) {
-                    echo "found by $itemCode: category=".$category."<br>";
+                    echo "Adding new found by $itemCode: category=".$category."<br>";
                     //exit(111);
 
                     $newProduct = new Product($user);
@@ -2170,6 +2176,9 @@ class TransResRequestUtil
                     $transresRequest->addProduct($newProduct);
                     $invoiceItem->setProduct($newProduct);
 
+                    $this->em->persist($newProduct);
+                    $this->em->flush();
+
                     $msg = "New product with the item code '$itemCode' with existing fee schedule ".
                         "'".$category->getOptimalAbbreviationName()."' has been added to the Work Request ID ".
                         $transresRequest->getOid()." via Invoice by ".$user;
@@ -2185,7 +2194,7 @@ class TransResRequestUtil
                 $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             } else {
-                exit("Product with ID=".$invoiceProduct->getId()." already exists in work request");
+                echo "Product with ID=".$invoiceProduct->getId()." already exists in work request. InvoiceID=".$invoice->getId().", workRequestId=".$transresRequest->getId().", invoiceItemId=".$invoiceItem->getId()."<br>";
             }
             //////////////////// EOF Case D: adding new invoice item with existing category ////////////////////
 
@@ -2204,7 +2213,8 @@ class TransResRequestUtil
             //Missing case in 8:
             //All fields in the existing invoice item are changed
 
-        }
+        } //foreach invoiceItem in invoice
+        exit("foreach invoiceItem in invoice");
 
         //detect removal (228: 8, Case C)
         foreach( $transresRequest->getProducts() as $product ) {
@@ -5048,9 +5058,21 @@ class TransResRequestUtil
         return $invoiceItem;
     }
 
-    //Find if the invoice item's product exists in the corresponding work request and invoice
-    //$product - work request product
+    //Find if the product exists in both: work request and invoice
     public function findProductInWorkRequestAndInvoice($product,$transresRequest,$invoice) {
+        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoice($product,$invoice) ) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    public function findProductInWorkRequestAndInvoiceItem($product,$transresRequest,$invoiceItem) {
+        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoiceItem($product,$invoiceItem) ) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    //Find if the $product exists in work request
+    public function findProductInWorkRequest($product,$transresRequest) {
         
         if( $product ) {
             $productId = $product->getId();
@@ -5098,6 +5120,108 @@ class TransResRequestUtil
         }
 
         return $product;
+    }
+    //Find if the $product exists in latest invoice
+    public function findProductInInvoice($product,$invoice) {
+
+        if( $product ) {
+            $productId = $product->getId();
+        } else {
+            return NULL;
+        }
+        //echo "productId=$productId <br>";
+
+        if( !$invoice ) {
+            return NULL;
+        }
+
+        //$invoiceItem = NULL;
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.invoiceItems','invoiceItems');
+        $dql->leftJoin('invoiceItems.product','product');
+
+        $dqlParameters = array();
+
+        $dql->where("product.id = :productId");
+        $dql->andWhere("invoice.id = :invoiceId");
+        $dql->andWhere("invoice.latestVersion = TRUE");
+
+        //sort by ID and get the most recent invoice. The largest ID will be the first
+        $dql->orderBy("product.id","DESC");
+
+        $dqlParameters["productId"] = $productId;
+        $dqlParameters["invoiceId"] = $invoice->getId();
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $invoices = $query->getResult();
+
+        //echo "products=".count($products)."<br>";
+
+        $invoice = NULL;
+        if( count($invoices) == 1 ) {
+            $invoice = $invoices[0];
+        }
+
+        return $invoice;
+    }
+    public function findProductInInvoiceItem($product,$invoiceItem) {
+        if( $product ) {
+            $productId = $product->getId();
+        } else {
+            return NULL;
+        }
+        //echo "productId=$productId <br>";
+
+        if( !$invoiceItem ) {
+            return NULL;
+        }
+
+        //$invoiceItem = NULL;
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
+        $dql =  $repository->createQueryBuilder("invoiceItem");
+        $dql->select('invoiceItem');
+
+        $dql->leftJoin('invoiceItem.invoice','invoice');
+        $dql->leftJoin('invoiceItem.product','product');
+
+        $dqlParameters = array();
+
+        $dql->where("product.id = :productId");
+        $dql->andWhere("invoiceItem.id = :invoiceItemId");
+        $dql->andWhere("invoice.latestVersion = TRUE");
+
+        //sort by ID and get the most recent invoice. The largest ID will be the first
+        $dql->orderBy("invoiceItem.id","DESC");
+
+        $dqlParameters["productId"] = $productId;
+        $dqlParameters["invoiceItemId"] = $invoiceItem->getId();
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $invoiceItems = $query->getResult();
+
+        //echo "products=".count($products)."<br>";
+
+        $invoiceItem = NULL;
+        if( count($invoiceItems) == 1 ) {
+            $invoiceItem = $invoiceItems[0];
+        }
+
+        return $invoiceItem;
     }
 }
 

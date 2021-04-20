@@ -835,7 +835,7 @@ class InvoiceController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-//            //update subsidy for new invoice : done in createSubmitNewInvoice
+//            //update subsidy for new invoice : done in create Submit New Invoice
 //            $transresRequestUtil->updateInvoiceSubsidy($invoice);
 
             if ($invoice->getStatus() == "Unpaid/Issued") {
@@ -1039,8 +1039,8 @@ class InvoiceController extends OrderAbstractController
             //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
             $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice); //edit
 
-            //update parent work request products by invoice's invoiceItems
-            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
+//            //update parent work request products by invoice's invoiceItems
+//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             $transresRequestUtil->updateInvoiceStatus($invoice);
             
@@ -1081,6 +1081,9 @@ class InvoiceController extends OrderAbstractController
             if( $invoiceStatus != $originalInvoiceStatus ) {
                 $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
             }
+
+            //update parent work request products by invoice's invoiceItems
+            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit
 
