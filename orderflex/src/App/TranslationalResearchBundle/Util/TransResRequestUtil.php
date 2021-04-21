@@ -4966,12 +4966,18 @@ class TransResRequestUtil
             "href=" . $url . ">" . $invoice->getOid() . "</a>";
 
         $administrativeFee = $invoice->getAdministrativeFee();
+        $discountNumeric = $invoice->getDiscountNumeric();
+        $discountPercent = $invoice->getDiscountPercent();
+        $invoiceSubTotal = $invoice->getSubTotal();
+        $invoiceTotal = $invoice->getTotal();
+
         $itemCode = $invoiceItem->getItemCode();
         $description = $invoiceItem->getDescription();
         $quantity = $thisQuantity = $invoiceItem->getQuantity();
         $additionalQuantity = $thisAdditionalQuantity = $invoiceItem->getAdditionalQuantity();
         $unitPrice = $invoiceItem->getUnitPrice();
         $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+        $itemTotal = $invoiceItem->getTotal();
 
         if( $quantity === NULL ) {
             $thisQuantity = 0;
@@ -4981,16 +4987,24 @@ class TransResRequestUtil
         }
         $totalQuantity = $thisQuantity + $thisAdditionalQuantity;
 
+
+
         $itemInfo = array(
             "invoiceLink" => $link,
-            "itemCode" => $itemCode,
+            "invoiceSubTotal" => $invoiceSubTotal,
             "administrativeFee" => $administrativeFee,
+            "discountNumeric" => $discountNumeric,
+            "discountPercent" => $discountPercent,
+            "invoiceTotal" => $invoiceTotal,
+
+            "itemCode" => $itemCode,
             "description" => $description,
             "totalQuantity" => $totalQuantity,
             "quantity" => $quantity,
             "additionalQuantity" => $additionalQuantity,
             "unitPrice" => $unitPrice,
             "additionalUnitPrice" => $additionalUnitPrice,
+            "itemTotal" => $itemTotal,
         );
 
         return $itemInfo;
@@ -5022,7 +5036,8 @@ class TransResRequestUtil
 //                }
 //            }
 
-            if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
+            //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
+            if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) === NULL ) {
                 $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
                 $newInvoiceItems[] = $itemInfo;
             }

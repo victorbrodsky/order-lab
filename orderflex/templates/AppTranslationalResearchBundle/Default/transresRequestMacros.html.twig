@@ -791,6 +791,7 @@
 
 {% macro productSections(form, cycle, sitename) %}
 
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
@@ -834,6 +835,11 @@
                     {% set newInvoiceItems = transres_request_util.getNewInvoiceItemWithoutCategory(form.vars.value,cycle) %}
                     {% if newInvoiceItems and newInvoiceItems|length > 0 %}
                         {% set invoiceLink = newInvoiceItems[0]['invoiceLink'] %}
+                        {% set administrativeFee = newInvoiceItems[0]['administrativeFee'] %}
+                        {% set discountNumeric = newInvoiceItems[0]['discountNumeric'] %}
+                        {% set discountPercent = newInvoiceItems[0]['discountPercent'] %}
+                        {% set invoiceTotal = newInvoiceItems[0]['invoiceTotal'] %}
+                        {% set invoiceSubTotal = newInvoiceItems[0]['invoiceSubTotal'] %}
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
@@ -849,6 +855,23 @@
                                             {{ transresRequestMacros.invoiceItemSimpleForm( newInvoiceItem, false ) }}
                                         </div>
                                     {% endfor %}
+                                    <div class="well">
+                                        {% if invoiceSubTotal %}
+                                            {{ formmacros.simplefield( "Invoiced Subtotal ($):", invoiceSubTotal, "", "disabled" ) }}
+                                        {% endif %}
+                                        {% if discountNumeric %}
+                                            {{ formmacros.simplefield( "Discount ($):", discountNumeric, "", "disabled" ) }}
+                                        {% endif %}
+                                        {% if discountPercent %}
+                                            {{ formmacros.simplefield( "Discount (%):", discountPercent, "", "disabled" ) }}
+                                        {% endif %}
+                                        {% if administrativeFee %}
+                                            {{ formmacros.simplefield( "Invoiced Administrative Fee ($):", administrativeFee, "", "disabled" ) }}
+                                        {% endif %}
+                                        {% if administrativeFee %}
+                                            {{ formmacros.simplefield( "Invoiced Total ($):", invoiceTotal, "", "disabled" ) }}
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -979,11 +1002,12 @@
         {{ formmacros.simplefield( "Invoiced Total Quantity:", invoiceItemInfo.totalQuantity, "", "disabled" ) }}
         {{ formmacros.simplefield( "Invoiced Initial Quantity:", invoiceItemInfo.quantity, "", "disabled" ) }}
         {{ formmacros.simplefield( "Invoiced Additional Quantity:", invoiceItemInfo.additionalQuantity, "", "disabled" ) }}
-        {{ formmacros.simplefield( "Invoiced Unit Price:", invoiceItemInfo.unitPrice, "", "disabled" ) }}
-        {{ formmacros.simplefield( "Invoiced Additional Unit Price:", invoiceItemInfo.additionalUnitPrice, "", "disabled" ) }}
-        {% if invoiceItemInfo.administrativeFee %}
-            {{ formmacros.simplefield( "Invoiced Administrative Fee:", invoiceItemInfo.administrativeFee, "", "disabled" ) }}
-        {% endif %}
+        {{ formmacros.simplefield( "Invoiced Unit Price ($):", invoiceItemInfo.unitPrice, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Additional Unit Price ($):", invoiceItemInfo.additionalUnitPrice, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Invoiced Item Total ($):", invoiceItemInfo.itemTotal, "", "disabled" ) }}
+        {#{% if invoiceItemInfo.administrativeFee %}#}
+            {#{{ formmacros.simplefield( "Invoiced Administrative Fee:", invoiceItemInfo.administrativeFee, "", "disabled" ) }}#}
+        {#{% endif %}#}
     {% endif %}
 {% endmacro %}
 
