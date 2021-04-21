@@ -59,40 +59,6 @@ class StringItemCodeTransformer implements DataTransformerInterface
         }
     }
 
-//    /**
-//     * Transforms an object or name string to id.
-//     */
-//    public function transform_ORIGINAL($entity)
-//    {
-//        if( null === $entity || $entity == "" ) {
-//            return "";
-//        }
-//
-//        //echo "data transformer entity=".$entity."<br>";
-//        //echo "data transformer entity id=".$entity->getId()."<br>";
-//
-//        if( is_int($entity) ) {
-//            //echo "transform by name=".$entity." !!!<br>";
-//            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity); //RequestCategoryTypeList
-//            //echo "findOneById entity=".$entity."<br>";
-//        }
-//        else {
-//            //echo "transform by name=".$entity." ????????????????<br>";
-//            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($entity);
-//            $entity = $this->findEntityByString($entity);
-//        }
-//
-//        if( null === $entity ) {
-//            return "";
-//        }
-//
-//        //return $entity->getId();
-//
-//        //echo "count=".count($entity)."<br>";
-//
-//        return $entity->getId();
-//    }
-
     /**
      * New/Show/Edit
      * Transforms an object or name string to id.
@@ -153,7 +119,9 @@ class StringItemCodeTransformer implements DataTransformerInterface
 
         if( is_numeric($text) ) {    //number => most probably it is id
             //echo 'text is id <br>';
+            //'TranslationalResearchBundle' 'RequestCategoryTypeList'
             $entity = $this->em->getRepository('App' . $this->bundleName . ':' . $this->className)->findOneById($text);
+            //echo "1 entity=$entity <br>";
 
             if ($entity) {
                 //return $entity->getBlockPrefix();
@@ -166,11 +134,13 @@ class StringItemCodeTransformer implements DataTransformerInterface
         }
 
         if ($entity) {
+            //echo $entity->getId().": 2 entity=$entity <br>";
+            //exit('222');
             return $entity->getProductId();
         }
 
-        //echo "data reverseTransform text=".$text."<br>";
-        //exit();
+        //echo "2data reverseTransform text=".$text."<br>";
+        //exit('333');
 
         return $text;
     }

@@ -2008,6 +2008,12 @@ class TransResRequestUtil
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
+        //testing
+        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+            $itemCode = $invoiceItem->getItemCode();
+            echo "1 ItemCode=" . $itemCode . "<br>";
+        }
+
         //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
         $this->updateRequestCompletedFieldsByInvoice($invoice);
 
@@ -2032,6 +2038,13 @@ class TransResRequestUtil
 //            $msg
 //        );
 
+        //testing
+        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+            $itemCode = $invoiceItem->getItemCode();
+            echo "2 ItemCode=" . $itemCode . "<br>";
+        }
+        //exit('EOF createSubmitNewInvoice');
+
         $eventType = "Invoice Created";
         $msg = "New Invoice with ID ".$invoice->getOid()." has been successfully submitted for the request ID ".$transresRequest->getOid();
         $transresUtil->setEventLog($invoice,$eventType,$msg);
@@ -2046,6 +2059,9 @@ class TransResRequestUtil
     public function updateRequestCompletedFieldsByInvoice($invoice) {
         $transresUtil = $this->container->get('transres_util');
 
+        $testing = false;
+        //$testing = true;
+
         if( strtolower($invoice->getStatus()) == strtolower("Canceled") ) {
             return null;
         }
@@ -2059,6 +2075,11 @@ class TransResRequestUtil
             $requestProduct = $invoiceItem->getProduct();
             if( !$requestProduct ) {
                 continue;
+            }
+
+            if( $testing ) {
+                $itemCode = $invoiceItem->getItemCode();
+                echo "ItemCode=" . $itemCode . "<br>";
             }
 
             $requestQuant = $requestProduct->getCompleted();
@@ -2078,12 +2099,18 @@ class TransResRequestUtil
                 //    " has been updated by the invoice's (".$invoice->getOid() . ") quantity value " . $invoiceQuant;
                 $msg = "Quantity of $categoryStr for Work Request ".$transresRequest->getOid().
                     " changed from old value $requestQuant to new value $invoiceQuant";
-                
-                $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+                if( !$testing ) {
+                    $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+                }
 
                 $requestProduct->setCompleted($invoiceQuant);
             }
 
+        }
+
+        if( $testing ) {
+            exit('EOF updateRequestCompletedFieldsByInvoice');
         }
 
         return $transresRequest;
@@ -2105,7 +2132,15 @@ class TransResRequestUtil
         }
 
         $transresUtil = $this->container->get('transres_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         $user = $this->secTokenStorage->getToken()->getUser();
+
+        $newline = "\n";
+
+        $currentDate = new \DateTime();
+        $currentDate = $userServiceUtil->convertFromUtcToUserTimezone($currentDate, $user);
+        $currentDateStr = $currentDate->format('m/d/Y \a\t H:i:s');
 
 //        $originalProducts = new ArrayCollection();
 //        foreach ($transresRequest->getProducts() as $product) {
@@ -2135,7 +2170,50 @@ class TransResRequestUtil
             //if exists => skip
             //if does not exist => add $invoiceProduct to Work Request
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) ) {
-                //skip
+                //TODO: Check if quantity is edited (replace function updateRequestCompletedFieldsByInvoice)
+
+                //TODO: Check if Item Code is edited
+                $itemCode = $invoiceItem->getItemCode();
+                echo "ItemCode=" . $itemCode . "<br>";
+
+                $category = $invoiceProduct->getCategory();
+                if( $category ) {
+                    $productId = $category->getProductId();
+                }
+
+                if( $productId."" == $itemCode."" ) {
+                    //itemCode is the same
+                } else {
+                    //itemCode is edited => change ItemCode (it means find category by productId and change category in product)
+                    $itemCode = $invoiceItem->getItemCode();
+                    if ($itemCode) {
+                        //$newInvoiceItemCategory = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                        $newInvoiceItemCategory = $this->getOneValidFeeScheduleByProductId($itemCode);
+                    } else {
+                        $newInvoiceItemCategory = NULL; //"Not Existed Fee Schedule";
+                    }
+
+                    if( $newInvoiceItemCategory ) {
+                        $invoiceProduct->setCategory($newInvoiceItemCategory);
+
+                        $msg = $newline.$newline."System Note: Item code $productId updated to $itemCode by $user on $currentDateStr.";
+                        $productComment = $invoiceProduct->getComment();
+                        if( $productComment ) {
+                            $productComment = $productComment . $msg;
+                        } else {
+                            $productComment = $msg;
+                        }
+                        if( $productComment ) {
+                            $invoiceProduct->setComment($productComment);
+                        }
+
+                        //Event Log
+                        $eventType = "Work Request Item Updated via Invoice";
+                        $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+                    }
+
+                }
+
             } else {
                 $category = $invoiceProduct->getCategory();
                 $itemCode = $invoiceItem->getItemCode();
@@ -2144,7 +2222,19 @@ class TransResRequestUtil
                 }
 
                 if( $category ) {
-                    //Case D: itemCode exists in the fee schedule
+                    //Case D: itemCode exists in the fee schedule => add to the parent Work Request
+                    //Add to the product comment: "Item added during invoice generation by FirstName LastName on MM/DD/YYYY at HH:MM.";
+                    $addToProductComment = $newline.$newline."System Note: Item added during invoice generation by $user on $currentDateStr";
+                    $productComment = $invoiceProduct->getComment();
+                    if( $productComment ) {
+                        $productComment = $productComment . $addToProductComment;
+                    } else {
+                        $productComment = $addToProductComment;
+                    }
+                    if( $productComment ) {
+                        $invoiceProduct->setComment($productComment);
+                    }
+
                     $transresRequest->addProduct($invoiceProduct);
                     $this->em->flush();
 
@@ -2173,7 +2263,8 @@ class TransResRequestUtil
                     $category = NULL;
                     $itemCode = $invoiceItem->getItemCode();
                     if ($itemCode) {
-                        $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                        //$category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                        $category = $this->getOneValidFeeScheduleByProductId($itemCode);
                     } else {
                         $itemCode = "Empty Item Code";
                     }
@@ -4045,6 +4136,39 @@ class TransResRequestUtil
         return $productsArr;
     }
 
+    public function getOneValidFeeScheduleByProductId( $productId ) {
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("list.productId = :productId");
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $dqlParameters = array();
+
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+        $dqlParameters["productId"] = $productId;
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $categories = $query->getResult();
+
+        $category = NULL;
+        if( count($categories) > 0 ) {
+            $category = $categories[0];
+        }
+
+        return $category;
+    }
+
     public function getInvoiceItemInfoHtml( $invoiceItem ) {
         $transresUtil = $this->container->get('transres_util');
         $row = "";
@@ -4350,7 +4474,8 @@ class TransResRequestUtil
             if( !$category ) {
                 //echo "NULL category: itemCode=".$itemCode."<br>";
                 //try to find category by itemCode
-                $category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                //$category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                $category = $this->getOneValidFeeScheduleByProductId($itemCode);
                 //echo "found category=[".$category."] by itemCode=$itemCode"."<br>";
 
                 //create and add product to InvoiceItem without Product by ItemCode
@@ -4987,7 +5112,7 @@ class TransResRequestUtil
         }
         $totalQuantity = $thisQuantity + $thisAdditionalQuantity;
 
-
+        //Case:
 
         $itemInfo = array(
             "invoiceLink" => $link,
@@ -5107,19 +5232,19 @@ class TransResRequestUtil
         return $invoiceItem;
     }
 
-    //Find if the product exists in both: work request and invoice
-    public function findProductInWorkRequestAndInvoice($product,$transresRequest,$invoice) {
-        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoice($product,$invoice) ) {
-            return TRUE;
-        }
-        return FALSE;
-    }
-    public function findProductInWorkRequestAndInvoiceItem($product,$transresRequest,$invoiceItem) {
-        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoiceItem($product,$invoiceItem) ) {
-            return TRUE;
-        }
-        return FALSE;
-    }
+//    //Find if the product exists in both: work request and invoice
+//    public function findProductInWorkRequestAndInvoice($product,$transresRequest,$invoice) {
+//        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoice($product,$invoice) ) {
+//            return TRUE;
+//        }
+//        return FALSE;
+//    }
+//    public function findProductInWorkRequestAndInvoiceItem($product,$transresRequest,$invoiceItem) {
+//        if( $this->findProductInWorkRequest($product,$transresRequest) && $this->findProductInInvoiceItem($product,$invoiceItem) ) {
+//            return TRUE;
+//        }
+//        return FALSE;
+//    }
     //Find if the $product exists in work request
     public function findProductInWorkRequest($product,$transresRequest) {
         
@@ -5170,108 +5295,108 @@ class TransResRequestUtil
 
         return $product;
     }
-    //Find if the $product exists in latest invoice
-    public function findProductInInvoice($product,$invoice) {
-
-        if( $product ) {
-            $productId = $product->getId();
-        } else {
-            return NULL;
-        }
-        //echo "productId=$productId <br>";
-
-        if( !$invoice ) {
-            return NULL;
-        }
-
-        //$invoiceItem = NULL;
-
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
-        $dql =  $repository->createQueryBuilder("invoice");
-        $dql->select('invoice');
-
-        $dql->leftJoin('invoice.invoiceItems','invoiceItems');
-        $dql->leftJoin('invoiceItems.product','product');
-
-        $dqlParameters = array();
-
-        $dql->where("product.id = :productId");
-        $dql->andWhere("invoice.id = :invoiceId");
-        $dql->andWhere("invoice.latestVersion = TRUE");
-
-        //sort by ID and get the most recent invoice. The largest ID will be the first
-        $dql->orderBy("product.id","DESC");
-
-        $dqlParameters["productId"] = $productId;
-        $dqlParameters["invoiceId"] = $invoice->getId();
-
-        $query = $this->em->createQuery($dql);
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
-        }
-
-        $invoices = $query->getResult();
-
-        //echo "products=".count($products)."<br>";
-
-        $invoice = NULL;
-        if( count($invoices) == 1 ) {
-            $invoice = $invoices[0];
-        }
-
-        return $invoice;
-    }
-    public function findProductInInvoiceItem($product,$invoiceItem) {
-        if( $product ) {
-            $productId = $product->getId();
-        } else {
-            return NULL;
-        }
-        //echo "productId=$productId <br>";
-
-        if( !$invoiceItem ) {
-            return NULL;
-        }
-
-        //$invoiceItem = NULL;
-
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
-        $dql =  $repository->createQueryBuilder("invoiceItem");
-        $dql->select('invoiceItem');
-
-        $dql->leftJoin('invoiceItem.invoice','invoice');
-        $dql->leftJoin('invoiceItem.product','product');
-
-        $dqlParameters = array();
-
-        $dql->where("product.id = :productId");
-        $dql->andWhere("invoiceItem.id = :invoiceItemId");
-        $dql->andWhere("invoice.latestVersion = TRUE");
-
-        //sort by ID and get the most recent invoice. The largest ID will be the first
-        $dql->orderBy("invoiceItem.id","DESC");
-
-        $dqlParameters["productId"] = $productId;
-        $dqlParameters["invoiceItemId"] = $invoiceItem->getId();
-
-        $query = $this->em->createQuery($dql);
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
-        }
-
-        $invoiceItems = $query->getResult();
-
-        //echo "products=".count($products)."<br>";
-
-        $invoiceItem = NULL;
-        if( count($invoiceItems) == 1 ) {
-            $invoiceItem = $invoiceItems[0];
-        }
-
-        return $invoiceItem;
-    }
+//    //Find if the $product exists in latest invoice
+//    public function findProductInInvoice($product,$invoice) {
+//
+//        if( $product ) {
+//            $productId = $product->getId();
+//        } else {
+//            return NULL;
+//        }
+//        //echo "productId=$productId <br>";
+//
+//        if( !$invoice ) {
+//            return NULL;
+//        }
+//
+//        //$invoiceItem = NULL;
+//
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+//        $dql =  $repository->createQueryBuilder("invoice");
+//        $dql->select('invoice');
+//
+//        $dql->leftJoin('invoice.invoiceItems','invoiceItems');
+//        $dql->leftJoin('invoiceItems.product','product');
+//
+//        $dqlParameters = array();
+//
+//        $dql->where("product.id = :productId");
+//        $dql->andWhere("invoice.id = :invoiceId");
+//        $dql->andWhere("invoice.latestVersion = TRUE");
+//
+//        //sort by ID and get the most recent invoice. The largest ID will be the first
+//        $dql->orderBy("product.id","DESC");
+//
+//        $dqlParameters["productId"] = $productId;
+//        $dqlParameters["invoiceId"] = $invoice->getId();
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $invoices = $query->getResult();
+//
+//        //echo "products=".count($products)."<br>";
+//
+//        $invoice = NULL;
+//        if( count($invoices) == 1 ) {
+//            $invoice = $invoices[0];
+//        }
+//
+//        return $invoice;
+//    }
+//    public function findProductInInvoiceItem($product,$invoiceItem) {
+//        if( $product ) {
+//            $productId = $product->getId();
+//        } else {
+//            return NULL;
+//        }
+//        //echo "productId=$productId <br>";
+//
+//        if( !$invoiceItem ) {
+//            return NULL;
+//        }
+//
+//        //$invoiceItem = NULL;
+//
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
+//        $dql =  $repository->createQueryBuilder("invoiceItem");
+//        $dql->select('invoiceItem');
+//
+//        $dql->leftJoin('invoiceItem.invoice','invoice');
+//        $dql->leftJoin('invoiceItem.product','product');
+//
+//        $dqlParameters = array();
+//
+//        $dql->where("product.id = :productId");
+//        $dql->andWhere("invoiceItem.id = :invoiceItemId");
+//        $dql->andWhere("invoice.latestVersion = TRUE");
+//
+//        //sort by ID and get the most recent invoice. The largest ID will be the first
+//        $dql->orderBy("invoiceItem.id","DESC");
+//
+//        $dqlParameters["productId"] = $productId;
+//        $dqlParameters["invoiceItemId"] = $invoiceItem->getId();
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $invoiceItems = $query->getResult();
+//
+//        //echo "products=".count($products)."<br>";
+//
+//        $invoiceItem = NULL;
+//        if( count($invoiceItems) == 1 ) {
+//            $invoiceItem = $invoiceItems[0];
+//        }
+//
+//        return $invoiceItem;
+//    }
 }
 
 
