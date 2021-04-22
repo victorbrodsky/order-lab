@@ -5130,6 +5130,7 @@ class TransResRequestUtil
             } else {
                 //Invoiced Total Quantity: X at $10.00
                 $totalQuantityStr = $quantity." at $".$unitPrice;
+                $quantity = NULL; //hide Initial Quantity
             }
         }
 
