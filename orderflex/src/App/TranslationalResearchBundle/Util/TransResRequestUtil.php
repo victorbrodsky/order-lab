@@ -1350,7 +1350,7 @@ class TransResRequestUtil
             $invoiceItem->setItemCode($categoryItemCode);
             $invoiceItem->setDescription($categoryName);
 
-            //TODO: add "comment" from Work Request
+            // add/show somehow "comment" from Work Request ?
 
             if( $initialQuantity && $initialFee ) {
                 //Total
@@ -2052,10 +2052,11 @@ class TransResRequestUtil
         return $msg;
     }
 
+    //NOT USED anymore
     //Used in create new invoice (createSubmitNewInvoice) by "Create new invoice" action
     // or by changing status of work request to "invoiced"
     // or by update invoice
-    //TODO: issue 228: update parent work requests fields by invoice if status is not "canceled"
+    //update parent work requests fields by invoice if status is not "canceled"
     public function updateRequestCompletedFieldsByInvoice($invoice) {
         $transresUtil = $this->container->get('transres_util');
 
@@ -2193,7 +2194,7 @@ class TransResRequestUtil
             //if does not exist => add $invoiceProduct to Work Request
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) ) {
 
-                //TODO: Check if quantity is edited (replace function updateRequestCompletedFieldsByInvoice)
+                //Check if quantity is edited (replace function updateRequestCompletedFieldsByInvoice)
                 /////////// Update Quantity on Work Request ////////////
                 $requestQuant = $invoiceProduct->getQuantity(); //getCompleted();
                 $invoiceQuant = $invoiceItem->getTotalQuantity();
@@ -2219,10 +2220,7 @@ class TransResRequestUtil
                 }
                 /////////// EOF Update Quantity on Work Request ////////////
 
-//                //TODO: Check if Item Code is edited
-//                $itemCode = $invoiceItem->getItemCode();
-//                echo "ItemCode=" . $itemCode . "<br>";
-
+                //Check if Item Code is edited
                 $category = $invoiceProduct->getCategory();
                 if( $category ) {
                     $productId = $category->getProductId();
@@ -5063,67 +5061,7 @@ class TransResRequestUtil
         }
         //echo "invoiceItem Id=".$invoiceItem->getId()."<br>";
 
-//        $invoice = $invoiceItem->getInvoice();
-//
-//        $url = $this->container->get('router')->generate(
-//            'translationalresearch_invoice_show',
-//            array(
-//                'oid'=>$invoice->getOid()
-//            ),
-//            UrlGeneratorInterface::ABSOLUTE_URL
-//        );
-//        $link = "<a target='_blank' " .
-//            "href=" . $url . ">" . $invoice->getOid() . "</a>";
-//
-//        $administrativeFee = $invoice->getAdministrativeFee();
-//        $description = $invoiceItem->getDescription();
-//        $quantity = $thisQuantity = $invoiceItem->getQuantity();
-//        $additionalQuantity = $thisAdditionalQuantity = $invoiceItem->getAdditionalQuantity();
-//        $unitPrice = $invoiceItem->getUnitPrice();
-//        $additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
-//
-//        if( $quantity === NULL ) {
-//            $thisQuantity = 0;
-//        }
-//        if( $thisAdditionalQuantity === NULL ) {
-//            $thisAdditionalQuantity = 0;
-//        }
-//        $totalQuantity = $thisQuantity + $thisAdditionalQuantity;
-//
-//        $itemInfo = array(
-//            "invoiceLink" => $link,
-//            "administrativeFee" => $administrativeFee,
-//            "description" => $description,
-//            "totalQuantity" => $totalQuantity,
-//            "quantity" => $quantity,
-//            "additionalQuantity" => $additionalQuantity,
-//            "unitPrice" => $unitPrice,
-//            "additionalUnitPrice" => $additionalUnitPrice,
-//        );
-
         $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
-
-//        if(0) {
-//            $itemInfo = "The latest invoice ID ".$link;
-//            $itemInfo .= "<br>";
-//
-//            $itemInfo .= "<label>Description</label>: " . $description;
-//
-//            $itemInfo .= "<br>";
-//
-//            $itemInfo .= "<label>Initial Quantity</label>: " . $quantity . "; ";
-//            $itemInfo .= "<label>Additional Quantity</label>: " . $additionalQuantity;
-//
-//            $itemInfo .= "<br>";
-//
-//            $itemInfo .= "<label>Unit Price ($)</label>: " . $unitPrice . "; ";
-//            $itemInfo .= "<label>Additional Unit Price ($)</label>: " . $additionalUnitPrice;
-//
-//            if ($administrativeFee) {
-//                $itemInfo .= "<br>";
-//                $itemInfo .= "<label>Administrative Fee ($)</label>: " . $administrativeFee;
-//            }
-//        }
 
         //dump($itemInfo);
 
@@ -5164,7 +5102,56 @@ class TransResRequestUtil
         }
         $totalQuantity = $thisQuantity + $thisAdditionalQuantity;
 
-        //Case:
+        //TODO: Cases
+        $product = $invoiceItem->getProduct();
+        $transresRequest = $invoice->getTransresRequest();
+        $priceList = $transresRequest->getPriceList();
+        $res = $product->calculateQuantities($priceList);
+//            $res = array(
+//                'initialQuantity' => $initialQuantity,
+//                'additionalQuantity' => $additionalQuantity, //$additionalQuantity
+//                'initialFee' => $initialFee,
+//                'additionalFee' => $additionalFee,
+//                'categoryItemCode' => $categoryItemCode,
+//                'categoryName' => $categoryName
+//            );
+
+        $totalQuantityStr = NULL;
+        // Case 9d:
+        //If the “Invoiced Additional Quantity” equals 0 or is NULL,
+        // and the prices on the latest invoice are unchanged (same as on the fee schedule)
+        // show just one line: Invoiced Total Quantity: X at $10.00
+        if( !$additionalQuantity ) {
+            if( $quantity == 1 ) {
+                //AND the initial quantity equals 1, instead of three lines above, show just one line:
+                //Invoiced Total Quantity: 1
+                $totalQuantityStr = 1;
+                $quantity = NULL; //hide Initial Quantity
+            } else {
+                //Invoiced Total Quantity: X at $10.00
+                $totalQuantityStr = $quantity." at $".$unitPrice;
+            }
+        }
+
+        //Hide invoice price if the same as in product
+        if( $unitPrice && $additionalUnitPrice ) {
+            $initialFee = $res['initialFee'];
+            $additionalFee = $res['additionalFee'];
+            if( $unitPrice == $initialFee ) {
+                $unitPrice = NULL;
+            }
+            if( $additionalFee == $additionalUnitPrice ) {
+                $additionalUnitPrice = NULL;
+            }
+        }
+
+        if( $description == $res['categoryName'] ) {
+            $description = NULL;
+        }
+
+        if( $itemCode == $res['categoryItemCode'] ) {
+            $itemCode = NULL;
+        }
 
         $itemInfo = array(
             "invoiceLink" => $link,
@@ -5182,6 +5169,8 @@ class TransResRequestUtil
             "unitPrice" => $unitPrice,
             "additionalUnitPrice" => $additionalUnitPrice,
             "itemTotal" => $itemTotal,
+
+            "totalQuantityStr" => $totalQuantityStr
         );
 
         return $itemInfo;
@@ -5201,17 +5190,6 @@ class TransResRequestUtil
         //foreach invoice item: detect if this invoice item does not exists in the original work request
         foreach($latestInvoice->getInvoiceItems() as $invoiceItem ) {
             $invoiceProduct = $invoiceItem->getProduct();
-            
-//            if( $invoiceProduct ) {
-//                //echo "invoiceProduct=".$invoiceProduct->getId()."<br>";
-//                $category = $invoiceProduct->getCategory();
-//                if( !$category ) {
-//                    //echo "No category invoiceProduct=".$invoiceProduct->getId()."<br>";
-//                    $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
-//
-//                    $newInvoiceItems[] = $itemInfo;
-//                }
-//            }
 
             //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) === NULL ) {
@@ -5221,9 +5199,6 @@ class TransResRequestUtil
             
         }
 
-//        //foreach product: detect if this product does not exists in the latest invoice
-//        foreach($transresRequest->getProducts() as $product) {
-//        }
         //echo "newInvoiceItems=".count($newInvoiceItems)."<br>";
 
         return $newInvoiceItems;
@@ -5347,6 +5322,17 @@ class TransResRequestUtil
 
         return $product;
     }
+
+    public function getInvoiceShowUrlByWorkRequest($transresRequest) {
+        $latestInvoice = $this->getLatestInvoice($transresRequest);
+        if( $latestInvoice ) {
+            //$invoice,$asHref=true,$title=null,$newPage=false
+            $title = $latestInvoice->getOid();
+            return $this->getInvoiceShowUrl($latestInvoice,true,$title,true);
+        }
+        return NULL;
+    }
+
 //    //Find if the $product exists in latest invoice
 //    public function findProductInInvoice($product,$invoice) {
 //
