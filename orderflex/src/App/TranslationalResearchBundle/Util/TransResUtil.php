@@ -651,6 +651,35 @@ class TransResUtil
         return $showRemainingBudget;
     }
 
+    public function getProjectRemainingBudgetNote($project) {
+        if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
+            //echo "show remaining budget <br>";
+            $remainingBudget = $project->getRemainingBudget();
+
+            if( $remainingBudget ) {
+                $remainingBudget = $this->dollarSignValue($remainingBudget);
+            }
+
+            //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
+            // If you have questions about this, please [email the system administrator]
+
+            $adminEmailsStr = "";
+            $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+            if( count($adminEmails) > 0 ) {
+                $adminEmailsStr = implode(", ",$adminEmails);
+            }
+
+            $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is".
+                    " ".$remainingBudget.".".
+                    "<br>If you have questions about this, please email to the system administrator ".$adminEmailsStr;
+
+            $note = "<h4>".$note."</h4>";
+
+            return $note;
+        }
+        return NULL;
+    }
+
     public function printTransition($transition) {
         echo $transition->getName().": ";
         $froms = $transition->getFroms();

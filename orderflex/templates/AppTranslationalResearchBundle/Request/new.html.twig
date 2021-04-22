@@ -32,6 +32,7 @@
 
 
     {% set invoiceShowUrl = transres_request_util.getInvoiceShowUrlByWorkRequest(transresRequest) %}
+    {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -39,6 +40,12 @@
             (Latest Invoice ID {{ invoiceShowUrl|raw }})
         {% endif %}
     </h4>
+
+    {% if projectRemainingBudgetNote %}
+        <p>
+            {{ projectRemainingBudgetNote|raw }}
+        </p>
+    {% endif %}
 
     {% if cycle == "new" %}
         <p>
