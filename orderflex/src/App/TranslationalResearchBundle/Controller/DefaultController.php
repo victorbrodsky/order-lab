@@ -233,6 +233,35 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/transres-project-remaining-budget", name="translationalresearch_get_project_remaining_budget_ajax", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getTransResRecalculateProjectRemainingBudgetAjaxAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$projectId = $request->query->get('projectId');
+        //$productArr = $request->query->get('productArr');
+
+        $projectId = $request->get('projectId');
+        $productArr = $request->get('productArr');
+
+        dump($productArr);
+        print_r($productArr);
+
+        exit('111');
+
+        //testing
+        $output[] = array(
+            'remainingBudget' => 100.00
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
 
     /**
      * http://localhost/order/translational-research/import-old-data/0

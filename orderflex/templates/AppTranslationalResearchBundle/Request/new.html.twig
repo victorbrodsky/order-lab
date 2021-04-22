@@ -22,6 +22,7 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
+    <input type="hidden" id="project-remaining-budget" value="{{ project.getRemainingBudget() }}" />
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
     {% if messageToUsers is defined and messageToUsers %}
@@ -465,6 +466,32 @@
                 }
             });
 
+            var projectRemainingBudget = $('#project-remaining-budget').val();
+            if( projectRemainingBudget != null ) {
+                if( projectRemainingBudget < 0 ) {
+                    //This work request appears to exceed the approved estimated budget of $xxx.xx
+                    // for this project by $yyy.yy. You may need to submit an updated budget estimate
+                    // along with an explanation. Please contact the administrator by emailing
+                    // [FirstName LastName at email - first user with admin review role for this project type]
+                    // to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)
+
+                    var msg = "This work request appears to exceed the approved estimated budget of $xxx.xx.";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+
+                    transresShowBtn();
+                    return false;
+                } else {
+                    //testing
+                    var msg = "This work request appears to exceed the approved estimated budget of $xxx.xx.";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+
+                    transresShowBtn();
+                    return false;
+                }
+            }
+
             //console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
@@ -768,6 +795,79 @@
             //change alert color of newHolder to primary
             newHolder.addClass('alert-success').removeClass('alert-default').removeClass('well');
 
+            var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget(thisEl);
+        }
+
+        function removeWorkRequestProductObject( delBtn, classname ) {
+            removeExistingObject(delBtn,classname);
+            //console.log("removeInvoiceItemExistingObject");
+
+            var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget(thisEl);
+        }
+
+        function transresRecalculateRemaniningBudget(projectField) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField && projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                //return;
+            }
+            console.log("projectId="+projectId);
+
+            if( projectId ) {
+                //console.log("get project account number");
+
+                var productArr = [
+                    'categoryId',
+                    '1'
+                ];
+
+                var url = Routing.generate('translationalresearch_get_project_remaining_budget_ajax');
+                //url = url + "/" + projectId;
+
+//                $.ajax({
+//                    url: url,
+//                    timeout: _ajaxTimeout,
+//                    type: "GET",
+//                    data: {projectId: projectId, productArr: productArr},
+//                    dataType: 'json',
+//                    async: asyncflag
+//                }).success(function(response) {
+//                    //console.log(response);
+//                }).done(function() {
+//                    //
+//                }).error(function(jqXHR, textStatus, errorThrown) {
+//                    //console.log('Error : ' + errorThrown);
+//                });
+
+                //translationalresearch_invoice_update_ajax
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "POST",
+                    data: {
+                        projectId: projectId,
+                        productArr: productArr
+                    },
+                    async: false,
+                }).success(function(response) {
+                    console.log(response);
+                    if( response == "OK" ) {
+                        //reload parent page
+                        //window.location.reload(true);
+                    }
+                }).done(function() {
+                    //lbtn.stop();
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error : ' + errorThrown);
+                });
+
+            } else {
+
+            }
         }
 
     </script>
