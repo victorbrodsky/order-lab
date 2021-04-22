@@ -2424,6 +2424,10 @@ class Project {
 
         $remainingBudget = NULL; //"No Info";
 
+        if( $this->getFunded() ) {
+            return $remainingBudget;
+        }
+
         if( $this->getNoBudgetLimit() === true ) {
             return $remainingBudget;
         }
