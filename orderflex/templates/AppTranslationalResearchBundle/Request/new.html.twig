@@ -808,40 +808,27 @@
         }
 
         function transresRecalculateRemaniningBudget(projectField) {
+            return; //testing
+            
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField && projectField.length ) {
                 projectId = projectField.val();
             } else {
-                projectId = $('#oleg_translationalresearchbundle_request_project').val();
-                //return;
+                //projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                return;
             }
             console.log("projectId="+projectId);
 
             if( projectId ) {
                 //console.log("get project account number");
 
+                //foreach product: get categoryId, quantity
                 var productArr = [
                     'categoryId',
                     '1'
                 ];
 
                 var url = Routing.generate('translationalresearch_get_project_remaining_budget_ajax');
-                //url = url + "/" + projectId;
-
-//                $.ajax({
-//                    url: url,
-//                    timeout: _ajaxTimeout,
-//                    type: "GET",
-//                    data: {projectId: projectId, productArr: productArr},
-//                    dataType: 'json',
-//                    async: asyncflag
-//                }).success(function(response) {
-//                    //console.log(response);
-//                }).done(function() {
-//                    //
-//                }).error(function(jqXHR, textStatus, errorThrown) {
-//                    //console.log('Error : ' + errorThrown);
-//                });
 
                 //translationalresearch_invoice_update_ajax
                 $.ajax({
