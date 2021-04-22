@@ -659,6 +659,7 @@ class TransResUtil
             if( $remainingBudget !== NULL ) {
                 //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
                 // If you have questions about this, please [email the system administrator]
+                $remainingBudget = $project->toMoney($remainingBudget);
 
                 $remainingBudget = $this->dollarSignValue($remainingBudget);
 
