@@ -153,7 +153,7 @@ class TransResRequestUtil
 
         foreach($request->getProducts() as $product) {
             $requested = $product->getRequested();
-            $completed = $product->getCompleted();
+            $completed = $product->getQuantity(); //getCompleted();
 
             $categoryStr = NULL;
             $category = $product->getCategory();
@@ -2014,11 +2014,11 @@ class TransResRequestUtil
             echo "1 ItemCode=" . $itemCode . "<br>";
         }
 
-        //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
-        $this->updateRequestCompletedFieldsByInvoice($invoice);
+//        //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
+//        $this->updateRequestCompletedFieldsByInvoice($invoice);
 
-//        //update parent work request products by invoice's invoiceItems
-//        $this->updateWorkRequestProductsByInvoice($invoice);
+        //update parent work request products by invoice's invoiceItems
+        $this->updateWorkRequestProductsByInvoice($invoice);
         
         $this->updateInvoiceStatus($invoice);
 
@@ -2030,7 +2030,7 @@ class TransResRequestUtil
         $this->em->flush();
 
         //update parent work request products by invoice's invoiceItems
-        $this->updateWorkRequestProductsByInvoice($invoice);
+        //$this->updateWorkRequestProductsByInvoice($invoice);
 
 //        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 //        $this->get('session')->getFlashBag()->add(
@@ -2082,6 +2082,7 @@ class TransResRequestUtil
                 echo "ItemCode=" . $itemCode . "<br>";
             }
 
+            /////////// Update Quantity on Work Request ////////////
             $requestQuant = $requestProduct->getCompleted();
             $invoiceQuant = $invoiceItem->getTotalQuantity();
             if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
@@ -2106,17 +2107,18 @@ class TransResRequestUtil
 
                 $requestProduct->setCompleted($invoiceQuant);
             }
+            /////////// EOF Update Quantity on Work Request ////////////
 
         }
 
         if( $testing ) {
-            exit('EOF updateRequestCompletedFieldsByInvoice');
+            exit('EOF update RequestCompletedFieldsByInvoice');
         }
 
         return $transresRequest;
     }
 
-    //Run after invoice is flushed
+    //Run after invoice is flushed (? Maybe not)
     //update parent work request products by invoice's invoiceItems
     public function updateWorkRequestProductsByInvoice( $invoice ) {
 
@@ -2151,13 +2153,33 @@ class TransResRequestUtil
 
         //detect adding (case 8D) or editing existing product (case E, F)
         foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
-            $requestProduct = $invoiceItem->getProduct();
-            if (!$requestProduct) {
+
+            $invoiceProduct = $invoiceItem->getProduct();
+
+            $itemCode = $invoiceItem->getItemCode();
+            echo "ItemCode=" . $itemCode . "<br>";
+
+//            if (!$invoiceProduct) {
+//                //exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
+//                continue;
+//            }
+
+            if (!$invoiceProduct) {
+                //echo "NULL category: itemCode=".$itemCode."<br>";
+                //try to find category by itemCode
+                //$category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                $category = $this->getOneValidFeeScheduleByProductId($itemCode);
+                //echo "found category=[".$category."] by itemCode=$itemCode"."<br>";
+
+                $invoiceProduct = $this->createAndAddProductToInvoiceItemByItemCode($invoiceItem, $category);
+            }
+
+            if( !$invoiceProduct ) {
                 exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
                 continue;
             }
 
-            $invoiceItemProducts[$requestProduct->getId()] = $requestProduct->getId();
+            $invoiceItemProducts[$invoiceProduct->getId()] = $invoiceProduct->getId();
 
             //////////////////// Case D: adding new invoice item with existing category ////////////////////
             //itemCode existed (Case D) => add as new Product
@@ -2167,14 +2189,39 @@ class TransResRequestUtil
             $invoiceProduct = $invoiceItem->getProduct();
 
             //Check if $invoiceProduct exists in work request:
-            //if exists => skip
+            //if exists => check if invoice item is modified => if ItemCode is modified => modify corresponding product
             //if does not exist => add $invoiceProduct to Work Request
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) ) {
-                //TODO: Check if quantity is edited (replace function updateRequestCompletedFieldsByInvoice)
 
-                //TODO: Check if Item Code is edited
-                $itemCode = $invoiceItem->getItemCode();
-                echo "ItemCode=" . $itemCode . "<br>";
+                //TODO: Check if quantity is edited (replace function updateRequestCompletedFieldsByInvoice)
+                /////////// Update Quantity on Work Request ////////////
+                $requestQuant = $invoiceProduct->getQuantity(); //getCompleted();
+                $invoiceQuant = $invoiceItem->getTotalQuantity();
+                if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
+
+                    //eventLog changes
+                    $eventType = "Work Request Quantity Updated by Invoice"; //"Request Updated";
+
+                    $categoryStr = "Unknown category";
+                    $category = $invoiceProduct->getCategory();
+                    if( $category ) {
+                        $categoryStr = $category->getOptimalAbbreviationName();
+                    }
+
+                    //$msg = "Request's (".$transresRequest->getOid(). ") completed value ".$requestQuant.
+                    //    " has been updated by the invoice's (".$invoice->getOid() . ") quantity value " . $invoiceQuant;
+                    $msg = "Quantity of $categoryStr for Work Request ".$transresRequest->getOid().
+                        " changed from old value $requestQuant to new value $invoiceQuant";
+
+                    $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+
+                    $invoiceProduct->setCompleted($invoiceQuant);
+                }
+                /////////// EOF Update Quantity on Work Request ////////////
+
+//                //TODO: Check if Item Code is edited
+//                $itemCode = $invoiceItem->getItemCode();
+//                echo "ItemCode=" . $itemCode . "<br>";
 
                 $category = $invoiceProduct->getCategory();
                 if( $category ) {
@@ -2183,6 +2230,7 @@ class TransResRequestUtil
 
                 if( $productId."" == $itemCode."" ) {
                     //itemCode is the same
+                    //If Description changed => show description in show/edit work request page
                 } else {
                     //itemCode is edited => change ItemCode (it means find category by productId and change category in product)
                     $itemCode = $invoiceItem->getItemCode();
@@ -2215,6 +2263,10 @@ class TransResRequestUtil
                 }
 
             } else {
+                //New product, not existing in the parent Work Request =>
+                //If ItemCode has a category (fee schedule) (Case D) => add to Work Request => EventLog
+                //If ItemCode does not have a category (fee schedule) (Case E) => don’t push it back to the parent work request => EventLog
+
                 $category = $invoiceProduct->getCategory();
                 $itemCode = $invoiceItem->getItemCode();
                 if( !$itemCode ) {

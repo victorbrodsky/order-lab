@@ -1036,11 +1036,11 @@ class InvoiceController extends OrderAbstractController
 
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
 
-            //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
-            $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice); //edit
+//            //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
+//            $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice); //edit
 
-//            //update parent work request products by invoice's invoiceItems
-//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
+            //update parent work request products by invoice's invoiceItems
+            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             $transresRequestUtil->updateInvoiceStatus($invoice);
             
@@ -1082,8 +1082,8 @@ class InvoiceController extends OrderAbstractController
                 $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
             }
 
-            //update parent work request products by invoice's invoiceItems
-            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
+//            //update parent work request products by invoice's invoiceItems
+//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit
 
