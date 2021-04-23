@@ -6511,14 +6511,38 @@ class TransResUtil
 
     public function dollarSignValue($value) {
         if( $value !== NULL ) {
+            $value = $this->toDecimal($value);
+            //echo "value=".$value."<br>";
             if( $value >= 0 ) {
+                $value = $this->toMoney($value);
                 $value = "$".$value;
             } else {
-                $value = "-$".abs($value);
+                $value = abs($value);
+                $value = $this->toMoney($value);
+                $value = "-$".$value;
             }
         }
 
         return $value;
+    }
+//    public function moneyDollarSignValue($value) {
+//        if( $value !== NULL ) {
+//            $value = $this->toDecimal($value);
+//            echo "value=".$value."<br>";
+//            if( $value >= 0 ) {
+//                $value = "$".$value;
+//            } else {
+//                $value = "-$".abs($value);
+//            }
+//        }
+//
+//        return $value;
+//    }
+    public function toDecimal($number) {
+        return number_format((float)$number, 2, '.', '');
+    }
+    public function toMoney($number) {
+        return number_format((float)$number, 2, '.', ',');
     }
 
 }

@@ -241,6 +241,7 @@ class DefaultController extends OrderAbstractController
     public function getTransResRecalculateProjectRemainingBudgetAjaxAction(Request $request) {
 
         $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
         //$projectId = $request->query->get('projectId');
@@ -254,9 +255,21 @@ class DefaultController extends OrderAbstractController
         //echo "projectId=$projectId, workrequestId=$workrequestId <br>";
         //exit('111');
 
+        if( !$projectId ) {
+            $output = NULL;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
         if( !$project ) {
             $output = NULL;
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
         }
 
         $transresRequestProducts = array();
@@ -273,10 +286,7 @@ class DefaultController extends OrderAbstractController
         $remainingBudget = $project->getRemainingBudget();
 
         if( $remainingBudget !== NULL ) {
-            //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
-            // If you have questions about this, please [email the system administrator]
-            //$remainingBudget = $project->toMoney($remainingBudget);
-            //$remainingBudget = $this->dollarSignValue($remainingBudget);
+            //
         } else {
             $remainingBudget = 0;
         }
@@ -333,25 +343,6 @@ class DefaultController extends OrderAbstractController
                         $grandTotal = $grandTotal - $total;
                     }
                 }
-
-//                if( $productDb ) {
-//                    $quantitiesArr = $productDb->calculateQuantitiesByQuantityAndCategory($priceList, $quantity, $category);
-//                    $initialQuantity = $quantitiesArr['initialQuantity'];
-//                    $additionalQuantity = $quantitiesArr['additionalQuantity'];
-//                    $initialFee = $quantitiesArr['initialFee'];
-//                    $additionalFee = $quantitiesArr['additionalFee'];
-//
-//                    if ($initialQuantity && $initialFee) {
-//                        //Total
-//                        //$total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
-//                        $total = $transresRequest->getTotalFeesByQuantity($initialFee, $additionalFee, $initialQuantity, $additionalQuantity);
-//                        //echo "total=$total<br>";
-//
-//                        if ($total) {
-//                            $grandTotal = $grandTotal - $total;
-//                        }
-//                    }
-//                }
             }//if $productId
 
         }//foreach product in html
@@ -382,13 +373,19 @@ class DefaultController extends OrderAbstractController
             }
         }
 
-        //echo "grandTotal=$grandTotal<br>";
+        //echo "1remainingBudget=$remainingBudget, grandTotal=$grandTotal<br>";
         if( $grandTotal ) {
-            $remainingBudget = $remainingBudget + $grandTotal;
+            //$remainingBudget = $transresRequestUtil->toDecimal($remainingBudget);
+            //echo "2remainingBudget=$remainingBudget, grandTotal=$grandTotal<br>";
+            $remainingBudget = $remainingBudget - $grandTotal;
+            //echo "3remainingBudget=$remainingBudget<br>";
         }
 
-        $remainingBudget = $project->toMoney($remainingBudget);
+        $remainingBudget = $transresUtil->toMoney($remainingBudget);
+        //echo "4remainingBudget=$remainingBudget<br>";
         $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
+        //$remainingBudget = $transresUtil->moneyDollarSignValue($remainingBudget);
+        //echo "5remainingBudget=$remainingBudget<br>";
 
         $transresRequest = NULL;
         $dummyProduct = NULL;
