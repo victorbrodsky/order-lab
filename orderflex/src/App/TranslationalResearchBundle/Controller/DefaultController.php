@@ -381,7 +381,7 @@ class DefaultController extends OrderAbstractController
             //echo "3remainingBudget=$remainingBudget<br>";
         }
 
-        $remainingBudget = $transresUtil->toMoney($remainingBudget);
+        //$remainingBudget = $transresUtil->toMoney($remainingBudget);
         //echo "4remainingBudget=$remainingBudget<br>";
         $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
         //$remainingBudget = $transresUtil->moneyDollarSignValue($remainingBudget);
