@@ -24,6 +24,7 @@
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
 
     <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
+    <input type="hidden" id="project-original-remaining-budget" value="{{ project.getRemainingBudget() }}" />
     <input type="hidden" id="project-remaining-budget" value="{{ project.getRemainingBudget() }}" />
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
@@ -826,8 +827,8 @@
             }
             console.log("projectId="+projectId);
 
-            var defaultRemainingBudget = $('#project-remaining-budget').val();
-            $('#project-remaining-budget-note').text(defaultRemainingBudget);
+            var currentRemainingBudget = $('#project-remaining-budget').val();
+            $('#project-remaining-budget-note').text(currentRemainingBudget);
 
             if( projectId ) {
                 //console.log("get project account number");
@@ -865,10 +866,14 @@
                         productsArr.push(productArr);
                     }
                 });
-                console.log(productsArr);
+                //console.log(productsArr);
 
                 if( productsArr.length == 0 ) {
                     console.log("products are empty");
+
+                    var originalRemainingBudget = $('#project-original-remaining-budget').val();
+                    $('#project-remaining-budget-note').text(originalRemainingBudget);
+
                     return;
                 }
 
@@ -887,12 +892,12 @@
                         productsArr: productsArr
                     },
                     dataType: 'json',
-                    async: false,
+                    async: asyncflag,
                 }).success(function(responses) {
                     if( responses ) {
                         var response = responses[0];
-                        console.log(response);
-                        console.log("remainingBudget=" + response.remainingBudget);
+                        //console.log(response);
+                        //console.log("remainingBudget=" + response.remainingBudget);
                         if (response.error == null) {
                             $('#project-remaining-budget-note').text(response.remainingBudget);
                             $('#project-remaining-budget').val(response.remainingBudget);
