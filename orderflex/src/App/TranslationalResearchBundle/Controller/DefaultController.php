@@ -259,9 +259,11 @@ class DefaultController extends OrderAbstractController
             $output = NULL;
         }
 
+        $transresRequestProducts = array();
         $transresRequest = NULL;
         if( $workrequestId ) {
             $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($workrequestId);
+            $transresRequestProducts = $transresRequest->getProducts();
         }
         if( !$transresRequest ) {
             $transresRequest = new TransResRequest();
@@ -281,6 +283,7 @@ class DefaultController extends OrderAbstractController
 
         $dummyProduct = new Product();
 
+        $processedProducts = array();
         $grandTotal = 0;
 
         //calculate this work request total
@@ -316,7 +319,66 @@ class DefaultController extends OrderAbstractController
                         $grandTotal = $grandTotal + $total;
                     }
                 }
+            }//if $category && $quantity
 
+            //Case if existing product in DB edited => subtract grandTotal from the product in DB
+            if( $productId ) {
+                $processedProducts[] = $productId;
+
+                $productDb = $em->getRepository('AppTranslationalResearchBundle:Product')->find($productId);
+
+                if( $productDb ) {
+                    $total = $this->calculateProductTotal($transresRequest, $productDb, $priceList, $quantity, $category);
+                    if ($total) {
+                        $grandTotal = $grandTotal - $total;
+                    }
+                }
+
+//                if( $productDb ) {
+//                    $quantitiesArr = $productDb->calculateQuantitiesByQuantityAndCategory($priceList, $quantity, $category);
+//                    $initialQuantity = $quantitiesArr['initialQuantity'];
+//                    $additionalQuantity = $quantitiesArr['additionalQuantity'];
+//                    $initialFee = $quantitiesArr['initialFee'];
+//                    $additionalFee = $quantitiesArr['additionalFee'];
+//
+//                    if ($initialQuantity && $initialFee) {
+//                        //Total
+//                        //$total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+//                        $total = $transresRequest->getTotalFeesByQuantity($initialFee, $additionalFee, $initialQuantity, $additionalQuantity);
+//                        //echo "total=$total<br>";
+//
+//                        if ($total) {
+//                            $grandTotal = $grandTotal - $total;
+//                        }
+//                    }
+//                }
+            }//if $productId
+
+        }//foreach product in html
+
+        //Case product removed from this Work Request in html
+        foreach($transresRequestProducts as $transresRequestProduct) {
+            //check if progressState != draft, canceled
+            $progressState = $transresRequestProduct->getProgressState();
+            //check if billingState != draft, canceled
+            $billingState = $transresRequestProduct->getBillingState();
+
+            $skip = false;
+            if( $progressState == 'draft' || $progressState == 'canceled' ) {
+                $skip = true;
+            }
+            if( $billingState == 'draft' || $billingState == 'canceled' ) {
+                $skip = true;
+            }
+
+            if( $skip == false ) {
+                $quantity = $transresRequestProduct->getQuantity();
+                $category = $transresRequestProduct->getCategory();
+                $total = $this->calculateProductTotal($transresRequest,$transresRequestProduct,$priceList, $quantity, $category);
+
+                if ($total) {
+                    $grandTotal = $grandTotal - $total;
+                }
             }
         }
 
@@ -327,6 +389,9 @@ class DefaultController extends OrderAbstractController
 
         $remainingBudget = $project->toMoney($remainingBudget);
         $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
+
+        $transresRequest = NULL;
+        $dummyProduct = NULL;
 
         //dump($productArr);
         //print_r($productArr);
@@ -346,6 +411,23 @@ class DefaultController extends OrderAbstractController
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($output));
         return $response;
+    }
+    public function calculateProductTotal($transresRequest,$product,$priceList, $quantity, $category) {
+        $total = 0;
+        if( $product ) {
+            $quantitiesArr = $product->calculateQuantitiesByQuantityAndCategory($priceList, $quantity, $category);
+            $initialQuantity = $quantitiesArr['initialQuantity'];
+            $additionalQuantity = $quantitiesArr['additionalQuantity'];
+            $initialFee = $quantitiesArr['initialFee'];
+            $additionalFee = $quantitiesArr['additionalFee'];
+
+            if ($initialQuantity && $initialFee) {
+                $total = $transresRequest->getTotalFeesByQuantity($initialFee, $additionalFee, $initialQuantity, $additionalQuantity);
+                //echo "total=$total<br>";
+            }
+        }
+
+        return $total;
     }
 
 

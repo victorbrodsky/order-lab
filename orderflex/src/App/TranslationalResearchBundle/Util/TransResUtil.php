@@ -669,11 +669,13 @@ class TransResUtil
                     $adminEmailsStr = implode(", ", $adminEmails);
                 }
 
+                $trpName = $this->getBusinessEntityAbbreviation();
+
                 $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
-                    " " . 
-                    "<span id='project-remaining-budget-note'>".$remainingBudget."</span>". 
+                    " " .
+                    "<span id='project-remaining-budget-note'>".$remainingBudget."</span>".
                     "." .
-                    "<br>If you have questions about this, please email to the system administrator " . $adminEmailsStr;
+                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
 
                 $note = "<h4>" . $note . "</h4>";
 

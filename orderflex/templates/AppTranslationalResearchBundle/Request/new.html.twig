@@ -749,6 +749,8 @@
         }
 
         function transresCloneExistingObject(btn,classname,confirmationMessage) {
+            transresProductItemListener();
+
             var cloneBtnEl = $(btn);
 
             var addBtn = $(".transres-products-holder").find(".transres-add-product-btn");
@@ -811,6 +813,7 @@
             transresRecalculateRemaniningBudget(thisEl);
         }
 
+        //transresProductItemListener
         function transresRecalculateRemaniningBudget(projectField) {
             //return; //testing
 
@@ -822,6 +825,9 @@
                 //return;
             }
             console.log("projectId="+projectId);
+
+            var defaultRemainingBudget = $('#project-remaining-budget').val();
+            $('#project-remaining-budget-note').text(defaultRemainingBudget);
 
             if( projectId ) {
                 //console.log("get project account number");
@@ -889,6 +895,7 @@
                         console.log("remainingBudget=" + response.remainingBudget);
                         if (response.error == null) {
                             $('#project-remaining-budget-note').text(response.remainingBudget);
+                            $('#project-remaining-budget').val(response.remainingBudget);
                         }
                     }
                 }).done(function() {
