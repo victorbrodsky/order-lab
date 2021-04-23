@@ -670,7 +670,9 @@ class TransResUtil
                 }
 
                 $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
-                    " " . $remainingBudget . "." .
+                    " " . 
+                    "<span id='project-remaining-budget-note'>".$remainingBudget."</span>". 
+                    "." .
                     "<br>If you have questions about this, please email to the system administrator " . $adminEmailsStr;
 
                 $note = "<h4>" . $note . "</h4>";

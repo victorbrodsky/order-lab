@@ -61,7 +61,9 @@ class ProductType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('id', HiddenType::class);
+        $builder->add('id', HiddenType::class, array(
+            'attr' => array('class'=>'product-id'),
+        ));
 
 //        $builder->add('category', EntityType::class, array(
 //            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',

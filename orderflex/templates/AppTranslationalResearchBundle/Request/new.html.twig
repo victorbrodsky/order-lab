@@ -22,6 +22,8 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
+
+    <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
     <input type="hidden" id="project-remaining-budget" value="{{ project.getRemainingBudget() }}" />
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
@@ -354,6 +356,8 @@
             }
 
             //transresProductCloneListener();
+
+            transresProductItemListener();
 
         });
 
@@ -808,14 +812,14 @@
         }
 
         function transresRecalculateRemaniningBudget(projectField) {
-            return; //testing
+            //return; //testing
 
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField && projectField.length ) {
                 projectId = projectField.val();
             } else {
-                //projectId = $('#oleg_translationalresearchbundle_request_project').val();
-                return;
+                projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                //return;
             }
             console.log("projectId="+projectId);
 
@@ -823,12 +827,48 @@
                 //console.log("get project account number");
 
                 //foreach product: get categoryId, quantity
-                var productArr = [
-                    'categoryId',
-                    '1'
-                ];
+                var productsArr = [];
+//                var productArr = [
+//                    'categoryId',
+//                    '1'
+//                ];
+
+                var workrequestId = $('#workrequest-id').val();
+
+                $('.transres-products').each(function(){
+                    var requestedQuantity = $(this).find('.product-requested-quantity').val();
+                    var completedQuantity = $(this).find('.product-completed-quantity').val();
+                    var quantity = requestedQuantity;
+                    if( completedQuantity != null ) {
+                        quantity = completedQuantity;
+                    }
+
+                    var categoryData = $(this).find('.product-category-combobox').select2('data');
+
+                    var productId = $(this).find('.product-id').val();
+
+                    if( quantity && categoryData ) {
+
+                        var categoryId = categoryData.id;
+
+                        var productArr = {
+                            'productId': productId,
+                            'categoryId': categoryId,
+                            'quantity': quantity
+                        };
+                        productsArr.push(productArr);
+                    }
+                });
+                console.log(productsArr);
+
+                if( productsArr.length == 0 ) {
+                    console.log("products are empty");
+                    return;
+                }
 
                 var url = Routing.generate('translationalresearch_get_project_remaining_budget_ajax');
+
+                console.log("projectId="+projectId+", workrequestId="+workrequestId);
 
                 //translationalresearch_invoice_update_ajax
                 $.ajax({
@@ -837,14 +877,19 @@
                     type: "POST",
                     data: {
                         projectId: projectId,
-                        productArr: productArr
+                        workrequestId: workrequestId,
+                        productsArr: productsArr
                     },
+                    dataType: 'json',
                     async: false,
-                }).success(function(response) {
-                    console.log(response);
-                    if( response == "OK" ) {
-                        //reload parent page
-                        //window.location.reload(true);
+                }).success(function(responses) {
+                    if( responses ) {
+                        var response = responses[0];
+                        console.log(response);
+                        console.log("remainingBudget=" + response.remainingBudget);
+                        if (response.error == null) {
+                            $('#project-remaining-budget-note').text(response.remainingBudget);
+                        }
                     }
                 }).done(function() {
                     //lbtn.stop();
@@ -855,6 +900,17 @@
             } else {
 
             }
+        }
+
+        function transresProductItemListener() {
+            $('.product-requested-quantity').on('input', function(event) {
+                console.log("product-requested-quantity changed");
+                transresRecalculateRemaniningBudget();
+            });
+            $('.product-category-combobox').on('change', function(event) {
+                console.log("product-category-combobox changed");
+                transresRecalculateRemaniningBudget();
+            });
         }
 
     </script>

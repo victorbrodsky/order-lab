@@ -2,6 +2,8 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+use App\TranslationalResearchBundle\Entity\Product;
+use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -238,23 +240,107 @@ class DefaultController extends OrderAbstractController
      */
     public function getTransResRecalculateProjectRemainingBudgetAjaxAction(Request $request) {
 
+        $transresUtil = $this->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
         //$projectId = $request->query->get('projectId');
         //$productArr = $request->query->get('productArr');
 
         $projectId = $request->get('projectId');
-        $productArr = $request->get('productArr');
+        $workrequestId = $request->get('workrequestId');
+        $productsArr = $request->get('productsArr');
 
-        dump($productArr);
-        print_r($productArr);
+        //print_r($productsArr);
+        //echo "projectId=$projectId, workrequestId=$workrequestId <br>";
+        //exit('111');
 
-        exit('111');
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        if( !$project ) {
+            $output = NULL;
+        }
+
+        $transresRequest = NULL;
+        if( $workrequestId ) {
+            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($workrequestId);
+        }
+        if( !$transresRequest ) {
+            $transresRequest = new TransResRequest();
+        }
+
+        $priceList = $project->getPriceList();
+        $remainingBudget = $project->getRemainingBudget();
+
+        if( $remainingBudget !== NULL ) {
+            //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
+            // If you have questions about this, please [email the system administrator]
+            //$remainingBudget = $project->toMoney($remainingBudget);
+            //$remainingBudget = $this->dollarSignValue($remainingBudget);
+        } else {
+            $remainingBudget = 0;
+        }
+
+        $dummyProduct = new Product();
+
+        $grandTotal = 0;
+
+        //calculate this work request total
+        foreach($productsArr as $productArr) {
+            $category = NULL;
+            $productId = $productArr['productId'];
+            $categoryId = $productArr['categoryId'];
+            $quantity = $productArr['quantity'];
+            //echo "quantity=$quantity, productId=$productId, categoryId=$categoryId <br>";
+
+            if( $categoryId ) {
+                $category = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($categoryId);
+            }
+            
+            if( $category && $quantity ) {
+                $quantitiesArr = $dummyProduct->calculateQuantitiesByQuantityAndCategory($priceList,$quantity,$category);
+                $initialQuantity = $quantitiesArr['initialQuantity'];
+                $additionalQuantity = $quantitiesArr['additionalQuantity'];
+                $initialFee = $quantitiesArr['initialFee'];
+                $additionalFee = $quantitiesArr['additionalFee'];
+                $categoryItemCode = $quantitiesArr['categoryItemCode'];
+                $categoryName = $quantitiesArr['categoryName'];
+
+                // add/show somehow "comment" from Work Request ?
+
+                if( $initialQuantity && $initialFee ) {
+                    //Total
+                    //$total = $this->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                    $total = $transresRequest->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                    //echo "total=$total<br>";
+
+                    if( $total ) {
+                        $grandTotal = $grandTotal + $total;
+                    }
+                }
+
+            }
+        }
+
+        //echo "grandTotal=$grandTotal<br>";
+        if( $grandTotal ) {
+            $remainingBudget = $remainingBudget + $grandTotal;
+        }
+
+        $remainingBudget = $project->toMoney($remainingBudget);
+        $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
+
+        //dump($productArr);
+        //print_r($productArr);
+
+        //echo "remainingBudget=$remainingBudget<br>";
+        //exit('111');
 
         //testing
         $output[] = array(
-            'remainingBudget' => 100.00
+            'error' => NULL,
+            'remainingBudget' => $remainingBudget //"$"."100.00"
         );
+
+        //$output = $remainingBudget;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
