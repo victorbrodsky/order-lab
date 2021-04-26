@@ -24,8 +24,12 @@
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
 
     <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
+    <input type="hidden" id="project-funded" value="{{ project.getFunded() }}" />
+    <input type="hidden" id="project-approved-budget" value="{{ project.getApprovedProjectBudget() }}" />
     <input type="hidden" id="project-original-remaining-budget" value="{{ project.getRemainingBudget() }}" />
     <input type="hidden" id="project-remaining-budget" value="{{ project.getRemainingBudget() }}" />
+    <input type="hidden" id="project-remaining-budget-value" value="{{ project.getRemainingBudget() }}" />
+    <input type="hidden" id="project-admin-emails" value="{{ transres_util.getAdminEmailsStr(project) }}" />
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
     {% if messageToUsers is defined and messageToUsers %}
@@ -51,6 +55,41 @@
                 {{ projectRemainingBudgetNote|raw }}
             </p>
         </div>
+
+        {#Modal for over budget 222(7)#}
+        <div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Over the Approved Project Budget</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy. #}
+                        {#You may need to submit an updated budget estimate along with an explanation. #}
+                        {#Please contact the administrator by emailing [FirstName LastName at email - first user with admin review role for this project type] #}
+                        {#to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)”#}
+
+                        <p>
+                            <div id="over-budget-warning-modal-text">
+                                This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.
+                                You may need to submit an updated budget estimate along with an explanation.
+                                Please contact the administrator by emailing [FirstName LastName at email -
+                                first user with admin review role for this project type] to ensure this work request is completed.
+                                Are you sure you would like to submit this work request?
+                            </div>
+                        </p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     {% endif %}
 
     {% if cycle == "new" %}
@@ -473,29 +512,64 @@
                 }
             });
 
-            var projectRemainingBudget = $('#project-remaining-budget').val();
-            if( projectRemainingBudget != null ) {
-                if( projectRemainingBudget < 0 ) {
-                    //This work request appears to exceed the approved estimated budget of $xxx.xx
-                    // for this project by $yyy.yy. You may need to submit an updated budget estimate
-                    // along with an explanation. Please contact the administrator by emailing
-                    // [FirstName LastName at email - first user with admin review role for this project type]
-                    // to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+            } else {
+                //un-funded => use over budget warning
+                //var projectRemainingBudget = $('#project-remaining-budget').val();
+                //console.log("projectRemainingBudget="+projectRemainingBudget);
+                var projectRemainingBudgetValue = $('#project-remaining-budget-value').val();
+                console.log("projectRemainingBudgetValue="+projectRemainingBudgetValue);
+                if( projectRemainingBudgetValue != null ) {
+                    if ( projectRemainingBudgetValue < 0 ) {
+                        //This work request appears to exceed the approved estimated budget of $xxx.xx
+                        // for this project by $yyy.yy. You may need to submit an updated budget estimate
+                        // along with an explanation. Please contact the administrator by emailing
+                        // [FirstName LastName at email - first user with admin review role for this project type]
+                        // to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)
 
-                    var msg = "This work request appears to exceed the approved estimated budget of $xxx.xx.";
-                    $("#projectError").show();
-                    $("#projectError").html(msg);
+                        var approvedBudget = $('#project-approved-budget').val();
+                        var adminEmails = $('#project-admin-emails').val();
+                        projectRemainingBudgetValue = Math.abs(projectRemainingBudgetValue);
+                        console.log("abs projectRemainingBudgetValue="+projectRemainingBudgetValue);
 
-                    transresShowBtn();
-                    return false;
-                } else {
-                    //testing
-                    var msg = "This work request appears to exceed the approved estimated budget of $xxx.xx.";
-                    $("#projectError").show();
-                    $("#projectError").html(msg);
+                        //over-budget-warning-modal
+                        var modalText = "This work request appears to exceed the approved estimated budget of $"+approvedBudget+
+                                " for this project by $"+projectRemainingBudgetValue+". " +
+                                "You may need to submit an updated budget estimate along with an explanation. " +
+                                "Please contact the administrator by emailing " + adminEmails
+                                //"[FirstName LastName at email - first user with admin review role for this project type] " +
+                                " to ensure this work request is completed. Are you sure you would like to submit this work request?";
+                        //$('#over-budget-warning-modal-text').text(modalText);
+                        //$('#over-budget-warning-modal').modal();
+                        //console.log("modal: finished");
+                        //https://www.codeply.com/go/Dz7rguXIQ2/bootstrap-bootstrap-modal-confirm-form-submit
 
-                    transresShowBtn();
-                    return false;
+                        //var msg = "This work request appears to exceed the approved estimated budget of $"+approvedBudget+" by $"+projectRemainingBudgetValue+".";
+                        $("#projectError").show();
+                        $("#projectError").html(modalText);
+
+                        //var txt;
+                        var r = confirm(modalText);
+                        if ( r == true ) {
+                            //txt = "Yes";
+                        } else {
+                            //txt = "No";
+                            transresShowBtn();
+                            return false;
+                        }
+
+                        //transresShowBtn();
+                        //return false;
+                    } else {
+//                        //testing
+//                        var msg = "budget OK";
+//                        $("#projectError").show();
+//                        $("#projectError").html(msg);
+//
+//                        transresShowBtn();
+//                        return false;
+                    }
                 }
             }
 
@@ -804,21 +878,28 @@
             //change alert color of newHolder to primary
             newHolder.addClass('alert-success').removeClass('alert-default').removeClass('well');
 
-            var thisEl = $('#oleg_translationalresearchbundle_request_project');
-            transresRecalculateRemaniningBudget(thisEl);
+            //var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget();
         }
 
         function removeWorkRequestProductObject( delBtn, classname ) {
             removeExistingObject(delBtn,classname);
             //console.log("removeInvoiceItemExistingObject");
 
-            var thisEl = $('#oleg_translationalresearchbundle_request_project');
-            transresRecalculateRemaniningBudget(thisEl);
+            //var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget();
         }
 
         //transresProductItemListener
-        function transresRecalculateRemaniningBudget(projectField) {
+        function transresRecalculateRemaniningBudget() {
             //return; //testing
+
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                return;
+            }
+
+            var projectField = $('#oleg_translationalresearchbundle_request_project');
 
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField && projectField.length ) {
@@ -827,7 +908,7 @@
                 projectId = $('#oleg_translationalresearchbundle_request_project').val();
                 //return;
             }
-            console.log("projectId="+projectId);
+            //console.log("projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
             //$('#project-remaining-budget-amount').text(currentRemainingBudget);
@@ -873,7 +954,7 @@
                 //console.log(productsArr);
 
                 if( productsArr.length == 0 ) {
-                    console.log("products are empty");
+                    //console.log("products are empty");
 
                     var originalRemainingBudget = $('#project-original-remaining-budget').val();
                     //$('#project-remaining-budget-amount').text(originalRemainingBudget);
@@ -884,9 +965,8 @@
 
                 var url = Routing.generate('translationalresearch_get_project_remaining_budget_ajax');
 
-                console.log("projectId="+projectId+", workrequestId="+workrequestId);
+                console.log("call translationalresearch_get_project_remaining_budget_ajax: projectId="+projectId+", workrequestId="+workrequestId);
 
-                //translationalresearch_invoice_update_ajax
                 $.ajax({
                     url: url,
                     timeout: _ajaxTimeout,
@@ -907,6 +987,7 @@
                             //$('#project-remaining-budget-amount').text(response.remainingBudget);
                             //$('#project-remaining-budget').val(response.remainingBudget);
                             transresSetRemainingBudgetNote(response.remainingBudget);
+                            $('#project-remaining-budget-value').val(response.remainingBudgetValue);
                         }
                     }
                 }).done(function() {
@@ -920,10 +1001,14 @@
             }
         }
 
-        function transresSetRemainingBudgetNote(currentRemainingBudget) {
-            $('#project-remaining-budget-amount').text(currentRemainingBudget);
-            $('#project-remaining-budget').val(currentRemainingBudget);
-            if( currentRemainingBudget.indexOf('-') !== -1 ) {
+        function transresSetRemainingBudgetNote(remainingBudgetValue) {
+            //$('#project-remaining-budget-value').val(response.remainingBudgetValue);
+            //$('#project-remaining-budget-amount').val(originalRemainingBudget);
+
+            //var currentRemainingBudget = response.remainingBudget;
+            $('#project-remaining-budget-amount').text(remainingBudgetValue);
+            $('#project-remaining-budget').val(remainingBudgetValue);
+            if( remainingBudgetValue.indexOf('-') !== -1 ) {
                 //'-' exists
                 $('#project-remaining-budget-note').removeClass('alert-success').addClass('alert-warning');
             } else {
@@ -932,6 +1017,11 @@
         }
 
         function transresProductItemListener() {
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                return;
+            }
+
 //            $('.product-requested-quantity').on('input', function(event) {
 //                console.log("product-requested-quantity changed");
 //                transresRecalculateRemaniningBudget();
@@ -947,13 +1037,13 @@
                 // Clear any previously set timer before setting a fresh one
                 window.clearTimeout($(this).data("timeout"));
                 $(this).data("timeout", setTimeout(function () {
-                    console.log("product-requested-quantity changed");
+                    //console.log("product-requested-quantity changed");
                     transresRecalculateRemaniningBudget();
                 }, timer));
             });
 
             $('.product-category-combobox').on('change', function(event) {
-                console.log("product-category-combobox changed");
+                //console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
         }

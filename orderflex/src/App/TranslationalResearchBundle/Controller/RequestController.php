@@ -157,7 +157,7 @@ class RequestController extends OrderAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //exit("Project submitted");
+            //exit("Request submitted"); //testing
 
             $project = $transresRequest->getProject();
 

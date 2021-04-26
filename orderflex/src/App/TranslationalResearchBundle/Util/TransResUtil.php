@@ -663,11 +663,12 @@ class TransResUtil
 
                 $remainingBudget = $this->dollarSignValue($remainingBudget);
 
-                $adminEmailsStr = "";
-                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
-                if (count($adminEmails) > 0) {
-                    $adminEmailsStr = implode(", ", $adminEmails);
-                }
+//                $adminEmailsStr = "";
+//                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+//                if (count($adminEmails) > 0) {
+//                    $adminEmailsStr = implode(", ", $adminEmails);
+//                }
+                $adminEmailsStr = $this->getAdminEmailsStr($project);
 
                 $trpName = $this->getBusinessEntityAbbreviation();
 
@@ -683,6 +684,18 @@ class TransResUtil
             }
         }
         return NULL;
+    }
+    public function getAdminEmailsStr($project) {
+        $adminEmailsStr = "";
+        $adminUsers = $this->getTransResAdminEmails($project->getProjectSpecialty(), false, true);
+        $adminEmails = array();
+        foreach($adminUsers as $adminUser) {
+            $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
+        }
+        if (count($adminEmails) > 0) {
+            $adminEmailsStr = implode(", ", $adminEmails);
+        }
+        return $adminEmailsStr;
     }
 
     public function printTransition($transition) {

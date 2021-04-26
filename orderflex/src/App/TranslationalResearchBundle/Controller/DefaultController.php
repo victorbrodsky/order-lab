@@ -283,7 +283,7 @@ class DefaultController extends OrderAbstractController
         }
 
         $priceList = $project->getPriceList();
-        $remainingBudget = $project->getRemainingBudget();
+        $remainingBudget = $originalRemainingBudget = $project->getRemainingBudget();
 
         if( $remainingBudget !== NULL ) {
             //
@@ -379,12 +379,14 @@ class DefaultController extends OrderAbstractController
             //echo "2remainingBudget=$remainingBudget, grandTotal=$grandTotal<br>";
             $remainingBudget = $remainingBudget - $grandTotal;
             //echo "3remainingBudget=$remainingBudget<br>";
+
+            $remainingBudgetValue = $transresUtil->toDecimal($remainingBudget);
         }
 
-        $negative = false;
-        if( $remainingBudget < 0 ) {
-            $negative = true;
-        }
+//        $negative = false;
+//        if( $remainingBudget < 0 ) {
+//            $negative = true;
+//        }
 
         //$remainingBudget = $transresUtil->toMoney($remainingBudget);
         //echo "4remainingBudget=$remainingBudget<br>";
@@ -405,7 +407,9 @@ class DefaultController extends OrderAbstractController
         $output[] = array(
             'error' => NULL,
             'remainingBudget' => $remainingBudget, //"$"."100.00"
-            'negative' => $negative
+            'remainingBudgetValue' => $remainingBudgetValue,
+            //'originalRemainingBudget' => $originalRemainingBudget
+            //'negative' => $negative
         );
 
         //$output = $remainingBudget;
