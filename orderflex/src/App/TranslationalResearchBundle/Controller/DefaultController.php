@@ -381,6 +381,11 @@ class DefaultController extends OrderAbstractController
             //echo "3remainingBudget=$remainingBudget<br>";
         }
 
+        $negative = false;
+        if( $remainingBudget < 0 ) {
+            $negative = true;
+        }
+
         //$remainingBudget = $transresUtil->toMoney($remainingBudget);
         //echo "4remainingBudget=$remainingBudget<br>";
         $remainingBudget = $transresUtil->dollarSignValue($remainingBudget);
@@ -399,7 +404,8 @@ class DefaultController extends OrderAbstractController
         //testing
         $output[] = array(
             'error' => NULL,
-            'remainingBudget' => $remainingBudget //"$"."100.00"
+            'remainingBudget' => $remainingBudget, //"$"."100.00"
+            'negative' => $negative
         );
 
         //$output = $remainingBudget;

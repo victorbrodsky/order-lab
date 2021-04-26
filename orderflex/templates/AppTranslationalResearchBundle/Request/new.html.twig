@@ -46,9 +46,11 @@
     </h4>
 
     {% if projectRemainingBudgetNote %}
-        <p>
-            {{ projectRemainingBudgetNote|raw }}
-        </p>
+        <div id="project-remaining-budget-note" class="alert alert-success" role="alert">
+            <p>
+                {{ projectRemainingBudgetNote|raw }}
+            </p>
+        </div>
     {% endif %}
 
     {% if cycle == "new" %}
@@ -828,7 +830,9 @@
             console.log("projectId="+projectId);
 
             var currentRemainingBudget = $('#project-remaining-budget').val();
-            $('#project-remaining-budget-note').text(currentRemainingBudget);
+            //$('#project-remaining-budget-amount').text(currentRemainingBudget);
+            transresSetRemainingBudgetNote(currentRemainingBudget);
+            //$('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-success');
 
             if( projectId ) {
                 //console.log("get project account number");
@@ -872,7 +876,8 @@
                     console.log("products are empty");
 
                     var originalRemainingBudget = $('#project-original-remaining-budget').val();
-                    $('#project-remaining-budget-note').text(originalRemainingBudget);
+                    //$('#project-remaining-budget-amount').text(originalRemainingBudget);
+                    transresSetRemainingBudgetNote(originalRemainingBudget);
 
                     return;
                 }
@@ -899,8 +904,9 @@
                         //console.log(response);
                         //console.log("remainingBudget=" + response.remainingBudget);
                         if (response.error == null) {
-                            $('#project-remaining-budget-note').text(response.remainingBudget);
-                            $('#project-remaining-budget').val(response.remainingBudget);
+                            //$('#project-remaining-budget-amount').text(response.remainingBudget);
+                            //$('#project-remaining-budget').val(response.remainingBudget);
+                            transresSetRemainingBudgetNote(response.remainingBudget);
                         }
                     }
                 }).done(function() {
@@ -914,11 +920,38 @@
             }
         }
 
+        function transresSetRemainingBudgetNote(currentRemainingBudget) {
+            $('#project-remaining-budget-amount').text(currentRemainingBudget);
+            $('#project-remaining-budget').val(currentRemainingBudget);
+            if( currentRemainingBudget.indexOf('-') !== -1 ) {
+                //'-' exists
+                $('#project-remaining-budget-note').removeClass('alert-success').addClass('alert-warning');
+            } else {
+                $('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-success');
+            }
+        }
+
         function transresProductItemListener() {
-            $('.product-requested-quantity').on('input', function(event) {
-                console.log("product-requested-quantity changed");
-                transresRecalculateRemaniningBudget();
+//            $('.product-requested-quantity').on('input', function(event) {
+//                console.log("product-requested-quantity changed");
+//                transresRecalculateRemaniningBudget();
+//            });
+
+            //delay user input listener
+            var timer = 700; //0.7 sec, 2000=>2 sec
+            $(".product-requested-quantity").bind("input propertychange", function (evt) {
+                // If it's the propertychange event, make sure it's the value that changed.
+                if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                    return;
+
+                // Clear any previously set timer before setting a fresh one
+                window.clearTimeout($(this).data("timeout"));
+                $(this).data("timeout", setTimeout(function () {
+                    console.log("product-requested-quantity changed");
+                    transresRecalculateRemaniningBudget();
+                }, timer));
             });
+
             $('.product-category-combobox').on('change', function(event) {
                 console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
