@@ -1613,6 +1613,7 @@
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {{ form_start(form) }}
 
@@ -1649,6 +1650,21 @@
     {% if specialty %}
         {% set specialtyId = specialty.getId() %}
     {% endif %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-email-naming-{{ specialtyId }}">Email's Subject and Body Naming Notation</a>
+            </h4>
+        </div>
+        <div id="transres-email-naming-{{ specialtyId }}" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                {{ transres.emailNamingNotation() }}
+
+            </div>
+        </div>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -1700,18 +1716,18 @@
         </div>
         <div id="transres-request-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
-                <p>
-                    Please use naming notation:
-                    [[PROJECT ID]] is for Project ID,
-                    [[PROJECT ID TITLE]] is for Project ID, Title,
-                    [[PROJECT SHOW URL]] is for Project Show Url,
-                    [[REQUEST ID]] is for Request ID,
-                    [[REQUEST SUBMITTER]] is for Request Submitter,
-                    [[REQUEST SUBMISSION DATE]] is for Request Submission Date,
-                    [[REQUEST PROGRESS STATUS]] is for Request progress status,
-                    [[REQUEST SHOW URL]] is for Request Show Url,
-                    [[INVOICE ID]] is for Invoice ID
-                </p>
+                {#<p>#}
+                    {#Please use naming notation:#}
+                    {#[[PROJECT ID]] is for Project ID,#}
+                    {#[[PROJECT ID TITLE]] is for Project ID, Title,#}
+                    {#[[PROJECT SHOW URL]] is for Project Show Url,#}
+                    {#[[REQUEST ID]] is for Request ID,#}
+                    {#[[REQUEST SUBMITTER]] is for Request Submitter,#}
+                    {#[[REQUEST SUBMISSION DATE]] is for Request Submission Date,#}
+                    {#[[REQUEST PROGRESS STATUS]] is for Request progress status,#}
+                    {#[[REQUEST SHOW URL]] is for Request Show Url,#}
+                    {#[[INVOICE ID]] is for Invoice ID#}
+                {#</p>#}
                 {{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}
                 {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
                 {{ formmacros.field(form.accessionType) }}
@@ -1787,19 +1803,19 @@
                 {{ formmacros.field(form.invoiceSalesperson) }}
                 {{ formmacros.field(form.showRemittance) }}
 
-                <hr>
-                <p>
-                    Please use naming notation:
-                    [[PROJECT ID]] is for Project ID,
-                    [[PROJECT ID TITLE]] is for Project ID, Title,
-                    [[PROJECT SHOW URL]] is for Project Show Url,
-                    [[REQUEST ID]] is for Request ID,
-                    [[REQUEST SUBMITTER]] is for Request Submitter,
-                    [[REQUEST SUBMISSION DATE]] is for Request Submission Date,
-                    [[REQUEST PROGRESS STATUS]] is for Request progress status,
-                    [[REQUEST SHOW URL]] is for Request Show Url,
-                    [[INVOICE ID]] is for Invoice ID
-                </p>
+                {#<hr>#}
+                {#<p>#}
+                    {#Please use naming notation:#}
+                    {#[[PROJECT ID]] is for Project ID,#}
+                    {#[[PROJECT ID TITLE]] is for Project ID, Title,#}
+                    {#[[PROJECT SHOW URL]] is for Project Show Url,#}
+                    {#[[REQUEST ID]] is for Request ID,#}
+                    {#[[REQUEST SUBMITTER]] is for Request Submitter,#}
+                    {#[[REQUEST SUBMISSION DATE]] is for Request Submission Date,#}
+                    {#[[REQUEST PROGRESS STATUS]] is for Request progress status,#}
+                    {#[[REQUEST SHOW URL]] is for Request Show Url,#}
+                    {#[[INVOICE ID]] is for Invoice ID#}
+                {#</p>#}
                 {{ formmacros.field(form.transresNotificationEmailSubject) }}
                 {{ formmacros.field(form.transresNotificationEmail) }}
 
@@ -1832,35 +1848,36 @@
         <div id="transres-reminder-email-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
 
-                <hr>
-                <h4>Translational Research Reminder Email</h4>
-                <p>
-                    Please use naming notation:
-                    <br>[[PROJECT ID]] - project request ID,
-                    <br>[[PROJECT TITLE SHORT]] - short project title,
-                    <br>[[PROJECT TITLE]] - full project title,
-                    <br>[[PROJECT PIS]] - project pis,
-                    <br>[[PROJECT SUBMISSION DATE]] - project submission date,
-                    <br>[[PROJECT STATUS]] - project status,
-                    <br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,
-                    <br>[[PROJECT SHOW URL]] - project request show url,
-                    <br>[[PROJECT EDIT URL]] - project request edit url,
+                {#<hr>#}
+                {#<h4>Translational Research Reminder Email</h4>#}
+                {#{{ transres.emailNamingNotation() }}#}
+                {#<p>#}
+                    {#Please use naming notation:#}
+                    {#<br>[[PROJECT ID]] - project request ID,#}
+                    {#<br>[[PROJECT TITLE SHORT]] - short project title,#}
+                    {#<br>[[PROJECT TITLE]] - full project title,#}
+                    {#<br>[[PROJECT PIS]] - project pis,#}
+                    {#<br>[[PROJECT SUBMISSION DATE]] - project submission date,#}
+                    {#<br>[[PROJECT STATUS]] - project status,#}
+                    {#<br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,#}
+                    {#<br>[[PROJECT SHOW URL]] - project request show url,#}
+                    {#<br>[[PROJECT EDIT URL]] - project request edit url,#}
 
-                    <br>[[REQUEST ID]] - work request ID,
-                    <br>[[REQUEST SUBMITTER]] - work request submitter,
-                    <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
-                    <br>[[REQUEST UPDATE DATE]] - work request update date,
-                    <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
-                    <br>[[REQUEST STATUS]] - work request status,
-                    <br>[[REQUEST SHOW URL]] - work request show url,
-                    <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
-                    <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
+                    {#<br>[[REQUEST ID]] - work request ID,#}
+                    {#<br>[[REQUEST SUBMITTER]] - work request submitter,#}
+                    {#<br>[[REQUEST SUBMISSION DATE]] - work request submission date,#}
+                    {#<br>[[REQUEST UPDATE DATE]] - work request update date,#}
+                    {#<br>[[REQUEST PROGRESS STATUS]] - work request progress status,#}
+                    {#<br>[[REQUEST STATUS]] - work request status,#}
+                    {#<br>[[REQUEST SHOW URL]] - work request show url,#}
+                    {#<br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,#}
+                    {#<br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,#}
 
-                    <br>[[INVOICE ID]] - invoice ID,
-                    <br>[[INVOICE SHOW URL]] - invoice url,
-                    <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
-                    <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
-                </p>
+                    {#<br>[[INVOICE ID]] - invoice ID,#}
+                    {#<br>[[INVOICE SHOW URL]] - invoice url,#}
+                    {#<br>[[INVOICE AMOUNT DUE]] - invoice amount due,#}
+                    {#<br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date#}
+                {#</p>#}
 
                 <h5>Invoice Reminder Email</h5>
                 {{ formmacros.field(form.invoiceReminderEmail) }}
@@ -1899,6 +1916,41 @@
         </div>
     </div>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-budget-email-{{ specialtyId }}">Budget Email Settings</a>
+            </h4>
+        </div>
+        <div id="transres-budget-email-{{ specialtyId }}" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                {#<hr>#}
+                {#<h4>Email Naming Notation</h4>#}
+                {#{{ transres.emailNamingNotation() }}#}
+
+                <h4>Over Budget Notification Email</h4>
+                {{ formmacros.field(form.overBudgetCalculation) }}
+                {{ formmacros.checkbox(form.overBudgetSendEmail) }}
+                {{ formmacros.field(form.overBudgetFromEmail) }}
+                {{ formmacros.field(form.overBudgetSubject) }}
+                {{ formmacros.field(form.overBudgetBody) }}
+
+                <hr>
+                <h4>Approved Budget Notification Email</h4>
+                {{ formmacros.checkbox(form.approvedBudgetSendEmail) }}
+                {{ formmacros.field(form.approvedBudgetFromEmail) }}
+                {{ formmacros.field(form.approvedBudgetSubject) }}
+                {{ formmacros.field(form.approvedBudgetBody) }}
+
+                <hr>
+                <h4>Approved Budget Limit Removal Notification Email </h4>
+                {{ formmacros.field(form.budgetLimitRemovalSubject) }}
+                {{ formmacros.field(form.budgetLimitRemovalBody) }}
+
+            </div>
+        </div>
+    </div>
 
     <p>
     {% if form.save is defined %}
@@ -1913,6 +1965,37 @@
     {{ form_end(form) }}
 
 {% endmacro %}
+{% macro emailNamingNotation() %}
+    <p>
+        {#Please use naming notation:#}
+        <br>[[PROJECT ID]] - project request ID,
+        <br>[[PROJECT ID TITLE]] - Project ID, Title,
+        <br>[[PROJECT TITLE SHORT]] - short project title,
+        <br>[[PROJECT TITLE]] - full project title,
+        <br>[[PROJECT PIS]] - project pis,
+        <br>[[PROJECT SUBMISSION DATE]] - project submission date,
+        <br>[[PROJECT STATUS]] - project status,
+        <br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,
+        <br>[[PROJECT SHOW URL]] - project request show url,
+        <br>[[PROJECT EDIT URL]] - project request edit url,
+
+        <br>[[REQUEST ID]] - work request ID,
+        <br>[[REQUEST SUBMITTER]] - work request submitter,
+        <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
+        <br>[[REQUEST UPDATE DATE]] - work request update date,
+        <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
+        <br>[[REQUEST STATUS]] - work request status,
+        <br>[[REQUEST SHOW URL]] - work request show url,
+        <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
+        <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
+
+        <br>[[INVOICE ID]] - invoice ID,
+        <br>[[INVOICE SHOW URL]] - invoice url,
+        <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
+        <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
+    </p>
+{% endmacro %}
+
 
 {#  9800.33 =>  $9,800.33 #}
 {# -9800.33 => -$9,800.33 #}

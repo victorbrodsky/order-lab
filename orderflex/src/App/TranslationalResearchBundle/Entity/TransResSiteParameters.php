@@ -464,13 +464,7 @@ class TransResSiteParameters {
      **/
     private $transresIntakeForms;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(name="testuser", referencedColumnName="id", nullable=true)
-//     */
-//    private $testuser;
-
-    //Budget Notification Email
+    ////////////// Budget Related Parameters /////////////////////
     /**
      * Over budget notification from: [default to trpadminMailingListEmail]: trp-admin@med.cornell.edu
      *
@@ -534,6 +528,7 @@ class TransResSiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $budgetLimitRemovalSubject;
+    
     /**
      * Approved budget limit removal notification email body
      *
@@ -549,7 +544,7 @@ class TransResSiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $overBudgetCalculation;
-
+    ////////////// EOF Budget Related Parameters /////////////////////
 
 
     public function __construct($user=null) {
@@ -1780,7 +1775,7 @@ class TransResSiteParameters {
     {
         $this->overBudgetCalculation = $overBudgetCalculation;
     }
-    
+
 
 
     public function __toString(){

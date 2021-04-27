@@ -428,6 +428,74 @@ class SiteParameterType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
+        ////////////// Budget Related Parameters /////////////////////
+        $builder->add('overBudgetFromEmail', null, array(
+            'label' => "Over budget notification from (trp-admin@med.cornell.edu):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('overBudgetSubject', null, array(
+            'label' => "Over budget notification subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('overBudgetBody', null, array(
+            'label' => "Over budget notification body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('overBudgetSendEmail', null, array(
+            'label' => "Send over budget notifications (yes/no):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('approvedBudgetSendEmail', null, array(
+            'label' => "Send 'approved project budget' update notifications (yes/no):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('approvedBudgetFromEmail', null, array(
+            'label' => "Approved budget amount update notification from (trp-admin@med.cornell.edu):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('approvedBudgetSubject', null, array(
+            'label' => "Approved budget amount update notification email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('approvedBudgetBody', null, array(
+            'label' => "Approved budget update notification email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('budgetLimitRemovalSubject', null, array(
+            'label' => "Approved budget limit removal notification email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('budgetLimitRemovalBody', null, array(
+            'label' => "Approved budget limit removal notification email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('overBudgetCalculation', null, array(
+            'label' => "Base the notification regarding exceeding the budget on whether the following value exceeds the project budget [Total (Charge and Subsidy) / Charge (without Subsidy)]:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        ////////////// EOF Budget Related Parameters /////////////////////
+
     }
     
     /**
