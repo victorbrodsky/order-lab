@@ -698,6 +698,65 @@ class TransResUtil
         return $adminEmailsStr;
     }
 
+    public function sendProjectOverBudgetEmail($transresRequest) {
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
+
+        $project = $transresRequest->getProject();
+        if( !$project ) {
+            return NULL;
+        }
+
+        $remainingBudget = $project->getRemainingBudget();
+
+        if( $remainingBudget < 0 ) {
+            $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+            $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+
+            $subject = ""; //222(10) Over budget notification subject:
+
+            $emailBody = ""; //222(10) Over budget notification body:
+
+            //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $adminEmails, $subject, $emailBody, null, $senderEmail );
+        }
+
+
+        if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
+            //echo "show remaining budget <br>";
+            $remainingBudget = $project->getRemainingBudget();
+
+            if( $remainingBudget !== NULL ) {
+                //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
+                // If you have questions about this, please [email the system administrator]
+                $remainingBudget = $project->toMoney($remainingBudget);
+
+                $remainingBudget = $this->dollarSignValue($remainingBudget);
+
+//                $adminEmailsStr = "";
+//                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+//                if (count($adminEmails) > 0) {
+//                    $adminEmailsStr = implode(", ", $adminEmails);
+//                }
+                $adminEmailsStr = $this->getAdminEmailsStr($project);
+
+                $trpName = $this->getBusinessEntityAbbreviation();
+
+                $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
+                    " " .
+                    "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
+                    "." .
+                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
+
+                $note = "<h4>" . $note . "</h4>";
+
+                return $note;
+            }
+        }
+        return NULL;
+    }
+
     public function printTransition($transition) {
         echo $transition->getName().": ";
         $froms = $transition->getFroms();

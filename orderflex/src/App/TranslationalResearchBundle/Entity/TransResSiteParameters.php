@@ -470,6 +470,87 @@ class TransResSiteParameters {
 //     */
 //    private $testuser;
 
+    //Budget Notification Email
+    /**
+     * Over budget notification from: [default to trpadminMailingListEmail]: trp-admin@med.cornell.edu
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $overBudgetFromEmail;
+
+    /**
+     * Over budget notification subject:
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $overBudgetSubject;
+
+    /**
+     * Over budget notification body
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $overBudgetBody;
+
+    /**
+     * Send over budget notifications: “yes/no” (default to “yes”)
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $overBudgetSendEmail;
+
+    //Approved Budget (6 fields)
+    /**
+     * Send ‘approved project budget’ update notifications: (yes/no, default to “yes)
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $approvedBudgetSendEmail;
+
+    /**
+     * Approved budget amount update notification from: [default to trpadminMailingListEmail]: trp-admin@med.cornell.edu
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $approvedBudgetFromEmail;
+
+    /**
+     * Approved budget amount update notification email subject
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $approvedBudgetSubject;
+
+    /**
+     * Approved budget update notification email body
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $approvedBudgetBody;
+
+    /**
+     * Approved budget limit removal notification email subject
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $budgetLimitRemovalSubject;
+    /**
+     * Approved budget limit removal notification email body
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $budgetLimitRemovalBody;
+
+    /**
+     * Base the notification regarding exceeding the budget on whether the following value exceeds the project’s budget:
+     * [Total (Charge and Subsidy) / Charge (without Subsidy)]
+     * Set to “Charge (without Subsidy)” by default.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $overBudgetCalculation;
+
+
 
     public function __construct($user=null) {
         $this->setCreator($user);
@@ -1523,8 +1604,183 @@ class TransResSiteParameters {
     {
         $this->updateProjectFundNumber = $updateProjectFundNumber;
     }
-    
 
+    /**
+     * @return mixed
+     */
+    public function getOverBudgetFromEmail()
+    {
+        return $this->overBudgetFromEmail;
+    }
+
+    /**
+     * @param mixed $overBudgetFromEmail
+     */
+    public function setOverBudgetFromEmail($overBudgetFromEmail)
+    {
+        $this->overBudgetFromEmail = $overBudgetFromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOverBudgetSubject()
+    {
+        return $this->overBudgetSubject;
+    }
+
+    /**
+     * @param mixed $overBudgetSubject
+     */
+    public function setOverBudgetSubject($overBudgetSubject)
+    {
+        $this->overBudgetSubject = $overBudgetSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOverBudgetBody()
+    {
+        return $this->overBudgetBody;
+    }
+
+    /**
+     * @param mixed $overBudgetBody
+     */
+    public function setOverBudgetBody($overBudgetBody)
+    {
+        $this->overBudgetBody = $overBudgetBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOverBudgetSendEmail()
+    {
+        return $this->overBudgetSendEmail;
+    }
+
+    /**
+     * @param mixed $overBudgetSendEmail
+     */
+    public function setOverBudgetSendEmail($overBudgetSendEmail)
+    {
+        $this->overBudgetSendEmail = $overBudgetSendEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovedBudgetSendEmail()
+    {
+        return $this->approvedBudgetSendEmail;
+    }
+
+    /**
+     * @param mixed $approvedBudgetSendEmail
+     */
+    public function setApprovedBudgetSendEmail($approvedBudgetSendEmail)
+    {
+        $this->approvedBudgetSendEmail = $approvedBudgetSendEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovedBudgetFromEmail()
+    {
+        return $this->approvedBudgetFromEmail;
+    }
+
+    /**
+     * @param mixed $approvedBudgetFromEmail
+     */
+    public function setApprovedBudgetFromEmail($approvedBudgetFromEmail)
+    {
+        $this->approvedBudgetFromEmail = $approvedBudgetFromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovedBudgetSubject()
+    {
+        return $this->approvedBudgetSubject;
+    }
+
+    /**
+     * @param mixed $approvedBudgetSubject
+     */
+    public function setApprovedBudgetSubject($approvedBudgetSubject)
+    {
+        $this->approvedBudgetSubject = $approvedBudgetSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovedBudgetBody()
+    {
+        return $this->approvedBudgetBody;
+    }
+
+    /**
+     * @param mixed $approvedBudgetBody
+     */
+    public function setApprovedBudgetBody($approvedBudgetBody)
+    {
+        $this->approvedBudgetBody = $approvedBudgetBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBudgetLimitRemovalSubject()
+    {
+        return $this->budgetLimitRemovalSubject;
+    }
+
+    /**
+     * @param mixed $budgetLimitRemovalSubject
+     */
+    public function setBudgetLimitRemovalSubject($budgetLimitRemovalSubject)
+    {
+        $this->budgetLimitRemovalSubject = $budgetLimitRemovalSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBudgetLimitRemovalBody()
+    {
+        return $this->budgetLimitRemovalBody;
+    }
+
+    /**
+     * @param mixed $budgetLimitRemovalBody
+     */
+    public function setBudgetLimitRemovalBody($budgetLimitRemovalBody)
+    {
+        $this->budgetLimitRemovalBody = $budgetLimitRemovalBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOverBudgetCalculation()
+    {
+        return $this->overBudgetCalculation;
+    }
+
+    /**
+     * @param mixed $overBudgetCalculation
+     */
+    public function setOverBudgetCalculation($overBudgetCalculation)
+    {
+        $this->overBudgetCalculation = $overBudgetCalculation;
+    }
+    
 
 
     public function __toString(){

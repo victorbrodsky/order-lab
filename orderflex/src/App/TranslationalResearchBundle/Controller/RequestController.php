@@ -243,6 +243,8 @@ class RequestController extends OrderAbstractController
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
             }
 
+            //send over budget email
+            $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //new
 
             $msg = "New work request " . $transresRequest->getOid() . " has been submitted.";
             $msg = $msg . $changedMsg;
@@ -254,7 +256,7 @@ class RequestController extends OrderAbstractController
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                $msg
+                $msg.$overBudgetEmail
             );
 
             //////////// Event Log and Email for Create //////////////////
@@ -530,12 +532,15 @@ class RequestController extends OrderAbstractController
 //            print "</pre><br>";
 //            echo "formnode[420]=".$_POST['formnode[420]']."<br>";
 //            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
-
+            
             //process form nodes
             if( $formnode ) {
                 $formNodeUtil = $this->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
             }
+
+            //send over budget email
+            $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //edit
 
             $msg = "Work Request ".$transresRequest->getOid()." has been updated.";
             $msg = $msg . $break.$break. $changedMsg;
@@ -548,7 +553,7 @@ class RequestController extends OrderAbstractController
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                $msg
+                $msg.$overBudgetEmail
             );
 
             //////////// Event Log and Email for Update //////////////////
