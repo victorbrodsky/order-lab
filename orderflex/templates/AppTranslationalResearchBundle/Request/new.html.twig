@@ -24,14 +24,31 @@
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
 
     <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
-    <input type="hidden" id="project-funded" value="{{ project.getFunded() }}" />
-    <input type="hidden" id="project-approved-budget" value="{{ project.getApprovedProjectBudget() }}" />
-    <input type="hidden" id="project-original-remaining-budget" value="{{ project.getRemainingBudget() }}" />
-    <input type="hidden" id="project-remaining-budget" value="{{ project.getRemainingBudget() }}" />
-    <input type="hidden" id="project-remaining-budget-value" value="{{ project.getRemainingBudget() }}" />
-    <input type="hidden" id="project-admin-emails" value="{{ transres_util.getAdminEmailsStr(project) }}" />
 
-    {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% if project and project.id %}
+        {% set projectFunded = project.getFunded() %}
+        {% set projectApprovedProjectBudget = project.getApprovedProjectBudget() %}
+        {% set projectRemainingBudget = project.getRemainingBudget() %}
+        {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project) %}
+        {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+        {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
+    {% else %}
+        {% set projectFunded = null %}
+        {% set projectApprovedProjectBudget = null %}
+        {% set projectRemainingBudget = null %}
+        {% set projectAdminEmailStr = null %}
+        {% set messageToUsers = null %}
+        {% set projectRemainingBudgetNote = null %}
+    {% endif %}
+
+    <input type="hidden" id="project-funded" value="{{ projectFunded }}" />
+    <input type="hidden" id="project-approved-budget" value="{{ projectApprovedProjectBudget }}" />
+    <input type="hidden" id="project-original-remaining-budget" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-remaining-budget" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-remaining-budget-value" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-admin-emails" value="{{ projectAdminEmailStr }}" />
+
+    {#{% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}#}
     {% if messageToUsers is defined and messageToUsers %}
         <h5 class="alert alert-danger well-lg safary-fix" align="center">
             {{ messageToUsers|raw }}
@@ -40,7 +57,7 @@
 
 
     {% set invoiceShowUrl = transres_request_util.getInvoiceShowUrlByWorkRequest(transresRequest) %}
-    {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
+    {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
 
     <h4 class="text-info" align="center">
         {{ title }}
