@@ -700,7 +700,7 @@ class TransResUtil
 
     public function sendProjectOverBudgetEmail($transresRequest) {
 
-        return NULL; //testing
+        //return NULL; //testing
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
@@ -4127,7 +4127,60 @@ class TransResUtil
                     $text = str_replace("[[PROJECT PRICE LIST]]", $priceList, $text);
                 }
             }
-        }
+
+            if( strpos($text, '[[PROJECT PATHOLOGIST LIST]]') !== false ) {
+                $pisArr = array();
+                $pis = $project->getPathologists();
+                foreach($pis as $pi) {
+                    $pisArr[] = $pi->getUsernameShortest();
+                }
+                $text = str_replace("[[PROJECT PATHOLOGIST LIST]]", implode(", ",$pisArr), $text);
+            }
+
+            if( strpos($text, '[[PROJECT BILLING CONTACT LIST]]') !== false ) {
+                $billingContact = $project->getBillingContact();
+                $text = str_replace("[[PROJECT BILLING CONTACT LIST]]", $billingContact, $text);
+            }
+
+            if( strpos($text, '[[PROJECT REQUESTS URL]]') !== false ) {
+                $linkRequestsForThisProject = $this->container->get('router')->generate(
+                    'translationalresearch_request_index',
+                    array(
+                        'id' => $project->getId(),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $linkRequestsForThisProject = '<a href="'.$linkRequestsForThisProject.'">'.$linkRequestsForThisProject.'</a>';
+
+                $text = str_replace("[[PROJECT REQUESTS URL]]", $linkRequestsForThisProject, $text);
+            }
+
+            if( strpos($text, '[[PROJECT NON-CANCELED INVOICES URL]]') !== false ) {
+//                $linkMyInvoices = $this->container->get('router')->generate(
+//                    'translationalresearch_invoice_index_type',
+//                    array(
+//                        'invoicetype' => "Latest Versions of All Invoices Except Canceled",
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+
+                $linkMyInvoices = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[idSearch]' => $project->getOid(),
+                        'filter[version]' => "Latest",
+                        'filter[status][]' => "Latest Versions of All Invoices Except Canceled",
+                        //'title' => $invoicetype,
+                        //'filterwell' => 'closed'
+                    )
+                );
+
+                $linkMyInvoices = '<a href="'.$linkMyInvoices.'">'.$linkMyInvoices.'</a>';
+
+                $text = str_replace("[[PROJECT NON-CANCELED INVOICES URL]]", $linkMyInvoices, $text);
+            }
+            
+        }//project
 
         if( $transresRequest ) {
             $text = str_replace("[[REQUEST ID]]", $transresRequest->getOid(), $text);
@@ -4179,7 +4232,7 @@ class TransResUtil
                     $text = str_replace("[[REQUEST NEW INVOICE URL]]", $requestNewInvoiceUrl, $text);
                 }
             }
-        }
+        }//$transresRequest
 
         if( $invoice ) {
             $text = str_replace("[[INVOICE ID]]", $invoice->getOid(), $text);
@@ -4190,7 +4243,7 @@ class TransResUtil
 
             //[[INVOICE AMOUNT DUE]]
             $text = str_replace("[[INVOICE AMOUNT DUE]]", $invoice->getDue(), $text);
-        }
+        }//$invoice
 
         return $text;
     }

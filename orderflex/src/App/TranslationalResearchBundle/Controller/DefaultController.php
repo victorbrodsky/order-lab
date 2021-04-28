@@ -1419,4 +1419,106 @@ class DefaultController extends OrderAbstractController
             'form' => $form->createView()
         );
     }
+
+    /**
+     * http://127.0.0.1/order/translational-research/email-notation-test
+     *
+     * @Route("/email-notation-test", name="translationalresearch_email_notation_test")
+     */
+    public function emailNotationTestAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("emailNotationTestAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $notations = "
+        <br>[[PROJECT ID]] - project request ID,
+        <br>[[PROJECT ID TITLE]] - project ID, Title,
+        <br>[[PROJECT TITLE SHORT]] - short project title,
+        <br>[[PROJECT TITLE]] - full project title,
+        <br>[[PROJECT PIS]] - project pis,
+        <br>[[PROJECT PATHOLOGIST LIST]] - project pathologist involved list,
+        <br>[[PROJECT BILLING CONTACT LIST]] - project billing contact list,
+        <br>[[PROJECT SUBMISSION DATE]] - project submission date,
+        <br>[[PROJECT STATUS]] - project status,
+        <br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,
+        <br>[[PROJECT SHOW URL]] - project request show url,
+        <br>[[PROJECT EDIT URL]] - project request edit url,
+        <br>[[PROJECT REQUESTS URL]] - link to list of all work requests for this project,
+        <br>[[PROJECT NON-CANCELED INVOICES URL]] - link to list of all latest non-canceled invoices for this project,
+
+        <br>[[REQUEST ID]] - work request ID,
+        <br>[[REQUEST SUBMITTER]] - work request submitter,
+        <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
+        <br>[[REQUEST UPDATE DATE]] - work request update date,
+        <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
+        <br>[[REQUEST STATUS]] - work request status,
+        <br>[[REQUEST SHOW URL]] - work request show url,
+        <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
+        <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
+
+        <br>[[INVOICE ID]] - invoice ID,
+        <br>[[INVOICE SHOW URL]] - invoice url,
+        <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
+        <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
+
+        <h4>Budget:</h4>
+        <br>[[PROJECT PRICE LIST]] - project price list,
+        <br>[[PROJECT APPROVED BUDGET]] - project approved budget,
+        <br>[[PROJECT OVER BUDGET]] - project over budget amount,
+        <br>[[PROJECT SUBSIDY]] - project subsidy,
+        <br>[[PROJECT VALUE]] - project value (invoiced or not),
+
+        <br>[[REQUEST VALUE]] - work request value (invoiced or not),
+        ";
+
+        //$notations = "No invoice";
+        $invoice = NULL;
+
+        //$invoices = $transresRequestUtil->getOverdueInvoices();
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->where("invoice.status = :pending AND invoice.latestVersion = TRUE"); //Unpaid/Issued
+        $params["pending"] = "pending";
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters(
+            $params
+        );
+
+        $invoices = $query->getResult();
+
+        $invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+
+        echo "invoices=".count($invoices)."<br>";
+
+        if( count($invoices) > 0 ) {
+            $invoice = $invoices[0];
+            //echo "1invoice=".$invoice."<br>";
+        }
+
+        if( $invoice ) {
+            //echo "2invoice=".$invoice."<br>";
+            $transresRequest = $invoice->getTransresRequest();
+            $project = $transresRequest->getProject();
+            $notations = $transresUtil->replaceTextByNamingConvention($notations, $project, $transresRequest, $invoice);
+            //echo "notations=".$notations."<br>";
+        } else {
+            $notations = "No invoice";
+        }
+
+        exit($notations);
+    }
 }
