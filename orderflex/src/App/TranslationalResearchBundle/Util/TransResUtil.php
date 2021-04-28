@@ -702,59 +702,66 @@ class TransResUtil
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        $res = NULL;
 
         $project = $transresRequest->getProject();
         if( !$project ) {
             return NULL;
         }
 
+        $approvedProjectBudget = $project->getApprovedProjectBudget();
         $remainingBudget = $project->getRemainingBudget();
 
+        $currentDate = new \DateTime();
+        $dateTimeUser = $userServiceUtil->convertFromUtcToUserTimezone($currentDate,$user);
+        $dateTimeUserStr = $dateTimeUser->format('m-d-Y \a\t H-i-s');
+
         if( $remainingBudget < 0 ) {
-            $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+
+            $workRequestBudget = "";
+
+            $invoicesInfos = $project->getInvoicesInfosByProject(true);
+            $subsidy = $invoicesInfos['subsidy'];
+
+            $subsidy = $this->dollarSignValue($subsidy);
+            $approvedProjectBudget = $this->dollarSignValue($approvedProjectBudget);
+            $remainingBudget = $this->dollarSignValue($remainingBudget);
+
+            $senderEmail = $transresUtil->getTransresSiteProjectParameter('overBudgetFromEmail',$project);
+            if( !$senderEmail ) {
+                $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+            }
+
             $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
 
-            $subject = ""; //222(10) Over budget notification subject:
+            //$subject = ""; //222(10) Over budget notification subject:
+            $subject = $transresUtil->getTransresSiteProjectParameter('overBudgetSubject',$project);
+            $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,$transresRequest,null);
+            if( !$subject ) {
+                $subject = "Budget potentially exceeded for ".$project->getOid()." by work request ".$transresRequest->getOid();
+            }
 
-            $emailBody = ""; //222(10) Over budget notification body:
+            //$emailBody = ""; //222(10) Over budget notification body:
+            $emailBody = $transresUtil->getTransresSiteProjectParameter('overBudgetBody',$project);
+            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
+            if( !$emailBody ) {
+                $emailBody = "According to the '[internal pricing]' price list, 
+                    the expected value of $workRequestBudget for the work request newly submitted by".
+                    " ".$transresRequest->getUpdateUser()." on ".$dateTimeUserStr.
+                    "exceeds by $remainingBudget the approved budget of $approvedProjectBudget 
+                    for the project ".$project->getOid(). " '".$project->getTitle()."' with a total current subsidy of $subsidy.";
+            }
 
             //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $adminEmails, $subject, $emailBody, null, $senderEmail );
+
+            $res = "Over-budget notification email sent with subject: $subject <br>body:<br>$emailBody";
         }
 
-
-        if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
-            //echo "show remaining budget <br>";
-            $remainingBudget = $project->getRemainingBudget();
-
-            if( $remainingBudget !== NULL ) {
-                //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
-                // If you have questions about this, please [email the system administrator]
-                $remainingBudget = $project->toMoney($remainingBudget);
-
-                $remainingBudget = $this->dollarSignValue($remainingBudget);
-
-//                $adminEmailsStr = "";
-//                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
-//                if (count($adminEmails) > 0) {
-//                    $adminEmailsStr = implode(", ", $adminEmails);
-//                }
-                $adminEmailsStr = $this->getAdminEmailsStr($project);
-
-                $trpName = $this->getBusinessEntityAbbreviation();
-
-                $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
-                    " " .
-                    "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
-                    "." .
-                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
-
-                $note = "<h4>" . $note . "</h4>";
-
-                return $note;
-            }
-        }
-        return NULL;
+        return $res;
     }
 
     public function printTransition($transition) {
@@ -4109,6 +4116,13 @@ class TransResUtil
                 $projectEditUrl = $this->getProjectEditUrl($project);
                 if ($projectEditUrl) {
                     $text = str_replace("[[PROJECT EDIT URL]]", $projectEditUrl, $text);
+                }
+            }
+
+            if( strpos($text, '[[PROJECT PRICE LIST]]') !== false ) {
+                $priceList = $project->getPriceList();
+                if( $priceList ) {
+                    $text = str_replace("[[PROJECT PRICE LIST]]", $priceList, $text);
                 }
             }
         }
