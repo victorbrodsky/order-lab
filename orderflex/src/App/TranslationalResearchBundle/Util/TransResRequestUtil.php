@@ -5106,7 +5106,13 @@ class TransResRequestUtil
         $product = $invoiceItem->getProduct();
         $transresRequest = $invoice->getTransresRequest();
         $priceList = $transresRequest->getPriceList();
-        $res = $product->calculateQuantities($priceList);
+
+        if( $product ) {
+            $res = $product->calculateQuantities($priceList);
+        } else {
+            $res = array();
+        }
+
 //            $res = array(
 //                'initialQuantity' => $initialQuantity,
 //                'additionalQuantity' => $additionalQuantity, //$additionalQuantity
@@ -5135,23 +5141,25 @@ class TransResRequestUtil
         }
 
         //Hide invoice price if the same as in product
-        if( $unitPrice && $additionalUnitPrice ) {
-            $initialFee = $res['initialFee'];
-            $additionalFee = $res['additionalFee'];
-            if( $unitPrice == $initialFee ) {
-                $unitPrice = NULL;
+        if( $res && count($res) > 0 ) {
+            if ($unitPrice && $additionalUnitPrice) {
+                $initialFee = $res['initialFee'];
+                $additionalFee = $res['additionalFee'];
+                if ($unitPrice == $initialFee) {
+                    $unitPrice = NULL;
+                }
+                if ($additionalFee == $additionalUnitPrice) {
+                    $additionalUnitPrice = NULL;
+                }
             }
-            if( $additionalFee == $additionalUnitPrice ) {
-                $additionalUnitPrice = NULL;
+
+            if ($description == $res['categoryName']) {
+                $description = NULL;
             }
-        }
 
-        if( $description == $res['categoryName'] ) {
-            $description = NULL;
-        }
-
-        if( $itemCode == $res['categoryItemCode'] ) {
-            $itemCode = NULL;
+            if ($itemCode == $res['categoryItemCode']) {
+                $itemCode = NULL;
+            }
         }
 
         $itemInfo = array(
