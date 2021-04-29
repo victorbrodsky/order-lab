@@ -653,7 +653,10 @@ class TransResUtil
 
     public function getProjectRemainingBudgetNote($project) {
 
-        return NULL; //testing
+        //return NULL; //testing
+        if( !$project ) {
+            return NULL;
+        }
 
         if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
             //echo "show remaining budget <br>";
@@ -709,7 +712,7 @@ class TransResUtil
 
     public function sendProjectOverBudgetEmail($transresRequest) {
 
-        return NULL; //testing
+        //return NULL; //testing
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');

@@ -31,14 +31,14 @@
         {% set projectRemainingBudget = project.getRemainingBudget() %}
         {#{% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project) %}#}
         {#{% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}#}
-        {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
+        {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
     {% else %}
         {% set projectFunded = null %}
         {% set projectApprovedProjectBudget = null %}
         {% set projectRemainingBudget = null %}
         {#{% set projectAdminEmailStr = null %}#}
         {#{% set messageToUsers = null %}#}
-        {% set projectRemainingBudgetNote = null %}
+        {#{% set projectRemainingBudgetNote = null %}#}
     {% endif %}
 
     {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project) %}
@@ -60,7 +60,7 @@
 
 
     {% set invoiceShowUrl = transres_request_util.getInvoiceShowUrlByWorkRequest(transresRequest) %}
-    {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
+    {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -70,7 +70,12 @@
     </h4>
 
     {% if projectRemainingBudgetNote %}
-        <div id="project-remaining-budget-note" class="alert alert-success" role="alert">
+        {% if projectRemainingBudget > 0 %}
+            {% set alertClass = "alert-success" %}
+        {% else %}
+            {% set alertClass = "alert-warning" %}
+        {% endif %}
+        <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
             <p>
                 {{ projectRemainingBudgetNote|raw }}
             </p>
@@ -540,7 +545,7 @@
                 //console.log("projectRemainingBudget="+projectRemainingBudget);
                 var projectRemainingBudgetValue = $('#project-remaining-budget-value').val();
                 console.log("projectRemainingBudgetValue="+projectRemainingBudgetValue);
-                if( 0 && projectRemainingBudgetValue != null ) { //testing "0 &&"
+                if( projectRemainingBudgetValue != null ) { //testing "0 &&"
                     if ( projectRemainingBudgetValue < 0 ) {
                         //This work request appears to exceed the approved estimated budget of $xxx.xx
                         // for this project by $yyy.yy. You may need to submit an updated budget estimate
