@@ -2338,14 +2338,20 @@ class Project {
     public function getInvoicesInfosByProject($admin=true) {
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $invoicesInfos = array();
-        $count = 0;
+        $count = 0;         //total number of latest invoices
         $total = 0.00;
         $paid = 0.00;
         $due = 0.00;
         $subsidy = 0.00;
         $countRequest = 0;
         $grandTotal = 0.00;
+        $grandTotalWithoutInvoices = 0.00; //amount of work requests without invoices including subsidy
         $sumTotal = 0.00;
+
+        $paidCount = 0;             //total number of latest invoices "Paid in Full", "Paid Partially"
+        $paidAmount = 0;            //amount of "Paid in Full", "Paid Partially"
+        $outstandingCount = 0;      //total number of latest invoices "Unpaid/Issued", "Paid Partially"
+        $outstandingAmount = 0;     //amount "issued-unpaid", "partially paid"
 
         foreach($this->getRequests() as $request) {
 
@@ -2376,6 +2382,12 @@ class Project {
                 $subsidy = $subsidy + $res['subsidy'];          //invoice subsidy
                 $grandTotal = $grandTotal + $res['grandTotal']; //Project Value
                 $sumTotal = $sumTotal + $res['sumTotal'];       //Project Total including subsidy (Paid+Due+Positive Subsidy)
+
+                $paidCount = $paidCount + $res['paidCount'];
+                $paidAmount = $paidAmount + $res['paidAmount'];
+                $outstandingCount = $outstandingCount + $res['outstandingCount'];
+                $outstandingAmount = $outstandingAmount + $res['outstandingAmount'];
+
             } else {
                 //No invoice. Use work request value instead.
                 $subTotal = $request->getTransResRequestSubTotal();
@@ -2383,6 +2395,7 @@ class Project {
                 $requestSubsidy = $request->calculateSubsidyByRequest();
                 //$grandTotal = $grandTotal + $res['grandTotal']; //$grandTotal = $total + $subsidy;
                 $grandTotal = $grandTotal + $subTotal + $requestSubsidy; //"Value" in the project list
+                $grandTotalWithoutInvoices = $grandTotalWithoutInvoices + $subTotal + $requestSubsidy;
             }
 
             $countRequest++;
@@ -2390,6 +2403,7 @@ class Project {
         //echo $project->getOid().": countRequest=$countRequest: ";
 
         $grandTotal = $this->toDecimal($grandTotal);
+        $grandTotalWithoutInvoices = $this->toDecimal($grandTotalWithoutInvoices);
 
         if( $count > 0 ) {
             $total = $this->toDecimal($total);
@@ -2397,6 +2411,9 @@ class Project {
             $due = $this->toDecimal($due);
             $subsidy = $this->toDecimal($subsidy);
             $sumTotal = $this->toDecimal($sumTotal);
+
+            $paidAmount = $this->toDecimal($paidAmount);
+            $outstandingAmount = $this->toDecimal($outstandingAmount);
         } else {
             //echo "total=$total<br>";
             $total = NULL;
@@ -2404,6 +2421,8 @@ class Project {
             $due = NULL;
             $subsidy = NULL;
             $sumTotal = NULL;
+            $paidAmount = NULL;
+            $outstandingAmount = NULL;
         }
         //echo "total=$total<br>";
 
@@ -2413,7 +2432,13 @@ class Project {
         $invoicesInfos['due'] = $due;
         $invoicesInfos['subsidy'] = $subsidy;
         $invoicesInfos['grandTotal'] = $grandTotal; //grand total including subsidy
+        $invoicesInfos['grandTotalWithoutInvoices'] = $grandTotalWithoutInvoices; //amount of work requests without invoices including subsidy
         $invoicesInfos['sumTotal'] = $sumTotal;
+
+        $invoicesInfos['paidCount'] = $paidCount;
+        $invoicesInfos['paidAmount'] = $paidAmount;
+        $invoicesInfos['outstandingCount'] = $outstandingCount;
+        $invoicesInfos['outstandingAmount'] = $outstandingAmount;
 
         return $invoicesInfos;
     }

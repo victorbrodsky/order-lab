@@ -956,8 +956,12 @@ class TransResRequest {
         //$transresRequest = $this->getTransresRequest();
 
         $invoicesInfos = array();
-        $count = 0;
-        $total = 0.00;          //Charge
+        $count = 0;                 //total number of latest invoices
+        $paidCount = 0;             //total number of latest invoices "Paid in Full", "Paid Partially"
+        $paidAmount = 0;            //amount of "Paid in Full", "Paid Partially"
+        $outstandingCount = 0;      //total number of latest invoices "Unpaid/Issued", "Paid Partially"
+        $outstandingAmount = 0;     //amount "issued-unpaid", "partially paid"
+        $total = 0.00;              //Charge
         $paid = 0.00;
         $due = 0.00;
         $subsidy = 0.00;
@@ -986,6 +990,16 @@ class TransResRequest {
                     $invoicePaid = $invoice->getPaid();
                     $invoiceDue = $invoice->getDue();
                     $invoiceSubsidy = $this->getInvoiceSubsidy($invoice, $admin);
+
+                    if( $invoice->getStatus() == 'Paid in Full' || $invoice->getStatus() == 'Paid Partially' ) {
+                        $paidCount++;
+                        $paidAmount = $paidAmount + $invoicePaid;
+                    }
+
+                    if( $invoice->getStatus() == 'Unpaid/Issued' || $invoice->getStatus() == 'Paid Partially' ) {
+                        $outstandingCount++;
+                        $outstandingAmount = $outstandingAmount + $invoiceDue;
+                    }
 
                     $total = $total + $invoiceTotal;
                     $paid = $paid + $invoicePaid;
@@ -1019,6 +1033,8 @@ class TransResRequest {
             $subsidy = $this->toDecimal($subsidy);
             $grandTotal = $this->toDecimal($grandTotal);    //Value: total + subsidy (?)
             $sumTotal = $this->toDecimal($sumTotal);
+            $paidAmount = $this->toDecimal($paidAmount);
+            $outstandingAmount = $this->toDecimal($outstandingAmount);
         } else {
             $total = null;
             $paid = null;
@@ -1026,11 +1042,19 @@ class TransResRequest {
             $subsidy = null;
             $grandTotal = null;
             $sumTotal = null;
+            $paidAmount = null;
+            $outstandingAmount = null;
         }
 
         //echo "paid=$paid<br>";
 
         $invoicesInfos['count'] = $count;
+
+        $invoicesInfos['paidCount'] = $paidCount;
+        $invoicesInfos['paidAmount'] = $paidAmount;
+        $invoicesInfos['outstandingCount'] = $outstandingCount;
+        $invoicesInfos['outstandingAmount'] = $outstandingAmount;
+
         $invoicesInfos['total'] = $total;
         $invoicesInfos['paid'] = $paid;
         $invoicesInfos['due'] = $due;

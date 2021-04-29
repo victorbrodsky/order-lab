@@ -743,9 +743,9 @@ class TransResUtil
         $approvedProjectBudget = $project->getApprovedProjectBudget();
         $remainingBudget = $project->getRemainingBudget();
 
-        $currentDate = new \DateTime();
-        $dateTimeUser = $userServiceUtil->convertFromUtcToUserTimezone($currentDate,$user);
-        $dateTimeUserStr = $dateTimeUser->format('m-d-Y \a\t H-i-s');
+//        $currentDate = new \DateTime();
+//        $dateTimeUser = $userServiceUtil->convertFromUtcToUserTimezone($currentDate,$user);
+//        $dateTimeUserStr = $dateTimeUser->format('m-d-Y \a\t H-i-s');
 
         if( $remainingBudget < 0 ) {
 
@@ -791,8 +791,8 @@ class TransResUtil
 
                 $emailBody = $emailBody . $newline.$newline.
                     "This project is [[PROJECT FUNDED]] and has [[PROJECT NUMBER INVOICES]] invoices,".
-                    " [[PROJECT NUMBER PAID INVOICES]] of them paid, for a total amount of [[PROJECT NUMBER PAID INVOICES AMOUNT]] collected,".
-                    " [[PROJECT NUMBER OUTSTANDING INVOICES]] in total for outstanding invoices, and [[REQUEST VALUE WITHOUT INVOICES]] in value for work requests without invoices."
+                    " [[PROJECT NUMBER PAID INVOICES]] of them paid, for a total amount of [[PROJECT AMOUNT PAID INVOICES]] collected,".
+                    " [[PROJECT AMOUNT OUTSTANDING INVOICES]] in total for outstanding invoices, and [[PROJECT VALUE WITHOUT INVOICES]] in value for work requests without invoices."
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
@@ -800,7 +800,8 @@ class TransResUtil
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
-                    "The project PI list includes [[PROJECT PIS]]. The pathologist list includes [[PROJECT PATHOLOGIST LIST]]. "
+                    "The project PI list includes [[PROJECT PIS]].".$newline.
+                    "The pathologist list includes [[PROJECT PATHOLOGIST LIST]]."
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
@@ -808,20 +809,29 @@ class TransResUtil
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
-                    ""
+                    "Please obtain the updated estimated budget from the submitter and, if approved,".
+                    " update the project request on the following page with the new value to avoid these notifications:".
+                    $newline . "[[PROJECT EDIT URL]]"
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
-                    ""
+                    "To review the work request, please follow this link:".
+                    $newline."[[REQUEST SHOW URL]]"
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
-                    ""
+                    "To review all work requests for this project, please follow the link below:".
+                    $newline."[[PROJECT REQUESTS URL]]"
                 ;
 
                 $emailBody = $emailBody . $newline.$newline.
-                    ""
+                    "To review all invoices for this project, please follow the link below:".
+                    $newline."[[PROJECT NON-CANCELED INVOICES URL]]" //[Link to list of all latest versions of non-canceled invoices for this project]
                 ;
+
+//                $emailBody = $emailBody . $newline.$newline.
+//                    ""
+//                ;
             }
             $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
 
@@ -4196,11 +4206,23 @@ class TransResUtil
                 foreach($pis as $pi) {
                     $pisArr[] = $pi->getUsernameShortest();
                 }
-                $text = str_replace("[[PROJECT PATHOLOGIST LIST]]", implode(", ",$pisArr), $text);
+
+                if( count($pisArr) > 0 ) {
+                    $pathologists = implode(", ",$pisArr);
+                } else {
+                    $pathologists = "No Pathologists";
+                }
+
+                $text = str_replace("[[PROJECT PATHOLOGIST LIST]]", $pathologists, $text);
             }
 
             if( strpos($text, '[[PROJECT BILLING CONTACT LIST]]') !== false ) {
                 $billingContact = $project->getBillingContact();
+
+                if( !$billingContact ) {
+                    $billingContact = "No Billing Contact";
+                }
+
                 $text = str_replace("[[PROJECT BILLING CONTACT LIST]]", $billingContact, $text);
             }
 
@@ -4234,7 +4256,8 @@ class TransResUtil
                         'filter[status][]' => "Latest Versions of All Invoices Except Canceled",
                         //'title' => $invoicetype,
                         //'filterwell' => 'closed'
-                    )
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
                 $linkMyInvoices = '<a href="'.$linkMyInvoices.'">'.$linkMyInvoices.'</a>';
@@ -4302,7 +4325,69 @@ class TransResUtil
                 $grandTotal = $this->dollarSignValue($grandTotal);
                 $text = str_replace("[[PROJECT VALUE]]", $grandTotal, $text);
             }
-            
+
+            if( strpos($text, '[[PROJECT FUNDED]]') !== false ) {
+                $isFunded = $project->isFunded(); //"Funded" or "Non-funded"
+                $text = str_replace("[[PROJECT FUNDED]]", $isFunded, $text);
+            }
+
+            if( strpos($text, '[[PROJECT NUMBER INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.count
+                $invoiceCount = $invoicesInfos['count'];
+                if( !$invoiceCount ) {
+                    $invoiceCount = 0;
+                }
+                $text = str_replace("[[PROJECT NUMBER INVOICES]]", $invoiceCount, $text);
+            }
+
+            if( strpos($text, '[[PROJECT NUMBER PAID INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidCount
+                $invoiceCount = $invoicesInfos['paidCount'];
+                if( !$invoiceCount ) {
+                    $invoiceCount = 0;
+                }
+                $text = str_replace("[[PROJECT NUMBER PAID INVOICES]]", $invoiceCount, $text);
+            }
+
+            if( strpos($text, '[[PROJECT AMOUNT PAID INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidAmount
+                $paidAmount = $invoicesInfos['paidAmount'];
+                if( !$paidAmount ) {
+                    $paidAmount = 0;
+                }
+                $paidAmount = $this->dollarSignValue($paidAmount);
+                $text = str_replace("[[PROJECT AMOUNT PAID INVOICES]]", $paidAmount, $text);
+            }
+
+            if( strpos($text, '[[PROJECT NUMBER OUTSTANDING INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.outstandingCount
+                $invoiceCount = $invoicesInfos['outstandingCount'];
+                if( !$invoiceCount ) {
+                    $invoiceCount = 0;
+                }
+                $text = str_replace("[[PROJECT NUMBER OUTSTANDING INVOICES]]", $invoiceCount, $text);
+            }
+
+            if( strpos($text, '[[PROJECT AMOUNT OUTSTANDING INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidAmount
+                $outstandingAmount = $invoicesInfos['outstandingAmount'];
+                if( !$outstandingAmount ) {
+                    $outstandingAmount = 0;
+                }
+                $outstandingAmount = $this->dollarSignValue($outstandingAmount);
+                $text = str_replace("[[PROJECT AMOUNT OUTSTANDING INVOICES]]", $outstandingAmount, $text);
+            }
+
+            if( strpos($text, '[[PROJECT VALUE WITHOUT INVOICES]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.grandTotalWithoutInvoices
+                $grandTotalWithoutInvoices = $invoicesInfos['grandTotalWithoutInvoices'];
+                if( !$grandTotalWithoutInvoices ) {
+                    $grandTotalWithoutInvoices = 0;
+                }
+                $grandTotalWithoutInvoices = $this->dollarSignValue($grandTotalWithoutInvoices);
+                $text = str_replace("[[PROJECT VALUE WITHOUT INVOICES]]", $grandTotalWithoutInvoices, $text);
+            }
+
         }//project
 
         if( $transresRequest ) {
