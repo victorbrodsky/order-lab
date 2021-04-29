@@ -652,6 +652,9 @@ class TransResUtil
     }
 
     public function getProjectRemainingBudgetNote($project) {
+
+        return NULL; //testing
+
         if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
             //echo "show remaining budget <br>";
             $remainingBudget = $project->getRemainingBudget();
@@ -685,9 +688,15 @@ class TransResUtil
         }
         return NULL;
     }
-    public function getAdminEmailsStr($project) {
+    public function getAdminEmailsStr($project=NULL) {
+
+        $projectSpecialty = NULL;
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
+        
         $adminEmailsStr = "";
-        $adminUsers = $this->getTransResAdminEmails($project->getProjectSpecialty(), false, true);
+        $adminUsers = $this->getTransResAdminEmails($projectSpecialty, false, true);
         $adminEmails = array();
         foreach($adminUsers as $adminUser) {
             $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
@@ -700,7 +709,7 @@ class TransResUtil
 
     public function sendProjectOverBudgetEmail($transresRequest) {
 
-        //return NULL; //testing
+        return NULL; //testing
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
@@ -4063,6 +4072,7 @@ class TransResUtil
         return $ids;
     }
 
+    //test notations by http://127.0.0.1/order/index_dev.php/translational-research/email-notation-test
     public function replaceTextByNamingConvention( $text, $project, $transresRequest, $invoice ) {
         if( $project ) {
             $text = str_replace("[[PROJECT ID]]", $project->getOid(), $text);
