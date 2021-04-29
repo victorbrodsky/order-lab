@@ -4220,21 +4220,19 @@ class TransResUtil
 
             if( strpos($text, '[[PROJECT APPROVED BUDGET]]') !== false ) {
                 $approvedBudget = $project->getApprovedProjectBudget();
-                if( $approvedBudget ) {
-                    $approvedBudgetStr = $this->dollarSignValue($approvedBudget);
-                } else {
-                    $approvedBudgetStr = "";
+                if( !$approvedBudget ) {
+                    $approvedBudget = 0;
                 }
+                $approvedBudgetStr = $this->dollarSignValue($approvedBudget);
                 $text = str_replace("[[PROJECT APPROVED BUDGET]]", $approvedBudgetStr, $text);
             }
 
             if( strpos($text, '[[PROJECT REMAINING BUDGET]]') !== false ) {
                 $remainingBudget = $project->getRemainingBudget();
-                if( $remainingBudget ) {
-                    $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
-                } else {
-                    $remainingBudgetStr = "";
+                if( !$remainingBudget ) {
+                    $remainingBudget = 0;
                 }
+                $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
                 $text = str_replace("[[PROJECT REMAINING BUDGET]]", $remainingBudgetStr, $text);
             }
 
@@ -4244,7 +4242,7 @@ class TransResUtil
                 if( $remainingBudget < 0 ) {
                     $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
                 } else {
-                    $remainingBudgetStr = "";
+                    $remainingBudgetStr = "'No Over Budget'";
                 }
                 $text = str_replace("[[PROJECT OVER BUDGET]]", $remainingBudgetStr, $text);
             }
@@ -4252,6 +4250,9 @@ class TransResUtil
             if( strpos($text, '[[PROJECT SUBSIDY]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true);
                 $subsidy = $invoicesInfos['subsidy'];
+                if( !$subsidy ) {
+                    $subsidy = 0;
+                }
                 $subsidy = $this->dollarSignValue($subsidy);
                 $text = str_replace("[[PROJECT SUBSIDY]]", $subsidy, $text);
             }
@@ -4259,6 +4260,9 @@ class TransResUtil
             if( strpos($text, '[[PROJECT VALUE]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true);
                 $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
+                if( !$grandTotal ) {
+                    $grandTotal = 0;
+                }
                 $grandTotal = $this->dollarSignValue($grandTotal);
                 $text = str_replace("[[PROJECT VALUE]]", $grandTotal, $text);
             }
@@ -4326,6 +4330,9 @@ class TransResUtil
             if( strpos($text, '[[REQUEST VALUE]]') !== false ) {
                 $invoicesInfos = $transresRequest->getInvoicesInfosByRequest(true);
                 $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
+                if( !$grandTotal ) {
+                    $grandTotal = 0;
+                }
                 $grandTotal = $this->dollarSignValue($grandTotal);
                 $text = str_replace("[[REQUEST VALUE]]", $grandTotal, $text);
             }
