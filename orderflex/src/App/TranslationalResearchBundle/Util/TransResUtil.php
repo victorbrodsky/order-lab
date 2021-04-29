@@ -731,6 +731,8 @@ class TransResUtil
         $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
 
+        $newline = "\r\n";
+
         $res = NULL;
 
         $project = $transresRequest->getProject();
@@ -783,9 +785,43 @@ class TransResUtil
                 $emailBody = "According to the [[PROJECT PRICE LIST]] price list,".
                     " the expected value of [[REQUEST VALUE]] for the work request newly submitted by [[REQUEST SUBMITTER]]".
                     " on [[REQUEST SUBMISSION DATE]]".
-                    " exceeds by [[PROJECT REMAINING BUDGET]] the approved budget of [[PROJECT APPROVED BUDGET]]".
+                    " exceeds by [[PROJECT OVER BUDGET]] the approved budget of [[PROJECT APPROVED BUDGET]]".
                     " for the project [[PROJECT ID]] '[[PROJECT TITLE]]'".
                     " with a total current subsidy of [[PROJECT SUBSIDY]].";
+
+                $emailBody = $emailBody . $newline.$newline.
+                    "This project is [[PROJECT FUNDED]] and has [[PROJECT NUMBER INVOICES]] invoices,".
+                    " [[PROJECT NUMBER PAID INVOICES]] of them paid, for a total amount of [[PROJECT NUMBER PAID INVOICES AMOUNT]] collected,".
+                    " [[PROJECT NUMBER OUTSTANDING INVOICES]] in total for outstanding invoices, and [[REQUEST VALUE WITHOUT INVOICES]] in value for work requests without invoices."
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    "The total value of all work requests (invoiced or not) is [[PROJECT VALUE]]."
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    "The project PI list includes [[PROJECT PIS]]. The pathologist list includes [[PROJECT PATHOLOGIST LIST]]. "
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    "The Billing Contact is [[PROJECT BILLING CONTACT LIST]]."
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    ""
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    ""
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    ""
+                ;
+
+                $emailBody = $emailBody . $newline.$newline.
+                    ""
+                ;
             }
             $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
 

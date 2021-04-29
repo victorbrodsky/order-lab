@@ -1448,10 +1448,12 @@ class DefaultController extends OrderAbstractController
         <br>[[PROJECT SUBMISSION DATE]] - project submission date,
         <br>[[PROJECT STATUS]] - project status,
         <br>[[PROJECT STATUS COMMENTS]] - comments for the current project's stage,
+        <br>[[PROJECT FUNDED]] - project \"Funded\" or \"Non-funded\",
         <br>[[PROJECT SHOW URL]] - project request show url,
         <br>[[PROJECT EDIT URL]] - project request edit url,
         <br>[[PROJECT REQUESTS URL]] - link to list of all work requests for this project,
         <br>[[PROJECT NON-CANCELED INVOICES URL]] - link to list of all latest non-canceled invoices for this project,
+
 
         <h4>Work Request:</h4>
         <br>[[REQUEST ID]] - work request ID,
@@ -1478,7 +1480,11 @@ class DefaultController extends OrderAbstractController
         <br>[[PROJECT SUBSIDY]] - project subsidy,
         <br>[[PROJECT VALUE]] - project value (invoiced or not),
 
-        <br>[[REQUEST VALUE]] - work request value (invoiced or not)
+        <br>[[PROJECT NUMBER INVOICES]] - project number of the latest invoices,
+        <br>[[PROJECT NUMBER OUTSTANDING INVOICES]] - project number of the outstanding invoices (issued-unpaid, partially paid),
+    
+        <br>[[REQUEST VALUE]] - work request value (invoiced or not),
+        <br>[[REQUEST VALUE WITHOUT INVOICES]] - value for work requests without invoices,
         ";
 
         //$notations = "No invoice";
