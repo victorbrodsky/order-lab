@@ -714,6 +714,18 @@ class TransResUtil
 
         //return NULL; //testing
 
+        if( !$transresRequest ) {
+            return NULL;
+        }
+
+        //send email only if work request state is active
+        if( $transresRequest->getProgressState() == 'active' && $transresRequest->getBillingState() == 'active' ) {
+            //send over budget email notification
+        } else {
+            //skip for non-active work request - don't send email
+            return NULL;
+        }
+
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -753,21 +765,29 @@ class TransResUtil
 
             //$subject = ""; //222(10) Over budget notification subject:
             $subject = $transresUtil->getTransresSiteProjectParameter('overBudgetSubject',$project);
-            $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,$transresRequest,null);
             if( !$subject ) {
-                $subject = "Budget potentially exceeded for ".$project->getOid()." by work request ".$transresRequest->getOid();
+                //$subject = "Budget potentially exceeded for ".$project->getOid()." by work request ".$transresRequest->getOid();
+                $subject = "Budget potentially exceeded for [[PROJECT ID]] by work request [[REQUEST ID]]";
             }
+            $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,$transresRequest,null);
 
             //$emailBody = ""; //222(10) Over budget notification body:
             $emailBody = $transresUtil->getTransresSiteProjectParameter('overBudgetBody',$project);
-            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
             if( !$emailBody ) {
-                $emailBody = "According to the '[internal pricing]' price list, 
-                    the expected value of $workRequestBudget for the work request newly submitted by".
-                    " ".$transresRequest->getUpdateUser()." on ".$dateTimeUserStr.
-                    "exceeds by $remainingBudget the approved budget of $approvedProjectBudget 
-                    for the project ".$project->getOid(). " '".$project->getTitle()."' with a total current subsidy of $subsidy.";
+//                $emailBody = "According to the '[[PROJECT PRICE LIST]]' price list,
+//                    the expected value of $workRequestBudget for the work request newly submitted by $user".
+//                    " on " . $dateTimeUserStr.
+//                    " exceeds by $remainingBudget the approved budget of $approvedProjectBudget
+//                    for the project ".$project->getOid(). " '".$project->getTitle()."' with a total current subsidy of $subsidy.";
+
+                $emailBody = "According to the [[PROJECT PRICE LIST]] price list,".
+                    " the expected value of [[REQUEST VALUE]] for the work request newly submitted by [[REQUEST SUBMITTER]]".
+                    " on [[REQUEST SUBMISSION DATE]]".
+                    " exceeds by [[PROJECT REMAINING BUDGET]] the approved budget of [[PROJECT APPROVED BUDGET]]".
+                    " for the project [[PROJECT ID]] '[[PROJECT TITLE]]'".
+                    " with a total current subsidy of [[PROJECT SUBSIDY]].";
             }
+            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
 
             //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $adminEmails, $subject, $emailBody, null, $senderEmail );
@@ -4134,13 +4154,6 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[PROJECT PRICE LIST]]') !== false ) {
-                $priceList = $project->getPriceList();
-                if( $priceList ) {
-                    $text = str_replace("[[PROJECT PRICE LIST]]", $priceList, $text);
-                }
-            }
-
             if( strpos($text, '[[PROJECT PATHOLOGIST LIST]]') !== false ) {
                 $pisArr = array();
                 $pis = $project->getPathologists();
@@ -4192,6 +4205,63 @@ class TransResUtil
 
                 $text = str_replace("[[PROJECT NON-CANCELED INVOICES URL]]", $linkMyInvoices, $text);
             }
+
+            //Budget
+            if( strpos($text, '[[PROJECT PRICE LIST]]') !== false ) {
+                $priceList = $project->getPriceList();
+                if( $priceList ) {
+                    $priceListStr = "'".$priceList->getName()."'";
+                } else {
+                    //$priceListStr = "Default";
+                    $priceListStr = "";
+                }
+                $text = str_replace("[[PROJECT PRICE LIST]]", $priceListStr, $text);
+            }
+
+            if( strpos($text, '[[PROJECT APPROVED BUDGET]]') !== false ) {
+                $approvedBudget = $project->getApprovedProjectBudget();
+                if( $approvedBudget ) {
+                    $approvedBudgetStr = $this->dollarSignValue($approvedBudget);
+                } else {
+                    $approvedBudgetStr = "";
+                }
+                $text = str_replace("[[PROJECT APPROVED BUDGET]]", $approvedBudgetStr, $text);
+            }
+
+            if( strpos($text, '[[PROJECT REMAINING BUDGET]]') !== false ) {
+                $remainingBudget = $project->getRemainingBudget();
+                if( $remainingBudget ) {
+                    $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
+                } else {
+                    $remainingBudgetStr = "";
+                }
+                $text = str_replace("[[PROJECT REMAINING BUDGET]]", $remainingBudgetStr, $text);
+            }
+
+            //[[PROJECT OVER BUDGET]] the same as negative project remaining budget
+            if( strpos($text, '[[PROJECT OVER BUDGET]]') !== false ) {
+                $remainingBudget = $project->getRemainingBudget();
+                if( $remainingBudget < 0 ) {
+                    $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
+                } else {
+                    $remainingBudgetStr = "";
+                }
+                $text = str_replace("[[PROJECT OVER BUDGET]]", $remainingBudgetStr, $text);
+            }
+
+            if( strpos($text, '[[PROJECT SUBSIDY]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true);
+                $subsidy = $invoicesInfos['subsidy'];
+                $subsidy = $this->dollarSignValue($subsidy);
+                $text = str_replace("[[PROJECT SUBSIDY]]", $subsidy, $text);
+            }
+
+            if( strpos($text, '[[PROJECT VALUE]]') !== false ) {
+                $invoicesInfos = $project->getInvoicesInfosByProject(true);
+                $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
+                $grandTotal = $this->dollarSignValue($grandTotal);
+                $text = str_replace("[[PROJECT VALUE]]", $grandTotal, $text);
+            }
             
         }//project
 
@@ -4222,6 +4292,13 @@ class TransResUtil
                 $text = str_replace("[[REQUEST PROGRESS STATUS]]", $state, $text);
             }
 
+            if( strpos($text, '[[REQUEST BILLING STATUS]]') !== false ) {
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                $state = $transresRequest->getBillingState();
+                $state = $transresRequestUtil->getBillingStateLabelByName($state);
+                $text = str_replace("[[REQUEST BILLING STATUS]]", $state, $text);
+            }
+
             if( strpos($text, '[[REQUEST SHOW URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
@@ -4245,6 +4322,14 @@ class TransResUtil
                     $text = str_replace("[[REQUEST NEW INVOICE URL]]", $requestNewInvoiceUrl, $text);
                 }
             }
+
+            if( strpos($text, '[[REQUEST VALUE]]') !== false ) {
+                $invoicesInfos = $transresRequest->getInvoicesInfosByRequest(true);
+                $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
+                $grandTotal = $this->dollarSignValue($grandTotal);
+                $text = str_replace("[[REQUEST VALUE]]", $grandTotal, $text);
+            }
+
         }//$transresRequest
 
         if( $invoice ) {
@@ -4256,6 +4341,15 @@ class TransResUtil
 
             //[[INVOICE AMOUNT DUE]]
             $text = str_replace("[[INVOICE AMOUNT DUE]]", $invoice->getDue(), $text);
+
+            if( strpos($text, '[[INVOICE SHOW URL]]') !== false ) {
+                $transresRequestUtil = $this->container->get('transres_request_util');
+                $invoiceShowUrl = $transresRequestUtil->getInvoiceShowUrl($invoice);
+                if ($invoiceShowUrl) {
+                    $text = str_replace("[[INVOICE SHOW URL]]", $invoiceShowUrl, $text);
+                }
+            }
+            
         }//$invoice
 
         return $text;

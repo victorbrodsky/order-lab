@@ -1437,6 +1437,7 @@ class DefaultController extends OrderAbstractController
         $transresRequestUtil = $this->get('transres_request_util');
 
         $notations = "
+        <h4>Project Request:</h4>
         <br>[[PROJECT ID]] - project request ID,
         <br>[[PROJECT ID TITLE]] - project ID, Title,
         <br>[[PROJECT TITLE SHORT]] - short project title,
@@ -1452,33 +1453,37 @@ class DefaultController extends OrderAbstractController
         <br>[[PROJECT REQUESTS URL]] - link to list of all work requests for this project,
         <br>[[PROJECT NON-CANCELED INVOICES URL]] - link to list of all latest non-canceled invoices for this project,
 
+        <h4>Work Request:</h4>
         <br>[[REQUEST ID]] - work request ID,
         <br>[[REQUEST SUBMITTER]] - work request submitter,
         <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
         <br>[[REQUEST UPDATE DATE]] - work request update date,
         <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
-        <br>[[REQUEST STATUS]] - work request status,
+        <br>[[REQUEST BILLING STATUS]] - work request billing status,
         <br>[[REQUEST SHOW URL]] - work request show url,
         <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
         <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
 
+        <h4>Invoice:</h4>
         <br>[[INVOICE ID]] - invoice ID,
         <br>[[INVOICE SHOW URL]] - invoice url,
         <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
         <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
 
         <h4>Budget:</h4>
-        <br>[[PROJECT PRICE LIST]] - project price list,
+        <br>[[PROJECT PRICE LIST]] - project price list (with quotes '...' if not default),
         <br>[[PROJECT APPROVED BUDGET]] - project approved budget,
-        <br>[[PROJECT OVER BUDGET]] - project over budget amount,
+        <br>[[PROJECT REMAINING BUDGET]] - project remaining budget,
+        <br>[[PROJECT OVER BUDGET]] - project over budget amount (the same as negative project remaining budget),
         <br>[[PROJECT SUBSIDY]] - project subsidy,
         <br>[[PROJECT VALUE]] - project value (invoiced or not),
 
-        <br>[[REQUEST VALUE]] - work request value (invoiced or not),
+        <br>[[REQUEST VALUE]] - work request value (invoiced or not)
         ";
 
         //$notations = "No invoice";
         $invoice = NULL;
+        $params = array();
 
         //$invoices = $transresRequestUtil->getOverdueInvoices();
         $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
@@ -1489,24 +1494,29 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin('transresRequest.project','project');
         $dql->leftJoin('project.projectSpecialty','projectSpecialty');
 
-        $dql->where("invoice.status = :pending AND invoice.latestVersion = TRUE"); //Unpaid/Issued
-        $params["pending"] = "pending";
+        $dql->where("invoice.latestVersion = TRUE");
+
+        $dql->andWhere("invoice.status = :status"); //Unpaid/Issued
+        $params["status"] = "Pending";
+        //$params["status"] = "active";
+
+        $dql->orderBy("invoice.id","DESC");
 
         $query = $em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
 
         $invoices = $query->getResult();
 
-        $invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+        //$invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
 
         echo "invoices=".count($invoices)."<br>";
 
         if( count($invoices) > 0 ) {
             $invoice = $invoices[0];
-            //echo "1invoice=".$invoice."<br>";
+            echo "invoice OID=".$invoice->getOid()."<br>";
         }
 
         if( $invoice ) {

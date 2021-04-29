@@ -1968,6 +1968,7 @@
 {% macro emailNamingNotation() %}
     <p>
         {#Please use naming notation:#}
+        <h4>Project Request:</h4>
         <br>[[PROJECT ID]] - project request ID,
         <br>[[PROJECT ID TITLE]] - project ID, Title,
         <br>[[PROJECT TITLE SHORT]] - short project title,
@@ -1983,25 +1984,28 @@
         <br>[[PROJECT REQUESTS URL]] - link to list of all work requests for this project,
         <br>[[PROJECT NON-CANCELED INVOICES URL]] - link to list of all latest non-canceled invoices for this project,
 
+        <h4>Work Request:</h4>
         <br>[[REQUEST ID]] - work request ID,
         <br>[[REQUEST SUBMITTER]] - work request submitter,
         <br>[[REQUEST SUBMISSION DATE]] - work request submission date,
         <br>[[REQUEST UPDATE DATE]] - work request update date,
         <br>[[REQUEST PROGRESS STATUS]] - work request progress status,
-        <br>[[REQUEST STATUS]] - work request status,
+        <br>[[REQUEST BILLING STATUS]] - work request billing status,
         <br>[[REQUEST SHOW URL]] - work request show url,
         <br>[[REQUEST CHANGE PROGRESS STATUS URL]] - work request change progress state url,
         <br>[[REQUEST NEW INVOICE URL]] - create a new invoice url for this work request,
 
+        <h4>Invoice:</h4>
         <br>[[INVOICE ID]] - invoice ID,
         <br>[[INVOICE SHOW URL]] - invoice url,
         <br>[[INVOICE AMOUNT DUE]] - invoice amount due,
         <br>[[INVOICE DUE DATE AND DAYS AGO]] - invoice due date
 
         <h4>Budget:</h4>
-        <br>[[PROJECT PRICE LIST]] - project price list,
+        <br>[[PROJECT PRICE LIST]] - project price list (with quotes '...' if not default),
         <br>[[PROJECT APPROVED BUDGET]] - project approved budget,
-        <br>[[PROJECT OVER BUDGET]] - project over budget amount,
+        <br>[[PROJECT REMAINING BUDGET]] - project remaining budget,
+        <br>[[PROJECT OVER BUDGET]] - project over budget amount (the same as negative project remaining budget),
         <br>[[PROJECT SUBSIDY]] - project subsidy,
         <br>[[PROJECT VALUE]] - project value (invoiced or not),
 
