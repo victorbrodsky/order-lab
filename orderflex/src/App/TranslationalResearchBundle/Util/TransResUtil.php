@@ -790,7 +790,7 @@ class TransResUtil
                     " with a total current subsidy of [[PROJECT SUBSIDY]].";
 
                 $emailBody = $emailBody . $newline.$newline.
-                    "This project is [[PROJECT FUNDED]] and has [[PROJECT NUMBER INVOICES]] invoices,".
+                    "This project is [[PROJECT FUNDED]] and has [[PROJECT NUMBER INVOICES]] invoice(s),".
                     " [[PROJECT NUMBER PAID INVOICES]] of them paid, for a total amount of [[PROJECT AMOUNT PAID INVOICES]] collected,".
                     " [[PROJECT AMOUNT OUTSTANDING INVOICES]] in total for outstanding invoices, and [[PROJECT VALUE WITHOUT INVOICES]] in value for work requests without invoices."
                 ;
@@ -4210,7 +4210,7 @@ class TransResUtil
                 if( count($pisArr) > 0 ) {
                     $pathologists = implode(", ",$pisArr);
                 } else {
-                    $pathologists = "No Pathologists";
+                    $pathologists = "no pathologists";
                 }
 
                 $text = str_replace("[[PROJECT PATHOLOGIST LIST]]", $pathologists, $text);
@@ -4328,6 +4328,7 @@ class TransResUtil
 
             if( strpos($text, '[[PROJECT FUNDED]]') !== false ) {
                 $isFunded = $project->isFunded(); //"Funded" or "Non-funded"
+                $isFunded = strtolower($isFunded);
                 $text = str_replace("[[PROJECT FUNDED]]", $isFunded, $text);
             }
 
