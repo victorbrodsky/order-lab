@@ -674,15 +674,25 @@ class TransResUtil
 //                if (count($adminEmails) > 0) {
 //                    $adminEmailsStr = implode(", ", $adminEmails);
 //                }
-                $adminEmailsStr = $this->getAdminEmailsStr($project);
+                $adminEmailsStr = $this->getAdminEmailsStr($project,false);
 
                 $trpName = $this->getBusinessEntityAbbreviation();
 
-                $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
-                    " " .
-                    "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
-                    "." .
-                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
+//                $note = "Based on the estimated total costs & the approved budget for the selected project, the remaining budget is" .
+//                    " " .
+//                    "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
+//                    "." .
+//                    "<br>If you have questions about this, please email the $trpName administrator " . $adminEmailsStr;
+
+                //Based on this project’s approved budget, invoices, work requests, and the items selected below,
+                // the remaining budget appears to be $20.00.
+                // If you have any questions, please email the CTP administrator Bing He (bih2004@med.cornell.edu)
+
+                $note = "Based on this project’s approved budget, invoices, work requests, ".
+                        "and the items selected below, the remaining budget appears to be ".
+                        "<span id='project-remaining-budget-amount'>".$remainingBudget."</span>".
+                        "." .
+                        "<br>If you have any questions, please email the $trpName administrator ".$adminEmailsStr;
 
                 $note = "<h4>" . $note . "</h4>";
 
@@ -691,7 +701,7 @@ class TransResUtil
         }
         return NULL;
     }
-    public function getAdminEmailsStr($project=NULL) {
+    public function getAdminEmailsStr($project=NULL,$all=true) {
 
         $projectSpecialty = NULL;
         if( $project ) {
@@ -703,6 +713,9 @@ class TransResUtil
         $adminEmails = array();
         foreach($adminUsers as $adminUser) {
             $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
+            if( !$all ) {
+                break;
+            }
         }
         if (count($adminEmails) > 0) {
             $adminEmailsStr = implode(", ", $adminEmails);

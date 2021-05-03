@@ -27,6 +27,7 @@ $(document).ready(function() {
     transresRequireTissueProcessingListener();
     transresRequireArchivalProcessingListener();
 
+    transresProjectFundedListener();
 
     if( cycle == "new" || cycle == "edit") {
         transresNewUserListener();
@@ -75,6 +76,8 @@ $(document).ready(function() {
     // transresIrbExemptListener('transres-project-pis');
 
     //fieldInputMask();
+
+    transresShowHideProjectDocument();
     
 });
 
@@ -154,6 +157,28 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
         $("#archivalspecimens").hide('slow');
     }
 }
+
+function transresProjectFundedListener() {
+    //oleg_translationalresearchbundle_project_funded
+    $(".transres-funded").on("change", function(e) {
+        //var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[transres-funded]"]:checked').val();
+        //console.log("change: checked value funded="+funded);
+        transresShowHideProjectDocument();
+    });
+}
+function transresShowHideProjectDocument() {
+    //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
+    //funded (checked) => hide
+    //not-funded (un-checked) => show
+    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+        console.log("funded hide");
+        $('#transres-project-documents').collapse('hide');
+    } else {
+        console.log("funded show");
+        $('#transres-project-documents').collapse('show');
+    }
+}
+
 
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post.
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type

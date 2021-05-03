@@ -196,7 +196,7 @@ class ProjectType extends AbstractType
         $builder->add('funded',CheckboxType::class,array(
             'required' => false,
             'label'=>"Funded:",
-            'attr' => array('class'=>'form-control')
+            'attr' => array('class'=>'form-control transres-funded')
         ));
 
         $builder->add('fundedAccountNumber',null, array(

@@ -41,7 +41,7 @@
         {#{% set projectRemainingBudgetNote = null %}#}
     {% endif %}
 
-    {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project) %}
+    {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project,false) %}
 
     <input type="hidden" id="project-funded" value="{{ projectFunded }}" />
     <input type="hidden" id="project-approved-budget" value="{{ projectApprovedProjectBudget }}" />
@@ -69,9 +69,10 @@
         {% endif %}
     </h4>
 
+    <div class="well well-sm">
     {% if projectRemainingBudgetNote %}
         {% if projectRemainingBudget > 0 %}
-            {% set alertClass = "alert-success" %}
+            {% set alertClass = "alert-secondary" %}
         {% else %}
             {% set alertClass = "alert-warning" %}
         {% endif %}
@@ -131,6 +132,7 @@
             </i>
         </p>
     {% endif %}
+    </div>
 
     {#barcode image test#}
     {#<button onclick="render()">Show Barcode</button>#}
@@ -334,6 +336,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
 
     {#{% stylesheets#}
     {#'orderassets/appuserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
@@ -938,7 +942,7 @@
             var currentRemainingBudget = $('#project-remaining-budget').val();
             //$('#project-remaining-budget-amount').text(currentRemainingBudget);
             transresSetRemainingBudgetNote(currentRemainingBudget);
-            //$('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-success');
+            //$('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
 
             if( projectId ) {
                 //console.log("get project account number");
@@ -983,6 +987,7 @@
 
                     var originalRemainingBudget = $('#project-original-remaining-budget').val();
                     //$('#project-remaining-budget-amount').text(originalRemainingBudget);
+                    originalRemainingBudget = transresDollarSignValue(originalRemainingBudget);
                     transresSetRemainingBudgetNote(originalRemainingBudget);
 
                     return;
@@ -1035,10 +1040,64 @@
             $('#project-remaining-budget').val(remainingBudgetValue);
             if( remainingBudgetValue.indexOf('-') !== -1 ) {
                 //'-' exists
-                $('#project-remaining-budget-note').removeClass('alert-success').addClass('alert-warning');
+                $('#project-remaining-budget-note').removeClass('alert-secondary').addClass('alert-warning');
             } else {
-                $('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-success');
+                $('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
             }
+        }
+
+
+        function transresDollarSignValue(value) {
+            //return value;
+            if( value !== null ) {
+                //value = transresToDecimal(value);
+                //echo "value=".$value."<br>";
+                if( value >= 0 ) {
+                    value = transresToMoney(value);
+                    value = "$"+value;
+                } else {
+                    value = Math.abs(value);
+                    value = transresToMoney(value);
+                    value = "-$"+value;
+                }
+            }
+
+            return value;
+        }
+        function transresToDecimal(value) {
+            return parseFloat(value).toFixed(2);
+        }
+        function transresToMoney(value) {
+            return transresNumberFormat(value, 2, '.', ',');
+        }
+        function transresNumberFormat(number, decimals, dec_point, thousands_point) {
+
+            if (number == null || !isFinite(number)) {
+                throw new TypeError("number is not valid");
+            }
+
+            if (!decimals) {
+                var len = number.toString().split('.').length;
+                decimals = len > 1 ? len : 0;
+            }
+
+            if (!dec_point) {
+                dec_point = '.';
+            }
+
+            if (!thousands_point) {
+                thousands_point = ',';
+            }
+
+            number = parseFloat(number).toFixed(decimals);
+
+            number = number.replace(".", dec_point);
+
+            var splitNum = number.split(dec_point);
+            splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_point);
+            number = splitNum.join(dec_point);
+
+            return number;
         }
 
         function transresProductItemListener() {

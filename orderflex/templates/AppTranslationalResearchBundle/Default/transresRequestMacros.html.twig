@@ -909,7 +909,13 @@
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
-                <button type="button" class="btn btn-success btn-sm transres-product-clone-btn" onClick="transresCloneExistingObject(this,'{{ classname }}')">Clone</button>
+                {#glyphicon-duplicate is in bootstrap 4 (might not be free), current version does not have it https://bootstrapdocs.com/v3.2.0/docs/components/#}
+                <button type="button" class="btn btn-default btn-sm transres-product-clone-btn" onClick="transresCloneExistingObject(this,'{{ classname }}')"
+                >
+                    {#<span class="glyphicon glyphicon-duplicate" aria-label="Clone"></span>#}
+                    <span class="fa fa-copy" aria-hidden="true" aria-label="Clone"></span>
+                    {#<i class="fa fa-copy"></i>#}
+                </button>
 
                 {#<button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
                 <button type="button" class="btn btn-default btn-sm"
@@ -954,7 +960,7 @@
         {#Show as info#}
         {% if cycle != "new" %}
             {#and formproduct.vars.value.notInInvoice#}
-            {% if formproduct.vars.value.notInInvoice is defined %}
+            {% if formproduct.vars.value.notInInvoice is defined and formproduct.vars.value.notInInvoice %}
                 {{ formmacros.simplefield_checkbox( "Not In Invoice:", formproduct.vars.value.notInInvoice, "", "disabled" ) }}
             {% endif %}
         {% endif %}
