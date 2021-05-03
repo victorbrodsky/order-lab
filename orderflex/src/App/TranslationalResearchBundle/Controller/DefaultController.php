@@ -1553,20 +1553,28 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $newline = "\n";
+        $invoice = NULL;
 
         $invoiceId = $request->get('invoiceId');
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
-        if( !$invoice ) {
-            $output = NULL;
-
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode($output));
-            return $response;
+        if( $invoiceId ) {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+//            if (!$invoice) {
+//                $output = NULL;
+//
+//                $response = new Response();
+//                $response->headers->set('Content-Type', 'application/json');
+//                $response->setContent(json_encode($output));
+//                return $response;
+//            }
         }
 
-        $transresRequest = $invoice->getTransresRequest();
-        $project = $transresRequest->getProject();
+        if( $invoice ) {
+            $transresRequest = $invoice->getTransresRequest();
+            $project = $transresRequest->getProject();
+        } else {
+            $transresRequest = NULL;
+            $project = NULL;
+        }
 
         $emailText = "";
 
@@ -1619,7 +1627,7 @@ class DefaultController extends OrderAbstractController
         );
 
         foreach($fields as $field) {
-            $emailText = $this->getNotation($emailText, $field, $project, $transresRequest, $invoice);
+            $emailText = $this->getEmailNotation($emailText, $field, $project, $transresRequest, $invoice);
         }
 
 //        //testing
@@ -1634,21 +1642,23 @@ class DefaultController extends OrderAbstractController
         $response->setContent(json_encode($output));
         return $response;
     }
-    public function getNotation( $restext, $field, $project, $transresRequest, $invoice) {
+    public function getEmailNotation( $restext, $field, $project, $transresRequest, $invoice) {
         $transresUtil = $this->get('transres_util');
         //$newline = "\n";
         //$newline = "<br>";
         $newline =  "<br>\n";
 
         $text = $transresUtil->getTransresSiteProjectParameter($field,$project);
-        if( $text ) {
+
+//        if( $text ) {
             $text = $transresUtil->replaceTextByNamingConvention($text, $project, $transresRequest, $invoice);
-            if( $text ) {
-                $restext = $restext . $newline.$newline.
-                    "<b>".$field."</b>".
+//        }
+
+        if( $text ) {
+            $restext = $restext . $newline.$newline.
+                "<b>".$field."</b>".
 //                    $field.
-                    ":".$newline.$text;
-            }
+                ":".$newline.$text;
         }
 
         return $restext;
