@@ -3591,6 +3591,28 @@ class TransResRequestUtil
         return $result;
     }
 
+    public function getLatestInvoiceLists() {
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        $dql = $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->where("invoice.latestVersion = TRUE");
+
+        $query = $dql->getQuery();
+
+        $invoices = $query->getResult();
+
+        return $invoices;
+
+//        $invoicesArr = array();
+//
+//        foreach($invoices as $invoice) {
+//            $invoicesArr[$invoice.""] = $invoice->getId();
+//        }
+//
+//        return $invoicesArr;
+    }
+
     public function getProjectMiniRequests($projectId) {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");

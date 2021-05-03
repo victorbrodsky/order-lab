@@ -718,6 +718,20 @@ class TransResUtil
             return NULL;
         }
 
+        $project = $transresRequest->getProject();
+        if( !$project ) {
+            return NULL;
+        }
+
+        //overBudgetSendEmail
+        $transresUtil = $this->container->get('transres_util');
+        $overBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('overBudgetSendEmail',$project);
+        if( $overBudgetSendEmail === TRUE ) {
+            //OK: send email
+        } else {
+            return NULL;
+        }
+
         //send email only if work request state is active
         if( $transresRequest->getProgressState() == 'active' && $transresRequest->getBillingState() == 'active' ) {
             //send over budget email notification
@@ -727,18 +741,13 @@ class TransResUtil
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
         $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
 
         $newline = "\r\n";
 
         $res = NULL;
-
-        $project = $transresRequest->getProject();
-        if( !$project ) {
-            return NULL;
-        }
 
         $approvedProjectBudget = $project->getApprovedProjectBudget();
         $remainingBudget = $project->getRemainingBudget();
@@ -833,6 +842,7 @@ class TransResUtil
 //                    ""
 //                ;
             }
+            //exit($emailBody);
             $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
 
             //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null

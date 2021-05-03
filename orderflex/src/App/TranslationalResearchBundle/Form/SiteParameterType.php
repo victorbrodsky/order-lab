@@ -448,13 +448,13 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('overBudgetSendEmail', null, array(
-            'label' => "Send over budget notifications (yes/no):",
+            'label' => "Send over budget notifications:",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('approvedBudgetSendEmail', null, array(
-            'label' => "Send 'approved project budget' update notifications (yes/no):",
+            'label' => "Send 'approved project budget' update notifications:",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

@@ -558,6 +558,9 @@ class TransResSiteParameters {
         $this->setEnableNewProjectAccessPage(true);
         $this->setEnableNewProjectOnNavbar(true);
         $this->setEnableNewProjectOnSelector(true);
+
+        $this->setOverBudgetSendEmail(true);
+        $this->setApprovedBudgetSendEmail(true);
     }
 
 

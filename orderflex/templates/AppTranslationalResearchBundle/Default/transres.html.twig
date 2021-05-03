@@ -1615,6 +1615,13 @@
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+    {#add test subject and body by choosing invoice#}
+    {#<p>#}
+        <a href="#" data-toggle="modal" data-target="#modal_test_email_naming_notation"
+        >Test email subject and body naming notation</a>
+    {#</p>#}
+    {{ transres.emailNamingNotationTest() }}
+
     {{ form_start(form) }}
 
     <div id="form-prototype-data"
@@ -2027,6 +2034,60 @@
     </p>
 {% endmacro %}
 
+{% macro emailNamingNotationTest() %}
+    <div class="modal fade" id="modal_test_email_naming_notation" tabindex="-1" role="dialog" aria-labelledby="modal_test_email_naming_notation_Label" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 80%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Test email subject and body naming notation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        {#<select id="transres-invoice-list" class="combobox combobox-width" name="transres-invoice-list">#}
+                        {#</select>#}
+
+                        {% set invoices = transres_request_util.getLatestInvoiceLists() %}
+                        <select
+                                id="transres-invoice-list"
+                                name="transresInvoice[]"
+                                class="combobox combobox-width" tabindex="-1"
+                                title="Choose an invoice:"
+                        >
+                            <option value=""></option>
+                            {% for invoice in invoices %}
+                                {#{% if invoice.getName() == value %}#}
+                                    {#<option value="{{ invoice.getId() }}" selected>{{ invoice.getOid() }}</option>#}
+                                {#{% else %}#}
+                                    <option value="{{ invoice.getId() }}">{{ invoice.getOid() }}</option>
+                                {#{% endif %}#}
+                            {% endfor %}
+                        </select>
+                    </p>
+
+                    <p>
+                        <button
+                                id="transres-test-email-notations"
+                                class="btn btn-primary transres-test-email-notations"
+                                onclick="transresTestEmailNotations()"
+                        >Test</button>
+                    </p>
+
+                    <p>
+                        {#<textarea id="transres-email-test-result" class="textarea form-control"></textarea>#}
+                        <div id="transres-email-test-result" style='white-space:pre-line;'></div>
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {#  9800.33 =>  $9,800.33 #}
 {# -9800.33 => -$9,800.33 #}
