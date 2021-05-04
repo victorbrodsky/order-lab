@@ -6337,7 +6337,7 @@ class TransResUtil
             throw new \Exception("Field name is empty");
         }
 
-        $projectSpecialtyAbbreviation = NULL;
+        $projectSpecialtyAbbreviation = NULL; //Use Default Site Settings
 
         if( $useDefault === false ) {
             if( !$projectSpecialty ) {
@@ -6346,6 +6346,12 @@ class TransResUtil
                     $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
                 } else {
                     //use default $projectSpecialtyAbbreviation=NULL
+                }
+            }
+
+            if( !$projectSpecialtyAbbreviation ) {
+                if( $projectSpecialty ) {
+                    $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
                 }
             }
         }
@@ -6360,15 +6366,6 @@ class TransResUtil
         $value = $siteParameter->$getMethod();
 
         if( $testing && $value ) {
-//            if( $projectSpecialty ) {
-//                $projectSpecialtyName = $projectSpecialty->getUppercaseShortName();
-//            } else {
-//                $projectSpecialtyName = "Default";
-//            }
-//            if( $useDefault ) {
-//                $projectSpecialtyName = "Default";
-//            }
-
             if( $projectSpecialtyAbbreviation ) {
                 $projectSpecialtyAbbreviation = strtoupper($projectSpecialtyAbbreviation);
             } else {
