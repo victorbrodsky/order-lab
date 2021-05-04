@@ -171,10 +171,10 @@ function transresShowHideProjectDocument() {
     //funded (checked) => hide
     //not-funded (un-checked) => show
     if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
-        console.log("funded hide");
+        //console.log("funded hide");
         $('#transres-project-documents').collapse('hide');
     } else {
-        console.log("funded show");
+        //console.log("funded show");
         $('#transres-project-documents').collapse('show');
     }
 }

@@ -1504,9 +1504,9 @@ class InvoiceController extends OrderAbstractController
      * @Route("/send-invoice-pdf-by-email/{oid}", name="translationalresearch_invoice_send_pdf_email", methods={"GET"})
      */
     public function sendByEmailAction( Request $request, $oid ) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
-        $transresPermissionUtil = $this->get('transres_permission_util');
+        //$transresPermissionUtil = $this->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
 
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);

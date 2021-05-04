@@ -5364,6 +5364,69 @@ class TransResRequestUtil
         return NULL;
     }
 
+    public function getInvoiceOidSplitWithUrls($invoice) {
+        $transresUtil = $this->container->get('transres_util');
+        $router = $transresUtil->getRequestContextRouter();
+
+        $url = NULL;
+
+        $idColor = $transresUtil->getPriceListColorByInvoice($invoice);
+
+        $invoiceOid = $invoice->getOid(); //APCP3355-REQ20458-V46
+
+        $invoiceOidArr = explode("-",$invoiceOid);
+
+        if( count($invoiceOidArr) == 3 ) {
+            $projectId = $invoiceOidArr[0]; //APCP3355
+            $requestId = $invoiceOidArr[1]; //REQ20458
+            $invoiceId = $invoiceOidArr[2]; //V46
+
+            $projectIdNum = preg_replace("/[^0-9.]/","",$projectId); //3355
+            $projectUrl = $router->generate(
+                'translationalresearch_project_show',
+                array(
+                    'id' => $projectIdNum,
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $projectUrl = '<a target="_blank" style="color:'.$idColor.'" href="'.$projectUrl.'">'.$projectId.'</a>';
+
+            $requestIdNum = str_replace("REQ","",$requestId); //20458
+            $requestUrl = $router->generate(
+                'translationalresearch_request_show',
+                array(
+                    'id' => $requestIdNum,
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $requestUrl = '<a target="_blank" style="color:'.$idColor.'" href="'.$requestUrl.'">'.$requestId.'</a>';
+
+            $invoiceUrl = $router->generate(
+                'translationalresearch_invoice_show',
+                array(
+                    'oid' => $invoice->getOid(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $invoiceUrl = '<a target="_blank" style="color:'.$idColor.'" href="'.$invoiceUrl.'">'.$invoiceId.'</a>';
+
+            $url = $projectUrl."-".$requestUrl."-".$invoiceUrl;
+        }
+
+        if( !$url ) {
+            $url = $router->generate(
+                'translationalresearch_invoice_show',
+                array(
+                    'oid' => $invoice->getOid(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $url = '<a target="_blank" style="color:'.$idColor.'" href="'.$url.'">'.$invoiceOid.'</a>';
+        }
+
+        return $url;
+    }
+
 //    //Find if the $product exists in latest invoice
 //    public function findProductInInvoice($product,$invoice) {
 //

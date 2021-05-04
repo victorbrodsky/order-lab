@@ -812,15 +812,24 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" or cycle == "review" %}
+        {% if fieldType is defined and fieldType == 'left' %}
+            {% set colLeft = 2 %}
+            {% set colMiddle = 6 %}
+            {% set colRight = 4 %}
+        {% else %}
+            {% set colLeft = 6 %}
+            {% set colMiddle = 6 %}
+            {% set colRight = 0 %}
+        {% endif %}
         <div class="row">
-            <div class="col-xs-2" align="right">
+            <div class="col-xs-{{ colLeft }}" align="right">
                 {#<div style="text-align: center;">#}
                     {#<p>#}
                         <strong>{{ userForm.vars.label }}</strong>
                     {#</p>#}
                 {#</div>#}
             </div>
-            <div class="col-xs-6" align="left">
+            <div class="col-xs-{{ colMiddle }}" align="left">
                 {#<div style="text-align: center;">#}
                     {#<p>#}
                         {#<strong>{{ userForm.vars.label }}</strong>#}
@@ -829,7 +838,7 @@
                 {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
                 {% do userForm.setRendered %}
             </div>
-            <div class="col-xs-4" align="right">
+            <div class="col-xs-{{ colRight }}" align="right">
             </div>
         </div>
     {% else %}

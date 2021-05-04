@@ -12,6 +12,17 @@
 
 {% block content %}
 
+    {#{% set fieldType = 'left' %}#}
+    {% if fieldType is defined and fieldType == 'left' %}
+        {% set colLeft = 2 %}
+        {% set colMiddle = 6 %}
+        {% set colRight = 4 %}
+    {% else %}
+        {% set colLeft = 6 %}
+        {% set colMiddle = 6 %}
+        {% set colRight = 0 %}
+    {% endif %}
+
     {% if invoiceDefaultTotal is not defined %}
         {% set invoiceDefaultTotal = null %}
     {% endif %}
@@ -24,12 +35,6 @@
 
     <input type="hidden" id="invoice-clean-total" value="0" />
     <input type="hidden" id="invoice-clean-subtotal" value="0" />
-
-    {#<div id="form-prototype-data"#}
-         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-         {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
-         {#data-userid = "{{ app.user.id }}"#}
-    {#></div>#}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -62,17 +67,24 @@
     {% set bundleFileName = transres_request_util.getDefaultFile("transresLogos",invoice)|raw %}
     {% if bundleFileName %}
 
-        <p>
-        <div class="row">
-            <div class="col-xs-2" align="right">
+
+        {% if fieldType is defined and fieldType == 'left' %}
+            <p>
+            <div class="row">
+                <div class="col-xs-2" align="right">
+                </div>
+                <div class="col-xs-6" align="left">
+                    <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+                </div>
+                <div class="col-xs-4" align="left">
+                </div>
             </div>
-            <div class="col-xs-6" align="left">
+            </p>
+        {% else %}
+            <p>
                 <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
-            </div>
-            <div class="col-xs-4" align="left">
-            </div>
-        </div>
-        </p>
+            </p>
+        {% endif %}
 
         <br><br>
         {#<div class="row" align="left">#}
@@ -83,15 +95,10 @@
         {#</div>#}
     {% endif %}
 
+    {#<div class="row">#}
+        {#<div class="col-xs-12" align="center">#}
+
     {{ form_start(form) }}
-
-        {#<div id="form-prototype-data"#}
-             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
-             {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
-             {#data-userid = "{{ app.user.id }}"#}
-
-             {#data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemFormOriginal(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"#}
-        {#></div>#}
 
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -108,39 +115,46 @@
         {#{{ formmacros.field(form.updateUser) }}#}
 
         {% if form.createDate is defined %}
-            {{ formmacros.field_left(form.createDate) }}
+            {#{{ formmacros.field_left(form.createDate) }}#}
+            {{ formmacros.field(form.createDate) }}
         {% endif %}
 
         {#{% if form.submitter is defined %}#}
             {#{{ formmacros.field_left(form.submitter) }}#}
         {#{% endif %}#}
                                 {#label,                                   value,                                               type,   disabled, tooltip, id, shift#}
-        {{ formmacros.simplefield("Requester (Work Request's Submitter):", transresRequest.getSubmitter().getUsernameOptimal(), "input", "disabled", "", "", "2-6") }}
+        {#{{ formmacros.simplefield("Requester (Work Request's Submitter):", transresRequest.getSubmitter().getUsernameOptimal(), "input", "disabled", "", "", "2-6") }}#}
+        {{ formmacros.simplefield("Requester (Work Request's Submitter):", transresRequest.getSubmitter().getUsernameOptimal(), "input", "disabled") }}
         {#<p>#}
             {#Requester (Work Request's Submitter): {{ transresRequest.getSubmitter().getUsernameOptimal() }}#}
         {#</p>#}
 
         {% if form.status is defined %}
-            {{ formmacros.field_left(form.status) }}
+            {#{{ formmacros.field_left(form.status) }}#}
+            {{ formmacros.field(form.status) }}
         {% endif %}
 
         {% if form.principalInvestigator is defined %}
             {#{{ formmacros.field_left(form.principalInvestigator) }}#}
-            {{ transres.userInfo(form.principalInvestigator,form.vars.value.principalInvestigator,cycle,'left') }}
+            {#{{ transres.userInfo(form.principalInvestigator,form.vars.value.principalInvestigator,cycle,'left') }}#}
+            {{ transres.userInfo(form.principalInvestigator,form.vars.value.principalInvestigator,cycle) }}
         {% endif %}
 
         {% if form.billingContact is defined %}
             {#{{ formmacros.field_left(form.billingContact) }}#}
-            {{ transres.userInfo(form.billingContact,form.vars.value.billingContact,cycle,'left') }}
+            {#{{ transres.userInfo(form.billingContact,form.vars.value.billingContact,cycle,'left') }}#}
+            {{ transres.userInfo(form.billingContact,form.vars.value.billingContact,cycle) }}
         {% endif %}
 
         {% if form.salesperson is defined %}
             {#{{ formmacros.field_left(form.salesperson) }}#}
-            {{ transres.userInfo(form.salesperson,form.vars.value.salesperson,cycle,'left') }}
+            {#{{ transres.userInfo(form.salesperson,form.vars.value.salesperson,cycle,'left') }}#}
+            {{ transres.userInfo(form.salesperson,form.vars.value.salesperson,cycle) }}
         {% endif %}
 
         {% if form.submitter is defined %}
-            {{ transres.userInfo(form.submitter,form.vars.value.submitter,cycle,'left') }}
+            {#{{ transres.userInfo(form.submitter,form.vars.value.submitter,cycle,'left') }}#}
+            {{ transres.userInfo(form.submitter,form.vars.value.submitter,cycle) }}
         {% endif %}
 
         <hr />
@@ -158,20 +172,22 @@
 
         {#<hr />#}
         {% if form.oid is defined %}
-            {{ formmacros.field_left(form.oid) }}
+            {#{{ formmacros.field_left(form.oid) }}#}
+            {{ formmacros.field(form.oid) }}
         {% endif %}
 
         {% if form.fundedAccountNumber is defined %}
-            {{ formmacros.field_left(form.fundedAccountNumber) }}
+            {#{{ formmacros.field_left(form.fundedAccountNumber) }}#}
+            {{ formmacros.field(form.fundedAccountNumber) }}
         {% endif %}
 
         {% if transresRequest is defined and transresRequest %}
             <p>
             <div class="row">
-                <div class="col-xs-2" align="right">
+                <div class="col-xs-{{ colLeft }}" align="right">
                     <strong>{{ transres_util.getHumanAnimalName("brackets") }} Number:</strong>
                 </div>
-                <div class="col-xs-6" align="left">
+                <div class="col-xs-{{ colMiddle }}" align="left">
                     <input
                         id="{{ transresRequest.getId() }}"
                         class="form-control form-control-modif not-mapped-simplefield"
@@ -179,28 +195,32 @@
                         value="{{ invoice.getProjectIrbIacucNumber()|raw }}"
                         disabled="disabled">
                 </div>
-                <div class="col-xs-4" align="right">
+                <div class="col-xs-{{ colRight }}" align="right">
                 </div>
             </div>
             </p>
         {% endif %}
 
         {% if transresRequest and transresRequest.getCreateDate() %}
-            {{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled", "", "", "2-6") }}
+            {#{{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled", "", "", "2-6") }}#}
+            {{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled") }}
         {% endif %}
 
         {% if form.dueDate is defined %}
-            {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
+            {#{{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}#}
+            {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
         {% endif %}
 
         {#<hr />#}
 
-        {{ formmacros.field_left(form.invoiceFrom) }}
+        {#{{ formmacros.field_left(form.invoiceFrom) }}#}
+        {{ formmacros.field(form.invoiceFrom) }}
 
         <div class="transres-alert" style="display: none">
             <p class="alert alert-info center-block" align="middle" style="width: 70%;"></p>
         </div>
-        {{ formmacros.field_left(form.invoiceTo) }}
+        {#{{ formmacros.field_left(form.invoiceTo) }}#}
+        {{ formmacros.field(form.invoiceTo) }}
         <br>
 
         {#<hr />#}
@@ -225,10 +245,10 @@
             {#{{ formmacros.field(form.subTotal) }}#}
             <p>
             <div class="row">
-                <div class="col-xs-2" align="right">
+                <div class="col-xs-{{ colLeft }}" align="right">
                     <strong>{{ form.subTotal.vars.label|raw }}</strong>
                 </div>
-                <div class="col-xs-6" align="left">
+                <div class="col-xs-{{ colMiddle }}" align="left">
                     {{ form_widget(form.subTotal) }}
                     {#<div class = "input-group">#}
                         {#{{ form_widget(form.subTotal) }}#}
@@ -237,7 +257,7 @@
                         {#</span>#}
                     {#</div>#}
                 </div>
-                <div class="col-xs-4" align="right">
+                <div class="col-xs-{{ colRight }}" align="right">
                 </div>
             </div>
             </p>
@@ -245,28 +265,31 @@
             {% if cycle == "show" and not form.discountNumeric %}
                 {#show nothing on show page when empty#}
             {% else %}
-                {{ formmacros.field_left(form.discountNumeric) }}
+                {#{{ formmacros.field_left(form.discountNumeric) }}#}
+                {{ formmacros.field(form.discountNumeric) }}
             {% endif %}
 
             {% if cycle == "show" and not form.discountPercent %}
                 {#show nothing on show page when empty#}
             {% else %}
-                {{ formmacros.field_left(form.discountPercent) }}
+                {#{{ formmacros.field_left(form.discountPercent) }}#}
+                {{ formmacros.field(form.discountPercent) }}
             {% endif %}
 
             {% if cycle == "show" and not form.administrativeFee %}
                 {#show nothing on show page when empty#}
             {% else %}
-                {{ formmacros.field_left(form.administrativeFee) }}
+                {#{{ formmacros.field_left(form.administrativeFee) }}#}
+                {{ formmacros.field(form.administrativeFee) }}
             {% endif %}
 
             {#{{ formmacros.field_left(form.total) }}#}
             <p>
             <div class="row">
-                <div class="col-xs-2" align="right">
+                <div class="col-xs-{{ colLeft }}" align="right">
                     <strong>{{ form.total.vars.label|raw }}</strong>
                 </div>
-                <div class="col-xs-6" align="left">
+                <div class="col-xs-{{ colMiddle }}" align="left">
                     {#{{ form_widget(form.total) }}#}
                     <div class = "input-group">
                         {{ form_widget(form.total) }}
@@ -276,44 +299,52 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-xs-4" align="right">
+                <div class="col-xs-{{ colRight }}" align="right">
                 </div>
             </div>
             </p>
 
             {% if form.paid is defined %}
-                {{ formmacros.field_left(form.paid) }}
+                {#{{ formmacros.field_left(form.paid) }}#}
+                {{ formmacros.field(form.paid) }}
             {% endif %}
 
             {#"Balance Due" (total - paid)#}
             {% if form.due is defined %}
-                {{ formmacros.field_left(form.due) }}
+                {#{{ formmacros.field_left(form.due) }}#}
+                {{ formmacros.field(form.due) }}
             {% endif %}
 
             {#add subsidy#}
             {% if form.subsidy is defined %}
-                {{ formmacros.field_left(form.subsidy) }}
+                {#{{ formmacros.field_left(form.subsidy) }}#}
+                {{ formmacros.field(form.subsidy) }}
             {% endif %}
 
             {% if form.paidDate is defined %}
-                {{ formmacros.fieldDateLabel_left(form.paidDate,'allow-future-date') }}
+                {#{{ formmacros.fieldDateLabel_left(form.paidDate,'allow-future-date') }}#}
+                {{ formmacros.fieldDateLabel(form.paidDate,'allow-future-date') }}
             {% endif %}
 
             {% if form.comment is defined %}
-                {{ formmacros.field_left(form.comment) }}
+                {#{{ formmacros.field_left(form.comment) }}#}
+                {{ formmacros.field(form.comment) }}
             {% endif %}
         </div>
 
         <br>
         <hr>
         {% if form.footer is defined %}
-            {{ formmacros.field_left(form.footer) }}
+            {#{{ formmacros.field_left(form.footer) }}#}
+            {{ formmacros.field(form.footer) }}
         {% endif %}
         {% if form.footer2 is defined %}
-            {{ formmacros.field_left(form.footer2) }}
+            {#{{ formmacros.field_left(form.footer2) }}#}
+            {{ formmacros.field(form.footer2) }}
         {% endif %}
         {% if form.footer3 is defined %}
-            {{ formmacros.field_left(form.footer3) }}
+            {#{{ formmacros.field_left(form.footer3) }}#}
+            {{ formmacros.field(form.footer3) }}
         {% endif %}
         <br><br>
 
@@ -367,6 +398,8 @@
 
     {{ form_end(form) }}
 
+        {#</div>#}
+    {#</div>#}
 
     {% if cycle == "show" and invoice.latestVersion and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
         <p>
@@ -395,7 +428,7 @@
             {#Send the most recent invoice PDF by e-mail#}
             <p>
             <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-            >Send the most recent invoice PDF by e-mail to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
+            >Send the most recent invoice PDF by email to PI and Billing Contact{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
             </p>
         {% endif %}
 
