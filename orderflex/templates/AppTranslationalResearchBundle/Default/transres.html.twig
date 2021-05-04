@@ -1654,12 +1654,17 @@
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+    {% set specialtyName = 'Default' %}
+    {% if specialty %}
+        {% set specialtyName = specialty.getUppercaseFullName() %}
+    {% endif %}
+
     {#add test subject and body by choosing invoice#}
     {#<p>#}
         <a href="#" data-toggle="modal" data-target="#modal_test_email_naming_notation"
-        >Test email subject and body naming notation</a>
+        >Test email subject and body naming notation for {{ specialtyName }}</a>
     {#</p>#}
-    {{ transres.emailNamingNotationTest() }}
+    {{ transres.emailNamingNotationTest(specialty) }}
 
     {{ form_start(form) }}
 
@@ -2073,12 +2078,20 @@
     </p>
 {% endmacro %}
 
-{% macro emailNamingNotationTest() %}
+{% macro emailNamingNotationTest(specialty) %}
+
+    {% set specialtyId = 'default' %}
+    {% set specialtyName = 'Default' %}
+    {% if specialty is defined and specialty %}
+        {% set specialtyId = specialty.getId() %}
+        {% set specialtyName = specialty.getUppercaseFullName() %}
+    {% endif %}
+
     <div class="modal fade" id="modal_test_email_naming_notation" tabindex="-1" role="dialog" aria-labelledby="modal_test_email_naming_notation_Label" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 80%">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Test email subject and body naming notation</h5>
+                    <h5 class="modal-title">Test email subject and body naming notation for {{ specialtyName }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -2088,7 +2101,7 @@
                         {#<select id="transres-invoice-list" class="combobox combobox-width" name="transres-invoice-list">#}
                         {#</select>#}
 
-                        {% set invoices = transres_request_util.getLatestInvoiceLists() %}
+                        {% set invoices = transres_request_util.getLatestInvoiceLists(specialty) %}
                         <select
                                 id="transres-invoice-list"
                                 name="transresInvoice[]"
@@ -2110,7 +2123,7 @@
                         <button
                                 id="transres-test-email-notations"
                                 class="btn btn-primary transres-test-email-notations"
-                                onclick="transresTestEmailNotations()"
+                                onclick="transresTestEmailNotations('{{ specialtyId }}')"
                         >Test</button>
                     </p>
 

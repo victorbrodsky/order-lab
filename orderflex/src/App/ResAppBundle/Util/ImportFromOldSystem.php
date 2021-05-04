@@ -1537,7 +1537,7 @@ class ImportFromOldSystem {
             $ROLE = $this->getValueByHeaderName('ROLE', $rowData, $headers);
             $mobilenumber = NULL;
 
-            $emailArr = explode("@",$EMAIL); //ecesarm@med.cornell.edu
+            $emailArr = explode("@",$EMAIL); //email@med.cornell.edu
             if( count($emailArr) > 0 ) {
                 $cwid = $emailArr[0];
             }

@@ -2793,7 +2793,7 @@ class TransResRequestUtil
         $body = "Please review the draft invoice pdf for work request ".$transresRequest->getOid()." by visiting:";
         $body = $body . $newline . $invoiceShowUrl;
 
-        //To issue the invoice to Surya Seshan - svs2002 (WCMC CWID) at email svs2002@med.cornell.edu, led9016@med.cornell.edu please visit this link:
+        //To issue the invoice to Name - email (WCMC CWID) at email email@med.cornell.edu, email@med.cornell.edu please visit this link:
         //http://localhost/order/translational-research/invoice/send-invoice-pdf-by-email/APCP12-REQ12-V2
         $body = $body . $newline.$newline . "To issue the invoice to ".$invoicePisStr." please visit this link:";
         $body = $body . $newline . $sendInvoiceByEmailUrl;
@@ -3591,26 +3591,32 @@ class TransResRequestUtil
         return $result;
     }
 
-    public function getLatestInvoiceLists() {
+    public function getLatestInvoiceLists( $projectSpecialty ) {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
         $dql->where("invoice.latestVersion = TRUE");
 
+        $params = array();
+        if( $projectSpecialty ) {
+            $dql->andWhere("projectSpecialty.id = :specialtyId");
+            $params["specialtyId"] = $projectSpecialty->getId();
+        }
+
         $query = $dql->getQuery();
+
+        $query->setParameters(
+            $params
+        );
 
         $invoices = $query->getResult();
 
         return $invoices;
-
-//        $invoicesArr = array();
-//
-//        foreach($invoices as $invoice) {
-//            $invoicesArr[$invoice.""] = $invoice->getId();
-//        }
-//
-//        return $invoicesArr;
     }
 
     public function getProjectMiniRequests($projectId) {

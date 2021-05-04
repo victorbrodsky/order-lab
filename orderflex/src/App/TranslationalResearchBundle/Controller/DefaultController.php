@@ -1548,24 +1548,19 @@ class DefaultController extends OrderAbstractController
      */
     public function getTransResTestEmailNotationAjaxAction(Request $request) {
 
-        $transresUtil = $this->get('transres_util');
+        //$transresUtil = $this->get('transres_util');
         //$transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
-        $newline = "\n";
+        //$newline = "\n";
+        $newline =  "<br>\n";
         $invoice = NULL;
 
         $invoiceId = $request->get('invoiceId');
+        $specialtyId = $request->get('specialtyId');
+        
         if( $invoiceId ) {
             $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
-//            if (!$invoice) {
-//                $output = NULL;
-//
-//                $response = new Response();
-//                $response->headers->set('Content-Type', 'application/json');
-//                $response->setContent(json_encode($output));
-//                return $response;
-//            }
         }
 
         if( $invoice ) {
@@ -1577,22 +1572,6 @@ class DefaultController extends OrderAbstractController
         }
 
         $emailText = "";
-
-//        $subject = $transresUtil->getTransresSiteProjectParameter('overBudgetSubject',$project);
-//        if( $subject ) {
-//            $subject = $transresUtil->replaceTextByNamingConvention($subject, $project, $transresRequest, $invoice);
-//            if( $subject ) {
-//                $emailText = $emailText . $newline.$newline. $subject;
-//            }
-//        }
-//
-//        $emailBody = $transresUtil->getTransresSiteProjectParameter('overBudgetBody',$project);
-//        if( $emailBody ) {
-//            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody, $project, $transresRequest, $invoice);
-//            if( $emailBody ) {
-//                $emailText = $emailText . $newline.$newline. $emailBody;
-//            }
-//        }
 
         $fields = array(
             'requestCompletedNotifiedEmailSubject',
@@ -1619,48 +1598,67 @@ class DefaultController extends OrderAbstractController
             'completedNoInvoiceRequestReminderSubject',
             'completedNoInvoiceRequestReminderBody',
 
-            //'',
-            //'',
-
             'overBudgetSubject',
             'overBudgetBody'
         );
 
         foreach($fields as $field) {
-            $emailText = $this->getEmailNotation($emailText, $field, $project, $transresRequest, $invoice);
+            $text = $this->getEmailNotation($field, $project, $transresRequest, $invoice, $specialtyId);
+            if( $text ) {
+                $emailText = $emailText . $text . $newline . $newline;
+            }
         }
-
-//        //testing
-//        $output[] = array(
-//            'error' => NULL,
-//        );
-
-        $output = $emailText;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
+        $response->setContent(json_encode($emailText));
         return $response;
     }
-    public function getEmailNotation( $restext, $field, $project, $transresRequest, $invoice) {
+    public function getEmailNotation( $field, $project, $transresRequest, $invoice, $specialtyId) {
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
+
         //$newline = "\n";
         //$newline = "<br>";
         $newline =  "<br>\n";
 
-        $text = $transresUtil->getTransresSiteProjectParameter($field,$project);
+        $testing = true;
+        $projectSpecialty = NULL;
 
-//        if( $text ) {
-            $text = $transresUtil->replaceTextByNamingConvention($text, $project, $transresRequest, $invoice);
-//        }
-
-        if( $text ) {
-            $restext = $restext . $newline.$newline.
-                "<b>".$field."</b>".
-//                    $field.
-                ":".$newline.$text;
+        if( $specialtyId && $specialtyId != 'default' ) {
+            $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+            $useDefault = false;
+        } else {
+            $useDefault = true;
         }
 
-        return $restext;
+        if( $specialtyId == 'default' ) {
+            $projectSpecialty = NULL;
+            $useDefault = true;
+            $text = $transresUtil->getTransresSiteProjectParameter($field,$project,$projectSpecialty,$useDefault,$testing);
+        } else {
+            $text = $transresUtil->getTransresSiteProjectParameter($field,$project,$projectSpecialty,$useDefault,$testing);
+            if( !$text ) {
+                $projectSpecialty = NULL;
+                $useDefault = false;
+                $text = $transresUtil->getTransresSiteProjectParameter($field,$project,$projectSpecialty,$useDefault,$testing);
+            }
+        }
+
+        $text = $transresUtil->replaceTextByNamingConvention($text, $project, $transresRequest, $invoice);
+
+        return $text;
+
+//        if( $text ) {
+//            $restext = $restext . $newline.$newline.
+////                "<b>".$field."</b>".
+////                "<b>".$field." (".$projectSpecialty.")"."</b>".
+////                    $field.
+////                ":".$newline.$text;
+//                $text
+//            ;
+//        }
+//
+//        return $restext;
     }
 }

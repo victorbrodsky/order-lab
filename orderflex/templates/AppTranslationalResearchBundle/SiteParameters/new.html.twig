@@ -64,13 +64,13 @@
 
         });
 
-        function transresTestEmailNotations() {
+        function transresTestEmailNotations(specialtyId) {
 
             $('#transres-email-test-result').html("");
 
             var invoiceId = null;
             var invoiceData = $('#transres-invoice-list').select2('data');
-            console.log(invoiceData);
+            //console.log(invoiceData);
             if( invoiceData ) {
                 invoiceId = invoiceData.id;
             }
@@ -80,11 +80,11 @@
                 url: url,
                 timeout: _ajaxTimeout,
                 type: "GET",
-                data: {invoiceId: invoiceId },
+                data: {invoiceId: invoiceId, specialtyId: specialtyId },
                 dataType: 'json',
                 async: false //asyncflag
             }).success(function(response) {
-                console.log(response);
+                //console.log(response);
 
                 //$('#transres-email-test-result').val(response);
                 $('#transres-email-test-result').html(response);

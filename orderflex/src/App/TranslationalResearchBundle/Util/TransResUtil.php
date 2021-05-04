@@ -686,7 +686,7 @@ class TransResUtil
 
                 //Based on this project’s approved budget, invoices, work requests, and the items selected below,
                 // the remaining budget appears to be $20.00.
-                // If you have any questions, please email the CTP administrator Bing He (bih2004@med.cornell.edu)
+                // If you have any questions, please email the CTP administrator Name (email)
 
                 $note = "Based on this project’s approved budget, invoices, work requests, ".
                         "and the items selected below, the remaining budget appears to be ".
@@ -6323,46 +6323,31 @@ class TransResUtil
         return $humanTissueFormsViewLink;
     }
 
-    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null ) {
-        $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty);
+    public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false ) {
+        $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty,$useDefault,$testing);
         if( $value === NULL ) {
-            $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL);
+            $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL,$useDefault,$testing);
         }
 
         return $value;
     }
-    public function getTransresSiteProjectParameterSingle( $fieldName, $project=null, $projectSpecialty=null ) {
+    public function getTransresSiteProjectParameterSingle( $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false ) {
 
         if( !$fieldName ) {
             throw new \Exception("Field name is empty");
         }
 
-        if( !$projectSpecialty ) {
-            if( $project ) {
-                $projectSpecialty = $project->getProjectSpecialty();
-            } else {
-                if(0) {
-                    //use the first project specialty as default
-                    $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
-                        array(
-                            'type' => array("default", "user-added")
-                        ),
-                        array('orderinlist' => 'ASC')
-                    );
-                    if (count($specialties) > 0) {
-                        $projectSpecialty = $specialties[0];
-                        //exit("projectSpecialty=$projectSpecialty ");
-                    } else {
-                        throw new \Exception("SpecialtyList is empty (no items with type 'default' or 'user-added')");
-                    }
-                }
-            }
-        }
-
         $projectSpecialtyAbbreviation = NULL;
 
-        if( $projectSpecialty ) {
-            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        if( $useDefault === false ) {
+            if( !$projectSpecialty ) {
+                if( $project ) {
+                    $projectSpecialty = $project->getProjectSpecialty();
+                    $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+                } else {
+                    //use default $projectSpecialtyAbbreviation=NULL
+                }
+            }
         }
 
         $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
@@ -6373,6 +6358,24 @@ class TransResUtil
         $getMethod = "get".$fieldName;
 
         $value = $siteParameter->$getMethod();
+
+        if( $testing && $value ) {
+//            if( $projectSpecialty ) {
+//                $projectSpecialtyName = $projectSpecialty->getUppercaseShortName();
+//            } else {
+//                $projectSpecialtyName = "Default";
+//            }
+//            if( $useDefault ) {
+//                $projectSpecialtyName = "Default";
+//            }
+
+            if( $projectSpecialtyAbbreviation ) {
+                $projectSpecialtyAbbreviation = strtoupper($projectSpecialtyAbbreviation);
+            } else {
+                $projectSpecialtyAbbreviation = "Default";
+            }
+            $value = "<b>".$fieldName." (".$projectSpecialtyAbbreviation. " Site Settings)"."</b>:<br>" .$value;
+        }
 
         return $value;
     }
