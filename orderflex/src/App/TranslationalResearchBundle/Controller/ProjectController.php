@@ -1309,6 +1309,8 @@ class ProjectController extends OrderAbstractController
 
         ///////////// get originals /////////////
         $originalProjectSpecialty = $project->getProjectSpecialty();
+        $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
+        $originalNoBudgetLimit = $project->getNoBudgetLimit();
 
         //IRB Reviews
         $originalIrbReviews = new ArrayCollection();
@@ -1419,6 +1421,9 @@ class ProjectController extends OrderAbstractController
                 $em->flush();
             }
 
+            $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);
+            $transresUtil->sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit);
+            
             //if specialty is changed
             if( $originalProjectSpecialty->getId() != $project->getProjectSpecialty()->getId() ) {
 

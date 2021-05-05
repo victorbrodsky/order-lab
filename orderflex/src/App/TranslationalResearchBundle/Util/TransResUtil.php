@@ -867,6 +867,90 @@ class TransResUtil
         return $res;
     }
 
+    //Send ‘approved project budget’ update notifications for non-funded projects
+    public function sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit,$noBudgetLimit=NULL) {
+        //send email only if project state is not 'start', 'draft', 'closed', 'canceled', '*_rejected'
+//        $projectState = $project->getState();
+//        if(
+//            $projectState == 'start' || $projectState == 'draft' ||
+//            $projectState == 'closed' || $projectState == 'canceled' ||
+//            strpos($projectState, '_rejected') !== false
+//        ) {
+//            //don't send email
+//            return NULL;
+//        } else {
+//            //send over budget email notification
+//        }
+
+        if( $this->toSendUpdateBudgetNotificationEmail($project) === false ) {
+            //don't send email
+            return NULL;
+        }
+
+        if( !$noBudgetLimit ) {
+            $noBudgetLimit = $project->getNoBudgetLimit();
+        }
+
+        if( $originalNoBudgetLimit == $noBudgetLimit ) {
+            return NULL;
+        }
+
+
+
+    }
+    //Send ‘approved project budget’ update notifications for non-funded projects
+    public function sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget,$approvedProjectBudget=NULL) {
+        if( $this->toSendUpdateBudgetNotificationEmail($project) === false ) {
+            //don't send email
+            return NULL;
+        }
+
+        if( !$approvedProjectBudget ) {
+            $approvedProjectBudget = $project->getApprovedProjectBudget();
+        }
+
+        if( $originalApprovedProjectBudget == $approvedProjectBudget ) {
+            return NULL;
+        }
+
+
+
+    }
+    public function toSendUpdateBudgetNotificationEmail($project) {
+        if( !$project ) {
+            return false;
+        }
+
+        //Send update notifications for non-funded projects
+        if( $project->getFunded() ) {
+            return false;
+        }
+
+        //approvedBudgetSendEmail
+        $transresUtil = $this->container->get('transres_util');
+        $approvedBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('approvedBudgetSendEmail',$project);
+        if( $approvedBudgetSendEmail === TRUE ) {
+            //OK: send email
+        } else {
+            return NULL;
+        }
+
+        //Send update notifications email only if project state is not 'start', 'draft', 'closed', 'canceled', '*_rejected'
+        $projectState = $project->getState();
+        if(
+            $projectState == 'start' || $projectState == 'draft' ||
+            $projectState == 'closed' || $projectState == 'canceled' ||
+            strpos($projectState, '_rejected') !== false
+        ) {
+            //don't send email
+            return false;
+        } else {
+            //send over budget email notification
+            return true;
+        }
+        return false;
+    }
+
     public function printTransition($transition) {
         echo $transition->getName().": ";
         $froms = $transition->getFroms();

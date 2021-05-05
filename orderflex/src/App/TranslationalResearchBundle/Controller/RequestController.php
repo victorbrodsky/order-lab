@@ -2737,6 +2737,8 @@ class RequestController extends OrderAbstractController
                 
                 $project->setApprovedProjectBudget($approvedProjectBudget);
                 $em->flush();
+
+                $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget,$approvedProjectBudget);
                 
                 $eventType = "Project Updated";
                 $res = "Project ID " . $project->getOid() . " has been updated: " .
@@ -2812,6 +2814,8 @@ class RequestController extends OrderAbstractController
                     $noBudgetLimitStr = "Yes";
                 }
 
+                $transresUtil->sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit,$noBudgetLimit);
+                
                 $eventType = "Project Updated";
                 $res = "Project ID " . $project->getOid() . " has been updated: " .
                     "No Budget Limit changed from " .
