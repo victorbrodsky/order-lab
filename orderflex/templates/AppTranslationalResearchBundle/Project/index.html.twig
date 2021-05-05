@@ -447,6 +447,7 @@
                 </td>
 
                 {#Remaining Budget#}
+                {#projectState={{ project.getState() }}#}
                 {% if showRemainingBudget %}
                     <td>
                         {% if remainingBudget %}
