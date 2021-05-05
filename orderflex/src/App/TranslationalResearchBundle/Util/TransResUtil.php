@@ -871,8 +871,12 @@ class TransResUtil
             //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $adminEmails, $subject, $emailBody, null, $senderEmail );
 
-            $res = "Over-budget notification email sent with subject: $subject <br>body:<br>$emailBody";
+            $res = "Over-budget notification email sent with Subject:<br>$subject <br>Body:<br>$emailBody";
         }
+
+        //eventlog
+        $eventType = "Project Over Budget Email Sent";
+        $transresUtil->setEventLog($project,$eventType,$res);
 
         return $res;
     }
@@ -930,22 +934,17 @@ class TransResUtil
         $emailUtil->sendEmail( $adminEmails, $approvedBudgetSubject, $approvedBudgetBody, null, $senderEmail );
         ///////////////////////// EOF Send Email ApprovedBudget /////////////////////////
 
+        $res = "Approved Budget Update notification email sent with Subject:<br>$approvedBudgetSubject <br>Body:<br>$approvedBudgetBody";
+
+        //eventlog
+        $eventType = "Project Approved Budget Updated";
+        $transresUtil->setEventLog($project,$eventType,$res);
+
+        return $res;
     }
     //Send ‘approved project budget’ update notifications for non-funded projects
     public function sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit,$noBudgetLimit=NULL) {
         //send email only if project state is not 'start', 'draft', 'closed', 'canceled', '*_rejected'
-//        $projectState = $project->getState();
-//        if(
-//            $projectState == 'start' || $projectState == 'draft' ||
-//            $projectState == 'closed' || $projectState == 'canceled' ||
-//            strpos($projectState, '_rejected') !== false
-//        ) {
-//            //don't send email
-//            return NULL;
-//        } else {
-//            //send over budget email notification
-//        }
-
         if( $this->toSendUpdateBudgetNotificationEmail($project) === false ) {
             //don't send email
             return NULL;
@@ -955,7 +954,10 @@ class TransResUtil
             $noBudgetLimit = $project->getNoBudgetLimit();
         }
 
-        if( $originalNoBudgetLimit == $noBudgetLimit ) {
+        //Approved budget limit removed: NoBudgetLimit changed from FALSE to TRUE
+        if( $originalNoBudgetLimit === FALSE && $noBudgetLimit === TRUE ) {
+            //Send email
+        } else {
             return NULL;
         }
 
@@ -970,16 +972,32 @@ class TransResUtil
 
         $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
 
-        //Approved budget limit removed by [FirstName LastName] for project [ProjectID] from $xxx.xx to $xxx.xx
-        $subject = "Approved budget limit removed by [FirstName LastName] for project [[PROJECT ID]] from $xxx.xx to $xxx.xx";
-        $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
+        $budgetLimitRemovalSubject = $transresUtil->getTransresSiteProjectParameter('budgetLimitRemovalSubject',$project);
+        if( !$budgetLimitRemovalSubject ) {
+            //Approved budget limit removed by [FirstName LastName] for project [ProjectID] from $xxx.xx to $xxx.xx
+            $budgetLimitRemovalSubject = "Approved budget limit removed by [[PROJECT UPDATER]] for project [[PROJECT ID]]";
+        }
+        $budgetLimitRemovalSubject = $transresUtil->replaceTextByNamingConvention($budgetLimitRemovalSubject,$project,null,null);
 
-        $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,null,null);
+        //budgetLimitRemovalBody
+        $budgetLimitRemovalBody = $transresUtil->getTransresSiteProjectParameter('budgetLimitRemovalBody',$project);
+        if( !$budgetLimitRemovalBody ) {
+            //Approved budget limit removed for project [ProjectID] by [FirstName LastName] on MM/DD/YYYY at HH:MM.
+            $budgetLimitRemovalBody = "Approved budget limit removed for project [[PROJECT ID]] by [[PROJECT UPDATER]] on [[PROJECT UPDATE DATE]].";
+        }
+        $budgetLimitRemovalBody = $transresUtil->replaceTextByNamingConvention($budgetLimitRemovalBody,$project,null,null);
 
         //                     $emails,      $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $adminEmails, $subject, $emailBody, null, $senderEmail );
+        $emailUtil->sendEmail( $adminEmails, $budgetLimitRemovalSubject, $budgetLimitRemovalBody, null, $senderEmail );
         ///////////////////////// EOF Send Email NoBudget /////////////////////////
 
+        $res = "Approved Budget Limit Removed notification email sent with Subject:<br>$budgetLimitRemovalSubject <br>Body:<br>$budgetLimitRemovalBody";
+
+        //eventlog
+        $eventType = "Project Approved Budget Limit Updated";
+        $transresUtil->setEventLog($project,$eventType,$res);
+
+        return $res;
     }
     public function toSendUpdateBudgetNotificationEmail($project) {
         if( !$project ) {
@@ -997,7 +1015,7 @@ class TransResUtil
         if( $approvedBudgetSendEmail === TRUE ) {
             //OK: send email
         } else {
-            return NULL;
+            return false;
         }
 
         //Send update notifications email only if project state is not 'start', 'draft', 'closed', 'canceled', '*_rejected'
@@ -1013,6 +1031,7 @@ class TransResUtil
             //send over budget email notification
             return true;
         }
+
         return false;
     }
 
@@ -4323,11 +4342,15 @@ class TransResUtil
             $projectUpdater = $project->getUpdateUser();
             if( $projectUpdater ) {
                 $text = str_replace("[[PROJECT UPDATER]]", $projectUpdater->getUsernameShortest(), $text);
+                //$text = str_replace("[[PROJECT UPDATER]]", $projectUpdater."", $text);
             }
 
             if( strpos($text, '[[PROJECT UPDATE DATE]]') !== false ) {
                 $projectUpdateDate = $project->getUpdateDate();
                 if( $projectUpdateDate ) {
+                    $user = $this->secTokenStorage->getToken()->getUser();
+                    $userServiceUtil = $this->container->get('user_service_utility');
+                    $projectUpdateDate = $userServiceUtil->convertFromUtcToUserTimezone($projectUpdateDate,$user);
                     $projectUpdateDateStr = $projectUpdateDate->format('m/d/Y \a\t H:i:s');
                     $text = str_replace("[[PROJECT UPDATE DATE]]", $projectUpdateDateStr, $text);
                 }
@@ -4343,6 +4366,7 @@ class TransResUtil
                 $pis = $project->getPrincipalInvestigators();
                 foreach($pis as $pi) {
                     $pisArr[] = $pi->getUsernameShortest();
+                    //$pisArr[] = $pi."";
                 }
                 $text = str_replace("[[PROJECT PIS]]", implode(", ",$pisArr), $text);
             }
@@ -4390,6 +4414,7 @@ class TransResUtil
                 $pis = $project->getPathologists();
                 foreach($pis as $pi) {
                     $pisArr[] = $pi->getUsernameShortest();
+                    //$pisArr[] = $pi."";
                 }
 
                 if( count($pisArr) > 0 ) {
@@ -4408,7 +4433,7 @@ class TransResUtil
                     $billingContact = "No Billing Contact";
                 }
 
-                $text = str_replace("[[PROJECT BILLING CONTACT LIST]]", $billingContact, $text);
+                $text = str_replace("[[PROJECT BILLING CONTACT LIST]]", $billingContact."", $text);
             }
 
             if( strpos($text, '[[PROJECT REQUESTS URL]]') !== false ) {

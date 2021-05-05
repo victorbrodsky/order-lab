@@ -2738,10 +2738,10 @@ class RequestController extends OrderAbstractController
                 $project->setApprovedProjectBudget($approvedProjectBudget);
                 $em->flush();
 
-                $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget,$approvedProjectBudget);
+                $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);
                 
-                $eventType = "Project Updated";
-                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                $eventType = "Project Approved Budget Updated";
+                $res = "Project " . $project->getOid() . " has been updated: " .
                     "Approved Project Budget changed from " .
                     $originalApprovedProjectBudget . " to " . $project->getApprovedProjectBudget();
                 $transresUtil->setEventLog($project,$eventType,$res);
@@ -2814,10 +2814,10 @@ class RequestController extends OrderAbstractController
                     $noBudgetLimitStr = "Yes";
                 }
 
-                $transresUtil->sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit,$noBudgetLimit);
+                $transresUtil->sendProjectNoBudgetUpdateEmail($project,$originalNoBudgetLimit);
                 
-                $eventType = "Project Updated";
-                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                $eventType = "Project Approved Budget Limit Updated";
+                $res = "Project " . $project->getOid() . " has been updated: " .
                     "No Budget Limit changed from " .
                     $originalNoBudgetLimitStr . " to " . $noBudgetLimitStr;
                 $transresUtil->setEventLog($project,$eventType,$res);
