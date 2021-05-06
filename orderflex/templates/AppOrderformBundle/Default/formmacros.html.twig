@@ -41,16 +41,39 @@
     </p>
 {% endmacro %}
 
-{% macro checkbox( field, attr, value ) %}
+{% macro checkbox( field, attr ) %}
+    <p>
+    <div class="row">
+        {{ form_errors(field) }}
+        <div class="col-xs-6" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+            {% if attr == "disabled" %}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% elseif attr == "readonly" %}
+                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+            {% elseif attr == "required" %}
+                {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
+        </div>
+    </div>
+    </p>
+{% endmacro %}
+{% macro checkbox_with_value( field, attr, value ) %}
 
     {% if value is defined %}
         {% set colLeft = 6 %}
         {% set colMiddle = 1 %}
         {% set colRight = 4 %}
+        {% set showRealValue = 1 %}
     {% else %}
         {% set colLeft = 6 %}
         {% set colMiddle = 6 %}
         {% set colRight = 0 %}
+        {% set showRealValue = 0 %}
     {% endif %}
 
     <p>
@@ -72,7 +95,7 @@
         </div>
 
         <div class="col-xs-{{ colRight }}" align="left">
-            {% if value is defined %}
+            {% if showRealValue == 1 %}
                 {#value={{ value }}<br>#}
                 {% set currentValueStr = "Unknown" %}
 
