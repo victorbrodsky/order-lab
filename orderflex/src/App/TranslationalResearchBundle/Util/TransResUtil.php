@@ -1006,15 +1006,19 @@ class TransResUtil
 
         //Send update notifications for non-funded projects
         if( $project->getFunded() ) {
+            //exit('exit: funded');
             return false;
         }
 
         //approvedBudgetSendEmail
         $transresUtil = $this->container->get('transres_util');
+        //                                              $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false
+        //$approvedBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('approvedBudgetSendEmail',$project,null,false,true);
         $approvedBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('approvedBudgetSendEmail',$project);
         if( $approvedBudgetSendEmail === TRUE ) {
             //OK: send email
         } else {
+            //exit('exit: approvedBudgetSendEmail FALSE='.$approvedBudgetSendEmail);
             return false;
         }
 
@@ -1026,6 +1030,7 @@ class TransResUtil
             strpos($projectState, '_rejected') !== false
         ) {
             //don't send email
+            //exit('exit: getState='.$projectState);
             return false;
         } else {
             //send over budget email notification
@@ -6512,8 +6517,12 @@ class TransResUtil
 
     public function getTransresSiteProjectParameter( $fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false ) {
         $value = $this->getTransresSiteProjectParameterSingle($fieldName,$project,$projectSpecialty,$useDefault,$testing);
+        //echo "value1=[$value] <br>";
         if( $value === NULL ) {
             $value = $this->getTransresSiteProjectParameterSingle($fieldName,NULL,NULL,$useDefault,$testing);
+            //echo "NULL value2=[$value] <br>";
+        } else {
+            //echo "NOTNULL value2=[$value] <br>";
         }
 
         return $value;

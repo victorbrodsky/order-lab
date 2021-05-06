@@ -41,14 +41,25 @@
     </p>
 {% endmacro %}
 
-{% macro checkbox( field, attr ) %}
+{% macro checkbox( field, attr, value ) %}
+
+    {% if value is defined %}
+        {% set colLeft = 6 %}
+        {% set colMiddle = 1 %}
+        {% set colRight = 4 %}
+    {% else %}
+        {% set colLeft = 6 %}
+        {% set colMiddle = 6 %}
+        {% set colRight = 0 %}
+    {% endif %}
+
     <p>
     <div class="row">
         {{ form_errors(field) }}
-        <div class="col-xs-6" align="right">
+        <div class="col-xs-{{ colLeft }}" align="right">
             {{ form_label(field) }}
         </div>
-        <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+        <div class="col-xs-{{ colMiddle }} text-center" align="left" style="width: 50px;">
             {% if attr == "disabled" %}
                 {{ form_widget(field,{ 'disabled':'disabled' }) }}
             {% elseif attr == "readonly" %}
@@ -59,6 +70,28 @@
                 {{ form_widget(field) }}
             {% endif %}
         </div>
+
+        <div class="col-xs-{{ colRight }}" align="left">
+            {% if value is defined %}
+                {#value={{ value }}<br>#}
+                {% set currentValueStr = "Unknown" %}
+
+                {% if value is same as(null) %}
+                    {% set currentValueStr = "NULL" %}
+                {% endif %}
+
+                {% if value is same as(true) %}
+                    {% set currentValueStr = "TRUE" %}
+                {% endif %}
+
+                {% if value is same as(false) %}
+                    {% set currentValueStr = "FALSE" %}
+                {% endif %}
+
+                Current Value is '{{ currentValueStr }}'
+            {% endif %}
+        </div>
+
     </div>
     </p>
 {% endmacro %}

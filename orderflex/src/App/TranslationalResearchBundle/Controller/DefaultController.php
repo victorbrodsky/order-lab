@@ -1661,4 +1661,90 @@ class DefaultController extends OrderAbstractController
 //
 //        return $restext;
     }
+
+
+    /**
+     * http://127.0.0.1/order/translational-research/test-trp-site-parameters
+     *
+     * @Route("/test-trp-site-parameters", name="translationalresearch_test_trp_site_parameters")
+     */
+    public function testTrpSiteParametersAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("emailNotationTestAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName("AP/CP");
+
+        //$invoices = $transresRequestUtil->getOverdueInvoices();
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->andWhere("projectSpecialty.id = :projectSpecialtyId"); //Unpaid/Issued
+        $params["projectSpecialtyId"] = $projectSpecialty->getId();
+        //$params["status"] = "active";
+
+        $dql->orderBy("project.id","DESC");
+
+        $query = $em->createQuery($dql);
+
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
+
+        $projects = $query->getResult();
+
+        //$invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+
+        echo "projects=".count($projects)."<br>";
+
+        $project = NULL;
+
+        if( count($projects) > 0 ) {
+            $project = $projects[0];
+            echo "Project OID=".$project->getOid()."<br>";
+        }
+
+        if( $project ) {
+
+            //$fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false
+            $approvedBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('approvedBudgetSendEmail',$project,null,false,true);
+            echo "approvedBudgetSendEmail=".$approvedBudgetSendEmail."<br>";
+            $approvedBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('approvedBudgetSendEmail',$project);
+            echo "approvedBudgetSendEmailStr=".$this->getBooleanStr($approvedBudgetSendEmail)."<br>";
+
+            $overBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('overBudgetSendEmail',$project,null,false,true);
+            echo "overBudgetSendEmail=".$overBudgetSendEmail."<br>";
+            $overBudgetSendEmail = $transresUtil->getTransresSiteProjectParameter('overBudgetSendEmail',$project);
+            echo "overBudgetSendEmailStr=".$this->getBooleanStr($overBudgetSendEmail)."<br>";
+
+            exit("exit");
+
+        } else {
+            $res = "No project";
+        }
+
+        exit($res);
+    }
+    public function getBooleanStr($value) {
+        $valueStr = "Unknown";
+        if ($value === NULL) {
+            $valueStr = "NULL ";
+        }
+        if ($value === TRUE) {
+            $valueStr = "TRUE ";
+        }
+        if ($value === FALSE) {
+            $valueStr = "FALSE ";
+        }
+        return $valueStr;
+    }
 }
