@@ -660,8 +660,12 @@ class VacReqUtil
     //$yearRange: '2015-2016' or '2015'
     public function getUserCarryOverDays( $user, $yearRange, $asObject=false ) {
 
+        //echo "yearRange=[$yearRange]<br>";
+
         $startYearArr = $this->getYearsFromYearRangeStr($yearRange);
         $startYear = $startYearArr[0];
+
+        //echo "startYear=[$startYear]<br>";
 
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqCarryOver');
         $dql = $repository->createQueryBuilder('carryOver');
@@ -694,6 +698,7 @@ class VacReqUtil
         return null;
     }
 
+    //$entity - AppVacReqBundle:VacReqRequest
     public function processVacReqCarryOverRequest( $entity, $onlyCheck=false ) {
 
         $logger = $this->container->get('logger');
@@ -706,6 +711,7 @@ class VacReqUtil
         $subjectUser = $entity->getUser();
 
         //get userCarryOver. TODO: This does not distinguish between approved, rejected or pending requests.
+        //Each user has only one VacReqUserCarryOver. VacReqUserCarryOver has multiple carryOvers(VacReqCarryOver: year, days)
         $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
         //echo "found userCarryOverID=".$userCarryOver->getId()."<br>";
 
@@ -786,6 +792,42 @@ class VacReqUtil
                 //$em = $this->getDoctrine()->getManager();
                 //$em->persist($carryOver);
                 //$em->flush($carryOver);
+
+                //TODO: cancel all other carryover requests:
+                // 1) find all 'approved' carryover requests for this user for this year (getOverlappedUserRequests)
+                // 2) cancel all except this one $entity
+                //getApprovedYearDays
+                //getOverlappedUserRequests
+                //checkRequestForOverlapDates
+                //getCarryOverRequests
+                //getPendingCarryOverRequests
+                //getTotalPendingRequests
+                //getTotalStatusTypeRequests
+
+                $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear,$entity);
+                //echo "approvedRequests=".count($approvedRequests)."<br>";
+
+                //echo "<br><br>";
+                foreach($approvedRequests as $approvedRequest) {
+                    //$msg = "approvedRequest=$approvedRequest <br>";
+
+                    //set status to canceled
+                    $approvedRequest->setStatus('canceled');
+
+                    //Event Log
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $loggedinUser = $this->security->getUser();
+                    $requestName = $approvedRequest->getRequestName();
+                    $eventType = 'Carry Over Request Updated';
+                    $event = "Previously approved ".$requestName . " ID# ".$approvedRequest->getId()." for ".$approvedRequest->getUser()." has been canceled by ".$loggedinUser." ".
+                        " by approving the carry over request ID# ".$entity->getId() . " for ".$entity->getUser();
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$loggedinUser,$entity,null,$eventType);
+
+                    //echo $event;
+                    //$logger->notice($event);
+                }
+
+                //exit("EOF processVacReqCarryOverRequest");
             }
         }
 
@@ -3363,6 +3405,46 @@ class VacReqUtil
 //        $query->setParameters(array(
 //            'groupIds' => implode(",",$idArr),
 //        ));
+
+        $requests = $query->getResult();
+
+        return $requests;
+    }
+
+    public function getCarryOverRequestsByUserStatusYear($user,$status,$year,$exceptRequest=NULL) {
+
+        //echo "status=$status, year=$year <br>";
+
+        $params = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("requestType.abbreviation = 'carryover'");
+
+        $dql->andWhere("user.id = :userId");
+        $params['userId'] = $user->getId();
+
+        $dql->andWhere("request.status = :status");
+        $params['status'] = $status;
+
+        $dql->andWhere("request.destinationYear = :destinationYear");
+        $params['destinationYear'] = $year;
+
+        if( $exceptRequest ) {
+            //echo "exceptRequest=".$exceptRequest->getId()."<br>";
+            $dql->andWhere("request.id != :exceptRequestId");
+            $params['exceptRequestId'] = $exceptRequest->getId();
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
 
         $requests = $query->getResult();
 

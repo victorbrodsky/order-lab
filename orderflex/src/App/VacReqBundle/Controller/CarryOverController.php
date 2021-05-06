@@ -254,10 +254,6 @@ class CarryOverController extends OrderAbstractController
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
-//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//        }
-
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
@@ -305,60 +301,6 @@ class CarryOverController extends OrderAbstractController
         }
         /////////////// EOF check permission: if user is in approvers => ok ///////////////
 
-        //check permissions
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
-//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//            }
-//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
-//            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
-//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//            }
-//        } else {
-//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//        }
-
-//        //testing
-//        if( $entity->getTentativeStatus() == 'pending' ) {
-//            $tentative = true;
-//        } else {
-//            $tentative = false;
-//        }
-//        if( $tentative ) {
-//            $subjectInst = $entity->getTentativeInstitution();
-//        } else {
-//            $subjectInst = $entity->getInstitution();
-//        }
-//
-//        //get approver role for subject institution
-//        if( $subjectInst ) {
-//
-//            //get user allowed groups
-//            $vacreqUtil = $this->container->get('vacreq_util');
-//
-//            if( $tentative ) {
-//                $tentativeGroupParams = array();
-//                $tentativeGroupParams['asObject'] = true;
-//                $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
-//            } else {
-//                $groupParams = array('asObject'=>true);
-//                $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
-//                $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-//            }
-//
-//            //check if subject has at least one of the $groupInstitutions
-//            foreach( $groupInstitutions as $inst ) {
-//                echo $inst." == ".$subjectInst."<br>";
-//                if( $inst->getId() == $subjectInst->getId() ) {
-//                    exit('permission ok!');
-//                }
-//            }
-//
-//        }
-//        exit('permission not ok');
-
         //echo "tent status=".$entity->getTentativeStatus()."<br>";
         if(
             $this->get('security.authorization_checker')->isGranted("changestatus", $entity)
@@ -374,42 +316,9 @@ class CarryOverController extends OrderAbstractController
         }
         //exit('testing: email approval of carry over request OK'); //testing
 
-//        if( $entity->getTentativeStatus() == 'pending' ) {
-//            //first step: group approver
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-//                $this->get('security.authorization_checker')->isGranted("changestatus", $entity)
-//            ) {
-//                //OK
-//            } else {
-//                exit('TentativeStatus: no permission to approve/reject');
-//                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//            }
-//        } else {
-//            //second step: supervisor
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-//                $this->get('security.authorization_checker')->isGranted("changestatus-carryover", $entity)
-//            ) {
-//                //OK
-//            } else {
-//                exit('Status: no permission to approve/reject');
-//                return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-//            }
-//        }
-
         /////////////// log status ////////////////////////
-        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        $logger->notice("CarryOverController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
         /////////////// EOF log status ////////////////////////
-
-
-//        //if not pending and vacreq_status_email_change => redirect to incoming request page
-//        if( $entity->getStatus() != "pending" && $routeName == 'vacreq_status_email_change' ) {
-//            //Flash
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                "This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
-//            );
-//            return $this->redirectToRoute('vacreq_incomingrequests');
-//        }
 
         //Now we have two cases: first and second step approval
 

@@ -776,7 +776,7 @@ class RequestController extends OrderAbstractController
         $originalStatus = $entity->getStatus();
 
         /////////////// log status ////////////////////////
-        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        $logger->notice("RequestController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
         /////////////// EOF log status ////////////////////////
 
         if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
@@ -1161,7 +1161,7 @@ class RequestController extends OrderAbstractController
         }
 
         $logger = $this->container->get('logger');
-        $logger->notice($entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        $logger->notice("RequestController statusCancellationRequestChaneAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
 
         //check permissions
         if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
