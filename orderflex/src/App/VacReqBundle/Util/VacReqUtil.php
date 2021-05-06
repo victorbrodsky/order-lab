@@ -753,7 +753,8 @@ class VacReqUtil
             $carryOverWarningMessageLog = $entity->getUser()->getUsernameOptimal()." already has ".$carryOverDays." days carried over from ".
                 $entity->getSourceYearRange()." academic year to the ".$entity->getDestinationYearRange()." academic year on file.<br>";
 
-            $carryOverWarningMessageLog .= "If this request would be approved, all previously already approved carry over requests for the same ".$entity->getDestinationYearRange()." academic year would be canceled.<br>";
+            $carryOverWarningMessageLog .= "If this request would be approved, all previously already approved carry over requests for the same destination ".
+                $entity->getDestinationYearRange()." academic year would be canceled automatically.<br>";
 
             // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
             $carryOverWarningMessageLog .= "This carry over request asks for ".$entity->getCarryOverDays()." days to be carried over from ".
