@@ -805,41 +805,41 @@ class VacReqUtil
                 //$em->persist($carryOver);
                 //$em->flush($carryOver);
 
-                if(0) {
-                    //TODO: cancel all other carryover requests:
-                    // 1) find all 'approved' carryover requests for this user for this year (getOverlappedUserRequests)
-                    // 2) cancel all except this one $entity
-                    //getApprovedYearDays
-                    //getOverlappedUserRequests
-                    //checkRequestForOverlapDates
-                    //getCarryOverRequests
-                    //getPendingCarryOverRequests
-                    //getTotalPendingRequests
-                    //getTotalStatusTypeRequests
-
-                    $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser, 'approved', $carryOverYear, $entity);
-                    //echo "approvedRequests=".count($approvedRequests)."<br>";
-
-                    //echo "<br><br>";
-                    foreach ($approvedRequests as $approvedRequest) {
-                        //$msg = "approvedRequest=$approvedRequest <br>";
-
-                        //set status to canceled
-                        $approvedRequest->setStatus('canceled');
-
-                        //Event Log
-                        $userSecUtil = $this->container->get('user_security_utility');
-                        $loggedinUser = $this->security->getUser();
-                        $requestName = $approvedRequest->getRequestName();
-                        $eventType = 'Carry Over Request Updated';
-                        $event = "Previously approved " . $requestName . " ID# " . $approvedRequest->getId() . " for " . $approvedRequest->getUser() . " has been canceled by " . $loggedinUser . " " .
-                            " by approving the carry over request ID# " . $entity->getId() . " for " . $entity->getUser();
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $loggedinUser, $entity, null, $eventType);
-
-                        //echo $event;
-                        //$logger->notice($event);
-                    }
-                }
+//                if(0) {
+//                    //TODO: cancel all other carryover requests:
+//                    // 1) find all 'approved' carryover requests for this user for this year (getOverlappedUserRequests)
+//                    // 2) cancel all except this one $entity
+//                    //getApprovedYearDays
+//                    //getOverlappedUserRequests
+//                    //checkRequestForOverlapDates
+//                    //getCarryOverRequests
+//                    //getPendingCarryOverRequests
+//                    //getTotalPendingRequests
+//                    //getTotalStatusTypeRequests
+//
+//                    $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser, 'approved', $carryOverYear, $entity);
+//                    //echo "approvedRequests=".count($approvedRequests)."<br>";
+//
+//                    //echo "<br><br>";
+//                    foreach ($approvedRequests as $approvedRequest) {
+//                        //$msg = "approvedRequest=$approvedRequest <br>";
+//
+//                        //set status to canceled
+//                        $approvedRequest->setStatus('canceled');
+//
+//                        //Event Log
+//                        $userSecUtil = $this->container->get('user_security_utility');
+//                        $loggedinUser = $this->security->getUser();
+//                        $requestName = $approvedRequest->getRequestName();
+//                        $eventType = 'Carry Over Request Updated';
+//                        $event = "Previously approved " . $requestName . " ID# " . $approvedRequest->getId() . " for " . $approvedRequest->getUser() . " has been canceled by " . $loggedinUser . " " .
+//                            " by approving the carry over request ID# " . $entity->getId() . " for " . $entity->getUser();
+//                        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $loggedinUser, $entity, null, $eventType);
+//
+//                        //echo $event;
+//                        //$logger->notice($event);
+//                    }
+//                }
 
                 //exit("EOF process VacReqCarryOverRequest");
             }
@@ -872,12 +872,6 @@ class VacReqUtil
         //2) Cancel all other approved carry over requests
 
         //approved -> any state (approved -> pending, approved -> cancel, approved -> rejected):
-        //Remove $carryOverDays from $carryOver
-        //approved -> pending:
-        //Remove $carryOverDays from $carryOver
-        //approved -> cancel:
-        //Remove $carryOverDays from $carryOver
-        //approved -> rejected:
         //Remove $carryOverDays from $carryOver
 
         //$newStatus and $originalStatus are unchanged and approved
