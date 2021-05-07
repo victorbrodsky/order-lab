@@ -183,7 +183,7 @@ class RequestController extends OrderAbstractController
         }
         //exit('testing');
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() && $form->isValid() ) { //new
 
             //exit('form is valid');
 
@@ -273,7 +273,10 @@ class RequestController extends OrderAbstractController
             $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
             //Event Log
-            $event = $requestName . " for ".$entity->getUser()." has been submitted. Confirmation email has been sent to ".$approversNameStr;
+            $event = $requestName . " for ".$entity->getUser()." has been submitted.".
+                " Confirmation email has been sent to ".$approversNameStr;
+            $event = $event . $break.$break. $entity->printRequest();
+
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
             //exit('exit event='.$event);
@@ -298,7 +301,7 @@ class RequestController extends OrderAbstractController
             }
 
             return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-        }
+        }//if $form -> isSubmitted()
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
@@ -477,6 +480,7 @@ class RequestController extends OrderAbstractController
 
         $originalTentativeStatus = $entity->getTentativeStatus();
         $originalStatus = $entity->getStatus();
+        $originalCarryOverDays = $entity->getCarryOverDays();
 
         //check if requested carry over days are already approved or denied
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
@@ -526,7 +530,7 @@ class RequestController extends OrderAbstractController
             }
         }
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() && $form->isValid() ) { //edit, review
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
@@ -572,7 +576,7 @@ class RequestController extends OrderAbstractController
 
                         $withRedirect = false;
                         $update=true;
-                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update );
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update ); //review
                         //exit("action=".$action);
 
                         if( $action == 'vacreq-nopermission' ) {
@@ -587,7 +591,9 @@ class RequestController extends OrderAbstractController
                         $logger->warning("Review CarryOver request ID=".$entity->getId()."; failed to process: changedStatusCount=".$changedStatusCount);
                     }
 
-                } else {
+                } //carryover
+                    else
+                {
                     ///////////////// business/vacation request //////////////////////
                     //set final (global) status according to sub-requests status:
                     //only two possible actions: reject or approved
@@ -613,8 +619,10 @@ class RequestController extends OrderAbstractController
                     $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
                 }
 
-            } else {
-                ///////////////// update //////////////////////////
+            }//$routName == 'vacreq_review'
+                else
+            {
+                ///////////////// update vacreq_edit (edit page does not allow to change status) //////////////////////////
 
                 $entity->setUpdateUser($user);
 
@@ -686,6 +694,11 @@ class RequestController extends OrderAbstractController
                 'notice',
                 $event
             );
+
+            //get request type
+            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                $vacreqUtil->syncVacReqCarryOverRequest($entity,$originalStatus,$originalCarryOverDays); //vacreq_review, vacreq_edit
+            }
 
             //set event log for objects
             if( count($changedInfoArr) > 0 ) {
@@ -954,6 +967,10 @@ class RequestController extends OrderAbstractController
                 $em->persist($entity);
                 $em->flush();
 
+                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                    $vacreqUtil->syncVacReqCarryOverRequest($entity, $originalStatus); //vacreq_status_change, vacreq_status_email_change
+                }
+
                 //return $this->redirectToRoute('vacreq_home');
 
                 //send respond confirmation email to a submitter
@@ -969,11 +986,11 @@ class RequestController extends OrderAbstractController
                 }
 
                 $removeCarryoverStr = "";
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
-                    //TODO: reset user's VacReqUserCarryOver object?
-                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
-                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
-                }
+//                if( $entity->getRequestType()->getAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
+//                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
+//                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+//                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
+//                }
                 //exit("test");
 
                 //Flash

@@ -320,6 +320,8 @@ class CarryOverController extends OrderAbstractController
         $logger->notice("CarryOverController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
         /////////////// EOF log status ////////////////////////
 
+        $originalStatus = $entity->getStatus();
+
         //Now we have two cases: first and second step approval
 
         //don't allow to change final status
@@ -348,7 +350,7 @@ class CarryOverController extends OrderAbstractController
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
         //$withRedirect=true; $update=true;
-        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, true, true );
+        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, true, true ); //vacreq_status_change_carryover, vacreq_status_email_change_carryover
 
         if( $action == 'vacreq_review' ) {
             return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
@@ -360,6 +362,7 @@ class CarryOverController extends OrderAbstractController
         $em->persist($entity);
         $em->flush();
 
+        $vacreqUtil->syncVacReqCarryOverRequest( $entity, $originalStatus );
 
         $url = $request->headers->get('referer');
         //exit('url='.$url);

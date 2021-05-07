@@ -699,6 +699,8 @@ class VacReqUtil
     }
 
     //$entity - AppVacReqBundle:VacReqRequest
+    //Used in processChangeStatusCarryOverRequest (edit, review, vacreq_status_change, vacreq_status_email_change)
+    //and when status='approved' and in vacreq_status_change, vacreq_status_email_change
     public function processVacReqCarryOverRequest( $entity, $onlyCheck=false ) {
 
         $logger = $this->container->get('logger');
@@ -720,8 +722,10 @@ class VacReqUtil
         }
 
         //get VacReqCarryOver for request's destination year
+        //If "2020-2021" as the current academic year => The current year is FY21 (CarryOver entity is referred by the destination year)
         $carryOverYear = $entity->getDestinationYear();
 
+        //find CarryOver entity by destination year $carryOverYear
         $carryOver = null;
         foreach( $userCarryOver->getCarryOvers() as $carryOverThis ) {
             //echo "carryOverThis ID=".$carryOverThis->getId().": year=".$carryOverYear." ?= ".$carryOverThis->getYear()."<br>";
@@ -736,6 +740,7 @@ class VacReqUtil
 
         if( !$carryOver ) {
             if( $onlyCheck == false ) {
+                //create CarryOver if not existing
                 $carryOver = new VacReqCarryOver();
                 $carryOver->setYear($carryOverYear);
                 $userCarryOver->addCarryOver($carryOver);
@@ -744,6 +749,7 @@ class VacReqUtil
             $carryOverDays = $carryOver->getDays();
         }
 
+        //Get $carryOverDays
         //echo "carryOverDays=".$carryOverDays."<br>";
         $res = array('userCarryOver'=>$userCarryOver);
 
@@ -753,8 +759,10 @@ class VacReqUtil
             $carryOverWarningMessageLog = $entity->getUser()->getUsernameOptimal()." already has ".$carryOverDays." days carried over from ".
                 $entity->getSourceYearRange()." academic year to the ".$entity->getDestinationYearRange()." academic year on file.<br>";
 
-            $carryOverWarningMessageLog .= "If this request would be approved, all previously already approved carry over requests for the same destination ".
-                $entity->getDestinationYearRange()." academic year would be canceled automatically.<br>";
+            //$carryOverWarningMessageLog .= "If this request would be approved, all previously already approved carry over requests for the same destination ".
+            //    $entity->getDestinationYearRange()." academic year would be canceled automatically.<br>";
+            $carryOverWarningMessageLog .= "Approving this carry over request cancels all previously approved carry over requests".
+            " for the same destination ".$entity->getDestinationYearRange()." academic year.<br>";
 
             // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
             $carryOverWarningMessageLog .= "This carry over request asks for ".$entity->getCarryOverDays()." days to be carried over from ".
@@ -797,47 +805,258 @@ class VacReqUtil
                 //$em->persist($carryOver);
                 //$em->flush($carryOver);
 
-                //TODO: cancel all other carryover requests:
-                // 1) find all 'approved' carryover requests for this user for this year (getOverlappedUserRequests)
-                // 2) cancel all except this one $entity
-                //getApprovedYearDays
-                //getOverlappedUserRequests
-                //checkRequestForOverlapDates
-                //getCarryOverRequests
-                //getPendingCarryOverRequests
-                //getTotalPendingRequests
-                //getTotalStatusTypeRequests
+                if(0) {
+                    //TODO: cancel all other carryover requests:
+                    // 1) find all 'approved' carryover requests for this user for this year (getOverlappedUserRequests)
+                    // 2) cancel all except this one $entity
+                    //getApprovedYearDays
+                    //getOverlappedUserRequests
+                    //checkRequestForOverlapDates
+                    //getCarryOverRequests
+                    //getPendingCarryOverRequests
+                    //getTotalPendingRequests
+                    //getTotalStatusTypeRequests
 
-                $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear,$entity);
-                //echo "approvedRequests=".count($approvedRequests)."<br>";
+                    $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser, 'approved', $carryOverYear, $entity);
+                    //echo "approvedRequests=".count($approvedRequests)."<br>";
 
-                //echo "<br><br>";
-                foreach($approvedRequests as $approvedRequest) {
-                    //$msg = "approvedRequest=$approvedRequest <br>";
+                    //echo "<br><br>";
+                    foreach ($approvedRequests as $approvedRequest) {
+                        //$msg = "approvedRequest=$approvedRequest <br>";
 
-                    //set status to canceled
-                    $approvedRequest->setStatus('canceled');
+                        //set status to canceled
+                        $approvedRequest->setStatus('canceled');
 
-                    //Event Log
-                    $userSecUtil = $this->container->get('user_security_utility');
-                    $loggedinUser = $this->security->getUser();
-                    $requestName = $approvedRequest->getRequestName();
-                    $eventType = 'Carry Over Request Updated';
-                    $event = "Previously approved ".$requestName . " ID# ".$approvedRequest->getId()." for ".$approvedRequest->getUser()." has been canceled by ".$loggedinUser." ".
-                        " by approving the carry over request ID# ".$entity->getId() . " for ".$entity->getUser();
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$loggedinUser,$entity,null,$eventType);
+                        //Event Log
+                        $userSecUtil = $this->container->get('user_security_utility');
+                        $loggedinUser = $this->security->getUser();
+                        $requestName = $approvedRequest->getRequestName();
+                        $eventType = 'Carry Over Request Updated';
+                        $event = "Previously approved " . $requestName . " ID# " . $approvedRequest->getId() . " for " . $approvedRequest->getUser() . " has been canceled by " . $loggedinUser . " " .
+                            " by approving the carry over request ID# " . $entity->getId() . " for " . $entity->getUser();
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $loggedinUser, $entity, null, $eventType);
 
-                    //echo $event;
-                    //$logger->notice($event);
+                        //echo $event;
+                        //$logger->notice($event);
+                    }
                 }
 
-                //exit("EOF processVacReqCarryOverRequest");
+                //exit("EOF process VacReqCarryOverRequest");
             }
         }
 
         return $res;
     }
 
+    //Assume all entities are in DB
+    //Used in
+    //CarryOverController #365: vacreq_status_change_carryover, vacreq_status_email_change_carryover
+    //RequestController: vacreq_status_change, vacreq_status_email_change
+    public function syncVacReqCarryOverRequest( $entity, $originalStatus, $originalCarryOverDays=NULL ) {
+
+        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            //OK
+        } else {
+            return "Not Cover Over request";
+        }
+
+        $newStatus = $entity->getStatus();
+
+        //$newTentativeStatus = $this->getTentativeStatus();
+        $carryOverDays = $entity->getCarryOverDays();
+
+        //Final status: pending, approved, rejected, cancel (ignore extraStatus: cancellation-request, cancellation-approve, cancellation-reject)
+
+        //any state -> approved (pending->approved, cancel->approved, rejected->approved):
+        //1) Copy $carryOverDays to this $carryOver
+        //2) Cancel all other approved carry over requests
+
+        //approved -> any state (approved -> pending, approved -> cancel, approved -> rejected):
+        //Remove $carryOverDays from $carryOver
+        //approved -> pending:
+        //Remove $carryOverDays from $carryOver
+        //approved -> cancel:
+        //Remove $carryOverDays from $carryOver
+        //approved -> rejected:
+        //Remove $carryOverDays from $carryOver
+
+        //$newStatus and $originalStatus are unchanged and approved
+        // AND $carryOverDays = 0 or NULL
+        //Remove $carryOverDays from $carryOver
+
+        $res = NULL;
+        $update = false;
+        $eventLog = NULL;
+        $loggedinUser = $this->security->getUser();
+        $subjectUser = $entity->getUser();
+        $carryOverYear = $entity->getDestinationYear();
+
+        //find CarryOver entity by destination year $carryOverYear
+        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        if( !$userCarryOver ) {
+            return "VacReqUserCarryOver container not found for $subjectUser";
+        }
+
+        $carryOver = null;
+        foreach( $userCarryOver->getCarryOvers() as $carryOverThis ) {
+            //echo "carryOverThis ID=".$carryOverThis->getId().": year=".$carryOverYear." ?= ".$carryOverThis->getYear()."<br>";
+            if( $carryOverThis->getYear() == $carryOverYear ) {
+                $carryOver = $carryOverThis;
+                break;
+            }
+        }
+
+        if( !$carryOver ) {
+            return "CarryOver object not found for destination year $carryOverYear for $subjectUser ";
+        }
+
+        //any state -> approved
+        if( $newStatus == 'approved' && $newStatus != $originalStatus ) {
+            //1) Copy $carryOverDays to this $carryOver
+            $carryOver->setDays($carryOverDays);
+
+            //2) Cancel all other approved carry over requests
+            $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear,$entity);
+            //echo "approvedRequests=".count($approvedRequests)."<br>";
+            $cancelStr = $this->cancelApprovedCarryOverRequests($approvedRequests,$entity);
+
+            $eventLog = "Set $carryOverDays carryover days to destination year $carryOverYear for $subjectUser.";
+            $res = $eventLog . "<br><br>" . $cancelStr;
+            //exit($res);
+
+            $update = true;
+        }
+        //exit("after any state -> approved");
+
+        //approved -> any state
+        if( $originalStatus == 'approved' && $newStatus != $originalStatus ) {
+            //Remove $carryOverDays from $carryOver
+            $carryOver->setDays(NULL);
+            $requestName = $entity->getRequestName() . " ID# " . $entity->getId();
+            $res = "Remove $carryOverDays carryover days from destination year $carryOverYear for $subjectUser ".
+            "by $newStatus action for the $requestName";
+
+            //find approved carry over request for the same year and update $carryOver with days from this found approved carry over request
+            $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear);
+            //echo "approvedRequests=".count($approvedRequests)."<br>";
+            if( count($approvedRequests) > 0 ) {
+                $approvedRequest = $approvedRequests[0];
+                $approvedCarryOverDays = $approvedRequest->getCarryOverDays();
+                $carryOver->setDays($approvedCarryOverDays);
+
+                $requestName = $approvedRequest->getRequestName() . " ID# " . $approvedRequest->getId();
+                $res = $res . "<br><br>" . "Set $approvedCarryOverDays carryover days for destination year $carryOverYear ".
+                "for $subjectUser by the latest existing approved $requestName";
+            }
+
+            $eventLog = $res;
+
+            $update = true;
+        }
+
+//        $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear,$entity);
+//        //echo "approvedRequests=".count($approvedRequests)."<br>";
+//        //echo "<br><br>";
+//        foreach($approvedRequests as $approvedRequest) {
+//            //$msg = "approvedRequest=$approvedRequest <br>";
+//
+//            //set status to canceled
+//            $approvedRequest->setStatus('canceled');
+//
+//            //Event Log
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $loggedinUser = $this->security->getUser();
+//            $requestName = $approvedRequest->getRequestName();
+//            $eventType = 'Carry Over Request Updated';
+//            $event = "Previously approved ".$requestName . " ID# ".$approvedRequest->getId()." for ".$approvedRequest->getUser()." has been canceled by ".$loggedinUser." ".
+//                " by approving the carry over request ID# ".$entity->getId() . " for ".$entity->getUser();
+//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$loggedinUser,$entity,null,$eventType);
+//
+//            //echo $event;
+//            //$logger->notice($event);
+//        }
+
+
+        //$newStatus and $originalStatus are unchanged and approved
+        //1) $carryOverDays = 0 or NULL
+        //Remove $carryOverDays from $carryOver
+        //2) $carryOverDays != $originalThisCarryOverDays
+        //Update $carryOverDays
+        if( $newStatus == 'approved' && $newStatus == $originalStatus ) {
+
+            $originalThisCarryOverDays = $carryOver->getDays();
+
+            if( $originalThisCarryOverDays != $carryOverDays ) {
+
+                if ($carryOverDays) {
+                    $carryOver->setDays($carryOverDays);
+
+                    $requestName = $entity->getRequestName() . " ID# " . $entity->getId();
+                    $res = $eventLog = "Carry over days are changed from $originalThisCarryOverDays to $carryOverDays for destination year $carryOverYear for $subjectUser" .
+                        ", because the carry over days in approved $requestName have been updated by $loggedinUser";
+                } else {
+                    $originalThisCarryOverDays = $carryOver->getDays();
+                    //Remove $carryOverDays from $carryOver
+                    $carryOver->setDays(NULL);
+
+                    $requestName = $entity->getRequestName() . " ID# " . $entity->getId();
+                    $res = $eventLog = "Remove $originalThisCarryOverDays carryover days from destination year $carryOverYear for $subjectUser" .
+                        ", because the carry over days in approved $requestName is set to zero by $loggedinUser";
+                }
+
+                $update = true;
+            }
+        }
+
+        if( $update ) {
+            $this->em->flush();
+        }
+
+        if( $eventLog ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $loggedinUser = $this->security->getUser();
+
+            //Event Log
+            $eventType = 'Carry Over Request Updated';
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$eventLog,$loggedinUser,$entity,null,$eventType);
+        }
+
+        return $res;
+    }
+    public function cancelApprovedCarryOverRequests( $approvedRequests, $changedByEntity ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $loggedinUser = $this->security->getUser();
+        $eventArr = array();
+        $res = NULL;
+
+        foreach($approvedRequests as $approvedRequest) {
+            //$msg = "approvedRequest=$approvedRequest <br>";
+
+            //set status to canceled
+            $approvedRequest->setStatus('canceled');
+
+            //Event Log
+            $requestName = $approvedRequest->getRequestName() . " ID# " . $approvedRequest->getId();
+            $eventType = 'Carry Over Request Updated';
+            $event = "Previously approved $requestName for ".$approvedRequest->getUser()." has been canceled by ".$loggedinUser." ".
+                " by approving the carry over request ID# ".$changedByEntity->getId() . " for ".$changedByEntity->getUser();
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$loggedinUser,$approvedRequest,null,$eventType);
+
+            $eventArr[] = $event;
+
+            //echo $event;
+            //$logger->notice($event);
+        }
+
+        if( count($eventArr) > 0 ) {
+            $res = implode("<br>",$eventArr);
+        }
+
+        return $res;
+    }
+
+    //Do not use it (do not delete CarryOver for canceled carry over request).
+    //Use syncVacReqCarryOverRequest instead to take care update days in CarryOver
     //TODO: if multiple carry over requests are existed, then the VacReqUserCarryOver should be changed according to them.
     //TODO: we might have one carry over request approved and one denied for the same year.
     //TODO: Currently, VacReqUserCarryOver is synchronised to the latest approved request.
@@ -3444,6 +3663,8 @@ class VacReqUtil
             $params['exceptRequestId'] = $exceptRequest->getId();
         }
 
+        $dql->orderBy("request.id","DESC"); //highest id on top
+
         $query = $this->em->createQuery($dql);
 
         if( count($params) > 0 ) {
@@ -3981,27 +4202,16 @@ class VacReqUtil
         return $dateStr;
     }
 
-    //$status - pre-approval or final status (the one has been changed)
+    //Used by vacreq_status_change_carryover, vacreq_status_email_change_carryover
+    //$status - pre-approval or final status (the one has been changed) ($status - new status)
     public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
-        //echo "<br><br>Testing: processChangeStatusCarryOverRequest: request ID=".$entity->getId()."<br>";
+        //echo "<br><br>Testing: process ChangeStatusCarryOverRequest: request ID=".$entity->getId()."<br>";
         //echo "Tentative inst=".$entity->getTentativeInstitution()."<br>";
 
         $logger = $this->container->get('logger');
         $session = $this->container->get('session');
 
-        //check permissions
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
-//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//            }
-//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
-//            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
-//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//            }
-//        } else {
-//            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//        }
         /////////////// check permission: if user is in approvers => ok ///////////////
         if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
@@ -4147,7 +4357,8 @@ class VacReqUtil
                     $userCarryOver = $res['userCarryOver'];
                     //$logger->notice("process ChangeStatusCarryOverRequest: update userCarryOver=".$userCarryOver);
                     $em->persist($userCarryOver);
-                    $em->flush($userCarryOver);
+                    //$em->flush($userCarryOver);
+                    $em->flush();
                 }
 
                 //send a confirmation email to submitter
@@ -4178,7 +4389,7 @@ class VacReqUtil
                     'notice',
                     $event
                 );
-            }
+            }//approved
 
 
             //send email to submitter
@@ -4210,7 +4421,7 @@ class VacReqUtil
                     'notice',
                     $event
                 );
-            }
+            }//rejected
         }
         /////////////////// EOF TWO CASES: pre-approval and final approval ///////////////////
 
