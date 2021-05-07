@@ -701,7 +701,7 @@ class RequestController extends OrderAbstractController
 
             //get request type
             if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
-                $vacreqUtil->syncVacReqCarryOverRequest($entity,$originalStatus,$originalCarryOverDays); //vacreq_review, vacreq_edit
+                $vacreqUtil->syncVacReqCarryOverRequest($entity,$originalStatus); //vacreq_review, vacreq_edit
             }
 
             //set event log for objects

@@ -116,7 +116,7 @@
     {#Set row color#}
     {% set tdclassname = "" %}
     {% if request %}
-        {% if request.getStatus() == 'pending' %}
+        {% if request.getStatus() == 'pending' or request.getTentativeStatus() == 'pending' %}
             {% set tdclassname = "alert alert-warning" %}
         {% endif %}
         {% if request.getStatus() == 'approved' %}
@@ -154,6 +154,10 @@
     <td class="{{ tdclassname }}">
         {% if request and request.status  %}
             {{ request.status|capitalize }}
+        {% else %}
+            {% if request and request.tentativeStatus  %}
+                Tentative: {{ request.tentativeStatus|capitalize }}
+            {% endif %}
         {% endif %}
     </td>
 
