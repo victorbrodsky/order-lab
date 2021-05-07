@@ -46,6 +46,12 @@
     <input type="hidden" id="requestType" value="{{ entity.getRequestType().getAbbreviation() }}" />
     <input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />
 
+    {% if is_granted('ROLE_VACREQ_ADMIN') %}
+        <input type="hidden" id="vacreq_admin" value="admin" />
+    {% else %}
+        <input type="hidden" id="vacreq_admin" value="" />
+    {% endif %}
+
     {% if overlappedMessage is defined and overlappedMessage %}
         <div class="alert alert-danger">
             {{ overlappedMessage|raw }}
@@ -811,31 +817,35 @@
             var error = null;
 
             var userInstitution = $('.vacreq-institution').select2('data');
-            if( !error && !userInstitution ) {
+            if (!error && !userInstitution) {
                 error = "Please choose an organizational group";
             }
 
             var carryOverDays = $('.vacreq-carryOverDays').val();
-            if( !error && !carryOverDays ) {
+            if (!error && !carryOverDays) {
                 error = "Please enter the number of days to carry over";
                 $('.vacreq-carryOverDays').addClass('alert-danger');
             }
 
             //Should we have this only for "new" request?
-            var maxCarryOverVacationDays = $('#maxcarryovervacationdays').val();
-            //console.log('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
-            if( carryOverDays && maxCarryOverVacationDays ) {
-                carryOverDays = parseInt(carryOverDays);
-                maxCarryOverVacationDays = parseInt(maxCarryOverVacationDays);
+            var admin = $('#vacreq_admin').val();
+            //console.log('admin='+admin);
+            if( admin != 'admin' ) {
+                var maxCarryOverVacationDays = $('#maxcarryovervacationdays').val();
                 //console.log('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
-                //alert('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
-                if ( carryOverDays > maxCarryOverVacationDays ) {
-                    error = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of " + maxCarryOverVacationDays;
-                    $('.vacreq-carryOverDays').addClass('alert-danger');
-                    //console.log('NOTOK='+error);
-                } else {
-                    //console.log('OK');
-                    //return;
+                if (carryOverDays && maxCarryOverVacationDays) {
+                    carryOverDays = parseInt(carryOverDays);
+                    maxCarryOverVacationDays = parseInt(maxCarryOverVacationDays);
+                    //console.log('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
+                    //alert('['+carryOverDays+']?=['+maxCarryOverVacationDays+']');
+                    if (carryOverDays > maxCarryOverVacationDays) {
+                        error = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of " + maxCarryOverVacationDays;
+                        $('.vacreq-carryOverDays').addClass('alert-danger');
+                        //console.log('NOTOK='+error);
+                    } else {
+                        //console.log('OK');
+                        //return;
+                    }
                 }
             }
 

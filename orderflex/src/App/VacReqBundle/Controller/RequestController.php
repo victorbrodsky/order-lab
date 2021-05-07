@@ -170,14 +170,16 @@ class RequestController extends OrderAbstractController
 
         //check carry over days limit
         if( $routeName == "vacreq_carryoverrequest" ) {
-            //check carry over days limit
-            $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
-            $carryOverDays = $entity->getCarryOverDays();
-            if( $carryOverDays && $maxCarryOverVacationDays ) {
-                if( $carryOverDays > $maxCarryOverVacationDays ) {
-                    $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
-                        . $maxCarryOverVacationDays;
-                    $form['carryOverDays']->addError(new FormError($errorMsg));
+            if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+                //check carry over days limit
+                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                $carryOverDays = $entity->getCarryOverDays();
+                if ($carryOverDays && $maxCarryOverVacationDays) {
+                    if ($carryOverDays > $maxCarryOverVacationDays) {
+                        $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                            . $maxCarryOverVacationDays;
+                        $form['carryOverDays']->addError(new FormError($errorMsg));
+                    }
                 }
             }
         }
@@ -516,16 +518,18 @@ class RequestController extends OrderAbstractController
 
         //check carry over days limit (edit). Should we have this only for "new" request?
         if( $entity->getRequestType()->getAbbreviation() == "carryover"  ) {
-            //check carry over days limit
-            $userSecUtil = $this->container->get('user_security_utility');
-            $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
-            $carryOverDays = $entity->getCarryOverDays();
-            if( $carryOverDays && $maxCarryOverVacationDays ) {
-                if( $carryOverDays > $maxCarryOverVacationDays ) {
-                    $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
-                        . $maxCarryOverVacationDays;
-                    //exit($errorMsg);
-                    $form['carryOverDays']->addError(new FormError($errorMsg));
+            if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+                //check carry over days limit
+                $userSecUtil = $this->container->get('user_security_utility');
+                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                $carryOverDays = $entity->getCarryOverDays();
+                if ($carryOverDays && $maxCarryOverVacationDays) {
+                    if ($carryOverDays > $maxCarryOverVacationDays) {
+                        $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                            . $maxCarryOverVacationDays;
+                        //exit($errorMsg);
+                        $form['carryOverDays']->addError(new FormError($errorMsg));
+                    }
                 }
             }
         }
