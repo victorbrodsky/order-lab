@@ -170,11 +170,13 @@ class DefaultController extends OrderAbstractController
                 //echo "destinationYear=$destinationYear <br>";
                 //echo "count=".$userCarryOverRequest[$userId][$destinationYear]."<br>";
                 $count = $carryOverRequests[$userId][$destinationYear];
-                echo "$userId: $destinationYear => $count ";
+                //echo "$userId: $destinationYear => $count ";
                 if( $count > 1 ) {
+                    echo "$userId: $destinationYear => $count ";
                     echo "=> Duplicate !!!";
+                    echo "<br>";
                 }
-                echo "<br>";
+                //echo "<br>";
             }
 
         }
