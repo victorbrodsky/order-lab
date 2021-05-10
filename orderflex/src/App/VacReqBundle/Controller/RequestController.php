@@ -480,9 +480,11 @@ class RequestController extends OrderAbstractController
             $cycle = 'review';
         }
 
+        $changedInfoArr = array();
+
         $originalTentativeStatus = $entity->getTentativeStatus();
         $originalStatus = $entity->getStatus();
-        $originalCarryOverDays = $entity->getCarryOverDays();
+        //$originalCarryOverDays = $entity->getCarryOverDays();
 
         //check if requested carry over days are already approved or denied
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {

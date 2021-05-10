@@ -149,15 +149,32 @@ class DefaultController extends OrderAbstractController
         $carryOverRequests = array();
         foreach($requests as $thisRequest) {
             $user = $thisRequest->getUser();
+            $user = $user."";
             $destinationYear = $thisRequest->getDestinationYear();
-            $carryOverRequests[$user->getId()][$destinationYear] = $request;
-        }
-        echo "carryOverRequests=".count($carryOverRequests)."<br>";
 
-        foreach($carryOverRequests as $userId=>$carryOverRequest ) {
-            echo $userId."<br>";
-            foreach($carryOverRequest as $thisCarryOverRequest) {
-                echo $thisCarryOverRequest[$userId]."<br>";
+            if( isset($carryOverRequests[$user][$destinationYear]) ) {
+                $count = $carryOverRequests[$user][$destinationYear];
+                $count++;
+                $carryOverRequests[$user][$destinationYear] = $count;
+            } else {
+                $carryOverRequests[$user][$destinationYear] = 1;
+            }
+
+        }
+        echo "carryOverRequests=".count($carryOverRequests)."<br><br>";
+
+        foreach($carryOverRequests as $userId=>$userCarryOverRequest ) {
+            //echo "userId=".$userId."<br>";
+            foreach($userCarryOverRequest as $destinationYear=>$userCarryOverRequest[$userId]) {
+                //echo $thisCarryOverRequest[$userId][$destinationYear]."<br>";
+                //echo "destinationYear=$destinationYear <br>";
+                //echo "count=".$userCarryOverRequest[$userId][$destinationYear]."<br>";
+                $count = $carryOverRequests[$userId][$destinationYear];
+                echo "$userId: $destinationYear => $count ";
+                if( $count > 1 ) {
+                    echo "=> Duplicate !!!";
+                }
+                echo "<br>";
             }
 
         }
