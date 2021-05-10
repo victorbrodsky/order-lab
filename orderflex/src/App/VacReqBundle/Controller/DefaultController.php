@@ -101,4 +101,67 @@ class DefaultController extends OrderAbstractController
 
         exit();
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/vacation-request/multiple-carry-over-requests
+     *
+     * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")
+     */
+    public function multipleCarryOverRequestsAction( Request $request ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //exit('Not allowed.');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $status = 'approved';
+
+        //1) get carry-over VacReqRequest with the same year and user
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->select('request');
+        //$dql->select('DISTINCT user.id, requestType.startDate, requestType.endDate, requestType.numberOfDays as numberOfDays');
+        //$dql->select('DISTINCT user.id');
+
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("requestType.abbreviation = 'carryover'");
+
+        $dql->andWhere("request.status = :status");
+        $params['status'] = $status;
+
+        //$dql->andWhere("request.destinationYear = :destinationYear");
+        //$params['destinationYear'] = $year;
+
+        $query = $em->createQuery($dql);
+
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
+
+        $requests = $query->getResult();
+        echo "requests=".count($requests)."<br>";
+
+        $carryOverRequests = array();
+        foreach($requests as $thisRequest) {
+            $user = $thisRequest->getUser();
+            $destinationYear = $thisRequest->getDestinationYear();
+            $carryOverRequests[$user->getId()][$destinationYear] = $request;
+        }
+        echo "carryOverRequests=".count($carryOverRequests)."<br>";
+
+        foreach($carryOverRequests as $userId=>$carryOverRequest ) {
+            echo $userId."<br>";
+            foreach($carryOverRequest as $thisCarryOverRequest) {
+                echo $thisCarryOverRequest[$userId]."<br>";
+            }
+
+        }
+
+        exit('EOF multipleCarryOverRequestsAction');
+    }
 }

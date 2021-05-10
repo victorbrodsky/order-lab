@@ -132,6 +132,7 @@ class VacReqCarryOver
         $this->days = $days;
     }
 
+    //key year is the first year: 2021 => 2021-2022
     public function getYearRange() {
         $endYear = (int)$this->getYear() + 1;
         //echo "endYear=".$endYear."<br>";

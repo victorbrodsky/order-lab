@@ -54,6 +54,7 @@ class VacReqUserCarryOver
 
     /**
      * @ORM\OneToMany(targetEntity="VacReqCarryOver", mappedBy="userCarryOver", cascade={"persist","remove"})
+     * @ORM\OrderBy({"year" = "DESC"})
      **/
     private $carryOvers;
 

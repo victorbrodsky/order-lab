@@ -36,7 +36,9 @@
 
         {{ form_errors(form) }}
 
-        {% for carryOver in form.carryOvers %}
+        {#{% for carryOver in form.carryOvers %}#}
+        {#order by year: the most recent year on top#}
+        {% for carryOver in form.carryOvers|sort((a, b) => b.vars.value.year <=> a.vars.value.year) %}
 
             <div class="well well-sm">
                 {#ID:{{ carryOver.vars.value.id }}#}

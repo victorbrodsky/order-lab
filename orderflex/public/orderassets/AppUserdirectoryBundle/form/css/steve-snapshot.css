@@ -72,7 +72,7 @@
     left: 6px;
     background-repeat: no-repeat;
     background-size: contain;
-    //background-image: url('profile-pic.jpg');
+    /*//background-image: url('profile-pic.jpg');*/
 }
 .snapshot-all .image-box img {
     height: 126px;

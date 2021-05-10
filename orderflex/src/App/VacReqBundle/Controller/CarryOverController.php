@@ -133,6 +133,11 @@ class CarryOverController extends OrderAbstractController
         //add next year, current year, [Current -1], [Current -2]
         $this->addCarryOverByYears($userCarryOver);
 
+//        $newCarryOvers = array();
+//        foreach($userCarryOver->getCarryOvers() as $carryOver) {
+//            echo "$carryOver <br>";
+//        }
+
         $cycle = 'edit';
 
         $form = $this->createCarryOversForm($userCarryOver,$cycle,$request);
@@ -239,6 +244,8 @@ class CarryOverController extends OrderAbstractController
             $carryOver = new VacReqCarryOver();
             $carryOver->setYear($startYear);
             $userCarryOver->addCarryOver($carryOver);
+
+            //echo "startYear=".$startYear."<br>";
         }
     }
 
