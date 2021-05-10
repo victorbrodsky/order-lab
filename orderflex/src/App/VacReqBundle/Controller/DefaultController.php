@@ -147,40 +147,148 @@ class DefaultController extends OrderAbstractController
         echo "requests=".count($requests)."<br>";
 
         $carryOverRequests = array();
-        foreach($requests as $thisRequest) {
-            $user = $thisRequest->getUser();
-            $user = $user."";
-            $destinationYear = $thisRequest->getDestinationYear();
+        //$carryOverDays = array();
 
-            if( isset($carryOverRequests[$user][$destinationYear]) ) {
-                $count = $carryOverRequests[$user][$destinationYear];
-                $count++;
-                $carryOverRequests[$user][$destinationYear] = $count;
-            } else {
-                $carryOverRequests[$user][$destinationYear] = 1;
-            }
+        if(1) {
+            foreach ($requests as $thisRequest) {
+                $user = $thisRequest->getUser();
+                $user = $user . "";
+                $destinationYear = $thisRequest->getDestinationYear();
 
-        }
-        echo "carryOverRequests=".count($carryOverRequests)."<br><br>";
-
-        foreach($carryOverRequests as $userId=>$userCarryOverRequest ) {
-            //echo "userId=".$userId."<br>";
-            foreach($userCarryOverRequest as $destinationYear=>$userCarryOverRequest[$userId]) {
-                //echo $thisCarryOverRequest[$userId][$destinationYear]."<br>";
-                //echo "destinationYear=$destinationYear <br>";
-                //echo "count=".$userCarryOverRequest[$userId][$destinationYear]."<br>";
-                $count = $carryOverRequests[$userId][$destinationYear];
-                //echo "$userId: $destinationYear => $count ";
-                if( $count > 1 ) {
-                    echo "$userId: $destinationYear => $count ";
-                    echo "=> Duplicate !!!";
-                    echo "<br>";
+                if (isset($carryOverRequests[$user][$destinationYear])) {
+                    $count = $carryOverRequests[$user][$destinationYear];
+                    $count++;
+                    $carryOverRequests[$user][$destinationYear] = $count;
+                } else {
+                    $carryOverRequests[$user][$destinationYear] = 1;
                 }
-                //echo "<br>";
             }
+            echo "carryOverRequests=" . count($carryOverRequests) . "<br><br>";
 
+
+            foreach ($carryOverRequests as $userId => $userCarryOverRequest) {
+                //echo "userId=".$userId."<br>";
+                foreach ($userCarryOverRequest as $destinationYear => $userCarryOverRequest[$userId]) {
+                    //echo $thisCarryOverRequest[$userId][$destinationYear]."<br>";
+                    //echo "destinationYear=$destinationYear <br>";
+                    //echo "count=".$userCarryOverRequest[$userId][$destinationYear]."<br>";
+                    $count = $carryOverRequests[$userId][$destinationYear];
+                    //echo "$userId: $destinationYear => $count ";
+                    if ($count > 1) {
+                        echo "$userId: $destinationYear => $count ";
+                        echo "=> Duplicate !!!";
+                        echo "<br>";
+                    }
+                    //echo "<br>";
+                }
+
+            }
         }
+
+//        foreach ($requests as $thisRequest) {
+//            $user = $thisRequest->getUser();
+//            $user = $user . "";
+//            $destinationYear = $thisRequest->getDestinationYear()."";
+//            $thisDay = $thisRequest->getCarryOverDays();
+//
+//            if (isset($carryOverDays[$user][$destinationYear])) {
+//                $days = $carryOverDays[$user][$destinationYear];
+//                $days = $days + $thisDay;
+//                $carryOverDays[$user][$destinationYear] = $days;
+//            } else {
+//                $carryOverDays[$user][$destinationYear] = $thisDay;
+//            }
+//
+//        }
+//
+//        foreach($carryOverDays as $userId=>$userCarryOverDays ) {
+//            //echo "userId=".$userId."<br>";
+//            foreach($userCarryOverDays as $destinationYear=>$userCarryOverDays[$userId]) {
+//                $days = $carryOverDays[$user][$destinationYear];
+//                echo "$userId: $destinationYear => $days ";
+//                echo "<br>";
+//            }
+//
+//        }
 
         exit('EOF multipleCarryOverRequestsAction');
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/vacation-request/diff-carry-over-days
+     *
+     * @Route("/diff-carry-over-days", name="vacreq_diff_carry_over_days")
+     */
+    public function diffCarryOverDaysAction( Request $request )
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //exit('Not allowed.');
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $status = 'approved';
+
+        //1) for all VacReqCarryOver => get days
+        //2) find approved carry over request for this user and year
+        //3) compare days
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqCarryOver');
+        $dql =  $repository->createQueryBuilder("carryover");
+
+        $dql->select('carryover');
+
+        $dql->leftJoin("carryover.userCarryOver", "userCarryOver");
+
+        //$dql->leftJoin("userCarryOver.requestType", "requestType");
+        //$dql->leftJoin("userCarryOver.user", "user");
+        //$dql->where("requestType.abbreviation = 'carryover'");
+
+        //$dql->andWhere("request.status = :status");
+        //$params['status'] = $status;
+
+        //$dql->andWhere("request.destinationYear = :destinationYear");
+        //$params['destinationYear'] = $year;
+
+        $query = $em->createQuery($dql);
+
+//        if( count($params) > 0 ) {
+//            $query->setParameters($params);
+//        }
+
+        $carryovers = $query->getResult();
+        echo "carryovers=".count($carryovers)."<br>";
+
+        foreach($carryovers as $carryover) {
+            $carryOverUser = $carryover->getUserCarryOver();
+            $user = $carryOverUser->getUser();
+            $days = $carryover->getDays();
+            $year = $carryover->getYear();
+
+            $approvedRequests = $vacreqUtil->getCarryOverRequestsByUserStatusYear($user,'approved',$year);
+            //echo "approvedRequests=".count($approvedRequests)."<br>";
+
+            if( count($approvedRequests) > 1 ) {
+                echo "$user: $year => $days days";
+                echo "=> Duplicate !!!";
+                echo "<br>";
+            }
+
+            if( count($approvedRequests) == 1 ) {
+                $approvedRequest = $approvedRequests[0];
+                $thisDays = $approvedRequest->getCarryOverDays();
+
+                if( $thisDays != $days ) {
+                    echo "$user: $year => Diff!!!: [$days] != [$thisDays]";
+                    echo "<br>";
+                }
+            }
+        }
+
+        exit('EOF diffCarryOverDaysAction');
+    }
+
 }
