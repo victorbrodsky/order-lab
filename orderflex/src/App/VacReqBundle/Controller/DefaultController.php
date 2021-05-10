@@ -112,7 +112,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //exit('Not allowed.');
+        exit('Not allowed.');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -225,7 +225,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        //exit('Not allowed.');
+        exit('Not allowed.');
 
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
