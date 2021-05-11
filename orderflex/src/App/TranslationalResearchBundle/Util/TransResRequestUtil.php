@@ -4099,10 +4099,11 @@ class TransResRequestUtil
 
     public function createtWorkRequesterEmails( $ids, $fileName, $limit=null ) {
 
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
 
         $emails = array();
         $count = 0;
+        $totalCount = 0;
 
         foreach( $ids as $requestId ) {
 
@@ -4123,12 +4124,16 @@ class TransResRequestUtil
             if ($submitter) {
                 $email = $submitter->getSingleEmail();
                 $emails[$submitter->getId()] = $email;
+                $totalCount++;
             }
 
         }
 
         if( count($emails) > 0 ) {
             $emailsStr = implode("; ", $emails);
+
+            echo "$totalCount requester's emails: <br><br>";
+
             echo $emailsStr;
         }
 
