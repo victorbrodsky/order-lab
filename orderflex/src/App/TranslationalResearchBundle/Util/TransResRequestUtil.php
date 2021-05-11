@@ -4097,6 +4097,43 @@ class TransResRequestUtil
         $writer->close();
     }
 
+    public function createtWorkRequesterEmails( $ids, $fileName, $limit=null ) {
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $emails = array();
+        $count = 0;
+
+        foreach( $ids as $requestId ) {
+
+            if (!$requestId) {
+                continue;
+            }
+
+            if ($limit && ($count++ > $limit)) {
+                break;
+            }
+
+            $transResRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($requestId);
+            if (!$transResRequest) {
+                continue;
+            }
+
+            $submitter = $transResRequest->getSubmitter();
+            if ($submitter) {
+                $email = $submitter->getSingleEmail();
+                $emails[$submitter->getId()] = $email;
+            }
+
+        }
+
+        if( count($emails) > 0 ) {
+            $emailsStr = implode("; ", $emails);
+            echo $emailsStr;
+        }
+
+        exit();
+    }
 
     public function getProductServiceByProjectSpecialty($projectSpecialty,$asCombobox=true) {
 

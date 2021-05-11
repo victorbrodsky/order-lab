@@ -26,6 +26,13 @@
                 title="Download the spreadsheet with matching work requests">
                 <span class="fa fa-file-excel-o" aria-hidden="true"></span>
             </label>
+
+            <label
+                    for="download-email-list" tabindex="0"
+                    data-toggle="tooltip"
+                    title="Generate the list of the requester's emails for the matching work requests">
+                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+            </label>
         {% endif %}
     </h4>
 
@@ -35,6 +42,14 @@
                 id="download-spreadsheet-form"
                 class="btn hidden"
         >Download the spreadsheet with matching work requests</button>
+    </form>
+
+    <form action="{{ path('translationalresearch_download_requester_emails') }}" method="post" target="_blank">
+        <input type="hidden" name="ids" value="{{ matchingStrWorkRequestIds }}">
+        <button type="submit"
+                id="download-email-list"
+                class="btn hidden"
+        >Generate the list of the requester's emails for the matching work requests</button>
     </form>
 
     <br>

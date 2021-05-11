@@ -2248,6 +2248,34 @@ class RequestController extends OrderAbstractController
         exit();
     }
 
+    /**
+     * @Route("/download-requester-emails/", name="translationalresearch_download_requester_emails", methods={"POST"})
+     */
+    public function downloadRequesterEmailsCsvAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        if( !$ids ) {
+            exit("No work requests found");
+        }
+
+        $idsArr = explode('-', $ids);
+        $idsArr = array_reverse($idsArr);
+
+        //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
+        $fileName = "WorkRequesterEmails".".csv";
+
+        $transresRequestUtil->createtWorkRequesterEmails( $idsArr, $fileName );
+
+        exit();
+    }
 
 
     public function createRequestEntity($user,$transresRequest=null,$formnode=false) {
