@@ -4711,10 +4711,23 @@ class UserController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
 
         //get username
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
         $username = $user->getUsername();
+
+        //EventLog
+        $event = $userAdmin." impersonated ".$user;
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->createUserEditEvent(
+            $this->getParameter('employees.sitename'),
+            $event,
+            $userAdmin,
+            $user,
+            $request,
+            'User Impersonated'
+        );
 
         //http://example.com/somewhere?_switch_user=thomas
         $url = $this->generateUrl('employees_showuser', array('id' => $id));

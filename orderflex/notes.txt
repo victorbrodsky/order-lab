@@ -641,4 +641,7 @@ composer require stof/doctrine-extensions-bundle
 Solution:
 Replaced Doctrine\Common\Persistence\ObjectManager by Doctrine\ORM\EntityManagerInterface in __construct(EntityManagerInterface $em ...)
 
+git push origin master
+git push originme master
+git push bitbucket master
 

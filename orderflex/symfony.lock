@@ -35,6 +35,9 @@
     "doctrine/dbal": {
         "version": "v2.10.1"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
@@ -89,6 +92,9 @@
     },
     "egulias/email-validator": {
         "version": "2.1.14"
+    },
+    "ezyang/htmlpurifier": {
+        "version": "v4.13.0"
     },
     "fabiang/sasl": {
         "version": "v1.0.1"
@@ -236,6 +242,9 @@
     },
     "phpoption/phpoption": {
         "version": "1.7.2"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "0.5.4"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -537,6 +546,9 @@
     "symfony/property-info": {
         "version": "v4.4.2"
     },
+    "symfony/proxy-manager-bridge": {
+        "version": "v4.4.20"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -745,9 +757,6 @@
     },
     "twilio/sdk": {
         "version": "6.4.0"
-    },
-    "webimpress/safe-writer": {
-        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.6.0"
