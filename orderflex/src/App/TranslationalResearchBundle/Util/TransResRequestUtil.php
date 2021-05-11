@@ -4132,7 +4132,7 @@ class TransResRequestUtil
         if( count($emails) > 0 ) {
             $emailsStr = implode("; ", $emails);
 
-            echo count($emails)." requester's emails: <br><br>";
+            echo count($emails)." requester's emails from $totalCount work requests: <br><br>";
 
             echo $emailsStr;
         }
