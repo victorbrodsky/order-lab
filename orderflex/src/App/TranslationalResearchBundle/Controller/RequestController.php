@@ -328,36 +328,6 @@ class RequestController extends OrderAbstractController
 
         $project = $transresRequest->getProject();
 
-//        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
-//            $transresUtil->isProjectRequester($project) === false
-//        ) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
-//            if ($transresUtil->isProjectRequester($project)) {
-//                if ($transresRequest->getProgressState() != 'draft') {
-//                    $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
-//                    $this->get('session')->getFlashBag()->add(
-//                        'warning',
-//                        "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
-//                    );
-//                    //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//                    return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
-//                }
-//            }
-//        }
-//
-//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
         if( false === $transresPermissionUtil->hasRequestPermission('update',$transresRequest) ) {
             if( $transresUtil->isProjectRequester($project) && $transresRequest->getProgressState() != 'draft' ) {
                 $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
