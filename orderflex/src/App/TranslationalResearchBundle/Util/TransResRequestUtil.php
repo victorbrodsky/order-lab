@@ -2307,7 +2307,6 @@ class TransResRequestUtil
             if(0) {
                 //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$invoice) === NULL ) {
                 if ($this->findProductInWorkRequestAndInvoiceItem($invoiceProduct, $transresRequest, $invoiceItem) === FALSE) {
-                    //$itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
 
                     //get $category by item code
                     $category = NULL;
@@ -5095,6 +5094,9 @@ class TransResRequestUtil
 
         return $itemInfo;
     }
+    //Used only in transRequestMacros.twig to display invoice item via:
+    // getInvoiceItemInfoByProduct (product item) and
+    // getNewInvoiceItemWithoutCategory (invoice items without or with non existed category)
     public function getInvoiceItemInfoArr($invoiceItem) {
         $invoice = $invoiceItem->getInvoice();
 
@@ -5136,12 +5138,12 @@ class TransResRequestUtil
         $priceList = $transresRequest->getPriceList();
 
         if( $product ) {
-            $res = $product->calculateQuantities($priceList);
+            $productRes = $product->calculateQuantities($priceList);
         } else {
-            $res = array();
+            $productRes = array();
         }
 
-//            $res = array(
+//            $productRes = array(
 //                'initialQuantity' => $initialQuantity,
 //                'additionalQuantity' => $additionalQuantity, //$additionalQuantity
 //                'initialFee' => $initialFee,
@@ -5156,23 +5158,43 @@ class TransResRequestUtil
         // and the prices on the latest invoice are unchanged (same as on the fee schedule)
         // show just one line: Invoiced Total Quantity: X at $10.00
         if( !$additionalQuantity ) {
-            if( $quantity == 1 ) {
-                //AND the initial quantity equals 1, instead of three lines above, show just one line:
-                //Invoiced Total Quantity: 1
-                $totalQuantityStr = 1;
-                $quantity = NULL; //hide Initial Quantity
-            } else {
-                //Invoiced Total Quantity: X at $10.00
-                $totalQuantityStr = $quantity." at $".$unitPrice;
-                $quantity = NULL; //hide Initial Quantity
+
+            if( $unitPrice == $additionalUnitPrice ) {
+                $additionalUnitPrice = NULL;
+
+                $totalQuantityStr = $quantity . " at $" . $unitPrice;
+                $unitPrice = NULL;
+                $additionalQuantity = NULL;
+                $quantity = NULL;
             }
+
+//            //item does not exists in the original work request
+//            //If $additionalUnitPrice and $additionalQuantity are NULL => Invoiced Total Quantity: X at $10.00
+//            if( !$additionalUnitPrice && !$additionalQuantity ) {
+//                $totalQuantityStr = $quantity . " at $" . $unitPrice;
+//                $quantity = NULL;
+//            }
+
+            if( !$totalQuantityStr ) {
+                if ($quantity == 1) {
+                    //AND the initial quantity equals 1, instead of three lines above, show just one line:
+                    //Invoiced Total Quantity: 1
+                    $totalQuantityStr = 1;
+                    $quantity = NULL; //hide Initial Quantity
+                } else {
+                    //Invoiced Total Quantity: X at $10.00
+                    $totalQuantityStr = $quantity . " at $" . $unitPrice;
+                    $quantity = NULL; //hide Initial Quantity
+                }
+            }
+
         }
 
         //Hide invoice price if the same as in product
-        if( $res && count($res) > 0 ) {
+        if( $productRes && count($productRes) > 0 ) {
             if ($unitPrice && $additionalUnitPrice) {
-                $initialFee = $res['initialFee'];
-                $additionalFee = $res['additionalFee'];
+                $initialFee = $productRes['initialFee'];
+                $additionalFee = $productRes['additionalFee'];
                 if ($unitPrice == $initialFee) {
                     $unitPrice = NULL;
                 }
@@ -5181,13 +5203,21 @@ class TransResRequestUtil
                 }
             }
 
-            if ($description == $res['categoryName']) {
+            if ($description == $productRes['categoryName']) {
                 $description = NULL;
             }
 
-            if ($itemCode == $res['categoryItemCode']) {
+            if ($itemCode == $productRes['categoryItemCode']) {
                 $itemCode = NULL;
             }
+
+            //if( )
+        } else {
+//            //item does not exists in the original work request
+//            //If $additionalUnitPrice and $additionalQuantity are NULL => Invoiced Total Quantity: X at $10.00
+//            if( !$additionalUnitPrice && !$additionalQuantity ) {
+//                $totalQuantityStr = $quantity . " at $" . $unitPrice;
+//            }
         }
 
         $itemInfo = array(
@@ -5207,7 +5237,7 @@ class TransResRequestUtil
             "additionalUnitPrice" => $additionalUnitPrice,
             "itemTotal" => $itemTotal,
 
-            "totalQuantityStr" => $totalQuantityStr
+            "totalQuantityStr" => $totalQuantityStr,
         );
 
         return $itemInfo;

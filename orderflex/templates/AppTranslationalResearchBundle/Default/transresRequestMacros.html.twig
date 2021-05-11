@@ -815,19 +815,7 @@
                 <div class="transres-products-holder">
                     {% for product in form.products %}
 
-                        {#{{ formmacros.field(form.category) }}#}
-                        {#{{ formmacros.field(form.requested) }}#}
-                        {#{{ formmacros.field(form.completed) }}#}
-                        {#{{ formmacros.field(form.comment) }}#}
-
                         {{ transresRequestMacros.productForm(product, cycle, 'transres-products', 'noprototype', sitename, 1) }}
-
-                        {#{% set invoiceItemInfo = transres_request_util.getInvoiceItemInfoByProduct(product.vars.value,cycle) %}#}
-                        {#{% if invoiceItemInfo %}#}
-                            {#<div class="well">#}
-                                {#{{ invoiceItemInfo|raw }}#}
-                            {#</div>#}
-                        {#{% endif %}#}
 
                     {% endfor %}
 
@@ -844,7 +832,7 @@
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">
-                                    Additional Info from the Invoice. The latest invoice ID {{ invoiceLink|raw }}
+                                    Additional Info from the Invoice. See latest invoice {{ invoiceLink|raw }}
                                 </a>
                                 </h4>
                             </div>
@@ -968,33 +956,8 @@
         {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfoByProduct(formproduct.vars.value,cycle) %}
         {% if invoiceItemInfo %}
             <div class="well">
-                {#{{ invoiceItemInfo|raw }}#}
-                {#The latest invoice ID {{ invoiceItemInfo.invoiceLink|raw }}<br>#}
-                {#{{ formmacros.simplefield( "Invoiced Total Quantity:", invoiceItemInfo.totalQuantity, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Invoiced Initial Quantity:", invoiceItemInfo.quantity, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Invoiced Additional Quantity:", invoiceItemInfo.additionalQuantity, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Invoiced Unit Price:", invoiceItemInfo.unitPrice, "", "disabled" ) }}#}
-                {#{{ formmacros.simplefield( "Invoiced Additional Unit Price:", invoiceItemInfo.additionalUnitPrice, "", "disabled" ) }}#}
-                {#{% if invoiceItemInfo.administrativeFee %}#}
-                    {#{{ formmacros.simplefield( "Invoiced Administrative Fee:", invoiceItemInfo.administrativeFee, "", "disabled" ) }}#}
-                {#{% endif %}#}
                 {{ transresRequestMacros.invoiceItemSimpleForm( invoiceItemInfo, false ) }}
             </div>
-
-            {#<div class="panel panel-default">#}
-                {#<div class="panel-heading" role="tab" id="headingOne">#}
-                    {#<h4 class="panel-title">#}
-                        {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#invoiceItemInfo" aria-expanded="true" aria-controls="collapseOne">#}
-                            {#Additional Info from the Invoice#}
-                        {#</a>#}
-                    {#</h4>#}
-                {#</div>#}
-                {#<div id="invoiceItemInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">#}
-                    {#<div class="panel-body text-center">#}
-                        {#{{ invoiceItemInfo|raw }}#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
 
         {% endif %}
 
