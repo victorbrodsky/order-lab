@@ -4123,8 +4123,10 @@ class TransResRequestUtil
             $submitter = $transResRequest->getSubmitter();
             if ($submitter) {
                 $email = $submitter->getSingleEmail();
-                $emails[$submitter->getId()] = $email;
-                $totalCount++;
+                if( $email ) {
+                    $emails[$submitter->getId()] = $email;
+                    $totalCount++;
+                }
             }
 
         }
