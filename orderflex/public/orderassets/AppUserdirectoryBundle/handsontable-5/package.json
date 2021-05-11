@@ -81,7 +81,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.1",
     "css-loader": "^0.28.4",
-    "ecstatic": "^3.2.0",
+    "ecstatic": "^4.1.4",
     "env-cmd": "^5.1.0",
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.1",
