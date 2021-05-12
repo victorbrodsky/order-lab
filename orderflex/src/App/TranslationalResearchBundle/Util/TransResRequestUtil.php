@@ -2037,9 +2037,6 @@ class TransResRequestUtil
         $this->em->persist($invoice);
         $this->em->flush();
 
-        //update parent work request products by invoice's invoiceItems
-        //$this->updateWorkRequestProductsByInvoice($invoice);
-
 //        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
@@ -5150,6 +5147,7 @@ class TransResRequestUtil
     // getInvoiceItemInfoByProduct (product item) and
     // getNewInvoiceItemWithoutCategory (invoice items without or with non existed category)
     public function getInvoiceItemInfoArr($invoiceItem) {
+        //echo "invoice=$invoiceItem<br>";
         $invoice = $invoiceItem->getInvoice();
 
         $url = $this->container->get('router')->generate(
@@ -5309,9 +5307,11 @@ class TransResRequestUtil
         //foreach invoice item: detect if this invoice item does not exists in the original work request
         foreach($latestInvoice->getInvoiceItems() as $invoiceItem ) {
             $invoiceProduct = $invoiceItem->getProduct();
-
+            echo "1invoiceItem=$invoiceItem <br>";
+            echo "invoiceProduct=$invoiceProduct <br>";
             //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) === NULL ) {
+                echo "2invoiceItem=$invoiceItem <br>";
                 $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
                 $newInvoiceItems[] = $itemInfo;
             }

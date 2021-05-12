@@ -500,4 +500,8 @@ class InvoiceItem {
         return $itemCode;
     }
 
+    public function __toString() {
+        return "InvoiceItem ".$this->getId().": description=".$this->getDescription()."; itemCode=".$this->getItemCode()."; quantity=".$this->getQuantity()."; additionalQuantity=".$this->getAdditionalQuantity();
+    }
+
 }

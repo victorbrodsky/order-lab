@@ -819,6 +819,10 @@
 
                     {% endfor %}
 
+                    {% if cycle != "show" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',"transres-add-product-btn","transresProductItemListener") }}
+                    {% endif %}
+
                     {#get added invoice items without or with non existed category#}
                     {% set newInvoiceItems = transres_request_util.getNewInvoiceItemWithoutCategory(form.vars.value,cycle) %}
                     {% if newInvoiceItems and newInvoiceItems|length > 0 %}
@@ -828,6 +832,7 @@
                         {% set discountPercent = newInvoiceItems[0]['discountPercent'] %}
                         {% set invoiceTotal = newInvoiceItems[0]['invoiceTotal'] %}
                         {% set invoiceSubTotal = newInvoiceItems[0]['invoiceSubTotal'] %}
+                        <br>
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
@@ -865,9 +870,6 @@
                         </div>
                     {% endif %}
 
-                    {% if cycle != "show" %}
-                        {{ usermacros.addNewObjectBtn(cycle,'transres-products','Add Product or Service',"transres-add-product-btn","transresProductItemListener") }}
-                    {% endif %}
                 </div>
 
 

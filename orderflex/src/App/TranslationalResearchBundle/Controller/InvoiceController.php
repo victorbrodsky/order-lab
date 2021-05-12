@@ -856,9 +856,6 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $msg . $msg2;
 
-//            //update parent work request products by invoice's invoiceItems
-//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //new
-
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 $msg
@@ -1002,6 +999,13 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+//        // Create an ArrayCollection of the current Tag objects in the database
+//        $originalInvoiceItems = new ArrayCollection();
+//        foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//            echo "1 invoiceItem=" . $invoiceItem . "<br>";
+//            $originalInvoiceItems->add($invoiceItem);
+//        }
+
         //update due date
         $invoice->reSetDueDate();
         //echo "due date=".$invoice->getDueDate()->format("Y-m-d")."<br>";
@@ -1031,6 +1035,29 @@ class InvoiceController extends OrderAbstractController
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
+//            foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//                echo "2 invoiceItem=" . $invoiceItem . "<br>";
+//            }
+
+//            //process invoiceItems
+//            // remove the relationship between the tag and the Task
+//            foreach($originalInvoiceItems as $invoiceItem) {
+//                if( false === $invoice->getInvoiceItems()->contains($invoiceItem) ) {
+//                    // remove the Task from the Tag
+//                    $invoice->getInvoiceItems()->removeElement($invoiceItem);
+//                    // if it was a many-to-one relationship, remove the relationship like this
+//                    $invoiceItem->setInvoice(null);
+//                    $em->persist($invoiceItem);
+//                    // if you wanted to delete the Tag entirely, you can also do that
+//                    $em->remove($invoiceItem);
+//                }
+//            }
+
+//            foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//                echo "3 invoiceItem=" . $invoiceItem . "<br>";
+//            }
+//            exit(111);
+
             //update subsidy for updated invoice
             $subsidy = $transresRequestUtil->updateInvoiceSubsidy($invoice);
             //exit("create new invoice: subsidy=$subsidy"); //testing
@@ -1044,7 +1071,7 @@ class InvoiceController extends OrderAbstractController
 //            $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice); //edit
 
             //update parent work request products by invoice's invoiceItems
-            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
+            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit //testing: remove to see that remove->add new invoiceitem
 
             $transresRequestUtil->updateInvoiceStatus($invoice);
             
@@ -1085,9 +1112,6 @@ class InvoiceController extends OrderAbstractController
             if( $invoiceStatus != $originalInvoiceStatus ) {
                 $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
             }
-
-//            //update parent work request products by invoice's invoiceItems
-//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
             //generate new PDF
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit

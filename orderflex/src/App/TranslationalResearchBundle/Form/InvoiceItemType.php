@@ -81,16 +81,33 @@ class InvoiceItemType extends AbstractType
             $total1 = NULL;
             $total2 = NULL;
             if( $invoiceItem ) {
-                $product = $invoiceItem->getProduct();
-                if( $product ) {
-                    $category = $product->getCategory();
-                    if( $category ) {
-                        $categoryId = $category->getId();
-                    }
-                }
 
-                if( !$categoryId ) {
-                    $categoryId = $invoiceItem->getItemCode();
+//                $product = $invoiceItem->getProduct();
+//                if( $product ) {
+//                    $category = $product->getCategory();
+//                    if( $category ) {
+//                        $categoryId = $category->getId();
+//                    }
+//                }
+//
+//                if( !$categoryId ) {
+//                    $categoryId = $invoiceItem->getItemCode();
+//                }
+//
+//                if( !$invoiceItem->getItemCode() ) {
+//                    $categoryId = $invoiceItem->getItemCode();
+//                }
+
+                if( $invoiceItem->getItemCode() ) {
+                    $product = $invoiceItem->getProduct();
+                    if( $product ) {
+                        $category = $product->getCategory();
+                        if( $category ) {
+                            $categoryId = $category->getId();
+                        }
+                    }
+                } else {
+                    $categoryId = NULL;
                 }
 
                 $itemCode = $invoiceItem->getItemCode();
