@@ -671,13 +671,15 @@ class TransResUtil
         if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
             //echo "show remaining budget <br>";
             $remainingBudget = $project->getRemainingBudget();
+            //echo "remainingBudget=[$remainingBudget] <br>";
 
             if( $remainingBudget !== NULL ) {
                 //Based on the estimated total costs & the approved budget for the selected project, the remaining budget is $[xxx.xx].
                 // If you have questions about this, please [email the system administrator]
-                $remainingBudget = $project->toMoney($remainingBudget);
-
+                //$remainingBudget = $project->toMoney($remainingBudget);
+                //echo "remainingBudget1=[$remainingBudget] <br>";
                 $remainingBudget = $this->dollarSignValue($remainingBudget);
+                //echo "remainingBudget2=[$remainingBudget] <br>";
 
 //                $adminEmailsStr = "";
 //                $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
@@ -7107,8 +7109,10 @@ class TransResUtil
 
     public function dollarSignValue($value) {
         if( $value !== NULL ) {
+            //echo "1value=".$value."<br>";
+            $value = str_replace(",","",$value);
             $value = $this->toDecimal($value);
-            //echo "value=".$value."<br>";
+            //echo "2value=".$value."<br>";
             if( $value >= 0 ) {
                 $value = $this->toMoney($value);
                 $value = "$".$value;

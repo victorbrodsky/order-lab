@@ -2009,17 +2009,25 @@ class TransResRequestUtil
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
         //testing
-        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
-            $itemCode = $invoiceItem->getItemCode();
-            echo "1 ItemCode=" . $itemCode . "<br>";
-        }
+//        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo "1 ItemCode=" . $itemCode . "<br>";
+//        }
+        //exit('EOF getInvoiceItems');
 
 //        //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
 //        $this->updateRequestCompletedFieldsByInvoice($invoice);
 
         //update parent work request products by invoice's invoiceItems
-        $this->updateWorkRequestProductsByInvoice($invoice);
-        
+        $this->updateWorkRequestProductsByInvoice($invoice); //createSubmitNewInvoice
+
+//        //testing
+//        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo "2 ItemCode=" . $itemCode . "<br>";
+//        }
+        //exit('EOF getInvoiceItems');
+
         $this->updateInvoiceStatus($invoice);
 
         //update subsidy for new invoice
@@ -2038,11 +2046,11 @@ class TransResRequestUtil
 //            $msg
 //        );
 
-        //testing
-        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
-            $itemCode = $invoiceItem->getItemCode();
-            echo "2 ItemCode=" . $itemCode . "<br>";
-        }
+//        //testing
+//        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo "3 ItemCode=" . $itemCode . "<br>";
+//        }
         //exit('EOF createSubmitNewInvoice');
 
         $eventType = "Invoice Created";
@@ -2176,7 +2184,7 @@ class TransResRequestUtil
             }
 
             if( !$invoiceProduct ) {
-                exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
+                //exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
                 continue;
             }
 

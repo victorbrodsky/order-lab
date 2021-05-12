@@ -916,16 +916,8 @@ class Project {
      */
     public function getApprovedProjectBudget()
     {
-//        if( $this->approvedProjectBudget === NULL ) {
-//            $approvedProjectBudget = $this->getTotalCost();
-//        } else {
-//            $approvedProjectBudget = $this->approvedProjectBudget;
-//        }
-//        $approvedProjectBudget = $this->strToDecimal($approvedProjectBudget);
-//
-//        return $approvedProjectBudget;
-
-        return $this->approvedProjectBudget;
+        return $this->strToDecimal($this->approvedProjectBudget);
+        //return $this->approvedProjectBudget;
     }
 
     /**

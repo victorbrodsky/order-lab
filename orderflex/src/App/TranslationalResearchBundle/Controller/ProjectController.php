@@ -1566,7 +1566,7 @@ class ProjectController extends OrderAbstractController
         if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
-                $approvedProjectBudget = $project->toMoney($approvedProjectBudget);
+                //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
                 $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
             }
@@ -1661,7 +1661,7 @@ class ProjectController extends OrderAbstractController
         if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
-                $approvedProjectBudget = $project->toMoney($approvedProjectBudget);
+                //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
                 $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
             }

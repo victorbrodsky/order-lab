@@ -844,6 +844,7 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
+            //generate new PDF
             $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user); //new
 
             $invoiceStatus = $invoice->getStatus();
@@ -855,13 +856,16 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $msg . $msg2;
 
+//            //update parent work request products by invoice's invoiceItems
+//            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //new
+
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 $msg
             );
 
             return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-        }
+        }//$form->isSubmitted()
 
         //$invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotalByInvoice($invoice);
         $invoiceDefaultTotal = $transresRequest->calculateDefaultTotalByRequest();
@@ -1085,6 +1089,7 @@ class InvoiceController extends OrderAbstractController
 //            //update parent work request products by invoice's invoiceItems
 //            $transresRequestUtil->updateWorkRequestProductsByInvoice($invoice); //edit
 
+            //generate new PDF
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
