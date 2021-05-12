@@ -78,26 +78,6 @@ $(document).ready(function() {
     
 });
 
-
-// function transresIACUCExemptListener( classname ) {
-//     $("."+classname).on("change", function(e) {
-//         transresIACUCExemptChange($(this),classname);
-//     });
-// }
-// function transresIACUCExemptChange( exemptEl, classname ) {
-//     var exemptData = exemptEl.select2('data');
-//     var exemptText = exemptData.text;
-//     //console.log("change: exemptText="+exemptText);
-//     if( exemptText == "Exempt" ) {
-//         $("."+classname+"-panel").hide('slow');
-//         //$("."+classname+"-panel").fadeOut(2000);
-//     }
-//     if( exemptText == "Not Exempt" ) {
-//         $("."+classname+"-panel").show('slow');
-//         //$("."+classname+"-panel").fadeIn(2000);
-//     }
-// }
-
 function transresIrbExemptListener( classname ) {
     $("."+classname).on("change", function(e) {
         transresIrbExemptChange($(this),classname);
