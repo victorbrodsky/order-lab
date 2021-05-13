@@ -509,6 +509,11 @@ class RequestController extends OrderAbstractController
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
             }
 
+            //TODO: get 'update-invoice-answer':
+            //update => re-generate invoice
+            //update-send => re-generate invoice and send
+            //no-update => do nothing
+
             //send over budget email
             $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //edit
 
