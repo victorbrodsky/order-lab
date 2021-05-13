@@ -351,6 +351,10 @@
             <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
             <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
 
+            {#hidden#}
+            {{ form_widget(forminvoiceItem.id) }}
+            {{ form_widget(forminvoiceItem.product) }}
+
             <div class="row">
                 <div class="col-xs-6">
                     {{ form_widget(forminvoiceItem.description) }}
@@ -825,13 +829,14 @@
 
                     {#get added invoice items without or with non existed category#}
                     {% set newInvoiceItems = transres_request_util.getNewInvoiceItemWithoutCategory(form.vars.value,cycle) %}
-                    {% if newInvoiceItems and newInvoiceItems|length > 0 %}
-                        {% set invoiceLink = newInvoiceItems[0]['invoiceLink'] %}
-                        {% set administrativeFee = newInvoiceItems[0]['administrativeFee'] %}
-                        {% set discountNumeric = newInvoiceItems[0]['discountNumeric'] %}
-                        {% set discountPercent = newInvoiceItems[0]['discountPercent'] %}
-                        {% set invoiceTotal = newInvoiceItems[0]['invoiceTotal'] %}
-                        {% set invoiceSubTotal = newInvoiceItems[0]['invoiceSubTotal'] %}
+                    {% set invoiceInfo = transres_request_util.getInvoiceInfo(form.vars.value,cycle) %}
+                    {% if newInvoiceItems and newInvoiceItems|length > 0 or invoiceInfo %}
+                        {% set invoiceLink = invoiceInfo['invoiceLink'] %}
+                        {% set administrativeFee = invoiceInfo['administrativeFee'] %}
+                        {% set discountNumeric = invoiceInfo['discountNumeric'] %}
+                        {% set discountPercent = invoiceInfo['discountPercent'] %}
+                        {% set invoiceTotal = invoiceInfo['invoiceTotal'] %}
+                        {% set invoiceSubTotal = invoiceInfo['invoiceSubTotal'] %}
                         <br>
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">

@@ -39,7 +39,15 @@ class InvoiceItemType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $invoiceItem = $builder->getData();
+        //$invoiceItem = $builder->getData();
+
+        $builder->add('id', HiddenType::class, array(
+            'attr' => array('class'=>'invoiceitem-id'),
+        ));
+        
+        $builder->add('product', null, array(
+            'attr' => array('class'=>'invoiceitem-product', 'style'=>'display:none;'),
+        ));
 
         $builder->add('quantity', NumberType::class, array(
             'label' => "Quantity",
@@ -98,8 +106,12 @@ class InvoiceItemType extends AbstractType
 //                    $categoryId = $invoiceItem->getItemCode();
 //                }
 
+                //$invoiceItemId = $invoiceItem->getId();
+                //$itemCode = $invoiceItem->getItemCode();
+                $product = NULL;
                 if( $invoiceItem->getItemCode() ) {
                     $product = $invoiceItem->getProduct();
+                    //echo "invoiceitem form product=".$product."<br>";
                     if( $product ) {
                         $category = $product->getCategory();
                         if( $category ) {
@@ -109,6 +121,7 @@ class InvoiceItemType extends AbstractType
                 } else {
                     $categoryId = NULL;
                 }
+                //echo $invoiceItemId.": invoiceitem form categoryId=".$categoryId.", itemCode=".$itemCode.", product=[".$product."]<br>";
 
                 $itemCode = $invoiceItem->getItemCode();
                 //echo "itemCode exists <br>";

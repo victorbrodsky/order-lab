@@ -393,7 +393,7 @@ class Product {
 
     public function __toString()
     {
-        return $this->getCategory()." (ID#".$this->getId()."): requested=".$this->getRequested().", completed=".$this->getCompleted()."<br>";
+        return $this->getCategory()." (ID#".$this->getId()."): requested=".$this->getRequested().", completed=".$this->getCompleted(); //."<br>";
     }
 
 }

@@ -2243,7 +2243,7 @@ class RequestController extends OrderAbstractController
         $fileName = "WorkRequesterEmails".".csv";
 
         $limit = NULL;
-        $transresRequestUtil->createtWorkRequesterEmails( $idsArr, $fileName, $limit );
+        $transresRequestUtil->createWorkRequesterEmails( $idsArr, $fileName, $limit );
 
         exit();
     }

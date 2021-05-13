@@ -501,7 +501,9 @@ class InvoiceItem {
     }
 
     public function __toString() {
-        return "InvoiceItem ".$this->getId().": description=".$this->getDescription()."; itemCode=".$this->getItemCode()."; quantity=".$this->getQuantity()."; additionalQuantity=".$this->getAdditionalQuantity();
+        return "InvoiceItem ".$this->getId().": description=".$this->getDescription().
+        "; itemCode=".$this->getItemCode()."; quantity=".$this->getQuantity().
+        "; additionalQuantity=".$this->getAdditionalQuantity()."; product=[".$this->getProduct()."]";
     }
 
 }

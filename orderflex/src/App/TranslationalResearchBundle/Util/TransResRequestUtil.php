@@ -2162,8 +2162,10 @@ class TransResRequestUtil
 
             $invoiceProduct = $invoiceItem->getProduct();
 
+            //TODO: set product to NULL if itemCode is NULL
             $itemCode = $invoiceItem->getItemCode();
-            echo "ItemCode=" . $itemCode . "<br>";
+            //echo "ItemCode=" . $itemCode . ", product=".$invoiceProduct."<br>";
+            //continue; //testing
 
 //            if (!$invoiceProduct) {
 //                //exit("skip: no request product with item code=".$invoiceItem->getItemCode().", invoiceItemId=".$invoiceItem->getId());
@@ -2374,7 +2376,7 @@ class TransResRequestUtil
                 } else {
                     echo "Product with ID=" . $invoiceProduct->getId() . " already exists in work request. InvoiceID=" . $invoice->getId() . ", workRequestId=" . $transresRequest->getId() . ", invoiceItemId=" . $invoiceItem->getId() . "<br>";
                 }
-            }
+            }//if(0)
             //////////////////// EOF Case D: adding new invoice item with existing category ////////////////////
 
             //Case F: edited invoice item: itemCode changed => EventLog
@@ -2397,27 +2399,10 @@ class TransResRequestUtil
 
         //detect removal (228: 8, Case C)
         foreach( $transresRequest->getProducts() as $product ) {
-
             if( !isset($invoiceItemProducts[$product->getId()]) ) {
                 //product does not exists anymore in the invoice via $invoiceItemProducts
                 $product->setNotInInvoice(true);
             }
-
-//            if( false === $currentProducts->contains($originalProduct) ) {
-//                // remove the Task from the Tag
-//                //$currentReviews->removeElement($originalReview);
-//                //$project->$removeMethod($originalReview);
-//
-//                // if it was a many-to-one relationship, remove the relationship like this
-//                //$originalReview->setProject(null);
-//
-//                //$this->em->persist($originalReview);
-//
-//                // if you wanted to delete the Tag entirely, you can also do that
-//                //$this->em->remove($originalReview);
-//
-//                $originalProduct->setNotInInvoice(true);
-//            }
         }
         
         return $transresRequest;
@@ -4102,7 +4087,7 @@ class TransResRequestUtil
         $writer->close();
     }
 
-    public function createtWorkRequesterEmails( $ids, $fileName, $limit=null ) {
+    public function createWorkRequesterEmails( $ids, $fileName, $limit=null ) {
 
         //$transresUtil = $this->container->get('transres_util');
 
@@ -4594,6 +4579,7 @@ class TransResRequestUtil
             $product = $invoiceItem->getProduct();
 
             if( $product ) {
+                //echo "product=".$product."<br>";
                 $category = $product->getCategory();
             }
 
@@ -5292,6 +5278,34 @@ class TransResRequestUtil
 
         return $itemInfo;
     }
+    public function getInvoiceInfoArr($invoice) {
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_invoice_show',
+            array(
+                'oid'=>$invoice->getOid()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $link = "<a target='_blank' " .
+            "href=" . $url . ">" . $invoice->getOid() . "</a>";
+
+        $administrativeFee = $invoice->getAdministrativeFee();
+        $discountNumeric = $invoice->getDiscountNumeric();
+        $discountPercent = $invoice->getDiscountPercent();
+        $invoiceSubTotal = $invoice->getSubTotal();
+        $invoiceTotal = $invoice->getTotal();
+
+        $invoiceInfo = array(
+            "invoiceLink" => $link,
+            "invoiceSubTotal" => $invoiceSubTotal,
+            "administrativeFee" => $administrativeFee,
+            "discountNumeric" => $discountNumeric,
+            "discountPercent" => $discountPercent,
+            "invoiceTotal" => $invoiceTotal
+        );
+
+        return $invoiceInfo;
+    }
 
     public function getNewInvoiceItemWithoutCategory($transresRequest, $cycle) {
         //Case 228: 8 E (new invoice item without or with new category)
@@ -5307,11 +5321,11 @@ class TransResRequestUtil
         //foreach invoice item: detect if this invoice item does not exists in the original work request
         foreach($latestInvoice->getInvoiceItems() as $invoiceItem ) {
             $invoiceProduct = $invoiceItem->getProduct();
-            echo "1invoiceItem=$invoiceItem <br>";
-            echo "invoiceProduct=$invoiceProduct <br>";
+            //echo "1invoiceItem=$invoiceItem <br>";
+            //echo "invoiceProduct=$invoiceProduct <br>";
             //if( $this->findProductInWorkRequestAndInvoice($invoiceProduct,$transresRequest,$latestInvoice) === NULL ) {
             if( $this->findProductInWorkRequest($invoiceProduct,$transresRequest) === NULL ) {
-                echo "2invoiceItem=$invoiceItem <br>";
+                //echo "2invoiceItem=$invoiceItem <br>";
                 $itemInfo = $this->getInvoiceItemInfoArr($invoiceItem);
                 $newInvoiceItems[] = $itemInfo;
             }
@@ -5321,6 +5335,19 @@ class TransResRequestUtil
         //echo "newInvoiceItems=".count($newInvoiceItems)."<br>";
 
         return $newInvoiceItems;
+    }
+
+    public function getInvoiceInfo($transresRequest, $cycle=NULL) {
+        //get latest invoice
+        $latestInvoice = $this->getLatestInvoice($transresRequest);
+
+        if( !$latestInvoice ) {
+            return NULL;
+        }
+
+        $invoiceInfoArr = $this->getInvoiceInfoArr($latestInvoice);
+
+        return $invoiceInfoArr;
     }
 
     //Find corresponding Invoice Item by a work request product

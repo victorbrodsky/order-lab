@@ -1016,9 +1016,7 @@ class InvoiceController extends OrderAbstractController
 
         //Get $transresRequest (Assume invoice has a single $transresRequest)
         $transresRequest = $invoice->getTransresRequest();
-
-
-
+        
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
 
@@ -1028,21 +1026,38 @@ class InvoiceController extends OrderAbstractController
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
+//        foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//            $invoiceProduct = $invoiceItem->getProduct();
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo "1 ".$invoiceItem."<br>";
+//        }
+
         //$editForm = $this->createForm('App\TranslationalResearchBundle\Form\InvoiceType', $invoice);
         $editForm = $this->createInvoiceForm($invoice,$cycle); //edit
+
+//        foreach($invoice->getInvoiceItems() as $invoiceItem) {
+//            $invoiceProduct = $invoiceItem->getProduct();
+//            $itemCode = $invoiceItem->getItemCode();
+//            echo "2 ".$invoiceItem."<br>";
+//        }
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
 //            foreach($invoice->getInvoiceItems() as $invoiceItem) {
-//                echo "2 invoiceItem=" . $invoiceItem . "<br>";
+//                $invoiceProduct = $invoiceItem->getProduct();
+//                $itemCode = $invoiceItem->getItemCode();
+//                echo "3 ".$invoiceItem."<br>";
 //            }
-
+//            exit('edit invoice');
+            
 //            //process invoiceItems
 //            // remove the relationship between the tag and the Task
 //            foreach($originalInvoiceItems as $invoiceItem) {
+//                echo "Remove?: ".$invoiceItem->getId()."<br>";
 //                if( false === $invoice->getInvoiceItems()->contains($invoiceItem) ) {
+//                    echo "Remove: ".$invoiceItem->getId().": ItemCode=" . $invoiceItem->getItemCode() . ", product=".$invoiceItem->getProduct()."<br>";
 //                    // remove the Task from the Tag
 //                    $invoice->getInvoiceItems()->removeElement($invoiceItem);
 //                    // if it was a many-to-one relationship, remove the relationship like this
@@ -1052,6 +1067,7 @@ class InvoiceController extends OrderAbstractController
 //                    $em->remove($invoiceItem);
 //                }
 //            }
+//            exit('edit invoice');
 
 //            foreach($invoice->getInvoiceItems() as $invoiceItem) {
 //                echo "3 invoiceItem=" . $invoiceItem . "<br>";
