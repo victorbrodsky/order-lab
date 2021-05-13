@@ -24,6 +24,10 @@
     <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
 
     <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
+    <input type="hidden" id="work-request-latest-invoice-id" value="{{ transres_request_util.getLatestInvoiceId(transresRequest) }}" />
+
+    <input type="hidden" id="update-invoice-answer" name="update-invoice-answer" value="" />
+    {{ transresRequestMacros.updateInvoiceQuestionModal(transresRequest) }}
 
     {% if project and project.id %}
         {% set projectFunded = project.getFunded() %}
@@ -368,6 +372,8 @@
         var _productServices = [];
         var _projectSpecialtyId = null;
 
+        var _submitBtn = null;
+
         $(document).ready(function() {
 
             fieldInputMask();
@@ -428,11 +434,34 @@
 
             //transresProductCloneListener();
 
-            transresProductItemListener();
+            transresProductItemListener(this);
 
         });
 
-        function transresValidateRequest(withConfirm) {
+        //https://stackoverflow.com/questions/32666100/jquery-form-submit-with-bootstrap-modal-confirmation
+//        $("#dischargeform").validate({
+//            rules: {
+//                firstname: "required",
+//                lastname: "required",
+//            },
+//            messages: {
+//                firstname: "Please enter your firstname",
+//                lastname: "Please enter your lastname",
+//            },
+//            submitHandler: function (form) {
+//                $("#myModal").modal('show');
+//                $('#SubForm').click(function () {
+//                    form.submit();
+//                });
+//            }
+//        });
+
+        function transresValidateRequest(submitBtn,withConfirm) {
+
+            var answer = $('#update-invoice-answer').val();
+            if( answer ) {
+                return true;
+            }
 
             transresHideBtn();
 
@@ -605,6 +634,11 @@
             //console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
+
+            console.log("submit button="+$(submitBtn).attr('id'));
+            transresUpdateInvoiceQuestion($(submitBtn));
+            return false;
+            //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
         }
 
         function transresHideBtn() {
@@ -1130,6 +1164,32 @@
                 //console.log("product-category-combobox changed");
                 transresRecalculateRemaniningBudget();
             });
+        }
+
+        //Ask to update invoice if: (a) any of the Completed quantities or (b) ordered items are changed (added, removed, or switched)
+
+        function transresUpdateInvoiceQuestion(submitBtn) {
+
+            //if request is changed
+            $('#update-invoice-answer').val('no-update');
+
+            //var clickedButtonId = clickedButton.attr('id');
+            //$('#submit-button-id').val('clickedButtonId');
+            _submitBtn = submitBtn;
+
+            var latestInvoiceId = $('#work-request-latest-invoice-id').val();
+            if( latestInvoiceId ) {
+                console.log("show question modal");
+                $('#modal-update-invoice-question').modal('show');
+            }
+        }
+
+        function transresupdateInvoiceAnswer(answer) {
+            $('#update-invoice-answer').val(answer);
+            //resubmit the form?
+            console.log("click button "+_submitBtn.attr('id'));
+            transresShowBtn();
+            _submitBtn.click();
         }
 
     </script>

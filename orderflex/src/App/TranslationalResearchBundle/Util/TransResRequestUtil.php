@@ -5479,6 +5479,14 @@ class TransResRequestUtil
         return NULL;
     }
 
+    public function getLatestInvoiceId($transresRequest) {
+        $latestInvoice = $this->getLatestInvoice($transresRequest);
+        if( $latestInvoice ) {
+            return $latestInvoice->getOid();
+        }
+        return NULL;
+    }
+    
     public function getInvoiceOidSplitWithUrls($invoice) {
         $transresUtil = $this->container->get('transres_util');
         $router = $transresUtil->getRequestContextRouter();

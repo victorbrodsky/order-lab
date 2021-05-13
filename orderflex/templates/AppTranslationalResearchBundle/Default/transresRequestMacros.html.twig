@@ -1546,6 +1546,53 @@
     </div>
 {% endmacro %}
 
+{#Ask to update invoice if: (a) any of the Completed quantities or (b) ordered items are changed (added, removed, or switched)#}
+{% macro updateInvoiceQuestionModal() %}
+
+    <div class="modal fade" id="modal-update-invoice-question" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Would you like to update the associated invoice and send the updated invoice to the billing contact for this work request now?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <p>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="transresupdateInvoiceAnswer('update')"
+                        >Update the invoice and send</button>
+                    </p>
+
+                    <p>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="transresupdateInvoiceAnswer('update-send')"
+                        >Update the invoice and do not send</button>
+                    </p>
+
+                    <p>
+                        <button
+                                type="button"
+                                class="btn btn-default"
+                                onclick="transresupdateInvoiceAnswer('no-update')"
+                        >Do not update the invoice</button>
+                    </p>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
 

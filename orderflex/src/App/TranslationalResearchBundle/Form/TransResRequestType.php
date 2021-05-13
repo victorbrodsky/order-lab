@@ -383,20 +383,20 @@ class TransResRequestType extends AbstractType
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => $saveAsDraftLabel,
                 //'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
-                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
+                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return transresValidateRequest(this,false);')
             ));
         }
         if( $this->params['saveAsUpdate'] === true ) {
             $builder->add('saveAsUpdate', SubmitType::class, array(
                 'label' => 'Update Changes',
                 //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest(this,false);')
             ));
         }
         if( $this->params['saveAsComplete'] === true ) {
             $builder->add('saveAsComplete', SubmitType::class, array(
                 'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-success saveAsComplete', 'onclick'=>'return transresValidateRequest(true);') //'general-data-confirm'=>"Are you sure you want to submit this Working Request?"
+                'attr' => array('class'=>'btn btn-success saveAsComplete', 'onclick'=>'return transresValidateRequest(this,true);') //'general-data-confirm'=>"Are you sure you want to submit this Working Request?"
             ));
             //, 'onsubmit'=>'transresValidateRequest();'
             //'onclick'=>'transresValidateHandsonTable();',
@@ -405,13 +405,13 @@ class TransResRequestType extends AbstractType
         if( $this->params['saveAsUpdateChangeProgressState'] === true ) {
             $builder->add('saveAsUpdateChangeProgressState', SubmitType::class, array(
                 'label' => 'Update Changes and Completion Status',
-                'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(false);')
+                'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(this,false);')
             ));
         }
         if( $this->params['saveAsUpdateChangeBillingState'] === true ) {
             $builder->add('saveAsUpdateChangeBillingState', SubmitType::class, array(
                 'label' => 'Update Changes and Billing Status',
-                'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(false);')
+                'attr' => array('class'=>'btn btn-success', 'onclick'=>'return transresValidateRequest(this,false);')
             ));
         }
 
