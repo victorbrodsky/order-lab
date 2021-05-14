@@ -5625,10 +5625,10 @@ class TransResRequestUtil
             //Create new invoice entity and pdf
             $invoice = $this->createNewInvoice($transresRequest, $user);
 
-            //TODO: carrying over/copying from the previous invoice version the (a) Administrative Fee and (b) non-fee-schedule items
+            //carrying over/copying from the previous latest invoice version the (a) Administrative Fee and (b) non-fee-schedule items
             if ($latestInvoice) {
 
-                //TODO: (a) Administrative Fee
+                //(a) Administrative Fee
                 $administrativeFee = $latestInvoice->getAdministrativeFee();
                 if ($administrativeFee) {
                     $invoice->setAdministrativeFee($administrativeFee);
@@ -5644,15 +5644,13 @@ class TransResRequestUtil
                     $invoice->setDiscountPercent($discountPercent);
                 }
 
-
-                //TODO: (b) non-fee-schedule items
+                //(b) non-fee-schedule items
                 foreach($latestInvoice->getInvoiceItems() as $invoiceItem) {
-                    echo "invoiceItem=".$invoiceItem."<br>";
+                    //echo "invoiceItem=".$invoiceItem."<br>";
 
-                    //TODO: why product is always exists? (check if category exists)
                     //remove product if item code does not exists in fee schedule
                     if( !$invoiceItem->getProduct() ) {
-                        echo "added invoiceItem=".$invoiceItem."<br>";
+                        //echo "added invoiceItem=".$invoiceItem."<br>";
                         $invoice->addInvoiceItem($invoiceItem);
                     }
                 }
@@ -5663,22 +5661,6 @@ class TransResRequestUtil
                 $invoice->setSubTotal($total);
                 $invoice->setTotal($total);
                 $invoice->setDue($total);
-
-
-//                $invoiceSubTotal = $latestInvoice->getSubTotal();
-//                if ($invoiceSubTotal) {
-//                    $invoice->setSubTotal($invoiceSubTotal);
-//                }
-//                $invoiceTotal = $latestInvoice->getTotal();
-//                if ($invoiceTotal) {
-//                    $invoice->setTotal($invoiceTotal);
-//                }
-//                $invoiceDue = $latestInvoice->getDue();
-//                if ($invoiceDue) {
-//                    $invoice->setDue($invoiceDue);
-//                }
-
-                //$invoiceSubTotal = $latestInvoice->getSubTotal();
 
                 $total = $latestInvoice->calculateTotal();
                 $invoice->setSubTotal($total);

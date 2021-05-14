@@ -195,6 +195,12 @@ class DefaultController extends OrderAbstractController
                                 'text' => $itemCode,
                             );
                         }
+                    } else {
+                        $itemCode = $invoiceItem->getItemCode();
+                        $output[] = array(
+                            'id' => $itemCode,
+                            'text' => $itemCode,
+                        );
                     }
                 }
             }
