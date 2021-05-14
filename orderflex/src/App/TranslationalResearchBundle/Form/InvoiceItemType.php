@@ -121,6 +121,9 @@ class InvoiceItemType extends AbstractType
                 } else {
                     $categoryId = NULL;
                 }
+                if( !$categoryId ) {
+                    $categoryId = $invoiceItem->getItemCode();
+                }
                 //echo $invoiceItemId.": invoiceitem form categoryId=".$categoryId.", itemCode=".$itemCode.", product=[".$product."]<br>";
 
                 $itemCode = $invoiceItem->getItemCode();

@@ -837,6 +837,7 @@
                         {% set discountPercent = invoiceInfo['discountPercent'] %}
                         {% set invoiceTotal = invoiceInfo['invoiceTotal'] %}
                         {% set invoiceSubTotal = invoiceInfo['invoiceSubTotal'] %}
+                        {% set invoiceSubsidy = invoiceInfo['invoiceSubsidy'] %}
                         <br>
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
@@ -866,8 +867,11 @@
                                         {% if administrativeFee %}
                                             {{ formmacros.simplefield( "Invoiced Administrative Fee ($):", administrativeFee, "", "disabled" ) }}
                                         {% endif %}
-                                        {% if administrativeFee %}
+                                        {% if invoiceTotal %}
                                             {{ formmacros.simplefield( "Invoiced Total ($):", invoiceTotal, "", "disabled" ) }}
+                                        {% endif %}
+                                        {% if invoiceSubsidy %}
+                                            {{ formmacros.simplefield( "Invoice Subsidy ($):", invoiceSubsidy, "", "disabled" ) }}
                                         {% endif %}
                                     </div>
                                 </div>

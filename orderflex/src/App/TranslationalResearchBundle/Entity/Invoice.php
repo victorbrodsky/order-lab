@@ -1107,6 +1107,33 @@ class Invoice {
 
         return $total;
     }
+
+    //calculate total with discounts, administrative fee
+    public function calculateTotal() {
+        $total = 0;
+        $discount = 0;
+        $discountNumeric = $this->getDiscountNumeric();
+        $discountPercent = $this->getDiscountPercent();
+        $administrativeFee = $this->getAdministrativeFee();
+        $subTotal = $this->getSubTotal();
+        
+        if( $subTotal ) {
+            if( $discountNumeric ) {
+                $discount = (float)$discountNumeric;
+            }
+            if( $discountPercent ) {
+                $discount = (float)$subTotal * ((float)$discountPercent/100);
+            }
+        }
+
+        $total = (float)$subTotal - (float)$discount;
+
+        if( $administrativeFee ) {
+            $total = (float)$total + (float)$administrativeFee;
+        }
+
+        return $total;
+    }
     
     public function __toString() {
         return "".$this->getId();

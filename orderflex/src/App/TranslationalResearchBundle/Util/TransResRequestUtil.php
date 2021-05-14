@@ -5310,6 +5310,7 @@ class TransResRequestUtil
         $discountPercent = $invoice->getDiscountPercent();
         $invoiceSubTotal = $invoice->getSubTotal();
         $invoiceTotal = $invoice->getTotal();
+        $invoiceSubsidy = $invoice->getSubsidy();
 
         $invoiceInfo = array(
             "invoiceLink" => $link,
@@ -5317,7 +5318,8 @@ class TransResRequestUtil
             "administrativeFee" => $administrativeFee,
             "discountNumeric" => $discountNumeric,
             "discountPercent" => $discountPercent,
-            "invoiceTotal" => $invoiceTotal
+            "invoiceTotal" => $invoiceTotal,
+            "invoiceSubsidy" => $invoiceSubsidy
         );
 
         return $invoiceInfo;
@@ -5577,43 +5579,73 @@ class TransResRequestUtil
         $addMsg = $msgInfo = "";
 
         if( $updateInvoiceAnswer == 'update' || $updateInvoiceAnswer == 'update-send' ) {
+
+            $latestInvoice = $this->getLatestInvoice($transresRequest);
+
             //Create new invoice entity and pdf
             $invoice = $this->createNewInvoice($transresRequest, $user);
-            $msgInvoice = $this->createSubmitNewInvoice($transresRequest,$invoice,false);
 
             //TODO: carrying over/copying from the previous invoice version the (a) Administrative Fee and (b) non-fee-schedule items
-            $latestInvoice = $this->getLatestInvoice($transresRequest);
-            if( $latestInvoice ) {
+            if ($latestInvoice) {
+
+                //TODO: (a) Administrative Fee
                 $administrativeFee = $latestInvoice->getAdministrativeFee();
-                if( $administrativeFee ) {
+                if ($administrativeFee) {
                     $invoice->setAdministrativeFee($administrativeFee);
                 }
 
                 $discountNumeric = $latestInvoice->getDiscountNumeric();
-                if( $discountNumeric ) {
+                if ($discountNumeric) {
                     $invoice->setDiscountNumeric($discountNumeric);
                 }
 
                 $discountPercent = $latestInvoice->getDiscountPercent();
-                if( $discountPercent ) {
+                if ($discountPercent) {
                     $invoice->setDiscountPercent($discountPercent);
                 }
 
-                $invoiceSubTotal = $latestInvoice->getSubTotal();
-                if( $invoiceSubTotal ) {
-                    $invoice->setSubTotal($invoiceSubTotal);
-                }
 
-                $invoiceTotal = $latestInvoice->getTotal();
-                if( $invoiceTotal ) {
-                    $invoice->setTotal($invoiceTotal);
+                //TODO: (b) non-fee-schedule items
+                foreach($latestInvoice->getInvoiceItems() as $invoiceItem) {
+                    if( !$invoiceItem->getProduct() ) {
+                        echo "added invoiceItem=".$invoiceItem."<br>";
+                        $invoice->addInvoiceItem($invoiceItem);
+                    }
                 }
+                exit('111');
+
+                //calculate Subtotal and Total
+                $total = $this->getTransResRequestSubTotal($transresRequest);
+                $invoice->setSubTotal($total);
+                $invoice->setTotal($total);
+                $invoice->setDue($total);
+
+
+//                $invoiceSubTotal = $latestInvoice->getSubTotal();
+//                if ($invoiceSubTotal) {
+//                    $invoice->setSubTotal($invoiceSubTotal);
+//                }
+//                $invoiceTotal = $latestInvoice->getTotal();
+//                if ($invoiceTotal) {
+//                    $invoice->setTotal($invoiceTotal);
+//                }
+//                $invoiceDue = $latestInvoice->getDue();
+//                if ($invoiceDue) {
+//                    $invoice->setDue($invoiceDue);
+//                }
+
+                //$invoiceSubTotal = $latestInvoice->getSubTotal();
+
+                $total = $latestInvoice->calculateTotal();
+                $invoice->setSubTotal($total);
+                $invoice->setTotal($total);
+                $invoice->setDue($total);
 
                 $subsidy = $this->updateInvoiceSubsidy($invoice);
-
-                //$this->em->persist($invoice);
-                $this->em->flush();
             }
+
+            $updateWorkRequest = false;
+            $msgInvoice = $this->createSubmitNewInvoice($transresRequest,$invoice,$updateWorkRequest);
 
             //generate Invoice PDF
             $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
