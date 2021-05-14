@@ -391,6 +391,13 @@ class RequestController extends OrderAbstractController
 
             //exit("Request update submitted");
 
+//            $updateInvoiceAnswer = $form->get('updateinvoiceanswer')->getData();
+//            echo "updateInvoiceAnswer=".$updateInvoiceAnswer."<br>";
+//            if ( $form->getClickedButton() ) {
+//                echo "button clicked=".$form->getClickedButton()->getName()." => ";
+//            }
+//            exit("updateInvoiceAnswer=".$updateInvoiceAnswer);
+
             //set project's funded account number
             $changedMsg = "";
             $break = "<br>";
@@ -509,10 +516,21 @@ class RequestController extends OrderAbstractController
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
             }
 
-            //TODO: get 'update-invoice-answer':
+            //TODO: get 'updateinvoiceanswer':
             //update => re-generate invoice
             //update-send => re-generate invoice and send
             //no-update => do nothing
+            $updateInvoiceAnswer = $form->get('updateinvoiceanswer')->getData();
+            $newInvoiceMsg = $transresRequestUtil->updateInvoiceByWorkRequest($transresRequest,$updateInvoiceAnswer);
+//            if( $newInvoice ) {
+//                $newInvoiceMsg = "";
+//            }
+//            if( $updateInvoiceAnswer == 'update' ) {
+//                updateInvoiceByWorkRequest($transresRequest,$updateInvoiceAnswer);
+//            }
+//            if( $updateInvoiceAnswer == 'update-send' ) {
+//
+//            }
 
             //send over budget email
             $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //edit
@@ -528,7 +546,7 @@ class RequestController extends OrderAbstractController
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                $msg.$overBudgetEmail
+                $msg.$overBudgetEmail.$newInvoiceMsg
             );
 
             //////////// Event Log and Email for Update //////////////////

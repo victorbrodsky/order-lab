@@ -26,7 +26,8 @@
     <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
     <input type="hidden" id="work-request-latest-invoice-id" value="{{ transres_request_util.getLatestInvoiceId(transresRequest) }}" />
 
-    <input type="hidden" id="update-invoice-answer" name="update-invoice-answer" value="" />
+    {#<input type="hidden" id="update-invoice-answer" name="update-invoice-answer" value="" />#}
+    {#<input id="update-invoice-answer" name="update-invoice-answer" value="test-answer!!!" />#}
     {{ transresRequestMacros.updateInvoiceQuestionModal(transresRequest) }}
 
     {% if project and project.id %}
@@ -177,6 +178,8 @@
 
     {{ form_start(form) }}
     {#{{ form_start(form,{'attr':{'onsubmit':'return transresValidateRequest();'}}) }}#}
+
+        {{ form_widget(form.updateinvoiceanswer) }}
 
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -373,6 +376,7 @@
         var _projectSpecialtyId = null;
 
         var _submitBtn = null;
+        var _workRequestUpdated = false;
 
         $(document).ready(function() {
 
@@ -436,6 +440,8 @@
 
             transresProductItemListener(this);
 
+            transresDetectMajorWorkRequestChanges();
+
         });
 
         //https://stackoverflow.com/questions/32666100/jquery-form-submit-with-bootstrap-modal-confirmation
@@ -458,7 +464,7 @@
 
         function transresValidateRequest(submitBtn,withConfirm) {
 
-            var answer = $('#update-invoice-answer').val();
+            var answer = $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val();
             console.log("transresValidateRequest answer="+answer);
             if( answer ) {
                 console.log("submit answer="+answer);
@@ -637,10 +643,20 @@
 
             transresValidateHandsonTable();
 
-            console.log("submit button="+$(submitBtn).attr('id'));
-            transresUpdateInvoiceQuestion($(submitBtn));
-            return false;
-            //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
+            console.log('_workRequestUpdated='+_workRequestUpdated);
+            if( _workRequestUpdated == true ) {
+                console.log("submit button=" + $(submitBtn).attr('id'));
+                transresUpdateInvoiceQuestion($(submitBtn));
+
+                //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
+                return false;
+            } else {
+                //if request is changed
+                $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
+            }
+
+            //return false; //testing
+            return true;
         }
 
         function transresHideBtn() {
@@ -953,6 +969,9 @@
 
             //var thisEl = $('#oleg_translationalresearchbundle_request_project');
             transresRecalculateRemaniningBudget();
+
+            console.log("removeWorkRequestProductObject transres-product-remove-btn click");
+            _workRequestUpdated = true;
         }
 
         //transresProductItemListener
@@ -1173,7 +1192,7 @@
         function transresUpdateInvoiceQuestion(submitBtn) {
 
             //if request is changed
-            $('#update-invoice-answer').val('no-update');
+            //$('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
 
             //var clickedButtonId = clickedButton.attr('id');
             //$('#submit-button-id').val('clickedButtonId');
@@ -1187,11 +1206,46 @@
         }
 
         function transresupdateInvoiceAnswer(answer) {
-            $('#update-invoice-answer').val(answer);
+            $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val(answer);
+            $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').show();
             //resubmit the form?
-            console.log("click button "+_submitBtn.attr('id'));
+            console.log("answer="+answer+"; click button "+_submitBtn.attr('id'));
             transresShowBtn();
+            console.log('answerval='+$('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val());
             _submitBtn.click();
+        }
+
+        function transresDetectMajorWorkRequestChanges() {
+
+            $('.product-requested-quantity, .product-completed-quantity').on('input', function(event) {
+                console.log("quantity changed");
+                _workRequestUpdated = true;
+            });
+
+            $('.product-category-combobox').on('change', function(event) {
+                console.log("product-category-combobox changed");
+                _workRequestUpdated = true;
+            });
+
+            //add product button
+            $('.transres-add-product-btn').on('click', function(event) {
+                console.log("transres-add-product-btn click");
+                _workRequestUpdated = true;
+            });
+
+            //clone product button
+            $('.transres-product-clone-btn').on('click', function(event) {
+                console.log("transres-product-clone-btn click");
+                _workRequestUpdated = true;
+            });
+
+            //Placed in removeWorkRequestProductObject
+//            //remove product button
+//            $('.transres-product-remove-btn').on('click', function(event) {
+//                console.log("transres-product-remove-btn click");
+//                _workRequestUpdated = true;
+//            });
+
         }
 
     </script>

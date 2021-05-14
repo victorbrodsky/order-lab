@@ -2002,7 +2002,7 @@ class TransResRequestUtil
 
         return $invoice;
     }
-    public function createSubmitNewInvoice( $transresRequest, $invoice ) {
+    public function createSubmitNewInvoice( $transresRequest, $invoice, $updateWorkRequest=true ) {
         $transresUtil = $this->container->get('transres_util');
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -2018,8 +2018,10 @@ class TransResRequestUtil
 //        //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
 //        $this->updateRequestCompletedFieldsByInvoice($invoice);
 
-        //update parent work request products by invoice's invoiceItems
-        $this->updateWorkRequestProductsByInvoice($invoice); //createSubmitNewInvoice
+        if( $updateWorkRequest ) {
+            //update parent work request products by invoice's invoiceItems
+            $this->updateWorkRequestProductsByInvoice($invoice); //createSubmitNewInvoice
+        }
 
 //        //testing
 //        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
@@ -2717,6 +2719,20 @@ class TransResRequestUtil
         } else {
             $emailSubject = "Pathology Translational Research Invoice ".$invoice->getOid();
         }
+
+        //TODO:
+        // Verify that the updated (version greater than 1) invoice is sent with
+        // an email body that makes it clear the attached invoice has been “updated”
+        // (For example, it contains two sentences similar to:
+        // “The attached invoice
+        // for your work request has been updated. If you have received any previous
+        // versions of the invoice for the same work request, please use this updated
+        // invoice instead.”
+        // If this or similar text is absent, please add it via an
+        // if statement to all invoices in this situation where (a) invoice version
+        // is greater than 1 and (b) event log indicates any of the previous versions
+        // for this invoice have been sent out.
+
 
         //send by email
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
@@ -5548,6 +5564,82 @@ class TransResRequestUtil
         }
 
         return $url;
+    }
+
+    public function updateInvoiceByWorkRequest( $transresRequest, $updateInvoiceAnswer ) {
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        $invoice = NULL;
+        $msgInvoice = NULL;
+        //$break = "<br>";
+        $addMsg = $msgInfo = "";
+
+        if( $updateInvoiceAnswer == 'update' || $updateInvoiceAnswer == 'update-send' ) {
+            //Create new invoice entity and pdf
+            $invoice = $this->createNewInvoice($transresRequest, $user);
+            $msgInvoice = $this->createSubmitNewInvoice($transresRequest,$invoice,false);
+
+            //TODO: carrying over/copying from the previous invoice version the (a) Administrative Fee and (b) non-fee-schedule items
+            $latestInvoice = $this->getLatestInvoice($transresRequest);
+            if( $latestInvoice ) {
+                $administrativeFee = $latestInvoice->getAdministrativeFee();
+                if( $administrativeFee ) {
+                    $invoice->setAdministrativeFee($administrativeFee);
+                }
+
+                $discountNumeric = $latestInvoice->getDiscountNumeric();
+                if( $discountNumeric ) {
+                    $invoice->setDiscountNumeric($discountNumeric);
+                }
+
+                $discountPercent = $latestInvoice->getDiscountPercent();
+                if( $discountPercent ) {
+                    $invoice->setDiscountPercent($discountPercent);
+                }
+
+                $invoiceSubTotal = $latestInvoice->getSubTotal();
+                if( $invoiceSubTotal ) {
+                    $invoice->setSubTotal($invoiceSubTotal);
+                }
+
+                $invoiceTotal = $latestInvoice->getTotal();
+                if( $invoiceTotal ) {
+                    $invoice->setTotal($invoiceTotal);
+                }
+
+                $subsidy = $this->updateInvoiceSubsidy($invoice);
+
+                //$this->em->persist($invoice);
+                $this->em->flush();
+            }
+
+            //generate Invoice PDF
+            $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+            $filename = $res['filename'];
+            //$pdf = $res['pdf'];
+            $size = $res['size'];
+            $msgPdf = "PDF has been created with filename=".$filename."; size=".$size;
+
+            $addMsg = $addMsg . "<br>New Invoice ID" . $invoice->getOid() . " has been successfully created for the request ID " . $transresRequest->getOid();
+            $addMsg = $addMsg . "<br>" . $msgPdf;
+
+            if( $updateInvoiceAnswer == 'update-send' ) {
+
+                $emailMsg = $this->sendInvoicePDFByEmail($invoice);
+
+                $addMsg = $addMsg . "<br>" . $emailMsg;
+                $msgInfo = $addMsg;
+            }
+
+            //event log
+            //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+            $eventType = "Request State Changed";
+            $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo,false);
+        }
+
+        return $msgInfo;
     }
 
 //    //Find if the $product exists in latest invoice

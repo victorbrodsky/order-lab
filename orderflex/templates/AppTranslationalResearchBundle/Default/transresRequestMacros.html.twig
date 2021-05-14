@@ -913,7 +913,7 @@
                 </button>
 
                 {#<button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
-                <button type="button" class="btn btn-default btn-sm"
+                <button type="button" class="btn btn-default btn-sm transres-product-remove-btn"
                         onClick="removeWorkRequestProductObject(this,'{{ classname }}')"
                 ><span class="glyphicon glyphicon-remove"></span></button>
 
@@ -1564,7 +1564,7 @@
                         <button
                                 type="button"
                                 class="btn btn-primary"
-                                onclick="transresupdateInvoiceAnswer('update')"
+                                onclick="transresupdateInvoiceAnswer('update-send')"
                         >Update the invoice and send</button>
                     </p>
 
@@ -1572,7 +1572,7 @@
                         <button
                                 type="button"
                                 class="btn btn-primary"
-                                onclick="transresupdateInvoiceAnswer('update-send')"
+                                onclick="transresupdateInvoiceAnswer('update')"
                         >Update the invoice and do not send</button>
                     </p>
 

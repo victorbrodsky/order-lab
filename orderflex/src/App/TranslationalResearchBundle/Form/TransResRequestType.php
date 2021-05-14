@@ -28,6 +28,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -310,6 +311,15 @@ class TransResRequestType extends AbstractType
         $builder->add('datalocker',HiddenType::class, array(
             "mapped" => false,
             'attr' => array('class' => 'transres-datalocker-field')
+        ));
+
+//        $builder->add('updateinvoiceanswer',TextType::class, array(
+//            "mapped" => false,
+//            'attr' => array('class' => 'transres-updateinvoiceanswer-field', 'style' => 'display:none;')
+//        ));
+        $builder->add('updateinvoiceanswer',HiddenType::class, array(
+            "mapped" => false,
+            'attr' => array('class' => 'transres-updateinvoiceanswer-field')
         ));
 
         $builder->add('documents', CollectionType::class, array(
