@@ -2409,6 +2409,41 @@ class TransResRequestUtil
         
         return $transresRequest;
     }
+
+    //NOT USED
+    public function processProductFromInvoiceItem($invoice) {
+        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+            //echo "process $invoiceItem <br>";
+            $removeProduct = false;
+            $invoiceProduct = $invoiceItem->getProduct();
+            if( $invoiceProduct ) {
+                $itemCode = $invoiceItem->getItemCode();
+                //set product to NULL if itemCode does not have fee schedule
+                if ($itemCode) {
+                    //$newInvoiceItemCategory = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                    $newInvoiceItemCategory = $this->getOneValidFeeScheduleByProductId($itemCode);
+                    //echo "itemCode=".$itemCode." => category=".$newInvoiceItemCategory."<br>";
+                    if ($newInvoiceItemCategory) {
+                        //fee schedule exists:
+                        $removeProduct = false;
+                    } else {
+                        $removeProduct = true;
+                    }
+                } else {
+                    $removeProduct = true;
+                }
+            }
+            if ($removeProduct) {
+                //echo "remove product $removeProduct <br>";
+                $invoiceProduct = NULL; //"Not Existed Fee Schedule";
+                $invoiceItem->setProduct(NULL);
+                $this->em->persist($invoiceItem);
+                $this->em->persist($invoiceProduct);
+                $this->em->remove($invoiceProduct);
+            }
+        }//foreach
+        //exit('processProductFromInvoiceItem');
+    }
     
     public function updateInvoiceStatus($invoice) {
         $paid = $invoice->getPaid();
@@ -4675,6 +4710,11 @@ class TransResRequestUtil
             return $invoiceItem->getProduct();
         }
 
+        //it does not make a sense to create a product without category (fee schedule)
+        if( !$category ) {
+            return NULL;
+        }
+
         $user = $this->secTokenStorage->getToken()->getUser();
 
         if( !$invoiceItem->getSubmitter() ) {
@@ -5607,12 +5647,16 @@ class TransResRequestUtil
 
                 //TODO: (b) non-fee-schedule items
                 foreach($latestInvoice->getInvoiceItems() as $invoiceItem) {
+                    echo "invoiceItem=".$invoiceItem."<br>";
+
+                    //TODO: why product is always exists? (check if category exists)
+                    //remove product if item code does not exists in fee schedule
                     if( !$invoiceItem->getProduct() ) {
                         echo "added invoiceItem=".$invoiceItem."<br>";
                         $invoice->addInvoiceItem($invoiceItem);
                     }
                 }
-                exit('111');
+                //exit('111');
 
                 //calculate Subtotal and Total
                 $total = $this->getTransResRequestSubTotal($transresRequest);

@@ -842,6 +842,9 @@ class InvoiceController extends OrderAbstractController
                 $invoice->setIssuedDate(new \DateTime());
             }
 
+            //remove product with not existing fee schedule
+            //$transresRequestUtil->processProductFromInvoiceItem($invoice);
+
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
             //generate new PDF
@@ -1073,6 +1076,9 @@ class InvoiceController extends OrderAbstractController
 //                echo "3 invoiceItem=" . $invoiceItem . "<br>";
 //            }
 //            exit(111);
+
+            //remove product with not existing fee schedule
+            //$transresRequestUtil->processProductFromInvoiceItem($invoice);
 
             //update subsidy for updated invoice
             $subsidy = $transresRequestUtil->updateInvoiceSubsidy($invoice);
