@@ -2755,7 +2755,6 @@ class TransResRequestUtil
             $emailSubject = "Pathology Translational Research Invoice ".$invoice->getOid();
         }
 
-        //TODO:
         // Verify that the updated (version greater than 1) invoice is sent with
         // an email body that makes it clear the attached invoice has been “updated”
         // (For example, it contains two sentences similar to:
@@ -2767,7 +2766,14 @@ class TransResRequestUtil
         // if statement to all invoices in this situation where (a) invoice version
         // is greater than 1 and (b) event log indicates any of the previous versions
         // for this invoice have been sent out.
+        if( $this->isInvoiceAlreadySent($invoice) ) {
+            $newline =  "<br>\n";
+            $invoiceAlreadySentTxt = "The attached invoice for your work request has been updated. ".
+                "If you have received any previous versions of the invoice for the same work request, ".
+                "please use this updated invoice instead.";
 
+            $emailBody = $emailBody . $newline.$newline. $invoiceAlreadySentTxt;
+        }
 
         //send by email
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
@@ -2782,6 +2788,48 @@ class TransResRequestUtil
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         return $msg;
+    }
+    public function isInvoiceAlreadySent($invoice) {
+        $version = $invoice->getVersion();
+        //echo "version=$version <br>";
+        if( $version > 1 ) {
+            $dqlParameters = array();
+
+            $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+            $dql = $repository->createQueryBuilder("logger");
+            $dql->innerJoin('logger.eventType', 'eventType');
+
+            //$dql->where("logger.entityNamespace = 'App\TranslationalResearchBundle\Entity'");
+
+            $dql->andWhere("logger.entityName = 'Invoice'");
+
+            $dql->andWhere("eventType.name = :eventTypeName");
+            $dqlParameters['eventTypeName'] = "Invoice PDF Issued";
+
+            //$dql->andWhere("logger.entityId = :entityId");
+            //$dqlParameters['entityId'] = $invoice->getId();
+
+            $transresRequest = $invoice->getTransresRequest();
+            $oid = $transresRequestOid = $transresRequest->getOid();
+            //echo "oid=[$oid]<br>";
+            $dql->andWhere("logger.event LIKE :eventStr");
+            $dqlParameters['eventStr'] = '%'.$oid.'%';
+
+            $dql->orderBy("logger.id","DESC");
+            $query = $this->em->createQuery($dql);
+
+            if( count($dqlParameters) > 0 ) {
+                $query->setParameters($dqlParameters);
+            }
+
+            $loggers = $query->getResult();
+            //echo "loggers=".count($loggers)."<br>";
+
+            if( count($loggers) > 0 ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function sendNewInvoicePDFGeneratedEmail($invoice) {
@@ -5657,13 +5705,18 @@ class TransResRequestUtil
                 //exit('111');
 
                 //calculate Subtotal and Total
-                $total = $this->getTransResRequestSubTotal($transresRequest);
-                $invoice->setSubTotal($total);
-                $invoice->setTotal($total);
-                $invoice->setDue($total);
+//                $total = $this->getTransResRequestSubTotal($transresRequest);
+//                $invoice->setSubTotal($total);
+//                $invoice->setTotal($total);
+//                $invoice->setDue($total);
 
-                $total = $latestInvoice->calculateTotal();
-                $invoice->setSubTotal($total);
+                $subTotal = $invoice->calculateSubTotal();
+                $invoice->setSubTotal($subTotal);
+                //$invoice->setTotal($subTotal);
+                //$invoice->setDue($subTotal);
+
+                $total = $invoice->calculateTotal();
+                //$invoice->setSubTotal($total);
                 $invoice->setTotal($total);
                 $invoice->setDue($total);
 

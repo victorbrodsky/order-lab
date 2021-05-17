@@ -1108,6 +1108,46 @@ class Invoice {
         return $total;
     }
 
+    //calculate total of all items with ItemCode with fee schedule (product) and without ItemCode or fee schedule
+    public function calculateSubTotal() {
+
+        $transresRequest = $this->getTransresRequest();
+        $priceList = $transresRequest->getPriceList();
+
+        $invoiceItems = $this->getInvoiceItems();
+
+        $subTotal = 0;
+
+        foreach( $invoiceItems as $invoiceItem ) {
+            $product = $invoiceItem->getProduct();
+
+            if( $product ) {
+                $productRes = $product->calculateQuantities($priceList);
+                $initialQuantity = $productRes['initialQuantity'];
+                $additionalQuantity = $productRes['additionalQuantity'];
+                $initialFee = $productRes['initialFee'];
+                $additionalFee = $productRes['additionalFee'];
+
+                if( $initialFee && $initialQuantity ) {
+                    $subTotal = $subTotal + $transresRequest->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                }
+
+                echo "product subTotal=$subTotal<br>";
+
+            } else {
+                $total1 = $invoiceItem->getTotal1();
+                $total2 = $invoiceItem->getTotal2();
+                $subTotal = $subTotal + $total1 + $total2;
+
+                echo "other subTotal=$subTotal<br>";
+            }
+        }
+
+        $subTotal = $this->toDecimal($subTotal);
+
+        return $subTotal;
+    }
+
     //calculate total with discounts, administrative fee
     public function calculateTotal() {
         $total = 0;

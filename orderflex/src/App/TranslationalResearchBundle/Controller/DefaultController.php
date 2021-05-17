@@ -42,6 +42,32 @@ class DefaultController extends OrderAbstractController
 //            exit($statMachineType.": Found by transitionName=".$transitionName);
 //        }
 
+//        //testing isInvoiceAlreadySent($invoice)
+//        $em = $this->getDoctrine()->getManager();
+//        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid('APCP3353-REQ20459-V28');
+//        $transresRequestUtil = $this->get('transres_request_util');
+//        if( $transresRequestUtil->isInvoiceAlreadySent($invoice) ) {
+//            echo "invoice already sent<br>";
+//        } else {
+//            echo "invoice not sent<br>";
+//        }
+
+        //testing $subTotal = $invoice->calculateSubTotal();
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid('APCP3353-REQ20459-V31');
+        $subTotal = $invoice->calculateSubTotal();
+        $invoice->setSubTotal($subTotal);
+        echo $invoice->getOid().": subTotal=$subTotal<br>";
+
+        $total = $invoice->calculateTotal();
+        $invoice->setTotal($total);
+        $invoice->setDue($total);
+        echo "total=$total<br>";
+
+        $transresRequestUtil = $this->get('transres_request_util');
+        $subsidy = $transresRequestUtil->updateInvoiceSubsidy($invoice);
+        echo "subsidy=$subsidy<br>";
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
