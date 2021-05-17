@@ -752,6 +752,7 @@ function transresRecalculateInvoiceDefaultTotal() {
             }
 
             var thisTotalDefault = transresRoundDecimal(transresGetTotalFeesByQuantity(initialFeeDefault, additionalFeeDefault, initialQuantity, additionalQuantity));
+            console.log("categoryId="+categoryId+": thisTotalDefault="+thisTotalDefault);
 
             totalDefault = (+totalDefault) + (+thisTotalDefault);
             totalDefault = transresRoundDecimal(totalDefault);

@@ -4647,7 +4647,7 @@ class TransResRequestUtil
 
     //Calculate subsidy based only on the invoice's invoiceItem.
     //Used only in updateInvoiceSubsidy($invoice)
-    public function calculateSubsidyInvoiceItems($invoice) {
+    public function calculateSubsidyInvoiceItems_ORIG($invoice) {
         $request = $invoice->getTransresRequest();
 
         $subsidy = 0;
@@ -4711,25 +4711,150 @@ class TransResRequestUtil
                 }
 
                 $totalInvoiceDefault = $totalInvoiceDefault + $totalDefault;
-                //echo "category $itemCode default total=".$totalDefault.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
+                echo "category $itemCode default total=".$totalDefault.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
 
             } else {
                 $totalInvoiceDefault = $totalInvoiceDefault + $total;
-                //echo "invoice item total=".$total.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
+                echo "invoice item total=".$total.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
             }
 
         }//foreach
 
         if( $totalInvoiceDefault && $totalInvoiceFinal ) {
-            //echo "calculate subsidy: totalInvoiceDefault=[$totalInvoiceDefault] - totalInvoiceFinal=[$totalInvoiceFinal]<br>";
+            echo "calculate subsidy: totalInvoiceDefault=[$totalInvoiceDefault] - totalInvoiceFinal=[$totalInvoiceFinal]<br>";
             $subsidy = $totalInvoiceDefault - $totalInvoiceFinal;
         }
 
         //Subsidy does not include administrative fee
         $administrativeFee = $invoice->getAdministrativeFee();
+        echo "before admin fee: invoice subsidy=[$subsidy]<br>";
         if( $administrativeFee ) {
             $subsidy = $subsidy + $administrativeFee;
+            echo "after admin fee: invoice subsidy=[$subsidy]<br>";
         }
+
+        $subsidy = $this->toDecimal($subsidy);
+
+        return $subsidy;
+    }
+    //Calculate subsidy based only on the invoice's invoiceItem.
+    //Used only in updateInvoiceSubsidy($invoice)
+    //Calculate default only based on the invoice items with category (with existing fee schedule) applying discount
+    public function calculateSubsidyInvoiceItems($invoice) {
+        $transresRequest = $invoice->getTransresRequest();
+        $priceList = $transresRequest->getPriceList();
+
+        $subsidy = 0;
+
+        $totalInvoiceDefault = 0;
+        $totalClean = 0; //clean total - invoice item total: only items with existing fee schedule (existing category)
+        $totalInvoiceFinal = $invoice->getTotal();
+        $invoiceItems = $invoice->getInvoiceItems();
+
+        $discountNumeric = $invoice->getDiscountNumeric();
+        $discountPercent = $invoice->getDiscountPercent();
+        //$administrativeFee = $invoice->getAdministrativeFee();
+
+        foreach( $invoiceItems as $invoiceItem ) {
+
+            $initialQuantity = $invoiceItem->getQuantity();                 //initial Quantity
+            $additionalQuantity = $invoiceItem->getAdditionalQuantity();    //additional Quantity
+            $itemCode = $invoiceItem->getItemCode();
+            //$unitPrice = $invoiceItem->getUnitPrice();
+            //$additionalUnitPrice = $invoiceItem->getAdditionalUnitPrice();
+            $total = $invoiceItem->getTotal();
+            $category = NULL;
+
+            //remove -i from itemCode "TRP-0001-i"
+            if( strpos($itemCode, '-') !== false ) {
+                $itemCodeArr = explode('-',$itemCode);
+                if( count($itemCodeArr) > 2 ) {
+                    $itemCode = $itemCodeArr[0].$itemCodeArr[1];
+                }
+            }
+
+            //try to fnd category by
+            $product = $invoiceItem->getProduct();
+
+            if( $product ) {
+                //echo "product=".$product."<br>";
+                $category = $product->getCategory();
+            }
+
+            if( !$category ) {
+                //echo "NULL category: itemCode=".$itemCode."<br>";
+                //try to find category by itemCode
+                //$category = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($itemCode);
+                $category = $this->getOneValidFeeScheduleByProductId($itemCode);
+                //echo "found category=[".$category."] by itemCode=$itemCode"."<br>";
+
+                //create and add product to InvoiceItem without Product by ItemCode
+                if( !$invoiceItem->getProduct() ) {
+                    $this->createAndAddProductToInvoiceItemByItemCode($invoiceItem, $category);
+                }
+            }
+
+            if( $category ) {
+
+                //default quantity
+                $quantitiesArr = $product->calculateQuantities($priceList);
+                $initialQuantity = $quantitiesArr['initialQuantity'];
+                $additionalQuantity = $quantitiesArr['additionalQuantity'];
+                $initialFee = $quantitiesArr['initialFee'];
+                $additionalFee = $quantitiesArr['additionalFee'];
+
+                //echo "units=$units; fee=$fee <br>";
+                if( $initialFee && $initialQuantity ) {
+                    $totalClean = $totalClean + $transresRequest->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
+                }
+
+                //default fee
+                $fee = $category->getPriceFee();
+                $feeAdditionalItem = $category->getPriceFeeAdditionalItem();
+                //$totalDefault = $this->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
+                $totalDefault = $transresRequest->getTotalFeesByQuantity($fee,$feeAdditionalItem,$initialQuantity,$additionalQuantity);
+
+                if( !$totalDefault ) {
+                    $totalDefault = $total;
+                }
+
+                $totalInvoiceDefault = $totalInvoiceDefault + $totalDefault;
+                //echo "category $itemCode default total=".$totalDefault.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
+
+            } else {
+                //$totalInvoiceDefault = $totalInvoiceDefault + $total;
+                //echo "invoice item total=".$total.": totalInvoiceDefault=[$totalInvoiceDefault]<br>";
+            }
+
+        }//foreach
+
+//        if( $totalInvoiceDefault && $totalInvoiceFinal ) {
+//            echo "calculate subsidy: totalInvoiceDefault=[$totalInvoiceDefault] - totalInvoiceFinal=[$totalInvoiceFinal]<br>";
+//            $subsidy = $totalInvoiceDefault - $totalInvoiceFinal;
+//        }
+
+        if( $totalClean ) {
+            if( $discountNumeric ) {
+                $discount = (float)$discountNumeric;
+            }
+            if( $discountPercent ) {
+                $discount = $totalClean * ((float)$discountPercent/100);
+            }
+
+            $totalClean = (float)$totalClean - (float)$discount;
+        }
+        if( $totalInvoiceDefault && $totalClean ) {
+            //echo "calculate subsidy: totalInvoiceDefault=[$totalInvoiceDefault] - totalClean=[$totalClean]<br>";
+            $subsidy = (float)$totalInvoiceDefault - (float)$totalClean;
+        }
+
+//        //Subsidy does not include administrative fee
+//        $administrativeFee = $invoice->getAdministrativeFee();
+//        echo "before admin fee: invoice subsidy=[$subsidy]<br>";
+//        if( $administrativeFee ) {
+//            $subsidy = $subsidy + $administrativeFee;
+//            echo "after admin fee: invoice subsidy=[$subsidy]<br>";
+//        }
 
         $subsidy = $this->toDecimal($subsidy);
 
