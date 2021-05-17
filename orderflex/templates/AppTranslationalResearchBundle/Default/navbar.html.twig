@@ -93,6 +93,13 @@
                                 {#new projects#}
                                 {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                                     {% if specialties|length > 0 %}
+
+                                        {#https://view.med.cornell.edu/translational-research/project/new#}
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_project_new_selector') }}"
+                                            >New Project Request</a>
+                                        </li>
+
                                         {% for specialty in specialties %}
                                             {% if transres_util.getTransresSiteProjectParameter('enableNewProjectOnNavbar',null,specialty) == true %}
                                                 <li>
