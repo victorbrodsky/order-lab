@@ -1132,14 +1132,14 @@ class Invoice {
                     $subTotal = $subTotal + $transresRequest->getTotalFeesByQuantity($initialFee,$additionalFee,$initialQuantity,$additionalQuantity);
                 }
 
-                echo "product subTotal=$subTotal<br>";
+                //echo "product subTotal=$subTotal<br>";
 
             } else {
                 $total1 = $invoiceItem->getTotal1();
                 $total2 = $invoiceItem->getTotal2();
                 $subTotal = $subTotal + $total1 + $total2;
 
-                echo "other subTotal=$subTotal<br>";
+                //echo "other subTotal=$subTotal<br>";
             }
         }
 
