@@ -1557,8 +1557,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Would you like to update the associated invoice and send the updated invoice to the billing contact for this work request now?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="transres-modal-title">Would you like to update the associated invoice and send the updated invoice to the billing contact for this work request now?</h5>
+                    <button
+                            type="button"
+                            class="close transres-btn-update-invoice-answer"
+                            id="transres-btn-update-invoice-modal-close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            onclick="transresShowBtn()"
+                            >
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -1567,7 +1574,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn btn-primary"
+                                class="btn btn-primary transres-btn-update-invoice-answer"
                                 onclick="transresupdateInvoiceAnswer('update-send')"
                         >Update the invoice and send</button>
                     </p>
@@ -1575,7 +1582,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn btn-primary"
+                                class="btn btn-primary transres-btn-update-invoice-answer"
                                 onclick="transresupdateInvoiceAnswer('update')"
                         >Update the invoice and do not send</button>
                     </p>
@@ -1583,7 +1590,7 @@
                     <p>
                         <button
                                 type="button"
-                                class="btn btn-default"
+                                class="btn btn-default transres-btn-update-invoice-answer"
                                 onclick="transresupdateInvoiceAnswer('no-update')"
                         >Do not update the invoice</button>
                     </p>
@@ -1591,7 +1598,13 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button
+                            type="button"
+                            class="btn btn-secondary transres-btn-update-invoice-answer"
+                            id="transres-btn-update-invoice-modal-close"
+                            data-dismiss="modal"
+                            onclick="transresShowBtn()"
+                    >Close</button>
                 </div>
             </div>
         </div>

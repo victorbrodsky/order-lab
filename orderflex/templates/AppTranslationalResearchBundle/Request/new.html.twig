@@ -674,7 +674,7 @@
             $('#please-wait').show();
         }
         function transresShowBtn() {
-            //console.log("show submit");
+            console.log("show submit");
             $(":submit").show();
             $('#please-wait').hide();
         }
@@ -1211,10 +1211,21 @@
             if( latestInvoiceId ) {
                 console.log("show question modal");
                 $('#modal-update-invoice-question').modal('show');
+
+//                //attach listener for modal cancel 'transres-btn-update-invoice-modal-close'
+//                $( "#transres-btn-update-invoice-modal-close" ).on('click', function(event) {
+//                    console.log('modal closed');
+//                    transresShowBtn();
+//                });
             }
         }
 
         function transresupdateInvoiceAnswer(answer) {
+            //hide modal buttons
+            $('.transres-btn-update-invoice-answer').hide();
+            $('#transres-modal-title').text("Please wait...");
+
+
             $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val(answer);
             $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').show();
             //resubmit the form?
