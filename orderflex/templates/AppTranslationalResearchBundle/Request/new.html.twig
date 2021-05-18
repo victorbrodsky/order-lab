@@ -464,11 +464,17 @@
 
         function transresValidateRequest(submitBtn,withConfirm) {
 
-            var answer = $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val();
-            console.log("transresValidateRequest answer="+answer);
-            if( answer ) {
-                console.log("submit answer="+answer);
-                return true;
+            var latestInvoiceId = $('#work-request-latest-invoice-id').val();
+            console.log('latestInvoiceId=' + latestInvoiceId);
+            //console.log('cycle=' + cycle);
+            //if( cycle == 'edit' ) {
+            if( latestInvoiceId ) {
+                var answer = $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val();
+                console.log("transresValidateRequest answer=" + answer);
+                if (answer) {
+                    console.log("submit answer=" + answer);
+                    return true;
+                }
             }
 
             transresHideBtn();
@@ -643,16 +649,19 @@
 
             transresValidateHandsonTable();
 
-            console.log('_workRequestUpdated='+_workRequestUpdated);
-            if( _workRequestUpdated == true ) {
-                console.log("submit button=" + $(submitBtn).attr('id'));
-                transresUpdateInvoiceQuestion($(submitBtn));
+            //if( cycle == 'edit' ) {
+            if( latestInvoiceId ) {
+                console.log('_workRequestUpdated=' + _workRequestUpdated);
+                if (_workRequestUpdated == true) {
+                    console.log("submit button=" + $(submitBtn).attr('id'));
+                    transresUpdateInvoiceQuestion($(submitBtn));
 
-                //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
-                return false;
-            } else {
-                //if request is changed
-                $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
+                    //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
+                    return false;
+                } else {
+                    //if request is changed
+                    $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
+                }
             }
 
             //return false; //testing
