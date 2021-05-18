@@ -1086,7 +1086,13 @@ class ProjectController extends OrderAbstractController
 
         //check enableNewProjectAccessPage
         if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectAccessPage',null,$specialty) !== true ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            //exit('disabled specialty='.$specialtyStr);
+            $adminEmailsStr = $transresUtil->getAdminEmailsStrBySpecialty($specialty,false);
+            //exit('adminEmailsStr='.$adminEmailsStr);
+            $additionalMessage = "This project request type is currently not active. ".
+                "Please select a different project request type or contact $adminEmailsStr";
+            //exit('additionalMessage='.$additionalMessage);
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission',array('additionalMessage'=>$additionalMessage)));
         }
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role

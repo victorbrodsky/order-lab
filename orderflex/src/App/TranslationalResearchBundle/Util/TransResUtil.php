@@ -719,7 +719,26 @@ class TransResUtil
         if( $project ) {
             $projectSpecialty = $project->getProjectSpecialty();
         }
+
+        $adminEmailsStr = $this->getAdminEmailsStrBySpecialty($projectSpecialty,$all);
+
+        return $adminEmailsStr;
         
+//        $adminEmailsStr = "";
+//        $adminUsers = $this->getTransResAdminEmails($projectSpecialty, false, true);
+//        $adminEmails = array();
+//        foreach($adminUsers as $adminUser) {
+//            $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
+//            if( !$all ) {
+//                break;
+//            }
+//        }
+//        if (count($adminEmails) > 0) {
+//            $adminEmailsStr = implode(", ", $adminEmails);
+//        }
+//        return $adminEmailsStr;
+    }
+    public function getAdminEmailsStrBySpecialty($projectSpecialty=NULL,$all=true) {
         $adminEmailsStr = "";
         $adminUsers = $this->getTransResAdminEmails($projectSpecialty, false, true);
         $adminEmails = array();
@@ -732,6 +751,24 @@ class TransResUtil
         if (count($adminEmails) > 0) {
             $adminEmailsStr = implode(", ", $adminEmails);
         }
+
+        if( !$adminEmailsStr ) {
+            $adminEmailsStr = $this->getTransresSiteProjectParameter('fromEmail',null,$projectSpecialty);
+            echo "trpemail=$adminEmailsStr <br>";
+        }
+
+        if( !$adminEmailsStr ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $adminEmails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+            if (count($adminEmails) > 0) {
+                if( $all ) {
+                    $adminEmailsStr = implode(", ", $adminEmails);
+                } else {
+                    $adminEmailsStr = $adminEmails[0];
+                }
+            }
+        }
+
         return $adminEmailsStr;
     }
 
@@ -3264,6 +3301,7 @@ class TransResUtil
         } else {
             $specialtyPostfix = null;
         }
+        //echo "specialtyPostfix="."ROLE_TRANSRES_ADMIN".$specialtyPostfix." <br>";
 
         $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN".$specialtyPostfix));
         foreach( $admins as $user ) {
