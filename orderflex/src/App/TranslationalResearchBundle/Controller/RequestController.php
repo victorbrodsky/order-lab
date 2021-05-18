@@ -254,9 +254,20 @@ class RequestController extends OrderAbstractController
                 exit('form is submitted and finished, msg=' . $msg);
             }
 
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    $msg . $break . $break . $overBudgetEmail
+//                );
+//            } else {
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    $msg
+//                );
+//            }
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                $msg.$overBudgetEmail
+                $msg
             );
 
             //////////// Event Log and Email for Create //////////////////
@@ -535,8 +546,12 @@ class RequestController extends OrderAbstractController
             //send over budget email
             $overBudgetEmail = $transresUtil->sendProjectOverBudgetEmail($transresRequest); //edit
 
+            if( $changedMsg ) {
+                $changedMsg = $break.$break . $changedMsg;
+            }
+
             $msg = "Work Request ".$transresRequest->getOid()." has been updated.";
-            $msg = $msg . $break.$break. $changedMsg;
+            $msg = $msg . $changedMsg;
             $msg = str_replace($break,"<br>",$msg);
 
             if( $testing ) {
@@ -544,9 +559,23 @@ class RequestController extends OrderAbstractController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    $msg . $break.$break . $overBudgetEmail . $break.$break . $newInvoiceMsg
+//                );
+//            } else {
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    $msg . $break.$break . $newInvoiceMsg
+//                );
+//            }
+            if( $newInvoiceMsg ) {
+                $newInvoiceMsg = $break.$break . $newInvoiceMsg;
+            }
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                $msg.$overBudgetEmail.$newInvoiceMsg
+                $msg . $newInvoiceMsg
             );
 
             //////////// Event Log and Email for Update //////////////////
