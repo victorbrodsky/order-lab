@@ -48,6 +48,15 @@ class SpecialtyList extends ListAbstract
      */
     private $requestCategories;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $rolename;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $friendlyname;
 
 
     public function __construct($author=null) {
@@ -85,7 +94,42 @@ class SpecialtyList extends ListAbstract
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRolename()
+    {
+        return $this->rolename;
+    }
 
+    /**
+     * @param mixed $rolename
+     */
+    public function setRolename($rolename)
+    {
+        $this->rolename = $rolename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFriendlyname()
+    {
+        return $this->friendlyname;
+    }
+
+    /**
+     * @param mixed $friendlyname
+     */
+    public function setFriendlyname($friendlyname)
+    {
+        $this->friendlyname = $friendlyname;
+    }
+
+    
+
+
+    //Used in ROLE_TRANSRES_ADMIN_*** (rolename)
     public function getUppercaseName() {
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "HEMATOPATHOLOGY";
@@ -110,6 +154,7 @@ class SpecialtyList extends ListAbstract
         return $abbreviation;
     }
 
+    //Used in project OID (shortname)
     public function getUppercaseShortName() {
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "HP";
@@ -134,6 +179,7 @@ class SpecialtyList extends ListAbstract
         return $abbreviation;
     }
 
+    //Used in Project specialty shown to users as user friendly string (friendlyname)
     public function getUppercaseFullName() {
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "Hematopathology";

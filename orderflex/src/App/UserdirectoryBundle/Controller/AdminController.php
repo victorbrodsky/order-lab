@@ -9397,11 +9397,13 @@ class AdminController extends OrderAbstractController
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        //                                                                  ROLE_               OID      project specialty shown to users as user friendly name
+        //$name =>                                  array(abbreviation,     rolename,        shortname, friendlyname)
         $types = array(
-            "Hematopathology" => "hematopathology",
-            "AP/CP" => "ap-cp",
-            "COVID-19" => "covid19",
-            "Multiparametric In Situ Imaging" => "misi" //Multiparametric In Situ Imaging (MISI)
+            "Hematopathology" =>                    array("hematopathology","HEMATOPATHOLOGY",  "HP",   "Hematopathology"),
+            "AP/CP" =>                              array("ap-cp",          "APCP",             "APCP", "AP/CP"),
+            "COVID-19" =>                           array("covid19",        "COVID19",          "COVID", "COVID-19"),
+            "Multiparametric In Situ Imaging" =>    array("misi",           "MISI",             "MISI", "MISI") //Multiparametric In Situ Imaging (MISI)
         );
 
         $count = 10;

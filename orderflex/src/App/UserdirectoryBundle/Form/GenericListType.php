@@ -1047,6 +1047,20 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( strtolower($this->mapper['className']) == strtolower("SpecialtyList") ) {
+            $builder->add('rolename',null,array(
+                'label' => "Role postfix ('APCP' in 'ROLE_TRANSRES_ADMIN_APCP'):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('friendlyname',null,array(
+                'label' => "Project specialty shown to users as a user friendly name ('AP/CP' in 'New AP/CP Project'):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+
 
     }
     

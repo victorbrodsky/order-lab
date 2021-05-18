@@ -723,20 +723,6 @@ class TransResUtil
         $adminEmailsStr = $this->getAdminEmailsStrBySpecialty($projectSpecialty,$all);
 
         return $adminEmailsStr;
-        
-//        $adminEmailsStr = "";
-//        $adminUsers = $this->getTransResAdminEmails($projectSpecialty, false, true);
-//        $adminEmails = array();
-//        foreach($adminUsers as $adminUser) {
-//            $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
-//            if( !$all ) {
-//                break;
-//            }
-//        }
-//        if (count($adminEmails) > 0) {
-//            $adminEmailsStr = implode(", ", $adminEmails);
-//        }
-//        return $adminEmailsStr;
     }
     public function getAdminEmailsStrBySpecialty($projectSpecialty=NULL,$all=true) {
         $adminEmailsStr = "";

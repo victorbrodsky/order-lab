@@ -1172,6 +1172,14 @@
         {{ formmacros.field(form.duration) }}
     {% endif %}
 
+    {#SpecialtyList#}
+    {% if form.rolename is defined %}
+        {{ formmacros.field(form.rolename) }}
+    {% endif %}
+    {% if form.friendlyname is defined %}
+        {{ formmacros.field(form.friendlyname) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}
