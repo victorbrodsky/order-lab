@@ -9408,6 +9408,8 @@ class AdminController extends OrderAbstractController
             "Multiparametric In Situ Imaging" =>    array("misi",           "MISI",             "MISI", "MISI"), //Multiparametric In Situ Imaging (MISI)
 
             "USCAP" =>                              array("uscap",          "USCAP",            "USCAP", "USCAP"), //USCAP (prefix USCAP)
+            "Anatomic Pathology" =>                 array("ap",             "AP",               "AP",    "AP"),    //Anatomic Pathology (prefix AP)
+            "Clinical Pathology" =>                 array("cp",             "CP",               "CP",    "CP"), //Clinical Pathology (prefix CP)
         );
 
         $flush = false;

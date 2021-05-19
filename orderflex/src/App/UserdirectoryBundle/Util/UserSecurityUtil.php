@@ -2910,6 +2910,10 @@ class UserSecurityUtil {
         $user = $this->secToken->getToken()->getUser();
 
         $rolename = $specialty->getRolename(); //MISI
+        if( !$rolename ) {
+            throw new \Exception('Rolename in the Project Specialty is empty');
+            exit('Rolename in the Project Specialty is empty');
+        }
 
         //9 roles (i.e. 'ROLE_TRANSRES_TECHNICIAN_MISI')
         $transresRoleBases = array(
@@ -3018,14 +3022,20 @@ class UserSecurityUtil {
                 $this->addSingleSiteToEntity($entity,$sitenameAbbreviation);
             }
 
-            //$this->em->persist($entity);
-            //$this->em->flush();
+            $this->em->persist($entity);
+            $this->em->flush();
 
-            echo "Added role=[$role] <br>";
+            $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
+
+            //Flash
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
 
         }//foreach
 
-        exit("EOF addTransresRoles");
+        //exit("EOF addTransresRoles");
     }
     public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
         $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);

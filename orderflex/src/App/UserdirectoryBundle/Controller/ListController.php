@@ -933,10 +933,7 @@ class ListController extends OrderAbstractController
                     $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
                 }
             }
-
-            $this->postProcessList($entity);//testing
-            exit(111);
-
+            
             $em->persist($entity);
             $em->flush();
             

@@ -94,7 +94,12 @@ class TransResListController extends ListController
 
     public function postProcessList($entity) {
         
-        exit('transres postProcessList');
+        //exit('transres postProcessList');
+
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->addTransresRoles($entity);
+        //exit('transres postProcessList');
+
         return NULL;
     }
 
