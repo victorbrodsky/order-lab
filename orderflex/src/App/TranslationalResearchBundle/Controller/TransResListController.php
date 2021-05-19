@@ -31,7 +31,9 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-work-request-products-and-services/", name="transresrequestcategorytypes-list_translationalresearch", methods={"GET"})
+     *
      * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list_translationalresearch", methods={"GET"})
+     * @Route("/list/translational-research-project-specialties-list/", name="transresprojectspecialties-list", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
