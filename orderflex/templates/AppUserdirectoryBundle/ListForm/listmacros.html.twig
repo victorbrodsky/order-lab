@@ -1173,6 +1173,9 @@
     {% endif %}
 
     {#SpecialtyList#}
+    {#{% if form.shortname is defined %}#}
+        {#{{ formmacros.field(form.shortname) }}#}
+    {#{% endif %}#}
     {% if form.rolename is defined %}
         {{ formmacros.field(form.rolename) }}
     {% endif %}

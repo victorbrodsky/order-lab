@@ -9392,8 +9392,10 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //Run after generateRoles
     public function generateTransResProjectSpecialty() {
 
+        $userSecUtil = $this->get('user_security_utility');
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -9403,14 +9405,46 @@ class AdminController extends OrderAbstractController
             "Hematopathology" =>                    array("hematopathology","HEMATOPATHOLOGY",  "HP",   "Hematopathology"),
             "AP/CP" =>                              array("ap-cp",          "APCP",             "APCP", "AP/CP"),
             "COVID-19" =>                           array("covid19",        "COVID19",          "COVID", "COVID-19"),
-            "Multiparametric In Situ Imaging" =>    array("misi",           "MISI",             "MISI", "MISI") //Multiparametric In Situ Imaging (MISI)
+            "Multiparametric In Situ Imaging" =>    array("misi",           "MISI",             "MISI", "MISI"), //Multiparametric In Situ Imaging (MISI)
+
+            "USCAP" =>                              array("uscap",          "USCAP",            "USCAP", "USCAP"), //USCAP (prefix USCAP)
         );
 
+        $flush = false;
         $count = 10;
-        foreach( $types as $name => $abbreviation ) {
+        foreach( $types as $name => $nameArr ) {
+
+            $abbreviation = $nameArr[0];
+            $rolename =     $nameArr[1];
+            $shortname =    $nameArr[2];
+            $friendlyname = $nameArr[3];
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
             if( $listEntity ) {
+
+                if( !$listEntity->getAbbreviation() ) {
+                    $listEntity->setAbbreviation($abbreviation);
+                    $flush = true;
+                }
+
+                if( !$listEntity->getRolename() ) {
+                    $listEntity->setRolename($rolename);
+                    $flush = true;
+                }
+
+                if( !$listEntity->getShortname() ) {
+                    $listEntity->setShortname($shortname);
+                    $flush = true;
+                }
+
+                if( !$listEntity->getFriendlyname() ) {
+                    $listEntity->setFriendlyname($friendlyname);
+                    $flush = true;
+                }
+
+                //add not existing _TRANSRES_ roles
+                $userSecUtil->addTransresRoles($listEntity);
+
                 continue;
             }
 
@@ -9418,12 +9452,23 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+            $listEntity->setRolename($rolename);
+            $listEntity->setShortname($shortname);
+            $listEntity->setFriendlyname($friendlyname);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
             $em->flush();
 
             $count = $count + 10;
+
+
+            //add not existing _TRANSRES_ roles
+            $userSecUtil->addTransresRoles($listEntity);
+        }
+
+        if( $flush ) {
+            $em->flush();
         }
 
         return round($count/10);

@@ -153,7 +153,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons-list", methods={"GET"})
      * @Route("/list/life-forms/", name="lifeforms-list", methods={"GET"})
      * @Route("/list/position-track-types/", name="positiontracktypes-list", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list", methods={"GET"})
+     * @Route("/list/translational-research-project-specialties-orig/", name="transresprojectspecialties-list-orig", methods={"GET"})
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes-list", methods={"GET"})
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list", methods={"GET"})
@@ -762,7 +762,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons_create", methods={"POST"})
      * @Route("/list/life-forms/", name="lifeforms_create", methods={"POST"})
      * @Route("/list/position-track-types/", name="positiontracktypes_create", methods={"POST"})
-     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties_create", methods={"POST"})
+     * @Route("/list/translational-research-project-specialties-orig/", name="transresprojectspecialties_create_orig", methods={"POST"})
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes_create", methods={"POST"})
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create", methods={"POST"})
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create", methods={"POST"})
@@ -934,8 +934,13 @@ class ListController extends OrderAbstractController
                 }
             }
 
+            $this->postProcessList($entity);//testing
+            exit(111);
+
             $em->persist($entity);
             $em->flush();
+            
+            $this->postProcessList($entity);
 
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())));
         }
@@ -948,6 +953,10 @@ class ListController extends OrderAbstractController
             'sitename' => $this->sitename,
             'cycle' => 'new'
         );
+    }
+
+    public function postProcessList($entity) {
+        return NULL;
     }
 
 
@@ -1094,7 +1103,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/new", name="objecttyperadiobuttons_new", methods={"GET"})
      * @Route("/list/life-forms/new", name="lifeforms_new", methods={"GET"})
      * @Route("/list/position-track-types/new", name="positiontracktypes_new", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties/new", name="transresprojectspecialties_new", methods={"GET"})
+     * @Route("/list/translational-research-project-specialties-orig/new", name="transresprojectspecialties_new_orig", methods={"GET"})
      * @Route("/list/translational-research-project-types/new", name="transresprojecttypes_new", methods={"GET"})
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new", methods={"GET"})
@@ -1379,7 +1388,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_show", methods={"GET"})
      * @Route("/list/life-forms/{id}", name="lifeforms_show", methods={"GET"})
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_show", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show", methods={"GET"})
+     * @Route("/list/translational-research-project-specialties_orig/{id}", name="transresprojectspecialties_show_orig", methods={"GET"})
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_show", methods={"GET"})
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show", methods={"GET"})
@@ -1657,7 +1666,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/{id}/edit", name="objecttyperadiobuttons_edit", methods={"GET"})
      * @Route("/list/life-forms/{id}/edit", name="lifeforms_edit", methods={"GET"})
      * @Route("/list/position-track-types/{id}/edit", name="positiontracktypes_edit", methods={"GET"})
-     * @Route("/list/translational-research-project-specialties/{id}/edit", name="transresprojectspecialties_edit", methods={"GET"})
+     * @Route("/list/translational-research-project-specialties-orig/{id}/edit", name="transresprojectspecialties_edit-orig", methods={"GET"})
      * @Route("/list/translational-research-project-types/{id}/edit", name="transresprojecttypes_edit", methods={"GET"})
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit", methods={"GET"})
@@ -1986,7 +1995,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_update", methods={"PUT"})
      * @Route("/list/life-forms/{id}", name="lifeforms_update", methods={"PUT"})
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_update", methods={"PUT"})
-     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_update", methods={"PUT"})
+     * @Route("/list/translational-research-project-specialties-orig/{id}", name="transresprojectspecialties_update_orig", methods={"PUT"})
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_update", methods={"PUT"})
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update", methods={"PUT"})
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update", methods={"PUT"})

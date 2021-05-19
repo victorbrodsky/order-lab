@@ -131,6 +131,12 @@ class SpecialtyList extends ListAbstract
 
     //Used in ROLE_TRANSRES_ADMIN_*** (rolename)
     public function getUppercaseName() {
+
+        //Use rolename instead
+        if( $this->getRolename() ) {
+            return $this->getRolename();
+        }
+
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "HEMATOPATHOLOGY";
         }
@@ -156,6 +162,12 @@ class SpecialtyList extends ListAbstract
 
     //Used in project OID (shortname)
     public function getUppercaseShortName() {
+
+        //Use shortname instead
+        if( $this->getShortname() ) {
+            return $this->getShortname();
+        }
+        
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "HP";
         }
@@ -181,6 +193,12 @@ class SpecialtyList extends ListAbstract
 
     //Used in Project specialty shown to users as user friendly string (friendlyname)
     public function getUppercaseFullName() {
+
+        //Use friendlyname instead
+        if( $this->getFriendlyname() ) {
+            return $this->getFriendlyname();
+        }
+        
         if( $this->getAbbreviation() == "hematopathology" ) {
             return "Hematopathology";
         }

@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\UserdirectoryBundle\Entity\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -2897,5 +2898,143 @@ class UserSecurityUtil {
 //            
 //        }
 //    }
+
+    //Run when specialty is added via Site Setting's '2) Populate All Lists with Default Values (Part A)'
+    //Run when add specialty via Platform List Manager's (directory/admin/list-manager/?filter%5Bsearch%5D=specialty):
+    //'Translational Research Project Specialty List, class: [SpecialtyList]' => 'Create a new entry'
+    public function addTransresRoles($specialty) {
+        if( !$specialty ) {
+            return NULL;
+        }
+
+        $user = $this->secToken->getToken()->getUser();
+
+        $rolename = $specialty->getRolename(); //MISI
+
+        //9 roles (i.e. 'ROLE_TRANSRES_TECHNICIAN_MISI')
+        $transresRoleBases = array(
+            'ROLE_TRANSRES_TECHNICIAN'              => array(
+                'Translational Research [[ROLENAME]] Technician',
+                "View and Edit a Translational Research [[ROLENAME]] Request",
+                50,
+            ),
+
+            'ROLE_TRANSRES_REQUESTER'               => array(
+                'Translational Research [[ROLENAME]] Project Requester',
+                "Submit, View and Edit a Translational Research [[ROLENAME]] Project",
+                30,
+            ),
+
+            'ROLE_TRANSRES_BILLING_ADMIN'           => array(
+                'Translational Research [[ROLENAME]] Billing Administrator',
+                "Create, View, Edit and Send an Invoice for Translational Research [[ROLENAME]] Project",
+                50,
+            ),
+
+            'ROLE_TRANSRES_EXECUTIVE'               => array(
+                'Translational Research [[ROLENAME]] Executive Committee',
+                'Full View Access for [[ROLENAME]] Translational Research site',
+                70
+            ),
+
+            'ROLE_TRANSRES_ADMIN'                   => array(
+                'Translational Research [[ROLENAME]] Admin',
+                'Full Access for Translational Research [[ROLENAME]] site',
+                90
+            ),
+
+            'ROLE_TRANSRES_IRB_REVIEWER'            => array(
+                "Translational Research [[ROLENAME]] IRB Reviewer",
+                "[[ROLENAME]] IRB Review",
+                50,
+            ),
+
+            'ROLE_TRANSRES_COMMITTEE_REVIEWER'      => array(
+                "Translational Research [[ROLENAME]] Committee Reviewer",
+                "[[ROLENAME]] Committee Review",
+                50,
+            ),
+
+            'ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER' => array(
+                "Translational Research [[ROLENAME]] Primary Committee Reviewer",
+                "[[ROLENAME]] Committee Review",
+                50
+            ),
+
+            'ROLE_TRANSRES_PRIMARY_REVIEWER' => array(
+                "Translational Research [[ROLENAME]] Final Reviewer",
+                "Review for all states for [[ROLENAME]]",
+                80
+            ),
+        );
+
+        $sitenameAbbreviation = "translationalresearch"; //"translational-research";
+
+        foreach($transresRoleBases as $transresRoleBase=>$roleInfoArr) {
+
+            $role = $transresRoleBase."_".$rolename; //ROLE_TRANSRES_TECHNICIAN_MISI
+
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new Roles();
+
+            //$entity, $count, $user, $name=null
+            $count = null;
+            $entity = $this->setDefaultList( $entity, $count, $user, $role );
+            $entity->setType('default');
+
+            $alias = $roleInfoArr[0];
+            $description = $roleInfoArr[1];
+            $level = $roleInfoArr[2];
+
+            if( $alias ) {
+                $alias = str_replace('[[ROLENAME]]',$rolename,$alias);
+            }
+            if( $description ) {
+                $description = str_replace('[[ROLENAME]]',$rolename,$description);
+            }
+
+            $entity->setName( $role );
+            $entity->setAlias( trim($alias) );
+            $entity->setDescription( trim($description) );
+            $entity->setLevel($level);
+
+            //set sitename
+            if( $sitenameAbbreviation ) {
+//                //the element exists in the array. write your code here.
+//                //i.e. $aliasDescription[3] === 'translational-research'
+//                //$input = array("a", "b", "c", "d", "e");
+//                //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+//                $roleParts = explode('_', $rolename); //ROLE TRANSRES IRB ...
+//                $rolePartSecondArr = array_slice($roleParts, 1, 1);
+//                $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
+//                //exit("rolePartSecond=".$rolePartSecond);
+//                $this->addSingleSite($entity,$rolePartSecond,$sitename);
+
+                $this->addSingleSiteToEntity($entity,$sitenameAbbreviation);
+            }
+
+            //$this->em->persist($entity);
+            //$this->em->flush();
+
+            echo "Added role=[$role] <br>";
+
+        }//foreach
+
+        exit("EOF addTransresRoles");
+    }
+    public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
+        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);
+        if( $siteObject ) {
+            if( !$entity->getSites()->contains($siteObject) ) {
+                $entity->addSite($siteObject);
+            }
+        }
+        return $entity;
+    }
     
 }
