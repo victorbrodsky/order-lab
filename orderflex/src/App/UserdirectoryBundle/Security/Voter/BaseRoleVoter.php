@@ -112,7 +112,7 @@ abstract class BaseRoleVoter extends Voter {
     public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) {
         //exit('voteOnSiteSpecificAttribute');
         //return false; //testing
-        //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute."<br>";
+        //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";
         //echo 'attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
         $user = $token->getUser();
@@ -126,7 +126,7 @@ abstract class BaseRoleVoter extends Voter {
 
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
-            //exit('admin!');
+            //exit('admin!: '.'ROLE_'.$siteRoleBase.'_ADMIN');
             return true;
         }
 

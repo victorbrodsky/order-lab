@@ -3046,5 +3046,81 @@ class UserSecurityUtil {
         }
         return $entity;
     }
+
+    public function roleHierarchyTest() {
+        //testing transres ROLE hierarchy
+        $user = $this->secToken->getToken()->getUser();
+        echo "$user: <br><br>";
+
+        $roles = array(
+
+            'ROLE_TRANSRES_TECHNICIAN_APCP',
+            'ROLE_TRANSRES_REQUESTER_APCP',
+            'ROLE_TRANSRES_IRB_REVIEWER_APCP',
+            'ROLE_TRANSRES_COMMITTEE_REVIEWER_APCP',
+            'ROLE_TRANSRES_PRIMARY_REVIEWER_APCP',
+            'ROLE_TRANSRES_BILLING_ADMIN_APCP',
+            'ROLE_TRANSRES_EXECUTIVE_APCP',
+            'ROLE_TRANSRES_ADMIN_APCP',
+
+            '',
+
+            'ROLE_TRANSRES_TECHNICIAN_USCAP',
+            'ROLE_TRANSRES_REQUESTER_USCAP',
+            'ROLE_TRANSRES_IRB_REVIEWER_USCAP',
+            'ROLE_TRANSRES_COMMITTEE_REVIEWER_USCAP',
+            'ROLE_TRANSRES_PRIMARY_REVIEWER_USCAP',
+            'ROLE_TRANSRES_BILLING_ADMIN_USCAP',
+            'ROLE_TRANSRES_EXECUTIVE_USCAP',
+            'ROLE_TRANSRES_ADMIN_USCAP',
+            //'_USCAP',
+
+            '',
+            
+            'ROLE_TRANSRES_USER',
+            'ROLE_TRANSRES_TECHNICIAN',
+            'ROLE_TRANSRES_ADMIN',
+            'ROLE_TRANSRES_REQUESTER',
+            'ROLE_TRANSRES_IRB_REVIEWER',
+            'ROLE_TRANSRES_BILLING_ADMIN',
+            'ROLE_TRANSRES_EXECUTIVE'
+
+        );
+
+//        $roles = array(
+//            'ROLE_TRANSRES_ADMIN',
+//        );
+
+//        $roles = array(
+//            'ROLE_TRANSRES_TECHNICIAN_USCAP',
+//        );
+
+//        $roles = array(
+//            'ROLE_TRANSRES_ADMIN_USCAP',
+//            'ROLE_TRANSRES_TECHNICIAN_USCAP',
+//            'ROLE_TRANSRES_TECHNICIAN_APCP',
+//            'ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY',
+//            'ROLE_TRANSRES_TECHNICIAN',
+//        );
+
+        foreach($roles as $role) {
+            $this->singleRoleHierarchyTest($role);
+        }
+        
+        //exit("<br>EOF role testing");
+    }
+    public function singleRoleHierarchyTest($role) {
+        if( !$role ) {
+            echo "<br>";
+            return NULL;
+        }
+        //testing transres ROLE hierarchy
+        if( !$this->secAuth->isGranted($role) ) {
+            echo "No $role <br>";
+        } else {
+            echo "Yes! $role <br>";
+        }
+        return NULL;
+    }
     
 }
