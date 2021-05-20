@@ -3047,6 +3047,7 @@ class UserSecurityUtil {
         return $entity;
     }
 
+    //Test hierarchy roles
     public function roleHierarchyTest() {
         //testing transres ROLE hierarchy
         $user = $this->secToken->getToken()->getUser();
@@ -3106,7 +3107,7 @@ class UserSecurityUtil {
         foreach($roles as $role) {
             $this->singleRoleHierarchyTest($role);
         }
-        
+
         //exit("<br>EOF role testing");
     }
     public function singleRoleHierarchyTest($role) {
