@@ -663,6 +663,7 @@
                                 {% endif %}
                             {% endif %}
 
+                            {#approve => final_approved#}
                             {% if transres_permission_util.hasProjectPermission("approve",project) and project.state != 'final_approved' %}
                                 <li>
                                     <a general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"

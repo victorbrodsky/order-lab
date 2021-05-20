@@ -994,9 +994,20 @@
 
             {% for actionLink in actionLinks %}
                 <p>
-                {% for actionLinkSet in actionLink %}
-                    {{ actionLinkSet|raw }}
-                {% endfor %}
+                    {% for actionLinkSet in actionLink %}
+                        {{ actionLinkSet|raw }}
+                    {% endfor %}
+
+                    {#TODO: Add a new darker green button next to the green approve button titled “Grant Final Approval” #}
+                    {#TODO: show project review to final_approved users#}
+                    {% if transres_permission_util.hasProjectPermission("final-review",project) and project.state != 'final_approved' %}
+                        <a
+                            class="btn btn-darkgreen"
+                            general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"
+                            href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                        >Grant Final Approval</a>
+                    {% endif %}
+
                 </p>
             {% endfor %}
 

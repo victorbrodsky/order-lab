@@ -518,6 +518,20 @@ class TransResPermissionUtil
             }
         }
 
+        if( $action == "final-review" ) {
+            $done = true;
+            if( $project ) {
+                if( $project->getFunded() ) {
+                    if(
+                        $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                        $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+                    ) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         if( $action == "view-log" ) {
             $done = true;
             if(

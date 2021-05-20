@@ -686,4 +686,9 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     border-color: #7a7a7a;
 }
 
+.btn-darkgreen {
+    color: #fff;
+    background-color: green;
+    border-color: darkgreen;
+}
 
