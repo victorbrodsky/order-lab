@@ -69,9 +69,9 @@ class DefaultController extends OrderAbstractController
 //        echo "subsidy=$subsidy<br>";
 
         //testing transres ROLE hierarchy
-        $userSecUtil = $this->get('user_security_utility');
-        $userSecUtil->roleHierarchyTest();
-        exit("EOF role testing");
+        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil->roleHierarchyTest();
+        //exit("EOF role testing");
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
