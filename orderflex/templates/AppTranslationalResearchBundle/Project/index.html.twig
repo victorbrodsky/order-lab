@@ -527,6 +527,16 @@
                                 >Show project request details</a>
                             </li>
 
+                            {#testing#}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
+                                {#isAdminOrPrimaryReviewer OK! <br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectReviewer(project) %}#}
+                                {#isProjectReviewer(project) OK! <br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectStateReviewer(project,app.user) %}#}
+                                {#isProjectStateReviewer(project,app.user) OK! <br>#}
+                            {#{% endif %}#}
 
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
                                 {% if transres_util.isProjectStateReviewer(project,app.user) %}
