@@ -998,23 +998,6 @@
                         {{ actionLinkSet|raw }}
                     {% endfor %}
 
-                    {#TODO: Add a new darker green button next to the green approve button titled “Grant Final Approval” #}
-                    {#TODO: show project review to final_approved users#}
-                    {#{% if transres_permission_util.hasProjectPermission("final-review",project) and project.state != 'final_approved' %}#}
-                        {#<a#}
-                            {#class="btn btn-darkgreen transres-review-submit"#}
-                            {#general-data-confirm="Are you sure you want to grant final approval for project {{ project.oid }}?"#}
-                            {#general-post-process="transresUpdateProjectSpecificBtn"#}
-                            {#href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"#}
-                        {#>Grant Final Approval</a>#}
-                        {#<a#}
-                            {#general-data-confirm="Are you sure you want to Request additional information from submitter for IRB Review?"#}
-                            {#general-post-process="transresUpdateProjectSpecificBtn"#}
-                            {#href="http://127.0.0.1/order/index_dev.php/translational-research/project-review-transition/irb_review_missinginfo/3359/1360"#}
-                            {#class="btn btn-warning transres-review-submit transres-missinginfo transres-irb_review"#}
-                        {#>Request additional information from submitter for IRB Review</a>#}
-                    {#{% endif %}#}
-
                 </p>
             {% endfor %}
 
@@ -1086,32 +1069,36 @@
         {% endif %}
     {% endif %}
 
-    {#TODO: Add a new darker green button next to the green approve button titled “Grant Final Approval” #}
-    {#TODO: show project review to final_approved users#}
-    {% if transres_permission_util.hasProjectPermission("funded-final-review",project) and project.state != 'final_approved' %}
-        {#<a#}
-                {#class="btn btn-darkgreen transres-review-submit"#}
-                {#general-data-confirm="Are you sure you want to grant final approval for project {{ project.oid }}?"#}
-                {#general-post-process="transresUpdateProjectSpecificBtn"#}
-                {#href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"#}
-        {#>Grant Final Approval</a>#}
-        <p>
-        <a
-                class="btn btn-darkgreen transres-review-submit"
-                general-data-confirm="Are you sure you want to grant final approval for project {{ project.oid }}?"
-                general-post-process="transresUpdateProjectSpecificBtn"
-                href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
-        >Grant Final Approval</a>
-        </p>
+    {#Add a new darker green button next to the green approve button titled “Grant Final Approval” #}
+    {#if move it to projectReviewsEnabledLinkActions, then fields to modify project (price list, budget, irb exp date) would be editable by primar reviewer => final reviewer would be equal to admin#}
+    {% if hasReviews == false %}
+        {% if transres_permission_util.hasProjectPermission("funded-final-review",project) and project.state != 'final_approved' %}
+            <div class="well transres-review-holder text-center col-xs-12">
+                {#<a#}
+                        {#class="btn btn-darkgreen transres-review-submit"#}
+                        {#general-data-confirm="Are you sure you want to grant final approval for project {{ project.oid }}?"#}
+                        {#general-post-process="transresUpdateProjectSpecificBtn"#}
+                        {#href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"#}
+                {#>Grant Final Approval</a>#}
+                <p>
+                <a
+                        class="btn btn-darkgreen transres-review-submit"
+                        general-data-confirm="Are you sure you want to grant final approval for project {{ project.oid }}?"
+                        general-post-process="transresUpdateProjectSpecificBtn"
+                        href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                >Grant Final Approval</a>
+                </p>
 
-        {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}#}
-        {#transres-Project-3359-irb_review#}
-        {% set stateStr = transres_util.getAllowedFromState(project) %}
-        {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ stateStr %}
+                {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}#}
+                {#transres-Project-3359-irb_review#}
+                {% set stateStr = transres_util.getAllowedFromState(project) %}
+                {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ stateStr %}
 
-        {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+                {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
 
-        {% set hasReviews = true %}
+                {% set hasReviews = true %}
+            </div>
+        {% endif %}
     {% endif %}
 
     {% if not hasReviews %}
