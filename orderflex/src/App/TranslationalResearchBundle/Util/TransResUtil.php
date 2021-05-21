@@ -3931,8 +3931,14 @@ class TransResUtil
 
     //$specialtyStr: hematopathology, ap-cp
     public function getSpecialtyObject($specialtyAbbreviation) {
-        //echo "specialtyStr=".$specialtyStr."<br>";
+        //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
+
         $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+
+        if( !$specialty ) {
+            $specialtyAbbreviationLower = strtolower($specialtyAbbreviation);
+            $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviationLower);
+        }
 
         if( !$specialty ) {
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
