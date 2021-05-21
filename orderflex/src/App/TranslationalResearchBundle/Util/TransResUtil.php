@@ -482,6 +482,35 @@ class TransResUtil
 
         return false;
     }
+    public function isPrimaryReviewer( $project=null, $strictReviewer=false ) { //$projectSpecialty=null
+        if( $strictReviewer ) {
+            //$strictReviewer - check if user is an admin reviewer of this particular project
+            if( $project ) {
+                $user = $this->secTokenStorage->getToken()->getUser();
+                if( $this->isReviewsReviewer($user, $project->getFinalReviews()) ) {
+                    return true;
+                }
+            }
+        } else {
+            $projectSpecialty = null;
+            $specialtyStr = null;
+
+            if( $project ) {
+                $projectSpecialty = $project->getProjectSpecialty();
+            }
+
+            if( $projectSpecialty ) {
+                $specialtyStr = $projectSpecialty->getUppercaseName();
+                $specialtyStr = "_" . $specialtyStr;
+            }
+
+            if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public function isAdminOrPrimaryReviewer( $project=null ) { //$projectSpecialty=null
         $projectSpecialty = null;
         $specialtyStr = null;
@@ -494,7 +523,12 @@ class TransResUtil
         }
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
-            //$this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+        ) {
+            return true;
+        }
+
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
         ) {
             return true;
         }
@@ -2593,6 +2627,10 @@ class TransResUtil
         if( $this->isAdminReviewer($project) ) {
             return true;
         }
+
+//        if( $this->isPrimaryReviewer($project) ) {
+//            return true;
+//        }
 
         //check if reviewer
         //$project, $user, $stateStr=null, $onlyReviewer=false

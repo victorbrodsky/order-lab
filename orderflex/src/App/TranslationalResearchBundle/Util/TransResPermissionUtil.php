@@ -518,7 +518,7 @@ class TransResPermissionUtil
             }
         }
 
-        if( $action == "final-review" ) {
+        if( $action == "funded-final-review" ) {
             $done = true;
             if( $project ) {
                 if( $project->getFunded() ) {

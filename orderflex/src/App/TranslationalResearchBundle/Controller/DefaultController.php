@@ -73,6 +73,24 @@ class DefaultController extends OrderAbstractController
         //$userSecUtil->roleHierarchyTest();
         //exit("EOF role testing");
 
+//        //testing review
+//        $transresUtil = $this->get('transres_util');
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        echo "$user<br>";
+//        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3359);
+//        echo "project=".$project->getOid().":<br><br>";
+//        if($transresUtil->isAdminOrPrimaryReviewer() ) {
+//            echo "isAdminOrPrimaryReviewer<br>";
+//        }
+//        if($transresUtil->isProjectReviewer($project) ) {
+//            echo "isProjectReviewer<br>";
+//        }
+//        if($transresUtil->isProjectStateReviewer($project,$user) ) {
+//            echo "isProjectStateReviewer<br>";
+//        }
+//        exit("EOF review testing");
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 

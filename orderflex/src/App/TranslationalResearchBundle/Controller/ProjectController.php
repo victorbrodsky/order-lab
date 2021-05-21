@@ -118,7 +118,10 @@ class ProjectController extends OrderAbstractController
 //        }
 
         if( $routeName == "translationalresearch_project_index" ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+            if( 
+                $transresUtil->isAdminOrPrimaryReviewer() === false && 
+                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false 
+            ) {
                 if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
                     return $this->redirectToRoute('translationalresearch_my_project_index');
                 }
@@ -2077,7 +2080,10 @@ class ProjectController extends OrderAbstractController
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
-        if( false === $transresPermissionUtil->hasProjectPermission("approve",$project) ) {
+        if(
+            false === $transresPermissionUtil->hasProjectPermission("approve",$project) &&
+            false === $transresPermissionUtil->hasProjectPermission("funded-final-review",$project)
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

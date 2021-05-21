@@ -527,6 +527,15 @@
                                 >Show project request details</a>
                             </li>
 
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
+                                {#isAdminOrPrimaryReviewer<br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectReviewer(project) %}#}
+                                {#isProjectReviewer<br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectStateReviewer(project,app.user) %}#}
+                                {#isProjectStateReviewer<br>#}
+                            {#{% endif %}#}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
                                 {% if transres_util.isProjectStateReviewer(project,app.user) %}
                                 <li>
@@ -664,7 +673,14 @@
                             {% endif %}
 
                             {#approve => final_approved#}
-                            {% if transres_permission_util.hasProjectPermission("approve",project) and project.state != 'final_approved' %}
+                            {% if
+                                (
+                                    transres_permission_util.hasProjectPermission("approve",project) or
+                                    transres_permission_util.hasProjectPermission("funded-final-review",project)
+                                )
+                                and
+                                project.state != 'final_approved'
+                            %}
                                 <li>
                                     <a general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"
                                        href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
