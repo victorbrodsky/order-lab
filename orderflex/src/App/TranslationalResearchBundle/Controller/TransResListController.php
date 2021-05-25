@@ -17,6 +17,7 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Controller\ListController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -98,6 +99,13 @@ class TransResListController extends ListController
         
         //exit('transres postProcessList');
 
+        if( $entity instanceof SpecialtyList ) {
+            //OK
+        } else {
+            return NULL;
+        }
+
+        //Use this only for SpecialtyList
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->addTransresRoles($entity);
         //exit('transres postProcessList');
