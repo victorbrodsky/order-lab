@@ -2026,12 +2026,16 @@ class VacReqUtil
 
         $dql->where("requestType.abbreviation = 'business-vacation'");
         $dql->andWhere("requestVacation.status = 'approved'");
-        $dql->andWhere("user.id = ".$user->getId());
-        //$dql->andWhere("request.id <> ".$subjectRequest->getId());
+        //$dql->andWhere("user.id = ".$user->getId());
+        $dql->andWhere("user.id = :userId");
+        $dql->andWhere("request.id != :requestId");
 
         $dql->orderBy('request.id');
 
         $query = $this->em->createQuery($dql);
+
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('requestId', $subjectRequest->getId());
 
         $requests = $query->getResult();
         //EOF get all user approved vacation requests
