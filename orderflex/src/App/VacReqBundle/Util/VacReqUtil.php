@@ -2025,8 +2025,9 @@ class VacReqUtil
         $dql->leftJoin("request.requestVacation", "requestVacation");
 
         $dql->where("requestType.abbreviation = 'business-vacation'");
-        $dql->andWhere("requestVacation.status='approved'");
-        $dql->andWhere("user.id=".$user->getId());
+        $dql->andWhere("requestVacation.status = 'approved'");
+        $dql->andWhere("user.id = ".$user->getId());
+        $dql->andWhere("request.id != ".$subjectRequest->getId());
 
         $dql->orderBy('request.id');
 

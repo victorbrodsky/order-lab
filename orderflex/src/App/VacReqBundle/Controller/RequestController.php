@@ -149,8 +149,6 @@ class RequestController extends OrderAbstractController
 
         //check for overlapped date range
         if( $routeName != "vacreq_carryoverrequest" ) {
-            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for newAction
-
             $vacreqUser = $entity->getUser();
             if( !$vacreqUser ) {
                 $vacreqUser = $user;
@@ -506,7 +504,6 @@ class RequestController extends OrderAbstractController
         //$routeName = $request->get('_route');
         if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
 
-            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity);    //check for editAction, bug: $user is not an approver!
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
             if (count($overlappedRequests) > 0) {
                 //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
@@ -835,7 +832,6 @@ class RequestController extends OrderAbstractController
 
         //check for overlapped date range if a new status is approved
         if( $status == "approved" ) {
-            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($user, $entity); //check for statusAction. bug: $user is not an approver!
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity); //check for statusAction
             //exit("count=".count($overlappedRequests));
             if (count($overlappedRequests) > 0) {
