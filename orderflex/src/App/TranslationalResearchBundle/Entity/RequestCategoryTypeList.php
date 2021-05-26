@@ -111,15 +111,9 @@ class RequestCategoryTypeList extends ListAbstract
      */
     private $productId;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\SpecialtyList")
-//     * @ORM\JoinTable(name="transres_requestcategory_specialty",
-//     *      joinColumns={@ORM\JoinColumn(name="requestcategory_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="specialty_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    private $projectSpecialties;
     /**
+     * Reverse association: Hide this orderable for the work requests that belong to project requests of this type
+     *
      * @ORM\ManyToMany(targetEntity="SpecialtyList", inversedBy="requestCategories")
      * @ORM\JoinTable(name="transres_requestcategory_specialty")
      */
@@ -301,6 +295,9 @@ class RequestCategoryTypeList extends ListAbstract
         }
 
         return $this;
+    }
+    public function clearProjectSpecialties() {
+        $this->projectSpecialties->clear();
     }
 
     public function getPrices()

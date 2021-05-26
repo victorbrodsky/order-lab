@@ -1802,4 +1802,100 @@ class DefaultController extends OrderAbstractController
         }
         return $valueStr;
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/reverse-fee-schedule-list
+     *
+     * @Route("/reverse-fee-schedule-list/", name="translationalresearch_reverse_fee_schedule_list")
+     */
+    public function reverseFeeScheduleListAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("reverseFeeScheduleListAction");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $abbreviations = array(
+            "hematopathology",
+            "ap-cp",
+            "covid19",
+            "misi"
+        );
+
+//        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+//        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
+//        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+
+        //SpecialtyList
+        $projectSpecialties = array();
+        foreach($abbreviations as $abbreviation) {
+            $projectSpecialties[$abbreviation] = $transresUtil->getSpecialtyObject($abbreviation);
+        }
+
+
+        $query = $em->createQueryBuilder()
+            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+
+
+
+        $fees = $query->getQuery()->getResult();
+        echo "fees count=".count($fees)."<br>";
+
+        foreach($fees as $fee) {
+
+            if( count($fee->getProjectSpecialties()) == 0 ) {
+                echo "Skip $fee <br>";
+                continue;
+            }
+
+            $thisAbbreviationsStr = "";
+            $diffStr = "";
+            $thisAbbreviations = array();
+
+            $specialties = $fee->getProjectSpecialties();
+            foreach($specialties as $specialty) {
+                $thisAbbreviations[] = $specialty->getAbbreviation();
+            }
+
+            if( count($thisAbbreviations) > 0 ) {
+                $thisAbbreviationsStr = implode(", ",$thisAbbreviations);
+            }
+
+            $diff = array_diff($abbreviations,$thisAbbreviations);
+
+            if( count($diff) > 0 ) {
+                $diffStr = implode(", ",$diff);
+            }
+
+            echo $fee->getId().": $fee [".$thisAbbreviationsStr. "]=>[" . $diffStr ."]<br>";
+
+            if( count($diff) > 0 ) {
+                $fee->clearProjectSpecialties();
+
+                foreach($diff as $thisAbbreviation) {
+                    $projectSpecialty = $projectSpecialties[$thisAbbreviation];
+                    $fee->addProjectSpecialty($projectSpecialty);
+                    //echo $projectSpecialty->getAbbreviation()." ";
+                }
+                //echo "<br><br>";
+            }
+
+            $resAbbreviations = array();
+            $specialties = $fee->getProjectSpecialties();
+            foreach($specialties as $specialty) {
+                $resAbbreviations[] = $specialty->getAbbreviation();
+            }
+            echo $fee->getId().": ".implode(",",$resAbbreviations)."<br><br>";
+        }
+
+        exit("EOF reverseFeeScheduleListAction");
+    }
 }
