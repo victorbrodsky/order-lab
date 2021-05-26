@@ -1849,7 +1849,11 @@ class DefaultController extends OrderAbstractController
         $fees = $query->getQuery()->getResult();
         echo "fees count=".count($fees)."<br>";
 
+        $count = 0;
+        $updateCount = 0;
         foreach($fees as $fee) {
+
+            $count++;
 
             if( count($fee->getProjectSpecialties()) == 0 ) {
                 echo "Skip $fee <br>";
@@ -1886,6 +1890,8 @@ class DefaultController extends OrderAbstractController
                     //echo $projectSpecialty->getAbbreviation()." ";
                 }
                 //echo "<br><br>";
+
+                $updateCount++;
             }
 
             $resAbbreviations = array();
@@ -1896,6 +1902,6 @@ class DefaultController extends OrderAbstractController
             echo $fee->getId().": ".implode(",",$resAbbreviations)."<br><br>";
         }
 
-        exit("EOF reverseFeeScheduleListAction");
+        exit("EOF reverseFeeScheduleListAction: total=$count, updated=$updateCount");
     }
 }
