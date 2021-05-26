@@ -169,14 +169,44 @@
 
             {% set entity = object['object'] %}
 
-            <tr>
+            {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
+                {% set onBehalfTooltip = "'S' in ID means that this request has been submitted by "
+                    ~ entity.getSubmitter().getUsernameShortest() ~
+                    " on behalf of " ~ entity.getUser().getUsernameShortest()
+                %}
+                {#<tr class="tr-tooltip-left" data-toggle="tooltip" title="{{ onBehalfTooltip }}" data-placement="left">#}
+                {#<tr data-toggle="tooltip" title="{{ onBehalfTooltip }}" data-container=".td-tooltip-{{ entity.id }}">#}
+            {% else %}
+                {% set onBehalfTooltip = null %}
+                {#<tr>#}
+            {% endif %}
 
-                <td>
+            <tr>
+            {#<tr data-toggle="tooltip" title="{{ onBehalfTooltip }}">#}
+
+                {#<td id="td-tooltip-{{ entity.id }}" class="td-tooltip-{{ entity.id }}">#}
+                {% if onBehalfTooltip %}
+                    <td data-toggle="tooltip" title="{{ onBehalfTooltip }}" data-container="body">
+                    <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a> S
+                {% else %}
+                    <td>
                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
-                    {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
-                        S
-                    {% endif %}
-                </td>
+                {% endif %}
+                {#{% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}#}
+                    {#<td data-toggle="tooltip" title="'S' means that this request has been submitted by {{ entity.getSubmitter() }} on behalf of the 'Person Away'">#}
+                        {#<a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a> S#}
+                    {#</td>#}
+                {#{% else %}#}
+                    {#<td>#}
+                        {#<a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
+                    {#</td>#}
+                {#{% endif %}#}
+                {#<td>#}
+                    {#<a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>#}
+                    {#{% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}#}
+                        {#S#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 {% if requestTypeAbbreviation != 'carryover' %}
                     <td>
