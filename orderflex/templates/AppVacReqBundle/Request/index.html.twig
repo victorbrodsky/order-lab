@@ -170,7 +170,7 @@
             {% set entity = object['object'] %}
 
             {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
-                {% set onBehalfTooltip = "'S' in ID means that this request has been submitted by "
+                {% set onBehalfTooltip = "This request has been submitted by "
                     ~ entity.getSubmitter().getUsernameShortest() ~
                     " on behalf of " ~ entity.getUser().getUsernameShortest()
                 %}
