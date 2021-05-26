@@ -159,7 +159,7 @@ class RequestController extends OrderAbstractController
                 //exit('error: count overlappedRequests='.count($overlappedRequests));
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //new
-                echo "new errorMsg=$errorMsg <br>";
+                //echo "new errorMsg=$errorMsg <br>";
                 //$form->addError(new FormError($errorMsg));
                 $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
                 //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
@@ -1768,7 +1768,7 @@ class RequestController extends OrderAbstractController
         $query = $em->createQuery($dql);
 
         $requests = $query->getResult();
-        echo "requests with users=".count($requests)."<br>";
+        //echo "requests with users=".count($requests)."<br>";
         return $requests;
     }
     public function analyzeRequests($userId,$count=1) {
@@ -1781,7 +1781,7 @@ class RequestController extends OrderAbstractController
 
         if( count($overlapRequests) > 0 ) {
             $logger->error($count." ^########## user: " . $user);
-            echo $count." ^########## user: " . $user . "<br><br><br>";
+            //echo $count." ^########## user: " . $user . "<br><br><br>";
             $count++;
         }
         return $count;
@@ -1814,13 +1814,13 @@ class RequestController extends OrderAbstractController
         $query = $em->createQuery($dql);
 
         $pendingRequests = $query->getResult();
-        echo "pending request count=".count($pendingRequests)."<br><br>";
+        //echo "pending request count=".count($pendingRequests)."<br><br>";
         //exit('exit');
 
         $count = 1;
         foreach( $pendingRequests as $pendingRequest ) {
 
-            echo "<br>req ID=".$pendingRequest->getId()."<br>";
+            //echo "<br>req ID=".$pendingRequest->getId()."<br>";
 
             $submitter = $pendingRequest->getUser();
 
@@ -1840,7 +1840,7 @@ class RequestController extends OrderAbstractController
                     //$tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 //}
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);
-                echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
+                //echo "tentativeInstitutions count=".count($tentativeInstitutions)."<br>";
                 if( count($tentativeInstitutions) > 1 ) {
                     $tentativeInstitutionArr = array();
                     foreach( $tentativeInstitutions as $tentativeInstitution ) {

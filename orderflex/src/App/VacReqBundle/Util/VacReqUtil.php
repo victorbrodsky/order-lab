@@ -2145,7 +2145,7 @@ class VacReqUtil
             $errorMsg = "This request includes dates ".implode(", ",$dates)." already covered by your previous request(s) (".implode(", ",$hrefs).").";
 
             if( !$short ) {
-                $errorMsg .= " Please exclude these dates from this request before re-submitting.";
+                $errorMsg .= " Please exclude these dates from this request before submitting.";
             }
         }
 
