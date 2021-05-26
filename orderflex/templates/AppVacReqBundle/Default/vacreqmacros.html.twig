@@ -177,9 +177,7 @@
 {% macro request_inputWithCalculateBtn( field ) %}
     <p>
     <div class="row">
-        <div class="my-custom-class-for-errors">
-            {{ form_errors(field) }}
-        </div>
+        {{ form_errors(field) }}
         <div class="col-xs-6" align="right">
             {#{{ form_label(field) }}#}
             <strong>{{ field.vars.label|raw }}</strong>
