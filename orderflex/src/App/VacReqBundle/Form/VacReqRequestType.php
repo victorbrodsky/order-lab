@@ -141,7 +141,7 @@ class VacReqRequestType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'App\VacReqBundle\Entity\VacReqRequest',
             'form_custom_value' => null,
-            'csrf_protection' => false,
+            //'csrf_protection' => false,
         ));
     }
 

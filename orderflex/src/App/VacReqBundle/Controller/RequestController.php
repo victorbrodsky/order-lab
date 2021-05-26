@@ -18,6 +18,7 @@
 namespace App\VacReqBundle\Controller;
 
 use App\UserdirectoryBundle\Entity\AccessRequest;
+use App\UserdirectoryBundle\Util\ErrorHelperUser;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestBusiness;
 use App\VacReqBundle\Entity\VacReqRequestVacation;
@@ -158,6 +159,7 @@ class RequestController extends OrderAbstractController
                 //exit('error: count overlappedRequests='.count($overlappedRequests));
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //new
+                echo "new errorMsg=$errorMsg <br>";
                 //$form->addError(new FormError($errorMsg));
                 $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
                 //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
@@ -505,11 +507,35 @@ class RequestController extends OrderAbstractController
         if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
 
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
+            //echo 'overlappedRequests count='.count($overlappedRequests)."<br>";
             if (count($overlappedRequests) > 0) {
                 //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //edit, review
-                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
-                //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
+                //echo "edit errorMsg=$errorMsg <br>";
+                //$form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                //$form['requestVacation']['approverComment']->addError(new FormError($errorMsg));
+                //$form['requestVacation']->addError(new FormError($errorMsg));
+                $form->addError(new FormError($errorMsg));
+
+//                if( $form->isSubmitted() ) {
+//                    $errorHelper = new ErrorHelperUser();
+//                    $errors = $errorHelper->getErrorMessages($form);
+//                    echo "<br>form errors:<br>";
+//                    print_r($errors);
+//                }
+
+                //print_r($form->getErrors());
+                //$errors = $form->getErrorsAsString();
+//                $errors = (string) $form->getErrors(true);
+//                echo "errors=[$errors]<br>";
+//                if( $form->isSubmitted() ) {
+//                    if ($form->isValid()) {
+//                        echo "form valid<br>";
+//                    } else {
+//                        echo "form invalid!!!<br>";
+//                    }
+//                }
+
             } else {
                 //exit('no overlaps found');
             }
@@ -534,6 +560,8 @@ class RequestController extends OrderAbstractController
         }
 
         if( $form->isSubmitted() && $form->isValid() ) { //edit, review
+
+            //exit("Review request");
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;

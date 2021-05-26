@@ -116,7 +116,10 @@
 
     {{ form_start(form,{'attr': {'id': 'vacreq-request-form'}}) }}
 
-        {{ form_errors(form) }}
+        {#<div class="my-custom-class-for-errors">#}
+            {#{{ form_errors(form) }}#}
+        {#</div>#}
+
         {% if not form.vars.valid %}
             {#form has error!!!!!!!!!#}
             <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
@@ -297,6 +300,7 @@
         {% endif %}
 
         {#Vacation#}
+        {#cycle={{ cycle }}#}
         {% if form.requestVacation is defined and (entity.hasVacationRequest or cycle == 'new' or cycle == 'edit') %}
             {#set vacationCollapse#}
             {% set showVacationStatus = false %}
@@ -350,6 +354,7 @@
                                 {#{{ form.requestVacation.startDate.vars.errors }}#}
                             </div>
                         {% endif %}
+
                         {{ formmacros.fieldDateLabel(form.requestVacation.startDate,'allow-future-date','','noerror') }}
 
                         {{ formmacros.fieldDateLabel(form.requestVacation.endDate,'allow-future-date') }}
@@ -430,6 +435,9 @@
             {{ formmacros.field(form.status) }}
         {% endif %}
 
+        {#{{ form_rest(form) }}#}
+        {{ form_row(form._token) }}
+
     {{ form_end(form,{'render_rest': false}) }}
 
     <br>
@@ -444,6 +452,28 @@
     <div id="error-box" class="alert alert-danger" style="display: none"></div>
 
     <br>
+
+    {#{% if not form.vars.valid %}#}
+    {#{% set formError = form_errors(form) %}#}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+            {#<div class="list-group">#}
+            {#<p class="text-danger">#}
+            {{ form_errors(form) }}
+            {#{{ formError }}#}
+            {#</p>#}
+            {#</div>#}
+        </div>
+
+        {#<div class="form-control">#}
+            {#<small>{{ form_help(form) }}</small>#}
+            {#<div class="form-error">#}
+                {#{{ formError }}#}
+            {#</div>#}
+        {#</div>#}
+
+        <br>
+    {% endif %}
 
     {% if cycle == "new" %}
         <p>
