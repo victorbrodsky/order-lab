@@ -691,9 +691,3 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     background-color: green;
     border-color: darkgreen;
 }
-
-.tr-tooltip-left.tooltip.left {
-    /*left: 10px;*/
-    /*top: 10px;*/
-    margin-left: 5%;
-}

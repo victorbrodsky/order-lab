@@ -180,7 +180,6 @@
 
             <tr>
 
-                {#<td id="td-tooltip-{{ entity.id }}" class="td-tooltip-{{ entity.id }}">#}
                 {% if onBehalfTooltip %}
                     <td data-toggle="tooltip" title="{{ onBehalfTooltip }}" data-container="body">
                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a> S
