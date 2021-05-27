@@ -1813,7 +1813,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("reverseFeeScheduleListAction not allowed");
+        exit("reverseFeeScheduleListAction not allowed");
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
