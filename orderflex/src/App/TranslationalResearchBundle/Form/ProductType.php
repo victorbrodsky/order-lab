@@ -191,7 +191,7 @@ class ProductType extends AbstractType
                 ->leftJoin('prices.priceList','priceList')
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 ->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
-                //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr) OR projectSpecialties.id IS NULL") //show categories with this specialty only OR categories without specialty
+                //->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)") //do show categories with this specialty only
                 ->andWhere($feeRestriction)
                 ->orderBy("list.orderinlist","ASC")
                 ->setParameters( array(

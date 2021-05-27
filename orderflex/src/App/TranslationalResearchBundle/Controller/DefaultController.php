@@ -1822,18 +1822,26 @@ class DefaultController extends OrderAbstractController
             "hematopathology",
             "ap-cp",
             "covid19",
-            "misi"
+            "misi",
+            "uscap",
+            "ap",
+            "cp"
         );
 
-//        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-//        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-//        $specialtyCovid19Object = $transresUtil->getSpecialtyObject("covid19");
-//        $specialtyMisiObject = $transresUtil->getSpecialtyObject("misi");
+        //new specialties
+//        "uscap"
+//        "ap"
+//        "cp"
 
         //SpecialtyList
         $projectSpecialties = array();
         foreach($abbreviations as $abbreviation) {
-            $projectSpecialties[$abbreviation] = $transresUtil->getSpecialtyObject($abbreviation);
+            $projectSpecialtyObject = $transresUtil->getSpecialtyObject($abbreviation);
+            if( $projectSpecialtyObject ) {
+                $projectSpecialties[$abbreviation] = $projectSpecialtyObject;
+            } else {
+                echo "Project specialty $abbreviation not found <br>";
+            }
         }
 
 
@@ -1843,8 +1851,6 @@ class DefaultController extends OrderAbstractController
             ->orderBy("list.orderinlist","ASC");
 
         //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
-
-
 
         $fees = $query->getQuery()->getResult();
         echo "fees count=".count($fees)."<br>";
@@ -1879,7 +1885,7 @@ class DefaultController extends OrderAbstractController
                 $diffStr = implode(", ",$diff);
             }
 
-            echo $fee->getId().": $fee [".$thisAbbreviationsStr. "]=>[" . $diffStr ."]<br>";
+            echo $fee->getId()." (".$fee->getProductId()."): $fee [".$thisAbbreviationsStr. "]=>[" . $diffStr ."]<br>";
 
             if( count($diff) > 0 ) {
                 $fee->clearProjectSpecialties();
@@ -1891,6 +1897,8 @@ class DefaultController extends OrderAbstractController
                 }
                 //echo "<br><br>";
 
+                //$em->flush();
+
                 $updateCount++;
             }
 
@@ -1899,8 +1907,9 @@ class DefaultController extends OrderAbstractController
             foreach($specialties as $specialty) {
                 $resAbbreviations[] = $specialty->getAbbreviation();
             }
-            echo $fee->getId().": ".implode(",",$resAbbreviations)."<br><br>";
-        }
+            echo $fee->getId().": Not available for [".implode(",",$resAbbreviations)."]<br><br>";
+
+        }//foreach fess
 
         exit("EOF reverseFeeScheduleListAction: total=$count, updated=$updateCount");
     }

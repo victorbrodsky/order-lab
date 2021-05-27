@@ -82,6 +82,9 @@ class ProjectController extends OrderAbstractController
      * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index", methods={"GET"})
      * @Route("/active-project-requests-non-funded-over-budget/", name="translationalresearch_active_non_funded_over_budget_project_index", methods={"GET"})
      *
+     * @Route("/approved-project-requests-funded/", name="translationalresearch_approved_funded_project_index", methods={"GET"})
+     * @Route("/approved-project-requests-non-funded/", name="translationalresearch_approved_non_funded_project_index", methods={"GET"})
+     *
      * @Template("AppTranslationalResearchBundle/Project/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -269,6 +272,22 @@ class ProjectController extends OrderAbstractController
             $params['overBudget'] = 'over-budget-with-no-budget'; //'Over Budget or With No Budget';
             $params['fundingType'] = "Non-Funded";
             $title = "Active Non-Funded Projects Over Budget or With No Budget";
+        }
+        if( $routeName == "translationalresearch_approved_funded_project_index" ) {
+            //echo "routeName=$routeName <br>";
+            $params['defaultStatesArr'] = array(
+                'final_approved'
+            );
+            $params['fundingType'] = "Funded";
+            $title = "Approved Funded Projects";
+        }
+        if( $routeName == "translationalresearch_approved_non_funded_project_index" ) {
+            //echo "routeName=$routeName <br>";
+            $params['defaultStatesArr'] = array(
+                'final_approved'
+            );
+            $params['fundingType'] = "Non-Funded";
+            $title = "Approved Non-Funded Projects";
         }
 
         $filterform = $this->createForm(FilterType::class, null,array(
@@ -895,6 +914,12 @@ class ProjectController extends OrderAbstractController
         }
         if( $routeName == "translationalresearch_active_non_funded_over_budget_project_index" ) {
             $title = "Active Non-Funded Projects Over Budget or With No Budget";
+        }
+        if( $routeName == "translationalresearch_approved_funded_project_index" ) {
+            $title = "Approved Funded Projects";
+        }
+        if( $routeName == "translationalresearch_approved_non_funded_project_index" ) {
+            $title = "Approved Non-Funded Projects";
         }
 
         //////////////////// EOF Start Filter ////////////////////
