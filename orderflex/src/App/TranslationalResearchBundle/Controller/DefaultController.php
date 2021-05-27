@@ -1862,7 +1862,7 @@ class DefaultController extends OrderAbstractController
         $fees = $query->getQuery()->getResult();
 
         $testing = true;
-        $testing = false;
+        //$testing = false;
 
         echo "testing=$testing <br>";
         echo "fees count=".count($fees)."<br><br>";
