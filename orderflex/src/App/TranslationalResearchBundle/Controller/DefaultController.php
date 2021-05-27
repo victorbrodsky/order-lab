@@ -1860,10 +1860,12 @@ class DefaultController extends OrderAbstractController
         //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $fees = $query->getQuery()->getResult();
-        echo "fees count=".count($fees)."<br><br>";
 
         $testing = true;
-        //$testing = false;
+        $testing = false;
+
+        echo "testing=$testing <br>";
+        echo "fees count=".count($fees)."<br><br>";
 
         $infoArr = array();
         $count = 0;
