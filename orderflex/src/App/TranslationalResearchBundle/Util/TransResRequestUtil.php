@@ -4247,8 +4247,8 @@ class TransResRequestUtil
 
         if( $projectSpecialty ) {
             $dql->leftJoin('list.projectSpecialties','projectSpecialties');
-            $dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
-            //$dql->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
+            //$dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
+            $dql->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
             $projectSpecialtyIdsArr = array();
             $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;

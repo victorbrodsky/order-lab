@@ -680,8 +680,8 @@ class GenericListType extends AbstractType
             $builder->add( 'projectSpecialties', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:SpecialtyList',
                 //'choice_label' => 'FullName',
-                'label'=>'Project Specialty(s):',
-                //'label'=>'Hide this orderable for the work requests that belong to project requests of this type:',
+                //'label'=>'Project Specialty(s):',
+                'label'=>'Hide this orderable for the work requests that belong to project requests of this type:',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),

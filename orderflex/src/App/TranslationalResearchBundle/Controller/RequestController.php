@@ -62,6 +62,8 @@ class RequestController extends OrderAbstractController
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
+        exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
+
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->get('transres_request_util');
@@ -319,6 +321,8 @@ class RequestController extends OrderAbstractController
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
+        exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
+
         //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresRequestUtil = $this->container->get('transres_request_util');

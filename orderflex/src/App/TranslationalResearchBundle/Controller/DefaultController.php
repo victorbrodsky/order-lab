@@ -1850,11 +1850,22 @@ class DefaultController extends OrderAbstractController
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
+//        $now = new \DateTime('now');
+//        $updateonDateStr = $now->format('Y-m-d H:i:s');
+//        //2021-05-27 13:37:29
+//        //                 2021-05-27 20:22:02 <= '2021-05-27 20:20:38'
+//        echo "updateonDateStr=$updateonDateStr < '2021-05-27 20:20:38'<br>";
+//        $query->where("list.updatedon IS NULL OR list.updatedon < '$updateonDateStr'");
+
         //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
 
         $fees = $query->getQuery()->getResult();
-        echo "fees count=".count($fees)."<br>";
+        echo "fees count=".count($fees)."<br><br>";
 
+        $testing = true;
+        //$testing = false;
+
+        $infoArr = array();
         $count = 0;
         $updateCount = 0;
         foreach($fees as $fee) {
@@ -1881,11 +1892,13 @@ class DefaultController extends OrderAbstractController
 
             $diff = array_diff($abbreviations,$thisAbbreviations);
 
-            if( count($diff) > 0 ) {
-                $diffStr = implode(", ",$diff);
-            }
+//            if( count($diff) > 0 ) {
+//                $diffStr = implode(", ",$diff);
+//            }
 
-            echo $fee->getId()." (".$fee->getProductId()."): $fee [".$thisAbbreviationsStr. "]=>[" . $diffStr ."]<br>";
+            //$info = "ID ".$fee->getId()." (".$fee->getProductId()."): $fee [".$thisAbbreviationsStr. "]=>[" . $diffStr ."]";
+            $info1 = "ID ".$fee->getId()." (".$fee->getProductId()."): $fee [".$thisAbbreviationsStr. "]";
+            //echo $info1."<br>";
 
             if( count($diff) > 0 ) {
                 $fee->clearProjectSpecialties();
@@ -1897,7 +1910,9 @@ class DefaultController extends OrderAbstractController
                 }
                 //echo "<br><br>";
 
-                //$em->flush();
+                if( !$testing ) {
+                    $em->flush();
+                }
 
                 $updateCount++;
             }
@@ -1907,9 +1922,37 @@ class DefaultController extends OrderAbstractController
             foreach($specialties as $specialty) {
                 $resAbbreviations[] = $specialty->getAbbreviation();
             }
-            echo $fee->getId().": Not available for [".implode(",",$resAbbreviations)."]<br><br>";
+            $info2 = " => Not available for [".implode(",",$resAbbreviations)."]<br>";
+
+            $info = $info1 . $info2;
+            //echo $info;
+
+            //eventlog
+            $eventType = "List Updated";
+            $msgSpecialtyChanged = "Updated fee schedule ".$info;
+            //echo $msgSpecialtyChanged;
+            if( !$testing ) {
+                $transresUtil->setEventLog($fee, $eventType, $msgSpecialtyChanged);
+            }
+
+            $infoArr[] = $info;
+
+            //break;
 
         }//foreach fess
+
+        if( count($infoArr) > 0 ) {
+            $infoStr = implode("", $infoArr);
+            echo "<br><br>".$infoStr;
+
+            //eventlog
+            $eventType = "List Updated";
+            $msgSpecialtyChanged = "Fee schedule updated:<br>".$infoStr;
+            if( !$testing ) {
+                $transresUtil->setEventLog(null, $eventType, $msgSpecialtyChanged);
+            }
+        }
+
 
         exit("EOF reverseFeeScheduleListAction: total=$count, updated=$updateCount");
     }
