@@ -4246,13 +4246,15 @@ class TransResRequestUtil
         $dqlParameters["typeadd"] = 'user-added';
 
         //show only with $fee for this price list
-        if(0) {
+        if(1) {
             $feeRestriction = "(list.fee IS NOT NULL)";
             if ($project) {
                 $priceList = $project->getPriceList();
                 if ($priceList) {
                     $priceListId = $priceList->getId();
                     if ($priceListId) {
+                        $dql->leftJoin('list.prices','prices');
+                        $dql->leftJoin('prices.priceList','priceList');
                         //$specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
                         $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
                         $feeRestriction = $feeRestriction . " OR ";
