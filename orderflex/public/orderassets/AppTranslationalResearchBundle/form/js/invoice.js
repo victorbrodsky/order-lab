@@ -3,6 +3,7 @@
  */
 
 var _transresitemcodes = [];
+var _transresitemcodesRun = false;
 
 function transresUpdateInvoiceStatus(invoiceId,status) {
     //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
@@ -820,9 +821,6 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
 
     var placeholder = "Select an option or type in a new value";
 
-    //var thisAsyncflag = asyncflag;
-    var thisAsyncflag = false; //use synchronous ajax to avoid second, simultaneous run when ajax is not completed yet.
-
     if( $(targetid).length == 0 ) {
         return;
     }
@@ -853,8 +851,14 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
     //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
     //console.log('get Combobox Generic: url='+url);
 
-    if( arrLen == 0 ) {
-        console.log('run translationalresearch_get_transresitemcodes_ajax='+globalDataArray.length);
+    //if( arrLen == 0 ) {
+    if( _transresitemcodesRun == false ) {
+
+        var thisAsyncflag = asyncflag;
+        //var thisAsyncflag = false; //use synchronous ajax to avoid second, simultaneous run when ajax is not completed yet.
+        _transresitemcodesRun = true;
+        console.log('run translationalresearch_get_transresitemcodes_ajax='+globalDataArray.length+", thisAsyncflag="+thisAsyncflag);
+
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
