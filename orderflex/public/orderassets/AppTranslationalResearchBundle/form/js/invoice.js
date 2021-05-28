@@ -802,19 +802,37 @@ function transresGetTotalFeesByQuantity(fee,feeAdditionalItem,initialQuantity,qu
 }
 
 //'transresitemcodes',_transresitemcodes,pricelistId
+//Used in transresInitItemCodeAsSelect, transresInvoiceItemListeneres
 function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
 
     //console.log('get Combobox Generic: name='+name);
 
+    var arrLen = Object.keys(globalDataArray).length;
+    //console.log(globalDataArray);
+    //console.log('arrLen='+arrLen);
+
+    // if( arrLen > 0 ) {
+    //     return;
+    // }
+
     var targetid = ".ajax-combobox-"+name;
+    //console.log('targetid='+targetid);
 
     var placeholder = "Select an option or type in a new value";
 
-    var thisAsyncflag = asyncflag;
+    //var thisAsyncflag = asyncflag;
+    var thisAsyncflag = false; //use synchronous ajax to avoid second, simultaneous run when ajax is not completed yet.
 
     if( $(targetid).length == 0 ) {
         return;
     }
+
+    // var data = $(targetid).select2("data");
+    // console.log('data='+data);
+    // console.log(data);
+    // if( data.length > 0 ) {
+    //     return;
+    // }
 
     // if( typeof cycle === 'undefined' ) {
     //     cycle = 'new';
@@ -827,6 +845,7 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
     // }
 
     var invoiceId = $('#invoice-id').val();
+    var transresRequestId = $('#transres-request-id').val();
 
     //translationalresearch_get_transresitemcodes_ajax
     var url = Routing.generate('translationalresearch_get_transresitemcodes_ajax');
@@ -834,12 +853,13 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
     //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
     //console.log('get Combobox Generic: url='+url);
 
-    if( globalDataArray.length == 0 ) {
+    if( arrLen == 0 ) {
+        console.log('run translationalresearch_get_transresitemcodes_ajax='+globalDataArray.length);
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: thisAsyncflag,
-            data: {pricelistId: pricelistId, invoiceId: invoiceId },
+            data: {pricelistId: pricelistId, invoiceId: invoiceId, transresRequestId: transresRequestId },
         }).done(function(data) {
             $.each(data, function(key, val) {
                 //console.log("val="+val);

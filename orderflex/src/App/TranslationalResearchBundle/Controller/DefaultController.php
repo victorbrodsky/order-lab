@@ -210,6 +210,117 @@ class DefaultController extends OrderAbstractController
 
         $pricelistId = $request->query->get('pricelistId');
         $invoiceId = $request->query->get('invoiceId');
+        $transresRequestId = $request->query->get('transresRequestId');
+
+        $output = array();
+
+        ///////////////// add not existed item code for invoiceItems without product /////////////////
+        if( $invoiceId ) {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+            if ($invoice) {
+                foreach ($invoice->getInvoiceItems() as $invoiceItem) {
+                    $product = $invoiceItem->getProduct();
+                    if( $product ) {
+
+                        $category = $product->getCategory();
+                        //echo "category=$category<br>";
+
+                        if( !$category ) {
+                            $itemCode = $invoiceItem->getItemCode();
+                            //echo $invoiceItem->getId().": itemCode=".$itemCode."<br>";
+
+                            $output[] = array(
+                                'id' => $itemCode,
+                                'text' => $itemCode,
+                            );
+                        }
+                    } else {
+                        $itemCode = $invoiceItem->getItemCode();
+                        $output[] = array(
+                            'id' => $itemCode,
+                            'text' => $itemCode,
+                        );
+                    }
+                }
+            }
+        }
+        ///////////////// EOF add not existed item code for invoiceItems without product /////////////////
+
+        //////////////// get price list ////////////////
+        if( $pricelistId == 'trp-default-pricelist' ) {
+            $priceList = NULL;
+        } else {
+            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistId);
+        }
+        //////////////// EOF get price list ////////////////
+
+        ///////////// get default fee schedules (product/services) for specialty ////////////////
+        $projectSpecialty = NULL;
+        if( $transresRequestId ) {
+            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($transresRequestId);
+            $projectSpecialty = $transresRequest->getProjectSpecialty();
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+        $categories = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
+
+        foreach ($categories as $category) {
+
+            $initialFee = $category->getPriceFee($priceList);
+            //echo "initialFee=[$initialFee] <br>";
+            if( $initialFee === NULL ) {
+                continue;
+            }
+
+            //show not just the item codes, but item codes followed by both the Description and Initial/Additional prices
+            $output[] = array(
+                'id' => $category->getId(),
+                'text' => $category->getOptimalAbbreviationName($priceList), //Use the same as in ProductType.php -> category
+            );
+        }
+        ///////////// EOF get default fee schedules (product/services) for specialty ////////////////
+
+        //////////// get products from work request /////////////////
+        //get products from work request (for example, for new invoice, when fee is not showing anymore because it was disable, or fee does not have this specialty)
+        if( $transresRequest ) {
+            foreach($transresRequest->getProducts() as $product) {
+                $category = $product->getCategory();
+                //echo "category=".$category->getId()."<br>";
+                //check if this fee schedule does not exists in output array
+                $key = $category->getId();
+                $val = $category->getOptimalAbbreviationName($priceList);
+                if( $this->inArray($output,$key,$val) == false ) {
+                    $output[] = array(
+                        'id' => $category->getId(),
+                        'text' => $category->getOptimalAbbreviationName($priceList), //Use the same as in ProductType.php -> category
+                    );
+                }
+            }
+        }
+        //////////// EOF get products from work request /////////////////
+        //exit('111');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+    function inArray($array, $key, $val) {
+        foreach ($array as $item)
+            if (isset($item[$key]) && $item[$key] == $val)
+                return true;
+        return false;
+    }
+    /**
+     * @Route("/transresitemcodes-orig", name="translationalresearch_get_transresitemcodes_orig_ajax", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function getTransResItemCodesAjaxOrigAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $pricelistId = $request->query->get('pricelistId');
+        $invoiceId = $request->query->get('invoiceId');
+        $transresRequestId = $request->query->get('transresRequestId');
 
         $query = $em->createQueryBuilder()
             ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
