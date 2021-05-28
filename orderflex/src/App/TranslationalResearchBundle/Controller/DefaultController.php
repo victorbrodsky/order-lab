@@ -24,6 +24,10 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
+        $em = $this->getDoctrine()->getManager();
+        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
+
         //test
         //$test = $this->getDummyClass();
         //$test = new DummyClass();
@@ -90,6 +94,18 @@ class DefaultController extends OrderAbstractController
 //            echo "isProjectStateReviewer<br>";
 //        }
 //        exit("EOF review testing");
+
+        //testing fee schedule->specialty filter
+        $specialtyId = 5; //MISI
+        $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+        echo "specialty = ID ".$projectSpecialty->getId()." $projectSpecialty <br><br>";
+        $fees = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
+        //$fees = $transresRequestUtil->getProductServiceByProjectSpecialtyTest3($projectSpecialty);
+        echo "fees count=".count($fees)."<br>";
+        foreach($fees as $fee) {
+            echo $fee->getId()." fee = ".$fee->getProductId(). "; hide for=[" . $fee->getProjectSpecialtiesStr() . "]; ".$fee->getName()."<br>";
+        }
+        exit('111');
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

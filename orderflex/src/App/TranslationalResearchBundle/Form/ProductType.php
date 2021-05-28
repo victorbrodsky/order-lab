@@ -9,6 +9,7 @@ use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -82,10 +83,12 @@ class ProductType extends AbstractType
 //                    ));
 //            },
 //        ));
+
         //dynamically get label and price according to the priceList
-        $builder->add('category', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
-            //'choice_label' => 'getOptimalAbbreviationName',
+        if(0) {
+            $builder->add('category', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+                //'choice_label' => 'getOptimalAbbreviationName',
 //            'choice_value' => function ($entity) {
 //                //return "111";
 //                if( $entity ) {
@@ -93,20 +96,50 @@ class ProductType extends AbstractType
 //                }
 //                return '';
 //            },
-            'choice_label' => function(RequestCategoryTypeList $entity) {
-                if( $entity ) {
-                    return $entity->getOptimalAbbreviationName($this->priceList);
-                }
-                return '';
-            },
-            'label'=>"Product or Service".$this->params['categoryListLink'].":",
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width product-category-combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $this->getRequestCategoryQueryBuilder($er);
-            },
-        ));
+                'choice_label' => function (RequestCategoryTypeList $entity) {
+                    if ($entity) {
+                        return $entity->getOptimalAbbreviationName($this->priceList);
+                    }
+                    return '';
+                },
+                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $this->getRequestCategoryQueryBuilder($er);
+                },
+            ));
+        } else {
+            $builder->add('category', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+                'choice_label' => function (RequestCategoryTypeList $entity) {
+                    if ($entity) {
+                        return $entity->getOptimalAbbreviationName($this->priceList);
+                    }
+                    return '';
+                },
+                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
+                'choices' => $this->params['projectSpecialties']
+            ));
+
+//            $builder->add('category', ChoiceType::class, array(
+//                'choice_label' => function (RequestCategoryTypeList $entity) {
+//                    if ($entity) {
+//                        return $entity->getOptimalAbbreviationName($this->priceList);
+//                    }
+//                    return '';
+//                },
+//                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
+//                'choices' => $this->params['projectSpecialties'],
+//                'required' => false,
+//                'multiple' => false,
+//                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
+//            ));
+        }
 
         $builder->add('requested',TextType::class,array(
             'label' => "Requested Quantity:",
@@ -155,6 +188,7 @@ class ProductType extends AbstractType
 
         //'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
         $workRequest = NULL;
+        $projectSpecialtyId = array();
         $projectSpecialtyIdsArr = array();
         if( isset($this->params['transresRequest']) ) {
             $workRequest = $this->params['transresRequest'];
@@ -162,10 +196,13 @@ class ProductType extends AbstractType
             if( $workRequest ) {
                 $projectSpecialty = $workRequest->getProjectSpecialty();
                 if( $projectSpecialty ) {
-                    $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                    $projectSpecialtyId = $projectSpecialty->getId();
+                    $projectSpecialtyIdsArr[] = $projectSpecialtyId;
                 }
             }
         }
+        //echo "projectSpecialtyIdsArr ids=".implode(",",$projectSpecialtyIdsArr)."<br>";
+        //echo "projectSpecialtyId = ".$projectSpecialtyId."<br>";
         //dump($projectSpecialtyIdsArr);
         //exit('111');
 
@@ -183,7 +220,8 @@ class ProductType extends AbstractType
             }
         }
 
-        if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
+        //if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
+        if( $workRequest && $projectSpecialtyId ) {
             //AppTranslationalResearchBundle:RequestCategoryTypeList
             $queryBuilder = $er->createQueryBuilder('list')
                 ->leftJoin('list.projectSpecialties','projectSpecialties')
@@ -191,9 +229,13 @@ class ProductType extends AbstractType
                 ->leftJoin('prices.priceList','priceList')
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
-                ->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)") //do show categories with this specialty only
+                //->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)") //do show categories with this specialty only
+                //->andWhere("projectSpecialties.id IS NULL")
+                ->andWhere("(projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr))")
+                //->andWhere("(projectSpecialties.id IS NULL OR projectSpecialties != :projectSpecialtyIdsArr)")
                 ->andWhere($feeRestriction)
                 ->orderBy("list.orderinlist","ASC")
+                //->setMaxResults( 1 )
                 ->setParameters( array(
                     'typedef' => 'default',
                     'typeadd' => 'user-added',

@@ -4231,7 +4231,7 @@ class TransResRequestUtil
         exit();
     }
 
-    public function getProductServiceByProjectSpecialty($projectSpecialty,$asCombobox=true) {
+    public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null, $asCombobox=false, $max=null ) {
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
@@ -4245,13 +4245,63 @@ class TransResRequestUtil
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
 
-        if( $projectSpecialty ) {
-            $dql->leftJoin('list.projectSpecialties','projectSpecialties');
-            //$dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
-            $dql->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
-            $projectSpecialtyIdsArr = array();
-            $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        if( 0 && $projectSpecialty ) {
+
+            if(0) {
+                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+                //$dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
+                //$dql->andWhere("projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
+                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)");
+                $projectSpecialtyIdsArr = array();
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+            } else {
+//                //$dql->innerJoin('list.projectSpecialties','projectSpecialties');
+//                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
+//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
+//
+//                $dql->groupBy("list");
+//                $dql->groupBy("projectSpecialties");
+//                $dql->having("projectSpecialties.id != 5");
+//
+//                $projectSpecialtyIdsArr = array();
+//                $projectSpecialtyId = $projectSpecialty->getId();
+//                $projectSpecialtyIdsArr[] = $projectSpecialtyId;
+//                //$dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
+
+                $inverseProjectSpecialtyIdsArr = array();
+                $inverseProjectSpecialtys = $this->getReversedSpecialties($projectSpecialty);
+                foreach($inverseProjectSpecialtys as $inverseProjectSpecialty) {
+                    echo "$inverseProjectSpecialty <br>";
+                    $inverseProjectSpecialtyIdsArr[] = $inverseProjectSpecialty->getId();
+                }
+
+                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id != 5");
+                //$projectSpecialtyIdsArr = array();
+                //$projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                //$dqlParameters["inverseProjectSpecialtyIdsArr"] = $inverseProjectSpecialtyIdsArr;
+            }
+        }
+
+        //show only with $fee for this price list
+        if(1) {
+            $feeRestriction = "(list.fee IS NOT NULL)";
+            if ($project) {
+                $priceList = $project->getPriceList();
+                if ($priceList) {
+                    $priceListId = $priceList->getId();
+                    if ($priceListId) {
+                        //$specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
+                        $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
+                        $feeRestriction = $feeRestriction . " OR ";
+                        $feeRestriction = $feeRestriction . $specificFeeRestriction;
+                        //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
+                    }
+                }
+                $dql->andWhere($feeRestriction);
+            }
         }
 
         $query = $this->em->createQuery($dql);
@@ -4260,7 +4310,99 @@ class TransResRequestUtil
             $query->setParameters($dqlParameters);
         }
 
-        $query->setMaxResults(3);
+        if( $max ) {
+            $query->setMaxResults($max);
+        }
+
+        $fullProducts = $query->getResult();
+
+        //filter by specialty
+        $products = new ArrayCollection();
+        if( $projectSpecialty ) {
+            //$projectSpecialtyId = $projectSpecialty->getId();
+            foreach( $fullProducts as $fee ) {
+                $feeSpecialties = $fee->getProjectSpecialties();
+                if( !$feeSpecialties->contains($projectSpecialty) ) {
+                    $products[] = $fee;
+                }
+            }
+        }
+
+        if( !$asCombobox ) {
+            return $products;
+        }
+
+        $productsCombobox = array();
+        foreach($products as $product) {
+            if( $asCombobox ) {
+                $productsCombobox[] = array('id'=>$product->getId(),'text'=>$product->getOptimalAbbreviationName());
+            }
+        }
+
+        return $productsCombobox;
+    }
+    public function getProductServiceByProjectSpecialty_ORIG($projectSpecialty,$asCombobox=true,$max=3) {
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $dqlParameters = array();
+
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+
+        if( $projectSpecialty ) {
+            if(0) {
+                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+                //$dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
+                //$dql->andWhere("projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
+                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)");
+                $projectSpecialtyIdsArr = array();
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+            } else {
+//                //$dql->innerJoin('list.projectSpecialties','projectSpecialties');
+//                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
+//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
+//
+//                $dql->groupBy("list");
+//                $dql->groupBy("projectSpecialties");
+//                $dql->having("projectSpecialties.id != 5");
+//
+//                $projectSpecialtyIdsArr = array();
+//                $projectSpecialtyId = $projectSpecialty->getId();
+//                $projectSpecialtyIdsArr[] = $projectSpecialtyId;
+//                //$dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
+
+                $inverseProjectSpecialtyIdsArr = array();
+                $inverseProjectSpecialtys = $this->getReversedSpecialties($projectSpecialty);
+                foreach($inverseProjectSpecialtys as $inverseProjectSpecialty) {
+                    echo "$inverseProjectSpecialty <br>";
+                    $inverseProjectSpecialtyIdsArr[] = $inverseProjectSpecialty->getId();
+                }
+
+                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id != 5");
+                //$projectSpecialtyIdsArr = array();
+                //$projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                //$dqlParameters["inverseProjectSpecialtyIdsArr"] = $inverseProjectSpecialtyIdsArr;
+            }
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        if( $max ) {
+            $query->setMaxResults($max);
+        }
 
         $products = $query->getResult();
 
@@ -4277,6 +4419,103 @@ class TransResRequestUtil
 
         return $productsCombobox;
     }
+//    public function getProductServiceByProjectSpecialtyTest($projectSpecialty) {
+//        $dqlParameters = array();
+//
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//
+//        $dql->orderBy("list.orderinlist","ASC");
+//
+//        //$dql->innerJoin('list.projectSpecialties','projectSpecialties');
+//        $dql->leftJoin('list.projectSpecialties','projectSpecialties');
+//        //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
+//        $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id IN (:projectSpecialtyId)");
+//
+//        //$dql->groupBy("list");
+//        //$dql->groupBy("list.id, projectSpecialties.id");
+//        //$dql->having("projectSpecialties.id IN (5)");
+//
+//        //$dql->where("NOT EXISTS(projectSpecialties.id NOT IN (:projectSpecialtyId))");
+//
+//        $projectSpecialtyIdsArr = array();
+//        $projectSpecialtyId = $projectSpecialty->getId();
+//        $projectSpecialtyIdsArr[] = $projectSpecialtyId;
+//        $dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $products = $query->getResult();
+//        return $products;
+//    }
+//    public function getProductServiceByProjectSpecialtyTest2($projectSpecialty = null)
+//    {
+//        $projectSpecialtyId = $projectSpecialty->getId();
+//
+//        $repository1 = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+//        //$qb = $this->createQueryBuilder('u');
+//        $qb = $repository1->createQueryBuilder("list");
+//        $qb->orderBy("list.orderinlist","ASC");
+//
+//        //Create subquery
+//        $repository2 = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList');
+//        $sub = $repository2->createQueryBuilder('s');
+//        $sub = $sub->innerJoin('s.requestCategories', 'requestCategories')
+//            ->where("requestCategories.id = list.id")
+//            ->andWhere("requestCategories.id IN ($projectSpecialtyId)")
+//        ;
+//
+//        $qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
+//
+//        return $qb->getQuery()->getResult();
+//    }
+//    public function getProductServiceByProjectSpecialtyTest3($projectSpecialty = null)
+//    {
+//        $projectSpecialtyId = $projectSpecialty->getId();
+//
+//        $repository1 = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList');
+//        $qb = $repository1->createQueryBuilder("s");
+//
+//        //Create subquery
+//        $repository2 = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+//        $sub = $repository2->createQueryBuilder('list');
+//        $sub = $sub->innerJoin('list.projectSpecialties', 'projectSpecialties')
+//            ->where("list.id = projectSpecialties.id")
+//            ->andWhere("projectSpecialties.id != $projectSpecialtyId")
+//        ;
+//        $sub->orderBy("list.orderinlist","ASC");
+//
+//        $qb->andWhere($qb->expr()->not($qb->expr()->exists($sub->getDQL())));
+//
+//        return $sub->getQuery()->getResult();
+//    }
+
+//    public function getReversedSpecialties($projectSpecialty) {
+//        $dqlParameters = array();
+//        $repository = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//
+//        $dql->where("list.id != :projectSpecialtyId");
+//
+//        $projectSpecialtyId = $projectSpecialty->getId();
+//        $dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $specialties = $query->getResult();
+//
+//        return $specialties;
+//    }
 
     public function getFeeSchedule( $transresRequest ) {
 

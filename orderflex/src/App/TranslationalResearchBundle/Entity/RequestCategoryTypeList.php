@@ -299,6 +299,13 @@ class RequestCategoryTypeList extends ListAbstract
     public function clearProjectSpecialties() {
         $this->projectSpecialties->clear();
     }
+    public function getProjectSpecialtiesStr() {
+        $specialtyStr = "";
+        foreach($this->getProjectSpecialties() as $specialty) {
+            $specialtyStr = $specialtyStr . $specialty->getAbbreviation() . " ";
+        }
+        return $specialtyStr;
+    }
 
     public function getPrices()
     {

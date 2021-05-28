@@ -2359,6 +2359,15 @@ class RequestController extends OrderAbstractController
             $categoryListLink = " <a data-toggle='tooltip' title='Products/Services (Fee Schedule) List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
         }
 
+        $projectSpecialties = array();
+        if( $transresRequest ) {
+            $project = $transresRequest->getProject();
+            $projectSpecialty = $transresRequest->getProjectSpecialty();
+            if ($projectSpecialty) {
+                $projectSpecialties = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty,$project);
+            }
+        }
+
         //for non-funded projects, show "Funding Number (Optional):"
         //transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded")
         $project = $transresRequest->getProject();
@@ -2387,6 +2396,7 @@ class RequestController extends OrderAbstractController
             'billingStateChoiceArr' => $billingStateChoiceArr,
             'progressStateChoiceArr' => $progressStateChoiceArr,
             'categoryListLink' => $categoryListLink,
+            'projectSpecialties' => $projectSpecialties,
             'fundedNumberLabel' => $fundedNumberLabel,
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName()
         );
@@ -3077,7 +3087,7 @@ class RequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
 
@@ -3091,7 +3101,7 @@ class RequestController extends OrderAbstractController
 
         $specialty = $project->getProjectSpecialty();
 
-        $products = $transresRequestUtil->getProductServiceByProjectSpecialty($specialty);
+        $products = $transresRequestUtil->getProductServiceByProjectSpecialty($specialty,$project);
         
         $output = array(
             "products" => $products,
