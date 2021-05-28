@@ -96,17 +96,17 @@ class DefaultController extends OrderAbstractController
 //        exit("EOF review testing");
 
         //testing fee schedule->specialty filter
-        $specialtyId = 5; //MISI
-        $specialtyId = 7; //USCAP
-        $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
-        echo "specialty = ID ".$projectSpecialty->getId()." $projectSpecialty <br><br>";
-        $fees = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
-        //$fees = $transresRequestUtil->getProductServiceByProjectSpecialtyTest3($projectSpecialty);
-        echo "fees count=".count($fees)."<br>";
-        foreach($fees as $fee) {
-            echo $fee->getId()." fee = ".$fee->getProductId(). "; hide for=[" . $fee->getProjectSpecialtiesStr() . "]; ".$fee->getName()."<br>";
-        }
-        exit('111');
+//        $specialtyId = 5; //MISI
+//        $specialtyId = 7; //USCAP
+//        $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+//        echo "specialty = ID ".$projectSpecialty->getId()." $projectSpecialty <br><br>";
+//        $fees = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
+//        //$fees = $transresRequestUtil->getProductServiceByProjectSpecialtyTest3($projectSpecialty);
+//        echo "fees count=".count($fees)."<br>";
+//        foreach($fees as $fee) {
+//            echo $fee->getId()." fee = ".$fee->getProductId(). "; hide for=[" . $fee->getProjectSpecialtiesStr() . "]; ".$fee->getName()."<br>";
+//        }
+//        exit('111');
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
