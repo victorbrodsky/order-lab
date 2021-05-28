@@ -4231,7 +4231,7 @@ class TransResRequestUtil
         exit();
     }
 
-    public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null, $asCombobox=false, $max=null ) {
+    public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null ) {
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
@@ -4244,46 +4244,6 @@ class TransResRequestUtil
         
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
-
-        if( 0 && $projectSpecialty ) {
-
-            if(0) {
-                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
-                //$dql->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)");       //show categories with this specialty only
-                //$dql->andWhere("projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)"); //do show categories with this specialty only
-                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)");
-                $projectSpecialtyIdsArr = array();
-                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-                $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
-            } else {
-//                //$dql->innerJoin('list.projectSpecialties','projectSpecialties');
-//                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
-//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
-//                //$dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyId)");
-//
-//                $dql->groupBy("list");
-//                $dql->groupBy("projectSpecialties");
-//                $dql->having("projectSpecialties.id != 5");
-//
-//                $projectSpecialtyIdsArr = array();
-//                $projectSpecialtyId = $projectSpecialty->getId();
-//                $projectSpecialtyIdsArr[] = $projectSpecialtyId;
-//                //$dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
-
-                $inverseProjectSpecialtyIdsArr = array();
-                $inverseProjectSpecialtys = $this->getReversedSpecialties($projectSpecialty);
-                foreach($inverseProjectSpecialtys as $inverseProjectSpecialty) {
-                    echo "$inverseProjectSpecialty <br>";
-                    $inverseProjectSpecialtyIdsArr[] = $inverseProjectSpecialty->getId();
-                }
-
-                $dql->leftJoin('list.projectSpecialties','projectSpecialties');
-                $dql->andWhere("projectSpecialties IS NULL OR projectSpecialties.id != 5");
-                //$projectSpecialtyIdsArr = array();
-                //$projectSpecialtyIdsArr[] = $projectSpecialty->getId();
-                //$dqlParameters["inverseProjectSpecialtyIdsArr"] = $inverseProjectSpecialtyIdsArr;
-            }
-        }
 
         //show only with $fee for this price list
         if(1) {
@@ -4310,36 +4270,25 @@ class TransResRequestUtil
             $query->setParameters($dqlParameters);
         }
 
-        if( $max ) {
-            $query->setMaxResults($max);
-        }
-
-        $fullProducts = $query->getResult();
+        $fees = $query->getResult();
 
         //filter by specialty
-        $products = new ArrayCollection();
+        $filteredFees = new ArrayCollection();
         if( $projectSpecialty ) {
             //$projectSpecialtyId = $projectSpecialty->getId();
-            foreach( $fullProducts as $fee ) {
+            foreach( $fees as $fee ) {
                 $feeSpecialties = $fee->getProjectSpecialties();
+                //echo "specialties=".$fee->getProductId()." ".$fee->getProjectSpecialtiesStr()."<br>";
                 if( !$feeSpecialties->contains($projectSpecialty) ) {
-                    $products[] = $fee;
+                    //echo "specialties=".$fee->getProductId()." ".$fee->getProjectSpecialtiesStr()."<br>";
+                    $filteredFees[] = $fee;
                 }
             }
+
+            return $filteredFees;
         }
 
-        if( !$asCombobox ) {
-            return $products;
-        }
-
-        $productsCombobox = array();
-        foreach($products as $product) {
-            if( $asCombobox ) {
-                $productsCombobox[] = array('id'=>$product->getId(),'text'=>$product->getOptimalAbbreviationName());
-            }
-        }
-
-        return $productsCombobox;
+        return $fees;
     }
     public function getProductServiceByProjectSpecialty_ORIG($projectSpecialty,$asCombobox=true,$max=3) {
 

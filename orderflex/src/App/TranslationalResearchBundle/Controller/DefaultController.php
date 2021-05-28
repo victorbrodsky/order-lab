@@ -97,6 +97,7 @@ class DefaultController extends OrderAbstractController
 
         //testing fee schedule->specialty filter
         $specialtyId = 5; //MISI
+        $specialtyId = 7; //USCAP
         $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
         echo "specialty = ID ".$projectSpecialty->getId()." $projectSpecialty <br><br>";
         $fees = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
