@@ -3391,3 +3391,36 @@
 
 {% endmacro %}
 
+{% macro dayMonthDate( field, cycle ) %}
+
+    {% if field is defined %}
+        {#{{ formmacros.field(field) }}#}
+        {#{{ form_label(field) }}#}
+        {#{{ form_widget(field['month']) }}#}
+        {#{{ form_widget(field['day']) }}#}
+        {#{{ form_widget(field['year'],{'attr':{'style':'display:none'}}) }}#}
+
+        <p>
+        <div class="row">
+            {{ form_errors(field) }}
+            <div class="col-xs-6" align="right">
+                {#<strong>{{ label }}</strong> {{ postfixLabel|raw }}<strong>:</strong>#}
+                {{ form_label(field) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                {#{{ form_widget(field) }}#}
+                {{ form_widget(field['month']) }}
+                {{ form_widget(field['day']) }}
+                {#{{ form_widget(field['year'],{'attr':{'style':'display:none'}}) }}#}
+                {{ form_widget(field['year']) }}
+            </div>
+            {#{{ form_rest(field) }}#}
+        </div>
+        </p>
+
+    {% endif %}
+
+{% endmacro %}
+
+
+

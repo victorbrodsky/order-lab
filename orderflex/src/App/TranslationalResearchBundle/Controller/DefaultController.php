@@ -214,6 +214,8 @@ class DefaultController extends OrderAbstractController
 
         $output = array();
 
+        //TODO: duplicate TRP-10003 in http://127.0.0.1/order/translational-research/invoice/new/20451
+
         ///////////////// add not existed item code for invoiceItems without product /////////////////
         if( $invoiceId ) {
             $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
@@ -233,6 +235,13 @@ class DefaultController extends OrderAbstractController
                                 'id' => $itemCode,
                                 'text' => $itemCode,
                             );
+
+//                            if( $this->inArray($output,$itemCode,$itemCode) == false ) {
+//                                $output[] = array(
+//                                    'id' => $itemCode,
+//                                    'text' => $itemCode,
+//                                );
+//                            }
                         }
                     } else {
                         $itemCode = $invoiceItem->getItemCode();
@@ -240,6 +249,13 @@ class DefaultController extends OrderAbstractController
                             'id' => $itemCode,
                             'text' => $itemCode,
                         );
+
+//                        if( $this->inArray($output,$itemCode,$itemCode) == false ) {
+//                            $output[] = array(
+//                                'id' => $itemCode,
+//                                'text' => $itemCode,
+//                            );
+//                        }
                     }
                 }
             }
@@ -277,6 +293,16 @@ class DefaultController extends OrderAbstractController
                 'id' => $category->getId(),
                 'text' => $category->getOptimalAbbreviationName($priceList), //Use the same as in ProductType.php -> category
             );
+
+//            $key = $category->getId();
+//            $val = $category->getOptimalAbbreviationName($priceList);
+//            if( $this->inArray($output,$key,$val) == false ) {
+//                $output[] = array(
+//                    'id' => $key,
+//                    'text' => $val, //Use the same as in ProductType.php -> category
+//                );
+//            }
+
         }
         ///////////// EOF get default fee schedules (product/services) for specialty ////////////////
 
@@ -306,9 +332,16 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
     function inArray($array, $key, $val) {
-        foreach ($array as $item)
-            if (isset($item[$key]) && $item[$key] == $val)
-                return true;
+        foreach($array as $item) {
+//            if( isset($item[$key]) && $item[$key] == $val ) {
+//                return true;
+//            }
+            if( isset($item[$key]) ) {
+                if( $item[$key] == $val ) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
     /**

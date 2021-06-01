@@ -79,6 +79,29 @@ class DefaultController extends OrderAbstractController
 //        $currentYear = $currentYear + 2;
 //        $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
 //        echo "fellowshipDbApplications count=".count($fellowshipDbApplications)."<br>";
+
+
+//        //Testing google drive
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//        $service = $googlesheetmanagement->getGoogleService();
+//        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$folderIdFellAppId ) {
+//            exit('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
+//        }
+//
+//        //find folder by name
+//        $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
+//        echo "letterSpreadsheetFolder=".$letterSpreadsheetFolder->getId()."<br>";
+//        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(),$service);
+//        echo "files count=".count($files)."<br>";
+//
+//        $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
+//        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
+//        echo "rec letter files count=".count($files)."<br>";
+//
+//        exit('111');
+        
         /////////// EOF testing ///////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

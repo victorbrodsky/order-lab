@@ -256,6 +256,16 @@ class ResappSiteParameter {
      */
     private $defaultResidencyTrack;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $resappAcademicYearStart;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $resappAcademicYearEnd;
+
 
 
     public function __construct() {
@@ -488,6 +498,38 @@ class ResappSiteParameter {
     public function setDefaultResidencyTrack($defaultResidencyTrack)
     {
         $this->defaultResidencyTrack = $defaultResidencyTrack;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResappAcademicYearStart()
+    {
+        return $this->resappAcademicYearStart;
+    }
+
+    /**
+     * @param mixed $resappAcademicYearStart
+     */
+    public function setResappAcademicYearStart($resappAcademicYearStart)
+    {
+        $this->resappAcademicYearStart = $resappAcademicYearStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResappAcademicYearEnd()
+    {
+        return $this->resappAcademicYearEnd;
+    }
+
+    /**
+     * @param mixed $resappAcademicYearEnd
+     */
+    public function setResappAcademicYearEnd($resappAcademicYearEnd)
+    {
+        $this->resappAcademicYearEnd = $resappAcademicYearEnd;
     }
 
 

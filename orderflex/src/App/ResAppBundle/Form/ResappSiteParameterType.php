@@ -143,6 +143,17 @@ class ResappSiteParameterType extends AbstractType
             )
         ));
 
+        $builder->add('resappAcademicYearStart',null,array(
+            'label'=>'Application season start date (MM/DD) when the default residency application year changes to the following year (April 1st):',
+            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('resappAcademicYearEnd',null,array(
+            'label'=>'Application season end date (MM/DD) when the default residency application year changes to the following year:',
+            'attr' => array('class'=>'form-control')
+        ));
+
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

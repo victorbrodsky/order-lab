@@ -29,7 +29,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#fellapp-Defaults">
-                    E-mail Notifications
+                    E-mail Notifications and Other Fellowship Settings
                 </a>
             </h4>
         </div>
@@ -53,6 +53,13 @@
 
                 {{ formmacros.field(form.rejectedEmailBody) }}
 
+                {% if form.fellappAcademicYearStart is defined %}
+                    {{ formmacros.dayMonthDate(form.fellappAcademicYearStart,cycle) }}
+                {% endif %}
+
+                {% if form.fellappAcademicYearEnd is defined %}
+                    {{ formmacros.dayMonthDate(form.fellappAcademicYearEnd,cycle) }}
+                {% endif %}
 
                 {% if cycle == "show" %}
                     <p>

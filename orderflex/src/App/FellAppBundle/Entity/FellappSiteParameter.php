@@ -62,10 +62,21 @@ class FellappSiteParameter {
      */
     private $rejectedEmailBody;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fellappAcademicYearStart;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fellappAcademicYearEnd;
+    
+    
+    
     
     public function __construct() {
-
+        
     }
 
 
@@ -150,6 +161,39 @@ class FellappSiteParameter {
         $this->rejectedEmailBody = $rejectedEmailBody;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFellappAcademicYearStart()
+    {
+        return $this->fellappAcademicYearStart;
+    }
+
+    /**
+     * @param mixed $fellappAcademicYearStart
+     */
+    public function setFellappAcademicYearStart($fellappAcademicYearStart)
+    {
+        $this->fellappAcademicYearStart = $fellappAcademicYearStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellappAcademicYearEnd()
+    {
+        return $this->fellappAcademicYearEnd;
+    }
+
+    /**
+     * @param mixed $fellappAcademicYearEnd
+     */
+    public function setFellappAcademicYearEnd($fellappAcademicYearEnd)
+    {
+        $this->fellappAcademicYearEnd = $fellappAcademicYearEnd;
+    }
+
+    
 
 }
 

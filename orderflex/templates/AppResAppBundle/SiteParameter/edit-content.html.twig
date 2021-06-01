@@ -64,6 +64,14 @@
 
                 {{ formmacros.field(form.rejectedEmailBody) }}
 
+                {% if form.resappAcademicYearStart is defined %}
+                    {{ formmacros.dayMonthDate(form.resappAcademicYearStart,cycle) }}
+                {% endif %}
+
+                {% if form.resappAcademicYearEnd is defined %}
+                    {{ formmacros.dayMonthDate(form.resappAcademicYearEnd,cycle) }}
+                {% endif %}
+
 
                 {% if cycle == "show" %}
                     <p>
