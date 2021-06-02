@@ -96,3 +96,54 @@
 
 {% endblock %}
 
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearStart_day').on("change", function(e) {
+                fellappUpdateStartEndYear('Start');
+            });
+            $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearStart_month').on("change", function(e) {
+                fellappUpdateStartEndYear('Start');
+            });
+
+            $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearEnd_day').on("change", function(e) {
+                fellappUpdateStartEndYear('End');
+            });
+            $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearEnd_month').on("change", function(e) {
+                fellappUpdateStartEndYear('End');
+            });
+
+        });
+
+        function fellappUpdateStartEndYear( name ) {
+            console.log("fellappUpdateStartYear: "+name);
+            var day = $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_day').val();
+            var month = $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_month').val();
+            var year = $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_year').val();
+
+//            if( !day ) {
+//                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_month').val(null);
+//                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_year').val(null);
+//            }
+//
+//            if( !month ) {
+//                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_day').val(null);
+//                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_year').val(null);
+//            }
+
+            if( !day && !month ) {
+                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_year').val(null);
+            } else {
+                var year = new Date().getFullYear();
+                $('#oleg_fellappbundle_fellappsiteparameter_fellappAcademicYear'+name+'_year').val(year);
+            }
+        }
+
+
+    </script>
+
+{% endblock %}
+

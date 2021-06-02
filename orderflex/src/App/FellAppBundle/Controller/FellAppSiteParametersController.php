@@ -105,13 +105,31 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "edit";
 
-        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters();
+        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters($cycle);
 
         $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
+
+            //set end default date as "Start" date - 1 day
+            //exit('end date');
+            if( $fellappSiteParameter->getFellappAcademicYearEnd() === NULL ) {
+                $startDate = $fellappSiteParameter->getFellappAcademicYearStart();
+                if( $startDate ) {
+                    //"Start" date - 1 day
+                    $thisEndDate = clone $startDate;
+                    $thisEndDate->modify('-1 day');
+                    $fellappSiteParameter->setFellappAcademicYearEnd($thisEndDate);
+                }
+//                else {
+//                    $currentYear = intval(date("Y"));
+//                    $june30 = new \DateTime($currentYear."-06-30");
+//                    //echo "set start date=".$june30->format('yyyy-mm-dd')."<br>";
+//                    $fellappSiteParameter->setFellappAcademicYearEnd($june30);
+//                }
+            }
 
             //exit('submit');
             $em->persist($fellappSiteParameter);
@@ -142,7 +160,7 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters();
+        $fellappSiteParameter = $this->getOrCreateNewFellAppParameters($cycle);
         //echo "fellappSiteParameter=".$fellappSiteParameter->getId()."<br>";
 
         $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
@@ -180,7 +198,7 @@ class FellAppSiteParametersController extends SiteParametersController
     }
 
     //Get or Create a new FellAppSiteParameter
-    public function getOrCreateNewFellAppParameters() {
+    public function getOrCreateNewFellAppParameters( $cycle ) {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         if( count($entities) != 1 ) {
@@ -194,8 +212,36 @@ class FellAppSiteParametersController extends SiteParametersController
         if( !$fellappSiteParameter ) {
             //echo "FellAppSiteParameter null <br>";
             $fellappSiteParameter = new FellappSiteParameter();
+
             $siteParameters->setFellappSiteParameter($fellappSiteParameter);
             $em->flush();
+        }
+
+        if(0) {
+            //set start default 1 July 2021 if NULL
+            if ($fellappSiteParameter->getFellappAcademicYearStart() === NULL) {
+                $currentYear = intval(date("Y"));
+                $july1 = new \DateTime($currentYear . "-07-01");
+                //echo "set start date=".$july1->format('yyyy-mm-dd')."<br>";
+                $fellappSiteParameter->setFellappAcademicYearStart($july1);
+
+            }
+            //set end default 30 June 2021 if NULL
+            if ($fellappSiteParameter->getFellappAcademicYearEnd() === NULL) {
+                $startDate = $fellappSiteParameter->getFellappAcademicYearStart();
+                if ($startDate) {
+                    //"Start" date - 1 day
+                    $thisEndDate = clone $startDate;
+                    $thisEndDate->modify('-1 day');
+                    $fellappSiteParameter->setFellappAcademicYearEnd($thisEndDate);
+                } else {
+                    $currentYear = intval(date("Y"));
+                    $june30 = new \DateTime($currentYear . "-06-30");
+                    //echo "set start date=".$june30->format('yyyy-mm-dd')."<br>";
+                    $fellappSiteParameter->setFellappAcademicYearEnd($june30);
+                }
+            }
+            //echo "set  date <br>";
         }
 
         return $fellappSiteParameter;

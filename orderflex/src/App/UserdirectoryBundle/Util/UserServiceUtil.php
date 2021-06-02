@@ -2839,17 +2839,19 @@ Pathology and Laboratory Medicine",
 
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
-    public function getAcademicYearStartEndDates( $currentYear=null, $asDateTimeObject=false, $yearOffset=null ) {
+    public function getAcademicYearStartEndDates_ORIG( $currentYear=null, $asDateTimeObject=false, $yearOffset=null, $sitename=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart',$sitename);
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+            //$startDate = NULL;
         }
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd',$sitename);
         if( !$academicYearEnd ) {
             throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+            //$endDate = NULL;
         }
 
         $startDateMD = $academicYearStart->format('m-d');
@@ -2881,8 +2883,73 @@ Pathology and Laboratory Medicine",
             'endDate'=> $endDate,
         );
     }
+    //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
+    //return format: Y-m-d
+    public function getAcademicYearStartEndDates(
+        $currentYear=null,
+        $asDateTimeObject=false,
+        $yearOffset=null,
+        $sitename=null,
+        $startfieldname='academicYearStart',
+        $endfieldname='academicYearEnd'
+    ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( !$currentYear ) {
+            $currentYear = $this->getDefaultAcademicStartYear();
+        }
+        $nextYear = $currentYear + 1;
+
+        //academicYearStart: July 01
+        $academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
+        if( $academicYearStart ) {
+            $startDateMD = $academicYearStart->format('m-d');
+
+            if( $yearOffset ) {
+                if( $currentYear ) {
+                    $currentYear = $currentYear + $yearOffset;
+                }
+            }
+
+            $startDate = $currentYear."-".$startDateMD;
+
+            if( $asDateTimeObject ) {
+                $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
+            }
+        } else {
+            $startDate = NULL;
+        }
+
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter($endfieldname,$sitename);
+        if( $academicYearEnd ) {
+            $endDateMD = $academicYearEnd->format('m-d');
+
+            if( $yearOffset ) {
+                if( $nextYear ) {
+                    $nextYear = $nextYear + $yearOffset;
+                }
+            }
+
+            $endDate = $nextYear."-".$endDateMD;
+
+            if( $asDateTimeObject ) {
+                $endDate = \DateTime::createFromFormat('Y-m-d', $endDate);
+            }
+        } else {
+            $endDate = NULL;
+        }
+
+        //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
+
+        return array(
+            //'currentYear' => $currentYear,
+            'startDate'=> $startDate,
+            'endDate'=> $endDate,
+        );
+    }
     //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings
-    public function getDefaultAcademicStartYear() {
+    public function getDefaultAcademicStartYear( $sitename=null, $startfieldname='academicYearStart' ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -2896,7 +2963,8 @@ Pathology and Laboratory Medicine",
         //start date of the academic year
         //$july1 = new \DateTime($currentYear."-07-01"); //get from site setting
 
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+        //start date
+        $academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
         if( $academicYearStart ) {
             $startDateMD = $academicYearStart->format('m-d');
             $july1 = new \DateTime($currentYear."-".$startDateMD);
@@ -2907,6 +2975,7 @@ Pathology and Laboratory Medicine",
         }
         //echo "july1=".$july1->format("d-m-Y")."<br>";
 
+        //end date of the year, always December 31
         $december31 = new \DateTime($currentYear."-12-31");
 
         //Application Season Start Year (applicationSeasonStartDates) set to:

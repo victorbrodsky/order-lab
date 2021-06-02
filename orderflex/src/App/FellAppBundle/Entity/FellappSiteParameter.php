@@ -63,11 +63,15 @@ class FellappSiteParameter {
     private $rejectedEmailBody;
 
     /**
+     * default: academicYearStart
+     * 
      * @ORM\Column(type="date", nullable=true)
      */
     private $fellappAcademicYearStart;
 
     /**
+     * default: academicYearEnd
+     * 
      * @ORM\Column(type="date", nullable=true)
      */
     private $fellappAcademicYearEnd;
