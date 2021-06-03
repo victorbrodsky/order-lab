@@ -742,6 +742,15 @@ function initSingleDatepicker( datepickerElement ) {
             //console.log('datepickerFormat='+datepickerFormat);
             //console.log(datepickerElement);
         }
+        if( datepickerElement.hasClass('datepicker-only-day-month') ) {
+            datepickertodayBtn = false;
+            datepickerFormat = "dd/mm";
+            //datepickerStartView = "month";
+            datepickerMinViewMode = "days";
+            //datepickerViewMode = "months";
+            //console.log('datepickerFormat='+datepickerFormat);
+            //console.log(datepickerElement);
+        }
         if( datepickerElement.hasClass('datepicker-only-year') ) {
             datepickertodayBtn = false;
             datepickerFormat = " yyyy";

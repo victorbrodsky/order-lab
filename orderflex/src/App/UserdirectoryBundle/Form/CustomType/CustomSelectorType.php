@@ -26,6 +26,7 @@
 namespace App\UserdirectoryBundle\Form\CustomType;
 
 
+use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\StringItemCodeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
@@ -224,6 +225,10 @@ class CustomSelectorType extends AbstractType {
             //month year date only
             case "month_year_date_only":
                 $transformer = new MonthYearDateTransformer($this->om, $username);
+                break;
+
+            case "day_month_date_only":
+                $transformer = new DayMonthDateTransformer($this->om, $username);
                 break;
 
             case "grant":

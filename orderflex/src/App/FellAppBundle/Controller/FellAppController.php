@@ -106,17 +106,31 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         $userServiceUtil = $this->get('user_service_utility');
 
-        $searchFlag = false;
-        //$startEndDates = $fellappUtil->getAcademicYearStartEndDates(null,false,+2);
-        //$currentYear = $startEndDates['currentYear'];
-        //$currentYear = date("Y")+2;
-        $currentYear = $fellappUtil->getDefaultAcademicStartYear();
-        $currentYear = $currentYear + 2;
-        //$currentYear = $currentYear + 3;
-        $defaultStartDates = $currentYear;
-
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
         //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
+
+        $searchFlag = false;
+
+        $defaultStartDates = NULL;
+        $currentYears = $fellappUtil->getAcademicStartYearByFellowships($fellowshipTypes);
+        if( $currentYears ) {
+            $currentYearArr = array();
+            foreach($currentYears as $currentYear) {
+                $currentYearArr[] = $currentYear + 2;
+            }
+            $currentYear = implode(",",$currentYearArr);
+            $defaultStartDates = $currentYear;
+        }
+        if( !$defaultStartDates ) {
+            //$startEndDates = $fellappUtil->getAcademicYearStartEndDates(null,false,+2);
+            //$currentYear = $startEndDates['currentYear'];
+            //$currentYear = date("Y")+2;
+            $currentYear = $fellappUtil->getDefaultAcademicStartYear();
+            $currentYear = $currentYear + 2;
+            //$currentYear = $currentYear + 3;
+            $defaultStartDates = $currentYear; //"2012,2013,2014,2015";
+        }
+
 
         if( count($fellowshipTypes) == 0 ) {
 //            $linkUrl = $this->generateUrl(

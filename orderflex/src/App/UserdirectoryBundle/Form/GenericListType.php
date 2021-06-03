@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Form;
 
 use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
@@ -87,6 +88,35 @@ class GenericListType extends AbstractType
 
         }
 
+        //TODO: implement date transformer when year is not set
+        if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
+            $builder->add('seasonYearStart',CustomSelectorType::class,array(
+                'label'=>'Application season start date (MM/DD) when the default fellowship application year for this fellowship changes to the following year (i.e. April 1st):',
+                'attr' => array('class'=>'form-control'),
+                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+                'classtype' => 'day_month_date_only'
+            ));
+            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
+                'label'=>'Application season end date (MM/DD) when the default fellowship application year for this fellowship changes to the following year (i.e. March 31):',
+                'attr' => array('class'=>'form-control'),
+                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+                'classtype' => 'day_month_date_only'
+            ));
+        }
+        if( strtolower($this->mapper['className']) == strtolower("ResidencySpecialty") ) {
+            $builder->add('seasonYearStart',CustomSelectorType::class,array(
+                'label'=>'Application season start date (MM/DD) when the default residency application year for this residency changes to the following year (i.e. April 1st):',
+                'attr' => array('class'=>'form-control'),
+                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+                'classtype' => 'day_month_date_only'
+            ));
+            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
+                'label'=>'Application season end date (MM/DD) when the default residency application year for this residency changes to the following year (i.e. March 31):',
+                'attr' => array('class'=>'form-control'),
+                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+                'classtype' => 'day_month_date_only'
+            ));
+        }
 
         //TODO: make it as institutional tree?
         if( method_exists($this->params['entity'],'getInstitution') ) {

@@ -1183,6 +1183,15 @@
         {{ formmacros.field(form.friendlyname) }}
     {% endif %}
 
+    {% if form.seasonYearStart is defined %}
+        {{ formmacros.dayMonthDate(form.seasonYearStart,cycle) }}
+        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
+    {% endif %}
+    {% if form.seasonYearStart is defined %}
+        {{ formmacros.dayMonthDate(form.seasonYearEnd,cycle) }}
+        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

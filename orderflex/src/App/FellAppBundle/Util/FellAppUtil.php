@@ -180,11 +180,12 @@ class FellAppUtil {
 
         return $applicants;
     }
-
+    
+    //Get Application season start dates
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
     public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {
-
+        
         $userServiceUtil = $this->container->get('user_service_utility');
         $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset,'fellapp','fellappAcademicYearStart','fellappAcademicYearEnd');
         
@@ -224,109 +225,8 @@ class FellAppUtil {
             'startDate'=> $startDate,
             'endDate'=> $endDate,
         );
-
-//        /////////////// MOVED TO user_service_utility ///////////////
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        //academicYearStart: July 01
-//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','fellapp');
-//        if( !$academicYearStart ) {
-//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-//        }
-//        //academicYearEnd: June 30
-//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
-//        if( !$academicYearEnd ) {
-//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-//        }
-//
-//        $startDateMD = $academicYearStart->format('m-d');
-//        $endDateMD = $academicYearEnd->format('m-d');
-//
-//        $nextYear = $currentYear + 1;
-//
-//        if( $yearOffset ) {
-//            $currentYear = $currentYear + $yearOffset;
-//            $nextYear = $nextYear + $yearOffset;
-//        }
-//
-//        $startDate = $currentYear."-".$startDateMD;
-//        $endDate = $nextYear."-".$endDateMD;
-//        //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
-//
-//        if( $asDateTimeObject ) {
-//            $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
-//            $endDate = \DateTime::createFromFormat('Y-m-d', $endDate);
-//        }
-//
-//        return array(
-//            //'currentYear' => $currentYear,
-//            'startDate'=> $startDate,
-//            'endDate'=> $endDate,
-//        );
     }
-//    //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings
-//    public function getDefaultAcademicStartYear_ORIG() {
-//
-//        $userServiceUtil = $this->container->get('user_service_utility');
-//        return $userServiceUtil->getDefaultAcademicStartYear();
-//
-//        /////////////// MOVED TO user_service_utility ///////////////
-//        $userSecUtil = $this->container->get('user_security_utility');
-//
-//        $currentYear = intval(date("Y"));
-//        $currentDate = new \DateTime();
-//
-//        //2011-03-26 (year-month-day)
-//        $january1 = new \DateTime($currentYear."-01-01");
-//        //$june30 = new \DateTime($currentYear."-06-30");
-//
-//        //start date of the academic year
-//        //$july1 = new \DateTime($currentYear."-07-01"); //get from site setting
-//
-//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
-//        if( $academicYearStart ) {
-//            $startDateMD = $academicYearStart->format('m-d');
-//            $july1 = new \DateTime($currentYear."-".$startDateMD);
-//        } else {
-//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-//            //assume start date July 1st
-//            $july1 = new \DateTime($currentYear."-07-01");
-//        }
-//        //echo "july1=".$july1->format("d-m-Y")."<br>";
-//
-//        $december31 = new \DateTime($currentYear."-12-31");
-//
-//        //default dates
-//        //$applicationSeasonStartDate = $currentYear;
-//        //$startDate = $currentYear + 1;
-//
-//        //Application Season Start Year (applicationSeasonStartDates) set to:
-//        //current year if current date is between July 1st and December 31st (inclusive) or
-//        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
-//        // 1January---(current year-1)---1July---(current year)---31December---
-//
-//        //Residency Start Year (startDates)
-//        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
-//        //current year if current date is between January 1st and June 30th (inclusive)
-//        // 1July---(current year+1)---31December---(current year)---30June---
-//
-//        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
-//        // current date is between July 1st and December 31st (inclusive) or
-//        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
-//            //$applicationSeasonStartDate = $currentYear;
-//            //$startDate = $currentYear + 1;
-//        }
-//
-//        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
-//        // current date is between January 1st and June 30th (inclusive)
-//        if( $currentDate >= $january1 && $currentDate < $july1 ) {
-//            $currentYear = $currentYear - 1;
-//            //$startDate = $currentYear;
-//        }
-//
-//        //echo "currentYear=$currentYear <br>";
-//
-//        return $currentYear;
-//    }
+    //Get Application season year
     //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings
     public function getDefaultAcademicStartYear() {
 
@@ -344,64 +244,29 @@ class FellAppUtil {
         }
 
         return $currentYear;
-
-        /////////////// MOVED TO user_service_utility ///////////////
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $currentYear = intval(date("Y"));
-        $currentDate = new \DateTime();
-
-        //2011-03-26 (year-month-day)
-        $january1 = new \DateTime($currentYear."-01-01");
-        //$june30 = new \DateTime($currentYear."-06-30");
-
-        //start date of the academic year
-        //$july1 = new \DateTime($currentYear."-07-01"); //get from site setting
-
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
-        if( $academicYearStart ) {
-            $startDateMD = $academicYearStart->format('m-d');
-            $july1 = new \DateTime($currentYear."-".$startDateMD);
-        } else {
-            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-            //assume start date July 1st
-            $july1 = new \DateTime($currentYear."-07-01");
+    }
+    //$fellowshipTypes[id] = name;
+    public function getAcademicStartYearByFellowships( $fellowshipTypes=NULL ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $currentYear = $this->getDefaultAcademicStartYear();
+        $startDates = array();
+        foreach($fellowshipTypes as $fellowshipId=>$fellowshipName) {
+            $fellowshipType = $this->em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellowshipId);
+            $startDate = $fellowshipType->getSeasonYearStart();
+            if( $startDate ) {
+                $startYear = $userServiceUtil->getAcademicStartYear($startDate);
+                $startDates[] = $startYear;
+            } else {
+                $startDates[] = $currentYear;
+            }
         }
-        //echo "july1=".$july1->format("d-m-Y")."<br>";
+//        $startDates[] = '2019';
+//        $startDates[] = '2020';
+//        $startDates[] = '2021';
 
-        $december31 = new \DateTime($currentYear."-12-31");
+        $startDates = array_unique($startDates);
 
-        //default dates
-        //$applicationSeasonStartDate = $currentYear;
-        //$startDate = $currentYear + 1;
-
-        //Application Season Start Year (applicationSeasonStartDates) set to:
-        //current year if current date is between July 1st and December 31st (inclusive) or
-        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
-        // 1January---(current year-1)---1July---(current year)---31December---
-
-        //Residency Start Year (startDates)
-        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
-        //current year if current date is between January 1st and June 30th (inclusive)
-        // 1July---(current year+1)---31December---(current year)---30June---
-
-        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
-        // current date is between July 1st and December 31st (inclusive) or
-        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
-            //$applicationSeasonStartDate = $currentYear;
-            //$startDate = $currentYear + 1;
-        }
-
-        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
-        // current date is between January 1st and June 30th (inclusive)
-        if( $currentDate >= $january1 && $currentDate < $july1 ) {
-            $currentYear = $currentYear - 1;
-            //$startDate = $currentYear;
-        }
-
-        //echo "currentYear=$currentYear <br>";
-
-        return $currentYear;
+        return $startDates;
     }
 
 //    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {

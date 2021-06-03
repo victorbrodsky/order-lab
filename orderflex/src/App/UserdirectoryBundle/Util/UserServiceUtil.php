@@ -2952,7 +2952,11 @@ Pathology and Laboratory Medicine",
     public function getDefaultAcademicStartYear( $sitename=null, $startfieldname='academicYearStart' ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
+        $currentYear = $this->getAcademicStartYear( $academicYearStart );
+        return $currentYear;
 
+        //Moved to getAcademicStartYear
         $currentYear = intval(date("Y"));
         $currentDate = new \DateTime();
 
@@ -2967,6 +2971,64 @@ Pathology and Laboratory Medicine",
         $academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
         if( $academicYearStart ) {
             $startDateMD = $academicYearStart->format('m-d');
+            $july1 = new \DateTime($currentYear."-".$startDateMD);
+        } else {
+            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+            //assume start date July 1st
+            $july1 = new \DateTime($currentYear."-07-01");
+        }
+        //echo "july1=".$july1->format("d-m-Y")."<br>";
+
+        //end date of the year, always December 31
+        $december31 = new \DateTime($currentYear."-12-31");
+
+        //Application Season Start Year (applicationSeasonStartDates) set to:
+        //current year if current date is between July 1st and December 31st (inclusive) or
+        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
+        // 1January---(current year-1)---1July---(current year)---31December---
+
+        //Residency Start Year (startDates)
+        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
+        //current year if current date is between January 1st and June 30th (inclusive)
+        // 1July---(current year+1)---31December---(current year)---30June---
+
+        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
+        // current date is between July 1st and December 31st (inclusive) or
+        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
+            //$applicationSeasonStartDate = $currentYear;
+            //$startDate = $currentYear + 1;
+        }
+
+        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
+        // current date is between January 1st and June 30th (inclusive)
+        if( $currentDate >= $january1 && $currentDate < $july1 ) {
+            $currentYear = $currentYear - 1;
+            //$startDate = $currentYear;
+        }
+
+        //echo "currentYear=$currentYear <br>";
+
+        return $currentYear;
+    }
+    //Get academic year (if 2021 it means 2021-2022 academic year) according to the $stardate and end of year (december 31st)
+    public function getAcademicStartYear( $stardate ) {
+
+        //$userSecUtil = $this->container->get('user_security_utility');
+
+        $currentYear = intval(date("Y"));
+        $currentDate = new \DateTime();
+
+        //2011-03-26 (year-month-day)
+        $january1 = new \DateTime($currentYear."-01-01");
+        //$june30 = new \DateTime($currentYear."-06-30");
+
+        //start date of the academic year
+        //$july1 = new \DateTime($currentYear."-07-01"); //get from site setting
+
+        //start date
+        //$academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
+        if( $stardate ) {
+            $startDateMD = $stardate->format('m-d');
             $july1 = new \DateTime($currentYear."-".$startDateMD);
         } else {
             //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');

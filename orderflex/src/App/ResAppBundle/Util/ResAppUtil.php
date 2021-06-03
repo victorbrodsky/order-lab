@@ -2281,54 +2281,55 @@ class ResAppUtil {
         return $ethnicities;
     }
 
-    //Assume start year is 01-01 (unlike fellowship application, usually July 1st, academicYearStart in the site settings)
-    public function getDefaultStartDatesOld() {
-
-        $currentYear = intval(date("Y"));
-        $currentDate = new \DateTime();
-
-        //2011-03-26 (year-month-day)
-        $january1 = new \DateTime($currentYear."-01-01");
-        //$june30 = new \DateTime($currentYear."-06-30");
-        $july1 = new \DateTime($currentYear."-07-01");
-        $december31 = new \DateTime($currentYear."-12-31");
-
-        //default dates
-        $applicationSeasonStartDate = $currentYear;
-        $startDate = $currentYear + 1;
-
-        //Application Season Start Year (applicationSeasonStartDates) set to:
-        //current year if current date is between July 1st and December 31st (inclusive) or
-        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
-        // 1January---(current year-1)---1July---(current year)---31December---
-
-        //Residency Start Year (startDates)
-        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
-        //current year if current date is between January 1st and June 30th (inclusive)
-        // 1July---(current year+1)---31December---(current year)---30June---
-
-        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
-        // current date is between July 1st and December 31st (inclusive) or
-        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
-            $applicationSeasonStartDate = $currentYear;
-            $startDate = $currentYear + 1;
-        }
-
-        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
-        // current date is between January 1st and June 30th (inclusive)
-        if( $currentDate >= $january1 && $currentDate < $july1 ) {
-            $applicationSeasonStartDate = $currentYear - 1;
-            $startDate = $currentYear;
-        }
-
-        $resArr['Application Season Start Year'] = $applicationSeasonStartDate;
-        $resArr['Application Season End Year'] = $applicationSeasonStartDate+1;
-
-        $resArr['Residency Start Year'] = $startDate;
-        $resArr['Residency End Year'] = $startDate+1;
-
-        return $resArr;
-    }
+//    //Assume start year is 01-01 (unlike fellowship application, usually July 1st, academicYearStart in the site settings)
+//    public function getDefaultStartDatesOld() {
+//
+//        $currentYear = intval(date("Y"));
+//        $currentDate = new \DateTime();
+//
+//        //2011-03-26 (year-month-day)
+//        $january1 = new \DateTime($currentYear."-01-01");
+//        //$june30 = new \DateTime($currentYear."-06-30");
+//        $july1 = new \DateTime($currentYear."-07-01");
+//        $december31 = new \DateTime($currentYear."-12-31");
+//
+//        //default dates
+//        $applicationSeasonStartDate = $currentYear;
+//        $startDate = $currentYear + 1;
+//
+//        //Application Season Start Year (applicationSeasonStartDates) set to:
+//        //current year if current date is between July 1st and December 31st (inclusive) or
+//        //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
+//        // 1January---(current year-1)---1July---(current year)---31December---
+//
+//        //Residency Start Year (startDates)
+//        //next year (current year+1) if current date is between July 1st and December 31st (inclusive) or
+//        //current year if current date is between January 1st and June 30th (inclusive)
+//        // 1July---(current year+1)---31December---(current year)---30June---
+//
+//        //set "Application Season Start Year" to current year and "Residency Start Year" to next year if
+//        // current date is between July 1st and December 31st (inclusive) or
+//        if( $currentDate >= $july1 && $currentDate <= $december31 ) {
+//            $applicationSeasonStartDate = $currentYear;
+//            $startDate = $currentYear + 1;
+//        }
+//
+//        //set "Application Season Start Year" to previous year and and "Residency Start Year" to current year if
+//        // current date is between January 1st and June 30th (inclusive)
+//        if( $currentDate >= $january1 && $currentDate < $july1 ) {
+//            $applicationSeasonStartDate = $currentYear - 1;
+//            $startDate = $currentYear;
+//        }
+//
+//        $resArr['Application Season Start Year'] = $applicationSeasonStartDate;
+//        $resArr['Application Season End Year'] = $applicationSeasonStartDate+1;
+//
+//        $resArr['Residency Start Year'] = $startDate;
+//        $resArr['Residency End Year'] = $startDate+1;
+//
+//        return $resArr;
+//    }
+    //TODO: update as in fellapp
     public function getDefaultStartDates() {
         $userServiceUtil = $this->container->get('user_service_utility');
 
@@ -2343,6 +2344,7 @@ class ResAppUtil {
         return $resArr;
     }
 
+    //TODO: update as in fellapp
     public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y" ) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
