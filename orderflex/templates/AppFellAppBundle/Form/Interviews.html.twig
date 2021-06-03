@@ -62,12 +62,10 @@
 
             {#form.interviews:{{ form.interviews|length }}#}
             <div class="fellapp-interviews-holder">
-                {% for interview in form.interviews %}
+                {% for interview in form.interviews if interview %}
 
                     {% set showInterview = false %}
                     {% if interview.interviewer and interview.vars.value.interviewer.id %}
-                        {#interview.interviewer.id=({{ interview.vars.value.interviewer.id }}) ?=#}
-                        {#app.user.id=({{ app.user.id }})<br>#}
                         {% if interview.vars.value.interviewer.id == app.user.id %}
                             {% set showInterview = true %}
                         {% endif %}
@@ -76,6 +74,21 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or showInterview  %}
+
+                        {#TODO: http://127.0.0.1/order/index_dev.php/fellowship-applications/show/1575#}
+                        {#{% if#}
+                            {#interview.vars.value is defined and#}
+                            {#interview.vars.value and#}
+                            {#interview.vars.value.submitter is defined and#}
+                            {#interview.vars.value.submitter#}
+                        {#%}#}
+                            {#interview.vars.value.submitter={{ interview.vars.value.submitter }}#}
+                        {#{% endif %}#}
+
+                        {#{% if interview.vars.value.submitter %}#}
+                            {#submitter id:{{ interview.vars.value.submitter.id }}<br>#}
+                            {#submitter:{{ interview.vars.value.getSubmitterName() }}#}
+                        {#{% endif %}#}
 
                         {{ fellappmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
 

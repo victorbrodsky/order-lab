@@ -351,7 +351,16 @@ class Interview {
         $this->submitter = $submitter;
     }
 
-    
+//    //testing when getInfos() return NULL
+//    public function getSubmitterName() {
+//        $submitterName = NULL;
+//        $submitter = $this->getSubmitter();
+//        if( $submitter ) {
+//            $submitterName = $submitter->getDisplayName();
+//            return $submitterName;
+//        }
+//        return NULL;
+//    }
 
     public function __toString() {
         $res = "Interview";

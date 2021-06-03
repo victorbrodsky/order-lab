@@ -1275,7 +1275,7 @@ class User extends UserBase {
     public function setSuffix($suffix)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setSuffix($suffix);
         }
     }
@@ -1287,7 +1287,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getSuffix();
         }
         return $value;
@@ -1299,7 +1299,7 @@ class User extends UserBase {
     public function setFirstName($firstName)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setFirstName($firstName);
         }
     }
@@ -1311,7 +1311,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getFirstName();
         }
         return $value;
@@ -1323,7 +1323,7 @@ class User extends UserBase {
     public function setMiddleName($middleName)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setMiddleName($middleName);
         }
     }
@@ -1335,7 +1335,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getMiddleName();
         }
         return $value;
@@ -1347,7 +1347,7 @@ class User extends UserBase {
     public function setLastName($lastName)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setLastName($lastName);
         }
     }
@@ -1359,9 +1359,15 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getLastName();
         }
+//        if( $infos ) {
+//            foreach ($infos as $info) {
+//                $value = $info->getLastName();
+//                return $value;
+//            }
+//        }
         return $value;
     }
 
@@ -1372,7 +1378,7 @@ class User extends UserBase {
     public function setSalutation($salutation)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setSalutation($salutation);
         }
     }
@@ -1381,7 +1387,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getSalutation();
         }
         return $value;
@@ -1436,7 +1442,7 @@ class User extends UserBase {
     public function setDisplayName($displayName)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setDisplayName($displayName);
         }
     }
@@ -1448,7 +1454,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getDisplayName();
         }
         return $value;
@@ -1460,7 +1466,7 @@ class User extends UserBase {
     public function setPreferredPhone($preferredPhone)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setPreferredPhone($preferredPhone);
         }
     }
@@ -1471,7 +1477,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getPreferredPhone();
         }
         return $value;
@@ -1483,7 +1489,7 @@ class User extends UserBase {
     public function setPreferredMobilePhone($preferredMobilePhone)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setPreferredMobilePhone($preferredMobilePhone);
         }
     }
@@ -1494,7 +1500,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getPreferredMobilePhone();
         }
         return $value;
@@ -1523,7 +1529,7 @@ class User extends UserBase {
     public function getUserInfo()
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             return $infos->first();
         }
         return false;
@@ -1535,7 +1541,7 @@ class User extends UserBase {
     public function setInitials($initials)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setInitials($initials);
         }
     }
@@ -1547,7 +1553,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getInitials();
         }
         return $value;
@@ -1557,7 +1563,7 @@ class User extends UserBase {
     public function setEmail($email)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $infos->first()->setEmail($email);
         }
     }
@@ -1565,7 +1571,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getEmail();
         }
         return $value;
@@ -1574,7 +1580,7 @@ class User extends UserBase {
     public function setEmailCanonical($emailCanonical)
     {
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             if( $emailCanonical ) {
                 //$emailCanonical = strtolower($emailCanonical);
                 $emailCanonical = $this->canonicalize($emailCanonical);
@@ -1586,7 +1592,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( count($infos) > 0 ) {
+        if( $infos && count($infos) > 0 ) {
             $value = $infos->first()->getEmailCanonical();
         }
         return $value;

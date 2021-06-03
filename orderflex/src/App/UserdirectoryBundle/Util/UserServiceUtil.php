@@ -2837,52 +2837,52 @@ Pathology and Laboratory Medicine",
         return NULL;
     }
 
-    //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
-    //return format: Y-m-d
-    public function getAcademicYearStartEndDates_ORIG( $currentYear=null, $asDateTimeObject=false, $yearOffset=null, $sitename=null ) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart',$sitename);
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-            //$startDate = NULL;
-        }
-        //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd',$sitename);
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-            //$endDate = NULL;
-        }
-
-        $startDateMD = $academicYearStart->format('m-d');
-        $endDateMD = $academicYearEnd->format('m-d');
-
-        if( !$currentYear ) {
-            $currentYear = $this->getDefaultAcademicStartYear();
-        }
-
-        $nextYear = $currentYear + 1;
-
-        if( $yearOffset ) {
-            $currentYear = $currentYear + $yearOffset;
-            $nextYear = $nextYear + $yearOffset;
-        }
-
-        $startDate = $currentYear."-".$startDateMD;
-        $endDate = $nextYear."-".$endDateMD;
-        //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
-
-        if( $asDateTimeObject ) {
-            $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
-            $endDate = \DateTime::createFromFormat('Y-m-d', $endDate);
-        }
-
-        return array(
-            //'currentYear' => $currentYear,
-            'startDate'=> $startDate,
-            'endDate'=> $endDate,
-        );
-    }
+//    //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
+//    //return format: Y-m-d
+//    public function getAcademicYearStartEndDates_ORIG( $currentYear=null, $asDateTimeObject=false, $yearOffset=null, $sitename=null ) {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        //academicYearStart: July 01
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart',$sitename);
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//            //$startDate = NULL;
+//        }
+//        //academicYearEnd: June 30
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd',$sitename);
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//            //$endDate = NULL;
+//        }
+//
+//        $startDateMD = $academicYearStart->format('m-d');
+//        $endDateMD = $academicYearEnd->format('m-d');
+//
+//        if( !$currentYear ) {
+//            $currentYear = $this->getDefaultAcademicStartYear();
+//        }
+//
+//        $nextYear = $currentYear + 1;
+//
+//        if( $yearOffset ) {
+//            $currentYear = $currentYear + $yearOffset;
+//            $nextYear = $nextYear + $yearOffset;
+//        }
+//
+//        $startDate = $currentYear."-".$startDateMD;
+//        $endDate = $nextYear."-".$endDateMD;
+//        //exit('<br> exit: startDate='.$startDate.'; endDate='.$endDate); //testing
+//
+//        if( $asDateTimeObject ) {
+//            $startDate = \DateTime::createFromFormat('Y-m-d', $startDate);
+//            $endDate = \DateTime::createFromFormat('Y-m-d', $endDate);
+//        }
+//
+//        return array(
+//            //'currentYear' => $currentYear,
+//            'startDate'=> $startDate,
+//            'endDate'=> $endDate,
+//        );
+//    }
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
     public function getAcademicYearStartEndDates(

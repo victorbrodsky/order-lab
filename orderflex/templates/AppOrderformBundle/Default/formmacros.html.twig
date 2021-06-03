@@ -179,7 +179,7 @@
             {% elseif type == "combobox" %}
                 <select class="combobox" {{ disabled }}>
                     {% for thisValue in value %}
-                        thisValue={{ thisValue }}
+                        {#thisValue={{ thisValue }}#}
                         <option value="{{ thisValue }}" selected>{{ thisValue }}</option>
                     {% endfor %}
                 </select>
