@@ -31,25 +31,9 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-class DayMonthDateTransformer implements DataTransformerInterface
-{
-//    /**
-//     * @var ObjectManager
-//     */
-//    private $em;
-//    private $user;
-//
-//    /**
-//     * @param ObjectManager $om
-//     */
-//    public function __construct(EntityManagerInterface $em=null, $user=null)
-//    {
-//        $this->em = $em;
-//        $this->user = $user;
-//    }
+class DayMonthDateTransformer implements DataTransformerInterface {
 
     //https://stackoverflow.com/questions/40463364/disable-days-and-month-from-symfony-datetypeclass
-
     /**
      * {@inheritdoc}
      */
@@ -57,89 +41,6 @@ class DayMonthDateTransformer implements DataTransformerInterface
     {
         return $value;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function transform_old($value)
-    {
-
-        //dump($value);
-        //echo "data reverseTransform text=".$value->format('m/d/Y')."<br>";
-        //exit();
-
-        if( is_array($value) ) {
-            //exit('value is array');
-            return $value;
-        }
-
-        //$value is datetime => convert to array
-//        array:3 [
-//          "year" => null
-//          "month" => 7
-//          "day" => 1
-//        ]
-
-        $day = $value->format('d');
-        $month = $value->format('m');
-        $year = $value->format('Y');
-
-        $value = array(
-            "year" => $year,
-            "month" => $month,
-            "day" => $day
-        );
-
-        //dump($value);
-        //exit();
-
-        return $value;
-    }
-
-//    /**
-//     * Transforms a string (number) to an object.
-//     * {@inheritdoc}
-//     */
-//    public function reverseTransform($text)
-//    {
-//        //echo "data reverseTransform text<br>";
-//        //echo "data reverseTransform text=".$text."<br>";
-//
-////        array:3 [
-////          "year" => null
-////          "month" => null
-////          "day" => null
-////        ]
-//        //dump($text);
-//        //exit();
-//
-//        if( !$text ) {
-//            return null;
-//        }
-//
-//        //convert mm/yyyy to dd/mm/yyyy accepted by symfony
-//        $datetime = $text;
-//
-//        $textArr = explode("/",$datetime);
-//        $day = $textArr[0];
-//        $month = $textArr[1];
-//        //$year = $textArr[2];
-//        $year = intval(date("Y"));
-//
-//        if( !$day || !$month ) {
-//            throw new \TransformationFailedException( 'Month or year are empty: day=' . $day . ', month=' . $month );
-//        }
-//
-//        //construct date as mm/dd/yyy
-//        $datetime = $month . "/" . $day . "/" . $year;
-//
-//        $date = new \DateTime($datetime);
-//
-//        //echo "date=".$date."<br>";
-//
-//        return $date;
-//    }
-
 
     /**
      * Transforms a string (number) to an object.
@@ -164,16 +65,11 @@ class DayMonthDateTransformer implements DataTransformerInterface
         $year = $value["year"];
 
         if( empty($day) && empty($month) ) {
-            $year = $value["year"] = NULL;
+            $value["year"] = NULL;
             return $value;
         }
 
-        if( empty($year) ) {
-            $year = intval(date("Y"));
-            $value["year"] = $year;
-        }
-
-        if( !$year ) {
+        if( empty($year) || !$year ) {
             $year = intval(date("Y"));
             $value["year"] = $year;
         }
@@ -185,35 +81,7 @@ class DayMonthDateTransformer implements DataTransformerInterface
             $value["day"] = $day;
         }
 
-//        echo "year=".$year."<br>";
-
-//        dump($value);
-        //exit('111');
-
-//        if (empty($value['year'])) {
-//            exit('111');
-//        }
-
-//        $datetime = "6" . "/" . "31" . "/" . "2021";
-//        $date = new \DateTime($datetime);
-//        echo "date=".$date->format("m/d/Y")."<br>";
-//        exit('111');
-//
         return $value;
-
-//        //construct date as mm/dd/yyy
-//        $datetime = $month . "/" . $day . "/" . $year;
-//
-//        $date = new \DateTime($datetime);
-//        echo "date=".$date->format("m/d/Y")."<br>";
-//
-//        if( intval($day) > 30 ) {
-//            echo "day=".$day."<br>";
-//            echo "date=".$date->format("m/d/Y")."<br>";
-//            exit('111');
-//        }
-//
-//        return $date;
     }
 
 }
