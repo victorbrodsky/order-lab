@@ -68,8 +68,8 @@ class FellappSiteParameterType extends AbstractType
         //TODO: implement date transformer when year is not set
         $builder->add('fellappAcademicYearStart',null,array(
             'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',
-            'attr' => array('class'=>'datepicker form-control datepicker-day-month')
-//            'attr' => array('class'=>'form-control')
+            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('fellappAcademicYearEnd',null,array(
             'label'=>'Application season end date (MM/DD) when the default fellowship application year changes to the following year, if empty set to start date -1 day (i.e. March 31):',
