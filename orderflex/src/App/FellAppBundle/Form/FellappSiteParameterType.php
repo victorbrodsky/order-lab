@@ -17,6 +17,7 @@
 
 namespace App\FellAppBundle\Form;
 
+use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -66,16 +67,30 @@ class FellappSiteParameterType extends AbstractType
         ));
 
         //TODO: implement date transformer when year is not set
-        $builder->add('fellappAcademicYearStart',null,array(
-            'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',
-            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
-            'attr' => array('class'=>'form-control')
-        ));
-        $builder->add('fellappAcademicYearEnd',null,array(
-            'label'=>'Application season end date (MM/DD) when the default fellowship application year changes to the following year, if empty set to start date -1 day (i.e. March 31):',
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('fellappAcademicYearStart',null,array(
+//            'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',
+//            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
+//            'attr' => array('class'=>'form-control')
+//        ));
+//        $builder->add('fellappAcademicYearEnd',null,array(
+//            'label'=>'Application season end date (MM/DD) when the default fellowship application year changes to the following year, if empty set to start date -1 day (i.e. March 31):',
+//            'attr' => array('class'=>'form-control')
+//        ));
 
+        $builder->add(
+                $builder->create('fellappAcademicYearStart', null, [
+                    'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',
+                    'required' => false,
+                ])
+                    ->addViewTransformer(new DayMonthDateTransformer())
+            );
+        $builder->add(
+            $builder->create('fellappAcademicYearEnd', null, [
+                'label'=>'Application season end date (MM/DD) when the default fellowship application year changes to the following year, if empty set to start date -1 day (i.e. March 31):',
+                'required' => false,
+            ])
+                ->addViewTransformer(new DayMonthDateTransformer())
+        );
 
 
         if( $this->params['cycle'] != 'show' ) {

@@ -55,6 +55,40 @@ class DayMonthDateTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function transform_old($value)
+    {
+
+        //dump($value);
+        //echo "data reverseTransform text=".$value->format('m/d/Y')."<br>";
+        //exit();
+
+        if( is_array($value) ) {
+            //exit('value is array');
+            return $value;
+        }
+
+        //$value is datetime => convert to array
+//        array:3 [
+//          "year" => null
+//          "month" => 7
+//          "day" => 1
+//        ]
+
+        $day = $value->format('d');
+        $month = $value->format('m');
+        $year = $value->format('Y');
+
+        $value = array(
+            "year" => $year,
+            "month" => $month,
+            "day" => $day
+        );
 
         //dump($value);
         //exit();

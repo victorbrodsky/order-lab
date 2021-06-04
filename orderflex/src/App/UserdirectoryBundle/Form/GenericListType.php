@@ -127,53 +127,25 @@ class GenericListType extends AbstractType
         if( strtolower($this->mapper['className']) == strtolower("ResidencySpecialty") ) {
             $specialtyName = "residency";
         }
-        if( 0 && $specialtyName ) {
-            $builder->add('seasonYearStart',CustomSelectorType::class,array(
-                'label'=>"Application season start date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. April 1st):",
-                'attr' => array('class'=>'form-control'),
-                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
-                'classtype' => 'day_month_date_only'
-            ));
-            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
-                'label'=>"Application season end date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. March 31):",
-                'attr' => array('class'=>'form-control'),
-                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
-                'classtype' => 'day_month_date_only'
-            ));
-        }
+//        if( 0 && $specialtyName ) {
+//            $builder->add('seasonYearStart',CustomSelectorType::class,array(
+//                'label'=>"Application season start date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. April 1st):",
+//                //'attr' => array('class'=>'form-control'),
+//                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+//                'widget' => 'choice',
+//                'required' => false,
+//                'classtype' => 'day_month_date_only'
+//            ));
+//            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
+//                'label'=>"Application season end date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. March 31):",
+//                //'attr' => array('class'=>'form-control'),
+//                //'attr' => array('class'=>'datepicker form-control datepicker-day-month allow-future-date'),
+//                'widget' => 'choice',
+//                'required' => false,
+//                'classtype' => 'day_month_date_only'
+//            ));
+//        }
         if( $specialtyName ) {
-//            $builder->add('seasonYearStart',CustomSelectorType::class,array(
-//                'label'=>"Application season start date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. April 1st):",
-////                'widget' => 'single_text',
-//                'required' => false,
-////                'format' => 'MM/dd/yyyy',
-//                'attr' => array('class'=>'form-control'),
-//                'classtype' => 'day_month_date_only'
-//            ));
-//            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
-//                'label'=>"Application season end date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. March 31):",
-////                'widget' => 'single_text',
-//                'required' => false,
-////                'format' => 'MM/dd/yyyy',
-//                'attr' => array('class'=>'form-control'),
-//                'classtype' => 'day_month_date_only'
-//            ));
-
-//            $builder->add('seasonYearStart',CustomSelectorType::class,array(
-//                'label'=>"Application season start date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. April 1st):",
-//                //'format' => 'y',
-//                'widget' => 'choice',
-//                'required' => false,
-//                'classtype' => 'day_month_date_only'
-//            ));
-//            $builder->add('seasonYearEnd',CustomSelectorType::class,array(
-//                'label'=>"Application season end date (MM/DD) when the default $specialtyName application year for this $specialtyName changes to the following year (i.e. March 31):",
-//                //'format' => 'y',
-//                'widget' => 'choice',
-//                'required' => false,
-//                'classtype' => 'day_month_date_only'
-//            ));
-
             $builder
                 ->add(
                     $builder->create('seasonYearStart', null, [

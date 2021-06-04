@@ -256,6 +256,7 @@ class CustomSelectorType extends AbstractType {
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selection does not exist',
+            //'widget' => 'choice',
         ));
         
         $resolver->setRequired(array(
