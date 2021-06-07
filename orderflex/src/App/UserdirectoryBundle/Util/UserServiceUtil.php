@@ -3092,7 +3092,31 @@ Pathology and Laboratory Medicine",
         );
     }
     
+    public function getLinkToListIdByClassName($listName) {
+        $listEntity = $this->em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
+        if( !$listEntity ) {
+            return NULL;
+        }
 
+        $linkToListId = $listEntity->getLinkToListId();
+
+        if( !$linkToListId ) {
+            return NULL;
+        }
+
+        return $linkToListId;
+
+        //platformlistmanager_edit
+        $url = $this->container->get('router')->generate(
+            'platformlistmanager_edit',
+            array(
+                'id' => $linkToListId,
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $url;
+    }
 
 
 

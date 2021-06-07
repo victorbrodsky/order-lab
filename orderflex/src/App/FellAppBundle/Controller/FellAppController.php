@@ -115,8 +115,8 @@ class FellAppController extends OrderAbstractController {
         $currentYears = $fellappUtil->getAcademicStartYearByFellowships($fellowshipTypes);
         if( $currentYears ) {
             $currentYearArr = array();
-            foreach($currentYears as $currentYear) {
-                $currentYearArr[] = $currentYear + 2;
+            foreach($currentYears as $thisCurrentYear) {
+                $currentYearArr[] = $thisCurrentYear + 2;
             }
             $currentYear = implode(",",$currentYearArr);
             $defaultStartDates = $currentYear;

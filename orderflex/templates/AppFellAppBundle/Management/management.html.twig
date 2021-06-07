@@ -40,11 +40,32 @@
 
     {% for entity in entities %}
 
+        {#{% set linkToListId = NULL %}#}
+        {% set seasonYear = NULL %}
+        {% set seasonYearStart = entity.getSeasonYearStart() %}
+        {% set seasonYearEnd = entity.getSeasonYearEnd() %}
+        {% if seasonYearStart or seasonYearEnd %}
+            {% set seasonYear = "Season start date " ~ seasonYearStart|date("F d",false) ~ ", end date " ~ seasonYearEnd|date("F d",false) %}
+            {#{% set linkToListId = user_service_utility.getLinkToListIdByClassName('FellowshipSubspecialty') %}#}
+        {% endif %}
+
+
         <h4>
             <a
                 href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
             </a>
         </h4>
+
+        {#{% if linkToListId and seasonYear %}#}
+            {#<a#}
+                {#href="{{ path('platformlistmanager_edit', { 'id': linkToListId}) }}">{{ seasonYear }}#}
+            {#</a>#}
+        {#{% endif %}#}
+        {% if seasonYear %}
+            <a
+                href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}">{{ seasonYear }}
+            </a>
+        {% endif %}
 
         <p>
             <h4>Default Interviewers:</h4>
