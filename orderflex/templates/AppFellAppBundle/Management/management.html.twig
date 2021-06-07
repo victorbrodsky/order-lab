@@ -40,15 +40,12 @@
 
     {% for entity in entities %}
 
-        {#{% set linkToListId = NULL %}#}
         {% set seasonYear = "Set season start/end date" %}
         {% set seasonYearStart = entity.getSeasonYearStart() %}
         {% set seasonYearEnd = entity.getSeasonYearEnd() %}
         {% if seasonYearStart or seasonYearEnd %}
             {% set seasonYear = "Season start date " ~ seasonYearStart|date("F d",false) ~ ", end date " ~ seasonYearEnd|date("F d",false) %}
-            {#{% set linkToListId = user_service_utility.getLinkToListIdByClassName('FellowshipSubspecialty') %}#}
         {% endif %}
-
 
         <h4>
             <a
@@ -56,11 +53,6 @@
             </a>
         </h4>
 
-        {#{% if linkToListId and seasonYear %}#}
-            {#<a#}
-                {#href="{{ path('platformlistmanager_edit', { 'id': linkToListId}) }}">{{ seasonYear }}#}
-            {#</a>#}
-        {#{% endif %}#}
         {% if seasonYear %}
             <a
                 href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}">{{ seasonYear }}
