@@ -41,7 +41,7 @@
     {% for entity in entities %}
 
         {#{% set linkToListId = NULL %}#}
-        {% set seasonYear = NULL %}
+        {% set seasonYear = "Set season start/end date" %}
         {% set seasonYearStart = entity.getSeasonYearStart() %}
         {% set seasonYearEnd = entity.getSeasonYearEnd() %}
         {% if seasonYearStart or seasonYearEnd %}

@@ -64,8 +64,6 @@ class FellAppController extends OrderAbstractController {
         //echo "route".$route."<br>";
         //exit();
 
-        $permission = true;
-
         if( $route == "fellapp_home" ) {
             if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
                 //check if has role interviewer => redirect to 'fellapp_myinterviewees'
