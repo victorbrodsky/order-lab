@@ -118,6 +118,7 @@
                 {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
             {#</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Name', 'infos.displayName') }}</th>
+            {#<th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>#}
             <th>{{ knp_pagination_sortable(entities, 'Administrative Title(s)', 'administrativeName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Academic Title(s)', 'appointmentName.name') }}</th>
             <th>{{ knp_pagination_sortable(entities, 'Training Year', 'appointmentTitles.pgylevel') }}</th>
@@ -132,11 +133,11 @@
             <th>{{ knp_pagination_sortable(entities, 'Assistant(s)', 'assistantinfos.displayName') }}</th>
 
 
-            {% if sitename != employees_sitename %}
+            {#{% if sitename != employees_sitename %}#}
                 <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.enabled') }}</th>
-            {% endif %}
+            {#{% endif %}#}
 
             {% else %}
 
@@ -146,6 +147,7 @@
                 {#{{ knp_pagination_sortable(entities, 'Service(s)', 'administrativeService.name') }}#}
                 {#</th>#}
                 <th>Name</th>
+                {#<th>Role(s)</th>#}
                 <th>Administrative Title(s)</th>
                 <th>Academic Title(s)</th>
                 <th>Training Year</th>
@@ -159,11 +161,11 @@
                 <th>Assistant(s)</th>
 
 
-                {% if sitename != employees_sitename %}
+                {#{% if sitename != employees_sitename %}#}
                     <th>Role(s)</th>
                     <th>Last Login</th>
                     <th>Locked</th>
-                {% endif %}
+                {#{% endif %}#}
 
             {% endif %}
 
@@ -274,12 +276,16 @@
                     {{ usermacros.showAssistantes( entity, sitename ) }}
                 </td>
 
-
-                {% if sitename != employees_sitename %}
+                {#sitename={{ sitename }}, employees_sitename={{ employees_sitename }}#}
+                {#{% if sitename != employees_sitename %}#}
                     <td>
                         {% for role in entity.roles %}
                             {% if role != "ROLE_USER" %}
-                                "{{ attribute(roles, role) }}"
+                                {% if attribute(roles, role) is defined %}
+                                "{{ attribute(roles, role) }}"<br>
+                                {% else %}
+                                    "{{ role }}"<br>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </td>
@@ -295,7 +301,7 @@
                             No
                         {% endif %}
                     </td>
-                {% endif %}
+                {#{% endif %}#}
 
                 {#<td class="rowlink-skip">#}
                     {#<div class="btn-group">#}
