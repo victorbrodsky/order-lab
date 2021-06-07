@@ -64,8 +64,16 @@ class FellAppController extends OrderAbstractController {
         //echo "route".$route."<br>";
         //exit();
 
+        $permission = true;
+
         if( $route == "fellapp_home" ) {
             if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
+                //check if has role interviewer => redirect to 'fellapp_myinterviewees'
+                //if( $this->get('security.authorization_checker')->isGranted("ROLE_FELLAPP_INTERVIEWER") ) {
+                if( $this->get('security.authorization_checker')->isGranted("create","Interview") ) {
+                    return $this->redirect( $this->generateUrl('fellapp_myinterviewees') );
+                }
+                //exit("no permission: read");
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -120,6 +128,7 @@ class FellAppController extends OrderAbstractController {
             }
             $currentYear = implode(",",$currentYearArr);
             $defaultStartDates = $currentYear;
+            //echo "defaultStartDates1=$defaultStartDates <br>";
         }
         if( !$defaultStartDates ) {
             //$startEndDates = $fellappUtil->getAcademicYearStartEndDates(null,false,+2);
@@ -129,6 +138,7 @@ class FellAppController extends OrderAbstractController {
             $currentYear = $currentYear + 2;
             //$currentYear = $currentYear + 3;
             $defaultStartDates = $currentYear; //"2012,2013,2014,2015";
+            //echo "defaultStartDates2=$defaultStartDates <br>";
         }
 
 
@@ -199,7 +209,7 @@ class FellAppController extends OrderAbstractController {
         //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
         $filterform->handleRequest($request);
 
-        $filter = $filterform['filter']->getData();
+        $filter = $filterform['filter']->getData(); //fellowship specialty
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData(); //startDates: currentYear is year only i.e. 2021
         $hidden = $filterform['hidden']->getData();

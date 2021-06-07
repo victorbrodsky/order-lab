@@ -254,9 +254,11 @@ class FellAppUtil {
             $fellowshipType = $this->em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellowshipId);
             $startDate = $fellowshipType->getSeasonYearStart();
             if( $startDate ) {
+                //echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
                 $startYear = $userServiceUtil->getAcademicStartYear($startDate);
                 $startDates[] = $startYear;
             } else {
+                //echo $fellowshipName.": startDate=NULL"."<br>";
                 $startDates[] = $currentYear;
             }
         }
