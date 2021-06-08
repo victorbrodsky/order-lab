@@ -111,21 +111,39 @@ class ResAppController extends OrderAbstractController {
         $enableGoolge = false;
         $searchFlag = false;
 
+        $residencyTypes = $resappUtil->getResidencyTypesByUser($user);
+        //echo "residencyTypes count=".count($residencyTypes)."<br>";
+
         //Application Season Start Year (applicationSeasonStartDates):
         //current year if current date is between July 1st and December 31st (inclusive) or
         //previous year (current year-1) if current date is between January 1st and June 30th (inclusive)
-        $currentYear = date("Y")+1;
+        //$currentYear = date("Y")+1;
         //$defaultStartDates = $currentYear;
+        $currentYear = NULL;
 
         //$applicationSeasonStartDate = date("Y");
         //$defaultApplicationSeasonStartDates = $applicationSeasonStartDate;
 
-        $datesArr = $resappUtil->getDefaultStartDates();
+        //1) get season start years based on residency tracks $residencyTypes
+        $currentYearArr = $resappUtil->getStartYearsByResidencyTracks($residencyTypes);
+        if( $currentYearArr ) {
+            $currentYear = implode(",",$currentYearArr);
+        }
+
+        if( !$currentYear ) {
+            //2) get start year from site settings
+            $currentYear = $resappUtil->getDefaultStartYear(); //can be comma separated multiple years
+        }
+
+        $datesArr = $resappUtil->getStartYearsByYears($currentYear,true);
+        //$datesArr = $resappUtil->getDefaultStartYears();
+        //$currentYear = $datesArr['Current Year'];
         $defaultStartDates = $datesArr['Residency Start Year'];
         $defaultApplicationSeasonStartDates = $datesArr['Application Season Start Year'];
 
-        $residencyTypes = $resappUtil->getResidencyTypesByUser($user);
-        //echo "residencyTypes count=".count($residencyTypes)."<br>";
+//        //testing multiple season start dates
+//        $defaultStartDates = NULL;
+//        $defaultApplicationSeasonStartDates = $defaultApplicationSeasonStartDates .","."2020";
 
         if( count($residencyTypes) == 0 ) {
 //            $linkUrl = $this->generateUrl(
@@ -172,14 +190,6 @@ class ResAppController extends OrderAbstractController {
             }
             $defaultStartDates = implode(",",$defaultStartDates);//"2012,2013,2014,2015";
         }
-        //echo "currentYear=".$currentYear."<br>";
-        //$currentYear1 = date("Y")+2;
-        //$currentYear2 = date("Y")+3;
-        //$currentYear3 = date("Y")+3;
-        //$defaultStartDates = array($currentYear1,$currentYear3,$currentYear3);
-        //$defaultStartDates = "2019,2020,2021";
-        //$defaultStartDates = "2019 2020 2021";
-        //$defaultStartDates = $currentYear;
 
         //create resapp filter
         $params = array(
@@ -231,7 +241,7 @@ class ResAppController extends OrderAbstractController {
             }
             return $this->redirect( $this->generateUrl($route,
                 array(
-                    'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[startDates]' => $defaultStartDates, 
                     //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
@@ -253,7 +263,7 @@ class ResAppController extends OrderAbstractController {
             //filter[active]=1&filter[priority]=1&filter[complete]=1&filter[interviewee]=1&filter[reject]=1
             return $this->redirect( $this->generateUrl($route,
                 array(
-                    'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[startDates]' => $defaultStartDates, 
                     'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
@@ -275,7 +285,7 @@ class ResAppController extends OrderAbstractController {
             }
             return $this->redirect( $this->generateUrl($route, //'resapp_home',
                 array(
-                    'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    'filter[startDates]' => $defaultStartDates, 
                     'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,

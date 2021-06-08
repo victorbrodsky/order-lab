@@ -40,11 +40,24 @@
 
     {% for entity in entities %}
 
+        {% set seasonYear = "Set season start/end date" %}
+        {% set seasonYearStart = entity.getSeasonYearStart() %}
+        {% set seasonYearEnd = entity.getSeasonYearEnd() %}
+        {% if seasonYearStart or seasonYearEnd %}
+            {% set seasonYear = "Season start date " ~ seasonYearStart|date("F d",false) ~ ", end date " ~ seasonYearEnd|date("F d",false) %}
+        {% endif %}
+
         <h4>
             <a
                 href="{{ path('resapp_residencytype_setting_edit', { 'id': entity.id}) }}">{{ entity.name }}
             </a>
         </h4>
+
+        {% if seasonYear %}
+            <a
+                href="{{ path('residencytracks_edit', { 'id': entity.id}) }}">{{ seasonYear }}
+            </a>
+        {% endif %}
 
         <p>
             <h4>Default Interviewers:</h4>

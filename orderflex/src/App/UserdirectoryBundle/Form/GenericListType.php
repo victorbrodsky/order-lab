@@ -124,8 +124,17 @@ class GenericListType extends AbstractType
         if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
             $specialtyName = "fellowship";
         }
-        if( strtolower($this->mapper['className']) == strtolower("ResidencySpecialty") ) {
+//        if( strtolower($this->mapper['className']) == strtolower("ResidencySpecialty") ) {
+//            $specialtyName = "residency";
+//        }
+        if( strtolower($this->mapper['className']) == strtolower("ResidencyTrackList") ) {
             $specialtyName = "residency";
+
+            $builder->add('duration',null,array(
+                'label' => "Expected Duration (in years):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
         }
 //        if( 0 && $specialtyName ) {
 //            $builder->add('seasonYearStart',CustomSelectorType::class,array(
@@ -1116,14 +1125,6 @@ class GenericListType extends AbstractType
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width')
-            ));
-        }
-
-        if( strtolower($this->mapper['className']) == strtolower("ResidencyTrackList") ) {
-            $builder->add('duration',null,array(
-                'label' => "Expected Duration (in years):",
-                'required' => false,
-                'attr' => array('class'=>'form-control'),
             ));
         }
 

@@ -17,6 +17,7 @@
 
 namespace App\ResAppBundle\Form;
 
+use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -143,16 +144,29 @@ class ResappSiteParameterType extends AbstractType
             )
         ));
 
-        $builder->add('resappAcademicYearStart',null,array(
-            'label'=>'Application season start date (MM/DD) when the default residency application year changes to the following year (April 1st):',
-            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
-            'attr' => array('class'=>'form-control')
-        ));
-
-        $builder->add('resappAcademicYearEnd',null,array(
-            'label'=>'Application season end date (MM/DD) when the default residency application year changes to the following year:',
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('resappAcademicYearStart',null,array(
+//            'label'=>'Application season start date (MM/DD) when the default residency application year changes to the following year (April 1st):',
+//            //'attr' => array('class'=>'datepicker form-control datepicker-day-month')
+//            'attr' => array('class'=>'form-control')
+//        ));
+//        $builder->add('resappAcademicYearEnd',null,array(
+//            'label'=>'Application season end date (MM/DD) when the default residency application year changes to the following year:',
+//            'attr' => array('class'=>'form-control')
+//        ));
+        $builder->add(
+            $builder->create('resappAcademicYearStart', null, [
+                'label'=>'Application season start date (MM/DD) when the default residency application year changes to the following year:',
+                'required' => false,
+            ])
+                ->addViewTransformer(new DayMonthDateTransformer())
+        );
+        $builder->add(
+            $builder->create('resappAcademicYearEnd', null, [
+                'label'=>'Application season end date (MM/DD) when the default residency application year changes to the following year:',
+                'required' => false,
+            ])
+                ->addViewTransformer(new DayMonthDateTransformer())
+        );
 
 
         if( $this->params['cycle'] != 'show' ) {

@@ -88,6 +88,20 @@ class ResidencyTrackList extends ListAbstract
      */
     private $duration;
 
+    /**
+     * Application season start date
+     *
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $seasonYearStart;
+
+    /**
+     * Application season end date
+     *
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $seasonYearEnd;
+
 
     public function __construct( $author = null ) {
         $this->coordinators = new ArrayCollection();
@@ -194,6 +208,39 @@ class ResidencyTrackList extends ListAbstract
     {
         $this->duration = $duration;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSeasonYearStart()
+    {
+        return $this->seasonYearStart;
+    }
+
+    /**
+     * @param mixed $seasonYearStart
+     */
+    public function setSeasonYearStart($seasonYearStart)
+    {
+        $this->seasonYearStart = $seasonYearStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeasonYearEnd()
+    {
+        return $this->seasonYearEnd;
+    }
+
+    /**
+     * @param mixed $seasonYearEnd
+     */
+    public function setSeasonYearEnd($seasonYearEnd)
+    {
+        $this->seasonYearEnd = $seasonYearEnd;
+    }
+
 
     
 

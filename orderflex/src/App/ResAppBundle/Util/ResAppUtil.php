@@ -2329,8 +2329,7 @@ class ResAppUtil {
 //
 //        return $resArr;
 //    }
-    //TODO: update as in fellapp
-    public function getDefaultStartDates() {
+    public function getDefaultStartDates_ORIG() {
         $userServiceUtil = $this->container->get('user_service_utility');
 
         $academicStartYear = $userServiceUtil->getDefaultAcademicStartYear();
@@ -2343,8 +2342,140 @@ class ResAppUtil {
 
         return $resArr;
     }
+    public function getResAppAcademicYearStartEndDates_ORIG( $currentYear=null, $formatStr="m/d/Y" ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+        $startDateObject = $startEndDates['startDate'];
+        $endDateObject = $startEndDates['endDate'];
 
-    //TODO: update as in fellapp
+        $startDate = $startDateObject->format($formatStr);
+        $endDate = $endDateObject->format($formatStr);
+
+        $resArr['Season Start Date'] = $startDate;
+        $resArr['Season End Date'] = $endDate;
+
+        $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year
+        $endDateObject->add(new \DateInterval('P1Y'));
+        $residencyStartDate = $startDateObject->format($formatStr);
+        $residencyEndDate = $endDateObject->format($formatStr);
+
+//        $startDateObjectPlusOne = clone $startDateObject;
+//        $endDateObjectPlusOne = clone $endDateObject;
+//        $startDateObjectPlusOne->modify('+1 year');
+//        $endDateObjectPlusOne->modify('+1 year');
+//        $residencyStartDate = $startDateObjectPlusOne->format($formatStr);
+//        $residencyEndDate = $endDateObjectPlusOne->format($formatStr);
+
+        $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
+        $resArr['Residency End Date'] = $residencyEndDate;
+
+        return $resArr;
+    }
+
+    //Renamed getDefaultStartDates to getDefaultStartYears
+    public function getDefaultStartYear() {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $currentYear = NULL;
+
+        //1) get current year based on site settings start date parameter
+        $currentYear = $userServiceUtil->getDefaultAcademicStartYear('resapp','resappAcademicYearStart');
+
+        if( !$currentYear ) {
+            //2) get current year based on default start date
+            $currentYear = $userServiceUtil->getDefaultAcademicStartYear();
+        }
+
+        if( !$currentYear ) {
+            //2) get current year
+            $currentYear = intval(date("Y"));
+        }
+        
+        return $currentYear;
+
+        //return $this->getStartYearsByYear($currentYear);
+
+//        $resArr['Current Year'] = $currentYear;
+//
+//        $resArr['Application Season Start Year'] = $currentYear;
+//        $resArr['Application Season End Year'] = $currentYear+1;
+//
+//        $resArr['Residency Start Year'] = $currentYear+1; //Application Season Start Year + 1 year
+//        $resArr['Residency End Year'] = $currentYear+2;
+//
+//        return $resArr;
+    }
+    //$currentYears - might be comma separated multiple years
+    //$clearResidencyYears - clear residency start/end years in case of multiple season years
+    public function getStartYearsByYears( $currentYearsStr, $clearResidencyYears=true ) {
+        $resArr = array();
+
+        $yearsArr = explode(",",$currentYearsStr);
+
+        $currentYearArr = array();
+        $seasonStartYearArr = array();
+        $seasonEndYearArr = array();
+        $residencyStartYearArr = array();
+        $residencyEndYearArr = array();
+
+        foreach($yearsArr as $currentYear ) {
+            $currentYearArr[] = $currentYear;
+
+            $seasonStartYearArr[] = $currentYear;
+            $seasonEndYearArr[] = $currentYear+1;
+
+            $residencyStartYearArr[] = $currentYear+1; //Application Season Start Year + 1 year
+            $residencyEndYearArr[] = $currentYear+2;
+        }
+
+//        $resArr['Current Year'] = $currentYear;
+//        $resArr['Application Season Start Year'] = $currentYear;
+//        $resArr['Application Season End Year'] = $currentYear+1;
+//        $resArr['Residency Start Year'] = $currentYear+1; //Application Season Start Year + 1 year
+//        $resArr['Residency End Year'] = $currentYear+2;
+
+        $resArr['Current Year'] = implode(",",$currentYearArr);
+
+        $resArr['Application Season Start Year'] = implode(",",$seasonStartYearArr);
+        $resArr['Application Season End Year'] = implode(",",$seasonEndYearArr);
+
+        if( $clearResidencyYears ) {
+            if (count($currentYearArr) <= 1) {
+                $resArr['Residency Start Year'] = implode(",", $residencyStartYearArr);
+                $resArr['Residency End Year'] = implode(",", $residencyEndYearArr);
+            } else {
+                $resArr['Residency Start Year'] = NULL;
+                $resArr['Residency End Year'] = NULL;
+            }
+        } else {
+            $resArr['Residency Start Year'] = implode(",", $residencyStartYearArr);
+            $resArr['Residency End Year'] = implode(",", $residencyEndYearArr);
+        }
+
+        return $resArr;
+    }
+    //$residencyTypes[id] = name;
+    public function getStartYearsByResidencyTracks( $residencyTypes=NULL ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $currentYear = $this->getDefaultStartYear();
+        $startDates = array();
+        foreach($residencyTypes as $residencyId=>$residencyName) {
+            $residencyType = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyId);
+            $startDate = $residencyType->getSeasonYearStart();
+            if( $startDate ) {
+                //echo $residencyName.": startDate=".$startDate->format('d-m-Y')."<br>";
+                $startYear = $userServiceUtil->getAcademicStartYear($startDate);
+                $startDates[] = $startYear;
+            } else {
+                //echo $residencyName.": startDate=NULL"."<br>";
+                $startDates[] = $currentYear;
+            }
+        }
+
+        $startDates = array_unique($startDates);
+
+        return $startDates;
+    }
+    //TODO: update as in fellapp getAcademicYearStartEndDates
     public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y" ) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
