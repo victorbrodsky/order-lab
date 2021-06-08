@@ -2475,7 +2475,7 @@ class ResAppUtil {
 
         return $startDates;
     }
-    //TODO: update as in fellapp getAcademicYearStartEndDates
+    //TODO: update as in fellapp getAcademicYearStartEndDates. Replace all getAcademicYearStartEndDates in resapp by this getResAppAcademicYearStartEndDates
     //Get application season and residency start/end dates
     public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y", $asDateTimeObject=false ) {
         //$userServiceUtil = $this->container->get('user_service_utility');
