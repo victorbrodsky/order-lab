@@ -2476,34 +2476,93 @@ class ResAppUtil {
         return $startDates;
     }
     //TODO: update as in fellapp getAcademicYearStartEndDates
-    public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y" ) {
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+    //Get application season and residency start/end dates
+    public function getResAppAcademicYearStartEndDates( $currentYear=null, $formatStr="m/d/Y", $asDateTimeObject=false ) {
+        //$userServiceUtil = $this->container->get('user_service_utility');
+
+        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+        $startEndDates = $this->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+
         $startDateObject = $startEndDates['startDate'];
         $endDateObject = $startEndDates['endDate'];
 
-        $startDate = $startDateObject->format($formatStr);
-        $endDate = $endDateObject->format($formatStr);
+        if( $asDateTimeObject ) {
+            $resArr['Season Start Date'] = $startDateObject;
+            $resArr['Season End Date'] = $endDateObject;
+        } else {
+            $startDate = $startDateObject->format($formatStr);
+            $endDate = $endDateObject->format($formatStr);
+            //echo "startDate=".$startDate."<br>";
+            //echo "endDate=".$endDate."<br>";
+            //exit('111');
 
-        $resArr['Season Start Date'] = $startDate;
-        $resArr['Season End Date'] = $endDate;
+            $resArr['Season Start Date'] = $startDate;
+            $resArr['Season End Date'] = $endDate;
+        }
 
         $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year
         $endDateObject->add(new \DateInterval('P1Y'));
-        $residencyStartDate = $startDateObject->format($formatStr);
-        $residencyEndDate = $endDateObject->format($formatStr);
 
-//        $startDateObjectPlusOne = clone $startDateObject;
-//        $endDateObjectPlusOne = clone $endDateObject;
-//        $startDateObjectPlusOne->modify('+1 year');
-//        $endDateObjectPlusOne->modify('+1 year');
-//        $residencyStartDate = $startDateObjectPlusOne->format($formatStr);
-//        $residencyEndDate = $endDateObjectPlusOne->format($formatStr);
+        if( $asDateTimeObject ) {
+            $resArr['Residency Start Date'] = $startDateObject; //Application Season Start Year + 1 year
+            $resArr['Residency End Date'] = $endDateObject;
+        } else {
+            $residencyStartDate = $startDateObject->format($formatStr);
+            $residencyEndDate = $endDateObject->format($formatStr);
 
-        $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
-        $resArr['Residency End Date'] = $residencyEndDate;
+            $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
+            $resArr['Residency End Date'] = $residencyEndDate;
+        }
 
         return $resArr;
+    }
+    //Get application start/end dates from resapp site setting or default site settings
+    //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
+    //return format: Y-m-d
+    public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        //1) get start/end dates from resapp site settings
+        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset,'resapp','resappAcademicYearStart','resappAcademicYearEnd');
+
+        $startDate = $startEndDates['startDate'];
+        $endDate = $startEndDates['endDate'];
+
+        //echo "startDate=".$startDate."<br>";
+        //echo "endDate=".$endDate."<br>";
+
+        if( $startDate == NULL || $endDate == NULL ) {
+            //2) get start/end dates from default site settings
+            $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset);
+
+            if( $startDate == NULL ) {
+                $startDate = $startEndDates['startDate'];
+            }
+
+            if( $endDate == NULL ) {
+                $endDate = $startEndDates['endDate'];
+            }
+
+            if( $startDate == NULL || $endDate == NULL ) {
+                $currentYear = intval(date("Y"));
+
+                //3) If still missing, set to the default value to July 1st
+                if( $startDate == NULL ) {
+                    $startDate = new \DateTime($currentYear."-07-01");
+                }
+
+                //3) If still missing, set to the default value to June 30
+                if( $endDate == NULL ) {
+                    $endDate = new \DateTime($currentYear."-06-30");
+                }
+            }
+        }
+
+        return array(
+            'startDate'=> $startDate,
+            'endDate'=> $endDate,
+        );
     }
     
 } 

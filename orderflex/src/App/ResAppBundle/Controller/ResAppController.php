@@ -823,6 +823,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
+        $resappUtil = $this->container->get('resapp_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$user = new User();
@@ -835,11 +836,31 @@ class ResAppController extends OrderAbstractController {
         $residencyApplication = new ResidencyApplication($user);
         $residencyApplication->setTimestamp(new \DateTime());
 
+        //add start/end dates
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates(null,null,true);
+        $seasonStartDate = $startEndDates['Season Start Date'];
+        if( $seasonStartDate ) {
+            $residencyApplication->setApplicationSeasonStartDate($seasonStartDate);
+        }
+        $seasonEndDate = $startEndDates['Season End Date'];
+        if( $seasonEndDate ) {
+            $residencyApplication->setApplicationSeasonEndDate($seasonEndDate);
+        }
+        $residencyStartDate = $startEndDates['Residency Start Date'];
+        if( $residencyStartDate ) {
+            $residencyApplication->setStartDate($residencyStartDate);
+        }
+        $residencyEndDate = $startEndDates['Residency End Date'];
+        if( $residencyEndDate ) {
+            $residencyApplication->setEndDate($residencyEndDate);
+        }
+
+
         $applicant->addResidencyApplication($residencyApplication);
 
         $routeName = $request->get('_route');
         //$args = $this->getShowParameters($routeName,null,$residencyApplication);
-        $args = $this->getShowParameters($routeName,$residencyApplication);
+        $args = $this->getShowParameters($routeName,$residencyApplication); //new
 
         if( count($args) == 0 ) {
             $linkUrl = $this->generateUrl(

@@ -187,6 +187,8 @@ class FellAppUtil {
     public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {
         
         $userServiceUtil = $this->container->get('user_service_utility');
+
+        //1) get start/end dates from fellapp site settings
         $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset,'fellapp','fellappAcademicYearStart','fellappAcademicYearEnd');
         
         $startDate = $startEndDates['startDate'];
@@ -196,6 +198,7 @@ class FellAppUtil {
         //echo "endDate=".$endDate."<br>";
 
         if( $startDate == NULL || $endDate == NULL ) {
+            //2) get start/end dates from default site settings
             $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset);
 
             if( $startDate == NULL ) {
@@ -209,12 +212,12 @@ class FellAppUtil {
             if( $startDate == NULL || $endDate == NULL ) {
                 $currentYear = intval(date("Y"));
 
-                //Default the value to April 1st
+                //3) If still missing, set to the default value to April 1st
                 if( $startDate == NULL ) {
                     $startDate = new \DateTime($currentYear."-04-01");
                 }
 
-                //Default the value to March 31
+                //3) If still missing, set to the default value to March 31
                 if( $endDate == NULL ) {
                     $endDate = new \DateTime($currentYear."-03-31");
                 }
