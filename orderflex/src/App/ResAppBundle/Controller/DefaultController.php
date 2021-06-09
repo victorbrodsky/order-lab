@@ -75,17 +75,17 @@ class DefaultController extends OrderAbstractController
 //        dump($keysArr);
         //exit('EOF getKeyFieldArr');
 
-        $resappUtil = $this->container->get('resapp_util');
-        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
-        dump($startEndDates);
-
-        $em = $this->getDoctrine()->getManager();
-        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(10);
-        $startDate = $resapp->getStartDate();
-        $startDateStr = $startDate->format('Y');
-        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
-        dump($startEndDates);
-        exit('EOF');
+//        $resappUtil = $this->container->get('resapp_util');
+//        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
+//        dump($startEndDates);
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(10);
+//        $startDate = $resapp->getStartDate();
+//        $startDateStr = $startDate->format('Y');
+//        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
+//        dump($startEndDates);
+//        exit('EOF');
 
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
