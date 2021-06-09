@@ -137,8 +137,8 @@ class ResAppUtil {
                     //$topDate = $singleYear."-12-31";
                     //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
                     $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($singleYear);
-                    $bottomDate = $startEndDates['startDate'];
-                    $topDate = $startEndDates['endDate'];
+                    $bottomDate = $startEndDates['Residency Start Date'];
+                    $topDate = $startEndDates['Residency End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
@@ -150,8 +150,8 @@ class ResAppUtil {
                 //$topDate = $year."-12-31";
                 //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($year);
                 $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($year);
-                $bottomDate = $startEndDates['startDate'];
-                $topDate = $startEndDates['endDate'];
+                $bottomDate = $startEndDates['Residency Start Date'];
+                $topDate = $startEndDates['Residency End Date'];
                 $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }
@@ -2332,50 +2332,50 @@ class ResAppUtil {
 //
 //        return $resArr;
 //    }
-    public function getDefaultStartDates_ORIG() {
-        $userServiceUtil = $this->container->get('user_service_utility');
-
-        $academicStartYear = $userServiceUtil->getDefaultAcademicStartYear();
-
-        $resArr['Application Season Start Year'] = $academicStartYear;
-        $resArr['Application Season End Year'] = $academicStartYear+1;
-
-        $resArr['Residency Start Year'] = $academicStartYear+1; //Application Season Start Year + 1 year
-        $resArr['Residency End Year'] = $academicStartYear+2;
-
-        return $resArr;
-    }
-    public function getResAppAcademicYearStartEndDates_ORIG( $currentYear=null, $formatStr="m/d/Y" ) {
-        //$userServiceUtil = $this->container->get('user_service_utility');
-        $resappUtil = $this->container->get('resapp_util');
-        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
-        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($currentYear,true); //return dates as Date object
-        $startDateObject = $startEndDates['startDate'];
-        $endDateObject = $startEndDates['endDate'];
-
-        $startDate = $startDateObject->format($formatStr);
-        $endDate = $endDateObject->format($formatStr);
-
-        $resArr['Season Start Date'] = $startDate;
-        $resArr['Season End Date'] = $endDate;
-
-        $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year
-        $endDateObject->add(new \DateInterval('P1Y'));
-        $residencyStartDate = $startDateObject->format($formatStr);
-        $residencyEndDate = $endDateObject->format($formatStr);
-
-//        $startDateObjectPlusOne = clone $startDateObject;
-//        $endDateObjectPlusOne = clone $endDateObject;
-//        $startDateObjectPlusOne->modify('+1 year');
-//        $endDateObjectPlusOne->modify('+1 year');
-//        $residencyStartDate = $startDateObjectPlusOne->format($formatStr);
-//        $residencyEndDate = $endDateObjectPlusOne->format($formatStr);
-
-        $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
-        $resArr['Residency End Date'] = $residencyEndDate;
-
-        return $resArr;
-    }
+//    public function getDefaultStartDates_ORIG() {
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//
+//        $academicStartYear = $userServiceUtil->getDefaultAcademicStartYear();
+//
+//        $resArr['Application Season Start Year'] = $academicStartYear;
+//        $resArr['Application Season End Year'] = $academicStartYear+1;
+//
+//        $resArr['Residency Start Year'] = $academicStartYear+1; //Application Season Start Year + 1 year
+//        $resArr['Residency End Year'] = $academicStartYear+2;
+//
+//        return $resArr;
+//    }
+//    public function getResAppAcademicYearStartEndDates_ORIG( $currentYear=null, $formatStr="m/d/Y" ) {
+//        //$userServiceUtil = $this->container->get('user_service_utility');
+//        $resappUtil = $this->container->get('resapp_util');
+//        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+//        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+//        $startDateObject = $startEndDates['startDate'];
+//        $endDateObject = $startEndDates['endDate'];
+//
+//        $startDate = $startDateObject->format($formatStr);
+//        $endDate = $endDateObject->format($formatStr);
+//
+//        $resArr['Season Start Date'] = $startDate;
+//        $resArr['Season End Date'] = $endDate;
+//
+//        $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year
+//        $endDateObject->add(new \DateInterval('P1Y'));
+//        $residencyStartDate = $startDateObject->format($formatStr);
+//        $residencyEndDate = $endDateObject->format($formatStr);
+//
+////        $startDateObjectPlusOne = clone $startDateObject;
+////        $endDateObjectPlusOne = clone $endDateObject;
+////        $startDateObjectPlusOne->modify('+1 year');
+////        $endDateObjectPlusOne->modify('+1 year');
+////        $residencyStartDate = $startDateObjectPlusOne->format($formatStr);
+////        $residencyEndDate = $endDateObjectPlusOne->format($formatStr);
+//
+//        $resArr['Residency Start Date'] = $residencyStartDate; //Application Season Start Year + 1 year
+//        $resArr['Residency End Date'] = $residencyEndDate;
+//
+//        return $resArr;
+//    }
 
     //Renamed getDefaultStartDates to getDefaultStartYears
     public function getDefaultStartYear() {
@@ -2494,6 +2494,10 @@ class ResAppUtil {
         if( $asDateTimeObject ) {
             $resArr['Season Start Date'] = $startDateObject;
             $resArr['Season End Date'] = $endDateObject;
+
+            //duplicate with legacy key from getAcademicYearStartEndDates 'startDate'
+            $resArr['startDate'] = $startDateObject;
+            $resArr['endDate'] = $endDateObject;
         } else {
             $startDate = $startDateObject->format($formatStr);
             $endDate = $endDateObject->format($formatStr);
@@ -2503,6 +2507,10 @@ class ResAppUtil {
 
             $resArr['Season Start Date'] = $startDate;
             $resArr['Season End Date'] = $endDate;
+
+            //duplicate with legacy key from getAcademicYearStartEndDates 'startDate'
+            $resArr['startDate'] = $startDate;
+            $resArr['endDate'] = $endDate;
         }
 
         $startDateObject->add(new \DateInterval('P1Y')); //P1Y = +1 year

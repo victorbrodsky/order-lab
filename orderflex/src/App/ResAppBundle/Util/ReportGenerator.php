@@ -127,8 +127,8 @@ class ReportGenerator {
         //$topDate = $startYearStr."-12-31";
         //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
         $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startYearStr);
-        $bottomDate = $startEndDates['startDate'];
-        $topDate = $startEndDates['endDate'];
+        $bottomDate = $startEndDates['Residency Start Date'];
+        $topDate = $startEndDates['Residency End Date'];
 
         $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 

@@ -1291,8 +1291,8 @@ class PdfUtil {
 
         //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
         $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
-        $startDate = $startEndDates['startDate'];
-        $endDate = $startEndDates['endDate'];
+        $startDate = $startEndDates['Season Start Date'];
+        $endDate = $startEndDates['Season End Date'];
 
         $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 

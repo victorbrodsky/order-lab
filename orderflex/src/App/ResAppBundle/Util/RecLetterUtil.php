@@ -1319,8 +1319,8 @@ class RecLetterUtil {
             //$endDate = $startDateStr."-12-31";
             //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
             $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
-            $startDate = $startEndDates['startDate'];
-            $endDate = $startEndDates['endDate'];
+            $startDate = $startEndDates['Residency Start Date'];
+            $endDate = $startEndDates['Residency End Date'];
             $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
             $query = $this->em->createQuery($dql);

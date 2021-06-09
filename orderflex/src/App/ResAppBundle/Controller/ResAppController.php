@@ -434,8 +434,8 @@ class ResAppController extends OrderAbstractController {
                     //$topDate = $startDate . "-12-31";
                     //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDate);
                     $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDate);
-                    $bottomDate = $startEndDates['startDate'];
-                    $topDate = $startEndDates['endDate'];
+                    $bottomDate = $startEndDates['Residency Start Date'];
+                    $topDate = $startEndDates['Residency End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     $startDateCriterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
@@ -451,8 +451,8 @@ class ResAppController extends OrderAbstractController {
                 //$topDate = $startYearStr."-12-31";
                 //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startYearStr);
                 $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startYearStr);
-                $bottomDate = $startEndDates['startDate'];
-                $topDate = $startEndDates['endDate'];
+                $bottomDate = $startEndDates['Residency Start Date'];
+                $topDate = $startEndDates['Residency End Date'];
                 $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
                 if( $startYearStr != $currentYear ) {
@@ -475,8 +475,8 @@ class ResAppController extends OrderAbstractController {
                     //$topDate = $applicationSeasonStartDate . "-12-31";
                     //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($applicationSeasonStartDate);
                     $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($applicationSeasonStartDate);
-                    $bottomDate = $startEndDates['startDate'];
-                    $topDate = $startEndDates['endDate'];
+                    $bottomDate = $startEndDates['Season Start Date'];
+                    $topDate = $startEndDates['Season End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     $applicationSeasonStartDateCriterions[] = "("."resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
@@ -492,8 +492,8 @@ class ResAppController extends OrderAbstractController {
                 //$topDate = $seasonStartYearStr."-12-31";
                 //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($seasonStartYearStr);
                 $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($seasonStartYearStr);
-                $bottomDate = $startEndDates['startDate'];
-                $topDate = $startEndDates['endDate'];
+                $bottomDate = $startEndDates['Season Start Date'];
+                $topDate = $startEndDates['Season End Date'];
                 $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
                 if( $seasonStartYearStr != $currentYear ) {
