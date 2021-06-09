@@ -94,6 +94,7 @@ class ResAppUtil {
     public function getResAppByStatusAndYear($status,$resSubspecArg,$year=null,$interviewer=null) {
 
         $userServiceUtil = $this->container->get('user_service_utility');
+        $resappUtil = $this->container->get('resapp_util');
 
         //echo "year=$year<br>";
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
@@ -134,7 +135,8 @@ class ResAppUtil {
                 foreach($yearArr as $singleYear) {
                     //$bottomDate = $singleYear."-01-01";
                     //$topDate = $singleYear."-12-31";
-                    $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
+                    //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
+                    $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($singleYear);
                     $bottomDate = $startEndDates['startDate'];
                     $topDate = $startEndDates['endDate'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
@@ -146,7 +148,8 @@ class ResAppUtil {
                 //seingle year
                 //$bottomDate = $year."-01-01";
                 //$topDate = $year."-12-31";
-                $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($year);
+                //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($year);
+                $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($year);
                 $bottomDate = $startEndDates['startDate'];
                 $topDate = $startEndDates['endDate'];
                 $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
@@ -2343,8 +2346,10 @@ class ResAppUtil {
         return $resArr;
     }
     public function getResAppAcademicYearStartEndDates_ORIG( $currentYear=null, $formatStr="m/d/Y" ) {
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $resappUtil = $this->container->get('resapp_util');
+        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,true); //return dates as Date object
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($currentYear,true); //return dates as Date object
         $startDateObject = $startEndDates['startDate'];
         $endDateObject = $startEndDates['endDate'];
 

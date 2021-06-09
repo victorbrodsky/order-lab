@@ -97,7 +97,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         //$resappUtil = $this->container->get('resapp_util');
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $resappUtil = $this->container->get('resapp_util');
 
         $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
 
@@ -136,7 +137,8 @@ class ResAppApplicantController extends OrderAbstractController {
         $startDateStr = $startDate->format('Y');
         //$startDate = $startDateStr."-01-01";
         //$endDate = $startDateStr."-12-31";
-        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
+        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
         $startDate = $startEndDates['startDate'];
         $endDate = $startEndDates['endDate'];
         //echo "startDate=$startDate, endDate=$endDate <br>";

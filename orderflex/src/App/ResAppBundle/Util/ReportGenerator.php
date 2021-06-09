@@ -113,7 +113,8 @@ class ReportGenerator {
     }
     public function getResApplicationsByYear($startYearStr) {
 
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $resappUtil = $this->container->get('resapp_util');
         
         $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
         $dql = $repository->createQueryBuilder("resapp");
@@ -124,7 +125,8 @@ class ReportGenerator {
         //$startYearStr = $startDate->format('Y');
         //$bottomDate = $startYearStr."-01-01";
         //$topDate = $startYearStr."-12-31";
-        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startYearStr);
         $bottomDate = $startEndDates['startDate'];
         $topDate = $startEndDates['endDate'];
 

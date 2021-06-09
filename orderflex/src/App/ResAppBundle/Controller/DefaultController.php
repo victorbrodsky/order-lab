@@ -64,9 +64,9 @@ class DefaultController extends OrderAbstractController
 //        }
 
 //        //testing extract pdf as array of keys
-        $resappPdfUtil = $this->get('resapp_pdfutil');
-        $keyFieldArr = $resappPdfUtil->getKeyFieldArr();
-        dump($keyFieldArr);
+        //$resappPdfUtil = $this->get('resapp_pdfutil');
+        //$keyFieldArr = $resappPdfUtil->getKeyFieldArr();
+        //dump($keyFieldArr);
 //        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
 //        $keysArr = $resappPdfUtil->extractPdfText($path,false);
 //        dump($keysArr);
@@ -74,6 +74,18 @@ class DefaultController extends OrderAbstractController
 //        $keysArr = $resappPdfUtil->extractPdfText($path,false);
 //        dump($keysArr);
         //exit('EOF getKeyFieldArr');
+
+        $resappUtil = $this->container->get('resapp_util');
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
+        dump($startEndDates);
+
+        $em = $this->getDoctrine()->getManager();
+        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(10);
+        $startDate = $resapp->getStartDate();
+        $startDateStr = $startDate->format('Y');
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
+        dump($startEndDates);
+        exit('EOF');
 
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }

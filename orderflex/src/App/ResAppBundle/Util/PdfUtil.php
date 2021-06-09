@@ -1232,7 +1232,8 @@ class PdfUtil {
     //get all enabled (active) residency application for the current application season year
     public function getEnabledResapps($exceptStatusArr=array()) {
 
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $resappUtil = $this->container->get('resapp_util');
 
         if( count($exceptStatusArr) == 0 ) {
             $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
@@ -1288,7 +1289,8 @@ class PdfUtil {
 //        $startDate = $startDateStr."-07-01";
 //        $endDate = $endDateStr."-06-30";
 
-        $startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
         $startDate = $startEndDates['startDate'];
         $endDate = $startEndDates['endDate'];
 
