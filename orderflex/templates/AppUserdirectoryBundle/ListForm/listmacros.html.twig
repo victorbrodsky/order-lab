@@ -139,6 +139,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Specialty', 'projectSpecialties.name') }}</th>#}
                 <th>Hide for specialty</th>
+                <th>Orderable for specialty</th>
             {% endif %}
 
             {% if entities|first.url is defined %}
@@ -387,6 +388,11 @@
                         {% for specialty in entity.projectSpecialties %}
                             {{ specialty.getUppercaseShortName() }}<br>
                             {#{{ specialty.name }}<br>#}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for orderableSpecialty in transres_util.orderableProjectSpecialties(entity) %}
+                            {{ orderableSpecialty.getUppercaseShortName() }}<br>
                         {% endfor %}
                     </td>
                 {% endif %}
@@ -1039,6 +1045,14 @@
     {% endif %}
     {% if form.projectSpecialties is defined %}
         {{ formmacros.field(form.projectSpecialties) }}
+
+        <p>
+            {#<label>Orderable for specialty:</label>#}
+            {#{% for orderableSpecialty in transres_util.orderableProjectSpecialties(entity) %}#}
+                {#{{ orderableSpecialty.getUppercaseShortName() }}{% if not loop.last %},{% endif %}#}
+            {#{% endfor %}#}
+            {{ formmacros.simplefield( "Orderable for specialty:", transres_util.orderableProjectSpecialties(entity)|join(', '), "", "disabled" ) }}
+        </p>
     {% endif %}
 
     {% if form.showLinkHomePage is defined %}

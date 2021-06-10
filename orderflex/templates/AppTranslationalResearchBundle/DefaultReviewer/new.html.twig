@@ -27,6 +27,10 @@
             {{ formmacros.checkbox(form.primaryReview) }}
         {% endif %}
 
+        {% if form.funded is defined %}
+            {{ formmacros.checkbox(form.funded) }}
+        {% endif %}
+
         {% if form.reviewer is defined %}
             {{ formmacros.field(form.reviewer) }}
         {% endif %}
@@ -34,6 +38,7 @@
         {% if form.reviewerDelegate is defined %}
             {{ formmacros.field(form.reviewerDelegate) }}
         {% endif %}
+
 
         <br>
         <p>

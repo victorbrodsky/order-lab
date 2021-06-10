@@ -7212,5 +7212,29 @@ class TransResUtil
     public function toMoney($number) {
         return number_format((float)$number, 2, '.', ',');
     }
+    
+    public function orderableProjectSpecialties($fee) {
+
+        //1) get all specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default", "user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        //2) get diff fee.projectSpecialties
+        $orderableSpcialties = array();
+        $hideSpecialties = $fee->getProjectSpecialties();
+        foreach($specialties as $specialty) {
+            if( $hideSpecialties->contains($specialty) ) {
+            } else {
+                $orderableSpcialties[] = $specialty;
+            }
+
+        }
+
+        return $orderableSpcialties;
+    }
 
 }

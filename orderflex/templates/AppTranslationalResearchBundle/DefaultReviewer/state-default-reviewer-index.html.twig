@@ -21,6 +21,9 @@
                 {% if stateStr == "committee_review" %}
                     <th>{{ knp_pagination_sortable(defaultReviewers, 'Primary Review', 'defaultReviewer.primaryReview') }}</th>
                 {% endif %}
+                {% if stateStr == "admin_review" %}
+                    <th>{{ knp_pagination_sortable(defaultReviewers, 'Admin Review for Funded Projects', 'defaultReviewer.funded') }}</th>
+                {% endif %}
                 {#<th>{{ knp_pagination_sortable(defaultReviewers, 'Review Stage', 'defaultReviewer.state') }}</th>#}
                 <th>Actions</th>
             </tr>
@@ -49,6 +52,16 @@
                 {% if stateStr == "committee_review" %}
                     <td>
                         {% if defaultReviewer.primaryReview == true %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {% if stateStr == "admin_review" %}
+                    <td>
+                        {% if defaultReviewer.funded == true %}
                             Yes
                         {% else %}
                             No

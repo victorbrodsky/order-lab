@@ -105,6 +105,13 @@ class DefaultReviewer
      */
     private $projectSpecialty;
 
+    /**
+     * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $funded;
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -273,6 +280,23 @@ class DefaultReviewer
     {
         $this->projectSpecialty = $projectSpecialty;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFunded()
+    {
+        return $this->funded;
+    }
+
+    /**
+     * @param mixed $funded
+     */
+    public function setFunded($funded)
+    {
+        $this->funded = $funded;
+    }
+
 
 
 

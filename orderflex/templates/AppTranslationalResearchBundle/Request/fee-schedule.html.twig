@@ -59,6 +59,7 @@
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Hide for specialty', 'projectSpecialties.name') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Orderable for specialty', 'projectSpecialties.name') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Type', 'list.type') }}</th>
 
                 {% if adminUser %}
@@ -121,6 +122,12 @@
                 <td>
                     {% for specialty in fee.projectSpecialties %}
                         {{ specialty.getUppercaseShortName() }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for orderableSpecialty in transres_util.orderableProjectSpecialties(fee) %}
+                        {{ orderableSpecialty.getUppercaseShortName() }}<br>
                     {% endfor %}
                 </td>
 

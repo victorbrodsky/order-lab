@@ -1406,6 +1406,10 @@
             {{ formmacros.checkbox(formreview.primaryReview) }}
         {% endif %}
 
+        {% if formreview.funded is defined %}
+            {{ formmacros.checkbox(formreview.funded) }}
+        {% endif %}
+
         {% if formreview.reviewer is defined %}
             {{ formmacros.field(formreview.reviewer) }}
         {% endif %}

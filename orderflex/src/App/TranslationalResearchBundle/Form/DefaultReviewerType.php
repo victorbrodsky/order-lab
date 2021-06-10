@@ -75,6 +75,15 @@ class DefaultReviewerType extends AbstractType
                     ));
             },
         ));
+
+        if( $this->params['showFunded'] ) {
+            $builder->add('funded', CheckboxType::class, array(
+                'required' => false,
+                'label' => "Funded:",
+                'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            ));
+        }
+
     }
     
     /**

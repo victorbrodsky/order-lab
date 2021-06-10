@@ -366,6 +366,10 @@ class DefaultReviewerController extends OrderAbstractController
             $params['showPrimaryReview'] = true;
         }
 
+        if( $defaultReviewer->getState() == "admin_review" ) {
+            $params['showFunded'] = true;
+        }
+
         $form = $this->createForm('App\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer, array(
             'disabled' => $disabled,
             'form_custom_value' => $params
