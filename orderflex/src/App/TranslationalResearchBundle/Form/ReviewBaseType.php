@@ -351,27 +351,6 @@ class ReviewBaseType extends AbstractType
                 'attr' => array('class' => 'horizontal_type')
             ));
 
-//            $builder->add('comment', TextareaType::class, array(
-//                'label' => 'Comment:',
-//                'disabled' => $disabledReviewerFields,
-//                'required' => false,
-//                'attr' => array('class' => 'textarea form-control'),
-//            ));
-//            $builder->add('comments', CollectionType::class, array(
-//                'entry_type' => FosCommentType::class,
-//                'entry_options' => array(
-//                    'data_class' => 'App\UserdirectoryBundle\Entity\FosComment',
-//                    'form_custom_value' => $this->params
-//                ),
-//                'label' => false,
-//                'required' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,
-//                'prototype' => true,
-//                'prototype_name' => '__comments__',
-//            ));
-
             if( $this->params['stateStr'] == "committee_review" ) {
                 //echo "show primaryReview <br>";
                 $builder->add('primaryReview', CheckboxType::class, array(
@@ -381,39 +360,22 @@ class ReviewBaseType extends AbstractType
                     'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
                 ));
             }
+
+            if( $this->params['stateStr'] == "admin_review" ) {
+                $builder->add('reviewProjectType', ChoiceType::class, array(
+                    'choices'   => array(
+                        'All' => 'all',
+                        'Funded' => 'funded',
+                        'Non-Funded' => 'non-funded'
+                    ),
+                    'label' => "Review for Project:",
+                    'required' => true,
+                    'disabled' => $this->params['disabledReviewers'],
+                    'attr' => array('class' => 'combobox combobox-no-width other-status'),
+                ));
+            }
+
         }
-
-//        //Reviewer's field
-//        $approved = 'Approved';
-//        $rejected = 'Rejected';
-//        if( $this->params["stateStr"] == "committee_review" ) {
-//            $approved = 'Like';
-//            $rejected = 'Dislike';
-//        }
-//
-//        $builder->add('decision', ChoiceType::class, array(
-//            'choices' => array(
-//                $approved => 'approved',
-//                $rejected => 'rejected'
-//            ),
-//            'invalid_message' => 'invalid value: decision',
-//            //'choices_as_values' => true,
-//            'disabled' => $disabledReviewerFields,
-//            'label' => "Decision:",
-//            'multiple' => false,
-//            'expanded' => true,
-//            'attr' => array('class' => 'horizontal_type')
-//        ));
-//
-//        $builder->add('comment', TextareaType::class, array(
-//            'label'=>'Comment:',
-//            'disabled' => $disabledReviewerFields,
-//            'required'=> false,
-//            'attr' => array('class'=>'textarea form-control'),
-//        ));
-
-
-
 
     }
     

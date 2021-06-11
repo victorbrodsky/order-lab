@@ -1337,6 +1337,10 @@ class TransResUtil
                         if ($reviewerDelegate) {
                             $reviewEntity->setReviewerDelegate($reviewerDelegate);
                         }
+
+                        //add reviewProjectType boolean
+                        $reviewEntity->setReviewProjectType($defaultReviewer->getReviewProjectType());
+                        
                         $project->addAdminReview($reviewEntity);
                     }
                 }
@@ -1458,6 +1462,13 @@ class TransResUtil
             if( $defaultReviewer->getState() == "committee_review" ) {
                 if( $defaultReviewer->getPrimaryReview() === true ) {
                     $info .= " (<font color=\"#8063FF\">Primary Reviewer</font>)";
+                }
+            }
+            if( $defaultReviewer->getState() == "admin_review" ) {
+                $reviewProjectType = $defaultReviewer->getReviewProjectType();
+                if( $reviewProjectType ) {
+                    $reviewProjectType = "Admin Reviewer for $reviewProjectType project";
+                    $info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
                 }
             }
             if( $info ) {
@@ -2712,7 +2723,11 @@ class TransResUtil
             $reviews = $project->getFinalReviews();
         }
 
+        //return false;
+        //return true;
+
         //echo $stateStr.": reviews count=".count($reviews)."<br>";
+        //exit('111');
         if( count($reviews) > 0 ) {
             if( $onlyReviewer == false ) {
                 if( $this->isAdminOrPrimaryReviewer($project) ) {

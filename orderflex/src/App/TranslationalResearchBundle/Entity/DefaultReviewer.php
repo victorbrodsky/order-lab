@@ -115,7 +115,7 @@ class DefaultReviewer
 
     /**
      * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
-     * Project Type 'string' - 'Funded', 'Non-Funded', 'All'
+     * Project Type 'string' - 'Funded', 'Non-Funded', 'All' ...
      *
      * @ORM\Column(type="string", nullable=true)
      */
@@ -124,7 +124,7 @@ class DefaultReviewer
 
 
 
-    
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);

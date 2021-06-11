@@ -40,14 +40,13 @@ class AdminReview extends ReviewBase
      */
     private $project;
 
-//    /**
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\FosComment")
-//     * @ORM\JoinTable(name="transres_adminreview_comment",
-//     *      joinColumns={@ORM\JoinColumn(name="review_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="comment_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    protected $comments;
+    /**
+     * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
+     * Project Type 'string' - 'Funded', 'Non-Funded', 'All' ...
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $reviewProjectType;
 
 
     /**
@@ -66,22 +65,23 @@ class AdminReview extends ReviewBase
         $this->project = $project;
     }
 
-//    public function getComments()
-//    {
-//        return $this->comments;
-//    }
-//    public function addComment($item)
-//    {
-//        if( $item && !$this->comments->contains($item) ) {
-//            $this->comments->add($item);
-//        }
-//        return $this;
-//    }
-//    public function removeComment($item)
-//    {
-//        $this->comments->removeElement($item);
-//    }
+    /**
+     * @return mixed
+     */
+    public function getReviewProjectType()
+    {
+        return $this->reviewProjectType;
+    }
 
+    /**
+     * @param mixed $reviewProjectType
+     */
+    public function setReviewProjectType($reviewProjectType)
+    {
+        $this->reviewProjectType = $reviewProjectType;
+    }
+
+    
 
     public function getStateStr() {
         return "admin_review";

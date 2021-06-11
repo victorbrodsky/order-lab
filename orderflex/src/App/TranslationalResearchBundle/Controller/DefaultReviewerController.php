@@ -357,7 +357,8 @@ class DefaultReviewerController extends OrderAbstractController
         }
 
         $params = array(
-            'showPrimaryReview'=>false,
+            'showPrimaryReview' => false,
+            'showProjectType' => false,
             'transresUtil' => $transresUtil
         );
 
