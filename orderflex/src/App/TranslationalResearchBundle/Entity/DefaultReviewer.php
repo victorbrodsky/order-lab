@@ -107,11 +107,24 @@ class DefaultReviewer
 
     /**
      * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
+     * Project Type 'string' - 'Funded', 'Non-Funded', 'All'
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $funded;
 
+    /**
+     * Separate Admin Review / Admin Review Delegate roles to “Admin Review for Funded Projects” and “Admin Review for Non-Funded Projects” for each specialty/project type
+     * Project Type 'string' - 'Funded', 'Non-Funded', 'All'
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $reviewProjectType;
+
+
+
+
+    
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -296,6 +309,24 @@ class DefaultReviewer
     {
         $this->funded = $funded;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReviewProjectType()
+    {
+        return $this->reviewProjectType;
+    }
+
+    /**
+     * @param mixed $reviewProjectType
+     */
+    public function setReviewProjectType($reviewProjectType)
+    {
+        $this->reviewProjectType = $reviewProjectType;
+    }
+
+
 
 
 
