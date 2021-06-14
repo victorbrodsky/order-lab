@@ -311,8 +311,6 @@ class TransResUtil
             //$reviewEntityName = "FinalReview";
         }
 
-        //$reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-
         foreach($reviews as $review) {
             $reviewer = $review->getReviewer();
             $reviewerDelegate = $review->getReviewerDelegate();
@@ -338,6 +336,7 @@ class TransResUtil
         return $links;
     }
 
+    //Used in sendReminderReviewProjectsBySpecialty (ReminderUtil.php)
     public function getProjectReviewers( $project, $state=null, $asEmails=false ) {
         //get project reviews for appropriate state (i.e. irb_review)
         $reviewers = array();
@@ -352,7 +351,7 @@ class TransResUtil
             $reviews = $project->getIrbReviews();
         }
         if( $state == "admin_review" ) {
-            $reviews = $project->getAdminReviews();
+            $reviews = $project->getAdminReviews(true);
         }
         if( $state == "committee_review" ) {
             $reviews = $project->getCommitteeReviews();
@@ -1468,8 +1467,11 @@ class TransResUtil
                 $reviewProjectType = $defaultReviewer->getReviewProjectType();
                 if( $reviewProjectType ) {
                     $reviewProjectType = "Admin Reviewer for $reviewProjectType project";
-                    $info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
+                    //$info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
+                } else {
+                    $reviewProjectType = "Admin Reviewer for all project";
                 }
+                $info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
             }
             if( $info ) {
                 $info .= "<br>";
@@ -1710,131 +1712,6 @@ class TransResUtil
 
         return $user;
     }
-
-    //get the review's form page according to the project's current state (i.e. IRB Review Page) and the logged in user
-//    public function getReviewLink( $project, $user=null ) {
-//
-//        //$workflow = $this->container->get('state_machine.transres_project');
-//        //$transitions = $workflow->getEnabledTransitions($project);
-//        //foreach($transitions as $transition) {
-//        //    echo "transition=".$this->printTransition($transition)."<br>";
-//        //}
-//
-//        $class = "btn btn-default";
-//
-//        //echo "project state=".$project->getState()."<br>";
-//
-//        switch( $project->getState() ) {
-//            case "irb_review":
-//                $thisUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_review_new',
-//                    array(
-//                        //'id'=>$project->getId()
-//                    ),
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//                $link = "<a href=".$thisUrl." class='".$class."' target='_blank'>"."IRB Review"."</a>";
-//                break;
-//            default:
-//                $link = "Not Available for ".$project->getState();
-//        }
-//
-//        return $link;
-//    }
-
-    //get all reviewers forms, starting with the user's review form
-//    public function getReviewFormsHtml($project, $user) {
-//        $html = null;
-//        switch( $project->getState() ) {
-//
-//            case "irb_review":
-//                $reviewEntityName = "IrbReview";
-//                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-//                foreach($reviewObjects as $reviewObject) {
-//                    $disabled = true;
-//                    if( $reviewObject->getReviewer() == $user || $reviewObject->getReviewerDelegate() == $user ) {
-//                        $disabled = false;
-//                    }
-//                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-//                        //'form_custom_value' => $params,
-//                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
-//                        'disabled' => $disabled
-//                    ));
-//                    //$reviewHtml = $this->render('AppTranslationalResearchBundle/ReviewBaseController/Some.html.twig', array())->getContent();
-//                    //$reviewHtml = $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-//                    //TODO: use include form translationalresearch_review_edit in twig
-//                }
-//                break;
-//
-////            case "admin_review":
-////                $reviewEntityName = "AdminReview";
-////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-////                foreach($reviewObjects as $reviewObject) {
-////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-////                        //'form_custom_value' => $params,
-////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-////                    ));
-////                }
-////                break;
-////
-////            case "committee_review":
-////                $reviewEntityName = "CommitteeReview";
-////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-////                foreach($reviewObjects as $reviewObject) {
-////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-////                        //'form_custom_value' => $params,
-////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-////                    ));
-////                }
-////                break;
-////
-////            case "final_review":
-////                $reviewEntityName = "FinalReview";
-////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-////                foreach($reviewObjects as $reviewObject) {
-////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-////                        //'form_custom_value' => $params,
-////                        'data_class' => 'App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-////                    ));
-////                }
-////                break;
-//
-//            default:
-//                //
-//        }
-//        return $html;
-//    }
-
-//    public function getReviewIds($project, $user) {
-//        $reviewIds = array();
-//        $reviewIds[] = 4;
-//        switch( $project->getState() ) {
-//
-//            case "irb_review":
-//                $reviewEntityName = "IrbReview";
-//                //$reviewIds[] = 4;
-//                break;
-//
-//            case "admin_review":
-//                $reviewEntityName = "AdminReview";
-//
-//                break;
-//
-//            case "committee_review":
-//                $reviewEntityName = "CommitteeReview";
-//
-//                break;
-//
-//            case "final_review":
-//                $reviewEntityName = "FinalReview";
-//
-//                break;
-//
-//            default:
-//                //
-//        }
-//        return $reviewIds;
-//    }
 
     public function getTransitionLabelByName( $transitionName, $review=null ) {
 
@@ -2323,13 +2200,41 @@ class TransResUtil
         return $reviewObject;
     }
 
-    public function getReviewsByProjectAndState($project,$state) {
+    //Used in DashboardUtil.php (getDiffDaysByProjectState, getStateExitDate)
+    //Used in this (getSingleReviewByProject, getNextStateReviewersEmails)
+    public function getReviewsByProjectAndState( $project, $state ) {
         $reviewEntityName = $this->getReviewClassNameByState($state);
         if( !$reviewEntityName ) {
             throw new \Exception('Unable to find Review Entity Name by state='.$state);
         }
 
-        $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project);
+        $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project); //DB array
+
+        //TODO: filter by project funded/non-funded
+        if( $state == "admin_review" ) {
+            $newAdminReviews = array();
+            $funded = $this->getFunded();
+            foreach($reviews as $adminReview) {
+                $reviewProjectType = $adminReview->getReviewProjectType();
+
+                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
+                    $newAdminReviews[] = ($adminReview);
+                    continue;
+                }
+
+                if( $funded ) {
+                    if( $reviewProjectType == 'funded' ) {
+                        $newAdminReviews[] = ($adminReview);
+                    }
+                } else {
+                    if( $reviewProjectType == 'non-funded' ) {
+                        $newAdminReviews[] = ($adminReview);
+                    }
+                }
+            }
+
+            return $newAdminReviews;
+        }
 
         return $reviews;
     }
@@ -2379,43 +2284,6 @@ class TransResUtil
             return $workflow->getEnabledTransitions($project);
         }
     }
-
-    //NOT USED
-//    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
-//
-//        $reviewEntityName = $this->getReviewClassNameByState($state);
-//        if( !$reviewEntityName ) {
-//            throw new \Exception('Unable to find Review Entity Name by state='.$state);
-//        }
-//        //echo "reviewEntityName=".$reviewEntityName."<br>";
-//
-//        if(1) {
-//            $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
-//            if( !$reviewObject ) {
-//                throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
-//            }
-//            return $reviewObject;
-//        } else {
-//
-//            $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName, $project, null, $reviewId);
-//            //echo "reviewObjects count=".count($reviewObjects)."<br>";
-//
-//            if (count($reviewObjects) == 1) {
-//                return $reviewObjects[0];
-//            }
-//
-//            if (count($reviewObjects) == 0) {
-//                return null;
-//            }
-//
-//            if (count($reviewObjects) > 1) {
-//                //throw new \Exception("No single Review object $reviewEntityName founded: ID ".$reviewId);
-//                return $reviewObjects[0];
-//            }
-//        }
-//
-//        return null;
-//    }
 
     //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
     //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
@@ -2476,16 +2344,6 @@ class TransResUtil
     }
     //$reviewObjectClassName - review entity class name (i.e. "IrbReview")
     public function findReviewObjectsByProjectAndAnyReviewers( $reviewObjectClassName, $project, $reviewer=null, $reviewId=null ) {
-//        $reviewObject = null;
-//        if( $reviewObjectClassName && $reviewer ) {
-//            $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName)->findBy(array(
-//                'reviewer' => $reviewer->getId(),
-//                'project' => $project->getId()
-//            ));
-//            if (!$reviewObject) {
-//                $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
-//            }
-//        }
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName);
         $dql =  $repository->createQueryBuilder("review");
         $dql->select('review');
@@ -2636,7 +2494,17 @@ class TransResUtil
 //        }
         //$strictReviewer = true;
         if( $this->isAdminReviewer($project) ) {
-            return true;
+
+            //TODO: check if funded/non-funded admin reviewer if $review is AdminReview
+            if( $review instanceof AdminReview ) {
+                if( $project->isAdminReviewerByType($review) ) {
+                    return true;
+                }
+            } else {
+                return true; //admin if $review is not AdminReview (???)
+            }
+
+            //return true;
         }
 
 //        if( $this->isPrimaryReviewer($project) ) {
@@ -3062,17 +2930,6 @@ class TransResUtil
             }
         }
 
-//        //Reviewers
-//        if( 0 && $review ) {
-//            // 3) current project's reviewers
-//            $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
-//            $emails = array_merge($emails, $currentReviewerEmails);
-//
-//            // 4) next state project's reviewers
-//            $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
-//            $emails = array_merge($emails,$nextStateReviewerEmails);
-//        }
-
         $emails = array_unique($emails);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
@@ -3330,6 +3187,7 @@ class TransResUtil
     }
 
 
+    //TODO: if project specified => filter ROLE_TRANSRES_ADMIN by project's funded/non-funded
     //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
     public function getTransResAdminEmails($projectSpecialty=null, $asEmail=true, $onlyAdmin=false) {
         $users = array();

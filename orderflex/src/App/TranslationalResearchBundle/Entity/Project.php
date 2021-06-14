@@ -1308,10 +1308,74 @@ class Project {
         $this->finalReviews->removeElement($item);
     }
 
-    public function getAdminReviews()
+    public function getAdminReviews( $filterByType=false )
     {
-        return $this->adminReviews;
+        $adminReviews = $this->adminReviews;
+
+        if( $filterByType === true ) {
+
+            $funded = $this->getFunded();
+            $newAdminReviews = new ArrayCollection();
+            //'funded', 'non-funded', 'all'/NULL/''
+
+
+            foreach($adminReviews as $adminReview) {
+
+//                $reviewProjectType = $adminReview->getReviewProjectType();
+//
+//                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
+//                    $newAdminReviews->add($adminReview);
+//                    continue;
+//                }
+//
+//                if( $funded ) {
+//                    if( $reviewProjectType == 'funded' ) {
+//                        $newAdminReviews->add($adminReview);
+//                    }
+//                } else {
+//                    if( $reviewProjectType == 'non-funded' ) {
+//                        $newAdminReviews->add($adminReview);
+//                    }
+//                }
+
+                if( $this->isAdminReviewerByType($adminReview) ) {
+                    $newAdminReviews->add($adminReview);
+                }
+            }
+
+            return $newAdminReviews;
+        }// if $filterByType
+
+        return $adminReviews;
     }
+    public function isAdminReviewerByType( $adminReview ) {
+
+        if( $adminReview instanceof AdminReview ) {
+            //continue
+        } else {
+            return true; //admin if $review is not AdminReview (???)
+        }
+
+        $funded = $this->getFunded();
+        $reviewProjectType = $adminReview->getReviewProjectType();
+
+        if( $reviewProjectType == 'all' || !$reviewProjectType ) {
+            return true;
+        }
+
+        if( $funded ) {
+            if( $reviewProjectType == 'funded' ) {
+                return true;
+            }
+        } else {
+            if( $reviewProjectType == 'non-funded' ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function addAdminReview($item)
     {
         if( $item && !$this->adminReviews->contains($item) ) {
