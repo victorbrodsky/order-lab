@@ -556,7 +556,7 @@ class ReminderUtil
             }
 
             //admins as $ccs
-            $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send reminder email
+            $ccs = $transresUtil->getTransResAdminEmails($project,true,true); //send reminder email
 
             //replace comments
             if( strpos($projectReminderBody, '[[PROJECT STATUS COMMENTS]]') !== false ) {
@@ -874,7 +874,7 @@ class ReminderUtil
             }
 
             //admins as $ccs
-            $ccs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send reminder email
+            $ccs = $transresUtil->getTransResAdminEmails($project,true,true); //send reminder email
 
             //replace [[...]]
             $reminderSubjectReady = $transresUtil->replaceTextByNamingConvention($reminderSubject,$project,$request,null);

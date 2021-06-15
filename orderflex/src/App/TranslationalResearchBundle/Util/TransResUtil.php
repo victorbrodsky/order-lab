@@ -854,7 +854,7 @@ class TransResUtil
                 $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
             }
 
-            $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectOverBudgetEmail
+            $adminEmails = $this->getTransResAdminEmails($project, true, true); //send ProjectOverBudgetEmail
 
             //$subject = ""; //222(10) Over budget notification subject:
             $subject = $transresUtil->getTransresSiteProjectParameter('overBudgetSubject',$project);
@@ -964,7 +964,7 @@ class TransResUtil
             $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         }
 
-        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectApprovedBudgetUpdateEmail
+        $adminEmails = $this->getTransResAdminEmails($project, true, true); //send ProjectApprovedBudgetUpdateEmail
 
         $originalApprovedProjectBudget = $this->dollarSignValue($originalApprovedProjectBudget);
         $approvedProjectBudget = $this->dollarSignValue($approvedProjectBudget);
@@ -1029,7 +1029,7 @@ class TransResUtil
             $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         }
 
-        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectNoBudgetUpdateEmail
+        $adminEmails = $this->getTransResAdminEmails($project, true, true); //send ProjectNoBudgetUpdateEmail
 
         $budgetLimitRemovalSubject = $transresUtil->getTransresSiteProjectParameter('budgetLimitRemovalSubject',$project);
         if( !$budgetLimitRemovalSubject ) {
@@ -1195,7 +1195,7 @@ class TransResUtil
                         $emailBody = $emailBody . $break. $projectReviewUrl;
 
                         //send notification emails (project transition: committee recomendation - committe_review)
-                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //set Transition
+                        $admins = $this->getTransResAdminEmails($project,true,true); //set Transition
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                         $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail );
 
@@ -2912,7 +2912,7 @@ class TransResUtil
         //send to the
         // 1) admins and primary reviewers
         //                                      $projectSpecialty=null, $asEmail=true, $onlyAdmin=false
-        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send NotificationEmails (function NOT USED)
+        $admins = $this->getTransResAdminEmails($project,true,true); //send NotificationEmails (function NOT USED)
         $emails = array_merge($emails,$admins);
 
         //project's submitter only
@@ -2992,7 +2992,7 @@ class TransResUtil
             $body = $body . $break. $projectReviewUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
+            $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3027,7 +3027,7 @@ class TransResUtil
             $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit the following link:".$break.$projectResubmitUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); ////send TransitionEmail
+            $adminsCcs = $this->getTransResAdminEmails($project,true,true); ////send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3056,7 +3056,7 @@ class TransResUtil
             // LastNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
             // email@domain.tld – list all users with TRP sysadmin roles associated with project specialty separated by comma ]
             $body = $body . $break.$break. "If you have any questions, please contact";
-            $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),false,true); //send TransitionEmail
+            $admins = $this->getTransResAdminEmails($project,false,true); //send TransitionEmail
             $adminInfos = array();
             foreach( $admins as $admin ) {
                 $adminInfos[] = $admin->getUsernameOptimal() . " " . $admin->getSingleEmail(false);
@@ -3066,7 +3066,7 @@ class TransResUtil
             }
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
+            $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3150,7 +3150,7 @@ class TransResUtil
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
+            $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3174,7 +3174,7 @@ class TransResUtil
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
+            $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );

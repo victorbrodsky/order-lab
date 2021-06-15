@@ -1115,7 +1115,7 @@ class ProjectController extends OrderAbstractController
         //check enableNewProjectAccessPage
         if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectAccessPage',null,$specialty) !== true ) {
             //exit('disabled specialty='.$specialtyStr);
-            $adminEmailsStr = $transresUtil->getAdminEmailsStrBySpecialty(null,$specialty,false);
+            $adminEmailsStr = $transresUtil->getAdminEmailsStrBySpecialty(null,$specialty,false); //new project
             //exit('adminEmailsStr='.$adminEmailsStr);
             $additionalMessage = "This project request type is currently not active. ".
                 "Please select a different project request type or contact $adminEmailsStr";
@@ -1281,7 +1281,7 @@ class ProjectController extends OrderAbstractController
                 $emailUtil = $this->container->get('user_mailer_utility');
                 $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
                 $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-                $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //new project after save
+                $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //new project after save
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
@@ -1568,7 +1568,7 @@ class ProjectController extends OrderAbstractController
                 $emailUtil = $this->container->get('user_mailer_utility');
                 $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
                 $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-                $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //after project edited
+                $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //after project edited
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs,$senderEmail);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
@@ -1997,7 +1997,7 @@ class ProjectController extends OrderAbstractController
         //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
 
         $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //after project canceled
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //after project canceled
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
@@ -2209,7 +2209,7 @@ class ProjectController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
-        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //after project deleted
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //after project deleted
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         $this->deleteProject($project);

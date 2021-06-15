@@ -97,6 +97,9 @@ class FosCommentListener implements EventSubscriberInterface {
         $comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
+        //echo "entity=".$entity->getId()."<br>";
+        //exit('111');
+
         //set only eventlog
         $resArr = $this->setCommentEventLog($event,$comment,$entity);
 
@@ -162,7 +165,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $reviews = $transresUtil->getReviewsByProjectAndState($project,$stateStr);
 
         //1) admins
-        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+        $adminEmails = $transresUtil->getTransResAdminEmails($project,true,true);
 
         //2) reviewers of this review
         foreach($reviews as $review) {
@@ -215,7 +218,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $emails = array();
 
         //1) admins
-        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+        $adminEmails = $transresUtil->getTransResAdminEmails($project,true,true);
         //$emails = array_merge($emails,$adminEmails);
 
 //        //2) contact (Billing Contact). Removed by Bing's request: "The email should be sent to the work request submitted and the PI."
