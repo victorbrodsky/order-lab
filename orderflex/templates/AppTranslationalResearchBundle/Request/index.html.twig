@@ -6,6 +6,14 @@
 {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+{% if project is not defined %}
+    {% set project = null %}
+{% endif %}
+
+{% if matchingStrWorkRequestIds is not defined %}
+    {% set matchingStrWorkRequestIds = null %}
+{% endif %}
+
 {% block title %}
     {% if project %}
         Requests for Project ID {{ project.oid }}

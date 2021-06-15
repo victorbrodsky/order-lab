@@ -108,6 +108,17 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
+        //testing getTransResAdminEmails
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3356);
+        $admins = $transresUtil->getTransResAdminEmails($project,true,true);
+        foreach($admins as $admin) {
+            echo "admin1=".$admin."<br>";
+        }
+        $admins = $transresUtil->getTransResAdminEmails(null,true,true);
+        foreach($admins as $admin) {
+            echo "admin2=".$admin."<br>";
+        }
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 

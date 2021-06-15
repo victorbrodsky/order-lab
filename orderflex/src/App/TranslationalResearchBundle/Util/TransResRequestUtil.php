@@ -1480,7 +1480,7 @@ class TransResRequestUtil
         }
 
         // 1) admins and primary reviewers
-        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,true); //ok
+        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,true); //get admin and tech email
         $emails = array_merge($emails,$admins);
 
         // 2) Technicians

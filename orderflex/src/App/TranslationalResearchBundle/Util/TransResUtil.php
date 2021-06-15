@@ -146,7 +146,7 @@ class TransResUtil
             }
 
             if( false === $this->isUserAllowedFromThisStateByProjectAndReview($project,$review) ) {
-                //echo "Skip isUserAllowedFromThisStateByProjectAndReview<br>";
+                //echo "Skip is UserAllowedFromThisStateByProjectAndReview<br>";
                 continue;
             }
 
@@ -753,13 +753,14 @@ class TransResUtil
             $projectSpecialty = $project->getProjectSpecialty();
         }
 
-        $adminEmailsStr = $this->getAdminEmailsStrBySpecialty($projectSpecialty,$all);
+        $adminEmailsStr = $this->getAdminEmailsStrBySpecialty($project,$projectSpecialty,$all);
 
         return $adminEmailsStr;
     }
-    public function getAdminEmailsStrBySpecialty($projectSpecialty=NULL,$all=true) {
+    //Add project to pass it to getTransResAdminEmails
+    public function getAdminEmailsStrBySpecialty($project,$projectSpecialty=NULL,$all=true) {
         $adminEmailsStr = "";
-        $adminUsers = $this->getTransResAdminEmails($projectSpecialty, false, true);
+        $adminUsers = $this->getTransResAdminEmails($project, false, true); //replaced $projectSpecialty by project
         $adminEmails = array();
         foreach($adminUsers as $adminUser) {
             $adminEmails[] = $adminUser->getUsernameOptimal()." (".$adminUser->getSingleEmail(false).")";
@@ -773,7 +774,7 @@ class TransResUtil
 
         if( !$adminEmailsStr ) {
             $adminEmailsStr = $this->getTransresSiteProjectParameter('fromEmail',null,$projectSpecialty);
-            echo "trpemail=$adminEmailsStr <br>";
+            //echo "trpemail=$adminEmailsStr <br>";
         }
 
         if( !$adminEmailsStr ) {
@@ -853,7 +854,7 @@ class TransResUtil
                 $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
             }
 
-            $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+            $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectOverBudgetEmail
 
             //$subject = ""; //222(10) Over budget notification subject:
             $subject = $transresUtil->getTransresSiteProjectParameter('overBudgetSubject',$project);
@@ -963,7 +964,7 @@ class TransResUtil
             $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         }
 
-        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectApprovedBudgetUpdateEmail
 
         $originalApprovedProjectBudget = $this->dollarSignValue($originalApprovedProjectBudget);
         $approvedProjectBudget = $this->dollarSignValue($approvedProjectBudget);
@@ -1028,7 +1029,7 @@ class TransResUtil
             $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         }
 
-        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true);
+        $adminEmails = $this->getTransResAdminEmails($project->getProjectSpecialty(), true, true); //send ProjectNoBudgetUpdateEmail
 
         $budgetLimitRemovalSubject = $transresUtil->getTransresSiteProjectParameter('budgetLimitRemovalSubject',$project);
         if( !$budgetLimitRemovalSubject ) {
@@ -1194,7 +1195,7 @@ class TransResUtil
                         $emailBody = $emailBody . $break. $projectReviewUrl;
 
                         //send notification emails (project transition: committee recomendation - committe_review)
-                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //set Transition
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                         $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail );
 
@@ -2471,7 +2472,7 @@ class TransResUtil
     //Check if the current logged in user is a reviewer of this review or reviewer's delegate
     //True should be returned for only actual reviewer or reviewer's delegate
     public function isUserAllowedFromThisStateByProjectAndReview($project, $review) {
-        //echo "isUserAllowedFromThisStateByProjectAndReview: reviewer=".$review->getReviewer()." <br>";
+        //echo "is UserAllowedFromThisStateByProjectAndReview: reviewer=".$review->getReviewer()." <br>";
         $user = $this->secTokenStorage->getToken()->getUser();
 
         if( !$project ) {
@@ -2530,7 +2531,6 @@ class TransResUtil
             return true;
         }
 
-        //echo "### Exit isUserAllowedFromThisStateByProjectAndReview ###<br>";
         return false;
     }
 
@@ -2908,7 +2908,7 @@ class TransResUtil
         //send to the
         // 1) admins and primary reviewers
         //                                      $projectSpecialty=null, $asEmail=true, $onlyAdmin=false
-        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send NotificationEmails (function NOT USED)
         $emails = array_merge($emails,$admins);
 
         //project's submitter only
@@ -2988,7 +2988,7 @@ class TransResUtil
             $body = $body . $break. $projectReviewUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3023,7 +3023,7 @@ class TransResUtil
             $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit the following link:".$break.$projectResubmitUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); ////send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3052,7 +3052,7 @@ class TransResUtil
             // LastNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
             // email@domain.tld – list all users with TRP sysadmin roles associated with project specialty separated by comma ]
             $body = $body . $break.$break. "If you have any questions, please contact";
-            $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),false,true);
+            $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),false,true); //send TransitionEmail
             $adminInfos = array();
             foreach( $admins as $admin ) {
                 $adminInfos[] = $admin->getUsernameOptimal() . " " . $admin->getSingleEmail(false);
@@ -3062,7 +3062,7 @@ class TransResUtil
             }
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3146,7 +3146,7 @@ class TransResUtil
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3170,7 +3170,7 @@ class TransResUtil
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
-            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //send TransitionEmail
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
@@ -3189,8 +3189,16 @@ class TransResUtil
 
     //TODO: if project specified => filter ROLE_TRANSRES_ADMIN by project's funded/non-funded
     //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
-    public function getTransResAdminEmails($projectSpecialty=null, $asEmail=true, $onlyAdmin=false) {
+    //Replaced $projectSpecialty by $project
+    //Must return at least one TRP admin
+    public function getTransResAdminEmails($project=null, $asEmail=true, $onlyAdmin=false) {
         $users = array();
+        $admins = array();
+
+        $projectSpecialty = NULL;
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+        }
 
         if( $projectSpecialty ) {
             $specialtyPostfix = $projectSpecialty->getUppercaseName();
@@ -3198,9 +3206,20 @@ class TransResUtil
         } else {
             $specialtyPostfix = null;
         }
-        //echo "specialtyPostfix="."ROLE_TRANSRES_ADMIN".$specialtyPostfix." <br>";
+        echo "specialtyPostfix="."ROLE_TRANSRES_ADMIN".$specialtyPostfix." <br>";
 
-        $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN".$specialtyPostfix));
+        //1) TODO: get specific admins from project
+        if( $project ) {
+            $admins = $project->getAdminUserReviewers(true);
+            echo "admins1=".count($admins)."<br>";
+        }
+
+        //2 get admins from DB
+        if( count($admins) == 0 ) {
+            $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN" . $specialtyPostfix));
+            echo "admins2=".count($admins)."<br>";
+        }
+
         foreach( $admins as $user ) {
             if( $user ) {
                 if( $asEmail ) {
@@ -3423,7 +3442,7 @@ class TransResUtil
         $emails = array();
 
         //get next state
-        $reviews = $this->getReviewsByProjectAndState($project,$nextStateStr);
+        $reviews = $this->getReviewsByProjectAndState($project,$nextStateStr); //filtered by funded/non-funded project
         foreach($reviews as $review) {
             $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
             $emails = array_merge($emails,$currentReviewerEmails);

@@ -2545,6 +2545,25 @@ class Project {
         return $total;
     }
 
+    public function getAdminUserReviewers($filterByType=false) {
+        $adminReviews = $this->getAdminReviews($filterByType);
+        if( count($adminReviews) == 0 ) {
+            return array();
+        }
+        $admins = array();
+        foreach($adminReviews as $adminReview) {
+            $admin = $adminReview->getReviewer();
+            if( $admin ) {
+                $admins[] = $admin;
+            }
+            $adminDelegate = $adminReview->getReviewerDelegate();
+            if( $adminDelegate ) {
+                $admins[] = $adminDelegate;
+            }
+        }
+        return $admins;
+    }
+
     public function getEntityName() {
         return "Project";
     }
