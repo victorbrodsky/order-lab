@@ -232,7 +232,8 @@ class UserRepository extends EntityRepository {
 
         $whereArr = array();
         foreach($roles as $role) {
-            $whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+            //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+            $whereArr[] = 'u.roles LIKE '."'%" . $role . "%'";
         }
 
         $qb = $this->_em->createQueryBuilder();

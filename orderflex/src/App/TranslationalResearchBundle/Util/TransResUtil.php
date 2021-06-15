@@ -2214,23 +2214,27 @@ class TransResUtil
         //TODO: filter by project funded/non-funded
         if( $state == "admin_review" ) {
             $newAdminReviews = array();
-            $funded = $this->getFunded();
+            //$funded = $project->getFunded();
             foreach($reviews as $adminReview) {
-                $reviewProjectType = $adminReview->getReviewProjectType();
+//                $reviewProjectType = $adminReview->getReviewProjectType();
+//
+//                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
+//                    $newAdminReviews[] = $adminReview;
+//                    continue;
+//                }
+//
+//                if( $funded ) {
+//                    if( $reviewProjectType == 'funded' ) {
+//                        $newAdminReviews[] = $adminReview;
+//                    }
+//                } else {
+//                    if( $reviewProjectType == 'non-funded' ) {
+//                        $newAdminReviews[] = $adminReview;
+//                    }
+//                }
 
-                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
-                    $newAdminReviews[] = ($adminReview);
-                    continue;
-                }
-
-                if( $funded ) {
-                    if( $reviewProjectType == 'funded' ) {
-                        $newAdminReviews[] = ($adminReview);
-                    }
-                } else {
-                    if( $reviewProjectType == 'non-funded' ) {
-                        $newAdminReviews[] = ($adminReview);
-                    }
+                if( $project->isAdminReviewerByType($adminReview) ) {
+                    $newAdminReviews[] = $adminReview;
                 }
             }
 
@@ -3187,8 +3191,8 @@ class TransResUtil
     }
 
 
-    //TODO: if project specified => filter ROLE_TRANSRES_ADMIN by project's funded/non-funded
-    //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
+    //1) if project specified => filter ROLE_TRANSRES_ADMIN by project's funded/non-funded
+    //2) get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
     //Replaced $projectSpecialty by $project
     //Must return at least one TRP admin
     public function getTransResAdminEmails($project=null, $asEmail=true, $onlyAdmin=false) {
@@ -3206,18 +3210,18 @@ class TransResUtil
         } else {
             $specialtyPostfix = null;
         }
-        echo "specialtyPostfix="."ROLE_TRANSRES_ADMIN".$specialtyPostfix." <br>";
+        //echo "specialtyPostfix="."ROLE_TRANSRES_ADMIN".$specialtyPostfix." <br>";
 
-        //1) TODO: get specific admins from project
+        //1) try to get specific admins from project
         if( $project ) {
             $admins = $project->getAdminUserReviewers(true);
-            echo "admins1=".count($admins)."<br>";
+            //echo "admins1=".count($admins)."<br>";
         }
 
-        //2 get admins from DB
+        //2) get admins from DB
         if( count($admins) == 0 ) {
             $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN" . $specialtyPostfix));
-            echo "admins2=".count($admins)."<br>";
+            //echo "admins2=".count($admins)."<br>";
         }
 
         foreach( $admins as $user ) {

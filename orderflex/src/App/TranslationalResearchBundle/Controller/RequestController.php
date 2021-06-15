@@ -1115,7 +1115,7 @@ class RequestController extends OrderAbstractController
         $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
         $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
-        if( 1 || count($projectSpecialtyAllowedArr) == 0 ) { //testing getTransResAdminEmails
+        if( count($projectSpecialtyAllowedArr) == 0 ) { //testing getTransResAdminEmails
             $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(null,true,true); //send warning email if no specialty
             $errorMsg = "You don't have any allowed project specialty in your profile.".
                 "<br>Please contact the system admin(s):".

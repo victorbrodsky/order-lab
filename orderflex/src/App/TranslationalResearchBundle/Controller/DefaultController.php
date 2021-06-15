@@ -108,16 +108,31 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
-        //testing getTransResAdminEmails
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3356);
-        $admins = $transresUtil->getTransResAdminEmails($project,true,true);
-        foreach($admins as $admin) {
-            echo "admin1=".$admin."<br>";
-        }
-        $admins = $transresUtil->getTransResAdminEmails(null,true,true);
-        foreach($admins as $admin) {
-            echo "admin2=".$admin."<br>";
-        }
+//        //testing getTransResAdminEmails
+//        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3356);
+//        $admins = $transresUtil->getTransResAdminEmails($project,true,true);
+//        foreach($admins as $admin) {
+//            echo "admin1=".$admin."<br>";
+//        }
+//        $admins = $transresUtil->getTransResAdminEmails(null,true,true);
+//        foreach($admins as $admin) {
+//            echo "admin2=".$admin."<br>";
+//        }
+//
+//        if( $project ) {
+//            $projectSpecialty = $project->getProjectSpecialty();
+//        }
+//        if( $projectSpecialty ) {
+//            $specialtyPostfix = $projectSpecialty->getUppercaseName();
+//            $specialtyPostfix = "_" . $specialtyPostfix;
+//        } else {
+//            $specialtyPostfix = null;
+//        }
+//        $specialtyPostfix = null;
+//        $role = "ROLE_TRANSRES_ADMIN" . $specialtyPostfix;
+//        echo "role=".$role." <br>";
+//        $admins = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array($role));
+//        echo "admins3=".count($admins)."<br>";
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
