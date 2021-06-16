@@ -405,10 +405,31 @@ class ProjectController extends OrderAbstractController
 //
 //        }
 
-        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
-            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+    //$testingDisable = 0;
+    //if( $testingDisable ) {
+
+        /////////////////////// Limit access for non-admin, non-reviewer, non-executive users /////////////////////////////
+        //Non admin, Primary Reviewers, Reviewers and Executive can see all projects.
+        // All other users can view only their projects
+        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
+        if (
+            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
+            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            || $transresUtil->hasReviewerRoles()
+        ) {
+            $showOnlyMyProjects = false;
+        } else {
+            //this will hide projects "Project Requests Pending My Review" for added reviewers directly to the project without reviewer role
+            $showOnlyMyProjects = true;
+        }
+        //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
+        /////////////////////// EOF Limit access for non-admin, non-reviewer, non-executive users /////////////////////////////
+
+        if ($projectSpecialties && count($projectSpecialties) > 0) {
+            //echo "testing where projectSpecialty <br>";
+            $dql->leftJoin('project.projectSpecialty', 'projectSpecialty');
             $projectSpecialtyIdsArr = array();
-            foreach($projectSpecialties as $projectSpecialty) {
+            foreach ($projectSpecialties as $projectSpecialty) {
                 $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
             }
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
@@ -416,49 +437,52 @@ class ProjectController extends OrderAbstractController
         }
 
         //echo "count states=".count($states)."<br>";
-        if( $states && count($states) > 0 ) {
+        if ($states && count($states) > 0) {
+            //echo "testing where state <br>";
             //All except Drafts
             $allExceptDraft = "";
-            if( in_array("All-except-Drafts", $states )) {
+            if (in_array("All-except-Drafts", $states)) {
                 $allExceptDraft = " OR project.state != 'draft' OR project.state IS NULL";
             }
-            if( in_array("All-except-Drafts-and-Canceled", $states )) {
+            if (in_array("All-except-Drafts-and-Canceled", $states)) {
                 $allExceptDraft = " OR (project.state != 'draft' AND project.state != 'canceled') OR project.state IS NULL";
             }
             $dql->andWhere("project.state IN (:states)" . $allExceptDraft);
             $dqlParameters["states"] = $states;
 
-            if( count($states) == 1 && $states[0] == "All-except-Drafts-and-Canceled" ) {
+            if (count($states) == 1 && $states[0] == "All-except-Drafts-and-Canceled") {
                 //as regular filter
             } else {
                 $advancedFilter++;
             }
         }
 
-        if( $searchId ) {
+        if ($searchId) {
+            //echo "testing where searchId <br>";
             //echo "searchId=$searchId<br>";
             $dql->andWhere("LOWER(project.oid) LIKE LOWER(:oid)");
             //$dql->andWhere("project.oid LIKE :oid");
-            $dqlParameters["oid"] = "%".$searchId."%";
+            $dqlParameters["oid"] = "%" . $searchId . "%";
         }
 
-        if( $exportId ) {
+        if ($exportId) {
+            //echo "testing where exportId <br>";
             //$dql->andWhere("LOWER(project.exportId) LIKE LOWER(:exportId)");
             $dql->andWhere("CAST(project.exportId as VARCHAR) LIKE LOWER(:exportId)");
-            $dqlParameters["exportId"] = "%".$exportId."%";
+            $dqlParameters["exportId"] = "%" . $exportId . "%";
             $advancedFilter++;
         }
 
-        if( $briefDescription ) {
+        if ($briefDescription) {
             $dql->andWhere("LOWER(project.description) LIKE LOWER(:description)");
-            $dqlParameters["description"] = "%".$briefDescription."%";
+            $dqlParameters["description"] = "%" . $briefDescription . "%";
             $advancedFilter++;
         }
 
-        if( $priceList ) {
-            if( $priceList != 'all' ) {
-                $dql->leftJoin('project.priceList','priceList');
-                if( $priceList == 'default' ) {
+        if ($priceList) {
+            if ($priceList != 'all') {
+                $dql->leftJoin('project.priceList', 'priceList');
+                if ($priceList == 'default') {
                     $dql->andWhere("priceList.id IS NULL");
                 } else {
                     $dql->andWhere("priceList.id = :priceListId");
@@ -475,10 +499,11 @@ class ProjectController extends OrderAbstractController
         //Then make a query to get approvedProjectBudget-Total
         //3 way) use DoctrineListener, when invoice or work request is updated, update project's total
         //echo "overBudget=$overBudget<br>";
-        if( $overBudget ) {
-            if( $overBudget != 'all' ) {
+        if ($overBudget) {
+            //echo "testing where over-budget <br>";
+            if ($overBudget != 'all') {
 
-                if( $overBudget == 'over-budget-with-no-budget' ) {
+                if ($overBudget == 'over-budget-with-no-budget') {
                     //do not show all project that have “No Budget Limit” checked
                     //list all projects that are also active and non-funded,
                     // and that have the “Remaining Budget” amount less than zero
@@ -501,19 +526,19 @@ class ProjectController extends OrderAbstractController
 //                    ");
 
                     $dql->andWhere(
-                        "project.noBudgetLimit = FALSE".
-                        " AND".
+                        "project.noBudgetLimit = FALSE" .
+                        " AND" .
                         //" project.funded != TRUE"
                         //." AND".
-                        " (".
-                            "project.approvedProjectBudget IS NULL".
-                            " OR".
-                            " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)".
+                        " (" .
+                        "project.approvedProjectBudget IS NULL" .
+                        " OR" .
+                        " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)" .
                         ")"
                     );
                 }
 
-                if( $overBudget == 'over-budget' ) {
+                if ($overBudget == 'over-budget') {
                     //$dql->andWhere("project.approvedProjectBudget IS NOT NULL OR project.grandTotal > project.approvedProjectBudget");
                     //$dql->andWhere("project.grandTotal > CAST(project.approvedProjectBudget AS integer)");
 
@@ -526,15 +551,15 @@ class ProjectController extends OrderAbstractController
 //                    ");
 
                     $dql->andWhere(
-                        "project.noBudgetLimit = FALSE".
-                        " AND".
-                        " (".
-                        " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)".
+                        "project.noBudgetLimit = FALSE" .
+                        " AND" .
+                        " (" .
+                        " (project.total IS NOT NULL AND project.approvedProjectBudget IS NOT NULL AND project.total > project.approvedProjectBudget)" .
                         ")"
                     );
                 }
 
-                if( $overBudget == 'with-no-budget' ) {
+                if ($overBudget == 'with-no-budget') {
                     //$dql->andWhere("project.approvedProjectBudget IS NULL OR project.noBudgetLimit = FALSE");
                     $dql->andWhere("project.approvedProjectBudget IS NULL");
                 }
@@ -544,7 +569,8 @@ class ProjectController extends OrderAbstractController
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
-        if($formnode) {
+        if ($formnode) {
+            //echo "testing where formnode <br>";
             if ($searchProjectType) {
                 $projectTypeIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchProjectType->getId(), "Project Type");
                 $dql->andWhere("project.id IN (:projectTypeIds)");
@@ -593,29 +619,29 @@ class ProjectController extends OrderAbstractController
         }
         //////////////// EOF get Projects IDs with the form node filter ////////////////
 
-        if( $searchProjectType ) {
+        if ($searchProjectType) {
             $dql->andWhere("projectType.id = :projectTypeId");
             $dqlParameters["projectTypeId"] = $searchProjectType->getId();
             $advancedFilter++;
         }
         //echo "searchTitle=$searchTitle <br>";
-        if( $searchTitle ) {
+        if ($searchTitle) {
             //exit('111');
             $dql->andWhere("LOWER(project.title) LIKE LOWER(:title)");
-            $dqlParameters["title"] = "%".$searchTitle."%";
+            $dqlParameters["title"] = "%" . $searchTitle . "%";
             $advancedFilter++;
         }
-        if( $searchIrbNumber ) {
+        if ($searchIrbNumber) {
             $dql->andWhere("LOWER(project.irbNumber) LIKE LOWER(:irbNumber) OR LOWER(project.iacucNumber) LIKE LOWER(:irbNumber)");
-            $dqlParameters["irbNumber"] = "%".$searchIrbNumber."%";
+            $dqlParameters["irbNumber"] = "%" . $searchIrbNumber . "%";
             $advancedFilter++;
         }
-        if( $fundingNumber ) {
+        if ($fundingNumber) {
             $dql->andWhere("LOWER(project.fundedAccountNumber) LIKE LOWER(:fundedAccountNumber)");
-            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
+            $dqlParameters["fundedAccountNumber"] = "%" . $fundingNumber . "%";
             $advancedFilter++;
         }
-        if( $fundingType ) {
+        if ($fundingType) {
             //echo "fundingType=" . $fundingType . "<br>";
             if ($fundingType == "Funded") {
                 $dql->andWhere("project.funded = true");
@@ -626,7 +652,7 @@ class ProjectController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( $humanTissue ) {
+        if ($humanTissue) {
             //echo "fundingType=" . $humanTissue . "<br>";
             if ($humanTissue == "Involves Human Tissue") {
                 $dql->andWhere("project.involveHumanTissue = 'Yes'");
@@ -636,7 +662,7 @@ class ProjectController extends OrderAbstractController
             }
             $advancedFilter++;
         }
-        if( $exemptIrbApproval ) {
+        if ($exemptIrbApproval) {
             //echo "fundingType=" . $exemptIrbApproval . "<br>";
             if ($exemptIrbApproval == "exempt-from-irb-approval") {
                 $dql->andWhere("project.exemptIrbApproval = true OR project.exemptIrbApproval IS NULL");
@@ -648,41 +674,42 @@ class ProjectController extends OrderAbstractController
         }
 
 
-        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+        if ($principalInvestigators && count($principalInvestigators) > 0) {
+            //echo "testing where principalInvestigators <br>";
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators) OR principalIrbInvestigator.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
-            foreach($principalInvestigators as $principalInvestigator) {
+            foreach ($principalInvestigators as $principalInvestigator) {
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
         }
 
-        if( $submitter ) {
+        if ($submitter) {
             //echo "submitter=".$submitter->getId()."<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
             $advancedFilter++;
         }
 
-        if( $reviewers && count($reviewers)>0 ) {
+        if ($reviewers && count($reviewers) > 0) {
+            //echo "testing where reviewerIds <br>";
             //"principalInvestigators.id IN (:principalInvestigators)"
             $reviewersCriterion =
-                "irbReviewer.id IN (:reviewerIds) OR ".
-                "irbReviewerDelegate.id IN (:reviewerIds) OR ".
+                "irbReviewer.id IN (:reviewerIds) OR " .
+                "irbReviewerDelegate.id IN (:reviewerIds) OR " .
 
-                "adminReviewer.id IN (:reviewerIds) OR ".
-                "adminReviewerDelegate.id IN (:reviewerIds) OR ".
+                "adminReviewer.id IN (:reviewerIds) OR " .
+                "adminReviewerDelegate.id IN (:reviewerIds) OR " .
 
-                "committeeReviewer.id IN (:reviewerIds) OR ".
-                "committeeReviewerDelegate.id IN (:reviewerIds) OR ".
+                "committeeReviewer.id IN (:reviewerIds) OR " .
+                "committeeReviewerDelegate.id IN (:reviewerIds) OR " .
 
-                "finalReviewer.id IN (:reviewerIds) OR ".
-                "finalReviewerDelegate.id IN (:reviewerIds)"
-            ;
+                "finalReviewer.id IN (:reviewerIds) OR " .
+                "finalReviewerDelegate.id IN (:reviewerIds)";
             $dql->andWhere($reviewersCriterion);
 
             $reviewersIdsArr = array();
-            foreach($reviewers as $reviewer) {
+            foreach ($reviewers as $reviewer) {
                 $reviewersIdsArr[] = $reviewer->getId();
             }
 
@@ -690,13 +717,13 @@ class ProjectController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( $startDate ) {
+        if ($startDate) {
             //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate >= :startDate');
             $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $endDate ) {
+        if ($endDate) {
             $endDate->modify('+1 day');
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate <= :endDate');
@@ -704,24 +731,24 @@ class ProjectController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( $fromExpectedCompletionDate ) {
+        if ($fromExpectedCompletionDate) {
             $dql->andWhere('project.expectedCompletionDate >= :fromExpectedCompletionDate');
             $dqlParameters['fromExpectedCompletionDate'] = $fromExpectedCompletionDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $toExpectedCompletionDate ) {
+        if ($toExpectedCompletionDate) {
             $toExpectedCompletionDate->modify('+1 day');
             $dql->andWhere('project.expectedCompletionDate <= :toExpectedCompletionDate');
             $dqlParameters['toExpectedCompletionDate'] = $toExpectedCompletionDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
-        if( $fromImplicitExpDate ) {
+        if ($fromImplicitExpDate) {
             $dql->andWhere('project.implicitExpirationDate >= :fromImplicitExpirationDate');
             $dqlParameters['fromImplicitExpirationDate'] = $fromImplicitExpDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $toImplicitExpDate ) {
+        if ($toImplicitExpDate) {
             $toImplicitExpDate->modify('+1 day');
             $dql->andWhere('project.implicitExpirationDate <= :toImplicitExpirationDate');
             $dqlParameters['toImplicitExpirationDate'] = $toImplicitExpDate->format('Y-m-d H:i:s');
@@ -729,59 +756,45 @@ class ProjectController extends OrderAbstractController
         }
 
         //In the project list, show Draft projects only to the project's requester and to admins
-        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+        if ($transresUtil->isAdminOrPrimaryReviewer() === false) {
+            //echo "testing where project.state != 'draft' <br>";
             //show projects where Iam requester
             $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
 
             //OR show projects with state!= draft
             $allowedStatesCriterion = "project.state != 'draft'";
 
-            $limitedProjectsCriterion = "(".$showOnlyMyProjectsCriterion . ")" . " OR " . $allowedStatesCriterion;
+            $limitedProjectsCriterion = "(" . $showOnlyMyProjectsCriterion . ")" . " OR " . $allowedStatesCriterion;
 
             $dql->andWhere($limitedProjectsCriterion);
             $dqlParameters["userId"] = $user->getId();
         }
 
-        //Non admin, Primary Reviewers, Reviewers and Executive can see all projects.
-        // All other users can view only their projects
-        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
-        if( 
-            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
-            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-            || $transresUtil->hasReviewerRoles()
-        ) {
-            $showOnlyMyProjects = false;
-        } else {
-            $showOnlyMyProjects = true;
-        }
-        //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
+//        /////////////////////// Limit access for non-admin, non-reviewer, non-executive users /////////////////////////////
+//        //Non admin, Primary Reviewers, Reviewers and Executive can see all projects.
+//        // All other users can view only their projects
+//        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
+//        if (
+//            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
+//            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//            || $transresUtil->hasReviewerRoles()
+//        ) {
+//            $showOnlyMyProjects = false;
+//        } else {
+//            //this will hide projects "Project Requests Pending My Review" for added reviewers directly to the project without reviewer role
+//            $showOnlyMyProjects = true;
+//        }
+//        //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
+//
+//        if ($showOnlyMyProjects || $routeName == "translationalresearch_my_project_index") {
+//            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
+//            $dql->andWhere($showOnlyMyProjectsCriterion);
+//            $dqlParameters["userId"] = $user->getId();
+//            $title = "My Project Requests, where I am a Requester";
+//        }
+//        /////////////////////// EOF Limit access for non-admin, non-reviewer, non-executive users /////////////////////////////
 
-        if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
-//            $dql->leftJoin('project.coInvestigators','coInvestigators');
-//            $dql->leftJoin('project.pathologists','pathologists');
-//            $dql->leftJoin('project.billingContact','billingContact');
-//            $dql->leftJoin('project.contacts','contacts');
-
-//            $showOnlyMyProjectsCriterion =
-//                "principalInvestigators.id = :userId OR ".
-//                "coInvestigators.id = :userId OR ".
-//                "pathologists.id = :userId OR ".
-//                "contacts.id = :userId OR ".
-//                "billingContact.id = :userId OR ".
-//                "submitter.id = :userId"
-//            ;
-            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
-
-            //$myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
-            //$showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
-
-            $dql->andWhere($showOnlyMyProjectsCriterion);
-
-            $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, where I am a Requester";
-        }
-
-        if( $routeName == "translationalresearch_my_request_project_index" ) {
+        if ($routeName == "translationalresearch_my_request_project_index") {
             $myRequestProjectsCriterion = "submitter.id = :userId";
             $dql->andWhere($myRequestProjectsCriterion);
 
@@ -789,9 +802,9 @@ class ProjectController extends OrderAbstractController
             $title = "Projects I Personally Requested"; //"My Project Requests, Where I am a Requester";
         }
 
-        if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
+        if ($routeName == "translationalresearch_my_request_project_draft_index") {
             $myRequestProjectsCriterion = $this->getProjectWhereIamRequester();
-            $dql->andWhere($myRequestProjectsCriterion." AND project.state != 'draft'");
+            $dql->andWhere($myRequestProjectsCriterion . " AND project.state != 'draft'");
 
             $dqlParameters["userId"] = $user->getId();
             $title = "Draft Projects, where I am a Requester"; //"My Project Requests, Where I am a Requester";
@@ -800,6 +813,7 @@ class ProjectController extends OrderAbstractController
         //Projects I have reviewed (History):
         // only shows projects previously reviewed by the reviewer, not any of the projects currently pending this user's review
         if( $routeName == "translationalresearch_my_reviewed_project_index" ) {
+            //echo "testing where translationalresearch_my_reviewed_project_index <br>";
             //$myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
 
             //rely on decision: problem that imported projects do not have decision set
@@ -846,9 +860,12 @@ class ProjectController extends OrderAbstractController
 
             $dqlParameters["userId"] = $user->getId();
             $title = "Projects I Have Reviewed (History)";
+
+            $showOnlyMyProjects = false;
         }
 
         if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
+            //echo "testing where translationalresearch_my_pending_review_project_index <br>";
             //Pending my review: I'm a reviewer and project's review where I'm a reviewer has decision = NULL ("Pending Review")
             //TODO: should filter current state, and corresponding current state review:decision is NULL (pending) and reviewer is logged in user?
 //            $myPendingProjectsCriterion =
@@ -874,6 +891,7 @@ class ProjectController extends OrderAbstractController
 //                ." AND project.state LIKE '%_review'"
 //                //." AND (project.state=irbReviews.status OR project.state=adminReviews.status OR project.state=committeeReviews.status OR project.state=finalReviews.status)"
 //            ;
+            //echo "routeName=$routeName <br>";
             $myPendingProjectsCriterion =
                 "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND project.state='irb_review')".
                 " OR ".
@@ -886,13 +904,22 @@ class ProjectController extends OrderAbstractController
                 //." AND (project.state=irbReviews.status OR project.state=adminReviews.status OR project.state=committeeReviews.status OR project.state=finalReviews.status)"
             ;
 
+            //testing
+            //TODO: why added reviewer does not see the project on the project to review page
+            //$myPendingProjectsCriterion =
+            //    "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND project.state='admin_review')"
+            //;
+
             $dql->andWhere($myPendingProjectsCriterion);
             $dqlParameters["userId"] = $user->getId();
 
             $title = "Project Requests Pending My Review";
+
+            $showOnlyMyProjects = false;
         }
 
         if( $routeName == "translationalresearch_my_missinginfo_review_project_index" ) {
+            //echo "testing where translationalresearch_my_missinginfo_review_project_index <br>";
             $myPendingProjectsCriterion =
                 "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND project.state='irb_missinginfo')".
                 " OR ".
@@ -903,6 +930,8 @@ class ProjectController extends OrderAbstractController
 
             $dqlParameters["userId"] = $user->getId();
             $title = "Projects Awaiting Additional Info To Be Reviewed";
+
+            $showOnlyMyProjects = false;
         }
 
         //set title
@@ -922,6 +951,28 @@ class ProjectController extends OrderAbstractController
             $title = "Approved Non-Funded Projects";
         }
 
+        /////////////////////// Limit access for non-admin, non-reviewer, non-executive users /////////////////////////////
+//        //Non admin, Primary Reviewers, Reviewers and Executive can see all projects.
+//        // All other users can view only their projects
+//        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
+//        if (
+//            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
+//            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//            || $transresUtil->hasReviewerRoles()
+//        ) {
+//            $showOnlyMyProjects = false;
+//        } else {
+//            //this will hide projects "Project Requests Pending My Review" for added reviewers directly to the project without reviewer role
+//            $showOnlyMyProjects = true;
+//        }
+//        //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
+
+        if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
+            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
+            $dql->andWhere($showOnlyMyProjectsCriterion);
+            $dqlParameters["userId"] = $user->getId();
+            $title = "My Project Requests, where I am a Requester";
+        }
         //////////////////// EOF Start Filter ////////////////////
 
         $dql->orderBy('project.createDate', 'DESC');
