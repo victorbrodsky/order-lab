@@ -135,8 +135,8 @@ function regularCombobox(holder) {
     });
 }
 function specificRegularCombobox( comboboxEl ) {
-    //console.log('comboboxEl:');
-    //console.log(comboboxEl);
+    console.log('comboboxEl:');
+    console.log(comboboxEl);
 
     var comboboxWidth = combobox_width;
     if( comboboxEl.hasClass('combobox-no-width') ) {
@@ -1417,7 +1417,6 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
         //console.log(response);
         //var template = response;
         $('#'+replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
-        //specificRegularCombobox(replaceTargetId);
         regularCombobox( $('#'+replaceTargetId) );
     }).always(function() {
         lbtn.stop();
@@ -1591,9 +1590,12 @@ function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) 
     //4) show modal
     $('body').append(modalHtml);
 
-    getComboboxGeneric($('#user-add-new-user-instance'),'administrativetitletype',_addmintitles,false);
+
+    getComboboxGeneric($('#user-add-new-user-instance'), 'administrativetitletype', _addmintitles, false);
     getComboboxCompositetree($('#user-add-new-user-instance'));
-    regularCombobox($('#user-add-new-user-instance'));
+    if( $('#user-add-new-user-instance').length ) {
+        regularCombobox($('#user-add-new-user-instance'));
+    }
 
     $('#user-add-new-user-instance').modal(
         {
@@ -1695,7 +1697,10 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
     var newUserEl = $('#user-add-new-user');
     getComboboxGeneric(newUserEl,'administrativetitletype',_addmintitles,false);
     getComboboxCompositetree(newUserEl);
-    regularCombobox(newUserEl);
+
+    if( newUserEl.length ) {
+        regularCombobox(newUserEl);
+    }
 
     newUserEl.modal(
         {

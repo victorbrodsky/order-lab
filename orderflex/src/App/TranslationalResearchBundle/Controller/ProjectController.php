@@ -971,7 +971,9 @@ class ProjectController extends OrderAbstractController
             $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
             $dql->andWhere($showOnlyMyProjectsCriterion);
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, where I am a Requester";
+            if( $routeName == "translationalresearch_my_project_index" ) {
+                $title = "My Project Requests, where I am a Requester";
+            }
         }
         //////////////////// EOF Start Filter ////////////////////
 

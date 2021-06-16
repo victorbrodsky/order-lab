@@ -296,6 +296,11 @@
             return false;
         }
 
+        if( $(".transres-project-priceList").length == 0 ) {
+            //price list is hidden for this user
+            return false;
+        }
+
         var priceListData = priceListEl.select2('data');
         var priceListId = null;
         if( priceListData ) {
@@ -321,7 +326,6 @@
                 if( response != "NotOK" ) {
                     $(".transres-alert").find(".alert").html(response);
                     $(".transres-alert").show();
-                    //$(".transres-project-priceList").val(irbExpDate);
                     $(".transres-project-priceList").select2('val', priceListId);
                 }
             }).done(function() {
@@ -369,7 +373,6 @@
             if( response != "NotOK" ) {
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
-                //$(".transres-project-priceList").val(irbExpDate);
                 $(".transres-project-approvedProjectBudget").val(approvedProjectBudget);
             }
         }).done(function() {
@@ -403,7 +406,6 @@
             noBudgetLimit = 1;
         }
 
-        //if( priceListId ) {
         var projectId = $("#projectid").val();
 
         var url = Routing.generate('translationalresearch_update_project_nobudgetlimit');
@@ -422,8 +424,6 @@
             if( response != "NotOK" ) {
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
-                //$(".transres-project-priceList").val(irbExpDate);
-                //$(".transres-project-noBudgetLimit").val(noBudgetLimit);
 
                 //console.log("noBudgetLimit="+noBudgetLimit);
                 if( noBudgetLimit ) {
