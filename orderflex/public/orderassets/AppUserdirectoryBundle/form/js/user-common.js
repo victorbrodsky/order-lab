@@ -136,8 +136,8 @@ function regularCombobox(holder) {
 }
 function specificRegularCombobox( comboboxEl ) {
     //return; //testing
-    console.log('comboboxEl:');
-    console.log(comboboxEl);
+    //console.log('comboboxEl:');
+    //console.log(comboboxEl);
 
     if( comboboxEl && comboboxEl.length ) {
         //ok
@@ -1691,7 +1691,7 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,selectEle
 }
 //employees_new_simple_user
 function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml) {
-    console.log("construct modal");
+    //console.log("construct modal");
 
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');

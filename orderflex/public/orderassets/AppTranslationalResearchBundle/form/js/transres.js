@@ -29,7 +29,7 @@ $(document).ready(function() {
 
     transresProjectFundedListener();
 
-    console.log("cycle="+cycle);
+    //console.log("cycle="+cycle);
     if( cycle == "new" || cycle == "edit") {
         transresNewUserListener();
 
@@ -170,7 +170,7 @@ function transresShowHideProjectDocument() {
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 function transresValidateProjectForm() {
 
-    console.log("Validate project");
+    //console.log("Validate project");
 
     transresHideBtn();
 
@@ -186,7 +186,7 @@ function transresValidateProjectForm() {
 
     //required class loop
     $("form[name=oleg_translationalresearchbundle_project]").find(".required").each(function( index ) {
-        console.log( "Required: "+index + ": " + $( this ).text() );
+        //console.log( "Required: "+index + ": " + $( this ).text() );
         label = $( this ).text();   //$(this).find("label").text();
         value = null;
 
@@ -211,7 +211,7 @@ function transresValidateProjectForm() {
             value = selectField.val();
             //console.log("select combobox: label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Select select combobox. label="+label);
+                //console.log("Error Select select combobox. label="+label);
                 validated = false;
                 transresShowBtn();
                 return false;
@@ -224,7 +224,7 @@ function transresValidateProjectForm() {
             value = inputSelectField.val();
             //console.log("input combobox: label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Select input combobox. label="+label);
+                //console.log("Error Select input combobox. label="+label);
                 validated = false;
                 transresShowBtn();
                 return false;
@@ -234,7 +234,7 @@ function transresValidateProjectForm() {
     });
 
     if( validated == false ) {
-        console.log("Error: required value is NULL! label="+label+"; value="+value);
+        //console.log("Error: required value is NULL! label="+label+"; value="+value);
         var msg = "The required field '" + label + "' is empty";
         $("#projectError").show();
         $("#projectError").html(msg);
@@ -247,7 +247,7 @@ function transresValidateProjectForm() {
     var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
     //console.log("involveHumanTissue="+involveHumanTissue);
     if( !involveHumanTissue ) {
-        console.log("Error: involveHumanTissue is NULL!");
+        //console.log("Error: involveHumanTissue is NULL!");
         //var msg = "Please upload a completed human tissue form";
         var msg = "Please answer the required question: 'Will this project involve human tissue?'";
         $("#projectError").show();
@@ -275,7 +275,7 @@ function transresValidateProjectForm() {
     var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
     //console.log("requireTissueProcessing="+requireTissueProcessing);
     if( !requireTissueProcessing ) {
-        console.log("Error: requireTissueProcessing is NULL!");
+        //console.log("Error: requireTissueProcessing is NULL!");
         //var msg = "Please upload a completed human tissue form";
         var msg = "Please answer the required question: 'Will this project require tissue procurement/processing?'";
         $("#projectError").show();
@@ -292,7 +292,7 @@ function transresValidateProjectForm() {
     var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
     //console.log("requireArchivalProcessing="+requireArchivalProcessing);
     if( !requireArchivalProcessing ) {
-        console.log("Error: requireArchivalProcessing is NULL!");
+        //console.log("Error: requireArchivalProcessing is NULL!");
         //var msg = "Please upload a completed human tissue form";
         var msg = "Please answer the required question: 'Will this project require archival specimens?'";
         $("#projectError").show();

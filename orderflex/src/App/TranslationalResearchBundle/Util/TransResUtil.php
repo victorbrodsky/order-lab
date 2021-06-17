@@ -532,9 +532,11 @@ class TransResUtil
             return true;
         }
 
-        //TODO: if user included in the project's reviewer directly
+        //if user included in the project's reviewer directly
         if( $project ) {
-            
+            if( $this->isProjectReviewer($project) ) {
+                return true;
+            }
         }
 
         //check if user is a primary reviewer of this particular project
@@ -579,6 +581,7 @@ class TransResUtil
             return true;
         }
         if( $this->isReviewsReviewer($user,$project->getAdminReviews()) ) {
+            //TODO: probably need to add the check if admin is funded/non-funded
             return true;
         }
         if( $this->isReviewsReviewer($user,$project->getCommitteeReviews()) ) {
@@ -619,6 +622,13 @@ class TransResUtil
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
         ) {
             return true;
+        }
+
+        //if user included in the project's reviewer directly
+        if( $project ) {
+            if( $this->isProjectReviewer($project) ) {
+                return true;
+            }
         }
 
         return false;
@@ -2221,23 +2231,6 @@ class TransResUtil
             $newAdminReviews = array();
             //$funded = $project->getFunded();
             foreach($reviews as $adminReview) {
-//                $reviewProjectType = $adminReview->getReviewProjectType();
-//
-//                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
-//                    $newAdminReviews[] = $adminReview;
-//                    continue;
-//                }
-//
-//                if( $funded ) {
-//                    if( $reviewProjectType == 'funded' ) {
-//                        $newAdminReviews[] = $adminReview;
-//                    }
-//                } else {
-//                    if( $reviewProjectType == 'non-funded' ) {
-//                        $newAdminReviews[] = $adminReview;
-//                    }
-//                }
-
                 if( $project->isAdminReviewerByType($adminReview) ) {
                     $newAdminReviews[] = $adminReview;
                 }

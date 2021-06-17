@@ -315,8 +315,9 @@ class WorkflowController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        echo $review->getId().": transitionName=".$transitionName."<br>";
-        exit();
+        //testing review
+        //echo $review->getId().": transitionName=".$transitionName."<br>";
+        //exit();
 
         $transresUtil = $this->container->get('transres_util');
 
