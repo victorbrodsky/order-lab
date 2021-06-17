@@ -532,6 +532,11 @@ class TransResUtil
             return true;
         }
 
+        //TODO: if user included in the project's reviewer directly
+        if( $project ) {
+            
+        }
+
         //check if user is a primary reviewer of this particular project
         if( $project ) {
             $user = $this->secTokenStorage->getToken()->getUser();

@@ -226,7 +226,7 @@
         transresUpdateProjectPriceList();
 
         transresUpdateApprovedProjectBudget();
-        //transresUpdateNoBudgetLimit();
+        transresUpdateNoBudgetLimit();
     }
 
 
@@ -379,31 +379,27 @@
 
         var url = Routing.generate('translationalresearch_update_project_approvedprojectbudget');
 
-        if(1) {
-            $.ajax({
-                url: url,
-                timeout: _ajaxTimeout,
-                //type: "GET",
-                type: "POST",
-                data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
-                //dataType: 'json',
-                //async: asyncflag
-                async: false
-            }).success(function (response) {
-                //console.log(response);
-                if(1) {
-                    if (response != "NotOK") {
-                        $(".transres-alert").find(".alert").html(response);
-                        $(".transres-alert").show();
-                        $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
-                    }
-                }
-            }).done(function () {
-                //lbtn.stop();
-            }).error(function (jqXHR, textStatus, errorThrown) {
-                console.log('Error : ' + errorThrown);
-            });
-        }
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function (response) {
+            //console.log(response);
+            if (response != "NotOK") {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
+            }
+        }).done(function () {
+            //lbtn.stop();
+        }).error(function (jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
 
         return false;
     }
