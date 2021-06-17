@@ -135,8 +135,15 @@ function regularCombobox(holder) {
     });
 }
 function specificRegularCombobox( comboboxEl ) {
+    //return; //testing
     console.log('comboboxEl:');
     console.log(comboboxEl);
+
+    if( comboboxEl && comboboxEl.length ) {
+        //ok
+    } else {
+        return;
+    }
 
     var comboboxWidth = combobox_width;
     if( comboboxEl.hasClass('combobox-no-width') ) {

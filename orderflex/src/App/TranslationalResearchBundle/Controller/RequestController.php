@@ -2774,21 +2774,25 @@ class RequestController extends OrderAbstractController
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
+        $res = "NotOK";
+
         if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
             //ok
         } else {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            $response = new Response($res);
+            return $response;
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            $response = new Response($res);
+            return $response;
         }
-
-        $res = "NotOK";
 
         if( $project ) {
             $approvedProjectBudget = trim($request->get('approvedProjectBudget'));

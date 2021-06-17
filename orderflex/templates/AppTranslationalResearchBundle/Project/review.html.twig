@@ -105,6 +105,12 @@
 
 {#{% endblock %}#}
 
+{#{% block headeradditionaljs %}#}
+    {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-2.0.0.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
+{#{% endblock %}#}
+
 {% block additionaljs %}
 
     {#{% javascripts#}
@@ -125,6 +131,8 @@
 
     $(document).ready(function() {
 
+        //testing: specificRegularCombobox( $(".transres-project-priceList") );
+
         //transres-review-submit
         $('.transres-review-submit').click(function(event) {
             //console.log("btn click:");
@@ -136,7 +144,7 @@
             event.stopPropagation();
             window.onbeforeunload = null;
 
-            var reviewHolder = $(this).closest('.transres-review-holder');
+//            var reviewHolder = $(this).closest('.transres-review-holder');
 
 //            //click all transres-update-project-specific-btn buttons
 //            reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
@@ -216,8 +224,9 @@
 
         transresUpdateIrbExpDate();
         transresUpdateProjectPriceList();
+
         transresUpdateApprovedProjectBudget();
-        transresUpdateNoBudgetLimit();
+        //transresUpdateNoBudgetLimit();
     }
 
 
@@ -289,14 +298,16 @@
 
         var priceListEl = $('#transres_project_pricelist');
 
-        if( priceListEl && priceListEl.length > 0 ) {
+        if( priceListEl && priceListEl.length ) {
             //exists
         } else {
             //doesn't exist
             return false;
         }
 
-        if( $(".transres-project-priceList").length == 0 ) {
+        if( $(".transres-project-priceList").length ) {
+            //ok
+        } else {
             //price list is hidden for this user
             return false;
         }
@@ -340,6 +351,8 @@
     }
 
     function transresUpdateApprovedProjectBudget() {
+        //return; //testing
+
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -352,6 +365,13 @@
             return false;
         }
 
+        if( $(".transres-project-approvedProjectBudget").length ) {
+            //ok
+        } else {
+            //price list is hidden for this user
+            return false;
+        }
+
         var approvedProjectBudget = approvedProjectBudgetEl.val();
 
         //if( priceListId ) {
@@ -359,34 +379,39 @@
 
         var url = Routing.generate('translationalresearch_update_project_approvedprojectbudget');
 
-        $.ajax({
-            url: url,
-            timeout: _ajaxTimeout,
-            //type: "GET",
-            type: "POST",
-            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget },
-            //dataType: 'json',
-            //async: asyncflag
-            async: false
-        }).success(function(response) {
-            //console.log(response);
-            if( response != "NotOK" ) {
-                $(".transres-alert").find(".alert").html(response);
-                $(".transres-alert").show();
-                $(".transres-project-approvedProjectBudget").val(approvedProjectBudget);
-            }
-        }).done(function() {
-            //lbtn.stop();
-        }).error(function(jqXHR, textStatus, errorThrown) {
-            console.log('Error : ' + errorThrown);
-        });
-
-        //}
+        if(1) {
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "POST",
+                data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
+                //dataType: 'json',
+                //async: asyncflag
+                async: false
+            }).success(function (response) {
+                //console.log(response);
+                if(1) {
+                    if (response != "NotOK") {
+                        $(".transres-alert").find(".alert").html(response);
+                        $(".transres-alert").show();
+                        $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
+                    }
+                }
+            }).done(function () {
+                //lbtn.stop();
+            }).error(function (jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+        }
 
         return false;
     }
 
     function transresUpdateNoBudgetLimit() {
+
+        //return; //testing
+
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -396,6 +421,13 @@
             //exists
         } else {
             //doesn't exist
+            return false;
+        }
+
+        if( $(".transres-project-noBudgetLimit").length ) {
+            //ok
+        } else {
+            //price list is hidden for this user
             return false;
         }
 

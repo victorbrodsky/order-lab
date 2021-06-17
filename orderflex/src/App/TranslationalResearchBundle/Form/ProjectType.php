@@ -417,16 +417,6 @@ class ProjectType extends AbstractType
             'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-//                    ->andWhere("list.id = 21 OR list.id = 22 OR list.id = 23")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName","ASC");
-//            },
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 

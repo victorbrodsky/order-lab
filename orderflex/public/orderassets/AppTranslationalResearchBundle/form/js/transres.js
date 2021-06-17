@@ -29,6 +29,7 @@ $(document).ready(function() {
 
     transresProjectFundedListener();
 
+    console.log("cycle="+cycle);
     if( cycle == "new" || cycle == "edit") {
         transresNewUserListener();
 
@@ -58,21 +59,9 @@ $(document).ready(function() {
 
     getComboboxGeneric(null,'transresprojecttypes',_transresprojecttypes,false);
 
-    //console.log("get _transresitemcodes");
-    //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false);
-
-    // $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
-    //     //return; //testing
-    //     ev.preventDefault(); // to stop the form from submitting
-    //     /* Validations go here */
-    //     transresValidateProjectForm(this);
-    // });
-
     transresIrbExemptListener('transres-project-exemptIrbApproval');
 
     transresIrbExemptListener('transres-project-exemptIACUCApproval');
-
-    //fieldInputMask();
 
     transresShowHideProjectDocument();
     

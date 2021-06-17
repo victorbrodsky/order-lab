@@ -154,7 +154,7 @@ class UserSecurityUtil {
         //showToRoles
         $hideRole = false;
         $showToRoles = $preferences->getShowToRoles();
-        if( count($showToRoles) > 0 ) {
+        if( $showToRoles && count($showToRoles) > 0 ) {
             $hideRole = true;
             //check if current user has one of the role
             foreach( $showToRoles as $role ) {

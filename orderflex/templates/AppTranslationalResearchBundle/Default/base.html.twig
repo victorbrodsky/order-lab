@@ -90,11 +90,6 @@
 
 {% block headeradditionaljs %}
     {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
-    {#{% javascripts#}
-        {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
-    {#%}#}
-        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
 {% endblock %}
 
