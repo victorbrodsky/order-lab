@@ -40,6 +40,7 @@ use App\TranslationalResearchBundle\Entity\ProjectTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
+use App\TranslationalResearchBundle\Entity\WorkQueueList;
 use App\UserdirectoryBundle\Entity\AdditionalCommunicationList;
 use App\UserdirectoryBundle\Entity\AuthorshipRoles;
 use App\UserdirectoryBundle\Entity\BloodProductTransfusedList;
@@ -990,6 +991,7 @@ class AdminController extends OrderAbstractController
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
+        $count_WorkQueueList = $this->generateWorkQueueList();
         $logger->notice("Finished generateBusinessPurposes");
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
@@ -1115,6 +1117,7 @@ class AdminController extends OrderAbstractController
             'populateClassUrl='.$count_populateClassUrl.', '.
             //'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
             'businessPurposesList='.$count_BusinessPurposesList.', '.
+            'WorkQueueList='.$count_WorkQueueList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -7453,7 +7456,7 @@ class AdminController extends OrderAbstractController
             "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
             "transrespricetypes" => array('PriceTypeList','transrespricetypes-list','Translational Research Price Type List'),
-
+            "workqueuetypes" => array('WorkQueueList','workqueuetypes-list','Work Queue Type List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -9700,6 +9703,35 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new BusinessPurposeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateWorkQueueList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "CTP Lab",
+            "MISI Lab",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new WorkQueueList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);

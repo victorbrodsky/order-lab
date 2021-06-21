@@ -158,6 +158,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list", methods={"GET"})
      * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes-list", methods={"GET"})
+     * @Route("/list/translational-work-queue-types/", name="workqueuetypes-list", methods={"GET"})
      * @Route("/list/antibodies/", name="antibodies-list", methods={"GET"})
      * @Route("/list/custom000/", name="custom000-list", methods={"GET"})
      * @Route("/list/custom001/", name="custom001-list", methods={"GET"})
@@ -767,6 +768,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create", methods={"POST"})
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create", methods={"POST"})
      * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes_create", methods={"POST"})
+     * @Route("/list/translational-work-queue-types/", name="workqueuetypes_create", methods={"POST"})
      * @Route("/list/antibodies/", name="antibodies_create", methods={"POST"})
      * @Route("/list/custom000/", name="custom000_create", methods={"POST"})
      * @Route("/list/custom001/", name="custom001_create", methods={"POST"})
@@ -1105,6 +1107,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new", methods={"GET"})
      * @Route("/list/translational-business-purposes/new", name="transresbusinesspurposes_new", methods={"GET"})
+     * @Route("/list/translational-work-queue-types/new", name="workqueuetypes_new", methods={"GET"})
      * @Route("/list/antibodies/new", name="antibodies_new", methods={"GET"}, methods={"GET"})
      * @Route("/list/custom000/new", name="custom000_new", methods={"GET"})
      * @Route("/list/custom001/new", name="custom001_new", methods={"GET"})
@@ -1390,6 +1393,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show", methods={"GET"})
      * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_show", methods={"GET"})
+     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_show", methods={"GET"})
      * @Route("/list/antibodies/{id}", name="antibodies_show", methods={"GET"})
      * @Route("/list/custom000/{id}", name="custom000_show", methods={"GET"})
      * @Route("/list/custom001/{id}", name="custom001_show", methods={"GET"})
@@ -1668,6 +1672,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit", methods={"GET"})
      * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit", methods={"GET"})
      * @Route("/list/translational-business-purposes/{id}/edit", name="transresbusinesspurposes_edit", methods={"GET"})
+     * @Route("/list/translational-work-queue-types/{id}/edit", name="workqueuetypes_edit", methods={"GET"})
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit", methods={"GET"})
      * @Route("/list/custom000/{id}/edit", name="custom000_edit", methods={"GET"})
      * @Route("/list/custom001/{id}/edit", name="custom001_edit", methods={"GET"})
@@ -1997,6 +2002,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update", methods={"PUT"})
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update", methods={"PUT"})
      * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_update", methods={"PUT"})
+     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_update", methods={"PUT"})
      * @Route("/list/antibodies/{id}", name="antibodies_update", methods={"PUT"})
      * @Route("/list/custom000/{id}", name="custom000_update", methods={"PUT"})
      * @Route("/list/custom001/{id}", name="custom001_update", methods={"PUT"})
@@ -3096,6 +3102,13 @@ class ListController extends OrderAbstractController
                 $displayName = "Antibody List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+
+            case "workqueuetypes":
+                $className = "WorkQueueList";
+                $displayName = "Work Queue Type List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+
             case "visastatus":
                 $className = "VisaStatus";
                 $displayName = "Visa Status";
@@ -3690,6 +3703,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete", methods={"DELETE"})
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete", methods={"DELETE"})
      * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_delete", methods={"DELETE"})
+     * @Route("/list/translational-work-queue-types/{id}", name="workqueuetypes_delete", methods={"DELETE"})
      * @Route("/list/antibodies/{id}", name="antibodies_delete", methods={"DELETE"})
      * @Route("/list/custom000/{id}", name="custom000_delete", methods={"DELETE"})
      * @Route("/list/custom001/{id}", name="custom001_delete", methods={"DELETE"})

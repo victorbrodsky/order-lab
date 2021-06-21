@@ -199,6 +199,9 @@ class UserSecurityUtil {
             array('user' => $user, 'siteName' => $sitename)
         );
 
+        //echo "accessRequest=".$accessRequest."<br>";
+        //exit('111');
+
         return $accessRequest;
     }
 

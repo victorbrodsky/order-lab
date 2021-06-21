@@ -1540,6 +1540,8 @@ class AccessRequestController extends OrderAbstractController
     public function logAuthorizationChanges($request,$sitename,$entity,$originalInsts,$originalRoles) {
 
         $removedInfo = null;
+        $removedCollections = array();
+
         if( $entity->getPerSiteSettings() ) {
             $removedInfo = $this->recordToEvenLogDiffCollection($originalInsts, $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope(), "PermittedInstitutionalPHIScope");
         }

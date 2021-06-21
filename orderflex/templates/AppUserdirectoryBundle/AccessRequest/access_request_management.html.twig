@@ -40,7 +40,7 @@
 
 {#This form is used for access request and authorization management#}
 
-{% if accreq is defined %}
+{% if accreq is defined and accreq %}
     {% if accreq.status == 0 %}
         {#STATUS_ACTIVE#}
         {% set titleStr = "This user has an active request to access the "~sitenamefull~" site. You can update the role and other details below." %}
@@ -78,7 +78,7 @@
 
     <hr>
 
-    {% if accreq is defined %}
+    {% if accreq is defined and accreq %}
 
         {{ formmacros.simplefield( "Request ID:", accreq.id, "", "disabled" ) }}
 

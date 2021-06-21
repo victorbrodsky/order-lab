@@ -92,6 +92,21 @@ class Prices
 //     */
 //    private $orderinlist;
 
+//    /**
+//     * Work Queue (single or multiple? single)
+//     *
+//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
+//     * @ORM\JoinTable(name="transres_prices_workqueue")
+//     */
+//    private $workQueue;
+//    /**
+//     * Work Queue (one per price section)
+//     *
+//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
+//     * @ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $workQueue;
+
 
     public function __construct() {
         
