@@ -991,7 +991,7 @@ class AdminController extends OrderAbstractController
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
-        $count_WorkQueueList = $this->generateWorkQueueList();
+        $count_WorkQueueList = $this->generateWorkQueueList(); //after generateTransResProjectSpecialty()s
         $logger->notice("Finished generateBusinessPurposes");
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
@@ -9448,7 +9448,7 @@ class AdminController extends OrderAbstractController
                 }
 
                 //add not existing _TRANSRES_ roles
-                $userSecUtil->addTransresRoles($listEntity);
+                $userSecUtil->addTransresRolesBySpecialty($listEntity);
 
                 continue;
             }
@@ -9469,11 +9469,48 @@ class AdminController extends OrderAbstractController
 
 
             //add not existing _TRANSRES_ roles
-            $userSecUtil->addTransresRoles($listEntity);
+            $userSecUtil->addTransresRolesBySpecialty($listEntity);
         }
 
         if( $flush ) {
             $em->flush();
+        }
+
+        return round($count/10);
+    }
+
+    public function generateWorkQueueList() {
+        $userSecUtil = $this->get('user_security_utility');
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "CTP Lab" => array("QUEUECTP"),
+            "MISI Lab" => array("QUEUEMISI"),
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
+            if( $listEntity ) {
+
+                //add not existing _TRANSRES_ roles
+                $userSecUtil->addTransresRolesByWorkQueue($listEntity);
+
+                continue;
+            }
+
+            $listEntity = new WorkQueueList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //add not existing ROLE_TRANSRES_TECHNICIAN_, ROLE_TRANSRES_ADMIN_ roles
+            $userSecUtil->addTransresRolesByWorkQueue($listEntity);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
         }
 
         return round($count/10);
@@ -9703,35 +9740,6 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new BusinessPurposeList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
-        }
-
-        return round($count/10);
-    }
-
-    public function generateWorkQueueList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-
-        $types = array(
-            "CTP Lab",
-            "MISI Lab",
-        );
-
-        $count = 10;
-        foreach( $types as $name ) {
-
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
-            if( $listEntity ) {
-                continue;
-            }
-
-            $listEntity = new WorkQueueList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);

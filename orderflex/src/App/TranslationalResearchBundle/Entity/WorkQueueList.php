@@ -40,5 +40,30 @@ class WorkQueueList extends ListAbstract
      **/
     protected $original;
 
+    //Use abbreviation for Role postfix:
+    // "CTP Lab" => "QUEUECTP"
+    // "MISI Lab" => "QUEUEMISI"
+
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    protected $rolename;
+
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getRolename()
+//    {
+//        return $this->rolename;
+//    }
+//
+//    /**
+//     * @param mixed $rolename
+//     */
+//    public function setRolename($rolename)
+//    {
+//        $this->rolename = $rolename;
+//    }
 
 }

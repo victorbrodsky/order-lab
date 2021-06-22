@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\WorkQueueList;
 use App\UserdirectoryBundle\Controller\ListController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -97,18 +98,21 @@ class TransResListController extends ListController
 
     public function postProcessList($entity) {
         
-        //exit('transres postProcessList');
+        //exit('transres post ProcessList');
+
+        $userSecUtil = $this->get('user_security_utility');
 
         if( $entity instanceof SpecialtyList ) {
-            //OK
-        } else {
-            return NULL;
+            //Use this only for SpecialtyList
+            $userSecUtil->addTransresRolesBySpecialty($entity);
         }
 
-        //Use this only for SpecialtyList
-        $userSecUtil = $this->get('user_security_utility');
-        $userSecUtil->addTransresRoles($entity);
-        //exit('transres postProcessList');
+        if( $entity instanceof WorkQueueList ) {
+            //Use this only for SpecialtyList
+            $userSecUtil->addTransresRolesByWorkQueue($entity);
+        }
+
+        //exit('transres post ProcessList');
 
         return NULL;
     }

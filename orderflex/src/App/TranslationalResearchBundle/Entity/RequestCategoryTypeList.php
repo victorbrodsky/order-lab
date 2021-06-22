@@ -119,20 +119,6 @@ class RequestCategoryTypeList extends ListAbstract
      */
     private $projectSpecialties;
 
-//    /**
-//     * Default Work Queue (single or multiple? single)
-//     *
-//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
-//     * @ORM\JoinTable(name="transres_requestcategory_workqueue")
-//     */
-//    private $workQueue;
-//    /**
-//     * Default Work Queue (one per price section)
-//     *
-//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
-//     * @ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $workQueue;
     /**
      * Default Work Queue (one per price section)
      *
@@ -146,6 +132,7 @@ class RequestCategoryTypeList extends ListAbstract
     private $workQueues;
 
 
+    
     public function __construct($author=null) {
 
         parent::__construct($author);

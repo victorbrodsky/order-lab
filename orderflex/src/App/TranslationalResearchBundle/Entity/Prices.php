@@ -85,27 +85,6 @@ class Prices
      */
     private $priceList;
 
-
-//    /**
-//     * Indicates the order in the list
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $orderinlist;
-
-//    /**
-//     * Work Queue (single or multiple? single)
-//     *
-//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
-//     * @ORM\JoinTable(name="transres_prices_workqueue")
-//     */
-//    private $workQueue;
-//    /**
-//     * Work Queue (one per price section)
-//     *
-//     * @ORM\ManyToOne(targetEntity="WorkQueueList")
-//     * @ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", nullable=true)
-//     */
-//    private $workQueue;
     /**
      * Work Queue (one per price section)
      *
@@ -120,7 +99,7 @@ class Prices
 
 
 
-    
+
     public function __construct() {
         $this->workQueues = new ArrayCollection();
     }

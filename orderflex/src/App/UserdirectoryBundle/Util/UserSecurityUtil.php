@@ -2905,7 +2905,7 @@ class UserSecurityUtil {
     //Run when specialty is added via Site Setting's '2) Populate All Lists with Default Values (Part A)'
     //Run when add specialty via Platform List Manager's (directory/admin/list-manager/?filter%5Bsearch%5D=specialty):
     //'Translational Research Project Specialty List, class: [SpecialtyList]' => 'Create a new entry'
-    public function addTransresRoles($specialty) {
+    public function addTransresRolesBySpecialty($specialty) {
         if( !$specialty ) {
             return NULL;
         }
@@ -2915,7 +2915,7 @@ class UserSecurityUtil {
         $rolename = $specialty->getRolename(); //MISI
         if( !$rolename ) {
             throw new \Exception('Rolename in the Project Specialty is empty');
-            exit('Rolename in the Project Specialty is empty');
+            //exit('Rolename in the Project Specialty is empty');
         }
 
         //9 roles (i.e. 'ROLE_TRANSRES_TECHNICIAN_MISI')
@@ -3039,6 +3039,107 @@ class UserSecurityUtil {
         }//foreach
 
         //exit("EOF addTransresRoles");
+    }
+    //Run when $workQueue is added via Site Setting's '2) Populate All Lists with Default Values (Part A)'
+    //Run when add $workQueue via Platform List Manager's (directory/admin/list-manager/?filter%5Bsearch%5D=workqueue):
+    //'Work Queue Type List, class: [WorkQueueList]' => 'Create a new entry'
+    public function addTransresRolesByWorkQueue($workQueue) {
+
+        exit("in progress: addTransresRolesByWorkQueue");
+
+        //TODO: create function addTransresRolesBySpecialtyWorkQueue($specialty,$workQueue)
+
+        if( !$workQueue ) {
+            return NULL;
+        }
+
+        $user = $this->secToken->getToken()->getUser();
+
+        $rolename = $workQueue->getAbbreviation(); //QUEUECTP QUEUEMISI
+        if( !$rolename ) {
+            throw new \Exception('Abbreviation in the Work Queue is empty');
+            //exit('Abbreviation in the Work Queue is empty');
+        }
+
+        //2 roles (i.e. 'ROLE_TRANSRES_TECHNICIAN_MISI, ROLE_TRANSRES_ADMIN_MISI ')
+        $transresRoleBases = array(
+            'ROLE_TRANSRES_TECHNICIAN'              => array(
+                'Translational Research [[ROLENAME]] Technician',
+                "View and Edit a Translational Research [[ROLENAME]] Request",
+                50,
+            ),
+
+            'ROLE_TRANSRES_ADMIN'                   => array(
+                'Translational Research [[ROLENAME]] Admin',
+                'Full Access for Translational Research [[ROLENAME]] site',
+                90
+            )
+        );
+
+        $sitenameAbbreviation = "translationalresearch"; //"translational-research";
+
+        foreach($transresRoleBases as $transresRoleBase=>$roleInfoArr) {
+
+            $role = $transresRoleBase."_".$rolename; //ROLE_TRANSRES_TECHNICIAN_MISI
+
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new Roles();
+
+            //$entity, $count, $user, $name=null
+            $count = null;
+            $entity = $this->setDefaultList( $entity, $count, $user, $role );
+            $entity->setType('default');
+
+            $alias = $roleInfoArr[0];
+            $description = $roleInfoArr[1];
+            $level = $roleInfoArr[2];
+
+            if( $alias ) {
+                $alias = str_replace('[[ROLENAME]]',$rolename,$alias);
+            }
+            if( $description ) {
+                $description = str_replace('[[ROLENAME]]',$rolename,$description);
+            }
+
+            $entity->setName( $role );
+            $entity->setAlias( trim($alias) );
+            $entity->setDescription( trim($description) );
+            $entity->setLevel($level);
+
+            //set sitename
+            if( $sitenameAbbreviation ) {
+//                //the element exists in the array. write your code here.
+//                //i.e. $aliasDescription[3] === 'translational-research'
+//                //$input = array("a", "b", "c", "d", "e");
+//                //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+//                $roleParts = explode('_', $rolename); //ROLE TRANSRES IRB ...
+//                $rolePartSecondArr = array_slice($roleParts, 1, 1);
+//                $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
+//                //exit("rolePartSecond=".$rolePartSecond);
+//                $this->addSingleSite($entity,$rolePartSecond,$sitename);
+
+                $this->addSingleSiteToEntity($entity,$sitenameAbbreviation);
+            }
+
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
+
+            //Flash
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+        }//foreach
+
+        //exit("EOF addTransresRolesByWorkQueue");
     }
     public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
         $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);
