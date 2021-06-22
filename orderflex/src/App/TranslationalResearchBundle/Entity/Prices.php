@@ -106,10 +106,23 @@ class Prices
 //     * @ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $workQueue;
+    /**
+     * Work Queue (one per price section)
+     *
+     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\WorkQueueList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_price_workqueue",
+     *      joinColumns={@ORM\JoinColumn(name="price_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $workQueues;
 
 
+
+    
     public function __construct() {
-        
+        $this->workQueues = new ArrayCollection();
     }
 
 
@@ -198,6 +211,27 @@ class Prices
     public function setInitialQuantity($initialQuantity)
     {
         $this->initialQuantity = $initialQuantity;
+    }
+
+    public function getWorkQueues()
+    {
+        return $this->workQueues;
+    }
+    public function addWorkQueue( $item )
+    {
+        if( !$this->workQueues->contains($item) ) {
+            $this->workQueues->add($item);
+        }
+
+        return $this;
+    }
+    public function removeWorkQueue($item)
+    {
+        if( $this->workQueues->contains($item) ) {
+            $this->workQueues->removeElement($item);
+        }
+
+        return $this;
     }
 
     /**

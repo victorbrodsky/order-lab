@@ -48,6 +48,7 @@
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Initial Quantity', 'list.initialQuantity') }}</th>
+                {#<th>{{ knp_pagination_sortable(fees, 'Work Queues', 'list.workQueues') }}</th>#}
 
                 {% if showSpecificFee %}
                     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
@@ -106,6 +107,14 @@
                         {{ fee.initialQuantity }}
                     {% endif %}
                 </td>
+
+                {#<td>#}
+                    {#{% if fee.workQueues %}#}
+                        {#{% for workQueue in fee.workQueues %}#}
+                            {#{{ workQueue }}<br>#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 {% if showSpecificFee %}
                     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}

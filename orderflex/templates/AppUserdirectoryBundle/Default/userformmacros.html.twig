@@ -1282,6 +1282,10 @@
         {{ formmacros.field(formfield.feeAdditionalItem) }}
         {{ formmacros.field(formfield.initialQuantity) }}
 
+        {% if formfield.workQueues is defined %}
+            {{ formmacros.field(formfield.workQueues) }}
+        {% endif %}
+
     </div>
 {% endmacro %}
 

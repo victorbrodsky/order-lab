@@ -382,6 +382,11 @@ class ListController extends OrderAbstractController
             $dql->addGroupBy('fellowshipSubspecialty.name');
         }
 
+        if( method_exists($entityClass,'getWorkQueues') ) {
+            $dql->leftJoin("ent.workQueues", "workQueues");
+            //$dql->addGroupBy('workQueues');
+        }
+
         if( 0 && method_exists($entityClass,'getProjectSpecialties') ) {
             //exit('123');
             $useWalker = true;

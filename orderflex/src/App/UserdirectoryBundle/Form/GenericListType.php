@@ -784,6 +784,23 @@ class GenericListType extends AbstractType
                         ));
                 },
             ));
+
+            $builder->add( 'workQueues', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+                'label'=>'Work Queues:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
         }
 
         if( strtolower($this->mapper['className']) == strtolower("SiteList") ) {

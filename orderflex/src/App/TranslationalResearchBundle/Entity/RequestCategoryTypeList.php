@@ -133,6 +133,17 @@ class RequestCategoryTypeList extends ListAbstract
 //     * @ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $workQueue;
+    /**
+     * Default Work Queue (one per price section)
+     *
+     * @ORM\ManyToMany(targetEntity="App\TranslationalResearchBundle\Entity\WorkQueueList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_requestcategory_workqueue",
+     *      joinColumns={@ORM\JoinColumn(name="requestcategory_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="workqueue_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $workQueues;
 
 
     public function __construct($author=null) {
@@ -141,6 +152,7 @@ class RequestCategoryTypeList extends ListAbstract
 
         $this->projectSpecialties = new ArrayCollection();
         $this->prices = new ArrayCollection();
+        $this->workQueues = new ArrayCollection();
     }
 
 
@@ -282,6 +294,27 @@ class RequestCategoryTypeList extends ListAbstract
     public function setProductId($productId)
     {
         $this->productId = $productId;
+    }
+
+    public function getWorkQueues()
+    {
+        return $this->workQueues;
+    }
+    public function addWorkQueue( $item )
+    {
+        if( !$this->workQueues->contains($item) ) {
+            $this->workQueues->add($item);
+        }
+
+        return $this;
+    }
+    public function removeWorkQueue($item)
+    {
+        if( $this->workQueues->contains($item) ) {
+            $this->workQueues->removeElement($item);
+        }
+
+        return $this;
     }
 
     /**
