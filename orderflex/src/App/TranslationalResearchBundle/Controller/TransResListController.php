@@ -100,16 +100,18 @@ class TransResListController extends ListController
         
         //exit('transres post ProcessList');
 
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->get('user_security_utility');
+        $transresUtil = $this->get('transres_util');
 
         if( $entity instanceof SpecialtyList ) {
             //Use this only for SpecialtyList
-            $userSecUtil->addTransresRolesBySpecialty($entity);
+            $transresUtil->addTransresRolesBySpecialty($entity);
         }
 
-        if( $entity instanceof WorkQueueList ) {
-            //Use this only for SpecialtyList
-            $userSecUtil->addTransresRolesByWorkQueue($entity);
+        if( $entity instanceof WorkQueueList || $entity instanceof SpecialtyList ) {
+            //Use this only for SpecialtyList and WorkQueueList
+            //scan and add Work Queue roles
+            $transresUtil->addTransresRolesBySpecialtyWorkQueue();
         }
 
         //exit('transres post ProcessList');

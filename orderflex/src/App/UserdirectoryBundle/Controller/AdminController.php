@@ -9398,7 +9398,8 @@ class AdminController extends OrderAbstractController
     //Run after generateRoles
     public function generateTransResProjectSpecialty() {
 
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->get('user_security_utility');
+        $transresUtil = $this->get('transres_util');
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -9448,7 +9449,7 @@ class AdminController extends OrderAbstractController
                 }
 
                 //add not existing _TRANSRES_ roles
-                $userSecUtil->addTransresRolesBySpecialty($listEntity);
+                $transresUtil->addTransresRolesBySpecialty($listEntity);
 
                 continue;
             }
@@ -9469,18 +9470,22 @@ class AdminController extends OrderAbstractController
 
 
             //add not existing _TRANSRES_ roles
-            $userSecUtil->addTransresRolesBySpecialty($listEntity);
+            $transresUtil->addTransresRolesBySpecialty($listEntity);
         }
 
         if( $flush ) {
             $em->flush();
         }
 
+        //scan and add Work Queue roles
+        //$transresUtil->addTransresRolesBySpecialtyWorkQueue();
+
         return round($count/10);
     }
 
     public function generateWorkQueueList() {
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->get('user_security_utility');
+        $transresUtil = $this->get('transres_util');
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -9496,7 +9501,7 @@ class AdminController extends OrderAbstractController
             if( $listEntity ) {
 
                 //add not existing _TRANSRES_ roles
-                $userSecUtil->addTransresRolesByWorkQueue($listEntity);
+                //$userSecUtil->addTransresRolesByWorkQueue($listEntity);
 
                 continue;
             }
@@ -9505,13 +9510,16 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //add not existing ROLE_TRANSRES_TECHNICIAN_, ROLE_TRANSRES_ADMIN_ roles
-            $userSecUtil->addTransresRolesByWorkQueue($listEntity);
+            //$userSecUtil->addTransresRolesByWorkQueue($listEntity);
 
             $em->persist($listEntity);
             $em->flush();
 
             $count = $count + 10;
         }
+
+        //scan and add Work Queue roles
+        $transresUtil->addTransresRolesBySpecialtyWorkQueue();
 
         return round($count/10);
     }

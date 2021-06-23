@@ -7131,4 +7131,249 @@ class TransResUtil
         return $orderableSpcialties;
     }
 
+
+    //Run when specialty is added via Site Setting's '2) Populate All Lists with Default Values (Part A)'
+    //Run when add specialty via Platform List Manager's (directory/admin/list-manager/?filter%5Bsearch%5D=specialty):
+    //'Translational Research Project Specialty List, class: [SpecialtyList]' => 'Create a new entry'
+    public function addTransresRolesBySpecialty($specialty) {
+        if( !$specialty ) {
+            return NULL;
+        }
+
+        $userSecUtil = $this->get('user_security_utility');
+
+        //$user = $this->secToken->getToken()->getUser();
+
+        $rolename = $specialty->getRolename(); //MISI
+        if( !$rolename ) {
+            throw new \Exception('Rolename in the Project Specialty is empty');
+            //exit('Rolename in the Project Specialty is empty');
+        }
+
+        //9 roles (i.e. 'ROLE_TRANSRES_TECHNICIAN_MISI')
+        $transresRoleBases = array(
+            'ROLE_TRANSRES_TECHNICIAN'              => array(
+                'Translational Research [[ROLENAME]] Technician',
+                "View and Edit a Translational Research [[ROLENAME]] Request",
+                50,
+            ),
+
+            'ROLE_TRANSRES_REQUESTER'               => array(
+                'Translational Research [[ROLENAME]] Project Requester',
+                "Submit, View and Edit a Translational Research [[ROLENAME]] Project",
+                30,
+            ),
+
+            'ROLE_TRANSRES_BILLING_ADMIN'           => array(
+                'Translational Research [[ROLENAME]] Billing Administrator',
+                "Create, View, Edit and Send an Invoice for Translational Research [[ROLENAME]] Project",
+                50,
+            ),
+
+            'ROLE_TRANSRES_EXECUTIVE'               => array(
+                'Translational Research [[ROLENAME]] Executive Committee',
+                'Full View Access for [[ROLENAME]] Translational Research site',
+                70
+            ),
+
+            'ROLE_TRANSRES_ADMIN'                   => array(
+                'Translational Research [[ROLENAME]] Admin',
+                'Full Access for Translational Research [[ROLENAME]] site',
+                90
+            ),
+
+            'ROLE_TRANSRES_IRB_REVIEWER'            => array(
+                "Translational Research [[ROLENAME]] IRB Reviewer",
+                "[[ROLENAME]] IRB Review",
+                50,
+            ),
+
+            'ROLE_TRANSRES_COMMITTEE_REVIEWER'      => array(
+                "Translational Research [[ROLENAME]] Committee Reviewer",
+                "[[ROLENAME]] Committee Review",
+                50,
+            ),
+
+            'ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER' => array(
+                "Translational Research [[ROLENAME]] Primary Committee Reviewer",
+                "[[ROLENAME]] Committee Review",
+                50
+            ),
+
+            'ROLE_TRANSRES_PRIMARY_REVIEWER' => array(
+                "Translational Research [[ROLENAME]] Final Reviewer",
+                "Review for all states for [[ROLENAME]]",
+                80
+            ),
+        );
+
+        $sitenameAbbreviation = "translationalresearch"; //"translational-research";
+
+        foreach($transresRoleBases as $transresRoleBase=>$roleInfoArr) {
+
+            $role = $transresRoleBase."_".$rolename; //ROLE_TRANSRES_TECHNICIAN_MISI
+
+            $entity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+
+            if( $entity ) {
+                continue;
+            }
+
+//            $entity = new Roles();
+//
+//            //$entity, $count, $user, $name=null
+//            $count = null;
+//            $entity = $this->setDefaultList( $entity, $count, $user, $role );
+//            $entity->setType('default');
+//
+//            $alias = $roleInfoArr[0];
+//            $description = $roleInfoArr[1];
+//            $level = $roleInfoArr[2];
+//
+//            if( $alias ) {
+//                $alias = str_replace('[[ROLENAME]]',$rolename,$alias);
+//            }
+//            if( $description ) {
+//                $description = str_replace('[[ROLENAME]]',$rolename,$description);
+//            }
+//
+//            $entity->setName( $role );
+//            $entity->setAlias( trim($alias) );
+//            $entity->setDescription( trim($description) );
+//            $entity->setLevel($level);
+//
+//            //set sitename
+//            if( $sitenameAbbreviation ) {
+//                $userSecUtil->addSingleSiteToEntity($entity,$sitenameAbbreviation);
+//            }
+
+            $alias = $roleInfoArr[0];
+            $description = $roleInfoArr[1];
+            $level = $roleInfoArr[2];
+
+            if( $alias ) {
+                $alias = str_replace('[[ROLENAME]]',$rolename,$alias);
+            }
+            if( $description ) {
+                $description = str_replace('[[ROLENAME]]',$rolename,$description);
+            }
+
+            $alias = trim($alias);
+            $description = trim($description);
+
+            //$roleName, $sitenameAbbreviation=NULL, $alias=NULL, $description=NULL, $level=NULL
+            $entity = $userSecUtil->createNewRole(
+                $role,
+                $sitenameAbbreviation,
+                $alias,         //"Translational Research AP/CP Technician"
+                $description,   //"View and Edit a Translational Research AP/CP Request"
+                $level
+            );
+
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
+
+            //Flash
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+        }//foreach
+
+        //exit("EOF addTransresRoles");
+    }
+    public function addTransresRolesBySpecialtyWorkQueue() {
+        $rolePartialName = "ROLE_TRANSRES_TECHNICIAN";
+        $this->addTransresSingleRoleBySpecialtyWorkQueue($rolePartialName);
+
+        $rolePartialName = "ROLE_TRANSRES_ADMIN";
+        $this->addTransresSingleRoleBySpecialtyWorkQueue($rolePartialName);
+    }
+    public function addTransresSingleRoleBySpecialtyWorkQueue($rolePartialName) {
+
+        if( !$rolePartialName ) {
+            return NULL;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $sitenameAbbreviation = "translationalresearch";
+
+        //1) find all roles by 'ROLE_TRANSRES_TECHNICIAN'
+        //$sitename, $rolePartialName, $institutionId=null, $statusArr=array()
+        //$rolePartialName = "ROLE_TRANSRES_TECHNICIAN";
+        $trpRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($sitenameAbbreviation,$rolePartialName);
+
+        $workQueues = $this->getWorkQueues();
+        echo "workQueues count=".count($workQueues)."<br><br>";
+
+        foreach($trpRoles as $trpRole) {
+            //echo "<br><br>$trpRole <br>";
+
+            if( strpos($trpRole, 'QUEUE') !== false ) {
+                continue; //skip: already QUEUE role
+            }
+
+            $alias = $trpRole->getAlias();
+            $description = $trpRole->getDescription();
+            $level = $trpRole->getLevel();
+
+            echo "Add QUEUE=$trpRole <br>";
+
+            foreach($workQueues as $workQueue) {
+                $workQueueName = $workQueue->getName();
+                $workQueueAbbreviation = $workQueue->getAbbreviation();
+                $workQueueRoleName = $trpRole . "_" . $workQueueAbbreviation;
+
+                //echo "workQueueRoleName=[$workQueueRoleName] <br>";
+                $workQueueRoleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($workQueueRoleName));
+                if( $workQueueRoleEntity ) {
+                    continue; //skip: already exists
+                }
+
+                //$prefix = ", Work Queue ";
+                //$postfix = "";
+
+                $prefix = " (Work Queue ";
+                $postfix = ")";
+
+                $newAlias = $alias . $prefix . $workQueueName . $postfix;
+                $newDescription = $description . $prefix . $workQueueName . $postfix;
+
+                echo "add workQueueRoleName=[$workQueueRoleName] <br>";
+                echo "add newAlias=[$newAlias] <br>";
+                echo "add newDescription=[$newDescription] <br>";
+                echo "add level=[$level] <br>";
+                //$roleName, $sitenameAbbreviation=NULL, $alias=NULL, $description=NULL, $level=NULL
+                $newRole = $userSecUtil->createNewRole(
+                    $workQueueRoleName,
+                    $sitenameAbbreviation,
+                    $newAlias,         //"Translational Research AP/CP Technician"
+                    $newDescription,   //"View and Edit a Translational Research AP/CP Request"
+                    $level
+                );
+
+                //$this->em->persist($newRole);
+                //$this->em->flush();
+
+                echo "added <br><br>";
+            }
+        }
+
+
+    }
+    public function getWorkQueues() {
+        $workQueues = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        return $workQueues;
+    }
+
 }
