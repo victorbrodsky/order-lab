@@ -1320,24 +1320,6 @@ class Project {
 
 
             foreach($adminReviews as $adminReview) {
-
-//                $reviewProjectType = $adminReview->getReviewProjectType();
-//
-//                if( $reviewProjectType == 'all' || !$reviewProjectType ) {
-//                    $newAdminReviews->add($adminReview);
-//                    continue;
-//                }
-//
-//                if( $funded ) {
-//                    if( $reviewProjectType == 'funded' ) {
-//                        $newAdminReviews->add($adminReview);
-//                    }
-//                } else {
-//                    if( $reviewProjectType == 'non-funded' ) {
-//                        $newAdminReviews->add($adminReview);
-//                    }
-//                }
-
                 if( $this->isAdminReviewerByType($adminReview) ) {
                     $newAdminReviews->add($adminReview);
                 }

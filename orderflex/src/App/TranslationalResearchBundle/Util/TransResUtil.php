@@ -2226,7 +2226,7 @@ class TransResUtil
 
         $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project); //DB array
 
-        //TODO: filter by project funded/non-funded
+        //filter by project funded/non-funded
         if( $state == "admin_review" ) {
             $newAdminReviews = array();
             //$funded = $project->getFunded();
@@ -2498,7 +2498,7 @@ class TransResUtil
         //$strictReviewer = true;
         if( $this->isAdminReviewer($project) ) {
 
-            //TODO: check if funded/non-funded admin reviewer if $review is AdminReview
+            //check if funded/non-funded admin reviewer if $review is AdminReview
             if( $review instanceof AdminReview ) {
                 if( $project->isAdminReviewerByType($review) ) {
                     return true;
@@ -7140,7 +7140,7 @@ class TransResUtil
             return NULL;
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //$user = $this->secToken->getToken()->getUser();
 
@@ -7272,6 +7272,7 @@ class TransResUtil
 
             $this->em->persist($entity);
             $this->em->flush();
+            //break; //testing
 
             $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
 
@@ -7303,12 +7304,21 @@ class TransResUtil
         $sitenameAbbreviation = "translationalresearch";
 
         //1) find all roles by 'ROLE_TRANSRES_TECHNICIAN'
-        //$sitename, $rolePartialName, $institutionId=null, $statusArr=array()
         //$rolePartialName = "ROLE_TRANSRES_TECHNICIAN";
-        $trpRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($sitenameAbbreviation,$rolePartialName);
+        //get only enabled roles
+        $statusArr = array("default","user-added");
+        $trpRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName(
+            $sitenameAbbreviation,  //$sitename
+            $rolePartialName,       //$rolePartialName
+            null,                   //$institutionId
+            $statusArr              //$statusArr
+        );
 
-        $workQueues = $this->getWorkQueues();
-        echo "workQueues count=".count($workQueues)."<br><br>";
+        $workQueues = $this->getWorkQueues(); //get only enabled work queues
+        //echo "workQueues count=".count($workQueues)."<br><br>";
+
+        $testing = true;
+        //$testing = false;
 
         foreach($trpRoles as $trpRole) {
             //echo "<br><br>$trpRole <br>";
@@ -7321,7 +7331,7 @@ class TransResUtil
             $description = $trpRole->getDescription();
             $level = $trpRole->getLevel();
 
-            echo "Add QUEUE=$trpRole <br>";
+            //echo "Add QUEUE=$trpRole <br>";
 
             foreach($workQueues as $workQueue) {
                 $workQueueName = $workQueue->getName();
@@ -7343,10 +7353,13 @@ class TransResUtil
                 $newAlias = $alias . $prefix . $workQueueName . $postfix;
                 $newDescription = $description . $prefix . $workQueueName . $postfix;
 
-                echo "add workQueueRoleName=[$workQueueRoleName] <br>";
-                echo "add newAlias=[$newAlias] <br>";
-                echo "add newDescription=[$newDescription] <br>";
-                echo "add level=[$level] <br>";
+                if( $testing ) {
+                    echo "add workQueueRoleName=[$workQueueRoleName] <br>";
+                    echo "add newAlias=[$newAlias] <br>";
+                    echo "add newDescription=[$newDescription] <br>";
+                    echo "add level=[$level] <br>";
+                }
+
                 //$roleName, $sitenameAbbreviation=NULL, $alias=NULL, $description=NULL, $level=NULL
                 $newRole = $userSecUtil->createNewRole(
                     $workQueueRoleName,
@@ -7356,13 +7369,23 @@ class TransResUtil
                     $level
                 );
 
-                //$this->em->persist($newRole);
-                //$this->em->flush();
+                if( !$testing ) {
+                    $this->em->persist($newRole);
+                    $this->em->flush();
 
-                echo "added <br><br>";
+                }
+
+                if( $testing ) {
+                    break;//testing
+                    echo "added <br><br>";
+                }
+            }//foreach $workQueues
+
+            if( $testing ) {
+                break;//testing
             }
-        }
 
+        }//foreach $trpRoles
 
     }
     public function getWorkQueues() {

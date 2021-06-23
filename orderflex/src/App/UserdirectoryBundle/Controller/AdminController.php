@@ -9495,22 +9495,17 @@ class AdminController extends OrderAbstractController
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $nameArr ) {
+
+            $name = $nameArr[0];
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
             if( $listEntity ) {
-
-                //add not existing _TRANSRES_ roles
-                //$userSecUtil->addTransresRolesByWorkQueue($listEntity);
-
                 continue;
             }
 
             $listEntity = new WorkQueueList();
             $this->setDefaultList($listEntity,$count,$username,$name);
-
-            //add not existing ROLE_TRANSRES_TECHNICIAN_, ROLE_TRANSRES_ADMIN_ roles
-            //$userSecUtil->addTransresRolesByWorkQueue($listEntity);
 
             $em->persist($listEntity);
             $em->flush();
