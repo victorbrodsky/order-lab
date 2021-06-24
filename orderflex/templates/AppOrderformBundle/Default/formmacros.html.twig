@@ -183,6 +183,8 @@
                         <option value="{{ thisValue }}" selected>{{ thisValue }}</option>
                     {% endfor %}
                 </select>
+            {% elseif type == "array-as-string" %}
+                <input id="{{ id }}" class="form-control not-mapped-simplefield" type="text" value="{{ value|join(', ') }}" {{ disabled }}>
             {% else %}
                 {#<div class="well well-sm" style="margin-bottom:0; min-height:40px">#}
                     {#{{ value|raw }}#}

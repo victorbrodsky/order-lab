@@ -275,60 +275,6 @@ class Product {
         //$priceList = NULL;
 
         return $this->calculateQuantitiesByQuantityAndCategory($priceList,$units,$category);
-
-//        $initialQuantity = 0;
-//        $additionalQuantity = 0;
-//
-//        $initialFee = 0;
-//        $additionalFee = 0;
-//
-//        $categoryItemCode = NULL;
-//        $categoryName = NULL;
-//
-////        if( !$priceList ) {
-////            $request = $this->getTransresRequest();
-////            if( $request ) {
-////                $priceList = $request->getPriceList();
-////            }
-////        }
-//
-//        if( $category ) {
-//            $initialQuantity = $category->getPriceInitialQuantity($priceList);
-//            $initialFee = $category->getPriceFee($priceList);
-//            $additionalFee = $category->getPriceFeeAdditionalItem($priceList);
-//            $categoryItemCode = $category->getProductId($priceList);
-//            $categoryName = $category->getName();
-//        }
-//
-//        if( $units > 0 ) {
-//            //echo "2units=".$units."<br>";
-//            if( !$initialQuantity ) {
-//                $initialQuantity = 1;
-//            }
-//            //1 > 1 => $units = 1, $initialQuantity = 1
-//            if( $units > $initialQuantity ) {
-//                $additionalQuantity = $units - $initialQuantity;
-//            } else {
-//                $initialQuantity = $units;
-//                $additionalQuantity = 0;
-//            }
-//        } else {
-//            $initialQuantity = 0;
-//            $additionalQuantity = 0;
-//        }
-//
-//        //echo "initialQuantity=$initialQuantity; additionalQuantity=$additionalQuantity <br>";
-//
-//        $res = array(
-//            'initialQuantity' => $initialQuantity,
-//            'additionalQuantity' => $additionalQuantity, //$additionalQuantity
-//            'initialFee' => $initialFee,
-//            'additionalFee' => $additionalFee,
-//            'categoryItemCode' => $categoryItemCode,
-//            'categoryName' => $categoryName
-//        );
-//
-//        return $res;
     }
     public function calculateQuantitiesByQuantityAndCategory( $priceList, $units, $category ) {
         //$units = $this->getQuantity();
@@ -389,6 +335,23 @@ class Product {
         );
 
         return $res;
+    }
+
+    public function getWorkQueues($priceList=NULL) {
+        if( !$priceList ) {
+            $request = $this->getTransresRequest();
+            if( $request ) {
+                $priceList = $request->getPriceList();
+            }
+        }
+
+        $category = $this->getCategory();
+        if( $category ) {
+            //$priceList = NULL;
+            return $category->getWorkQueuesByPriceList($priceList);
+        }
+
+        return NULL;
     }
 
     public function __toString()

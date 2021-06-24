@@ -7141,6 +7141,7 @@ class TransResUtil
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
 
         //$user = $this->secToken->getToken()->getUser();
 
@@ -7270,17 +7271,23 @@ class TransResUtil
                 $level
             );
 
-            $this->em->persist($entity);
-            $this->em->flush();
-            //break; //testing
+            if( $entity ) {
+                $this->em->persist($entity);
+                $this->em->flush();
+                //break; //testing
 
-            $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
+                $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
 
-            //Flash
-            $this->container->get('session')->getFlashBag()->add(
-                'notice',
-                $msg
-            );
+                //Flash
+                $this->container->get('session')->getFlashBag()->add(
+                    'notice',
+                    $msg
+                );
+
+                //eventlog
+                $eventType = "New Role Created";
+                $transresUtil->setEventLog($entity,$eventType,$msg);
+            }
 
         }//foreach
 
@@ -7299,6 +7306,7 @@ class TransResUtil
             return NULL;
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $sitenameAbbreviation = "translationalresearch";
@@ -7317,8 +7325,8 @@ class TransResUtil
         $workQueues = $this->getWorkQueues(); //get only enabled work queues
         //echo "workQueues count=".count($workQueues)."<br><br>";
 
-        $testing = true;
-        //$testing = false;
+        //$testing = true;
+        $testing = false;
 
         foreach($trpRoles as $trpRole) {
             //echo "<br><br>$trpRole <br>";
@@ -7369,15 +7377,29 @@ class TransResUtil
                     $level
                 );
 
-                if( !$testing ) {
-                    $this->em->persist($newRole);
-                    $this->em->flush();
+                if( $newRole ) {
 
-                }
+                    if ($testing == false) {
+                        $this->em->persist($newRole);
+                        $this->em->flush();
+                    }
 
-                if( $testing ) {
-                    break;//testing
-                    echo "added <br><br>";
+                    $msg = "Added role=[$workQueueRoleName]: alias=[$alias], description=[$description] <br>";
+
+                    //Flash
+                    $this->container->get('session')->getFlashBag()->add(
+                        'notice',
+                        $msg
+                    );
+
+                    //eventlog
+                    $eventType = "New Role Created";
+                    $transresUtil->setEventLog($newRole,$eventType,$msg);
+
+                    if ($testing) {
+                        break;//testing
+                        echo "added <br><br>";
+                    }
                 }
             }//foreach $workQueues
 

@@ -953,6 +953,13 @@
             {{ formmacros.field(formproduct.note) }}
         {% endif %}
 
+        {% if formproduct.vars.value %}
+            {% set workQueues = formproduct.vars.value.getWorkQueues() %}
+            {% if workQueues and workQueues|length > 0 %}
+                {{ formmacros.simplefield( "Work Queues:", workQueues, "array-as-string", "disabled" ) }}
+            {% endif %}
+        {% endif %}
+
         {#{% if formproduct.notInInvoice is defined %}#}
             {#{{ formmacros.checkbox(formproduct.notInInvoice) }}#}
         {#{% endif %}#}
@@ -966,10 +973,11 @@
 
         {% set invoiceItemInfo = transres_request_util.getInvoiceItemInfoByProduct(formproduct.vars.value,cycle) %}
         {% if invoiceItemInfo %}
+            <p>
             <div class="well">
                 {{ transresRequestMacros.invoiceItemSimpleForm( invoiceItemInfo, false ) }}
             </div>
-
+            </p>
         {% endif %}
 
     </div>

@@ -23,36 +23,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductType extends AbstractType
 {
 
-    //protected $product;
     protected $params;
     protected $priceList;
-    //protected $trpBusinessNameAbbreviation;
-
-//    public function __construct(TransResUtil $transresUtil)
-//    {
-//        $trpBusinessNameAbbreviation = $transresUtil->getBusinessEntityAbbreviation();
-//        $this->trpBusinessNameAbbreviation = $trpBusinessNameAbbreviation;
-//    }
+    protected $disabled;
 
     public function formConstructor( $params )
     {
         $this->params = $params;
-        //$this->$product = $params['product'];
 
 //        if( isset($params['transresUtil']) ) {
 //            $this->trpBusinessNameAbbreviation = $params['transresUtil']->getBusinessEntityAbbreviation();
 //        }
 
         $this->priceList = NULL;
-        if( isset($this->params['transresRequest']) ) {
+        if (isset($this->params['transresRequest'])) {
             $workRequest = $this->params['transresRequest'];
             $project = $workRequest->getProject();
             //echo "project=".$project."<br>";
-            if( $project ) {
+            if ($project) {
                 $this->priceList = $project->getPriceList();
             }
         }
         //echo "priceList=".$this->priceList."<br>";
+
+        $disabled = false;
+        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $disabled = true;
+        }
+        //$disabled = true;
+        $this->disabled = $disabled;
     }
 
     /**
@@ -65,24 +64,6 @@ class ProductType extends AbstractType
         $builder->add('id', HiddenType::class, array(
             'attr' => array('class'=>'product-id'),
         ));
-
-//        $builder->add('category', EntityType::class, array(
-//            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
-//            'choice_label' => 'getOptimalAbbreviationName',
-//            'label'=>"Product or Service".$this->params['categoryListLink'].":",
-//            'required'=> false,
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
-//        ));
 
         //dynamically get label and price according to the priceList
         if(0) {
@@ -122,28 +103,16 @@ class ProductType extends AbstractType
                 'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
                 'required' => false,
                 'multiple' => false,
+                'disabled' => $this->disabled,
                 'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
                 'choices' => $this->params['projectSpecialties']
             ));
-
-//            $builder->add('category', ChoiceType::class, array(
-//                'choice_label' => function (RequestCategoryTypeList $entity) {
-//                    if ($entity) {
-//                        return $entity->getOptimalAbbreviationName($this->priceList);
-//                    }
-//                    return '';
-//                },
-//                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
-//                'choices' => $this->params['projectSpecialties'],
-//                'required' => false,
-//                'multiple' => false,
-//                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
-//            ));
         }
 
         $builder->add('requested',TextType::class,array(
             'label' => "Requested Quantity:",
             'required' => true,
+            'disabled' => $this->disabled,
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left product-requested-quantity')
         ));
 
@@ -151,6 +120,7 @@ class ProductType extends AbstractType
             $builder->add('completed', TextType::class, array(
                 'label' => "Completed Quantity:",
                 'required' => false,
+                'disabled' => $this->disabled,
                 'attr' => array('class' => 'form-control digit-mask mask-text-align-left product-completed-quantity')
             ));
         }
@@ -158,6 +128,7 @@ class ProductType extends AbstractType
         $builder->add('comment', null, array(
             'label' => "Comment:",
             'required' => false,
+            'disabled' => $this->disabled,
             'attr' => array('class' => 'textarea form-control product-comment')
         ));
 
@@ -172,6 +143,7 @@ class ProductType extends AbstractType
                 //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
                 //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
                 'required' => false,
+                'disabled' => $this->disabled,
                 'attr' => array('class' => 'textarea form-control product-note')
             ));
 

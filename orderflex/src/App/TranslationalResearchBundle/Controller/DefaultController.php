@@ -134,8 +134,8 @@ class DefaultController extends OrderAbstractController
 //        $admins = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array($role));
 //        echo "admins3=".count($admins)."<br>";
 
-        $transresUtil->addTransresRolesBySpecialtyWorkQueue();
-        exit('111');
+        //$transresUtil->addTransresRolesBySpecialtyWorkQueue();
+        //exit('111');
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

@@ -3034,7 +3034,7 @@ class UserSecurityUtil {
 
         $roleObject = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
         if( $roleObject ) {
-            return $roleObject;
+            return NULL;
         }
 
         $user = $this->secToken->getToken()->getUser();

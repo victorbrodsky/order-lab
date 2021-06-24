@@ -486,4 +486,26 @@ class RequestCategoryTypeList extends ListAbstract
 
         return $specificPriceInfo;
     }
+
+    public function getWorkQueuesByPriceList($priceList=NULL) {
+        $workQueues = NULL;
+        if( $priceList ) {
+            foreach( $this->getPrices() as $price ) {
+                $thisPriceList = $price->getPriceList();
+                if( $thisPriceList ) {
+                    if( $thisPriceList->getId() == $priceList->getId() ) {
+                        $workQueues = $price->getWorkQueues();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if( !$workQueues || count($workQueues) == 0 ) {
+            $workQueues = $this->getWorkQueues();
+        }
+
+        //echo "count=".count($workQueues)."<br>";
+        return $workQueues;
+    }
 }

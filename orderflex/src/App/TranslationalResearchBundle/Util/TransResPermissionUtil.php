@@ -721,6 +721,45 @@ class TransResPermissionUtil
 
         return false;
     }
+
+    public function hasProductPermission( $action, $product=null ) {
+
+        if( !$product ) {
+            return true;
+        }
+
+        if( $action == "update" || $action == "edit" ) {
+
+            $project = NULL;
+            $request = $this->getTransresRequest();
+            if( $request ) {
+                $project = $request->getProject();
+            }
+
+            $specialtyStr = null;
+            if( $project ) {
+                $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+                $specialtyStr = "_" . $specialtyStr;
+            }
+
+            $workQueues = $product->getWorkQueues();
+
+            foreach($workQueues as $workQueue) {
+                $workQueueStr = "_" . $workQueue->getAbbreviation();
+
+
+                if(
+                    $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr.$workQueueStr) ||
+                    $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr.$workQueueStr)
+                ) {
+                    return false;
+                }
+            }
+
+        }
+
+        return true;
+    }
     /////////////// EOF Request ///////////////////////
 
 
