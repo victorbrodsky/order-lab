@@ -18,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
@@ -46,12 +48,12 @@ class ProductType extends AbstractType
         }
         //echo "priceList=".$this->priceList."<br>";
 
-        $disabled = false;
-        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            $disabled = true;
-        }
-        //$disabled = true;
-        $this->disabled = $disabled;
+//        $disabled = false;
+//        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            $disabled = true;
+//        }
+//        //$disabled = true;
+//        $this->disabled = $disabled;
     }
 
     /**
@@ -65,94 +67,17 @@ class ProductType extends AbstractType
             'attr' => array('class'=>'product-id'),
         ));
 
-        //dynamically get label and price according to the priceList
-        if(0) {
-            $builder->add('category', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
-                //'choice_label' => 'getOptimalAbbreviationName',
-//            'choice_value' => function ($entity) {
-//                //return "111";
-//                if( $entity ) {
-//                    return $entity->getOptimalAbbreviationName($this->priceList);
-//                }
-//                return '';
-//            },
-                'choice_label' => function (RequestCategoryTypeList $entity) {
-                    if ($entity) {
-                        return $entity->getOptimalAbbreviationName($this->priceList);
-                    }
-                    return '';
-                },
-                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
-                'required' => false,
-                'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $this->getRequestCategoryQueryBuilder($er);
-                },
-            ));
-        } else {
-            $builder->add('category', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
-                'choice_label' => function (RequestCategoryTypeList $entity) {
-                    if ($entity) {
-                        return $entity->getOptimalAbbreviationName($this->priceList);
-                    }
-                    return '';
-                },
-                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
-                'required' => false,
-                'multiple' => false,
-                'disabled' => $this->disabled,
-                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
-                'choices' => $this->params['projectSpecialties']
-            ));
-        }
+        //wrap all of the fields in addEventListener
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
-        $builder->add('requested',TextType::class,array(
-            'label' => "Requested Quantity:",
-            'required' => true,
-            'disabled' => $this->disabled,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left product-requested-quantity')
-        ));
+            $product = $event->getData();
+            $form = $event->getForm();
 
-        if( $this->params["cycle"] != "new" ) {
-            $builder->add('completed', TextType::class, array(
-                'label' => "Completed Quantity:",
-                'required' => false,
-                'disabled' => $this->disabled,
-                'attr' => array('class' => 'form-control digit-mask mask-text-align-left product-completed-quantity')
-            ));
-        }
+            $this->setProductPermission($product);
 
-        $builder->add('comment', null, array(
-            'label' => "Comment:",
-            'required' => false,
-            'disabled' => $this->disabled,
-            'attr' => array('class' => 'textarea form-control product-comment')
-        ));
+            $this->getForm($form);
 
-        if( $this->params['cycle'] != "new" ) {
-            $trpBusinessNameAbbreviation = "TRP";
-            if( isset($this->params['transresUtil']) ) {
-                $trpBusinessNameAbbreviation = $this->params['transresUtil']->getBusinessEntityAbbreviation();
-            }
-            $builder->add('note', null, array(
-                //'label' => "Note (TRP tech):",
-                'label' => "Note ($trpBusinessNameAbbreviation tech):", //$this->trpBusinessNameAbbreviation
-                //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
-                //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
-                'required' => false,
-                'disabled' => $this->disabled,
-                'attr' => array('class' => 'textarea form-control product-note')
-            ));
-
-//            $builder->add('notInInvoice', CheckboxType::class, array(
-//                'label' => 'Not In Invoice:',
-//                'required' => false,
-//                'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
-//            ));
-        }
+        });
 
     }
 
@@ -227,6 +152,128 @@ class ProductType extends AbstractType
         }
 
         return $queryBuilder;
+    }
+
+    public function setProductPermission($product) {
+
+            if( !$product ) {
+                return false;
+            }
+
+            //testing
+            $productId = "";
+            if( $product ) {
+                $category = $product->getCategory();
+                if ($category) {
+                    $productId = $category->getProductId();
+                }
+            }
+
+            $action = $this->params['cycle'];
+
+            $transresPermissionUtil = $this->params['transresPermissionUtil'];
+
+            $productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
+            if( $productPermission ) {
+                //echo $productId.": enables <br>";
+                $this->disabled = false;
+                //$this->disabled = true; //testing
+            } else {
+                //echo $productId.": disabled <br>";
+                $this->disabled = true;
+            }
+    }
+
+    public function getForm($builder) {
+        //dynamically get label and price according to the priceList
+        if(0) {
+            $builder->add('category', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+                //'choice_label' => 'getOptimalAbbreviationName',
+                //            'choice_value' => function ($entity) {
+                //                //return "111";
+                //                if( $entity ) {
+                //                    return $entity->getOptimalAbbreviationName($this->priceList);
+                //                }
+                //                return '';
+                //            },
+                'choice_label' => function (RequestCategoryTypeList $entity) {
+                    if ($entity) {
+                        return $entity->getOptimalAbbreviationName($this->priceList);
+                    }
+                    return '';
+                },
+                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $this->getRequestCategoryQueryBuilder($er);
+                },
+            ));
+        } else {
+
+            $builder->add('category', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+                'choice_label' => function (RequestCategoryTypeList $entity) {
+                    if ($entity) {
+                        return $entity->getOptimalAbbreviationName($this->priceList);
+                    }
+                    return '';
+                },
+                'label' => "Product or Service" . $this->params['categoryListLink'] . ":",
+                'required' => false,
+                'multiple' => false,
+                'disabled' => $this->disabled,
+                'attr' => array('class' => 'combobox combobox-width product-category-combobox'),
+                'choices' => $this->params['projectSpecialties']
+            ));
+        }
+
+        $builder->add('requested',TextType::class,array(
+            'label' => "Requested Quantity:",
+            'required' => true,
+            'disabled' => $this->disabled,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left product-requested-quantity')
+        ));
+
+        if( $this->params["cycle"] != "new" ) {
+            $builder->add('completed', TextType::class, array(
+                'label' => "Completed Quantity:",
+                'required' => false,
+                'disabled' => $this->disabled,
+                'attr' => array('class' => 'form-control digit-mask mask-text-align-left product-completed-quantity')
+            ));
+        }
+
+        $builder->add('comment', null, array(
+            'label' => "Comment:",
+            'required' => false,
+            'disabled' => $this->disabled,
+            'attr' => array('class' => 'textarea form-control product-comment')
+        ));
+
+        if( $this->params['cycle'] != "new" ) {
+            $trpBusinessNameAbbreviation = "TRP";
+            if( isset($this->params['transresUtil']) ) {
+                $trpBusinessNameAbbreviation = $this->params['transresUtil']->getBusinessEntityAbbreviation();
+            }
+            $builder->add('note', null, array(
+                //'label' => "Note (TRP tech):",
+                'label' => "Note ($trpBusinessNameAbbreviation tech):", //$this->trpBusinessNameAbbreviation
+                //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
+                //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
+                'required' => false,
+                'disabled' => $this->disabled,
+                'attr' => array('class' => 'textarea form-control product-note')
+            ));
+
+            //            $builder->add('notInInvoice', CheckboxType::class, array(
+            //                'label' => 'Not In Invoice:',
+            //                'required' => false,
+            //                'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //            ));
+        }
     }
 
     /**

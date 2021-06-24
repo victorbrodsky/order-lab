@@ -2413,6 +2413,9 @@ class RequestController extends OrderAbstractController
             //TODO: do not add reviewers
         }
 
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+        $params['transresPermissionUtil'] = $transresPermissionUtil;
+
         $disabled = false;
 
         if( $cycle == "new" ) {
