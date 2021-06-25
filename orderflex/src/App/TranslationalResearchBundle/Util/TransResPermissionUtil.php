@@ -49,7 +49,7 @@ class TransResPermissionUtil
 
     /////////////// INVOICE ///////////////////////
     public function areInvoicesShowableToUser($project) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
@@ -730,6 +730,8 @@ class TransResPermissionUtil
 
         if( $action == "update" || $action == "edit" ) {
 
+            $user = $this->secTokenStorage->getToken()->getUser();
+
             $project = NULL;
             $request = $product->getTransresRequest();
             if( $request ) {
@@ -746,7 +748,35 @@ class TransResPermissionUtil
                 return true;
             }
 
-            //$category = $product->getCategory();
+            $specialtyQueueRole = $user->hasPartialRole($specialtyStr,"_QUEUE");
+
+//            //testing
+//            if(
+//                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+//            ) {
+//                //echo "allow <br>";
+//                return true;
+//            }
+//            else {
+//                //echo "notallow <br>";
+//                return false;
+//            }
+
+            //TODO: if user does not have a specific QUEUE role => check generic role
+//            if( $specialtyQueueRole == false ) {
+//
+//                //echo $category->getProductId().": Role2=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
+//                if (
+//                    $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+//                    $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+//                ) {
+//                    return true;
+//                }
+//
+//            }
+
+            $category = $product->getCategory();
             $workQueues = $product->getWorkQueues();
             //echo "workQueues count=".count($workQueues)."<br>";
 
@@ -763,19 +793,48 @@ class TransResPermissionUtil
                         return true;
                     }
 
+                    //if user does not have '_QUEUE' role check if user has a generic technician role for this specialty
+                    if( $specialtyQueueRole == false ) {
+                        if(
+                            $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                            $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+                        ) {
+                            return true;
+                        }
+                    }
+
+
                 }//foreach
                 ///////////// EOF check work queues ////////////////
             } else {
-                //if user does not have specific QUEUE role
-                ///////////// check general role ////////////////
-                //echo $category->getProductId().": Role2=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
-                if(
-                    $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                    $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
-                ) {
-                    return true;
+                ///////////// Product does not have work queue ////////////////
+                //TODO: case 'ROLE_TRANSRES_TECHNICIAN_APCP' and 'ROLE_TRANSRES_TECHNICIAN_APCP_QUEUEAPCP'
+                //'ROLE_TRANSRES_TECHNICIAN_APCP' => allow
+                //
+                //TODO: if user has a specialty + QUEUE role => check if has general role
+                if( $specialtyQueueRole == false ) {
+
+                    //echo $category->getProductId().": Role1=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
+                    if (
+                        $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+                        $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+                    ) {
+                        return true;
+                    }
+
+                } else {
+
+                    //echo $category->getProductId().": Role2=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
+                    //check exact role
+                    if(
+                        $user->hasRole("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+                        $user->hasRole("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+                    ) {
+                        return true;
+                    }
+
                 }
-                ///////////// EOF check general role ////////////////
+                ///////////// EOF Product does not have work queue ////////////////
             }
 
         }//if action

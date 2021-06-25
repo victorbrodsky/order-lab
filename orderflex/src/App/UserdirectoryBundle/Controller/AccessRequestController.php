@@ -1498,9 +1498,14 @@ class AccessRequestController extends OrderAbstractController
 
         $primaryPublicUserIdStr = $request->query->get('primaryPublicUserId');
         $primaryPublicUserIdStr = trim($primaryPublicUserIdStr);
+        //echo "primaryPublicUserIdStr=$primaryPublicUserIdStr <br>";
 
-        //the string should be silently cut at the @ character to get cwid in case email was entered with @
-        list($primaryPublicUserId,$email) = explode('@', $primaryPublicUserIdStr);
+        if (strpos($primaryPublicUserIdStr, '@') !== false) {
+            //the string should be silently cut at the @ character to get cwid in case email was entered with @
+            list($primaryPublicUserId, $email) = explode('@', $primaryPublicUserIdStr);
+        } else {
+            $primaryPublicUserId = $primaryPublicUserIdStr;
+        }
 
         //echo "sitename=".$this->siteName."<br>";
         //echo "usertype=(".$keytype.")<br>";
