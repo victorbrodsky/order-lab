@@ -321,6 +321,24 @@ class FilterRequestType extends AbstractType
                 'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Price List'),
             ));
         }
+        
+        $builder->add('workQueues', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+            'label' => false,
+            //'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
     }
 

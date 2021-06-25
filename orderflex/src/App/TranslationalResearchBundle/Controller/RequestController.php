@@ -1154,7 +1154,7 @@ class RequestController extends OrderAbstractController
         $ids = array();
         $showOnlyMyProjects = false;
         $priceList = null;
-
+        $workQueues = array();
 
 
         if( $withfilter ) {
@@ -1283,6 +1283,10 @@ class RequestController extends OrderAbstractController
             if(isset($filterform['priceList']) ) {
                 $priceList = $filterform['priceList']->getData();
             }
+            if(isset($filterform['workQueues']) ) {
+                $workQueues = $filterform['workQueues']->getData();
+            }
+
         }
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
@@ -2023,6 +2027,31 @@ class RequestController extends OrderAbstractController
 
                 $advancedFilter++;
             }
+        }
+
+        if( $workQueues && count($workQueues) > 0 ) {
+            //dump($dql->getAllAliases());
+            //exit();
+            if( in_array("products", $dql->getAllAliases()) ) {
+                //already exists
+            } else {
+                $dql->leftJoin('transresRequest.products','products');
+            }
+            $dql->leftJoin('products.category','category');
+            $dql->leftJoin('category.workQueues','workQueues');
+
+            //$prices
+            $dql->leftJoin('category.prices','prices');
+            $dql->leftJoin('prices.workQueues','priceWorkQueues');
+
+            $workQueuesIdsArr = array();
+            foreach($workQueues as $workQueue) {
+                $workQueuesIdsArr[] = $workQueue->getId();
+            }
+            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            $dqlParameters["workQueues"] = $workQueuesIdsArr;
+
+            $advancedFilter++;
         }
 
         if( count($ids) > 0 ) {

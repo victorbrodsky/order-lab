@@ -1189,6 +1189,9 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-4">
+                            {% if filterform.workQueues is defined %}
+                                {{ form_widget(filterform.workQueues) }}
+                            {% endif %}
                         </div>
                     </div>
 
