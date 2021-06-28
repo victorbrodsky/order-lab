@@ -157,6 +157,12 @@ class ProductType extends AbstractType
     public function setProductPermission($product) {
 
             if( !$product ) {
+                $this->disabled = false;
+                return false;
+            }
+
+            if( $this->params['cycle'] == 'new' ) {
+                $this->disabled = false;
                 return false;
             }
 

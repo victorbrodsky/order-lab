@@ -2667,6 +2667,9 @@ class TransResRequestUtil
         }
         //$filterTypes[] = '[[hr]]';
 
+        //TODO: add all the Work Queues as named in the list manager + appended “ Work Queue”
+        //(So there should be two new links: “CTP Lab Work Queue” and “MISI Lab Work Queue”
+
         return $filterTypes;
     }
 

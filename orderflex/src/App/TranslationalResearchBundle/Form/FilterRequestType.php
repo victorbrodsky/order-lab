@@ -328,7 +328,7 @@ class FilterRequestType extends AbstractType
             //'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
             'required' => false,
             'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Work Queue'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")

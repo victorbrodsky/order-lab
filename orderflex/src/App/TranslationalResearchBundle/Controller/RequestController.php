@@ -2032,8 +2032,9 @@ class RequestController extends OrderAbstractController
         if( $workQueues && count($workQueues) > 0 ) {
             //dump($dql->getAllAliases());
             //exit();
+            //TODO: filter workqueue by project's price list
             if( in_array("products", $dql->getAllAliases()) ) {
-                //already exists
+                //join already exists
             } else {
                 $dql->leftJoin('transresRequest.products','products');
             }
@@ -2048,6 +2049,8 @@ class RequestController extends OrderAbstractController
             foreach($workQueues as $workQueue) {
                 $workQueuesIdsArr[] = $workQueue->getId();
             }
+            //$dql->andWhere("workQueues.id IN (:workQueues)");
+            //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
             $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
             $dqlParameters["workQueues"] = $workQueuesIdsArr;
 
