@@ -1,0 +1,96 @@
+
+{#{% stopwatch "### header ###" %}#}
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{#{% endstopwatch %}#}
+
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+{% if project is not defined %}
+    {% set project = null %}
+{% endif %}
+
+
+{% block title %}
+    {{ title|raw }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(products, 'ID', 'workQueue.id') }}</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {#{% set count = 0 %}#}
+        {% for product in products %}
+
+            {% set trclassname = '' %}
+
+            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
+                <td>
+                    <a
+                        href="{{ path(translationalresearch_sitename~'_product_show', { 'id': product.id }) }}"
+                        target="_blank"
+                    >{{ product.id }} {{ product.name }}</a>
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                                >Show work request details</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {#{% endstopwatch %}#}
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(transresRequests) }}
+    </div>
+
+{% endblock %}
+
+
+{#{% block additionaljs %}#}
+    {##}
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-request.js') }}"></script>#}
+
+
+    {#<script type="text/javascript">#}
+        {#$(document).ready(function() {#}
+            {#$('[data-toggle="tooltip"]').tooltip();#}
+        {#});#}
+    {#</script>#}
+
+{#{% endblock %}#}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}

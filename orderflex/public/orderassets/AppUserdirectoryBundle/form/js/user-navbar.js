@@ -307,6 +307,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-allmenu-requests';
     }
 
+    if( full.indexOf("/translational-research/orderables/") !== -1 ) {
+        id = 'translationalresearch-allmenu-queues';
+    }
+
     if( full.indexOf("/translational-research/invoice/list") !== -1 ) {
         id = 'translationalresearch-allmenu-invoices';
     }

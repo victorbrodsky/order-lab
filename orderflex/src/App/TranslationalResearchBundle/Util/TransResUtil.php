@@ -7425,7 +7425,7 @@ class TransResUtil
         //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
 
         $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByname($name);
-        
+
         if( !$entity ) {
             $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
         }
@@ -7433,6 +7433,22 @@ class TransResUtil
         if( !$entity ) {
             $name = strtolower($name);
             $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
+        }
+
+        if( !$entity ) {
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList');
+            $dql =  $repository->createQueryBuilder("workQueue");
+            $dql->select('workQueue');
+
+            $dql->where("LOWER(workQueue.name) = :workQueueName");
+
+            $name = strtolower($name);
+            $dqlParameters['workQueueName'] = $name;
+
+            $query = $this->em->createQuery($dql);
+            $query->setParameters($dqlParameters);
+
+            $entity = $query->getOneOrNullResult();
         }
 
         if( !$entity ) {

@@ -2600,7 +2600,6 @@ class TransResRequestUtil
     //get allowed filter request types for logged in user
     public function getRequestFilterPresetType() {
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
 
         //get all enabled project specialties
         $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
@@ -2667,12 +2666,28 @@ class TransResRequestUtil
         }
         $filterTypes[] = '[[hr]]';
 
-        //TODO: add all the Work Queues as named in the list manager + appended “ Work Queue”
+        //add all the Work Queues as named in the list manager + appended “ Work Queue”
         //(So there should be two new links: “CTP Lab Work Queue” and “MISI Lab Work Queue”
         $workQueues = $transresUtil->getWorkQueues();
         $filterTypes[] = 'All Requests with Work Queues';
         foreach($workQueues as $workQueue) {
             $filterTypes[] = $workQueue->getName()." Work Queue";
+        }
+
+        return $filterTypes;
+    }
+
+    //get allowed filter work queue types for logged in user
+    public function getWorkQueuesFilterPresetType() {
+        $transresUtil = $this->container->get('transres_util');
+        //"CTP Lab Work Queue" and "MISI Lab Work Queue"
+        $workQueues = $transresUtil->getWorkQueues();
+        $filterTypes = array();
+        foreach($workQueues as $workQueue) {
+            //CTP Lab => ctp-lab
+            $lowercaseName = strtolower($workQueue->getName()); //ctp lab
+            $lowercaseName = str_replace(' ','-',$lowercaseName);
+            $filterTypes[$lowercaseName] = "All ".$workQueue->getName()." Work Queue";
         }
 
         return $filterTypes;

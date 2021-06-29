@@ -29,6 +29,33 @@
     {% endfor %}
 {% endmacro %}
 
+{% macro createFilterWorkQueuesType( filterTypes ) %}
+    {#filterTypes: filterTypes['ctp-lab']='CTP Lab'#}
+    {#{% for filterType in filterTypes %}#}
+        {#{% if filterType == "[[hr]]" %}#}
+            {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+        {#{% else %}#}
+            {#{% set filterTypeUrl = filterType|replace({' ':'-'}) %}#}
+            {#<li>#}
+                {#<a href="{{ path(translationalresearch_sitename~'_work_queue_index_filter',{'workqueue':filterTypeUrl}) }}">{{ filterType }}</a>#}
+            {#</li>#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
+
+    {% for key, workQueue in filterTypes %}
+        {#<li>{{ key }}: {{ workQueue }}</li>#}
+        {% if workQueue == "[[hr]]" %}
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+        {% else %}
+            {% set filterTypeUrl = key|replace({' ':'-'}) %}
+            <li>
+                <a href="{{ path(translationalresearch_sitename~'_work_queue_index_filter',{'workqueue':filterTypeUrl}) }}">{{ workQueue }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+
+{% endmacro %}
+
 {% block navbar %}
 
     <nav class="navbar navbar-default" role="navigation">
@@ -241,6 +268,23 @@
                             </ul>
                         </li>
                     {#{% endif %}#}
+
+                    {% if
+                        is_granted('ROLE_TRANSRES_ADMIN') or
+                        is_granted('ROLE_TRANSRES_TECHNICIAN')
+                    %}
+                        <li id="nav-bar-translationalresearch-allmenu-queues" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Queues<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                                {% set filterWorkQueues = transres_request_util.getWorkQueuesFilterPresetType() %}
+                                {{ navbarmacros.createFilterWorkQueuesType(filterWorkQueues) }}
+
+                            </ul>
+                        </li>
+                    {% endif %}
 
                     {#{% if#}
                         {#is_granted('ROLE_TRANSRES_REQUESTER') or#}
