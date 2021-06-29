@@ -1584,6 +1584,33 @@ class RequestController extends OrderAbstractController
                     $pendingRequestArr
                 );
             }
+            //TODO: add generic specialty filter
+            if( strpos($filterTypeLowerCase, strtolower('Pending Requests')) !== false ) {
+                $specialtyName = str_replace('Pending Requests','',$filterType); //All MISI
+                $specialtyName = str_replace('All','',$specialtyName); //MISI
+                $specialtyName = trim($specialtyName);
+                //echo "specialtyName=$specialtyName<br>";
+
+                $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
+                $pendingRequestArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    $pendingRequestArr
+                );
+
+//                $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
+//                if( $projectSpecialtyObject ) {
+//                    return $this->redirectToRoute(
+//                        'translationalresearch_request_index_filter',
+//                        array(
+//                            'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+//                            'filter[progressState][0]' => "active",
+//                            'title' => $filterType,
+//                        )
+//                    );
+//                }
+            }
 
             if ($filterTypeLowerCase == strtolower("All Active Requests") ) {
                 return $this->redirectToRoute(
@@ -1637,6 +1664,24 @@ class RequestController extends OrderAbstractController
                         'title' => $filterType,
                     )
                 );
+            }
+            //TODO: add generic specialty filter
+            if( strpos($filterTypeLowerCase, strtolower('Active Requests')) !== false ) {
+                $specialtyName = str_replace('Active Requests','',$filterType); //All MISI
+                $specialtyName = str_replace('All','',$specialtyName); //MISI
+                $specialtyName = trim($specialtyName);
+                //echo "specialtyName=$specialtyName<br>";
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
+                if( $projectSpecialtyObject ) {
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        array(
+                            'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                            'filter[progressState][0]' => "active",
+                            'title' => $filterType,
+                        )
+                    );
+                }
             }
 
             if ($filterTypeLowerCase == strtolower("All Completed Requests") ) {
@@ -1692,6 +1737,24 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
+            //TODO: add generic specialty filter
+            if( strpos($filterTypeLowerCase, strtolower('Completed Requests')) !== false ) {
+                $specialtyName = str_replace('Completed Requests','',$filterType); //All MISI
+                $specialtyName = str_replace('All','',$specialtyName); //MISI
+                $specialtyName = trim($specialtyName);
+                //echo "specialtyName=$specialtyName<br>";
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
+                if( $projectSpecialtyObject ) {
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        array(
+                            'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                            'filter[progressState][0]' => "completed",
+                            'title' => $filterType,
+                        )
+                    );
+                }
+            }
 
             if ($filterTypeLowerCase == strtolower("All Completed and Notified Requests") ) {
                 return $this->redirectToRoute(
@@ -1746,6 +1809,73 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
+            //TODO: add generic specialty filter
+            //if ($filterTypeLowerCase == strtolower("All MISI Completed and Notified Requests") ) {
+            if( strpos($filterTypeLowerCase, strtolower('Completed and Notified Requests')) !== false ) {
+                $specialtyName = str_replace('Completed and Notified Requests','',$filterType); //All MISI
+                $specialtyName = str_replace('All','',$specialtyName); //MISI
+                $specialtyName = trim($specialtyName);
+                //echo "specialtyName=$specialtyName<br>";
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
+                if( $projectSpecialtyObject ) {
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        array(
+                            'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                            'filter[progressState][0]' => "completedNotified",
+                            'title' => $filterType,
+                        )
+                    );
+                }
+            }
+            //exit($filterTypeLowerCase);
+
+            if ($filterTypeLowerCase == strtolower("All Requests with Work Queues") ) {
+                //$workQueueObject = $transresUtil->getWorkQueueObject("CTP Lab");
+                $workQueues = $transresUtil->getWorkQueues();
+                $filterArr = array('title'=>$filterType);
+                $count = 0;
+                foreach($workQueues as $workQueue) {
+                    //'filter[workQueues][0]'
+                    $index = "filter[workQueues][$count]";
+                    $filterArr[$index] = $workQueue->getId();
+                    $count++;
+                }
+                //var_dump($filterArr);
+                //exit('111');
+                //filter[workQueues]=1
+                //filter[workQueues][]=1&filter[workQueues][]=2
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+//                    array(
+//                        'filter[workQueues][0]' => 1,
+//                        'filter[workQueues][1]' => 2,
+//                        'title' => $filterType,
+//                    )
+                    $filterArr
+                );
+            }
+            //Generic work queues with substring "Work Queue"
+            //if( $filterTypeLowerCase == strtolower("CTP Lab Work Queue") ) {
+            if( strpos($filterTypeLowerCase, strtolower('Work Queue')) !== false ) {
+                //echo "filterTypeLowerCase=$filterTypeLowerCase<br>";
+                //echo "filterType=$filterType<br>";
+                $workQueueName = str_replace('Work Queue','',$filterType); //CTP Lab
+                $workQueueName = trim($workQueueName);
+                //echo "workQueueName=$workQueueName<br>";
+                $workQueueObject = $transresUtil->getWorkQueueObject($workQueueName);
+                //echo "workQueueObject=$workQueueObject<br>";
+                if( $workQueueObject ) {
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        array(
+                            'filter[workQueues][0]' => $workQueueObject->getId(),
+                            'title' => $filterType,
+                        )
+                    );
+                }
+            }
+
 
             //not pre-set filter
 //            if( $filterType != "All Requests" ) {

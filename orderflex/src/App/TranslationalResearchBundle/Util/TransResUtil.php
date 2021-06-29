@@ -7420,5 +7420,32 @@ class TransResUtil
 
         return $workQueues;
     }
+    //$specialtyStr: hematopathology, ap-cp
+    public function getWorkQueueObject($name) {
+        //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
+
+        $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByname($name);
+        
+        if( !$entity ) {
+            $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
+        }
+
+        if( !$entity ) {
+            $name = strtolower($name);
+            $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
+        }
+
+        if( !$entity ) {
+            throw new \Exception( "Work Queue is not found by name '".$name."'" );
+        }
+
+//        if( $specialty->getType() == 'default' || $specialty->getType() == 'user-added' ) {
+//            //OK
+//        } else {
+//            return NULL;
+//        }
+
+        return $entity;
+    }
 
 }

@@ -2665,10 +2665,15 @@ class TransResRequestUtil
         foreach($allowSpecialties as $allowSpecialty) {
             $filterTypes[] = "All $allowSpecialty Completed and Notified Requests";
         }
-        //$filterTypes[] = '[[hr]]';
+        $filterTypes[] = '[[hr]]';
 
         //TODO: add all the Work Queues as named in the list manager + appended “ Work Queue”
         //(So there should be two new links: “CTP Lab Work Queue” and “MISI Lab Work Queue”
+        $workQueues = $transresUtil->getWorkQueues();
+        $filterTypes[] = 'All Requests with Work Queues';
+        foreach($workQueues as $workQueue) {
+            $filterTypes[] = $workQueue->getName()." Work Queue";
+        }
 
         return $filterTypes;
     }
