@@ -92,6 +92,13 @@ class Product {
     // the Work Request View page if the value is not NULL. Only show this field on
     // the Work Request Edit page if the user’s role has the Queue attribute that is
     // associated with that specific item on the fee schedule.
+    /**
+     * @ORM\ManyToOne(targetEntity="OrderableStatusList")
+     * @ORM\JoinColumn(name="orderableStatus", referencedColumnName="id", nullable=true)
+     */
+    private $orderableStatus;
+
+
 
 
     public function __construct($user=null) {
@@ -260,6 +267,22 @@ class Product {
     public function setNotInInvoice($notInInvoice)
     {
         $this->notInInvoice = $notInInvoice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderableStatus()
+    {
+        return $this->orderableStatus;
+    }
+
+    /**
+     * @param mixed $orderableStatus
+     */
+    public function setOrderableStatus($orderableStatus)
+    {
+        $this->orderableStatus = $orderableStatus;
     }
 
 
