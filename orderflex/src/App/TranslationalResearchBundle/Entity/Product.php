@@ -85,6 +85,13 @@ class Product {
      */
     private $notInInvoice;
 
+    //TODO: 16- In Platform List manager, add a new list titled “Orderable Status” with the following values:
+    // “Requested”, “Pending Additional Info”, “In Progress”, and “Completed”.
+    // For each ordered product in the Work request, add a field titled “Orderable Status”
+    // with a single-select Select2 listing all the list values. Only show this field on
+    // the Work Request View page if the value is not NULL. Only show this field on
+    // the Work Request Edit page if the user’s role has the Queue attribute that is
+    // associated with that specific item on the fee schedule.
 
 
     public function __construct($user=null) {
@@ -352,6 +359,24 @@ class Product {
         }
 
         return NULL;
+    }
+
+    public function getCombinedComment() {
+        $combineComment = "";
+        $comment = $this->getComment();
+        $note = $this->getNote();
+        if( $comment ) {
+            $combineComment = $combineComment . $comment;
+        }
+        if( $note ) {
+            $separator = "";
+            if( $combineComment ) {
+                $separator = "; ";
+            }
+            $combineComment = $combineComment . $separator . $note;
+        }
+        
+        return $combineComment;
     }
 
     public function __toString()

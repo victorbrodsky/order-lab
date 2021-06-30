@@ -25,8 +25,16 @@
     <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
-                {#<th>Id</th>#}
-                <th>{{ knp_pagination_sortable(products, 'ID', 'workQueue.id') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Project ID', 'project.id') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Work Request ID', 'transresRequest.id') }}</th>
+
+                <th>{{ knp_pagination_sortable(products, 'PI(s)', 'principalInvestigatorsInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Product or Service', 'category.productId') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Requested Quantity', 'product.requested') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Completed Quantity', 'product.completed') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Status ', 'product.id') }}</th>
+
                 <th>Actions</th>
             </tr>
         </thead>
@@ -35,14 +43,76 @@
         {#{% set count = 0 %}#}
         {% for product in products %}
 
+            {% set transresRequest = product.getTransresRequest() %}
+            {% set project = transresRequest.getProject() %}
+
             {% set trclassname = '' %}
+            {% set idColor = transres_util.getPriceListColorByRequest(transresRequest) %}
 
             <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
-                <td>
+
+                <td class="rowlink-skip">
                     <a
-                        href="{{ path(translationalresearch_sitename~'_product_show', { 'id': product.id }) }}"
+                        href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
                         target="_blank"
-                    >{{ product.id }} {{ product.name }}</a>
+                        style="color:{{ idColor }}"
+                    >{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
+                </td>
+
+                {#Work Request ID#}
+                <td class="rowlink-skip">
+                    {#<a#}
+                        {#href="{{ path(translationalresearch_sitename~'_product_show', { 'id': product.id }) }}"#}
+                        {#target="_blank"#}
+                    {#>{{ product.id }} {{ product }}</a>#}
+
+                    <a
+                        href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                        target="_blank"
+                        style="color:{{ idColor }}"
+                        data-toggle="tooltip" title="{{ transres_request_util.getProgressStateLabelByName(transresRequest.getProgressState()) }}"
+                    >{{ transresRequest.oid }}{{ transresRequest.project.getPriceListAbbreviationPostfix() }}</a>
+                </td>
+
+                <td class="rowlink-skip">
+                    {% for principalInvestigator in project.principalInvestigators %}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~principalInvestigator.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endfor %}
+                </td>
+
+                {#Submitter#}
+                <td class="rowlink-skip">
+                    {% if transresRequest.submitter %}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <div data-toggle="tooltip" title="{{ product.getCombinedComment() }}">
+                        {% if product.category %}
+                            {{ product.category.getShortInfo(transresRequest) }}<br>
+                        {% endif %}
+                    </div>
+                </td>
+
+                {#Requested Quantity#}
+                <td>
+                    {{ product.getRequested() }}
+                </td>
+
+                {#Completed Quantity#}
+                <td>
+                    {{ product.getCompleted() }}
+                </td>
+
+                {#Status#}
+                {#"Orderable Status" with the following values: “Requested”, “Pending Additional Info”, “In Progress”, and “Completed”#}
+                <td>
+                    {{ product.note }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -58,6 +128,19 @@
                                 >Show work request details</a>
                             </li>
 
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                                >Edit work request</a>
+                            </li>
+
+                            {#Mark as “Completed”.#}
+
+                            {#Mark as “Pending Additional Info”#}
+
+                            {#Mark as “In Progress”#}
+
+                            {#Mark as “Requested”.#}
+
                         </ul>
 
                     </div>
@@ -70,26 +153,21 @@
 
     {# display navigation #}
     <div class="navigation">
-        {{ knp_pagination_render(transresRequests) }}
+        {{ knp_pagination_render(products) }}
     </div>
 
 {% endblock %}
 
 
-{#{% block additionaljs %}#}
-    {##}
-    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-request.js') }}"></script>#}
+{% block additionaljs %}
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
-    {#<script type="text/javascript">#}
-        {#$(document).ready(function() {#}
-            {#$('[data-toggle="tooltip"]').tooltip();#}
-        {#});#}
-    {#</script>#}
-
-{#{% endblock %}#}
+{% endblock %}
 
 {#{% block additionalcss %}#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}

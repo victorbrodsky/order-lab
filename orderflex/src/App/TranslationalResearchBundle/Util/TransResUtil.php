@@ -6310,6 +6310,48 @@ class TransResUtil
         return $requestIds;
     }
 
+    public function getTotalProductsCount() {
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql = $repository->createQueryBuilder("product");
+        $dql->select('COUNT(product)');
+
+        $query = $dql->getQuery();
+
+        //$count = -1;
+        $count = $query->getSingleScalarResult();
+        //$resArr = $query->getOneOrNullResult();
+        //print_r($resArr);
+        //echo "count=".$count."<br>";
+
+        return $count;
+    }
+    public function getMatchingProductArrByDqlParameters($dql,$dqlParameters) {
+        $dql->select('product.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $results = $query->getScalarResult();
+        //print_r($results);
+        //echo "<br><br>";
+
+        //All Invoices (188 matching for Total: $61,591.00, Paid: $30,000.00, Unpaid: $31591.00)
+
+        $requestIds = array();
+
+        $counter = 0;
+        foreach($results as $idParams) {
+            $id = $idParams['id'];
+            $requestIds[] = $id;
+            $counter++;
+        }//foreach
+
+        return $requestIds;
+    }
+
     public function getAppropriatedUsers() {
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
 
@@ -7060,6 +7102,9 @@ class TransResUtil
         return $this->getPriceListColor($priceList);
     }
     public function getPriceListColorByRequest($request) {
+        if( !$request ) {
+            return NULL;
+        }
         $priceList = $request->getPriceList();
         return $this->getPriceListColor($priceList);
     }

@@ -74,18 +74,28 @@ class WorkQueueController extends OrderAbstractController
 
         echo "workqueue=$workqueue<br>";
 
-        $title = "Work Queues";
-
         //$workQueues = $transresUtil->getWorkQueues();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
-        $dql =  $repository->createQueryBuilder("transresRequest");
-        $dql->select('transresRequest');
+//        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+//        $dql =  $repository->createQueryBuilder("transresRequest");
+//        $dql->select('transresRequest');
+//        $dql->leftJoin('transresRequest.products','products');
 
-        $dql->leftJoin('transresRequest.products','products');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql =  $repository->createQueryBuilder("product");
+        $dql->select('product');
+
+        $dql->leftJoin('product.transresRequest','transresRequest');
+        $dql->leftJoin('transresRequest.project','project');
+
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('submitter.infos','submitterInfos');
 
         //products
-        $dql->leftJoin('products.category','category');
+        $dql->leftJoin('product.category','category');
         $dql->leftJoin('category.workQueues','workQueues');
 
         //prices
@@ -107,11 +117,14 @@ class WorkQueueController extends OrderAbstractController
 
         $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
         $workQueuesId = NULL;
+        $workQueuesName = NULL;
         if( $workqueueEntity ) {
             $workQueuesId = $workqueueEntity->getId();
+            $workQueuesName = $workqueueEntity->getName();
         }
         echo "workQueuesId=$workQueuesId<br>";
 
+        $dql->andWhere("transresRequest IS NOT NULL");
         $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
         $dqlParameters["workQueues"] = $workQueuesId;
 
@@ -125,7 +138,7 @@ class WorkQueueController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'transresRequest.createDate',
+            'defaultSortFieldName' => 'product.createDate',
             'defaultSortDirection' => 'DESC',
             'wrap-queries' => true
         );
@@ -149,6 +162,12 @@ class WorkQueueController extends OrderAbstractController
             $paginationParams
         );
 
+        $title = "Work Queues " . $workQueuesName;
+
+        $matchingStrProductstIds = $transresUtil->getMatchingProductArrByDqlParameters($dql,$dqlParameters);
+        $allProductsts = count($matchingStrProductstIds);
+        $allGlobalRequests = $transresUtil->getTotalProductsCount();
+        $title = $title . " (Matching " . $allProductsts . ", Total " . $allGlobalRequests . ")";
 
         $formArray = array(
             'products' => $products,
