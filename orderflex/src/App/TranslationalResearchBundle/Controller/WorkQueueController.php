@@ -72,7 +72,7 @@ class WorkQueueController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
-        echo "workqueue=$workqueue<br>";
+        //echo "workqueue=$workqueue<br>";
 
         //$workQueues = $transresUtil->getWorkQueues();
 
@@ -93,6 +93,8 @@ class WorkQueueController extends OrderAbstractController
 
         $dql->leftJoin('transresRequest.submitter','submitter');
         $dql->leftJoin('submitter.infos','submitterInfos');
+
+        $dql->leftJoin('product.orderableStatus','orderableStatus');
 
         //products
         $dql->leftJoin('product.category','category');
@@ -122,7 +124,7 @@ class WorkQueueController extends OrderAbstractController
             $workQueuesId = $workqueueEntity->getId();
             $workQueuesName = $workqueueEntity->getName();
         }
-        echo "workQueuesId=$workQueuesId<br>";
+        //echo "workQueuesId=$workQueuesId<br>";
 
         $dql->andWhere("transresRequest IS NOT NULL");
         $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
@@ -172,6 +174,7 @@ class WorkQueueController extends OrderAbstractController
         $formArray = array(
             'products' => $products,
             'title' => $title,
+            'workqueue' => $workqueue
         );
 
         return $formArray;
@@ -222,6 +225,53 @@ class WorkQueueController extends OrderAbstractController
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
+    }
+
+    /**
+     * @Route("/update-product-orderable-status/{id}", name="translationalresearch_product_update_orderablestatus", methods={"GET"})
+     */
+    public function updateOrderableStatusAction(Request $request, Product $product)
+    {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+        //$transresUtil = $this->container->get('transres_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
+        $em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
+        if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $orderableStatusName = $request->query->get('orderablestatus');
+        $workqueue = $request->query->get('workqueue');
+        echo "workqueue=$workqueue<br>";
+        $set = false;
+
+        $orderableStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($orderableStatusName);
+        if( !$orderableStatus ) {
+            $set = false;
+        }
+
+        if( $orderableStatus ) {
+            $product->setOrderableStatus($orderableStatus);
+            $em->flush();
+            $set = true;
+        }
+
+        if( $set ) {
+            $msq = "Success: Orderable status for product '".$product."' has been updated to $orderableStatusName";
+        } else {
+            $msq = "Error: Orderable status for product '".$product."' has not been updated to $orderableStatusName";
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msq
+        );
+
+        //translationalresearch_work_queue_index_filter
+        return $this->redirectToRoute('translationalresearch_work_queue_index_filter',array('workqueue'=>$workqueue));
     }
 
 }

@@ -92,6 +92,8 @@ class Product {
     // the Work Request View page if the value is not NULL. Only show this field on
     // the Work Request Edit page if the user’s role has the Queue attribute that is
     // associated with that specific item on the fee schedule.
+    // Requested - when work request is created
+    // Completed - when work request is completed
     /**
      * @ORM\ManyToOne(targetEntity="OrderableStatusList")
      * @ORM\JoinColumn(name="orderableStatus", referencedColumnName="id", nullable=true)

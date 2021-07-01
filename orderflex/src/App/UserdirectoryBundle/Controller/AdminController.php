@@ -9539,6 +9539,8 @@ class AdminController extends OrderAbstractController
             "Pending Additional Info" => array("pending-additional-info"),
             "In Progress" => array("in-progress"),
             "Completed" => array("completed"),
+            "Canceled by Requestor" => array("canceled-by-requestor"),
+            "Canceled by Performer" => array("canceled-by-performer"),
         );
 
         $count = 10;

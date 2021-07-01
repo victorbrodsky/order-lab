@@ -229,6 +229,9 @@ class RequestController extends OrderAbstractController
                 $transresRequest->setSubmitter($user);
             }
 
+            //set product's orderableStatus to "Requested" if not set
+            $transresRequestUtil->setProductsStatus($transresRequest,"Requested"); //new
+
             if( !$testing ) {
                 $em->persist($transresRequest);
                 $em->flush();
@@ -504,6 +507,9 @@ class RequestController extends OrderAbstractController
             if( $transresRequest->getProgressState() == "completedNotified" ) {
                 $transresRequest->setCompletedBy($user);
             }
+
+            //set product's orderableStatus to "Requested" if not set
+            $transresRequestUtil->setProductsStatus($transresRequest,"Requested"); //edit
 
             if( !$testing ) {
                 $em->persist($transresRequest);

@@ -274,6 +274,29 @@ class ProductType extends AbstractType
                 'attr' => array('class' => 'textarea form-control product-note')
             ));
 
+//            $builder->add('orderableStatus', null, array(
+//                'label' => "Orderable Status:",
+//                'required' => false,
+//                'disabled' => $this->disabled,
+//                'attr' => array('class' => 'textarea form-control product-note')
+//            ));
+            $builder->add('orderableStatus', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
+                'label' => "Orderable Status:",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox product-orderableStatus'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
             //            $builder->add('notInInvoice', CheckboxType::class, array(
             //                'label' => 'Not In Invoice:',
             //                'required' => false,

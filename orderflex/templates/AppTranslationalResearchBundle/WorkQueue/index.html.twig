@@ -33,7 +33,7 @@
                 <th>{{ knp_pagination_sortable(products, 'Product or Service', 'category.productId') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Requested Quantity', 'product.requested') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Completed Quantity', 'product.completed') }}</th>
-                <th>{{ knp_pagination_sortable(products, 'Status ', 'product.id') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Status ', 'orderableStatus.id') }}</th>
 
                 <th>Actions</th>
             </tr>
@@ -112,7 +112,7 @@
                 {#Status#}
                 {#"Orderable Status" with the following values: “Requested”, “Pending Additional Info”, “In Progress”, and “Completed”#}
                 <td>
-                    {{ product.note }}
+                    {{ product.orderableStatus }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -134,12 +134,28 @@
                             </li>
 
                             {#Mark as “Completed”.#}
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Completed', 'workqueue': workqueue }) }}"
+                                >Mark as "Completed"</a>
+                            </li>
 
                             {#Mark as “Pending Additional Info”#}
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Pending Additional Info', 'workqueue': workqueue }) }}"
+                                >Mark as "Pending Additional Info"</a>
+                            </li>
 
                             {#Mark as “In Progress”#}
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'In Progress', 'workqueue': workqueue }) }}"
+                                >Mark as "In Progress"</a>
+                            </li>
 
                             {#Mark as “Requested”.#}
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Requested', 'workqueue': workqueue }) }}"
+                                >Mark as "Requested"</a>
+                            </li>
 
                         </ul>
 

@@ -953,6 +953,10 @@
             {{ formmacros.field(formproduct.note) }}
         {% endif %}
 
+        {% if formproduct.orderableStatus is defined %}
+            {{ formmacros.field(formproduct.orderableStatus) }}
+        {% endif %}
+
         {% if formproduct.vars.value %}
             {% set workQueues = formproduct.vars.value.getWorkQueues() %}
             {% if workQueues and workQueues|length > 0 %}

@@ -2406,6 +2406,9 @@ class TransResRequestUtil
                 $product->setNotInInvoice(true);
             }
         }
+
+        //set product's orderableStatus to "Requested" if not set
+        $this->setProductsStatus($transresRequest,"Requested");
         
         return $transresRequest;
     }
@@ -6090,6 +6093,32 @@ class TransResRequestUtil
         }
 
         return $msgInfo;
+    }
+
+    //set product's orderableStatus to "Requested" if not set
+    public function setProductsStatus( $transresRequest, $orderableStatus="Requested" ) {
+
+        if( !$transresRequest ) {
+            return false;
+        }
+
+        if( !$orderableStatus ) {
+            return false;
+        }
+
+        $requestedStatus = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($orderableStatus);
+        if( !$requestedStatus ) {
+            return false;
+        }
+
+        foreach( $transresRequest->getProducts() as $product ) {
+            //only set if not set (don't change existing status)
+            if( !$product->getOrderableStatus() ) {
+                $product->setOrderableStatus($requestedStatus);
+            }
+        }
+
+        return true;
     }
 
 //    //Find if the $product exists in latest invoice
