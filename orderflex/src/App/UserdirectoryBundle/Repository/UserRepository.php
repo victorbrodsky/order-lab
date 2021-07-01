@@ -566,9 +566,13 @@ class UserRepository extends EntityRepository {
         if( $statusArr && count($statusArr)>0 ) {
             $statusCriterionArr = array();
             foreach( $statusArr as $status ) {
-                $statusCriterionArr[] = "list.status = '".$status."'";
+                $statusCriterionArr[] = "list.type = '".$status."'";
+
+                //$statusCriterionArr[] = "list.status = :statusName";
+                //$parameters['statusName'] = $status;
             }
             $statusCriterion = "(".implode(" OR ",$statusCriterionArr).")";
+            //echo "statusCriterion=[$statusCriterion]<br>";
             $query->andWhere($statusCriterion);
         }
 

@@ -34,6 +34,7 @@ use App\ResAppBundle\Entity\ResAppStatus;
 use App\ResAppBundle\Entity\SpecificIndividualList;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Entity\OrderableStatusList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\ProjectTypeList;
@@ -992,6 +993,7 @@ class AdminController extends OrderAbstractController
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_WorkQueueList = $this->generateWorkQueueList(); //after generateTransResProjectSpecialty()s
+        $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
@@ -1118,6 +1120,7 @@ class AdminController extends OrderAbstractController
             //'CrnEntryTagsList='.$count_generateCrnEntryTagsList.', '.
             'businessPurposesList='.$count_BusinessPurposesList.', '.
             'WorkQueueList='.$count_WorkQueueList.', '.
+            'OrderableStatusList='.$count_OrderableStatusList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -7457,6 +7460,7 @@ class AdminController extends OrderAbstractController
             "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
             "transrespricetypes" => array('PriceTypeList','transrespricetypes-list','Translational Research Price Type List'),
             "workqueuetypes" => array('WorkQueueList','workqueuetypes-list','Work Queue Type List'),
+            "orderablestatus" => array('OrderableStatusList','orderablestatus-list','Orderable Status List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -9495,11 +9499,14 @@ class AdminController extends OrderAbstractController
         );
 
         $count = 10;
-        foreach( $types as $nameArr ) {
+        foreach( $types as $name=>$nameArr ) {
 
-            $name = $nameArr[0];
+            $abbreviation = $nameArr[0];
+            //echo "name=$name<br>";
+            //echo "abbreviation=$abbreviation<br>";
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
+            //echo "name=".$listEntity->getName()."; abbreviation=".$listEntity->getAbbreviation()."<br>";
             if( $listEntity ) {
                 continue;
             }
@@ -9507,14 +9514,55 @@ class AdminController extends OrderAbstractController
             $listEntity = new WorkQueueList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
+            $listEntity->setAbbreviation($abbreviation);
+
             $em->persist($listEntity);
             $em->flush();
 
             $count = $count + 10;
         }
+        //exit('111');
 
         //scan and add Work Queue roles
         $transresUtil->addTransresRolesBySpecialtyWorkQueue();
+
+        return round($count/10);
+    }
+
+    public function generateOrderableStatusList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        //“Requested”, “Pending Additional Info”, “In Progress”, and “Completed”
+        $types = array(
+            "Requested" => array("requested"),
+            "Pending Additional Info" => array("pending-additional-info"),
+            "In Progress" => array("in-progress"),
+            "Completed" => array("completed"),
+        );
+
+        $count = 10;
+        foreach( $types as $name=>$nameArr ) {
+
+            $abbreviation = $nameArr[0];
+            //echo "name=$name<br>";
+            //echo "abbreviation=$abbreviation<br>";
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new OrderableStatusList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
 
         return round($count/10);
     }
@@ -9763,7 +9811,7 @@ class AdminController extends OrderAbstractController
         //disable all where productId is NULL
         $query = $em->createQuery("UPDATE AppTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
         $numUpdated = $query->execute();
-        echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
+        //echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
 
         //(rev.08/17) *Contact: Bing He 212-746-6230
         $types = array(
