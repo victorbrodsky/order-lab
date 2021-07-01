@@ -1215,6 +1215,157 @@
     </div>
 {% endmacro %}
 
+{% macro transresWorkQueuesFilter( filterform, advancedFilter ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div id="transres-filter-request" class="well form-search">
+        {{ form_start(filterform) }}
+
+        {#"Category", "Project Specialty" [AP/CP or Hematopathology], "Project", "Work Progress Status", "Billing Progress Status", and "Submitter"#}
+        <div class="row">
+            <div class="col-xs-4">
+                {% if filterform.categories is defined %}
+                    {{ form_widget(filterform.categories,{'attr': {'placeholder': 'Products/Services'}}) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(filterform.requestId) }}
+            </div>
+            <div class="col-xs-3">
+                {% if filterform.project is defined %}
+                    {{ form_widget(filterform.project) }}
+                {% endif %}
+                {% if filterform.projectSearch is defined %}
+                    <div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">
+                        {{ form_widget(filterform.projectSearch) }}
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="col-xs-1">
+                <div class="btn-group btn-group-sm">
+                        <span data-toggle="buttons-checkbox">
+                            <button
+                                    data-toggle="collapse"
+                                    href="#transres-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                <span class="glyphicon glyphicon-wrench"></span>
+                            </button>
+                        </span>
+                    <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
+                </div>
+            </div>
+        </div> {#row#}
+
+        <br>
+        <div class="row">
+            <div class="col-xs-4">
+                {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Completion Status'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {% if filterform.requester is defined %}
+                    {{ form_widget(filterform.requester, {'attr': {'placeholder': 'Requester'}}) }}
+                {% endif %}
+            </div>
+        </div>
+
+        {#advanced search#}
+        {% if advancedFilter %}
+            {% set advacedCollapse = 'in' %}
+        {% else %}
+            {% set advacedCollapse = '' %}
+        {% endif %}
+
+        <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        {% if filterform.principalInvestigators is defined %}
+                            {{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators for the project'}}) }}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        {% if filterform.billingContact is defined %}
+                            {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_widget(filterform.fundingNumber) }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_widget(filterform.fundingType) }}
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        {{ form_widget(filterform.comment) }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_widget(filterform.externalId) }}
+                    </div>
+                    <div class="col-xs-4">
+                        {{ form_widget(filterform.sampleName) }}
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        {% if filterform.completedBy is defined %}
+                            {{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4">
+                        {% if filterform.priceList is defined %}
+                            {{ form_widget(filterform.priceList) }}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4">
+                        {% if filterform.workQueues is defined %}
+                            {{ form_widget(filterform.workQueues) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {#<div class="row">#}
+                {#<div class="col-xs-4">#}
+                {#</div>#}
+                {#<div class="col-xs-4">#}
+                {#</div>#}
+                {#<div class="col-xs-4">#}
+                {#</div>#}
+                {#</div>#}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+
+        {{ form_end(filterform) }}
+    </div>
+{% endmacro %}
 
 {% macro transresInvoiceFilter( filterform, advancedFilter ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}

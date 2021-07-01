@@ -25,6 +25,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\TranslationalResearchBundle\Form\FilterWorkQueuesType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -70,7 +71,53 @@ class WorkQueueController extends OrderAbstractController
         }
 
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        
+        ///////////// Filter //////////////////
+        $advancedFilter = 0;
+
+        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+
+        if( count($projectSpecialtyAllowedArr) == 0 ) { //testing getTransResAdminEmails
+            $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(null,true,true); //send warning email if no specialty
+            $errorMsg = "You don't have any allowed project specialty in your profile.".
+                "<br>Please contact the system admin(s):".
+                "<br>".implode(", ",$sysAdminEmailArr);
+            //exit($errorMsg);
+            //no allowed specialty
+            return array(
+                'filterError' => true,
+                'title' => $errorMsg,
+            );
+        }
+
+        $progressStateArr = $transresRequestUtil->getProgressStateArr();
+        $billingStateArr = $transresRequestUtil->getBillingStateArr();
+
+        //add "All except Drafts"
+        $progressStateArr["All except Drafts"] = "All-except-Drafts";
+        $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
+
+        $transresPricesList = $transresUtil->getPricesList();
+
+        $params = array(
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'progressStateArr' => $progressStateArr,
+            'billingStateArr' => $billingStateArr,
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
+            'transresPricesList' => $transresPricesList
+        );
+        $filterform = $this->createForm(FilterWorkQueuesType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+
+        $filterform->handleRequest($request);
+        
+        ///////////// EOF Filetr ///////////////
 
         //echo "workqueue=$workqueue<br>";
 
@@ -174,7 +221,9 @@ class WorkQueueController extends OrderAbstractController
         $formArray = array(
             'products' => $products,
             'title' => $title,
-            'workqueue' => $workqueue
+            'workqueue' => $workqueue,
+            'filterform' => $filterform->createView(),
+            'advancedFilter' => $advancedFilter,
         );
 
         return $formArray;
