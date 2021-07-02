@@ -168,10 +168,8 @@ class FilterWorkQueuesType extends AbstractType
         ));
         
         $builder->add('principalInvestigators', CustomSelectorType::class, array(
-            //'label' => 'Building:',
             'attr' => array('class' => 'combobox combobox-without-add ajax-combobox-pis', 'type' => 'hidden'),
             'required' => false,
-            //'multiple' => true,
             'classtype' => 'genericusers'
         ));
 

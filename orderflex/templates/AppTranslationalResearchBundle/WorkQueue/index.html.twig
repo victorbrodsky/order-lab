@@ -30,8 +30,8 @@
                 <th>{{ knp_pagination_sortable(products, 'Project ID', 'project.id') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Work Request ID', 'transresRequest.id') }}</th>
 
-                <th>{{ knp_pagination_sortable(products, 'PI(s)', 'principalInvestigatorsInfos.displayName') }}</th>
-                <th>{{ knp_pagination_sortable(products, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'PI(s)', 'requestPrincipalInvestigatorsInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Submitter', 'requestSubmitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Product or Service', 'category.productId') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Requested Quantity', 'product.requested') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Completed Quantity', 'product.completed') }}</th>
@@ -187,12 +187,29 @@
 {% block additionaljs %}
 
     <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>#}
-    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-workqueues.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-request.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-workqueues.js') }}"></script>#}
 
     <script type="text/javascript">
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
+
+            var holder = $('#transres-filter-request');
+            getComboboxGeneric(
+                    holder,
+                    'requesters',
+                    _genericusers,      //globalDataArray
+                    false,              //multipleFlag
+                    'genericusers/',    //urlprefix
+                    "employees",        //sitename
+                    null,               //force
+                    null,               //placeholder
+                    false               //thisAsyncflag. Async - get array of users (_genericusers) asynchronous.
+            );
+
+            populateSelectCombobox( $('.ajax-combobox-requesters'), _genericusers, true, true );
+            populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
         });
     </script>
 

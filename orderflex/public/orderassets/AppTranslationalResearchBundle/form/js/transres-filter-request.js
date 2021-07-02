@@ -37,7 +37,6 @@ $(document).ready(function() {
     // thisAsyncflag
     // )
     var holder = $('#transres-filter-request');
-    //getComboboxGeneric(newForm,'locationusers',_locationusers,false,'');
     getComboboxGeneric(
         holder,
         'submitter',
@@ -54,6 +53,7 @@ $(document).ready(function() {
     populateSelectCombobox( $('.ajax-combobox-billingcontact'), _genericusers, true, false );
     populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
     populateSelectCombobox( $('.ajax-combobox-completedby'), _genericusers, true, false );
+    //populateSelectCombobox( $('.ajax-combobox-requesters'), _genericusers, true, true );
 });
 
 

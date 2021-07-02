@@ -244,11 +244,14 @@ class WorkQueueController extends OrderAbstractController
         $dql->leftJoin('product.transresRequest','transresRequest');
         $dql->leftJoin('transresRequest.project','project');
 
-        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
-        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+        //$dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        //$dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
-        $dql->leftJoin('transresRequest.submitter','submitter');
-        $dql->leftJoin('submitter.infos','submitterInfos');
+        $dql->leftJoin('transresRequest.principalInvestigators','requestPrincipalInvestigators');
+        $dql->leftJoin('requestPrincipalInvestigators.infos','requestPrincipalInvestigatorsInfos');
+        
+        $dql->leftJoin('transresRequest.submitter','requestSubmitter');
+        $dql->leftJoin('requestSubmitter.infos','requestSubmitterInfos');
 
         $dql->leftJoin('product.orderableStatus','orderableStatus');
 
@@ -359,36 +362,158 @@ class WorkQueueController extends OrderAbstractController
 
         if( $requesters ) {
             //TODO:
-            $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
-            $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
-            $dql->leftJoin('project.pathologists','projectPathologists');
-            $dql->leftJoin('project.billingContact','projectBillingContact');
-            $dql->leftJoin('project.contacts','projectContacts');
-            $dql->leftJoin('project.submitter','projectSubmitter');
-            $dql->leftJoin('project.updateUser','projectUpdateUser');
+//            $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
+//            $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
+//            $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
+//            $dql->leftJoin('project.pathologists','projectPathologists');
+//            $dql->leftJoin('project.billingContact','projectBillingContact');
+//            $dql->leftJoin('project.contacts','projectContacts');
+//            $dql->leftJoin('project.submitter','projectSubmitter');
+//            $dql->leftJoin('project.updateUser','projectUpdateUser');
 
-            $dql->leftJoin('transresRequest.updateUser','transresRequestUpdateUser');
-            $dql->leftJoin('transresRequest.completedBy','transresRequestCompletedBy');
-            $dql->leftJoin('transresRequest.principalInvestigators','transresRequestPrincipalInvestigators');
-            $dql->leftJoin('transresRequest.contact','transresRequestContact');
-            $dql->leftJoin('transresRequest.submitter','transresRequestSubmitter');
+            $dql->leftJoin('transresRequest.updateUser','requestUpdateUser');
+            $dql->leftJoin('transresRequest.completedBy','requestCompletedBy');
+            $dql->leftJoin('transresRequest.contact','requestContact');
 
+
+//            $dql->andWhere(
+//                //Request requesters
+//                "requestPrincipalInvestigators.id = :userId OR ".
+//                "requestContact.id = :userId OR ".
+//                "requestSubmitter.id = :userId"
+//                //project's requesters
+//                . " OR " .
+//                "projectPrincipalInvestigators.id = :userId OR ".
+//                "projectPrincipalIrbInvestigator.id = :userId OR ".
+//                "projectCoInvestigators.id = :userId OR ".
+//                "projectPathologists.id = :userId OR ".
+//                "projectContacts.id = :userId OR ".
+//                "projectBillingContact.id = :userId OR ".
+//                "projectSubmitter.id = :userId"
+//            );
 
             $dql->andWhere(
                 //Request requesters
-                "principalInvestigators.id = :userId OR ".
-                "contact.id = :userId OR ".
-                "submitter.id = :userId OR ".
+                "requestPrincipalInvestigators.id IN (:userId) OR ".
+                "requestContact.id IN (:userId) OR ".
+                "requestSubmitter.id IN (:userId)"
                 //project's requesters
-                "projectPrincipalInvestigators.id = :userId OR ".
-                "projectPrincipalIrbInvestigator.id = :userId OR ".
-                "projectCoInvestigators.id = :userId OR ".
-                "projectPathologists.id = :userId OR ".
-                "projectContacts.id = :userId OR ".
-                "projectBillingContact.id = :userId OR ".
-                "projectSubmitter.id = :userId"
-
+//                . " OR " .
+//                "projectPrincipalInvestigators.id = :userId OR ".
+//                "projectPrincipalIrbInvestigator.id = :userId OR ".
+//                "projectCoInvestigators.id = :userId OR ".
+//                "projectPathologists.id = :userId OR ".
+//                "projectContacts.id = :userId OR ".
+//                "projectBillingContact.id = :userId OR ".
+//                "projectSubmitter.id = :userId"
             );
+
+            $dqlParameters["userId"] = $requesters;
+        }
+
+        if( $fundingNumber ) {
+            $dql->andWhere("LOWER(transresRequest.fundedAccountNumber) LIKE LOWER(:fundedAccountNumber)");
+            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
+            $advancedFilter++;
+        }
+
+        if( $fundingType ) {
+            //echo "fundingType=" . $fundingType . "<br>";
+            if( $fundingType == "Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NOT NULL");
+                $advancedFilter++;
+            }
+            if( $fundingType == "Non-Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NULL");
+                $advancedFilter++;
+            }
+        }
+
+        if( $sampleName ) {
+            $dql->leftJoin('transresRequest.dataResults','dataResults');
+            $dql->andWhere("LOWER(dataResults.barcode) LIKE LOWER(:sampleName)");
+            $dqlParameters["sampleName"] = "%".$sampleName."%";
+            $advancedFilter++;
+        }
+
+        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+            $dql->andWhere("requestPrincipalInvestigators.id IN (:principalInvestigators)");
+
+            $principalInvestigatorsIdsArr = array();
+            foreach($principalInvestigators as $principalInvestigator) {
+                //echo "PI=".$principalInvestigator."; id=".$principalInvestigator->getId()."<br>";
+                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+            }
+            $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);
+
+            //$dqlParameters["principalInvestigators"] = $principalInvestigators;
+
+            $advancedFilter++;
+        }
+
+        if( $progressStates && count($progressStates) > 0 ) {
+            $allExceptDraft = "";
+            if( in_array("All-except-Drafts", $progressStates )) {
+                $allExceptDraft = " OR transresRequest.progressState != 'draft' OR transresRequest.progressState IS NULL";
+            }
+            if( in_array("All-except-Drafts-and-Canceled", $progressStates )) {
+                $allExceptDraft = " OR (transresRequest.progressState != 'draft' AND transresRequest.progressState != 'canceled') OR transresRequest.progressState IS NULL";
+            }
+            $dql->andWhere("transresRequest.progressState IN (:progressStates)".$allExceptDraft);
+            $dqlParameters["progressStates"] = $progressStates;
+            $advancedFilter++;
+        }
+
+        if( $billingStates && count($billingStates)>0 ) {
+            //$dql->andWhere("transresRequest.billingState IN (:billingStates)");
+            //$dqlParameters["billingStates"] = implode(",",$billingStates);
+            $dql->andWhere("transresRequest.billingState IN (:billingStates)");
+            $dqlParameters["billingStates"] = $billingStates;
+            $advancedFilter++;
+        }
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('transresRequest.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $endDate ) {
+            $endDate->modify('+1 day');
+            $dql->andWhere('transresRequest.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if ($searchStr) {
+            $dql->leftJoin('transresRequest.dataResults','dataResults');
+            //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
+            $commentCriterion = "LOWER(product.comment) LIKE LOWER(:searchStr) OR LOWER(product.note) LIKE LOWER(:searchStr) OR LOWER(transresRequest.comment) LIKE LOWER(:searchStr) OR LOWER(dataResults.comment) LIKE LOWER(:searchStr)";
+            $dqlParameters["searchStr"] = "%".$searchStr."%";
+
+            //add search fos bundle comments
+            $requestCommentIds = $transresRequestUtil->getRequestIdsByFosComment($searchStr);
+            if( count($requestCommentIds) > 0 ) {
+                $commentCriterion = $commentCriterion . " OR " . "transresRequest.id IN (:requestCommentIds)";
+                $dqlParameters["requestCommentIds"] = $requestCommentIds;
+            }
+
+            $dql->andWhere($commentCriterion);
+
+            $advancedFilter++;
+        }
+
+        if( $priceList ) {
+            if( $priceList != 'all' ) {
+                $dql->leftJoin('project.priceList','priceList');
+                if( $priceList == 'default' ) {
+                    $dql->andWhere("priceList.id IS NULL");
+                } else {
+                    $dql->andWhere("priceList.id = :priceListId");
+                    $dqlParameters["priceListId"] = $priceList;
+                }
+                $advancedFilter++;
+            }
         }
 
         //////////// EOF Process Filter //////////////////

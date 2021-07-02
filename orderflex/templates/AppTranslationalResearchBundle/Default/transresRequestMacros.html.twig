@@ -1279,8 +1279,8 @@
                 {% endif %}
             </div>
             <div class="col-xs-4">
-                {% if filterform.requester is defined %}
-                    {{ form_widget(filterform.requester, {'attr': {'placeholder': 'Requester'}}) }}
+                {% if filterform.requesters is defined %}
+                    {{ form_widget(filterform.requesters, {'attr': {'placeholder': 'Work Request Particiapant(s)'}}) }}
                 {% endif %}
             </div>
         </div>
