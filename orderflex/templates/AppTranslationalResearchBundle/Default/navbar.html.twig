@@ -30,26 +30,17 @@
 {% endmacro %}
 
 {% macro createFilterWorkQueuesType( filterTypes ) %}
-    {#filterTypes: filterTypes['ctp-lab']='CTP Lab'#}
-    {#{% for filterType in filterTypes %}#}
-        {#{% if filterType == "[[hr]]" %}#}
-            {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
-        {#{% else %}#}
-            {#{% set filterTypeUrl = filterType|replace({' ':'-'}) %}#}
-            {#<li>#}
-                {#<a href="{{ path(translationalresearch_sitename~'_work_queue_index_filter',{'workqueue':filterTypeUrl}) }}">{{ filterType }}</a>#}
-            {#</li>#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
-
-    {% for key, workQueue in filterTypes %}
+    {% for key, workQueueName in filterTypes %}
         {#<li>{{ key }}: {{ workQueue }}</li>#}
-        {% if workQueue == "[[hr]]" %}
+        {% if workQueueName == "[[hr]]" %}
             <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
             {% set filterTypeUrl = key|replace({' ':'-'}) %}
+            {#<li>#}
+                {#<a href="{{ path(translationalresearch_sitename~'_work_queue_index_filter',{'workqueue':filterTypeUrl}) }}">{{ workQueue }}</a>#}
+            {#</li>#}
             <li>
-                <a href="{{ path(translationalresearch_sitename~'_work_queue_index_filter',{'workqueue':filterTypeUrl}) }}">{{ workQueue }}</a>
+                <a href="{{ path(translationalresearch_sitename~'_work_queue_index',{'workqueue':filterTypeUrl}) }}">{{ workQueueName }}</a>
             </li>
         {% endif %}
     {% endfor %}

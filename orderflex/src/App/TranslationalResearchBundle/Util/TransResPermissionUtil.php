@@ -750,7 +750,11 @@ class TransResPermissionUtil
 
             $specialtyQueueRole = $user->hasPartialRole($specialtyStr,"_QUEUE");
 
-//            //testing
+            //Always allow for Platform Admin
+            if( $this->secAuth->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+                return true;
+            }
+
 //            if(
 //                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
 //                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)

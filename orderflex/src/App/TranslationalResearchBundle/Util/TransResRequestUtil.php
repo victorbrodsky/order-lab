@@ -2691,6 +2691,7 @@ class TransResRequestUtil
             $lowercaseName = strtolower($workQueue->getName()); //ctp lab
             $lowercaseName = str_replace(' ','-',$lowercaseName);
             $filterTypes[$lowercaseName] = "All ".$workQueue->getName()." Work Queue";
+            //$filterTypes[$workQueue->getId()] = "All ".$workQueue->getName()." Work Queue";
         }
 
         return $filterTypes;

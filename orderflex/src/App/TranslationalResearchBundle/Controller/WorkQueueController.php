@@ -58,10 +58,15 @@ class WorkQueueController extends OrderAbstractController
      * Finds and displays the filtered work queues lists
      * orderables/queue=ctp-lab /orderables/queue=misi-lab
      *
-     * @Route("/orderables/{workqueue}", name="translationalresearch_work_queue_index_filter", methods={"GET"})
+     * //Route("/orderables/{workqueue}", name="translationalresearch_work_queue_index_filter", methods={"GET"})
+     *
+     * @Route("/orderables/queue/{workqueue}", name="translationalresearch_work_queue_index", methods={"GET"})
+     * @Route("/orderables/", name="translationalresearch_work_queue_index_filter", methods={"GET"})
+     *
+     * @Route("/orderables/", name="translationalresearch_work_queue_index_filter", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/WorkQueue/index.html.twig")
      */
-    public function myRequestsAction(Request $request, $workqueue) {
+    public function myRequestsAction(Request $request, $workqueue=NULL) {
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -74,11 +79,36 @@ class WorkQueueController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        
+
+        $routeName = $request->get('_route');
+        $singleWorkqueue = NULL;
+        $title = "Work Queues"; // . $workQueuesName;
+
+
+        if( $routeName == 'translationalresearch_work_queue_index') {
+            //$workqueue = $request->query->get('workqueue');
+            $workqueueName = str_replace('-',' ',$workqueue);
+            $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
+            //$workQueuesId = NULL;
+            //$workQueuesName = NULL;
+            //if( $workqueueEntity ) {
+            //    $workQueuesId = $workqueueEntity->getId();
+            //    $workQueuesName = $workqueueEntity->getName();
+            //}
+            //echo "workQueuesId=$workQueuesId<br>";
+            if( $workqueueEntity ) {
+                return $this->redirectToRoute('translationalresearch_work_queue_index_filter',array('filter[workQueues][]'=>$workqueueEntity->getId()));
+            } else {
+                return $this->redirectToRoute('translationalresearch_work_queue_index_filter');
+            }
+        }
+
         ///////////// Filter //////////////////
         $advancedFilter = 0;
 
         //////// create filter //////////
+        //filter%5Bcategories%5D%5B%5D=58&filter%5BrequestId%5D=&filter%5BprojectSearch%5D=&filter%5BworkQueues%5D%5B%5D=1&filter%5BworkQueues%5D%5B%5D=2&filter%5Brequester%5D=&filter%5BprincipalInvestigators%5D=&filter%5BstartDate%5D=&filter%5BendDate%5D=&filter%5BfundingNumber%5D=&filter%5BfundingType%5D=&filter%5Bcomment%5D=&filter%5BsampleName%5D=&filter%5BpriceList%5D=all
+
         $requestId = null;
         $externalId = null;
         $submitter = null;
@@ -149,19 +179,15 @@ class WorkQueueController extends OrderAbstractController
 
 
         $requestId = $filterform['requestId']->getData();
-        $externalId = $filterform['externalId']->getData();
-        //$submitter = $filterform['submitter']->getData();
+        //$externalId = $filterform['externalId']->getData();
+        $orderableStatuses = $filterform['orderableStatus']->getData();
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
-        //$categories = $filterform['categories']->getData();
         $projectSpecialties = $filterform['projectSpecialty']->getData();
         $searchStr = $filterform['comment']->getData();
         $sampleName = $filterform['sampleName']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
-        //$principalInvestigators = $filterform['principalInvestigators']->getData();
-        //$accountNumber = $filterform['accountNumber']->getData();
-        //$billingContact = $filterform['billingContact']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
         $filterType = trim($request->get('type'));
@@ -172,6 +198,19 @@ class WorkQueueController extends OrderAbstractController
         $filterType = str_replace("-", " ", $filterType);
         $filterType = str_replace("COVID 19","COVID-19",$filterType); //All COVID 19 Requests => All COVID-19 Requests
         $filterTypeLowerCase = strtolower($filterType);
+
+        if (isset($filterform['categories'])) {
+            $categories = $filterform['categories']->getData();
+        }
+
+        $principalInvestigators = null;
+        if( isset($filterform['principalInvestigators']) ) {
+            $principalInvestigators = $filterform['principalInvestigators']->getData();
+        }
+
+        if( isset($filterform['requesters']) ) {
+            $requesters = $filterform['requesters']->getData();
+        }
 
         if( isset($filterform['project']) ) {
             $projectFilter = $filterform['project']->getData();
@@ -232,20 +271,127 @@ class WorkQueueController extends OrderAbstractController
         //$dql->andWhere("transresRequest.id IN (:ids)");
         //$dqlParameters["ids"] = $ids;
 
-        $workqueueName = str_replace('-',' ',$workqueue);
-
-        $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
-        $workQueuesId = NULL;
-        $workQueuesName = NULL;
-        if( $workqueueEntity ) {
-            $workQueuesId = $workqueueEntity->getId();
-            $workQueuesName = $workqueueEntity->getName();
-        }
+        //$workqueueName = str_replace('-',' ',$workqueue);
+        //$workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
+        //$workQueuesId = NULL;
+        //$workQueuesName = NULL;
+        //if( $workqueueEntity ) {
+        //    $workQueuesId = $workqueueEntity->getId();
+        //    $workQueuesName = $workqueueEntity->getName();
+        //}
         //echo "workQueuesId=$workQueuesId<br>";
 
+        //////////// Process Filter //////////////////
+
         $dql->andWhere("transresRequest IS NOT NULL");
-        $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
-        $dqlParameters["workQueues"] = $workQueuesId;
+        //$dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+        //$dqlParameters["workQueues"] = $workQueuesId;
+
+        if( $workQueues && count($workQueues) > 0 ) {
+            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            $dqlParameters["workQueues"] = $workQueues;
+
+            $workQueueNameArr = array();
+            foreach($workQueues as $workQueue) {
+                $workQueueNameArr[] = $workQueue->getName();
+            }
+            //$workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
+            if( count($workQueueNameArr) > 0 ) {
+                $title = $title . " " . implode(", ",$workQueueNameArr);
+            }
+
+            if( count($workQueues) == 1 ) {
+                $singleWorkqueue = $workQueues[0];
+            }
+        }
+
+        if( $categories && count($categories) > 0 ) {
+            $dql->andWhere("category.id IN (:categoryIds)");
+            $dqlParameters["categoryIds"] = $categories;
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $requestId ) {
+            $dql->andWhere('LOWER(transresRequest.oid) LIKE LOWER(:requestId)');
+            $dqlParameters['requestId'] = "%".$requestId."%";
+        }
+
+        if( $projectSearch ) {
+            $projectId = null;
+            if (strpos($projectSearch, ', ') !== false) {
+                //get id
+                $projectSearchArr = explode(", ",$projectSearch);
+                if( count($projectSearchArr) > 1 ) {
+                    $projectOid = $projectSearchArr[0];
+                    //get id (remove APCP or HP)
+                    $projectId = (int) filter_var($projectOid, FILTER_SANITIZE_NUMBER_INT);
+                }
+                if( !$projectId ) {
+                    $projectOid = $projectSearch;
+                    //get id (remove APCP or HP)
+                    $projectId = (int) filter_var($projectOid, FILTER_SANITIZE_NUMBER_INT);
+                }
+            } else {
+                //get id (remove APCP or HP)
+                $projectId = (int) filter_var($projectSearch, FILTER_SANITIZE_NUMBER_INT);
+            }
+
+            if( $projectId ) {
+                //echo "projectId=[".$projectId."] <br>";
+                $dql->andWhere("project.id = :projectId");
+                $dqlParameters["projectId"] = $projectId;
+            }
+        }
+
+        if( $orderableStatuses && count($orderableStatuses) > 0 ) {
+            $dql->andWhere("orderableStatus.id IN (:orderableStatusIds)");
+            $dqlParameters["orderableStatusIds"] = $orderableStatuses;
+        }
+
+        if( $requesters ) {
+            //TODO:
+            $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
+            $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
+            $dql->leftJoin('project.pathologists','projectPathologists');
+            $dql->leftJoin('project.billingContact','projectBillingContact');
+            $dql->leftJoin('project.contacts','projectContacts');
+            $dql->leftJoin('project.submitter','projectSubmitter');
+            $dql->leftJoin('project.updateUser','projectUpdateUser');
+
+            $dql->leftJoin('transresRequest.updateUser','transresRequestUpdateUser');
+            $dql->leftJoin('transresRequest.completedBy','transresRequestCompletedBy');
+            $dql->leftJoin('transresRequest.principalInvestigators','transresRequestPrincipalInvestigators');
+            $dql->leftJoin('transresRequest.contact','transresRequestContact');
+            $dql->leftJoin('transresRequest.submitter','transresRequestSubmitter');
+
+
+            $dql->andWhere(
+                //Request requesters
+                "principalInvestigators.id = :userId OR ".
+                "contact.id = :userId OR ".
+                "submitter.id = :userId OR ".
+                //project's requesters
+                "projectPrincipalInvestigators.id = :userId OR ".
+                "projectPrincipalIrbInvestigator.id = :userId OR ".
+                "projectCoInvestigators.id = :userId OR ".
+                "projectPathologists.id = :userId OR ".
+                "projectContacts.id = :userId OR ".
+                "projectBillingContact.id = :userId OR ".
+                "projectSubmitter.id = :userId"
+
+            );
+        }
+
+        //////////// EOF Process Filter //////////////////
 
         $limit = 20;
         $query = $em->createQuery($dql);
@@ -281,8 +427,6 @@ class WorkQueueController extends OrderAbstractController
             $paginationParams
         );
 
-        $title = "Work Queues " . $workQueuesName;
-
         $matchingStrProductstIds = $transresUtil->getMatchingProductArrByDqlParameters($dql,$dqlParameters);
         $allProductsts = count($matchingStrProductstIds);
         $allGlobalRequests = $transresUtil->getTotalProductsCount();
@@ -291,7 +435,7 @@ class WorkQueueController extends OrderAbstractController
         $formArray = array(
             'products' => $products,
             'title' => $title,
-            'workqueue' => $workqueue,
+            'workqueue' => $singleWorkqueue,
             'filterform' => $filterform->createView(),
             'advancedFilter' => $advancedFilter,
         );
@@ -359,12 +503,13 @@ class WorkQueueController extends OrderAbstractController
 
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
+            //exit("no permisssion");
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $orderableStatusName = $request->query->get('orderablestatus');
-        $workqueue = $request->query->get('workqueue');
-        echo "workqueue=$workqueue<br>";
+        $workqueueId = $request->query->get('workqueue');
+        //echo "workqueue=$workqueue<br>";
         $set = false;
 
         $orderableStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($orderableStatusName);
@@ -390,7 +535,20 @@ class WorkQueueController extends OrderAbstractController
         );
 
         //translationalresearch_work_queue_index_filter
-        return $this->redirectToRoute('translationalresearch_work_queue_index_filter',array('workqueue'=>$workqueue));
+        $lowercaseName = NULL;
+        if( $workqueueId ) {
+            $workQueue = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->find($workqueueId);
+            if ($workQueue) {
+                $lowercaseName = strtolower($workQueue->getName()); //ctp lab
+                $lowercaseName = str_replace(' ', '-', $lowercaseName);
+            }
+        }
+        if( $lowercaseName ) {
+            return $this->redirectToRoute('translationalresearch_work_queue_index',array('workqueue'=>$lowercaseName));
+        } else {
+            return $this->redirectToRoute('translationalresearch_work_queue_index_filter');
+        }
+
     }
 
 }

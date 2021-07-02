@@ -39,7 +39,7 @@ $(document).ready(function() {
     //Now use _genericusers to populate other user select boxes
     //populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
     populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
-    populateSelectCombobox( $('.ajax-combobox-requester'), _genericusers, true, false );
+    populateSelectCombobox( $('.ajax-combobox-requesters'), _genericusers, true, true );
 });
 
 

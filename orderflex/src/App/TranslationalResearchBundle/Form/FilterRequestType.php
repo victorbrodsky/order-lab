@@ -196,8 +196,8 @@ class FilterRequestType extends AbstractType
             //echo "specialty=$spec<br>";
             $projectSpecialtyAllowedArr[] = $spec;
         }
-        echo "count spec1=".count($this->params["projectSpecialtyAllowedArr"])."<br>";
-        echo "count spec2=".count($projectSpecialtyAllowedArr)."<br>";
+        //echo "count spec1=".count($this->params["projectSpecialtyAllowedArr"])."<br>";
+        //echo "count spec2=".count($projectSpecialtyAllowedArr)."<br>";
 
         if( count($projectSpecialtyAllowedArr) == 1 ) {
             $disabled = true;

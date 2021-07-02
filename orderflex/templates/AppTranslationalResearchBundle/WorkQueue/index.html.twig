@@ -35,6 +35,7 @@
                 <th>{{ knp_pagination_sortable(products, 'Product or Service', 'category.productId') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Requested Quantity', 'product.requested') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Completed Quantity', 'product.completed') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Work Queue ', 'workQueues.id') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Status ', 'orderableStatus.id') }}</th>
 
                 <th>Actions</th>
@@ -109,6 +110,12 @@
                 {#Completed Quantity#}
                 <td>
                     {{ product.getCompleted() }}
+                </td>
+
+                <td>
+                    {% for workQueue in product.getWorkQueues() %}
+                        {{ workQueue.getName() }}
+                    {% endfor %}
                 </td>
 
                 {#Status#}
