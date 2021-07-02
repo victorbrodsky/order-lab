@@ -6121,6 +6121,17 @@ class TransResRequestUtil
         return true;
     }
 
+    public function getOrderableStatuses() {
+        $statuses = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        return $statuses;
+    }
+
 //    //Find if the $product exists in latest invoice
 //    public function findProductInInvoice($product,$invoice) {
 //

@@ -1265,10 +1265,18 @@
         <br>
         <div class="row">
             <div class="col-xs-4">
-                {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Completion Status'}}) }}
+                {{ form_widget(filterform.orderableStatus, {'attr': {'placeholder': 'Orderable Status'}}) }}
             </div>
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Completion Status'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}#}
+            {#</div>#}
             <div class="col-xs-4">
-                {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
+                {% if filterform.workQueues is defined %}
+                    {{ form_widget(filterform.workQueues) }}
+                {% endif %}
             </div>
             <div class="col-xs-4">
                 {% if filterform.requester is defined %}
@@ -1304,15 +1312,22 @@
                 <br>
 
                 <div class="row">
-                    <div class="col-xs-4">
-                        {% if filterform.billingContact is defined %}
-                            {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
-                        {% endif %}
+                    {#<div class="col-xs-4">#}
+                        {#{% if filterform.billingContact is defined %}#}
+                            {#{{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}#}
+                        {#{% endif %}#}
+                        {##}
+                    {#</div>#}
+                    <div class="col-xs-3">
+                        {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Completion Status'}}) }}
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
+                        {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
+                    </div>
+                    <div class="col-xs-3">
                         {{ form_widget(filterform.fundingNumber) }}
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-3">
                         {{ form_widget(filterform.fundingType) }}
                     </div>
                 </div>
@@ -1323,33 +1338,38 @@
                     <div class="col-xs-4">
                         {{ form_widget(filterform.comment) }}
                     </div>
-                    <div class="col-xs-4">
-                        {{ form_widget(filterform.externalId) }}
-                    </div>
+                    {#<div class="col-xs-4">#}
+                        {#{{ form_widget(filterform.externalId) }}#}
+                    {#</div>#}
                     <div class="col-xs-4">
                         {{ form_widget(filterform.sampleName) }}
-                    </div>
-                </div>
-
-                <br>
-
-                <div class="row">
-                    <div class="col-xs-4">
-                        {% if filterform.completedBy is defined %}
-                            {{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}
-                        {% endif %}
                     </div>
                     <div class="col-xs-4">
                         {% if filterform.priceList is defined %}
                             {{ form_widget(filterform.priceList) }}
                         {% endif %}
                     </div>
-                    <div class="col-xs-4">
-                        {% if filterform.workQueues is defined %}
-                            {{ form_widget(filterform.workQueues) }}
-                        {% endif %}
-                    </div>
                 </div>
+
+                {#<br>#}
+
+                {#<div class="row">#}
+                    {#<div class="col-xs-4">#}
+                        {#{% if filterform.completedBy is defined %}#}
+                            {#{{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{% if filterform.priceList is defined %}#}
+                            {#{{ form_widget(filterform.priceList) }}#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{% if filterform.workQueues is defined %}#}
+                            {#{{ form_widget(filterform.workQueues) }}#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                {#</div>#}
 
                 {#<div class="row">#}
                 {#<div class="col-xs-4">#}

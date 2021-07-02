@@ -78,6 +78,33 @@ class WorkQueueController extends OrderAbstractController
         ///////////// Filter //////////////////
         $advancedFilter = 0;
 
+        //////// create filter //////////
+        $requestId = null;
+        $externalId = null;
+        $submitter = null;
+        $progressStates = null;
+        $billingStates = null;
+        $categories = null;
+        $projectFilter = null;
+        $projectSearch = null;
+        $searchStr = null;
+        $startDate = null;
+        $endDate = null;
+        $principalInvestigators = null;
+        $billingContact = null;
+        $completedBy = null;
+        $fundingNumber = null;
+        $fundingType = null;
+        $filterType = null;
+        $filterTitle = null;
+        $projectSpecialties = array();
+        $submitter = null;
+        $project = null;
+        $ids = array();
+        $showOnlyMyProjects = false;
+        $priceList = null;
+        $workQueues = array();
+
         $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
         $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
 
@@ -101,12 +128,15 @@ class WorkQueueController extends OrderAbstractController
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
         $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
 
+        //$orderableStatusArr = $transresRequestUtil->getOrderableStatusArr();
+
         $transresPricesList = $transresUtil->getPricesList();
 
         $params = array(
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
+            //'orderableStatusArr' => $orderableStatusArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'transresPricesList' => $transresPricesList
         );
@@ -116,7 +146,47 @@ class WorkQueueController extends OrderAbstractController
         ));
 
         $filterform->handleRequest($request);
-        
+
+
+        $requestId = $filterform['requestId']->getData();
+        $externalId = $filterform['externalId']->getData();
+        //$submitter = $filterform['submitter']->getData();
+        $progressStates = $filterform['progressState']->getData();
+        $billingStates = $filterform['billingState']->getData();
+        //$categories = $filterform['categories']->getData();
+        $projectSpecialties = $filterform['projectSpecialty']->getData();
+        $searchStr = $filterform['comment']->getData();
+        $sampleName = $filterform['sampleName']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        //$principalInvestigators = $filterform['principalInvestigators']->getData();
+        //$accountNumber = $filterform['accountNumber']->getData();
+        //$billingContact = $filterform['billingContact']->getData();
+        $fundingNumber = $filterform['fundingNumber']->getData();
+        $fundingType = $filterform['fundingType']->getData();
+        $filterType = trim($request->get('type'));
+        $filterTitle = trim($request->get('title'));
+
+        //replace - with space
+        //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
+        $filterType = str_replace("-", " ", $filterType);
+        $filterType = str_replace("COVID 19","COVID-19",$filterType); //All COVID 19 Requests => All COVID-19 Requests
+        $filterTypeLowerCase = strtolower($filterType);
+
+        if( isset($filterform['project']) ) {
+            $projectFilter = $filterform['project']->getData();
+        }
+        if(isset($filterform['projectSearch']) ) {
+            $projectSearch = $filterform['projectSearch']->getData();
+        }
+        if(isset($filterform['priceList']) ) {
+            $priceList = $filterform['priceList']->getData();
+        }
+        if(isset($filterform['workQueues']) ) {
+            $workQueues = $filterform['workQueues']->getData();
+        }
+
+
         ///////////// EOF Filetr ///////////////
 
         //echo "workqueue=$workqueue<br>";

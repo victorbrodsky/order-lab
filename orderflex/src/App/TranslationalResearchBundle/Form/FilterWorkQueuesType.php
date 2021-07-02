@@ -78,6 +78,31 @@ class FilterWorkQueuesType extends AbstractType
             },
         ));
 
+//        $builder->add('orderableStatus',ChoiceType::class, array(
+//            'label' => false,
+//            'required' => false,
+//            'multiple' => true,
+//            'choices' => $this->params['orderableStatusArr'],
+//            'attr' => array('class' => 'combobox'),
+//        ));
+        $builder->add('orderableStatus', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
+            'label' => false,
+            //'choice_label' => "getOptimalAbbreviationName",
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>'Orderable Status'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
         $builder->add('progressState',ChoiceType::class, array(
             'label' => false,
             'required' => false,
@@ -113,8 +138,11 @@ class FilterWorkQueuesType extends AbstractType
 
         $projectSpecialtyAllowedArr = array();
         foreach($this->params["projectSpecialtyAllowedArr"] as $spec) {
+            //echo "specialty=$spec<br>";
             $projectSpecialtyAllowedArr[] = $spec;
         }
+        echo "count spec1=".count($this->params["projectSpecialtyAllowedArr"])."<br>";
+        echo "count spec2=".count($projectSpecialtyAllowedArr)."<br>";
 
         if( count($projectSpecialtyAllowedArr) == 1 ) {
             $disabled = true;
@@ -164,11 +192,11 @@ class FilterWorkQueuesType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));
 
-        $builder->add('externalId', TextType::class, array(
-            'required'=>false,
-            'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
-        ));
+//        $builder->add('externalId', TextType::class, array(
+//            'required'=>false,
+//            'label' => false,
+//            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
+//        ));
 
         $builder->add('requestId', TextType::class, array(
             'required'=>false,

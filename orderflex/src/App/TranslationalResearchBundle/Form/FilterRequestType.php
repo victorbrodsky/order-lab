@@ -193,8 +193,11 @@ class FilterRequestType extends AbstractType
 
         $projectSpecialtyAllowedArr = array();
         foreach($this->params["projectSpecialtyAllowedArr"] as $spec) {
+            //echo "specialty=$spec<br>";
             $projectSpecialtyAllowedArr[] = $spec;
         }
+        echo "count spec1=".count($this->params["projectSpecialtyAllowedArr"])."<br>";
+        echo "count spec2=".count($projectSpecialtyAllowedArr)."<br>";
 
         if( count($projectSpecialtyAllowedArr) == 1 ) {
             $disabled = true;
@@ -211,15 +214,6 @@ class FilterRequestType extends AbstractType
             'choices' => $this->params["projectSpecialtyAllowedArr"],
             'data' => $projectSpecialtyAllowedArr,
             'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
         ));
 
         $builder->add('fundingNumber', TextType::class, array(
