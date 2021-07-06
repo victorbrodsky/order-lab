@@ -1024,6 +1024,7 @@ class TransResRequestUtil
                 //If Work Request’s Progress Status is changed
                 if( $statMachineType == 'progress' ) {
                     $this->syncRequestStatus($transresRequest,$to,$testing);
+                    $this->setOrderableStatusByWorkRequestStatus($transresRequest,$originalStateStr,$to);
                 }
 
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
@@ -2408,7 +2409,7 @@ class TransResRequestUtil
         }
 
         //set product's orderableStatus to "Requested" if not set
-        $this->setProductsStatus($transresRequest,"Requested");
+        $this->setProductsStatus($transresRequest,"Requested"); //update WorkRequest Products By Invoice
         
         return $transresRequest;
     }
@@ -6131,6 +6132,59 @@ class TransResRequestUtil
         );
 
         return $statuses;
+    }
+
+    //It can be run inside setProductsStatus or for each product update (WorkRequest edit, each product change status)
+    //issue 17: For all existing Work Requests that have a status of “Completed” set the statuses of the products or services to “Completed”.
+    //issue 18: Setting a work request status to “Completed” should set the status of each of its products or services to “Completed”.
+    //issue 20: Each time a product or service’s queue status is set, check if all of the parent work request’s product
+    // or service items have a status of “ Completed” AND the status of the parent work request
+    // itself is not equal to “Completed” - if that is the case, set the status of the parent work request to “Completed”.
+    public function setWorkRequestStatusByOrderableStatus( $transresRequest ) {
+        if( !$transresRequest ) {
+            return NULL;
+        }
+
+        $products = $transresRequest->getProducts();
+
+        $completedCount = 0;
+
+        foreach($products as $product) {
+            $productStatus = $product->getOrderableStatus();
+            $productStatus = strtolower($productStatus);
+            if( $productStatus == strtolower("Completed") ) {
+                $completedCount++;
+            }
+        }
+
+        if( count($products) > 0 && $completedCount > 0 && $completedCount == count($products) ) {
+            //set work request progress state to Completed
+            $transresRequest->setProgressState('completed');
+        }
+
+        return $transresRequest;
+    }
+    //TODO: work request status to 'completed...' (setRequestTransition) => change all product status to 'completed'
+    //call this after syncRequestStatus (in setRequestTransition and in editAction)
+    public function setOrderableStatusByWorkRequestStatus( $transresRequest, $fromStatus, $currentStatus=NULL ) {
+        if( !$currentStatus ) {
+            $currentStatus = $transresRequest->getProgressState();
+        }
+        if( $currentStatus == 'completed' ) {
+            if( $fromStatus && $fromStatus != $currentStatus ) {
+                //set all product's status to 'completed'
+                $products = $transresRequest->getProducts();
+                $count = 0;
+                foreach($products as $product) {
+                    $product->setOrderableStatus("Completed");
+                }
+                if( $count > 0 ) {
+                    $this->em->flush();
+                    return $transresRequest;
+                }
+            }
+        }
+        return NULL;
     }
 
 //    //Find if the $product exists in latest invoice

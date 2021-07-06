@@ -70,6 +70,7 @@ class WorkQueueController extends OrderAbstractController
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
+        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',null) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -591,6 +592,7 @@ class WorkQueueController extends OrderAbstractController
         $transresRequest = $product->getTransresRequest();
         $project = $transresRequest->getProject();
 
+        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -626,6 +628,7 @@ class WorkQueueController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
+        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
             //exit("no permisssion");

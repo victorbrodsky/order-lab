@@ -74,70 +74,74 @@
         {% endif %}
     </h4>
 
-    <div class="well well-sm">
     {% if projectRemainingBudgetNote %}
-        {% if projectRemainingBudget > 0 %}
-            {% set alertClass = "alert-secondary" %}
-        {% else %}
-            {% set alertClass = "alert-warning" %}
-        {% endif %}
-        <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
-            <p>
-                {{ projectRemainingBudgetNote|raw }}
-            </p>
-        </div>
+        <div class="well well-sm">
+            {% if projectRemainingBudget > 0 %}
+                {% set alertClass = "alert-secondary" %}
+            {% else %}
+                {% set alertClass = "alert-warning" %}
+            {% endif %}
+            <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
+                <p>
+                    {{ projectRemainingBudgetNote|raw }}
+                </p>
+            </div>
 
-        {#Modal for over budget 222(7)#}
-        <div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Over the Approved Project Budget</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy. #}
-                        {#You may need to submit an updated budget estimate along with an explanation. #}
-                        {#Please contact the administrator by emailing [FirstName LastName at email - first user with admin review role for this project type] #}
-                        {#to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)”#}
+            {#Modal for over budget 222(7)#}
+            <div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Over the Approved Project Budget</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy. #}
+                            {#You may need to submit an updated budget estimate along with an explanation. #}
+                            {#Please contact the administrator by emailing [FirstName LastName at email - first user with admin review role for this project type] #}
+                            {#to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)”#}
 
-                        <p>
-                            <div id="over-budget-warning-modal-text">
-                                This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.
-                                You may need to submit an updated budget estimate along with an explanation.
-                                Please contact the administrator by emailing [FirstName LastName at email -
-                                first user with admin review role for this project type] to ensure this work request is completed.
-                                Are you sure you would like to submit this work request?
-                            </div>
-                        </p>
+                            <p>
+                                <div id="over-budget-warning-modal-text">
+                                    This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.
+                                    You may need to submit an updated budget estimate along with an explanation.
+                                    Please contact the administrator by emailing [FirstName LastName at email -
+                                    first user with admin review role for this project type] to ensure this work request is completed.
+                                    Are you sure you would like to submit this work request?
+                                </div>
+                            </p>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     {% endif %}
 
     {% if cycle == "new" %}
+        <div class="well well-sm">
         <p>
             <i>
                 Please make sure to save your work request as a draft or submit the request prior leaving this page.
             </i>
         </p>
+        </div>
     {% endif %}
     {% if cycle == "edit" %}
+        <div class="well well-sm">
         <p>
             <i>
                 Please make sure to update/save your Work Request prior leaving this page.
             </i>
         </p>
+        </div>
     {% endif %}
-    </div>
+
 
     {#barcode image test#}
     {#<button onclick="render()">Show Barcode</button>#}

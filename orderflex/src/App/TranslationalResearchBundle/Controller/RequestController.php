@@ -520,6 +520,7 @@ class RequestController extends OrderAbstractController
             $progressState = $transresRequest->getProgressState();
             if( $progressState != $originalProgressState ) {
                 $transresRequestUtil->syncRequestStatus($transresRequest,$progressState,$testing);
+                $transresRequestUtil->setOrderableStatusByWorkRequestStatus($transresRequest,$originalProgressState,$progressState);
             }
 
             //testing
