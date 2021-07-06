@@ -1234,10 +1234,10 @@
             <div class="col-xs-2">
                 {{ form_widget(filterform.requestId) }}
             </div>
-            <div class="col-xs-3">
-                {% if filterform.project is defined %}
-                    {{ form_widget(filterform.project) }}
-                {% endif %}
+            <div class="col-xs-3" align="left">
+                {#{% if filterform.project is defined %}#}
+                    {#{{ form_widget(filterform.project) }}#}
+                {#{% endif %}#}
                 {% if filterform.projectSearch is defined %}
                     <div id="multiple-datasets-typeahead-search-project" class="multiple-datasets-typeahead-search-project">
                         {{ form_widget(filterform.projectSearch) }}

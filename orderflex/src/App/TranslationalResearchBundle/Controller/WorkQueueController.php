@@ -115,7 +115,7 @@ class WorkQueueController extends OrderAbstractController
         $progressStates = null;
         $billingStates = null;
         $categories = null;
-        $projectFilter = null;
+        //$projectFilter = null;
         $projectSearch = null;
         $searchStr = null;
         $startDate = null;
@@ -125,13 +125,13 @@ class WorkQueueController extends OrderAbstractController
         $completedBy = null;
         $fundingNumber = null;
         $fundingType = null;
-        $filterType = null;
-        $filterTitle = null;
+        //$filterType = null;
+        //$filterTitle = null;
         $projectSpecialties = array();
         $submitter = null;
         $project = null;
-        $ids = array();
-        $showOnlyMyProjects = false;
+        //$ids = array();
+        //$showOnlyMyProjects = false;
         $priceList = null;
         $workQueues = array();
 
@@ -190,14 +190,14 @@ class WorkQueueController extends OrderAbstractController
         $endDate = $filterform['endDate']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
-        $filterType = trim($request->get('type'));
-        $filterTitle = trim($request->get('title'));
+        //$filterType = trim($request->get('type'));
+        //$filterTitle = trim($request->get('title'));
 
         //replace - with space
         //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
-        $filterType = str_replace("-", " ", $filterType);
-        $filterType = str_replace("COVID 19","COVID-19",$filterType); //All COVID 19 Requests => All COVID-19 Requests
-        $filterTypeLowerCase = strtolower($filterType);
+        //$filterType = str_replace("-", " ", $filterType);
+        //$filterType = str_replace("COVID 19","COVID-19",$filterType); //All COVID 19 Requests => All COVID-19 Requests
+        //$filterTypeLowerCase = strtolower($filterType);
 
         if (isset($filterform['categories'])) {
             $categories = $filterform['categories']->getData();
@@ -212,9 +212,9 @@ class WorkQueueController extends OrderAbstractController
             $requesters = $filterform['requesters']->getData();
         }
 
-        if( isset($filterform['project']) ) {
-            $projectFilter = $filterform['project']->getData();
-        }
+//        if( isset($filterform['project']) ) {
+//            $projectFilter = $filterform['project']->getData();
+//        }
         if(isset($filterform['projectSearch']) ) {
             $projectSearch = $filterform['projectSearch']->getData();
         }
@@ -621,7 +621,7 @@ class WorkQueueController extends OrderAbstractController
     public function updateOrderableStatusAction(Request $request, Product $product)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
-        //$transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -649,15 +649,20 @@ class WorkQueueController extends OrderAbstractController
         }
 
         if( $set ) {
-            $msq = "Success: Orderable status for product '".$product."' has been updated to $orderableStatusName";
+            $msg = "Success: Orderable status for product '".$product."' has been updated to $orderableStatusName";
         } else {
-            $msq = "Error: Orderable status for product '".$product."' has not been updated to $orderableStatusName";
+            $msg = "Error: Orderable status for product '".$product."' has not been updated to $orderableStatusName";
         }
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $msq
+            $msg
         );
+
+        //EventLog
+        $transresRequest = $product->getTransresRequest();
+        $eventType = "Orderable Status Changed";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         //translationalresearch_work_queue_index_filter
         $lowercaseName = NULL;

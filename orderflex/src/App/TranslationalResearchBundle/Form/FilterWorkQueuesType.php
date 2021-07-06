@@ -217,6 +217,8 @@ class FilterWorkQueuesType extends AbstractType
         $builder->add('projectSearch', TextType::class, array(
             'required' => false,
             'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 320px;' ),
+            //'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 250%;' ),
+            //'attr' => array('class' => 'form-control typeahead', 'placeholder' => "Project", 'style' => 'font-size: 14px; width: 400px;'),
         ));
 
         if (
