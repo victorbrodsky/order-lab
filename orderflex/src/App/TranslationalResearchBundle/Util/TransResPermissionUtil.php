@@ -750,7 +750,8 @@ class TransResPermissionUtil
                 return true;
             }
 
-            $specialtyQueueRole = $user->hasPartialRole($specialtyStr,"_QUEUE");
+            //ROLE_TRANSRES_TECHNICIAN_APCP_QUEUECTP
+            $specialtyQueueRole = $user->hasPartialRole($specialtyStr."_QUEUE");
 
             //Always allow for Platform Admin
             if( $this->secAuth->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {

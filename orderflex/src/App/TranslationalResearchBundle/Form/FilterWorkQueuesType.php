@@ -42,21 +42,30 @@ class FilterWorkQueuesType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+//        $builder->add('workQueues', EntityType::class, array(
+//            'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+//            'label' => false,
+//            'required' => false,
+//            'multiple' => true,
+//            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Work Queue'),
+//            'query_builder' => function (EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist", "ASC")
+//                    ->setParameters(array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
         $builder->add('workQueues', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:WorkQueueList',
             'label' => false,
-            'required' => false,
+            'required'=> false,
             'multiple' => true,
-            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Work Queue'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
+            'choices' => $this->params["permittedWorkQueues"],
+            //'data' => $projectSpecialtyAllowedArr,
+            'attr' => array('class'=>'combobox submit-on-enter-field', 'placeholder'=>'Work Queue'),
         ));
 
         $categoriesChoiceLabel = "getOptimalAbbreviationName";

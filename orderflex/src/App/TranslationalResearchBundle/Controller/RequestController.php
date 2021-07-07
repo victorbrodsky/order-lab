@@ -1161,7 +1161,7 @@ class RequestController extends OrderAbstractController
         $projectSpecialties = array();
         $submitter = null;
         $project = null;
-        $ids = array();
+        //$ids = array();
         $showOnlyMyProjects = false;
         $priceList = null;
         $workQueues = array();
@@ -1373,22 +1373,22 @@ class RequestController extends OrderAbstractController
         //echo 'showOnlyMyProjects='.$showOnlyMyProjects."<br>";
 
         //////////////// get Requests IDs with the form node filter ////////////////
-        $ids = array();
-        if ($formnode) {
-            //echo "use formnode<br>";
-            if ($categories) {
-                $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
-                $ids = array_merge($ids, $categoryIds);
-            }
-            if ($searchStr) {
-                $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
-                $ids = array_merge($ids, $commentIds);
-            }
-        }
-        if (count($ids) > 0) {
-            $ids = array_unique($ids);
-            //print_r($ids);
-        }
+//        $ids = array();
+//        if ($formnode) {
+//            //echo "use formnode<br>";
+//            if ($categories) {
+//                $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+//                $ids = array_merge($ids, $categoryIds);
+//            }
+//            if ($searchStr) {
+//                $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
+//                $ids = array_merge($ids, $commentIds);
+//            }
+//        }
+//        if (count($ids) > 0) {
+//            $ids = array_unique($ids);
+//            //print_r($ids);
+//        }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
         //exit('start filtering requests');
@@ -2209,13 +2209,13 @@ class RequestController extends OrderAbstractController
             $advancedFilter++;
         }
 
-        if( count($ids) > 0 ) {
-            //echo "using ids <br>";
-            //$dql->andWhere("transresRequest.id IN (:ids)");
-            //$dqlParameters["ids"] = implode(",",$ids);
-            $dql->andWhere("transresRequest.id IN (:ids)");
-            $dqlParameters["ids"] = $ids;
-        }
+//        if( count($ids) > 0 ) {
+//            //echo "using ids <br>";
+//            //$dql->andWhere("transresRequest.id IN (:ids)");
+//            //$dqlParameters["ids"] = implode(",",$ids);
+//            $dql->andWhere("transresRequest.id IN (:ids)");
+//            $dqlParameters["ids"] = $ids;
+//        }
         ///////// EOF filters //////////
 
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";

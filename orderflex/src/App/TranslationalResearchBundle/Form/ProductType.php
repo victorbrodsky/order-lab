@@ -285,6 +285,7 @@ class ProductType extends AbstractType
                 'label' => "Orderable Status:",
                 'required' => false,
                 'multiple' => false,
+                'disabled' => $this->disabled,
                 'attr' => array('class' => 'combobox product-orderableStatus'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')

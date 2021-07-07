@@ -84,26 +84,6 @@ class WorkQueueController extends OrderAbstractController
         $singleWorkqueue = NULL;
         $title = "Work Queues"; // . $workQueuesName;
 
-        //TODO: hide not permitted work queue from select box
-
-        if( $routeName == 'translationalresearch_work_queue_index') {
-            //$workqueue = $request->query->get('workqueue');
-            $workqueueName = str_replace('-',' ',$workqueue);
-            $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
-            //$workQueuesId = NULL;
-            //$workQueuesName = NULL;
-            //if( $workqueueEntity ) {
-            //    $workQueuesId = $workqueueEntity->getId();
-            //    $workQueuesName = $workqueueEntity->getName();
-            //}
-            //echo "workQueuesId=$workQueuesId<br>";
-            if( $workqueueEntity ) {
-                return $this->redirectToRoute('translationalresearch_work_queue_index_filter',array('filter[workQueues][]'=>$workqueueEntity->getId()));
-            } else {
-                return $this->redirectToRoute('translationalresearch_work_queue_index_filter');
-            }
-        }
-
         ///////////// Filter //////////////////
         $advancedFilter = 0;
 
@@ -127,7 +107,7 @@ class WorkQueueController extends OrderAbstractController
         $fundingNumber = null;
         $fundingType = null;
         //$filterType = null;
-        //$filterTitle = null;
+        $filterTitle = null;
         $projectSpecialties = array();
         $submitter = null;
         $project = null;
@@ -163,13 +143,18 @@ class WorkQueueController extends OrderAbstractController
 
         $transresPricesList = $transresUtil->getPricesList();
 
+        //show only permitted work queue in select box
+        $permittedWorkQueues = $transresRequestUtil->getPermittedWorkQueues($user);
+        //TODO: preset only allowed $permittedWorkQueues for All
+
         $params = array(
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
             //'orderableStatusArr' => $orderableStatusArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
-            'transresPricesList' => $transresPricesList
+            'transresPricesList' => $transresPricesList,
+            'permittedWorkQueues' => $permittedWorkQueues
         );
         $filterform = $this->createForm(FilterWorkQueuesType::class, null, array(
             'method' => 'GET',
@@ -192,7 +177,7 @@ class WorkQueueController extends OrderAbstractController
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
         //$filterType = trim($request->get('type'));
-        //$filterTitle = trim($request->get('title'));
+        $filterTitle = trim($request->get('title'));
 
         //replace - with space
         //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
@@ -225,9 +210,101 @@ class WorkQueueController extends OrderAbstractController
         if(isset($filterform['workQueues']) ) {
             $workQueues = $filterform['workQueues']->getData();
         }
-
-
         ///////////// EOF Filetr ///////////////
+
+        ///////////// Predefined Filetr ///////////////
+        if( $routeName == 'translationalresearch_work_queue_index') {
+            //echo "workqueue=[$workqueue]<br>";
+
+            //$workqueue = $request->query->get('workqueue');
+            $workqueueEntity = NULL;
+
+            //Case 'all'
+            if( $workqueue == 'all' ) {
+                return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
+                    array(
+                        'title' => "All " . $title,
+                        //'filter[projectSpecialty][]' => ""
+                        'filter[]' => ""
+                    )
+                );
+            }
+
+            //Case 'incomplete'
+            if( strpos($workqueue, '-incomplete') !== false ) {
+                //echo "Case incomplete = [$workqueue]<br>";
+                //status NOT equal to “Completed”
+                $workqueueName = str_replace('-incomplete', '', $workqueue);
+                $workqueueName = str_replace('-', ' ', $workqueueName);
+                //echo "workqueueName=[$workqueueName]<br>";
+
+                $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
+                if( $workqueueEntity ) {
+
+                    $incompleteFilter = array(
+                        'filter[workQueues][]' => $workqueueEntity->getId(),
+                        'title' => "Incomplete " . $title
+                    );
+
+                    $requestedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('requested');
+                    if( $requestedStatusEntity ) {
+                        $incompleteFilter['filter[orderableStatus][1]'] = $requestedStatusEntity->getId();
+                    }
+
+                    $inprogressStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('in-progress');
+                    if( $inprogressStatusEntity ) {
+                        $incompleteFilter['filter[orderableStatus][2]'] = $inprogressStatusEntity->getId();
+                    }
+
+                    $pendingStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('pending-additional-info');
+                    if( $pendingStatusEntity ) {
+                        $incompleteFilter['filter[orderableStatus][3]'] = $pendingStatusEntity->getId();
+                    }
+
+                    $completedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('completed');
+                    if( $completedStatusEntity ) {
+                        $incompleteFilter['filter[orderableStatus][4]'] = $completedStatusEntity->getId();
+                    }
+
+                    return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
+//                        array(
+//                            'filter[workQueues][]' => $workqueueEntity->getId(),
+//                            'filter[orderableStatus][]' => ''
+//                        )
+                        $incompleteFilter
+                    );
+                }
+            }
+
+            //All other cases
+            if( $workqueue != 'all' ) {
+                //echo "Case all<br>";
+                $workqueueName = str_replace('-', ' ', $workqueue);
+                $workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
+                //$workQueuesId = NULL;
+                //$workQueuesName = NULL;
+                //if( $workqueueEntity ) {
+                //    $workQueuesId = $workqueueEntity->getId();
+                //    $workQueuesName = $workqueueEntity->getName();
+                //}
+                //echo "workQueuesId=$workQueuesId<br>";
+                if( $workqueueEntity ) {
+                    return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
+                        array(
+                            'filter[workQueues][]'=>$workqueueEntity->getId(),
+                            'title' => "All " . $title
+                        )
+                    );
+                }
+            }
+
+            return $this->redirectToRoute('translationalresearch_work_queue_index_filter');
+        }
+        ///////////// EOF Predefined Filetr ///////////////
+
+        if( $filterTitle ) {
+            $title = $filterTitle;
+        }
 
         //echo "workqueue=$workqueue<br>";
 

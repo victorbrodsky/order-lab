@@ -2683,15 +2683,29 @@ class TransResRequestUtil
 
     //get allowed filter work queue types for logged in user
     public function getWorkQueuesFilterPresetType() {
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
         //"CTP Lab Work Queue" and "MISI Lab Work Queue"
-        $workQueues = $transresUtil->getWorkQueues();
+
+        //$workQueues = $transresUtil->getWorkQueues();
+        $workQueues = $this->getPermittedWorkQueues($user);
+
         $filterTypes = array();
+
+        //$filterTypes['all'] = "All Work Queue";
+
         foreach($workQueues as $workQueue) {
             //CTP Lab => ctp-lab
             $lowercaseName = strtolower($workQueue->getName()); //ctp lab
             $lowercaseName = str_replace(' ','-',$lowercaseName);
+
+            $filterTypes[] = '[[hr]]';
+
             $filterTypes[$lowercaseName] = "All ".$workQueue->getName()." Work Queue";
+
+            $lowercaseName = $lowercaseName."-incomplete";
+            $filterTypes[$lowercaseName] = "Incomplete ".$workQueue->getName()." Work Queue";
             //$filterTypes[$workQueue->getId()] = "All ".$workQueue->getName()." Work Queue";
         }
 
@@ -6134,7 +6148,6 @@ class TransResRequestUtil
         return $statuses;
     }
 
-    //TODO: use it
     //It can be run inside setProductsStatus or for each product update:
     // each product change status on the Work Queue list page
     // WorkRequest edit => might be dangerous to silently change the status of the work request => do not use this function on WorkRequest edit
@@ -6172,7 +6185,7 @@ class TransResRequestUtil
 
         return NULL;
     }
-    //TODO: work request status to 'completed...' (setRequestTransition) => change all product status to 'completed'
+    //work request status to 'completed...' (setRequestTransition) => change all product status to 'completed'
     //call this after syncRequestStatus (in setRequestTransition and in editAction)
     public function setOrderableStatusByWorkRequestStatus( $transresRequest, $fromStatus, $currentStatus=NULL ) {
         if( !$currentStatus ) {
@@ -6193,6 +6206,50 @@ class TransResRequestUtil
             }
         }
         return NULL;
+    }
+
+    public function getPermittedWorkQueues( $user ) {
+        $transresUtil = $this->container->get('transres_util');
+        //$projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        //$projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+
+        $workQueues = $transresUtil->getWorkQueues();
+
+        if( $this->secAuth->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+            return $workQueues;
+        }
+
+        //ROLE_TRANSRES_TECHNICIAN_APCP_QUEUECTP
+        //$specialtyQueueRole = $user->hasPartialRole($specialtyStr."_QUEUE");
+
+        //echo "1111<br>";
+
+        $specialtyStr = "";
+        if(
+            $user->hasRole("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+            $user->hasRole("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+        ) {
+            //echo "has exact roles<br>";exit('111');
+            return $workQueues;
+        }
+
+//        if(
+//            $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//            $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+//        ) {
+//            echo "granted roles<br>";exit('111');
+//            return $workQueues;
+//        }
+
+        $filteredWorkQueues = array();
+        foreach($workQueues as $workQueue) {
+            $partialRoleName = $workQueue->getAbbreviation();
+            if( $user->hasPartialRole($partialRoleName) ) {
+                $filteredWorkQueues[] = $workQueue;
+            }
+        }
+
+        return $filteredWorkQueues;
     }
 
 //    //Find if the $product exists in latest invoice
