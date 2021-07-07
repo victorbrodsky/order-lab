@@ -404,6 +404,22 @@ class Product {
         return $combineComment;
     }
 
+    public function hasStatus( $status ) {
+        $productStatus = $this->getOrderableStatus();
+        if( !$productStatus ) {
+            $productStatus = "";
+        }
+        $productStatus = strtolower($productStatus);
+        if( !$status ) {
+            $status = "";
+        }
+        $status = strtolower($status);
+        if( $productStatus == $status ) {
+            return true;
+        }
+        return false;
+    }
+
     public function __toString()
     {
         return $this->getCategory()." (ID#".$this->getId()."): requested=".$this->getRequested().", completed=".$this->getCompleted(); //."<br>";

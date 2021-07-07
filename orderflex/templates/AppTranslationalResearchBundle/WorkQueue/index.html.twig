@@ -143,28 +143,64 @@
                             </li>
 
                             {#Mark as “Completed”.#}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Completed', 'workqueue': workqueue }) }}"
-                                >Mark as "Completed"</a>
-                            </li>
+                            {% set thisStatus = "Completed" %}
+                            {% if not product.hasStatus(thisStatus) %}
+                                <li>
+                                    {#<a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Completed', 'workqueue': workqueue }) }}"#}
+                                    {#>Mark as "Completed"</a>#}
+                                    <a
+                                        general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
+                                        href="{{
+                                            path(translationalresearch_sitename~'_product_update_orderablestatus',
+                                            { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        }}">Mark as "{{ thisStatus }}"</a>
+                                </li>
+                            {% endif %}
 
                             {#Mark as “Pending Additional Info”#}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Pending Additional Info', 'workqueue': workqueue }) }}"
-                                >Mark as "Pending Additional Info"</a>
-                            </li>
+                            {% set thisStatus = "Pending Additional Info" %}
+                            {% if not product.hasStatus(thisStatus) %}
+                                <li>
+                                    {#<a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue }) }}"#}
+                                    {#>Mark as "{{ thisStatus }}"</a>#}
+                                    <a
+                                        general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
+                                        href="{{
+                                        path(translationalresearch_sitename~'_product_update_orderablestatus',
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        }}">Mark as "{{ thisStatus }}"</a>
+                                </li>
+                            {% endif %}
 
                             {#Mark as “In Progress”#}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'In Progress', 'workqueue': workqueue }) }}"
-                                >Mark as "In Progress"</a>
-                            </li>
+                            {% set thisStatus = "In Progress" %}
+                            {% if not product.hasStatus(thisStatus) %}
+                                <li>
+                                    {#<a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'In Progress', 'workqueue': workqueue }) }}"#}
+                                    {#>Mark as "In Progress"</a>#}
+                                    <a
+                                        general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
+                                        href="{{
+                                        path(translationalresearch_sitename~'_product_update_orderablestatus',
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        }}">Mark as "{{ thisStatus }}"</a>
+                                </li>
+                            {% endif %}
 
                             {#Mark as “Requested”.#}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Requested', 'workqueue': workqueue }) }}"
-                                >Mark as "Requested"</a>
-                            </li>
+                            {% set thisStatus = "Requested" %}
+                            {% if not product.hasStatus(thisStatus) %}
+                                <li>
+                                    {#<a href="{{ path(translationalresearch_sitename~'_product_update_orderablestatus', { 'id': product.id, 'orderablestatus': 'Requested', 'workqueue': workqueue }) }}"#}
+                                    {#>Mark as "Requested"</a>#}
+                                    <a
+                                        general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
+                                        href="{{
+                                        path(translationalresearch_sitename~'_product_update_orderablestatus',
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        }}">Mark as "{{ thisStatus }}"</a>
+                                </li>
+                            {% endif %}
 
                         </ul>
 

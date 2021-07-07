@@ -521,6 +521,9 @@ class RequestController extends OrderAbstractController
             if( $progressState != $originalProgressState ) {
                 $transresRequestUtil->syncRequestStatus($transresRequest,$progressState,$testing);
                 $transresRequestUtil->setOrderableStatusByWorkRequestStatus($transresRequest,$originalProgressState,$progressState);
+            } else {
+                //work status has not been changed implicitly - might be dangerous to silently change the status of the work request => do not use this function on WorkRequest edit
+                //$transresRequestUtil->setWorkRequestStatusByOrderableStatus($transresRequest);
             }
 
             //testing

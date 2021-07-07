@@ -70,7 +70,6 @@ class WorkQueueController extends OrderAbstractController
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
-        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',null) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -85,6 +84,7 @@ class WorkQueueController extends OrderAbstractController
         $singleWorkqueue = NULL;
         $title = "Work Queues"; // . $workQueuesName;
 
+        //TODO: hide not permitted work queue from select box
 
         if( $routeName == 'translationalresearch_work_queue_index') {
             //$workqueue = $request->query->get('workqueue');
@@ -592,7 +592,6 @@ class WorkQueueController extends OrderAbstractController
         $transresRequest = $product->getTransresRequest();
         $project = $transresRequest->getProject();
 
-        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -624,11 +623,10 @@ class WorkQueueController extends OrderAbstractController
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
-        //$transresRequestUtil = $this->container->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        //TODO: test permission
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {
             //exit("no permisssion");
@@ -651,6 +649,10 @@ class WorkQueueController extends OrderAbstractController
             $set = true;
         }
 
+        $transresRequest = $product->getTransresRequest();
+
+        $transresRequestUtil->setWorkRequestStatusByOrderableStatus($transresRequest);
+
         if( $set ) {
             $msg = "Success: Orderable status for product '".$product."' has been updated to $orderableStatusName";
         } else {
@@ -663,7 +665,6 @@ class WorkQueueController extends OrderAbstractController
         );
 
         //EventLog
-        $transresRequest = $product->getTransresRequest();
         $eventType = "Orderable Status Changed";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 

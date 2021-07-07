@@ -6134,7 +6134,10 @@ class TransResRequestUtil
         return $statuses;
     }
 
-    //It can be run inside setProductsStatus or for each product update (WorkRequest edit, each product change status)
+    //TODO: use it
+    //It can be run inside setProductsStatus or for each product update:
+    // each product change status on the Work Queue list page
+    // WorkRequest edit => might be dangerous to silently change the status of the work request => do not use this function on WorkRequest edit
     //issue 17: For all existing Work Requests that have a status of “Completed” set the statuses of the products or services to “Completed”.
     //issue 18: Setting a work request status to “Completed” should set the status of each of its products or services to “Completed”.
     //issue 20: Each time a product or service’s queue status is set, check if all of the parent work request’s product
@@ -6150,9 +6153,12 @@ class TransResRequestUtil
         $completedCount = 0;
 
         foreach($products as $product) {
-            $productStatus = $product->getOrderableStatus();
-            $productStatus = strtolower($productStatus);
-            if( $productStatus == strtolower("Completed") ) {
+//            $productStatus = $product->getOrderableStatus();
+//            $productStatus = strtolower($productStatus);
+//            if( $productStatus == strtolower("Completed") ) {
+//                $completedCount++;
+//            }
+            if( $product->hasStatus("Completed") ) {
                 $completedCount++;
             }
         }
@@ -6160,9 +6166,11 @@ class TransResRequestUtil
         if( count($products) > 0 && $completedCount > 0 && $completedCount == count($products) ) {
             //set work request progress state to Completed
             $transresRequest->setProgressState('completed');
+            $this->em->flush();
+            return $transresRequest;
         }
 
-        return $transresRequest;
+        return NULL;
     }
     //TODO: work request status to 'completed...' (setRequestTransition) => change all product status to 'completed'
     //call this after syncRequestStatus (in setRequestTransition and in editAction)

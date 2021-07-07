@@ -430,7 +430,6 @@ class TransResPermissionUtil
             //all request's requesters associated with this project.
             //We can search all requests and then verify if this user is request's requester
             //but for perfomarnce, just show the project to requester roles
-            //TODO: test
             if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
                 return true;
             }
@@ -722,6 +721,9 @@ class TransResPermissionUtil
         return false;
     }
 
+    //Test case:
+    // Kenny admin for AP/CP CTP Lab
+    // Jeff admin for AP/CP
     public function hasProductPermission( $action, $product=null ) {
 
         if( !$product ) {
