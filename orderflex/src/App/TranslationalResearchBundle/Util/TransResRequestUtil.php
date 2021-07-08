@@ -1104,7 +1104,7 @@ class TransResRequestUtil
 
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Action failed: ".$label
+                    "Action failed (setRequestTransition): ".$e
                 );
                 return false;
             }//try
@@ -6188,16 +6188,30 @@ class TransResRequestUtil
     //work request status to 'completed...' (setRequestTransition) => change all product status to 'completed'
     //call this after syncRequestStatus (in setRequestTransition and in editAction)
     public function setOrderableStatusByWorkRequestStatus( $transresRequest, $fromStatus, $currentStatus=NULL ) {
+        if( !$transresRequest ) {
+            return NULL;
+        }
+        if( !$fromStatus ) {
+            return NULL;
+        }
+
         if( !$currentStatus ) {
             $currentStatus = $transresRequest->getProgressState();
         }
-        if( $currentStatus == 'completed' ) {
+        if( $currentStatus == 'completed' || $currentStatus == 'completedNotified' ) {
             if( $fromStatus && $fromStatus != $currentStatus ) {
-                //set all product's status to 'completed'
+                //set all product's status to 'completed's
+
+                $completedStatus = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Completed");
+                if( !$completedStatus ) {
+                    return NULL;
+                }
+
                 $products = $transresRequest->getProducts();
                 $count = 0;
                 foreach($products as $product) {
-                    $product->setOrderableStatus("Completed");
+                    $product->setOrderableStatus($completedStatus);
+                    $count++;
                 }
                 if( $count > 0 ) {
                     $this->em->flush();

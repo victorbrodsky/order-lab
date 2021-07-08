@@ -1287,11 +1287,11 @@ class TransResUtil
                 //event log
 
                 $logger = $this->container->get('logger');
-                $logger->error("Action failed: ".$this->getTransitionLabelByName($transitionName).", Error:".$e);
+                $logger->error("Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName).", Error:".$e);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Action failed: ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
+                    "Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
                 );
                 return false;
             }//try
