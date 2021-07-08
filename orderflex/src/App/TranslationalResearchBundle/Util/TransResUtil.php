@@ -3873,7 +3873,8 @@ class TransResUtil
         }
 
         if( !$specialty ) {
-            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+            //throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+            return NULL;
         }
 
 //        if( $specialty->getType() == 'default' || $specialty->getType() == 'user-added' ) {

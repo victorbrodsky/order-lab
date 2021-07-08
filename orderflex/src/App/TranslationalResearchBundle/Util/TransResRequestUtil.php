@@ -200,7 +200,7 @@ class TransResRequestUtil
 
     public function getFilterPendingRequestArr($title=null) {
         $res = array(
-            'filter[progressState][0]' => "active",
+            //'filter[progressState][0]' => "active",
             'filter[progressState][1]' => "pendingInvestigatorInput",
             'filter[progressState][2]' => "pendingHistology",
             'filter[progressState][3]' => "pendingImmunohistochemistry",

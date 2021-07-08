@@ -1549,14 +1549,16 @@ class RequestController extends OrderAbstractController
                 //echo "specialtyName=$specialtyName<br>";
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
-                return $this->redirectToRoute(
-                    'translationalresearch_request_index_filter',
-                    array(
-                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
-                        'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
-                        'title' => $filterType,
-                    )
-                );
+                if( $projectSpecialtyObject ) {
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        array(
+                            'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
+                            'filter[progressState][0]' => "All-except-Drafts-and-Canceled",
+                            'title' => $filterType,
+                        )
+                    );
+                }
             }
 
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
@@ -1634,11 +1636,13 @@ class RequestController extends OrderAbstractController
 
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
-                $pendingRequestArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
-                return $this->redirectToRoute(
-                    'translationalresearch_request_index_filter',
-                    $pendingRequestArr
-                );
+                if( $projectSpecialtyObject ) {
+                    $pendingRequestArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+                    return $this->redirectToRoute(
+                        'translationalresearch_request_index_filter',
+                        $pendingRequestArr
+                    );
+                }
             }
 
             if ($filterTypeLowerCase == strtolower("All Active Requests") ) {
