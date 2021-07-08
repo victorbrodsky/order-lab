@@ -2148,5 +2148,46 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF reverseFeeScheduleListAction: total=$count, updated=$updateCount");
     }
-    
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/update-products-in-work-requests
+     *
+     * @Route("/update-products-in-work-requests/", name="translationalresearch_update_products_in_work_requests")
+     */
+    public function updateProductsInWorkRequestsAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateProductsInWorkRequestsAction not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        //find all products with work completed requests
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql =  $repository->createQueryBuilder("product");
+        $dql->select('product');
+
+        $dql->leftJoin('product.transresRequest','transresRequest');
+        $dql->leftJoin('product.orderableStatus','orderableStatus');
+
+        $dql->where("transresRequest IS NOT NULL");
+        $dql->andWhere("orderableStatus IS NULL");
+
+        $dql->andWhere("transresRequest.progressState = 'completed' OR transresRequest.progressState = 'completedNotified'");
+
+        $dql->orderBy("product.id","DESC");
+
+        $query = $em->createQuery($dql);
+
+        $products = $query->getResult();
+
+        echo "products=".count($products)."<br>";
+
+        $count = 0;
+        $updateCount = 0;
+
+        exit("EOF updateProductsInWorkRequestsAction: total=$count, updated=$updateCount");
+    }
 }

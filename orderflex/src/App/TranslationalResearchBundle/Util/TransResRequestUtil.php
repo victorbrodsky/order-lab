@@ -6179,6 +6179,18 @@ class TransResRequestUtil
         if( count($products) > 0 && $completedCount > 0 && $completedCount == count($products) ) {
             //set work request progress state to Completed
             $transresRequest->setProgressState('completed');
+
+            //TODO: use similar as in transitionRequestReviewAction instead
+            //                      $transresRequest, $statMachineType, $transitionName, $to, $testing
+            //$statMachineType = 'progress'
+            //$transitionName = 'active_completedNotified' or 'active_completed'
+            //$this->setRequestTransition($transresRequest,$statMachineType,$transitionName,$to,$testing);
+            //EventLog
+            $eventType = "Request State Changed";
+            $transresUtil = $this->container->get('transres_util');
+            $msgInfo = "Work Request progress status has been changed to 'Completed' by completing all product(s)";
+            $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo);
+
             $this->em->flush();
             return $transresRequest;
         }
@@ -6214,6 +6226,14 @@ class TransResRequestUtil
                     $count++;
                 }
                 if( $count > 0 ) {
+
+                    //EventLog
+                    $eventType = "Request Updated";
+                    $transresUtil = $this->container->get('transres_util');
+                    //getProgressStateLabelByName
+                    $msgInfo = "Work Request product's status has been changed to 'Completed' by changing the Work Request's progress status to 'Completed'";
+                    $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo);
+
                     $this->em->flush();
                     return $transresRequest;
                 }
