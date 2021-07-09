@@ -147,11 +147,13 @@ class WorkQueueController extends OrderAbstractController
         $permittedWorkQueues = $transresRequestUtil->getPermittedWorkQueues($user);
         //TODO: preset only allowed $permittedWorkQueues for All
 
+        $orderableStatusArr = $transresRequestUtil->getFilterOrderableStatuses();
+        
         $params = array(
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
-            //'orderableStatusArr' => $orderableStatusArr,
+            'orderableStatusArr' => $orderableStatusArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'transresPricesList' => $transresPricesList,
             'permittedWorkQueues' => $permittedWorkQueues
@@ -261,10 +263,10 @@ class WorkQueueController extends OrderAbstractController
                         $incompleteFilter['filter[orderableStatus][3]'] = $pendingStatusEntity->getId();
                     }
 
-                    $completedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('completed');
-                    if( $completedStatusEntity ) {
-                        $incompleteFilter['filter[orderableStatus][4]'] = $completedStatusEntity->getId();
-                    }
+//                    $completedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('completed');
+//                    if( $completedStatusEntity ) {
+//                        $incompleteFilter['filter[orderableStatus][4]'] = $completedStatusEntity->getId();
+//                    }
 
                     return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
 //                        array(

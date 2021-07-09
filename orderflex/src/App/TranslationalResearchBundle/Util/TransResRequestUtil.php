@@ -6147,6 +6147,15 @@ class TransResRequestUtil
 
         return $statuses;
     }
+    public function getFilterOrderableStatuses() {
+        $statuses = $this->getOrderableStatuses();
+
+        $filterStatusArr = array();
+        
+        
+
+        return $statuses;
+    }
 
     //It can be run inside setProductsStatus or for each product update:
     // each product change status on the Work Queue list page
