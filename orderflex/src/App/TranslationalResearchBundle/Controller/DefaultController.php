@@ -2162,7 +2162,18 @@ class DefaultController extends OrderAbstractController
         //exit("updateProductsInWorkRequestsAction not allowed");
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
+
+        $totalWorkRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
+        echo "totalWorkRequests=".count($totalWorkRequests)."<br>";
+
+        $this->notCompletedWorkRequests();
+        $this->productsWithStatus();
+
+        $completedProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Completed");
+        if( !$completedProductStatus ) {
+            exit("OrderableStatusList not found by name 'Completed'");
+        }
 
         //find all products with work completed requests
         $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
@@ -2187,7 +2198,92 @@ class DefaultController extends OrderAbstractController
 
         $count = 0;
         $updateCount = 0;
+        $updatedProducts = array();
+        $transresRequests = array();
+
+        $testing = true;
+
+        foreach($products as $product) {
+            $transresRequest = $product->getTransresRequest();
+            //echo "transresRequest=".$transresRequest->getOid()."<br>";
+            $progressState = $transresRequest->getProgressState();
+            if( $progressState != 'completed' && $progressState != 'completedNotified' ) {
+                continue; //skip
+            }
+
+            $transresRequests[$transresRequest->getOid()] = $transresRequest->getOid();
+
+            $currentProductStatus = $product->getOrderableStatus();
+            //if( !$currentProductStatus || $currentProductStatus && $currentProductStatus->getId() != $completedProductStatus->getId() ) {
+            if( !$currentProductStatus ) {
+                if( $testing == false ) {
+                    $product->setOrderableStatus($completedProductStatus);
+                }
+                $updateCount++;
+                $updatedProducts[] = $product->getId();
+            }
+            $count++;
+        }
+
+        if( $updateCount > 0 ) {
+            if( $testing == false ) {
+                $em->flush();
+            }
+            echo "flushed <br>";
+
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $eventType = "Request Updated";
+            $transresUtil = $this->container->get('transres_util');
+            $msgInfo = "Products have been set to 'Completed' by updateProductsInWorkRequestsAction by " . $user . " (total products ".count($updatedProducts)."): <br>" . implode(", ",$updatedProducts);
+            echo "msgInfo=".$msgInfo."<br>";
+            if( $testing == false ) {
+                $transresUtil->setEventLog(null,$eventType,$msgInfo);
+            }
+
+            $msgInfo = "Work Request's products have been set to 'Completed' by updateProductsInWorkRequestsAction by " . $user . " (total work requests ".count($transresRequests)."): <br>" . implode(", ",$transresRequests);
+            echo "msgInfo=".$msgInfo."<br>";
+            if( $testing == false ) {
+                $transresUtil->setEventLog(null,$eventType,$msgInfo);
+            }
+        }
+
+        //echo "transresRequests=".count($transresRequests)."<br>";
+        //dump($transresRequests);
 
         exit("EOF updateProductsInWorkRequestsAction: total=$count, updated=$updateCount");
+    }
+    public function notCompletedWorkRequests() {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest');
+
+        $dql->andWhere("transresRequest.progressState != 'completed' AND transresRequest.progressState != 'completedNotified'");
+
+        $dql->orderBy("transresRequest.id","DESC");
+
+        $query = $em->createQuery($dql);
+
+        $transresRequests = $query->getResult();
+        echo "Not completed transresRequests=".count($transresRequests)."<br>";
+    }
+    public function productsWithStatus() {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql =  $repository->createQueryBuilder("product");
+        $dql->select('product');
+
+        $dql->leftJoin('product.transresRequest','transresRequest');
+        $dql->leftJoin('product.orderableStatus','orderableStatus');
+
+        $dql->where("transresRequest IS NOT NULL");
+        $dql->andWhere("orderableStatus IS NOT NULL");
+
+        $dql->orderBy("transresRequest.id","DESC");
+
+        $query = $em->createQuery($dql);
+
+        $products = $query->getResult();
+        echo "Products with status=".count($products)."<br>";
     }
 }
