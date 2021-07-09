@@ -2292,4 +2292,147 @@ class DefaultController extends OrderAbstractController
         $products = $query->getResult();
         echo "Products with status=".count($products)."<br>";
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/update-not-completed-products-in-work-requests/
+     *
+     * @Route("/update-not-completed-products-in-work-requests/", name="translationalresearch_update_not_completed_products_in_work_requests")
+     */
+    public function updateNotCompletedProductsInWorkRequestsAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        exit("updateNotCompletedProductsInWorkRequestsAction not allowed");
+
+        //set all orderables that belong to the “Completed” work requests to “Completed”,
+        // all orderables that belong to “Canceled” work requests to “Canceled by Performer”,
+        // and all the rest should be set to status of “Requested”
+
+        $em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+
+        $totalWorkRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
+        echo "totalWorkRequests=".count($totalWorkRequests)."<br>";
+
+        $totalproducts = $em->getRepository('AppTranslationalResearchBundle:Product')->findAll();
+        echo "totalproducts=".count($totalproducts)."<br>";
+
+        $this->notCompletedWorkRequests();
+        $this->productsWithStatus();
+
+        //Canceled by Performer
+        $canceledProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Canceled by Performer");
+        if( !$canceledProductStatus ) {
+            exit("OrderableStatusList not found by name 'Canceled by Performer'");
+        }
+
+        //Requested
+        $requestedProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Requested");
+        if( !$requestedProductStatus ) {
+            exit("OrderableStatusList not found by name 'Requested'");
+        }
+
+        //find all products with work completed requests
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        $dql =  $repository->createQueryBuilder("product");
+        $dql->select('product');
+
+        $dql->leftJoin('product.transresRequest','transresRequest');
+        $dql->leftJoin('product.orderableStatus','orderableStatus');
+
+        $dql->where("transresRequest IS NOT NULL");
+        $dql->andWhere("orderableStatus IS NULL");
+
+        $dql->andWhere("transresRequest.progressState != 'completed' AND transresRequest.progressState != 'completedNotified'");
+
+        $dql->orderBy("product.id","DESC");
+
+        $query = $em->createQuery($dql);
+
+        $products = $query->getResult();
+
+        echo "Not completed products=".count($products)."<br>";
+
+        $count = 0;
+        $updateCountCanceled = 0;
+        $updateCountRequested = 0;
+        $updatedProductsCanceled = array();
+        $updatedProductsRequested = array();
+        $transresRequests = array();
+
+        //$testing = false;
+        $testing = true;
+
+        foreach($products as $product) {
+            $transresRequest = $product->getTransresRequest();
+            //echo "transresRequest=".$transresRequest->getOid()."<br>";
+
+            $progressState = $transresRequest->getProgressState();
+            echo $count.": ".$transresRequest->getOid().": progressState=".$progressState."<br>";
+            if( $progressState == 'completed' || $progressState == 'completedNotified' ) {
+                continue; //skip
+            }
+
+            $transresRequests[$transresRequest->getOid()] = $transresRequest->getOid();
+
+            $currentProductStatus = $product->getOrderableStatus();
+            //if( !$currentProductStatus || $currentProductStatus && $currentProductStatus->getId() != $completedProductStatus->getId() ) {
+            if( !$currentProductStatus ) {
+                if( $progressState == 'canceled' ) {
+                    if( $testing == false ) {
+                        ////$product->setOrderableStatus($canceledProductStatus);
+                    }
+                    $updateCountCanceled++;
+                    $updatedProductsCanceled[] = $product->getId();
+                } else {
+                    if( $testing == false ) {
+                        ////$product->setOrderableStatus($requestedProductStatus);
+                    }
+                    $updateCountRequested++;
+                    $updatedProductsRequested[] = $product->getId();
+                }
+            }
+            $count++;
+        }
+
+        if( $updateCountCanceled > 0 || $updateCountRequested ) {
+            if( $testing == false ) {
+                ////$em->flush();
+            }
+            echo "flushed <br>";
+
+            $transresUtil = $this->container->get('transres_util');
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $eventType = "Request Updated";
+
+            //Canceled
+            $msgInfo = "Products have been set to 'Canceled' by updateNotCompletedProductsInWorkRequestsAction by " . $user .
+                " (total products ".count($updatedProductsCanceled)."): <br>" . implode(", ",$updatedProductsCanceled);
+            echo "msgInfo=".$msgInfo."<br>";
+            if( $testing == false ) {
+                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+            }
+
+            //Requested
+            $msgInfo = "Products have been set to 'Requested' by updateNotCompletedProductsInWorkRequestsAction by " . $user .
+                " (total products ".count($updatedProductsRequested)."): <br>" . implode(", ",$updatedProductsRequested);
+            echo "msgInfo=".$msgInfo."<br>";
+            if( $testing == false ) {
+                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+            }
+
+            $msgInfo = "Work Request's products have been set to 'Completed' by updateProductsInWorkRequestsAction by " . $user .
+                " (total work requests ".count($transresRequests)."): <br>" . implode(", ",$transresRequests);
+            echo "msgInfo=".$msgInfo."<br>";
+            if( $testing == false ) {
+                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+            }
+        }
+
+        //echo "transresRequests=".count($transresRequests)."<br>";
+        //dump($transresRequests);
+
+        exit("EOF updateProductsInWorkRequestsAction: total=$count, updateCountCanceled=$updateCountCanceled, updateCountRequested=$updateCountRequested");
+    }
 }
