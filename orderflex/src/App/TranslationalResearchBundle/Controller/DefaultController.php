@@ -2167,6 +2167,9 @@ class DefaultController extends OrderAbstractController
         $totalWorkRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
         echo "totalWorkRequests=".count($totalWorkRequests)."<br>";
 
+        $totalproducts = $em->getRepository('AppTranslationalResearchBundle:Product')->findAll();
+        echo "totalproducts=".count($totalproducts)."<br>";
+
         $this->notCompletedWorkRequests();
         $this->productsWithStatus();
 
