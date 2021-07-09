@@ -139,14 +139,12 @@ class WorkQueueController extends OrderAbstractController
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
         $progressStateArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
 
-        //$orderableStatusArr = $transresRequestUtil->getOrderableStatusArr();
-
         $transresPricesList = $transresUtil->getPricesList();
 
         //show only permitted work queue in select box
         $permittedWorkQueues = $transresRequestUtil->getPermittedWorkQueues($user);
-        //TODO: preset only allowed $permittedWorkQueues for All
 
+        //TODO: add "not completed" dummy select
         $orderableStatusArr = $transresRequestUtil->getFilterOrderableStatuses();
         
         $params = array(
@@ -262,6 +260,9 @@ class WorkQueueController extends OrderAbstractController
                     if( $pendingStatusEntity ) {
                         $incompleteFilter['filter[orderableStatus][3]'] = $pendingStatusEntity->getId();
                     }
+
+                    //"Without Status"
+                    $incompleteFilter['filter[orderableStatus][4]'] = "Without Status";
 
 //                    $completedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('completed');
 //                    if( $completedStatusEntity ) {
@@ -436,12 +437,31 @@ class WorkQueueController extends OrderAbstractController
         }
 
         if( $orderableStatuses && count($orderableStatuses) > 0 ) {
-            $dql->andWhere("orderableStatus.id IN (:orderableStatusIds)");
-            $dqlParameters["orderableStatusIds"] = $orderableStatuses;
+            //TODO: handle "Without Status"
+            $orderableStatusesEntityIds = array();
+            $withoutStatus = false;
+            foreach($orderableStatuses as $orderableStatus) {
+                //echo "orderableStatus=$orderableStatus <br>"; //id or string
+                if( is_string($orderableStatus) && $orderableStatus == "Without Status" ) {
+                    $withoutStatus = true;
+                } else {
+                    //$orderableStatusId = $orderableStatus->getId();
+                    $orderableStatusesEntityIds[] = $orderableStatus;
+                }
+            }
+
+            if( $withoutStatus ) {
+                $dql->andWhere("orderableStatus.id IN (:orderableStatusIds) OR orderableStatus IS NULL");
+                //$dqlParameters["orderableStatusIds"] = $orderableStatuses;
+                $dqlParameters["orderableStatusIds"] = $orderableStatusesEntityIds;
+            } else {
+                $dql->andWhere("orderableStatus.id IN (:orderableStatusIds)");
+                //$dqlParameters["orderableStatusIds"] = $orderableStatuses;
+                $dqlParameters["orderableStatusIds"] = $orderableStatusesEntityIds;
+            }
         }
 
         if( $requesters ) {
-            //TODO:
 //            $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
 //            $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
 //            $dql->leftJoin('project.coInvestigators','projectCoInvestigators');

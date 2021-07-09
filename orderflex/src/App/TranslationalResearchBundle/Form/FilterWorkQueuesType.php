@@ -87,30 +87,33 @@ class FilterWorkQueuesType extends AbstractType
             },
         ));
 
-//        $builder->add('orderableStatus',ChoiceType::class, array(
-//            'label' => false,
-//            'required' => false,
-//            'multiple' => true,
-//            'choices' => $this->params['orderableStatusArr'],
-//            'attr' => array('class' => 'combobox'),
-//        ));
-        $builder->add('orderableStatus', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
-            'label' => false,
-            //'choice_label' => "getOptimalAbbreviationName",
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>'Orderable Status'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        if( 1 ) {
+            $builder->add('orderableStatus', ChoiceType::class, array(
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                'choices' => $this->params['orderableStatusArr'],
+                'attr' => array('class' => 'combobox', 'placeholder'=>'Orderable Status'),
+            ));
+        } else {
+            $builder->add('orderableStatus', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
+                'label' => false,
+                //'choice_label' => "getOptimalAbbreviationName",
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>'Orderable Status'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         $builder->add('progressState',ChoiceType::class, array(
             'label' => false,

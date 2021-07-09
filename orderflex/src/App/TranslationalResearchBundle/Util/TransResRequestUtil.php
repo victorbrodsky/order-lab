@@ -6152,9 +6152,14 @@ class TransResRequestUtil
 
         $filterStatusArr = array();
         
-        
+        foreach($statuses as $status) {
+            //$filterStatusArr[$status->getId()] = $status->getName();
+            $filterStatusArr[$status->getName()] = $status->getId();
+        }
 
-        return $statuses;
+        $filterStatusArr["Without Status"] = "Without Status";
+
+        return $filterStatusArr;
     }
 
     //It can be run inside setProductsStatus or for each product update:
