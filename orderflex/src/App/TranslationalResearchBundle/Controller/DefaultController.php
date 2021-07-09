@@ -2204,12 +2204,15 @@ class DefaultController extends OrderAbstractController
         $updatedProducts = array();
         $transresRequests = array();
 
+        //$testing = false;
         $testing = true;
 
         foreach($products as $product) {
             $transresRequest = $product->getTransresRequest();
             //echo "transresRequest=".$transresRequest->getOid()."<br>";
+
             $progressState = $transresRequest->getProgressState();
+            echo $count.": ".$transresRequest->getOid().": progressState=".$progressState."<br>";
             if( $progressState != 'completed' && $progressState != 'completedNotified' ) {
                 continue; //skip
             }
