@@ -2362,7 +2362,7 @@ class DefaultController extends OrderAbstractController
         $transresRequests = array();
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         foreach($products as $product) {
             $transresRequest = $product->getTransresRequest();
