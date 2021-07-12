@@ -2303,7 +2303,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateNotCompletedProductsInWorkRequestsAction not allowed");
+        exit("updateNotCompletedProductsInWorkRequestsAction not allowed");
 
         //set all orderables that belong to the “Completed” work requests to “Completed”,
         // all orderables that belong to “Canceled” work requests to “Canceled by Performer”,
