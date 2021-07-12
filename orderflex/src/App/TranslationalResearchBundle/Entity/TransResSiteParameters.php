@@ -546,6 +546,32 @@ class TransResSiteParameters {
     private $overBudgetCalculation;
     ////////////// EOF Budget Related Parameters /////////////////////
 
+    ///////////// Project expirations ///////////////
+    /**
+     * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $projectExprDuration;
+
+    //Default number of months in advance of the project request expiration date when the automatic notification requesting a
+    // progress report should be sent (leave blank to never send this notification): [6] - default to 6
+    /**
+     * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $projectExprDurationEmail;
+
+    //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
+    // (leave blank to never auto-close): [90] - default to 90
+    /**
+     * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $projectExprDurationChangeStatus;
+    ///////////// EOF Project expirations ///////////////
 
     public function __construct($user=null) {
         $this->setCreator($user);
@@ -1777,6 +1803,54 @@ class TransResSiteParameters {
     public function setOverBudgetCalculation($overBudgetCalculation)
     {
         $this->overBudgetCalculation = $overBudgetCalculation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectExprDuration()
+    {
+        return $this->projectExprDuration;
+    }
+
+    /**
+     * @param mixed $projectExprDuration
+     */
+    public function setProjectExprDuration($projectExprDuration)
+    {
+        $this->projectExprDuration = $projectExprDuration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectExprDurationEmail()
+    {
+        return $this->projectExprDurationEmail;
+    }
+
+    /**
+     * @param mixed $projectExprDurationEmail
+     */
+    public function setProjectExprDurationEmail($projectExprDurationEmail)
+    {
+        $this->projectExprDurationEmail = $projectExprDurationEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectExprDurationChangeStatus()
+    {
+        return $this->projectExprDurationChangeStatus;
+    }
+
+    /**
+     * @param mixed $projectExprDurationChangeStatus
+     */
+    public function setProjectExprDurationChangeStatus($projectExprDurationChangeStatus)
+    {
+        $this->projectExprDurationChangeStatus = $projectExprDurationChangeStatus;
     }
 
 
