@@ -2303,7 +2303,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        exit("updateNotCompletedProductsInWorkRequestsAction not allowed");
+        //exit("updateNotCompletedProductsInWorkRequestsAction not allowed");
 
         //set all orderables that belong to the “Completed” work requests to “Completed”,
         // all orderables that belong to “Canceled” work requests to “Canceled by Performer”,
@@ -2361,7 +2361,7 @@ class DefaultController extends OrderAbstractController
         $updatedProductsRequested = array();
         $transresRequests = array();
 
-        //$testing = false;
+        $testing = false;
         $testing = true;
 
         foreach($products as $product) {
@@ -2369,7 +2369,7 @@ class DefaultController extends OrderAbstractController
             //echo "transresRequest=".$transresRequest->getOid()."<br>";
 
             $progressState = $transresRequest->getProgressState();
-            echo $count.": ".$transresRequest->getOid().": progressState=".$progressState."<br>";
+            //echo $count.": ".$transresRequest->getOid().": progressState=".$progressState."<br>";
             if( $progressState == 'completed' || $progressState == 'completedNotified' ) {
                 continue; //skip
             }
@@ -2381,14 +2381,18 @@ class DefaultController extends OrderAbstractController
             if( !$currentProductStatus ) {
                 if( $progressState == 'canceled' ) {
                     if( $testing == false ) {
-                        ////$product->setOrderableStatus($canceledProductStatus);
+                        $product->setOrderableStatus($canceledProductStatus);
                     }
+                    //echo $count.": ".$transresRequest->getOid()." (".$progressState."): progressState=[".$currentProductStatus."]=>[".$canceledProductStatus."]<br>";
+                    echo $count.": ".$transresRequest->getOid().": [".$progressState."]=>[".$canceledProductStatus."]<br>";
                     $updateCountCanceled++;
                     $updatedProductsCanceled[] = $product->getId();
                 } else {
                     if( $testing == false ) {
-                        ////$product->setOrderableStatus($requestedProductStatus);
+                        $product->setOrderableStatus($requestedProductStatus);
                     }
+                    //echo $count.": ".$transresRequest->getOid()." (".$progressState."): progressState=[".$currentProductStatus."]=>[".$requestedProductStatus."]<br>";
+                    echo $count.": ".$transresRequest->getOid().": [".$progressState."]=>[".$requestedProductStatus."]<br>";
                     $updateCountRequested++;
                     $updatedProductsRequested[] = $product->getId();
                 }
@@ -2398,7 +2402,7 @@ class DefaultController extends OrderAbstractController
 
         if( $updateCountCanceled > 0 || $updateCountRequested ) {
             if( $testing == false ) {
-                ////$em->flush();
+                $em->flush();
             }
             echo "flushed <br>";
 
@@ -2411,7 +2415,7 @@ class DefaultController extends OrderAbstractController
                 " (total products ".count($updatedProductsCanceled)."): <br>" . implode(", ",$updatedProductsCanceled);
             echo "msgInfo=".$msgInfo."<br>";
             if( $testing == false ) {
-                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+                $transresUtil->setEventLog(null,$eventType,$msgInfo);
             }
 
             //Requested
@@ -2419,14 +2423,14 @@ class DefaultController extends OrderAbstractController
                 " (total products ".count($updatedProductsRequested)."): <br>" . implode(", ",$updatedProductsRequested);
             echo "msgInfo=".$msgInfo."<br>";
             if( $testing == false ) {
-                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+                $transresUtil->setEventLog(null,$eventType,$msgInfo);
             }
 
             $msgInfo = "Work Request's products have been set to 'Completed' by updateProductsInWorkRequestsAction by " . $user .
                 " (total work requests ".count($transresRequests)."): <br>" . implode(", ",$transresRequests);
             echo "msgInfo=".$msgInfo."<br>";
             if( $testing == false ) {
-                ////$transresUtil->setEventLog(null,$eventType,$msgInfo);
+                $transresUtil->setEventLog(null,$eventType,$msgInfo);
             }
         }
 
