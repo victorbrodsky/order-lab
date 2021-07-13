@@ -544,6 +544,12 @@ class Project {
     private $implicitExpirationDate;
 
     /**
+     * Expected Expiration Date
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $expectedExpirationDate;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $stateComment;
@@ -1656,6 +1662,24 @@ class Project {
 
         return $earliestDate;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExpectedExpirationDate()
+    {
+        return $this->expectedExpirationDate;
+    }
+
+    /**
+     * @param mixed $expectedExpirationDate
+     */
+    public function setExpectedExpirationDate($expectedExpirationDate)
+    {
+        $this->expectedExpirationDate = $expectedExpirationDate;
+    }
+    
+    
 
     /**
      * @return mixed

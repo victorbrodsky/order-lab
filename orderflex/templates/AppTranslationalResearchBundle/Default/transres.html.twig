@@ -245,6 +245,10 @@
                         {{ formmacros.field(form.approvedProjectBudget) }}
                     {% endif %}
 
+                    {% if form.expectedExpirationDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.expectedExpirationDate,'allow-future-date') }}
+                    {% endif %}
+
                     {{ transres.projectDocument(form,project,cycle) }}
 
                     {% if cycle != "new" %}
@@ -1784,15 +1788,15 @@
                 {#form.updateProjectFundNumber={{ form.vars.value.updateProjectFundNumber }}#}
                 {{ formmacros.checkbox_with_value(form.updateProjectFundNumber,"",form.vars.value.updateProjectFundNumber) }}
 
-                <hr>
-                <h4>
-                    Project Expiration Settings
-                </h4>
-                {{ formmacros.field(form.projectExprDuration) }}
-                {{ formmacros.field(form.projectExprDurationEmail) }}
-                {{ formmacros.field(form.projectExprDurationChangeStatus) }}
-                {{ formmacros.checkbox_with_value(form.projectExprApply,"",form.vars.value.projectExprApply) }}
-                {{ formmacros.checkbox_with_value(form.projectExprApplyChangeStatus,"",form.vars.value.projectExprApplyChangeStatus) }}
+                {#<hr>#}
+                {#<h4>#}
+                    {#Project Expiration Settings#}
+                {#</h4>#}
+                {#{{ formmacros.field(form.projectExprDuration) }}#}
+                {#{{ formmacros.field(form.projectExprDurationEmail) }}#}
+                {#{{ formmacros.field(form.projectExprDurationChangeStatus) }}#}
+                {#{{ formmacros.checkbox_with_value(form.projectExprApply,"",form.vars.value.projectExprApply) }}#}
+                {#{{ formmacros.checkbox_with_value(form.projectExprApplyChangeStatus,"",form.vars.value.projectExprApplyChangeStatus) }}#}
 
                 <hr>
 
@@ -1813,6 +1817,28 @@
         </div>
     </div>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-project-expr-content-{{ specialtyId }}">Project Expiration Settings</a>
+            </h4>
+        </div>
+        <div id="transres-project-expr-content-{{ specialtyId }}" class="panel-collapse collapse">
+            <div class="panel-body">
+                {{ formmacros.field(form.projectExprDuration) }}
+                {{ formmacros.field(form.projectExprDurationEmail) }}
+                {{ formmacros.field(form.projectExprDurationChangeStatus) }}
+                {#{{ formmacros.checkbox_with_value(form.projectExprApply,"",form.vars.value.projectExprApply) }}#}
+                {#{{ formmacros.checkbox_with_value(form.projectExprApplyChangeStatus,"",form.vars.value.projectExprApplyChangeStatus) }}#}
+                {{ formmacros.field(form.projectExprApply) }}
+                {{ formmacros.field(form.projectExprApplyChangeStatus) }}
+
+                {#Email#}
+                {#H- In Site Settings, for each project type separately (MISI, AP, etc), in their accordions, add 8 fields:#}
+
+            </div>
+        </div>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">

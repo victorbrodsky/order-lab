@@ -215,6 +215,18 @@ class ProjectType extends AbstractType
             'required' => false,
         ));
 
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('expectedExpirationDate', DateType::class, array(
+                'widget' => 'single_text',
+                'label' => "Expected Expiration Date:",
+                'format' => 'MM/dd/yyyy',
+                //'view_timezone' => $user_tz,
+                //'model_timezone' => $user_tz,
+                'attr' => array('class' => 'datepicker form-control transres-project-expectedExpirationDate'),
+                'required' => false,
+            ));
+        }
+
         ///////////////// Hide 7 fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
         if(0) {
             $builder->add('budgetSummary', null, array(

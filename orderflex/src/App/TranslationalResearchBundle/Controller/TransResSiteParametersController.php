@@ -242,7 +242,8 @@ class TransResSiteParametersController extends OrderAbstractController
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
-            'humanName' => $transresUtil->getHumanName()
+            'humanName' => $transresUtil->getHumanName(),
+            'projectSpecialty' => $siteParameter->getProjectSpecialty()
         );
 
         if( $cycle == "new" ) {

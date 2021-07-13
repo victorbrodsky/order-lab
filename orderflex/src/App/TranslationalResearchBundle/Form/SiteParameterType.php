@@ -2,6 +2,7 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -516,17 +517,57 @@ class SiteParameterType extends AbstractType
         ));
 
         //[Yes/No] and default to “Yes” by default
-        $builder->add('projectExprApply', null, array(
+        if( $this->params["projectSpecialty"] ) {
+            //If specialty is set => Yes, No, Default
+            $booleanChoices = array(
+                'Yes' => 'Yes',
+                'No' => 'No',
+                'Default' => 'Default'
+            );
+            $booleanChoices = array(
+                'Yes' => true,
+                'No' => false,
+                'Default' => NULL
+            );
+            //$booleanRequired = false;
+        } else {
+            //If specialty is not set (default) => Yes, No
+            $booleanChoices = array(
+                'Yes' => 'Yes',
+                'No' => 'No'
+            );
+            $booleanChoices = array(
+                'Yes' => true,
+                'No' => false,
+            );
+            //$booleanRequired = true;
+        }
+        $builder->add('projectExprApply', ChoiceType::class, array(
             'label' => "Apply project request expiration notification rule to this project request type:",
+            'choices' => $booleanChoices,
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
-        //[Yes/No] and default to “Yes” by default
-        $builder->add('projectExprApplyChangeStatus', null, array(
+        $builder->add('projectExprApplyChangeStatus', ChoiceType::class, array(
             'label' => "Apply project request auto-closure after expiration rule to this project request type:",
+            'choices' => $booleanChoices,
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
+//        $builder->add('projectExprApply', CustomSelectorType::class, array(
+//            'label' => "Apply project request expiration notification rule to this project request type:",
+//            'choices' => $booleanChoices,
+//            'required' => true,
+//            'attr' => array('class' => 'combobox'),
+//            'classtype' => 'boolean-with-default'
+//        ));
+//        $builder->add('projectExprApplyChangeStatus', CustomSelectorType::class, array(
+//            'label' => "Apply project request auto-closure after expiration rule to this project request type:",
+//            'choices' => $booleanChoices,
+//            'required' => true,
+//            'attr' => array('class' => 'combobox'),
+//            'classtype' => 'boolean-with-default'
+//        ));
     }
     
     /**
