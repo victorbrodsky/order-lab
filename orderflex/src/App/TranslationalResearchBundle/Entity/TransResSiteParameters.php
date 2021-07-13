@@ -554,23 +554,36 @@ class TransResSiteParameters {
      */
     private $projectExprDuration;
 
-    //Default number of months in advance of the project request expiration date when the automatic notification requesting a
-    // progress report should be sent (leave blank to never send this notification): [6] - default to 6
     /**
-     * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
+     * Default number of months in advance of the project request expiration date when the automatic notification requesting a
+     * progress report should be sent (leave blank to never send this notification): [6] - default to 6
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $projectExprDurationEmail;
 
-    //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
-    // (leave blank to never auto-close): [90] - default to 90
     /**
-     * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
+     * Default number of days after the project request expiration date when the project request status should be set to 'Closed'
+     * (leave blank to never auto-close): [90] - default to 90
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $projectExprDurationChangeStatus;
+
+    /**
+     * Apply project request expiration notification rule to this project request type: [Yes/No] and default to “Yes” by default
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $projectExprApply;
+
+    /**
+     * Apply project request auto-closure after expiration rule to this project request type: [Yes/No] and default to “Yes” by default
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $projectExprApplyChangeStatus;
+
     ///////////// EOF Project expirations ///////////////
 
     public function __construct($user=null) {
@@ -1852,6 +1865,39 @@ class TransResSiteParameters {
     {
         $this->projectExprDurationChangeStatus = $projectExprDurationChangeStatus;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectExprApply()
+    {
+        return $this->projectExprApply;
+    }
+
+    /**
+     * @param mixed $projectExprApply
+     */
+    public function setProjectExprApply($projectExprApply)
+    {
+        $this->projectExprApply = $projectExprApply;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectExprApplyChangeStatus()
+    {
+        return $this->projectExprApplyChangeStatus;
+    }
+
+    /**
+     * @param mixed $projectExprApplyChangeStatus
+     */
+    public function setProjectExprApplyChangeStatus($projectExprApplyChangeStatus)
+    {
+        $this->projectExprApplyChangeStatus = $projectExprApplyChangeStatus;
+    }
+
 
 
 

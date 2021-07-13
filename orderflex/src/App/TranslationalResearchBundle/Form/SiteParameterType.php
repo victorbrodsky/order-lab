@@ -515,6 +515,18 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        //[Yes/No] and default to “Yes” by default
+        $builder->add('projectExprApply', null, array(
+            'label' => "Apply project request expiration notification rule to this project request type:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        //[Yes/No] and default to “Yes” by default
+        $builder->add('projectExprApplyChangeStatus', null, array(
+            'label' => "Apply project request auto-closure after expiration rule to this project request type:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
     }
     
     /**
