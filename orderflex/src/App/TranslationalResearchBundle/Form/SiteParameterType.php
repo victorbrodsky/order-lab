@@ -530,20 +530,20 @@ class SiteParameterType extends AbstractType
         ////////////// EOF Budget Related Parameters /////////////////////
 
         $builder->add('projectExprDuration', null, array(
-            'label' => "Default duration of a project request before expiration in months (leave blank for no notification):",
+            'label' => "Default duration of a project request before expiration in months (default is 12 months):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectExprDurationEmail', null, array(
             'label' => "Default number of months in advance of the project request expiration".
                 " date when the automatic notification requesting a progress report should".
-                " be sent (leave blank to never send this notification):",
+                " be sent (default is 6 months):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectExprDurationChangeStatus', null, array(
             'label' => "Default number of days after the project request expiration date when".
-                " the project request status should be set to 'Closed' (leave blank to never auto-close):",
+                " the project request status should be set to 'Closed' (default is 90 days):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
