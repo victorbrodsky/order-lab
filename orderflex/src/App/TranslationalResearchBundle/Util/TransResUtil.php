@@ -7510,4 +7510,29 @@ class TransResUtil
         return $entity;
     }
 
+    //use the value from the “Default duration of a project request before expiration (in months)”
+    // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
+    public function calculateAndSetProjectExpectedExprDate( $project ) {
+        if( $project->getExpectedExpirationDate() ) {
+            return NULL;
+        }
+
+        //projectExprDuration -> setExpectedExpirationDate
+        $projectExprDuration = $this->getTransresSiteProjectParameter('projectExprDuration',$project); //Month
+        if( !$projectExprDuration ) {
+            //default to 12
+            $projectExprDuration = 12;
+        }
+
+        $projectExprDuration = intval($projectExprDuration);
+
+        $expectedExprDate = new \DateTime("+".$projectExprDuration." months");
+
+        if( $expectedExprDate) {
+            $project->setExpectedExpirationDate($expectedExprDate);
+        }
+
+        return $project;
+    }
+
 }

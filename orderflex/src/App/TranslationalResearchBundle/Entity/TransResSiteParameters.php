@@ -317,11 +317,6 @@ class TransResSiteParameters {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableNewProjectAccessPage;
-//    /**
-//     * Hide everywhere
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $hideEverywhere;
 
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:

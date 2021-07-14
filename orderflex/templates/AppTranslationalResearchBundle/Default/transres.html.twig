@@ -1774,19 +1774,22 @@
                 <hr>
 
                 {#form.showMessageToUsers={{ form.vars.value.showMessageToUsers }}#}
-                {{ formmacros.checkbox_with_value(form.showMessageToUsers,"",form.vars.value.showMessageToUsers) }}
+                {#{{ formmacros.checkbox_with_value(form.showMessageToUsers,"",form.vars.value.showMessageToUsers) }}#}
+                {{ formmacros.field(form.showMessageToUsers) }}
                 {{ formmacros.field(form.messageToUsers) }}
 
                 {{ formmacros.field(form.humanTissueFormNote) }}
 
                 <hr>
 
-                {{ formmacros.checkbox_with_value(form.enableNewProjectOnSelector,"",form.vars.value.enableNewProjectOnSelector) }}
-                {{ formmacros.checkbox_with_value(form.enableNewProjectOnNavbar,"",form.vars.value.enableNewProjectOnNavbar) }}
-                {{ formmacros.checkbox_with_value(form.enableNewProjectAccessPage,"",form.vars.value.enableNewProjectAccessPage) }}
-
-                {#form.updateProjectFundNumber={{ form.vars.value.updateProjectFundNumber }}#}
-                {{ formmacros.checkbox_with_value(form.updateProjectFundNumber,"",form.vars.value.updateProjectFundNumber) }}
+                {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnSelector,"",form.vars.value.enableNewProjectOnSelector) }}#}
+                {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnNavbar,"",form.vars.value.enableNewProjectOnNavbar) }}#}
+                {#{{ formmacros.checkbox_with_value(form.enableNewProjectAccessPage,"",form.vars.value.enableNewProjectAccessPage) }}#}
+                {#{{ formmacros.checkbox_with_value(form.updateProjectFundNumber,"",form.vars.value.updateProjectFundNumber) }}#}
+                {{ formmacros.field(form.enableNewProjectOnSelector) }}
+                {{ formmacros.field(form.enableNewProjectOnNavbar) }}
+                {{ formmacros.field(form.enableNewProjectAccessPage) }}
+                {{ formmacros.field(form.updateProjectFundNumber) }}
 
                 {#<hr>#}
                 {#<h4>#}
@@ -1933,7 +1936,8 @@
                 {{ formmacros.field(form.transresFromHeader) }}
                 {{ formmacros.field(form.transresFooter) }}
                 {{ formmacros.field(form.invoiceSalesperson) }}
-                {{ formmacros.checkbox_with_value(form.showRemittance,"",form.vars.value.showRemittance) }}
+                {#{{ formmacros.checkbox_with_value(form.showRemittance,"",form.vars.value.showRemittance) }}#}
+                {{ formmacros.field(form.showRemittance) }}
 
                 {#<hr>#}
                 {#<p>#}
@@ -2063,14 +2067,16 @@
 
                 <h4>Over Budget Notification Email</h4>
                 {{ formmacros.field(form.overBudgetCalculation) }}
-                {{ formmacros.checkbox_with_value(form.overBudgetSendEmail,"",form.vars.value.overBudgetSendEmail) }}
+                {#{{ formmacros.checkbox_with_value(form.overBudgetSendEmail,"",form.vars.value.overBudgetSendEmail) }}#}
+                {{ formmacros.field(form.overBudgetSendEmail) }}
                 {{ formmacros.field(form.overBudgetFromEmail) }}
                 {{ formmacros.field(form.overBudgetSubject) }}
                 {{ formmacros.field(form.overBudgetBody) }}
 
                 <hr>
                 <h4>Approved Budget Notification Email</h4>
-                {{ formmacros.checkbox_with_value(form.approvedBudgetSendEmail,"",form.vars.value.approvedBudgetSendEmail) }}
+                {#{{ formmacros.checkbox_with_value(form.approvedBudgetSendEmail,"",form.vars.value.approvedBudgetSendEmail) }}#}
+                {{ formmacros.field(form.approvedBudgetSendEmail) }}
                 {{ formmacros.field(form.approvedBudgetFromEmail) }}
                 {{ formmacros.field(form.approvedBudgetSubject) }}
                 {{ formmacros.field(form.approvedBudgetBody) }}

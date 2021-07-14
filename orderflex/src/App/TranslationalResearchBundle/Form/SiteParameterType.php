@@ -2,7 +2,6 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
-use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -19,9 +18,34 @@ class SiteParameterType extends AbstractType
 {
 
     protected $params;
+    protected $booleanChoices;
+    protected $booleanRequired;
 
     public function formConstructor( $params ) {
         $this->params = $params;
+
+        //Use this choices for boolean. If Default is set than use the value from the default TRP site settings
+        //default TRP site settings -> use "Yes" by default
+        //specific TRP site settings -> use "Default" by default
+        //[Yes/No] and default to “Yes” by default
+        if( $this->params["projectSpecialty"] ) {
+            //If specialty is set => Yes, No, Default
+            $booleanChoices = array(
+                'Default' => NULL,
+                'Yes' => true,
+                'No' => false
+            );
+            //$booleanRequired = false;
+        } else {
+            //If specialty is not set (default) => Yes, No
+            $booleanChoices = array(
+                'Yes' => true,
+                'No' => false,
+            );
+            //$booleanRequired = true;
+        }
+        $this->booleanChoices = $booleanChoices;
+        $this->booleanRequired = true;
     }
 
     /**
@@ -241,9 +265,10 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('showMessageToUsers', null, array(
+        $builder->add('showMessageToUsers', ChoiceType::class, array(
             'label' => 'Show TRP Message to Users:',
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('messageToUsers', null, array(
@@ -259,19 +284,22 @@ class SiteParameterType extends AbstractType
         ));
 
         //Disable/Enable new project
-        $builder->add('enableNewProjectOnSelector', null, array(
+        $builder->add('enableNewProjectOnSelector', ChoiceType::class, array(
             'label' => 'Enable the display the button (project specialty) on the "New Project Request" page (translational-research/project/new):',
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('enableNewProjectOnNavbar', null, array(
+        $builder->add('enableNewProjectOnNavbar', ChoiceType::class, array(
             'label' => 'Enable the display the "New Project Request" link in the top Navbar:',
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('enableNewProjectAccessPage', null, array(
+        $builder->add('enableNewProjectAccessPage', ChoiceType::class, array(
             'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
 
@@ -406,15 +434,17 @@ class SiteParameterType extends AbstractType
         ));
         ////////// EOF Completed and Notified, without issued invoice work request reminder email ////////////
 
-        $builder->add('showRemittance', null, array(
+        $builder->add('showRemittance', ChoiceType::class, array(
             'label' => "Show Remittance section in invoice PDF:",
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('updateProjectFundNumber', null, array(
+        $builder->add('updateProjectFundNumber', ChoiceType::class, array(
             'label' => "Update parent Project Request’s Fund Number when New Work request’s number is submitted:",
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
 
@@ -448,15 +478,17 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('overBudgetSendEmail', null, array(
+        $builder->add('overBudgetSendEmail', ChoiceType::class, array(
             'label' => "Send over budget notifications:",
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('approvedBudgetSendEmail', null, array(
+        $builder->add('approvedBudgetSendEmail', ChoiceType::class, array(
             'label' => "Send 'approved project budget' update notifications:",
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
 
@@ -516,58 +548,18 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        //[Yes/No] and default to “Yes” by default
-        if( $this->params["projectSpecialty"] ) {
-            //If specialty is set => Yes, No, Default
-            $booleanChoices = array(
-                'Yes' => 'Yes',
-                'No' => 'No',
-                'Default' => 'Default'
-            );
-            $booleanChoices = array(
-                'Yes' => true,
-                'No' => false,
-                'Default' => NULL
-            );
-            //$booleanRequired = false;
-        } else {
-            //If specialty is not set (default) => Yes, No
-            $booleanChoices = array(
-                'Yes' => 'Yes',
-                'No' => 'No'
-            );
-            $booleanChoices = array(
-                'Yes' => true,
-                'No' => false,
-            );
-            //$booleanRequired = true;
-        }
         $builder->add('projectExprApply', ChoiceType::class, array(
             'label' => "Apply project request expiration notification rule to this project request type:",
-            'choices' => $booleanChoices,
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectExprApplyChangeStatus', ChoiceType::class, array(
             'label' => "Apply project request auto-closure after expiration rule to this project request type:",
-            'choices' => $booleanChoices,
-            'required' => false,
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-//        $builder->add('projectExprApply', CustomSelectorType::class, array(
-//            'label' => "Apply project request expiration notification rule to this project request type:",
-//            'choices' => $booleanChoices,
-//            'required' => true,
-//            'attr' => array('class' => 'combobox'),
-//            'classtype' => 'boolean-with-default'
-//        ));
-//        $builder->add('projectExprApplyChangeStatus', CustomSelectorType::class, array(
-//            'label' => "Apply project request auto-closure after expiration rule to this project request type:",
-//            'choices' => $booleanChoices,
-//            'required' => true,
-//            'attr' => array('class' => 'combobox'),
-//            'classtype' => 'boolean-with-default'
-//        ));
     }
     
     /**
