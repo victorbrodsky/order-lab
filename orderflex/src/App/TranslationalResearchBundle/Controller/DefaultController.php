@@ -2498,7 +2498,7 @@ class DefaultController extends OrderAbstractController
                 if( $status == 'closed' || $status == 'canceled' ) {
                     $closedCount++;
                 }
-                if( $status == 'approved' ) {
+                if( $status == 'final_approved' ) {
                     $approvedCount++;
                 }
 
