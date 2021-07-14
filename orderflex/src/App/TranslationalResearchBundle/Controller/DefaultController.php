@@ -340,9 +340,10 @@ class DefaultController extends OrderAbstractController
         if( $transresRequest ) {
             foreach($transresRequest->getProducts() as $product) {
                 $category = $product->getCategory();
-                if( !$category ) {
-                    continue;
-                }
+                //if( !$category ) {
+                //    continue;
+                //}
+                
                 //echo "category=".$category->getId()."<br>";
                 //check if this fee schedule does not exists in output array
                 $key = $category->getId();
