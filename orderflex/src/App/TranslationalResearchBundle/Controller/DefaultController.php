@@ -2494,7 +2494,7 @@ class DefaultController extends OrderAbstractController
                 $updatedProjects[] = $res; //$project->getId();
 
                 $status = $project->getState();
-                if( $status == 'closed' || $status == 'canceled' || $status == 'draft') {
+                if( $status == 'closed' || $status == 'canceled' ) {
                     $closedCount++;
                 }
 
