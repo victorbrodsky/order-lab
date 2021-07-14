@@ -2464,6 +2464,7 @@ class DefaultController extends OrderAbstractController
 
         $count = 0;
         $updateCount = 0;
+        $closedCount = 0;
         $updatedProjects = array();
 
         //find all projects without expiration date
@@ -2492,16 +2493,22 @@ class DefaultController extends OrderAbstractController
 
                 $updatedProjects[] = $res; //$project->getId();
 
-                $project->getCreateDate();
+                $status = $project->getState();
+                if( $status == 'closed' || $status == 'canceled' || $status == 'draft') {
+                    $closedCount++;
+                }
 
                 if( $testing == false ) {
                     //$em->flush();
-                    $updateCount++;
                 }
+
+                $updateCount++;
             }
 
             $count++;
         }
+
+        echo "Total=".$count.", closedCount=".$closedCount.", updatedCount=".$updateCount."<br>";
 
         //EventLog
         $msg = "Populated projects expectedExpirationDate: ".implode(", ",$updatedProjects)."<br>";

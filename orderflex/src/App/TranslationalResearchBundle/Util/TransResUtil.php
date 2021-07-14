@@ -7553,7 +7553,8 @@ class TransResUtil
             $createDateStr = NULL;
             if( $createDate ) {
                 $createDateStr = $createDate->format('d-m-Y');
-                $res = $project->getOid() ." (created ". $createDateStr ."): exprDate=".$expectedExprDate->format('d-m-Y');
+                $status = $project->getState();
+                $res = $project->getOid() ." (created ". $createDateStr. ", " . $status ."): exprDate=".$expectedExprDate->format('d-m-Y');
             }
 
             return $res;
