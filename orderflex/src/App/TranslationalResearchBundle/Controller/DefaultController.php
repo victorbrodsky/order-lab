@@ -2443,4 +2443,77 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF updateProductsInWorkRequestsAction: total=$count, updateCountCanceled=$updateCountCanceled, updateCountRequested=$updateCountRequested");
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/populate-project-expiration-date
+     *
+     * @Route("/populate-project-expiration-date/", name="translationalresearch_populate_project_expiration_date")
+     */
+    public function populateProjectExpectedExpirationDateAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("populateProjectExpectedExpirationDateAction not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        $testing = true;
+
+        $count = 0;
+        $updateCount = 0;
+        $updatedProjects = array();
+
+        //find all projects without expiration date
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+        $dql->where("project.expectedExpirationDate IS NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        foreach($projects as $project) {
+
+            if( $project->getExpectedExpirationDate() ) {
+                continue;
+            }
+
+            //                                                          $project, $useProjectSubmissionDate=false
+            $res = $transresUtil->calculateAndSetProjectExpectedExprDate($project,true);
+
+            if( $res ) {
+
+                $updatedProjects[] = $res; //$project->getId();
+
+                $project->getCreateDate();
+
+                if( $testing == false ) {
+                    //$em->flush();
+                    $updateCount++;
+                }
+            }
+
+            $count++;
+        }
+
+        //EventLog
+        $msg = "Populated projects expectedExpirationDate: ".implode(", ",$updatedProjects)."<br>";
+        echo "$msg <br>";
+
+        if( $testing == false ) {
+            $eventType = "Project Updated";
+            if( $testing == false ) {
+                //$transresUtil->setEventLog(null,$eventType,$msg);
+            }
+        }
+
+        exit("EOF populateProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
+    }
 }

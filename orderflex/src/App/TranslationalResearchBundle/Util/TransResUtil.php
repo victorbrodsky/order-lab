@@ -7512,9 +7512,9 @@ class TransResUtil
 
     //use the value from the “Default duration of a project request before expiration (in months)”
     // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
-    public function calculateAndSetProjectExpectedExprDate( $project ) {
+    public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false ) {
         if( $project->getExpectedExpirationDate() ) {
-            return NULL;
+            return false;
         }
 
         //projectExprDuration -> setExpectedExpirationDate
@@ -7526,13 +7526,40 @@ class TransResUtil
 
         $projectExprDuration = intval($projectExprDuration);
 
-        $expectedExprDate = new \DateTime("+".$projectExprDuration." months");
+        $addMonthStr = "+".$projectExprDuration." months";
 
-        if( $expectedExprDate) {
-            $project->setExpectedExpirationDate($expectedExprDate);
+        $expectedExprDate = NULL;
+        $createDate = NULL;
+
+        if( $useProjectSubmissionDate ) {
+            $createDate = $project->getCreateDate();
+            if( $createDate ) {
+                $expectedExprDate = clone $createDate;
+                $expectedExprDate->modify($addMonthStr);
+            }
         }
 
-        return $project;
+        if( !$expectedExprDate ) {
+            $expectedExprDate = new \DateTime($addMonthStr);
+        }
+
+        if( $expectedExprDate) {
+
+            $project->setExpectedExpirationDate($expectedExprDate);
+
+            $res = $project->getOid().": exprDate=".$expectedExprDate->format('d-m-Y');
+
+            //for echo
+            $createDateStr = NULL;
+            if( $createDate ) {
+                $createDateStr = $createDate->format('d-m-Y');
+                $res = $project->getOid() ." (created ". $createDateStr ."): exprDate=".$expectedExprDate->format('d-m-Y');
+            }
+
+            return $res;
+        }
+
+        return false;
     }
 
 }
