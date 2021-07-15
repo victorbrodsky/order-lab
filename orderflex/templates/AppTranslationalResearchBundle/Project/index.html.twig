@@ -249,6 +249,7 @@
                 {#<th>IRB Expiration Date</th>#}
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.irbExpirationDate') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, transres_util.getHumanAnimalName()~' Expiration Date', 'project.implicitExpirationDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expectedExpirationDate') }}</th>
                 <th>Work Requests</th>
 
                 <th title="Number of the most recent issued invoices">Issued Invoices</th>
@@ -412,6 +413,10 @@
                     {% if project.implicitExpirationDate %}
                         {{ project.implicitExpirationDate|date("m/d/Y",false) }}
                     {% endif %}
+                </td>
+
+                <td>
+                    {{ project.expectedExpirationDate|date("m/d/Y",false) }}
                 </td>
 
                 {#Requests#}
