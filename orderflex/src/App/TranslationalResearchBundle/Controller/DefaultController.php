@@ -2460,7 +2460,7 @@ class DefaultController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $count = 0;
         $updateCount = 0;
@@ -2503,7 +2503,7 @@ class DefaultController extends OrderAbstractController
                 }
 
                 if( $testing == false ) {
-                    //$em->flush();
+                    $em->flush();
                 }
 
                 $updateCount++;
@@ -2512,17 +2512,21 @@ class DefaultController extends OrderAbstractController
             $count++;
         }
 
+        if( $updateCount > 0 ) {
+            if ($testing == false) {
+                $em->flush();
+            }
+        }
+
         echo "Total=".$count.", approvedCount=".$approvedCount.", closedCount=".$closedCount.", updatedCount=".$updateCount."<br>";
 
         //EventLog
-        $msg = "Populated projects expectedExpirationDate: ".implode(", ",$updatedProjects)."<br>";
+        $msg = "Populated projects expectedExpirationDate: ".implode("; ",$updatedProjects)."<br>";
         echo "$msg <br>";
 
         if( $testing == false ) {
             $eventType = "Project Updated";
-            if( $testing == false ) {
-                //$transresUtil->setEventLog(null,$eventType,$msg);
-            }
+            $transresUtil->setEventLog(null,$eventType,$msg);
         }
 
         exit("EOF populateProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
