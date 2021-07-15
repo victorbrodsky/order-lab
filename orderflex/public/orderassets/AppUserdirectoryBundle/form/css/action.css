@@ -208,6 +208,9 @@
 .table-row-budget-negative {
     background: #F89C9C;
 }
+.table-row-project-expired {
+    background: #FFB914;
+}
 
 .res-app-status-legend-add {
     background: lightgreen;

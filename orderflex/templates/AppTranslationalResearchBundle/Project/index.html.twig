@@ -200,6 +200,9 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-4">
+                            {% if filterform.expectedExpirationDateChoices is defined %}
+                                {{ form_widget(filterform.expectedExpirationDateChoices) }}
+                            {% endif %}
                         </div>
                     </div>
 
@@ -329,6 +332,10 @@
                 {% if remainingBudget < 0 %}
                     {% set trclassname = "table-row-budget-negative" %}
                 {% endif %}
+            {% endif %}
+
+            {% if transres_util.isProjectExpired(project) %}
+                {% set trclassname = "table-row-project-expired" %}
             {% endif %}
 
             {#

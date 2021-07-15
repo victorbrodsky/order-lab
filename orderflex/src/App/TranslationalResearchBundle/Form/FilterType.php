@@ -324,6 +324,14 @@ class FilterType extends AbstractType
             ));
         }
 
+        $builder->add('expectedExpirationDateChoices', ChoiceType::class, array(
+            'label' => false,
+            'required' => true,
+            'multiple' => false,
+            'choices' => $this->params['expectedExpirationDateChoices'],
+            'attr' => array('class'=>'combobox submit-on-enter-field', 'placeholder' => 'Expiration'),
+        ));
+
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => true,

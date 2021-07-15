@@ -202,6 +202,8 @@ class ProjectController extends OrderAbstractController
         //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
         $transresPricesList = $transresUtil->getPricesList();
 
+        $expectedExpirationDateChoices = $transresUtil->getExpectedExpirationDateChoices();
+
         $params = array(
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresUsers' => $transresUsers,
@@ -216,6 +218,7 @@ class ProjectController extends OrderAbstractController
             'humanAnimalNameBracket' => $transresUtil->getHumanAnimalName("brackets"),
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash"),
             'transresPricesList' => $transresPricesList,
+            'expectedExpirationDateChoices' => $expectedExpirationDateChoices,
             'overBudget' => 'all',
             'fundingType' => null
         );
@@ -327,17 +330,14 @@ class ProjectController extends OrderAbstractController
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
         $reviewers = $filterform['reviewers']->getData();
-
         $humanTissue = $filterform['humanTissue']->getData();
         $exemptIrbApproval = $filterform['exemptIrbApproval']->getData();
-
         $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();
         $toExpectedCompletionDate = $filterform['toExpectedCompletionDate']->getData();
-
         $fromImplicitExpDate = $filterform['fromImplicitExpDate']->getData();
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
-
         $briefDescription = $filterform['briefDescription']->getData();
+        $expectedExpirationDateChoices = $filterform['expectedExpirationDateChoices']->getData();
 
         $priceList = NULL;
         if( isset($filterform['priceList']) ) {
@@ -566,6 +566,53 @@ class ProjectController extends OrderAbstractController
 
                 $advancedFilter++;
             }
+        }
+
+        if( $expectedExpirationDateChoices ) {
+
+            $expectedExpirationDateChoices = strtolower($expectedExpirationDateChoices);
+            $expectedExpirationDateProcessed = false;
+
+            if ($expectedExpirationDateChoices == strtolower('All')) {
+                //do nothing
+                $expectedExpirationDateProcessed = true;
+            }
+
+            $now = new \DateTime();
+            $nowStr = $now->format('Y-m-d H:i:s');
+
+            if( $expectedExpirationDateChoices == strtolower('Expired') ) {
+                $dql->andWhere(':nowDatetime > project.expectedExpirationDate');
+                $dqlParameters['nowDatetime'] = $nowStr;
+                $expectedExpirationDateProcessed = true;
+            }
+
+            if( $expectedExpirationDateChoices == strtolower('Expiring') ) {
+                //([expiration date - “Default number of months in advance…” (var from site settings)] older than today)
+                $projectExprDurationEmail = $transresUtil->getProjectExprDurationEmail();
+                if( $projectExprDurationEmail ) {
+                    $advanceDate = $now->modify("+" . $projectExprDurationEmail . " months");
+                    $dql->andWhere('(project.expectedExpirationDate BETWEEN :nowDatetime and :advanceDate)');
+                    $dqlParameters['nowDatetime'] = $nowStr;
+                    $dqlParameters['advanceDate'] = $advanceDate->format('Y-m-d H:i:s');
+                }
+                $expectedExpirationDateProcessed = true;
+            }
+
+            if( $expectedExpirationDateChoices == strtolower('Current/Non-expired') ) {
+                $dql->andWhere('project.expectedExpirationDate > :nowDatetime');
+                $dqlParameters['nowDatetime'] = $nowStr;
+                $expectedExpirationDateProcessed = true;
+            }
+
+            if( $expectedExpirationDateProcessed == false ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Expiration filter '$expectedExpirationDateChoices' not found"
+                );
+            }
+
+            $advancedFilter++;
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////

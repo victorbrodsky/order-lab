@@ -7563,4 +7563,35 @@ class TransResUtil
         return false;
     }
 
+    public function getProjectExprDurationEmail($project=NULL) {
+        $projectExprDurationEmail = $this->getTransresSiteProjectParameter('projectExprDurationEmail',$project); //Month
+        if( !$projectExprDurationEmail ) {
+            //default to 6
+            $projectExprDurationEmail = 6;
+        }
+        return $projectExprDurationEmail;
+    }
+
+    public function isProjectExpired( $project ) {
+        $now = new \DateTime();
+        $expirationDate = $project->getExpectedExpirationDate();
+        if( $expirationDate && $now > $expirationDate ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getExpectedExpirationDateChoices() {
+        $expectedExpirationDateChoices = array(
+            'All' => 'All',
+            'Expired' => 'Expired',
+            'Expiring' => 'Expiring',
+            'Current/Non-expired' => 'Current/Non-expired',
+            //'test' => 'test'
+        );
+
+        return $expectedExpirationDateChoices;
+    }
+
 }
