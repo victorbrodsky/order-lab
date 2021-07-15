@@ -2456,6 +2456,8 @@ class DefaultController extends OrderAbstractController
 
         //exit("populateProjectExpectedExpirationDateAction not allowed");
 
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
