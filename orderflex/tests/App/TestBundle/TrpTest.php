@@ -602,6 +602,28 @@ class TrpTest extends WebTestBase
         }
     }
 
+    public function testIndexQueuesAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/translational-research/orderables/');
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Queues")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Matching")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Requested Quantity")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Product or Service")')->count()
+        );
+    }
 
 //    public function testUnderConstruction() {
 //        //under-construction
