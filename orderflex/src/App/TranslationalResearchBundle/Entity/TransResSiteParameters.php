@@ -579,6 +579,71 @@ class TransResSiteParameters {
      */
     private $projectExprApplyChangeStatus;
 
+    //8 fields
+    /**
+     * 1) Automatically send a reminder email to submit project progress report for expiring projects: [Yes/No] (Default to yes)
+     * Similar to "Apply project request expiration notification rule to this project request type"?
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendExpriringProjectEmail;
+
+    //2) Project Request Upcoming Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
+    /**
+     * 2) Project Request Upcoming Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $upcomingExpirationEmailFrom;
+
+    //3) Project Request Upcoming Expiration Notification E-Mail Subject: “[TRP] Please submit a progress report for PROJECT-ID”
+    /**
+     * 3) Project Request Upcoming Expiration Notification E-Mail Subject: “[TRP] Please submit a progress report for PROJECT-ID”
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $upcomingExpirationEmailSubject;
+
+    //4) Project Request Upcoming Expiration Notification E-Mail Body:
+    /**
+     * 4) Project Request Upcoming Expiration Notification E-Mail Body:
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $upcomingExpirationEmailBody;
+
+    //5) Automatically send a reminder email to the [TRP] system administrator for expired projects: [Yes/No] (Default to yes)
+    /**
+     * 5) Automatically send a reminder email to the [TRP] system administrator for expired projects: [Yes/No] (Default to yes)
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendExpiredProjectEmail;
+
+    //6) Project Request Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
+    /**
+     * //6) Project Request Expiration Notification E-Mail sent from: [email address], default to trp-admin’s
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $expirationEmailFrom;
+
+    //7) Project Request Expiration Notification E-Mail Subject: “[TRP] Project PROJECT-ID has reached its expiration date”
+    /**
+     * 7) Project Request Expiration Notification E-Mail Subject: “[TRP] Project PROJECT-ID has reached its expiration date”
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $expirationEmailSubject;
+
+    //8) Project Request Expiration Notification E-Mail Body:
+    /**
+     * 8) Project Request Expiration Notification E-Mail Body:
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $expirationEmailBody;
+
     ///////////// EOF Project expirations ///////////////
 
     public function __construct($user=null) {
@@ -1892,6 +1957,135 @@ class TransResSiteParameters {
     {
         $this->projectExprApplyChangeStatus = $projectExprApplyChangeStatus;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSendExpriringProjectEmail()
+    {
+        return $this->sendExpriringProjectEmail;
+    }
+
+    /**
+     * @param mixed $sendExpriringProjectEmail
+     */
+    public function setSendExpriringProjectEmail($sendExpriringProjectEmail)
+    {
+        $this->sendExpriringProjectEmail = $sendExpriringProjectEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpcomingExpirationEmailFrom()
+    {
+        return $this->upcomingExpirationEmailFrom;
+    }
+
+    /**
+     * @param mixed $upcomingExpirationEmailFrom
+     */
+    public function setUpcomingExpirationEmailFrom($upcomingExpirationEmailFrom)
+    {
+        $this->upcomingExpirationEmailFrom = $upcomingExpirationEmailFrom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpcomingExpirationEmailSubject()
+    {
+        return $this->upcomingExpirationEmailSubject;
+    }
+
+    /**
+     * @param mixed $upcomingExpirationEmailSubject
+     */
+    public function setUpcomingExpirationEmailSubject($upcomingExpirationEmailSubject)
+    {
+        $this->upcomingExpirationEmailSubject = $upcomingExpirationEmailSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpcomingExpirationEmailBody()
+    {
+        return $this->upcomingExpirationEmailBody;
+    }
+
+    /**
+     * @param mixed $upcomingExpirationEmailBody
+     */
+    public function setUpcomingExpirationEmailBody($upcomingExpirationEmailBody)
+    {
+        $this->upcomingExpirationEmailBody = $upcomingExpirationEmailBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSendExpiredProjectEmail()
+    {
+        return $this->sendExpiredProjectEmail;
+    }
+
+    /**
+     * @param mixed $sendExpiredProjectEmail
+     */
+    public function setSendExpiredProjectEmail($sendExpiredProjectEmail)
+    {
+        $this->sendExpiredProjectEmail = $sendExpiredProjectEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpirationEmailFrom()
+    {
+        return $this->expirationEmailFrom;
+    }
+
+    /**
+     * @param mixed $expirationEmailFrom
+     */
+    public function setExpirationEmailFrom($expirationEmailFrom)
+    {
+        $this->expirationEmailFrom = $expirationEmailFrom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpirationEmailSubject()
+    {
+        return $this->expirationEmailSubject;
+    }
+
+    /**
+     * @param mixed $expirationEmailSubject
+     */
+    public function setExpirationEmailSubject($expirationEmailSubject)
+    {
+        $this->expirationEmailSubject = $expirationEmailSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpirationEmailBody()
+    {
+        return $this->expirationEmailBody;
+    }
+
+    /**
+     * @param mixed $expirationEmailBody
+     */
+    public function setExpirationEmailBody($expirationEmailBody)
+    {
+        $this->expirationEmailBody = $expirationEmailBody;
+    }
+
 
 
 

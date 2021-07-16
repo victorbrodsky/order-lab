@@ -1838,6 +1838,15 @@
 
                 {#Email#}
                 {#H- In Site Settings, for each project type separately (MISI, AP, etc), in their accordions, add 8 fields:#}
+                {{ formmacros.field(form.sendExpriringProjectEmail) }}
+                {{ formmacros.field(form.upcomingExpirationEmailFrom) }}
+                {{ formmacros.field(form.upcomingExpirationEmailSubject) }}
+                {{ formmacros.field(form.upcomingExpirationEmailBody) }}
+
+                {{ formmacros.field(form.sendExpiredProjectEmail) }}
+                {{ formmacros.field(form.expirationEmailFrom) }}
+                {{ formmacros.field(form.expirationEmailSubject) }}
+                {{ formmacros.field(form.expirationEmailBody) }}
 
             </div>
         </div>

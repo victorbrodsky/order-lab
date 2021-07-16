@@ -255,7 +255,7 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('fromEmail', null, array(
-            'label' => "Emails sent by this site will appear to come from the following address (trp-admin@med.cornell.edu):",
+            'label' => "Emails sent by this site will appear to come from the following address (trp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -461,7 +461,7 @@ class SiteParameterType extends AbstractType
 
         ////////////// Budget Related Parameters /////////////////////
         $builder->add('overBudgetFromEmail', null, array(
-            'label' => "Over budget notification from (trp-admin@med.cornell.edu):",
+            'label' => "Over budget notification from (default trp-admin):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -493,7 +493,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('approvedBudgetFromEmail', null, array(
-            'label' => "Approved budget amount update notification from (trp-admin@med.cornell.edu):",
+            'label' => "Approved budget amount update notification from (default trp-admin):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -560,6 +560,52 @@ class SiteParameterType extends AbstractType
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
+
+        //8 fields
+        $builder->add('sendExpriringProjectEmail', ChoiceType::class, array(
+            'label' => "Automatically send a reminder email to submit project progress report for expiring projects:",
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('upcomingExpirationEmailFrom', null, array(
+            'label' => "Project Request Upcoming Expiration Notification E-Mail sent from (default trp-admin):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('upcomingExpirationEmailSubject', null, array(
+            'label' => "Project Request Upcoming Expiration Notification E-Mail Subject:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('upcomingExpirationEmailBody', null, array(
+            'label' => "Project Request Upcoming Expiration Notification E-Mail Body:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('sendExpiredProjectEmail', ChoiceType::class, array(
+            'label' => "Project Request Expiration Notification E-Mail sent from:",
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('expirationEmailFrom', ChoiceType::class, array(
+            'label' => "Project Request Expiration Notification E-Mail sent from (default trp-admin):",
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('expirationEmailSubject', null, array(
+            'label' => "Project Request Expiration Notification E-Mail Subject:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('expirationEmailBody', null, array(
+            'label' => "Project Request Expiration Notification E-Mail Body:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
     }
     
     /**
