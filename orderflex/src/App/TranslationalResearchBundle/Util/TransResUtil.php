@@ -4569,6 +4569,17 @@ class TransResUtil
                 $text = str_replace("[[PROJECT VALUE WITHOUT INVOICES]]", $grandTotalWithoutInvoices, $text);
             }
 
+                if( strpos($text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
+                    $expectedExpirationDate = $project->getExpectedExpirationDate();
+                    if( $expectedExpirationDate ) {
+                        $user = $this->secTokenStorage->getToken()->getUser();
+                        $userServiceUtil = $this->container->get('user_service_utility');
+                        $expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
+                        $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y \a\t H:i:s');
+                        $text = str_replace("[[PROJECT EXPIRATION DATE]]", $expectedExpirationDateStr, $text);
+                    }
+                }
+
         }//project
 
         if( $transresRequest ) {

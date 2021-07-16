@@ -562,48 +562,50 @@ class SiteParameterType extends AbstractType
         ));
 
         //8 fields
+        //1
         $builder->add('sendExpriringProjectEmail', ChoiceType::class, array(
             'label' => "Automatically send a reminder email to submit project progress report for expiring projects:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('upcomingExpirationEmailFrom', null, array(
+        //2
+        $builder->add('expiringProjectEmailFrom', null, array(
             'label' => "Project Request Upcoming Expiration Notification E-Mail sent from (default trp-admin):",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
-        $builder->add('upcomingExpirationEmailSubject', null, array(
+        $builder->add('expiringProjectEmailSubject', null, array(
             'label' => "Project Request Upcoming Expiration Notification E-Mail Subject:",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
-        $builder->add('upcomingExpirationEmailBody', null, array(
+        $builder->add('expiringProjectEmailBody', null, array(
             'label' => "Project Request Upcoming Expiration Notification E-Mail Body:",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
+        //5
         $builder->add('sendExpiredProjectEmail', ChoiceType::class, array(
             'label' => "Project Request Expiration Notification E-Mail sent from:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('expirationEmailFrom', ChoiceType::class, array(
+        $builder->add('expiredProjectEmailFrom', null, array(
             'label' => "Project Request Expiration Notification E-Mail sent from (default trp-admin):",
-            'choices' => $this->booleanChoices,
-            'required' => $this->booleanRequired,
-            'attr' => array('class' => 'form-control')
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
         ));
-        $builder->add('expirationEmailSubject', null, array(
+        $builder->add('expiredProjectEmailSubject', null, array(
             'label' => "Project Request Expiration Notification E-Mail Subject:",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
-        $builder->add('expirationEmailBody', null, array(
+        $builder->add('expiredProjectEmailBody', null, array(
             'label' => "Project Request Expiration Notification E-Mail Body:",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
     }

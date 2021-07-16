@@ -1837,16 +1837,16 @@
                 {{ formmacros.field(form.projectExprApplyChangeStatus) }}
 
                 {#Email#}
-                {#H- In Site Settings, for each project type separately (MISI, AP, etc), in their accordions, add 8 fields:#}
+                {#H 8 fields:#}
                 {{ formmacros.field(form.sendExpriringProjectEmail) }}
-                {{ formmacros.field(form.upcomingExpirationEmailFrom) }}
-                {{ formmacros.field(form.upcomingExpirationEmailSubject) }}
-                {{ formmacros.field(form.upcomingExpirationEmailBody) }}
+                {{ formmacros.field(form.expiringProjectEmailFrom) }}
+                {{ formmacros.field(form.expiringProjectEmailSubject) }}
+                {{ formmacros.field(form.expiringProjectEmailBody) }}
 
                 {{ formmacros.field(form.sendExpiredProjectEmail) }}
-                {{ formmacros.field(form.expirationEmailFrom) }}
-                {{ formmacros.field(form.expirationEmailSubject) }}
-                {{ formmacros.field(form.expirationEmailBody) }}
+                {{ formmacros.field(form.expiredProjectEmailFrom) }}
+                {{ formmacros.field(form.expiredProjectEmailSubject) }}
+                {{ formmacros.field(form.expiredProjectEmailBody) }}
 
             </div>
         </div>
@@ -2133,7 +2133,7 @@
         <br>[[PROJECT EDIT URL]] - project request edit url,
         <br>[[PROJECT REQUESTS URL]] - link to list of all work requests for this project,
         <br>[[PROJECT NON-CANCELED INVOICES URL]] - link to list of all latest non-canceled invoices for this project,
-
+        <br>[[PROJECT EXPIRATION DATE]] - project expiration date,
 
         <h4>Work Request:</h4>
         <br>[[REQUEST ID]] - work request ID,
