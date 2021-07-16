@@ -4575,7 +4575,7 @@ class TransResUtil
                         $user = $this->secTokenStorage->getToken()->getUser();
                         $userServiceUtil = $this->container->get('user_service_utility');
                         $expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
-                        $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y \a\t H:i:s');
+                        $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y');
                         $text = str_replace("[[PROJECT EXPIRATION DATE]]", $expectedExpirationDateStr, $text);
                     }
                 }
