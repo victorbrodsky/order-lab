@@ -938,9 +938,74 @@ class ReminderUtil
         return $loggers;
     }
     
-    
+    //221
+    //I (cron expiring): “Upcoming” expiring projects - send only once
+    //Add a field to the project object (visible only on view/edit pages and only to TRP Admin role and above) that stores the “Upcoming expiration notification state” = “Notified Once” / NULL
+    //J (cron expired): send an email to the users with the “TRP Admin” role for every NEWLY expired project as described above - send only once
+    //“Notification of expiration state” = “Notified Once” / NULL
+    //K (cron auto-close): Auto-close project request
     public function sendProjectExpirationReminder( $showSummary=false ) {
-        
+        $transresUtil = $this->container->get('transres_util');
+
+        //I - expiring projects
+        //if sendExpriringProjectEmail=Yes and and the number of days in A above is set (projectExprDurationEmail)
+
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
+        foreach($projectSpecialties as $projectSpecialty) {
+            //$fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false
+            //$sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',null,$projectSpecialty);
+            //$projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty);
+            //if( $sendExpriringProjectEmail && $projectExprDurationEmail ) {
+                //$this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
+            //}
+            $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
+        }
+
+
+    }
+    //Expiring - Upcoming expiration notification
+    public function sendExpiringProjectReminderPerSpecialty($projectSpecialty) {
+        $transresUtil = $this->container->get('transres_util');
+        $newline = "\r\n";
+        $newline = "<br>";
+
+        $projectExprApply = $transresUtil->getTransresSiteProjectParameter('projectExprApply',null,$projectSpecialty);
+        $projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty); //months
+
+        //A2) projectExprApply - Apply project request expiration notification rule to this project request type: [Yes/No]
+        //A) projectExprDurationEmail - Default number of months in advance of the project request expiration date when the
+        //                              automatic notification requesting a progress report should be sent
+
+        if( $projectExprApply && $projectExprDurationEmail ) {
+            //now   <--projectExprDurationEmail--> expirationDate
+            $addMonthStr = "+".$projectExprDurationEmail." months";
+            $upcomingDeadline = new \DateTime($addMonthStr); //now + duration
+            //if( $upcomingDeadline > $expirationDate ) => send email
+            echo $projectSpecialty.": projectExprDurationEmail=$projectExprDurationEmail, upcomingDeadline=".$upcomingDeadline->format('Y-m-d H:i:s')."<br>";
+
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+            $dql =  $repository->createQueryBuilder("project");
+            $dql->select('project');
+
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+            $dql->where("projectSpecialty.id = :specialtyId");
+            $params["specialtyId"] = $projectSpecialty->getId();
+
+            $dql->andWhere("project.expectedExpirationDate IS NOT NULL AND :upcomingDeadline > project.expectedExpirationDate");
+            $params["upcomingDeadline"] = $upcomingDeadline->format('Y-m-d H:i:s');
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameters(
+                $params
+            );
+
+            $projects = $query->getResult();
+            echo "$projectSpecialty count projects=".count($projects)."$newline";
+
+
+        }
     }
 
 }

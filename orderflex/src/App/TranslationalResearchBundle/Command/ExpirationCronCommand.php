@@ -43,17 +43,13 @@ class ExpirationCronCommand extends Command {
     protected function configure() {
         $this
             //->setName('cron:expiration-reminder-emails')
-            ->setDescription('Translational Research Unpaid Invoice Reminder Email');
+            ->setDescription('Translational Research Project Expiration Reminder Email');
     }
 
     //php bin/console cron:expiration-reminder-emails --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->container->get('logger');
-        //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
-        //$result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
-        //$logger->notice("Cron job processing FellApp from Google Drive finished with result=".$result);
-        //$output->writeln($result);
 
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
@@ -62,72 +58,7 @@ class ExpirationCronCommand extends Command {
 
         $logger->notice("Cron expiration-reminder-emails with showSummary=".$showSummary);
 
-        ////////////// expiration projects //////////////
         $results = $transresReminderUtil->sendProjectExpirationReminder($showSummary);
-        if( is_array($results) ) {
-            //$results = "Unpaid invoices=".count($results);
-            //echo "#########array#########";
-            //$results = implode(", ",$results);
-            $invoiceCounter = 0;
-            foreach($results as $result) {
-                if( is_array($result) ) {
-                    $invoiceCounter = $invoiceCounter + count($result);
-                }
-            }
-            $results = "Unpaid invoices=".$invoiceCounter;
-        }
-        //$output->writeln($results); //testing
-        //return true; //testing
-        ////////////// EOF expiration projects //////////////
-
-        ////////////// delayed projects //////////////
-        $states = array("irb_review", "admin_review", "committee_review", "final_review", "irb_missinginfo", "admin_missinginfo");
-        $finalResults = array();
-
-        foreach($states as $state) {
-            $projectResults = $transresReminderUtil->sendReminderReviewProjects($state,$showSummary);
-            if( is_array($projectResults) ) {
-                $projectResults = count($projectResults);
-            }
-            $finalResults[$state] = $projectResults;
-        }
-
-        $projectResultsArr = array();
-        foreach($finalResults as $state=>$projectResults) {
-            $projectResultsArr[] = $state.": ".$projectResults;
-        }
-        $results = $results . "; " . implode(", ",$projectResultsArr);
-        ////////////// EOF delayed projects //////////////
-
-        ////////////// delayed requests //////////////
-        $states = array(
-            'active',
-            'pendingInvestigatorInput',
-            'pendingHistology',
-            'pendingImmunohistochemistry',
-            'pendingMolecular',
-            'pendingCaseRetrieval',
-            'pendingTissueMicroArray',
-            'pendingSlideScanning',
-            'completed',
-            'completedNotified'
-        );
-        $finalResults = array();
-
-        foreach($states as $state) {
-            $requestResults = $transresReminderUtil->sendReminderPendingRequests($state,$showSummary);
-            if( is_array($requestResults) ) {
-                $requestResults = count($requestResults);
-            }
-            $finalResults[$state] = $requestResults;
-        }
-
-        $requestResultsArr = array();
-        foreach($finalResults as $state=>$requestResults) {
-            $requestResultsArr[] = $state.": ".$requestResults;
-        }
-        $results = $results . "; " . implode(", ",$requestResultsArr);
-        ////////////// EOF delayed requests //////////////
 
         $logger->notice("Cron expiration-reminder-emails result=".$results);
 

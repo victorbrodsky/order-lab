@@ -209,9 +209,9 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:invoice-reminder-emails' }
 
-    App\TranslationalResearchBundle\Command\ExpirationCronCommand:
-        tags:
-            - { name: 'console.command', command: 'cron:expiration-reminder-emails' }
+#    App\TranslationalResearchBundle\Command\ExpirationCronCommand:
+#        tags:
+#            - { name: 'console.command', command: 'cron:expiration-reminder-emails' }
     ################## EOF Commands ##################
 
     logger:
