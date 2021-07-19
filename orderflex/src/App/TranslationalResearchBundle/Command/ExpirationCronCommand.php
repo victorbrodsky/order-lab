@@ -18,7 +18,6 @@
 
 namespace App\TranslationalResearchBundle\Command;
 
-//use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,9 +26,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CronCommand extends Command {
+class ExpirationCronCommand extends Command {
 
-    protected static $defaultName = 'cron:invoice-reminder-emails';
+    protected static $defaultName = 'cron:expiration-reminder-emails';
     private $container;
     private $em;
 
@@ -43,11 +42,11 @@ class CronCommand extends Command {
 
     protected function configure() {
         $this
-            //->setName('cron:invoice-reminder-emails')
+            //->setName('cron:expiration-reminder-emails')
             ->setDescription('Translational Research Unpaid Invoice Reminder Email');
     }
 
-    //php bin/console cron:invoice-reminder-emails --env=prod
+    //php bin/console cron:expiration-reminder-emails --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->container->get('logger');
@@ -61,10 +60,10 @@ class CronCommand extends Command {
         $showSummary = false; //send email reminder
         //$showSummary = true; //testing: show unpaid invoices only without sending emails
 
-        $logger->notice("Cron invoice-reminder-emails with showSummary=".$showSummary);
+        $logger->notice("Cron expiration-reminder-emails with showSummary=".$showSummary);
 
-        ////////////// unpaid invoices //////////////
-        $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary);
+        ////////////// expiration projects //////////////
+        $results = $transresReminderUtil->sendProjectExpirationReminder($showSummary);
         if( is_array($results) ) {
             //$results = "Unpaid invoices=".count($results);
             //echo "#########array#########";
@@ -79,7 +78,7 @@ class CronCommand extends Command {
         }
         //$output->writeln($results); //testing
         //return true; //testing
-        ////////////// EOF unpaid invoices //////////////
+        ////////////// EOF expiration projects //////////////
 
         ////////////// delayed projects //////////////
         $states = array("irb_review", "admin_review", "committee_review", "final_review", "irb_missinginfo", "admin_missinginfo");
@@ -130,14 +129,7 @@ class CronCommand extends Command {
         $results = $results . "; " . implode(", ",$requestResultsArr);
         ////////////// EOF delayed requests //////////////
 
-
-        ////////////// expiration projects //////////////
-        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($showSummary);
-        $results = $results . "; " . $projectExpirationResults;
-        ////////////// EOF expiration projects //////////////
-
-
-        $logger->notice("Cron invoice-reminder-emails result=".$results);
+        $logger->notice("Cron expiration-reminder-emails result=".$results);
 
         $output->writeln($results);
 

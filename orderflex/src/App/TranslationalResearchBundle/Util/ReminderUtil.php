@@ -937,6 +937,11 @@ class ReminderUtil
 
         return $loggers;
     }
+    
+    
+    public function sendProjectExpirationReminder( $showSummary=false ) {
+        
+    }
 
 }
 

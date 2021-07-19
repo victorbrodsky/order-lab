@@ -1857,7 +1857,25 @@ Pathology and Laboratory Medicine",
             $resFellapp = exec($command);
         }
         ////////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) //////////////////////
-        
+
+        ////////////////////// 3b) Expiration Reminder (at 5 am every Monday) //////////////////////
+        $cronJobName = "expiration-reminder-emails";
+        if( $this->getCronStatusWindows($cronJobName,true) === false ) {
+
+            $cronJobCommand = 'php \"' . $console . '\" cron:expiration-reminder-emails --env=prod';
+            $cronJobCommand = '"' . $cronJobCommand . '"';
+
+            $command = 'SchTasks /Create /SC WEEKLY /D MON /MO 1 /ST 5:00' .
+                ' /IT ' .
+                //' /RU system'.
+                ' /TN ' . $cronJobName .
+                ' /TR ' . $cronJobCommand . '';
+            //echo "SchTasks add: ".$command."<br>";
+            //$logger->notice("SchTasks:".$command);
+            $resFellapp = exec($command);
+        }
+        ////////////////////// EOF 3b) Expiration Reminder (at 5 am every Monday) //////////////////////
+
     }
 
     //Can use package: https://packagist.org/packages/hellogerard/jobby
@@ -1942,6 +1960,24 @@ Pathology and Laboratory Medicine",
 
         $logger->notice($res);
         //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
+
+        //////////////////// 3b) Expiration Reminder (at 5 am every Monday) ////////////////////
+        $cronJobName = "cron:expiration-reminder-emails --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        $trpCronJob = "00 05 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+
+        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+            $this->addCronJobLinux($trpCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+        //////////////////// EOF 3b) Expiration Reminder (at 5 am every Monday) ////////////////////
 
         //////////////////// 4) Status (every 30 minutes) ////////////////////
 //        $cronJobName = "cron:status --env=prod";
