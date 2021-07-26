@@ -549,6 +549,18 @@ class Project {
      */
     private $expectedExpirationDate;
 
+    //TODO:
+//    /**
+//     * Upcoming expiration notification state (Counter)
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $expirationNotificationCounter;
+//    /**
+//     * Upcoming expired notification state (Counter)
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $expiredNotificationCounter;
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */

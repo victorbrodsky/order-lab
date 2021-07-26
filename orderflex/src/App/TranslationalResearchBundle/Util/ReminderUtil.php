@@ -1076,14 +1076,16 @@ class ReminderUtil
 
         //send out the notification email to ALL corresponding PI’s
         $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
-        if( count($requesterEmails) > 0 ) {
-            $requesterEmailsStr = implode(", ",$requesterEmails);
+        if( count($emailArr) == 0 ) {
+            return NULL;
         }
-        echo "requesterEmails=$requesterEmailsStr <br>";
+        echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
         //This notification should only be sent once for a given combination of project id and Expiration date (so write it to the Event Log every time it is done)
         //“Upcoming expiration notification state” = “Notified Once” / NULL
 
+        //$expirationNotificationCounter = $expirationNotificationCounter + 1;
+        //$project->setExpirationNotificationCounter($expirationNotificationCounter); //or incrementExpirationNotificationCounter();
     }
 
 
