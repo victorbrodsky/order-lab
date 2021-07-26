@@ -541,7 +541,7 @@ class TransResSiteParameters {
     private $overBudgetCalculation;
     ////////////// EOF Budget Related Parameters /////////////////////
 
-    ///////////// Project expirations ///////////////
+    /////////////////////// Project expirations ///////////////////////
     /**
      * Default duration of a project request before expiration in months (leave blank for no notification): [12] - default to 12
      *
@@ -636,8 +636,7 @@ class TransResSiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $expiredProjectEmailBody;
-
-    ///////////// EOF Project expirations ///////////////
+    /////////////////////// EOF Project expirations ///////////////////////
 
     public function __construct($user=null) {
         $this->setCreator($user);
