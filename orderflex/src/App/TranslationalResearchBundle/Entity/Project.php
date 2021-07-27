@@ -549,17 +549,16 @@ class Project {
      */
     private $expectedExpirationDate;
 
-    //TODO:
-//    /**
-//     * Upcoming expiration notification state (Counter)
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $expirationNotificationCounter;
-//    /**
-//     * Upcoming expired notification state (Counter)
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $expiredNotificationCounter;
+    /**
+     * Upcoming expiration notification state (Counter)
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expirationNotifyCounter;
+    /**
+     * Upcoming expired notification state (Counter)
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $expiredNotifyCounter;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -2078,6 +2077,57 @@ class Project {
     public function setStateComment($stateComment)
     {
         $this->stateComment = $stateComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpirationNotifyCounter()
+    {
+        return $this->expirationNotifyCounter;
+    }
+
+    /**
+     * @param mixed $expirationNotifyCounter
+     */
+    public function setExpirationNotifyCounter($expirationNotifyCounter)
+    {
+        $this->expirationNotifyCounter = $expirationNotifyCounter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpiredNotifyCounter()
+    {
+        return $this->expiredNotifyCounter;
+    }
+
+    /**
+     * @param mixed $expiredNotifyCounter
+     */
+    public function setExpiredNotifyCounter($expiredNotifyCounter)
+    {
+        $this->expiredNotifyCounter = $expiredNotifyCounter;
+    }
+
+    public function incrementExpirationNotifyCounter() {
+        $counter = $this->getExpirationNotifyCounter();
+        if( !$counter ) {
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+        $this->setExpirationNotifyCounter($counter);
+        return $counter;
+    }
+    public function incrementExpiredNotifyCounter() {
+        $counter = $this->getExpiredNotifyCounter();
+        if( !$counter ) {
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+        $this->setExpiredNotifyCounter($counter);
+        return $counter;
     }
 
     /**

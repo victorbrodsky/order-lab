@@ -1029,10 +1029,10 @@ class ReminderUtil
         }
 
         //“Upcoming expiration notification state” = “Notified Once” / NULL
-//        $expirationNotificationCounter = $project->getExpirationNotificationCounter();
-//        if( $expirationNotificationCounter ) {
-//            return NULL;
-//        }
+        $expirationNotifyCounter = $project->getExpirationNotifyCounter();
+        if( $expirationNotifyCounter ) {
+            return NULL;
+        }
 
         $transresUtil = $this->container->get('transres_util');
 
@@ -1081,11 +1081,24 @@ class ReminderUtil
         }
         echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
+        //Send email
+        $emailUtil = $this->container->get('user_mailer_utility');
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emailArr, $subject, $body, null, $from );
+
         //This notification should only be sent once for a given combination of project id and Expiration date (so write it to the Event Log every time it is done)
         //“Upcoming expiration notification state” = “Notified Once” / NULL
-
         //$expirationNotificationCounter = $expirationNotificationCounter + 1;
         //$project->setExpirationNotificationCounter($expirationNotificationCounter); //or incrementExpirationNotificationCounter();
+        $project->incrementExpirationNotifyCounter();
+        $this->em->flush();
+
+        //EventLog
+        //eventlog
+        $eventType = "Project Expiration Reminder Email";
+        $msg = "Expiration email sent to ".implode(",",$emailArr)."<br>".
+            "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
+        $transresUtil->setEventLog($project,$eventType,$msg);
     }
 
 
