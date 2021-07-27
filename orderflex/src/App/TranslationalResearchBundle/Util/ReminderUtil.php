@@ -959,8 +959,9 @@ class ReminderUtil
                 //$this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
             //}
             $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
-        }
 
+            $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty);
+        }
 
     }
     //Expiring - Upcoming expiration notification
@@ -1081,7 +1082,7 @@ class ReminderUtil
         if( count($emailArr) == 0 ) {
             return NULL;
         }
-        echo "requesterEmails=".implode(",",$emailArr)."<br>";
+        //echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
         //Send email
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -1100,10 +1101,155 @@ class ReminderUtil
         $eventType = "Project Expiration Reminder Email";
         $msg = "Expiration email sent to ".implode(",",$emailArr)."<br>".
             "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
-        echo "msg=$msg<br>";
-        //$transresUtil->setEventLog($project,$eventType,$msg);
+        //echo "msg=$msg<br>";
+        $transresUtil->setEventLog($project,$eventType,$msg);
     }
 
+    //TODO:
+    //Expired - send expired notification
+    public function sendExpiredProjectReminderPerSpecialty($projectSpecialty) {
+
+        //TODO: test expired projects
+        return NULL;
+
+        $transresUtil = $this->container->get('transres_util');
+        $newline = "\r\n";
+        $newline = "<br>";
+
+        //$projectExprApply = $transresUtil->getTransresSiteProjectParameter('projectExprApply',null,$projectSpecialty);
+        //Use site settings parameters from (8 fields)
+        $sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',null,$projectSpecialty);
+
+        $projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty); //months
+
+        //A2) projectExprApply - Apply project request expiration notification rule to this project request type: [Yes/No]
+        //A) projectExprDurationEmail - Default number of months in advance of the project request expiration date when the
+        //                              automatic notification requesting a progress report should be sent
+
+        if( !$sendExpriringProjectEmail || !$projectExprDurationEmail ) {
+            return NULL;
+        }
+
+        //now   <--projectExprDurationEmail--> expirationDate
+        $now = new \DateTime();
+        $nowStr = $now->format('Y-m-d H:i:s');
+
+        $addMonthStr = "+".$projectExprDurationEmail." months";
+        $upcomingDeadline = new \DateTime($addMonthStr); //now + duration
+        //if( $upcomingDeadline > $expirationDate ) => send email
+        echo $projectSpecialty.": projectExprDurationEmail=$projectExprDurationEmail, upcomingDeadline=".$upcomingDeadline->format('Y-m-d H:i:s')."<br>";
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->where("projectSpecialty.id = :specialtyId");
+        $params["specialtyId"] = $projectSpecialty->getId();
+
+        //$dql->andWhere("project.expectedExpirationDate IS NOT NULL AND :upcomingDeadline > project.expectedExpirationDate");
+        //$params["upcomingDeadline"] = $upcomingDeadline->format('Y-m-d H:i:s');
+
+        $dql->andWhere('(project.expectedExpirationDate BETWEEN :nowDatetime and :upcomingDeadline)');
+        $params['nowDatetime'] = $nowStr;
+        $params['upcomingDeadline'] = $upcomingDeadline->format('Y-m-d H:i:s');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(
+            $params
+        );
+
+        $projects = $query->getResult();
+        echo "$projectSpecialty count projects=".count($projects)."$newline $newline";
+
+        foreach( $projects as $project ) {
+            $this->sendExpiredReminderEmail($project);
+        }
+
+
+    }
+    public function sendExpiredReminderEmail( $project ) {
+        if( !$project ) {
+            return NULL;
+        }
+
+        //“Upcoming expiration notification state” = “Notified Once” / NULL
+        $expirationNotifyCounter = $project->getExpirationNotifyCounter();
+        if( $expirationNotifyCounter ) {
+            return NULL;
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',$project);
+        if( $sendExpriringProjectEmail === false ) {
+            return NULL;
+        }
+
+        $subject = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailSubject',$project);
+        if( !$subject ) {
+            $subject = "[TRP] Please submit a progress report for project ".$project->getOid();
+        }
+        $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
+
+        $body = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailBody',$project);
+        if( !$body ) {
+            $projectExpirationStr = "";
+            $expirationDate = $project->getExpectedExpirationDate();
+            if( $expirationDate ) {
+                $projectExpirationStr = $expirationDate->format("m/d/Y");
+            }
+            $body = "To enable you to continue to submit work requests for your project".
+                " ".$project->getOid()." titled ".$project->getTitle().", Center for Translational Pathology".
+                " is requesting a progress report for this project. ".
+                "According to our records, the expiration date for this project request is ".$projectExpirationStr;
+        }
+        $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);
+
+        $from = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailFrom',$project);
+        if( !$from ) {
+            $from = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+            if( !$from ) {
+                $fromArr = $transresUtil->getTransResAdminEmails($project,true,true); //send reminder email
+                if( count($fromArr) > 0 ) {
+                    $from = $fromArr[0];
+                }
+            }
+            if( !$from ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $from = $userSecUtil->getSiteSettingParameter('siteEmail');
+            }
+        }
+
+        //send out the notification email to ALL corresponding PI’s
+        $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+        if( count($emailArr) == 0 ) {
+            return NULL;
+        }
+        //echo "requesterEmails=".implode(",",$emailArr)."<br>";
+
+        //Send email
+        $emailUtil = $this->container->get('user_mailer_utility');
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emailArr, $subject, $body, null, $from );
+
+        //This notification should only be sent once for a given combination of project id and Expiration date (so write it to the Event Log every time it is done)
+        //“Upcoming expiration notification state” = “Notified Once” / NULL
+        //$expirationNotificationCounter = $expirationNotificationCounter + 1;
+        //$project->setExpirationNotificationCounter($expirationNotificationCounter); //or incrementExpirationNotificationCounter();
+        $project->incrementExpirationNotifyCounter();
+        //$this->em->flush();
+
+        //EventLog
+        //eventlog
+        $eventType = "Project Expiration Reminder Email";
+        $msg = "Expiration email sent to ".implode(",",$emailArr)."<br>".
+            "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
+        //echo "msg=$msg<br>";
+        $transresUtil->setEventLog($project,$eventType,$msg);
+    }
 
 }
 
