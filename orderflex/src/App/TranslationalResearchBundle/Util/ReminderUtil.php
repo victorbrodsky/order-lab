@@ -1045,6 +1045,7 @@ class ReminderUtil
         if( !$subject ) {
             $subject = "[TRP] Please submit a progress report for project ".$project->getOid();
         }
+        $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
 
         $body = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailBody',$project);
         if( !$body ) {
@@ -1058,6 +1059,7 @@ class ReminderUtil
                 " is requesting a progress report for this project. ".
                 "According to our records, the expiration date for this project request is ".$projectExpirationStr;
         }
+        $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);
 
         $from = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailFrom',$project);
         if( !$from ) {
@@ -1091,14 +1093,15 @@ class ReminderUtil
         //$expirationNotificationCounter = $expirationNotificationCounter + 1;
         //$project->setExpirationNotificationCounter($expirationNotificationCounter); //or incrementExpirationNotificationCounter();
         $project->incrementExpirationNotifyCounter();
-        $this->em->flush();
+        //$this->em->flush();
 
         //EventLog
         //eventlog
         $eventType = "Project Expiration Reminder Email";
         $msg = "Expiration email sent to ".implode(",",$emailArr)."<br>".
             "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
-        $transresUtil->setEventLog($project,$eventType,$msg);
+        echo "msg=$msg<br>";
+        //$transresUtil->setEventLog($project,$eventType,$msg);
     }
 
 
