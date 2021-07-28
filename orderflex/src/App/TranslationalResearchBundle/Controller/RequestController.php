@@ -606,7 +606,7 @@ class RequestController extends OrderAbstractController
                     "This request is being processed and a notification will be sent out once it has been completed and the deliverables (if any) are ready for pick up. There are no materials ready for pick up yet.";
 
                 //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
-                $subject = "Work Request " . $transresRequest->getOid() . " has been updated and it’s status set to Active.";
+                $subject = "Work Request " . $transresRequest->getOid() . " has been updated and its status was set to 'Active'.";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
                 $msg = $emailRes;
