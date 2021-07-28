@@ -345,7 +345,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
@@ -362,7 +363,9 @@
 
 {% block additionaljs %}
 
-    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>
+    {#Fix for numbro.min.js.map: From Handsontable README.md: Use Handsontable bare files => **handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>#}
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}" ></script>

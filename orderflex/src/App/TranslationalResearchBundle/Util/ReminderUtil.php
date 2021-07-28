@@ -989,7 +989,7 @@ class ReminderUtil
 
         //now   <--projectExprDurationEmail--> expirationDate
         $now = new \DateTime();
-        $nowStr = $now->format('Y-m-d H:i:s');
+        $nowStr = $now->format('Y-m-d');
 
         $addMonthStr = "+".$projectExprDurationEmail." months";
         $upcomingDeadline = new \DateTime($addMonthStr); //now + duration
@@ -1006,13 +1006,16 @@ class ReminderUtil
         $params["specialtyId"] = $projectSpecialty->getId();
 
         //TODO: $dql->andWhere status is active
+//        $dql->andWhere("project.state = 'final_approved'");
+        $dql->andWhere("project.state = :approved");
+        $params['approved'] = "final_approved";
 
         //$dql->andWhere("project.expectedExpirationDate IS NOT NULL AND :upcomingDeadline > project.expectedExpirationDate");
         //$params["upcomingDeadline"] = $upcomingDeadline->format('Y-m-d H:i:s');
 
         $dql->andWhere('(project.expectedExpirationDate BETWEEN :nowDatetime and :upcomingDeadline)');
         $params['nowDatetime'] = $nowStr;
-        $params['upcomingDeadline'] = $upcomingDeadline->format('Y-m-d H:i:s');
+        $params['upcomingDeadline'] = $upcomingDeadline->format('Y-m-d');
 
         $query = $this->em->createQuery($dql);
 
@@ -1135,11 +1138,11 @@ class ReminderUtil
 
         //now   <--projectExprDurationEmail--> expirationDate
         $now = new \DateTime();
-        $nowStr = $now->format('Y-m-d H:i:s');
+        $nowStr = $now->format('Y-m-d');
 
         //$projectExprDurationChangeStatus in days
-        $addMonthStr = "+".$projectExprDurationChangeStatus." months";
-        $expirationDuration = new \DateTime($addMonthStr); //now + duration
+        $addDaysStr = "+".$projectExprDurationChangeStatus." days";
+        $expirationDuration = new \DateTime($addDaysStr); //now + duration
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -1151,13 +1154,17 @@ class ReminderUtil
         $params["specialtyId"] = $projectSpecialty->getId();
 
         //TODO: $dql->andWhere status is active
+        //$dql->andWhere("project.state = 'final_approved'");
+        $dql->andWhere("project.state = :approved");
+        $params['approved'] = "final_approved";
 
         //$dql->andWhere(':nowDatetime > project.expectedExpirationDate');
         //$params['nowDatetime'] = $nowStr;
 
+        //expirationDate ------------ now -------------- +90 days
         $dql->andWhere('(:nowDatetime BETWEEN project.expectedExpirationDate and :expirationDuration)');
         $params['nowDatetime'] = $nowStr;
-        $params['expirationDuration'] = $expirationDuration->format('Y-m-d H:i:s');
+        $params['expirationDuration'] = $expirationDuration->format('Y-m-d');
 
         $query = $this->em->createQuery($dql);
 
