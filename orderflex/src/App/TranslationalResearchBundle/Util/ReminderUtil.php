@@ -965,8 +965,10 @@ class ReminderUtil
             $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
         }
 
-        echo "expiringProjectCount=$expiringProjectCount <br>";
-        echo "expiredProjectCount=$expiredProjectCount <br>";
+        if( $testing ) {
+            echo "expiringProjectCount=$expiringProjectCount <br>";
+            echo "expiredProjectCount=$expiredProjectCount <br>";
+        }
     }
     //Expiring - Upcoming expiration notification
     public function sendExpiringProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
@@ -1115,7 +1117,7 @@ class ReminderUtil
         if( $testing === false ) {
             $transresUtil->setEventLog($project, $eventType, $msg);
         } else {
-            echo "msg=$msg<br>";
+            echo "<br>EXPIRATION msg=$msg<br>";
         }
     }
 
@@ -1285,7 +1287,7 @@ class ReminderUtil
         if( $testing === false ) {
             $transresUtil->setEventLog($project,$eventType,$msg);
         } else {
-            echo "msg=$msg<br>";
+            echo "<br>EXPIRED msg=$msg<br>";
         }
     }
 
