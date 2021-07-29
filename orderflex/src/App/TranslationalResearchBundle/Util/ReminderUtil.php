@@ -958,13 +958,6 @@ class ReminderUtil
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
-            //$fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false
-            //$sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',null,$projectSpecialty);
-            //$projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty);
-            //if( $sendExpriringProjectEmail && $projectExprDurationEmail ) {
-                //$this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
-            //}
-
             //1) expiring projects notification
             $expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
 
@@ -972,6 +965,7 @@ class ReminderUtil
             $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
         }
 
+        echo "expiringProjectCount=$expiringProjectCount <br>";
         echo "expiredProjectCount=$expiredProjectCount <br>";
     }
     //Expiring - Upcoming expiration notification
