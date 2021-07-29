@@ -4572,9 +4572,9 @@ class TransResUtil
                 if( strpos($text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
                     $expectedExpirationDate = $project->getExpectedExpirationDate();
                     if( $expectedExpirationDate ) {
-                        $user = $this->secTokenStorage->getToken()->getUser();
-                        $userServiceUtil = $this->container->get('user_service_utility');
-                        $expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
+                        //$user = $this->secTokenStorage->getToken()->getUser();
+                        //$userServiceUtil = $this->container->get('user_service_utility');
+                        //$expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
                         $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y');
                         $text = str_replace("[[PROJECT EXPIRATION DATE]]", $expectedExpirationDateStr, $text);
                     }

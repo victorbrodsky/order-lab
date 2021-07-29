@@ -950,6 +950,8 @@ class ReminderUtil
         //I - expiring projects
         //if sendExpriringProjectEmail=Yes and and the number of days in A above is set (projectExprDurationEmail)
 
+        $expiredProjectCount = 0;
+
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
             //$fieldName, $project=null, $projectSpecialty=null, $useDefault=false, $testing=false
@@ -963,9 +965,10 @@ class ReminderUtil
             ////$this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
 
             //2) expired projects notification
-            $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty);
+            $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty);
         }
 
+        echo "expiredProjectCount=$expiredProjectCount <br>";
     }
     //Expiring - Upcoming expiration notification
     public function sendExpiringProjectReminderPerSpecialty($projectSpecialty) {
@@ -1110,7 +1113,6 @@ class ReminderUtil
         $transresUtil->setEventLog($project,$eventType,$msg);
     }
 
-    //TODO:
     //Expired - send expired notification
     //send an email to the users with the “TRP Admin” role for every NEWLY expired project
     public function sendExpiredProjectReminderPerSpecialty($projectSpecialty) {
@@ -1139,10 +1141,17 @@ class ReminderUtil
         //now   <--projectExprDurationEmail--> expirationDate
         $now = new \DateTime();
         $nowStr = $now->format('Y-m-d');
+        //echo "nowStr=$nowStr <br>";
 
         //$projectExprDurationChangeStatus in days
-        $addDaysStr = "+".$projectExprDurationChangeStatus." days";
-        $expirationDuration = new \DateTime($addDaysStr); //now + duration
+        $projectExprDurationChangeStatus = 120; //testing
+
+        //echo "projectExprDurationChangeStatus=$projectExprDurationChangeStatus <br>";
+        //$addDaysStr = "+".$projectExprDurationChangeStatus." days";
+        $addDaysStr = "-".$projectExprDurationChangeStatus." days";
+        $expirationDuration = new \DateTime($addDaysStr); //now - duration days
+        $expirationDurationStr = $expirationDuration->format('Y-m-d');
+        //echo "expirationDurationStr=$expirationDurationStr <br>";
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -1153,18 +1162,24 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        //TODO: $dql->andWhere status is active
         //$dql->andWhere("project.state = 'final_approved'");
         $dql->andWhere("project.state = :approved");
         $params['approved'] = "final_approved";
 
-        //$dql->andWhere(':nowDatetime > project.expectedExpirationDate');
-        //$params['nowDatetime'] = $nowStr;
+        //$dql->andWhere(':nowDate > project.expectedExpirationDate');
+        //$params['nowDate'] = $nowStr;
+
+        //expirationDate ------------ now
+        $dql->andWhere('(:nowDate > project.expectedExpirationDate)');
+        $params['nowDate'] = $nowStr;
 
         //expirationDate ------------ now -------------- +90 days
-        $dql->andWhere('(:nowDatetime BETWEEN project.expectedExpirationDate and :expirationDuration)');
-        $params['nowDatetime'] = $nowStr;
-        $params['expirationDuration'] = $expirationDuration->format('Y-m-d');
+        //$dql->andWhere('(:nowDate BETWEEN project.expectedExpirationDate and :expirationDuration)');
+
+        //expirationDate ------------ +90 days ------------ now
+        $dql->andWhere('(:expirationDuration < project.expectedExpirationDate)');
+
+        $params['expirationDuration'] = $expirationDurationStr;
 
         $query = $this->em->createQuery($dql);
 
@@ -1176,9 +1191,11 @@ class ReminderUtil
         echo "$projectSpecialty count projects=".count($projects)."$newline $newline";
 
         foreach( $projects as $project ) {
-            //$this->sendExpiredReminderEmail($project);
+            //echo "Expired project ".$project->getOid()."<br>";
+            $this->sendExpiredReminderEmail($project);
         }
 
+        return count($projects);
     }
     public function sendExpiredReminderEmail( $project ) {
         if( !$project ) {
