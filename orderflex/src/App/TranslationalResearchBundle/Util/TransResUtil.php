@@ -3334,6 +3334,8 @@ class TransResUtil
             }
         }
 
+        $resArr = array_unique($resArr);
+
         return $resArr;
     }
     //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
@@ -3360,6 +3362,8 @@ class TransResUtil
                 }
             }
         }
+
+        $resArr = array_unique($resArr);
 
         return $resArr;
     }
