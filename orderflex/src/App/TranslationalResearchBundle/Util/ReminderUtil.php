@@ -950,6 +950,10 @@ class ReminderUtil
         //I - expiring projects
         //if sendExpriringProjectEmail=Yes and and the number of days in A above is set (projectExprDurationEmail)
 
+        $testing = false;
+        $testing = true;
+
+        $expiringProjectCount = 0;
         $expiredProjectCount = 0;
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
@@ -962,16 +966,16 @@ class ReminderUtil
             //}
 
             //1) expiring projects notification
-            ////$this->sendExpiringProjectReminderPerSpecialty($projectSpecialty);
+            $expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
 
             //2) expired projects notification
-            $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty);
+            $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
         }
 
         echo "expiredProjectCount=$expiredProjectCount <br>";
     }
     //Expiring - Upcoming expiration notification
-    public function sendExpiringProjectReminderPerSpecialty($projectSpecialty) {
+    public function sendExpiringProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
         $transresUtil = $this->container->get('transres_util');
         $newline = "\r\n";
         $newline = "<br>";
@@ -997,7 +1001,7 @@ class ReminderUtil
         $addMonthStr = "+".$projectExprDurationEmail." months";
         $upcomingDeadline = new \DateTime($addMonthStr); //now + duration
         //if( $upcomingDeadline > $expirationDate ) => send email
-        echo $projectSpecialty.": projectExprDurationEmail=$projectExprDurationEmail, upcomingDeadline=".$upcomingDeadline->format('Y-m-d H:i:s')."<br>";
+        //echo $projectSpecialty.": projectExprDurationEmail=$projectExprDurationEmail, upcomingDeadline=".$upcomingDeadline->format('Y-m-d H:i:s')."<br>";
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -1008,7 +1012,6 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
-        //TODO: $dql->andWhere status is active
 //        $dql->andWhere("project.state = 'final_approved'");
         $dql->andWhere("project.state = :approved");
         $params['approved'] = "final_approved";
@@ -1027,15 +1030,17 @@ class ReminderUtil
         );
 
         $projects = $query->getResult();
-        echo "$projectSpecialty count projects=".count($projects)."$newline $newline";
-
-        foreach( $projects as $project ) {
-            $this->sendExpiritaionReminderEmail($project);
+        if( $testing ) {
+            echo "$projectSpecialty count expiring projects=" . count($projects) . "$newline $newline";
         }
 
+        foreach( $projects as $project ) {
+            $this->sendExpiritaionReminderEmail($project,$testing);
+        }
 
+        return count($projects);
     }
-    public function sendExpiritaionReminderEmail( $project ) {
+    public function sendExpiritaionReminderEmail( $project, $testing=false ) {
         if( !$project ) {
             return NULL;
         }
@@ -1096,26 +1101,33 @@ class ReminderUtil
         //echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
         //Send email
-        $emailUtil = $this->container->get('user_mailer_utility');
-        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $emailArr, $subject, $body, null, $from );
+        if( $testing === false ) {
+            $emailUtil = $this->container->get('user_mailer_utility');
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($emailArr, $subject, $body, null, $from);
+        }
 
         //This notification should only be sent once for a given combination of project id and Expiration date (so write it to the Event Log every time it is done)
         //“Upcoming expiration notification state” = “Notified Once” / NULL
         $project->incrementExpirationNotifyCounter();
-        $this->em->flush();
+        if( $testing === false ) {
+            $this->em->flush();
+        }
 
         //EventLog
         $eventType = "Project Expiration Reminder Email";
         $msg = "Expiration email sent to ".implode(",",$emailArr)."<br>".
             "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
-        //echo "msg=$msg<br>";
-        $transresUtil->setEventLog($project,$eventType,$msg);
+        if( $testing === false ) {
+            $transresUtil->setEventLog($project, $eventType, $msg);
+        } else {
+            echo "msg=$msg<br>";
+        }
     }
 
     //Expired - send expired notification
     //send an email to the users with the “TRP Admin” role for every NEWLY expired project
-    public function sendExpiredProjectReminderPerSpecialty($projectSpecialty) {
+    public function sendExpiredProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
 
         //TODO: test expired projects
         //return NULL;
@@ -1144,7 +1156,7 @@ class ReminderUtil
         //echo "nowStr=$nowStr <br>";
 
         //$projectExprDurationChangeStatus in days
-        $projectExprDurationChangeStatus = 120; //testing
+        //$projectExprDurationChangeStatus = 120; //testing
 
         //echo "projectExprDurationChangeStatus=$projectExprDurationChangeStatus <br>";
         //$addDaysStr = "+".$projectExprDurationChangeStatus." days";
@@ -1188,16 +1200,18 @@ class ReminderUtil
         );
 
         $projects = $query->getResult();
-        echo "$projectSpecialty count projects=".count($projects)."$newline $newline";
+        if( $testing ) {
+            echo "$projectSpecialty count expired projects=" . count($projects) . "$newline $newline";
+        }
 
         foreach( $projects as $project ) {
             //echo "Expired project ".$project->getOid()."<br>";
-            $this->sendExpiredReminderEmail($project);
+            $this->sendExpiredReminderEmail($project,$testing);
         }
 
         return count($projects);
     }
-    public function sendExpiredReminderEmail( $project ) {
+    public function sendExpiredReminderEmail( $project, $testing=false ) {
         if( !$project ) {
             return NULL;
         }
@@ -1257,21 +1271,28 @@ class ReminderUtil
         //echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
         //Send email
-        $emailUtil = $this->container->get('user_mailer_utility');
-        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $emailArr, $subject, $body, null, $from );
+        if( $testing === false ) {
+            $emailUtil = $this->container->get('user_mailer_utility');
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($emailArr, $subject, $body, null, $from);
+        }
 
         //This notification should only be sent once
         //“Upcoming expired notification state” = “Notified Once” / NULL
         $project->incrementExpiredNotifyCounter();
-        ////$this->em->flush();
+        if( $testing === false ) {
+            $this->em->flush();
+        }
 
         //EventLog
         $eventType = "Project Expired Reminder Email";
         $msg = "Expired email sent to ".implode(",",$emailArr)."<br>".
             "Subject:<br>".$subject . "<br><br>Body:<br>" . $body;
-        echo "msg=$msg<br>";
-        ////$transresUtil->setEventLog($project,$eventType,$msg);
+        if( $testing === false ) {
+            $transresUtil->setEventLog($project,$eventType,$msg);
+        } else {
+            echo "msg=$msg<br>";
+        }
     }
 
 }
