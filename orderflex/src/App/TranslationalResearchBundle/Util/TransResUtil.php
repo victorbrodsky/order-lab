@@ -3400,6 +3400,8 @@ class TransResUtil
             }
         }
 
+        $resArr = array_unique($resArr);
+
         return $resArr;
     }
     //current project's reviewers

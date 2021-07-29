@@ -944,14 +944,14 @@ class ReminderUtil
     //J (cron expired): send an email to the users with the “TRP Admin” role for every NEWLY expired project as described above - send only once
     //“Notification of expiration state” = “Notified Once” / NULL
     //K (cron auto-close): Auto-close project request
-    public function sendProjectExpirationReminder( $showSummary=false ) {
+    public function sendProjectExpirationReminder( $testing=false ) {
         $transresUtil = $this->container->get('transres_util');
 
         //I - expiring projects
         //if sendExpriringProjectEmail=Yes and and the number of days in A above is set (projectExprDurationEmail)
 
-        $testing = false;
-        $testing = true;
+        //$testing = false;
+        //$testing = true;
 
         $expiringProjectCount = 0;
         $expiredProjectCount = 0;
@@ -1089,6 +1089,8 @@ class ReminderUtil
             }
         }
 
+        //TODO: get unique array
+        //TODO: include all project's requesters
         //send out the notification email to ALL corresponding PI’s
         $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
         if( count($emailArr) == 0 ) {
@@ -1259,6 +1261,8 @@ class ReminderUtil
             }
         }
 
+        //TODO: get unique array
+        //TODO: include all project's requesters
         //send out the notification email to ALL corresponding PI’s
         $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
         if( count($emailArr) == 0 ) {

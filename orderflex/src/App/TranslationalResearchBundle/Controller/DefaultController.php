@@ -139,7 +139,7 @@ class DefaultController extends OrderAbstractController
 
         //expiration date
         $transresReminderUtil = $this->container->get('transres_reminder_util');
-        $transresReminderUtil->sendProjectExpirationReminder();
+        $transresReminderUtil->sendProjectExpirationReminder(true);
         exit('111');
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));

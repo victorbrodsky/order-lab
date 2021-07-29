@@ -63,6 +63,16 @@ class CronCommand extends Command {
 
         $logger->notice("Cron invoice-reminder-emails with showSummary=".$showSummary);
 
+//        ////////////// expiration projects //////////////
+//        //testing
+//        $testing = true;
+//        $results = "";
+//        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
+//        $results = $results . "; " . $projectExpirationResults;
+//        exit('111');
+//        ////////////// EOF expiration projects //////////////
+
+
         ////////////// unpaid invoices //////////////
         $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary);
         if( is_array($results) ) {
@@ -132,7 +142,9 @@ class CronCommand extends Command {
 
 
         ////////////// expiration projects //////////////
-        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($showSummary);
+        $testing = false;
+        $testing = true;
+        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
         $results = $results . "; " . $projectExpirationResults;
         ////////////// EOF expiration projects //////////////
 
