@@ -1828,6 +1828,9 @@
         </div>
         <div id="transres-project-expr-content-{{ specialtyId }}" class="panel-collapse collapse">
             <div class="panel-body">
+
+                <h4>General Settings</h4>
+
                 {{ formmacros.field(form.projectExprDuration) }}
                 {{ formmacros.field(form.projectExprDurationEmail) }}
                 {{ formmacros.field(form.projectExprDurationChangeStatus) }}
@@ -1836,12 +1839,18 @@
                 {{ formmacros.field(form.projectExprApply) }}
                 {{ formmacros.field(form.projectExprApplyChangeStatus) }}
 
+                <hr>
+                <h4>Notification for Expiring Project</h4>
+
                 {#Email#}
                 {#H 8 fields:#}
                 {{ formmacros.field(form.sendExpriringProjectEmail) }}
                 {{ formmacros.field(form.expiringProjectEmailFrom) }}
                 {{ formmacros.field(form.expiringProjectEmailSubject) }}
                 {{ formmacros.field(form.expiringProjectEmailBody) }}
+
+                <hr>
+                <h4>Notification for Expired Project</h4>
 
                 {{ formmacros.field(form.sendExpiredProjectEmail) }}
                 {{ formmacros.field(form.expiredProjectEmailFrom) }}

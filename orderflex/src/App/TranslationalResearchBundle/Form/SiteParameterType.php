@@ -587,7 +587,7 @@ class SiteParameterType extends AbstractType
         ));
         //5
         $builder->add('sendExpiredProjectEmail', ChoiceType::class, array(
-            'label' => "Project Request Expiration Notification E-Mail sent from:",
+            'label' => "Automatically send a reminder email to the [TRP] system administrator for expired projects:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
