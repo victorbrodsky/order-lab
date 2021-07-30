@@ -51,6 +51,10 @@
 
                     {{ transres.updateInfo(form,cycle) }}
 
+                    {#expired notification email#}
+                    {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
+                    {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+
                 </div>
             </div>
         </div>

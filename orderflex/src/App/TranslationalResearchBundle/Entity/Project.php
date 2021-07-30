@@ -1705,6 +1705,8 @@ class Project {
             // meaning, if this Cron Job sets the project request to status “Closed”,
             // but the admin user sets it back to another status (not “Closed”) WITHOUT changing the Expiration date,
             // the system should not try to change it again
+
+            //exit("updated exp date");
         }
 
         $this->expectedExpirationDate = $expectedExpirationDate;
@@ -2148,6 +2150,19 @@ class Project {
         $counter = $counter + 1;
         $this->setExpiredNotifyCounter($counter);
         return $counter;
+    }
+    
+    public function getExpirationNotifyCounterStr() {
+        if( $this->getExpirationNotifyCounter() ) {
+            return "Yes";
+        }
+        return "No";
+    }
+    public function getExpiredNotifyCounterStr() {
+        if( $this->getExpiredNotifyCounter() ) {
+            return "Yes";
+        }
+        return "No";
     }
 
     /**
