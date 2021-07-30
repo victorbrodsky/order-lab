@@ -3250,7 +3250,7 @@ class TransResUtil
         return $users;
     }
     //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
-    public function getRequesterEmails($project, $asEmail=true) {
+    public function getRequesterEmails($project, $asEmail=true, $withBillingContact=true) {
         $resArr = array();
 
         //1 submitter
@@ -3323,13 +3323,15 @@ class TransResUtil
         }
 
         //6 Billing contacts
-        $billingContacts = $project->getBillingContacts();
-        foreach( $billingContacts as $billingContact ) {
-            if( $billingContact ) {
-                if( $asEmail ) {
-                    $resArr[] = $billingContact->getSingleEmail(false);
-                } else {
-                    $resArr[] = $billingContact;
+        if( $withBillingContact ) {
+            $billingContacts = $project->getBillingContacts();
+            foreach ($billingContacts as $billingContact) {
+                if ($billingContact) {
+                    if ($asEmail) {
+                        $resArr[] = $billingContact->getSingleEmail(false);
+                    } else {
+                        $resArr[] = $billingContact;
+                    }
                 }
             }
         }

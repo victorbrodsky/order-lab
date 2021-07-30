@@ -1089,10 +1089,9 @@ class ReminderUtil
             }
         }
 
-        //TODO: get unique array
-        //TODO: include all project's requesters
-        //send out the notification email to ALL corresponding PI’s
-        $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+        //send out the notification email to all project's requesters (all requesters except billing contact)
+        //$emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+        $emailArr = $transresUtil->getRequesterEmails($project,true,false); //$withBillingContact=false
         if( count($emailArr) == 0 ) {
             return NULL;
         }
@@ -1261,10 +1260,9 @@ class ReminderUtil
             }
         }
 
-        //TODO: get unique array
-        //TODO: include all project's requesters
-        //send out the notification email to ALL corresponding PI’s
-        $emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+        //send out the notification email to all project's requesters (all requesters except billing contact)
+        //$emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
+        $emailArr = $transresUtil->getRequesterEmails($project,true,false); //$withBillingContact=false
         if( count($emailArr) == 0 ) {
             return NULL;
         }
