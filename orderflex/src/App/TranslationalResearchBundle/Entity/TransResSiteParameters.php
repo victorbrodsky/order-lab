@@ -567,6 +567,7 @@ class TransResSiteParameters {
 
     /**
      * Apply project request expiration notification rule to this project request type: [Yes/No] and default to “Yes” by default
+     * We don't need this, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail
      *
      * @ORM\Column(type="boolean", nullable=true)
      */

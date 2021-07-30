@@ -976,7 +976,9 @@ class ReminderUtil
         $newline = "\r\n";
         $newline = "<br>";
 
+        //We don't need projectExprApply, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail
         //$projectExprApply = $transresUtil->getTransresSiteProjectParameter('projectExprApply',null,$projectSpecialty);
+
         //Use site settings parameters from (8 fields)
         $sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',null,$projectSpecialty);
 

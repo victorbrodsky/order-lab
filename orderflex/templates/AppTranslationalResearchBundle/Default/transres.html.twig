@@ -1836,7 +1836,10 @@
                 {{ formmacros.field(form.projectExprDurationChangeStatus) }}
                 {#{{ formmacros.checkbox_with_value(form.projectExprApply,"",form.vars.value.projectExprApply) }}#}
                 {#{{ formmacros.checkbox_with_value(form.projectExprApplyChangeStatus,"",form.vars.value.projectExprApplyChangeStatus) }}#}
-                {{ formmacros.field(form.projectExprApply) }}
+                {% if form.projectExprApply is defined %}
+                    {#We don't need projectExprApply, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail#}
+                    {{ formmacros.field(form.projectExprApply) }}
+                {% endif %}
                 {{ formmacros.field(form.projectExprApplyChangeStatus) }}
 
                 <hr>

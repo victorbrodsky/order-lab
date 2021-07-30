@@ -547,13 +547,13 @@ class SiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
-
-        $builder->add('projectExprApply', ChoiceType::class, array(
-            'label' => "Apply project request expiration notification rule to this project request type:",
-            'choices' => $this->booleanChoices,
-            'required' => $this->booleanRequired,
-            'attr' => array('class' => 'form-control')
-        ));
+        //We don't need projectExprApply, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail
+//        $builder->add('projectExprApply', ChoiceType::class, array(
+//            'label' => "Apply project request expiration notification rule to this project request type:",
+//            'choices' => $this->booleanChoices,
+//            'required' => $this->booleanRequired,
+//            'attr' => array('class' => 'form-control')
+//        ));
         $builder->add('projectExprApplyChangeStatus', ChoiceType::class, array(
             'label' => "Apply project request auto-closure after expiration rule to this project request type:",
             'choices' => $this->booleanChoices,
