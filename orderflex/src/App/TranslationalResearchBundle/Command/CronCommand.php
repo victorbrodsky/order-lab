@@ -143,7 +143,7 @@ class CronCommand extends Command {
 
         ////////////// expiration projects //////////////
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
         $results = $results . "; " . $projectExpirationResults;
         ////////////// EOF expiration projects //////////////
