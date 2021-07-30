@@ -148,6 +148,12 @@ class CronCommand extends Command {
         $results = $results . "; " . $projectExpirationResults;
         ////////////// EOF expiration projects //////////////
 
+        ////////////// Auto-close expired projects //////////////
+        $testing = false;
+        $testing = true;
+        $closeExpiredProject = $transresReminderUtil->closeExpiredProject($testing);
+        $results = $results . "; " . $closeExpiredProject;
+        ////////////// EOF Auto-close expired projects //////////////
 
         $logger->notice("Cron invoice-reminder-emails result=".$results);
 

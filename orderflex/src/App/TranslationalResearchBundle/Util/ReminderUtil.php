@@ -943,12 +943,8 @@ class ReminderUtil
     //Add a field to the project object (visible only on view/edit pages and only to TRP Admin role and above) that stores the “Upcoming expiration notification state” = “Notified Once” / NULL
     //J (cron expired): send an email to the users with the “TRP Admin” role for every NEWLY expired project as described above - send only once
     //“Notification of expiration state” = “Notified Once” / NULL
-    //K (cron auto-close): Auto-close project request
     public function sendProjectExpirationReminder( $testing=false ) {
         $transresUtil = $this->container->get('transres_util');
-
-        //I - expiring projects
-        //if sendExpriringProjectEmail=Yes and and the number of days in A above is set (projectExprDurationEmail)
 
         //$testing = false;
         //$testing = true;
@@ -969,6 +965,8 @@ class ReminderUtil
             echo "expiringProjectCount=$expiringProjectCount <br>";
             echo "expiredProjectCount=$expiredProjectCount <br>";
         }
+        
+        return "Notification emails: expiringProjectCount=$expiringProjectCount, expiredProjectCount=$expiredProjectCount";
     }
     //Expiring - Upcoming expiration notification
     public function sendExpiringProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
@@ -989,7 +987,7 @@ class ReminderUtil
         //                              automatic notification requesting a progress report should be sent
 
         if( !$sendExpriringProjectEmail || !$projectExprDurationEmail ) {
-            return NULL;
+            return false;
         }
 
         //now   <--projectExprDurationEmail--> expirationDate
@@ -1032,28 +1030,33 @@ class ReminderUtil
             echo "$projectSpecialty count expiring projects=" . count($projects) . "$newline $newline";
         }
 
+        $projectCounter = 0;
+
         foreach( $projects as $project ) {
-            $this->sendExpiritaionReminderEmail($project,$testing);
+            $res = $this->sendExpiritaionReminderEmail($project,$testing);
+            if( $res ) {
+                $projectCounter++;
+            }
         }
 
-        return count($projects);
+        return $projectCounter;
     }
     public function sendExpiritaionReminderEmail( $project, $testing=false ) {
         if( !$project ) {
-            return NULL;
+            return false;
         }
 
         //“Upcoming expiration notification state” = “Notified Once” / NULL
         $expirationNotifyCounter = $project->getExpirationNotifyCounter();
         if( $expirationNotifyCounter ) {
-            return NULL;
+            return false;
         }
 
         $transresUtil = $this->container->get('transres_util');
 
         $sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',$project);
         if( $sendExpriringProjectEmail === false ) {
-            return NULL;
+            return false;
         }
 
         $subject = $transresUtil->getTransresSiteProjectParameter('expiringProjectEmailSubject',$project);
@@ -1095,7 +1098,7 @@ class ReminderUtil
         //$emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
         $emailArr = $transresUtil->getRequesterEmails($project,true,false); //$withBillingContact=false
         if( count($emailArr) == 0 ) {
-            return NULL;
+            return false;
         }
         //echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
@@ -1122,14 +1125,13 @@ class ReminderUtil
         } else {
             echo "<br>EXPIRATION msg=$msg<br>";
         }
+        
+        return true;
     }
 
     //Expired - send expired notification
     //send an email to the users with the “TRP Admin” role for every NEWLY expired project
     public function sendExpiredProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
-
-        //TODO: test expired projects
-        //return NULL;
 
         $transresUtil = $this->container->get('transres_util');
         $newline = "\r\n";
@@ -1140,13 +1142,13 @@ class ReminderUtil
         //Use projectExprDurationChangeStatus in days (90 days)?
         $projectExprDurationChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprDurationChangeStatus',null,$projectSpecialty);
         if( !$projectExprDurationChangeStatus ) {
-            return NULL;
+            return false;
         }
 
         //Use site settings parameters from (8 fields): 5,6,7,8
         $sendExpiredProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpiredProjectEmail',null,$projectSpecialty);
         if( !$sendExpiredProjectEmail ) {
-            return NULL;
+            return false;
         }
 
         //now   <--projectExprDurationEmail--> expirationDate
@@ -1203,29 +1205,34 @@ class ReminderUtil
             echo "$projectSpecialty count expired projects=" . count($projects) . "$newline $newline";
         }
 
+        $projectCounter = 0;
+
         foreach( $projects as $project ) {
             //echo "Expired project ".$project->getOid()."<br>";
-            $this->sendExpiredReminderEmail($project,$testing);
+            $res = $this->sendExpiredReminderEmail($project,$testing);
+            if( $res ) {
+                $projectCounter++;
+            }
         }
 
-        return count($projects);
+        return $projectCounter;
     }
     public function sendExpiredReminderEmail( $project, $testing=false ) {
         if( !$project ) {
-            return NULL;
+            return false;
         }
 
         //“Upcoming expiration notification state” = “Notified Once” / NULL
         $expiredNotifyCounter = $project->getExpiredNotifyCounter();
         if( $expiredNotifyCounter ) {
-            return NULL;
+            return false;
         }
 
         $transresUtil = $this->container->get('transres_util');
 
         $sendExpiredProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpiredProjectEmail',$project);
         if( $sendExpiredProjectEmail === false ) {
-            return NULL;
+            return false;
         }
 
         $subject = $transresUtil->getTransresSiteProjectParameter('expiredProjectEmailSubject',$project);
@@ -1266,7 +1273,7 @@ class ReminderUtil
         //$emailArr = $transresUtil->getRequesterPisContactsSubmitterEmails($project);
         $emailArr = $transresUtil->getRequesterEmails($project,true,false); //$withBillingContact=false
         if( count($emailArr) == 0 ) {
-            return NULL;
+            return false;
         }
         //echo "requesterEmails=".implode(",",$emailArr)."<br>";
 
@@ -1293,8 +1300,14 @@ class ReminderUtil
         } else {
             echo "<br>EXPIRED msg=$msg<br>";
         }
+
+        return true;
     }
 
+    //K (cron auto-close): Auto-close project request
+    public function closeExpiredProject( $testing=false ) {
+
+    }
 }
 
 

@@ -137,10 +137,10 @@ class DefaultController extends OrderAbstractController
         //$transresUtil->addTransresRolesBySpecialtyWorkQueue();
         //exit('111');
 
-//        //expiration date
-//        $transresReminderUtil = $this->container->get('transres_reminder_util');
-//        $transresReminderUtil->sendProjectExpirationReminder(true); //$testing=true
-//        exit('111');
+        //expiration date
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
+        $transresReminderUtil->sendProjectExpirationReminder(true); //$testing=true
+        //exit('111');
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
