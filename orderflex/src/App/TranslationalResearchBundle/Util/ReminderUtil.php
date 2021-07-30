@@ -1216,8 +1216,8 @@ class ReminderUtil
         }
 
         //“Upcoming expiration notification state” = “Notified Once” / NULL
-        $expirationNotifyCounter = $project->getExpirationNotifyCounter();
-        if( $expirationNotifyCounter ) {
+        $expiredNotifyCounter = $project->getExpiredNotifyCounter();
+        if( $expiredNotifyCounter ) {
             return NULL;
         }
 
