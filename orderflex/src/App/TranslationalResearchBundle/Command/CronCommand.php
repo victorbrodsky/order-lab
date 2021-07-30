@@ -69,7 +69,7 @@ class CronCommand extends Command {
 //        $results = "";
 //        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
 //        $results = $results . "; " . $projectExpirationResults;
-//        exit('111');
+//        exit($results);
 //        ////////////// EOF expiration projects //////////////
 
 
@@ -143,14 +143,14 @@ class CronCommand extends Command {
 
         ////////////// expiration projects //////////////
         $testing = false;
-        //$testing = true;
+        $testing = true;
         $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
         $results = $results . "; " . $projectExpirationResults;
         ////////////// EOF expiration projects //////////////
 
         ////////////// Auto-close expired projects //////////////
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $closeExpiredProject = $transresReminderUtil->closeExpiredProject($testing);
         $results = $results . "; " . $closeExpiredProject;
         ////////////// EOF Auto-close expired projects //////////////
