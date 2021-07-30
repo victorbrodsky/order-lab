@@ -1307,6 +1307,20 @@ class ReminderUtil
     //K (cron auto-close): Auto-close project request
     public function closeExpiredProject( $testing=false ) {
 
+        //Apply project request auto-closure after expiration rule to this project request type: [Yes/No] and default to “Yes” by default
+        //$projectExprApplyChangeStatus
+
+        //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
+        //(leave blank to never auto-close): [90] - default to 90 (days)
+        //$projectExprDurationChangeStatus
+
+        //Auto-close project request N days after expiration date (use the value from the field in A above)
+        //$projectExprDuration
+
+        //1)project expiration date is set when project created
+        //2) cron: auto-close project after $projectExprDurationChangeStatus(90 days) after expiration date
+        //   if now+$projectExprDurationChangeStatus(90 days) > expectedExpirationDate(project expiration date)
+
     }
 }
 

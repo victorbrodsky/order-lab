@@ -1687,6 +1687,26 @@ class Project {
      */
     public function setExpectedExpirationDate($expectedExpirationDate)
     {
+        //notification should only be sent once for a given combination of project id and Expiration date:
+        //if expectedExpirationDate is updated => reset expired/expiring notify counter
+        if( $expectedExpirationDate != $this->expectedExpirationDate ) {
+
+            if( $this->getExpirationNotifyCounter() ) {
+                $this->setExpirationNotifyCounter(0);
+            }
+
+            if( $this->getExpiredNotifyCounter() ) {
+                $this->setExpiredNotifyCounter(0);
+            }
+
+            //Same for auto-closed counter:
+            // This automatic status switch should only be done ONCE
+            // per project ID + Expiration Date value combination,
+            // meaning, if this Cron Job sets the project request to status “Closed”,
+            // but the admin user sets it back to another status (not “Closed”) WITHOUT changing the Expiration date,
+            // the system should not try to change it again
+        }
+
         $this->expectedExpirationDate = $expectedExpirationDate;
     }
     
