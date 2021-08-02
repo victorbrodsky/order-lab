@@ -1258,6 +1258,8 @@ class TransResUtil
 
                 if( $to === "final_approved" ) {
                     $project->setApprovalDate(new \DateTime());
+                    //Reset expectedExpirationDate when project passed "Final Approval" stage.
+                    $this->calculateAndSetProjectExpectedExprDate($project); //Status changed
                 }
 
                 $workflow->apply($project, $transitionName);
@@ -7538,9 +7540,10 @@ class TransResUtil
             return false;
         }
 
-        if( $project->getExpectedExpirationDate() ) {
-            return false;
-        }
+        //ExpectedExpirationDate can be rest in the final approval stage
+//        if( $project->getExpectedExpirationDate() ) {
+//            return false;
+//        }
 
         //projectExprDuration -> setExpectedExpirationDate
         $projectExprDuration = $this->getTransresSiteProjectParameter('projectExprDuration',$project); //Month

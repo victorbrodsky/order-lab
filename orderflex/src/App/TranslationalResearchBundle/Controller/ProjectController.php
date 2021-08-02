@@ -578,12 +578,14 @@ class ProjectController extends OrderAbstractController
                 $expectedExpirationDateProcessed = true;
             }
 
+            //only for non-funded projects. clear for all funded projects.
+            // However we have a separate filter for funded/non-funded projects.
+            // Therefore, should we include "project.funded != TRUE" condition here?
+
             $now = new \DateTime();
             $nowStr = $now->format('Y-m-d H:i:s');
 
             if( $expectedExpirationDateChoices == strtolower('Expired') ) {
-                //only for non-funded projects. clear for all funded projects.
-
                 $dql->andWhere('(:nowDatetime > project.expectedExpirationDate AND project.funded != TRUE)');
                 $dqlParameters['nowDatetime'] = $nowStr;
                 $expectedExpirationDateProcessed = true;

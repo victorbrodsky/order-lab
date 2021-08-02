@@ -2538,4 +2538,7 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF populateProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
     }
+
+    //TODO: rerun script and generate expectedExpirationDate based on the approval date.
+    //TODO: Insert calculateAndSetProjectExpectedExprDate after the "Final Approval" stage is executed
 }
