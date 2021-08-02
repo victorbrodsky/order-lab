@@ -7598,6 +7598,11 @@ class TransResUtil
     }
 
     public function isProjectExpired( $project ) {
+        //only for non-funded projects. clear for all funded projects.
+        if( $project->getFunded() ) {
+            return false;
+        }
+
         $now = new \DateTime();
         $expirationDate = $project->getExpectedExpirationDate();
         if( $expirationDate && $now > $expirationDate ) {

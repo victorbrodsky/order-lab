@@ -582,7 +582,9 @@ class ProjectController extends OrderAbstractController
             $nowStr = $now->format('Y-m-d H:i:s');
 
             if( $expectedExpirationDateChoices == strtolower('Expired') ) {
-                $dql->andWhere(':nowDatetime > project.expectedExpirationDate');
+                //only for non-funded projects. clear for all funded projects.
+
+                $dql->andWhere('(:nowDatetime > project.expectedExpirationDate AND project.funded != TRUE)');
                 $dqlParameters['nowDatetime'] = $nowStr;
                 $expectedExpirationDateProcessed = true;
             }
@@ -592,7 +594,7 @@ class ProjectController extends OrderAbstractController
                 $projectExprDurationEmail = $transresUtil->getProjectExprDurationEmail();
                 if( $projectExprDurationEmail ) {
                     $advanceDate = $now->modify("+" . $projectExprDurationEmail . " months");
-                    $dql->andWhere('(project.expectedExpirationDate BETWEEN :nowDatetime and :advanceDate)');
+                    $dql->andWhere('(project.expectedExpirationDate BETWEEN :nowDatetime and :advanceDate AND project.funded != TRUE)');
                     $dqlParameters['nowDatetime'] = $nowStr;
                     $dqlParameters['advanceDate'] = $advanceDate->format('Y-m-d H:i:s');
                 }
@@ -600,7 +602,7 @@ class ProjectController extends OrderAbstractController
             }
 
             if( $expectedExpirationDateChoices == strtolower('Current/Non-expired') ) {
-                $dql->andWhere('project.expectedExpirationDate > :nowDatetime');
+                $dql->andWhere('project.expectedExpirationDate > :nowDatetime AND project.funded != TRUE');
                 $dqlParameters['nowDatetime'] = $nowStr;
                 $expectedExpirationDateProcessed = true;
             }
