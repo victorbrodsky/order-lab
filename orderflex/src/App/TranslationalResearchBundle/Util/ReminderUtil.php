@@ -980,7 +980,7 @@ class ReminderUtil
         //Use site settings parameters from (8 fields)
         $sendExpriringProjectEmail = $transresUtil->getTransresSiteProjectParameter('sendExpriringProjectEmail',null,$projectSpecialty);
 
-        $projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty); //months
+        $projectExprDurationEmail = $transresUtil->getTransresSiteProjectParameter('projectExprDurationEmail',null,$projectSpecialty); //6 months
 
         //A2) projectExprApply - Apply project request expiration notification rule to this project request type: [Yes/No]
         //A) projectExprDurationEmail - Default number of months in advance of the project request expiration date when the
