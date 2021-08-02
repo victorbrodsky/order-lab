@@ -215,16 +215,25 @@ class ProjectType extends AbstractType
             'required' => false,
         ));
 
-        if( $this->params['cycle'] != 'new' ) {
+        if( $this->params['cycle'] != 'new' && $this->params['admin'] ) {
             $builder->add('expectedExpirationDate', DateType::class, array(
                 'widget' => 'single_text',
-                'label' => "Expected Expiration Date:",
+                'label' => "Expected Expiration Date (for non-funded project only):",
                 'format' => 'MM/dd/yyyy',
                 //'view_timezone' => $user_tz,
                 //'model_timezone' => $user_tz,
                 'attr' => array('class' => 'datepicker form-control transres-project-expectedExpirationDate'),
                 'required' => false,
             ));
+
+            //visible only to the TRP admin role (or the relevant Admin role per project type - CTP,  MISI) and only on the Edit/View pages
+            //$this->params['transresUtil']
+            if( $this->params['admin'] ) {
+                $builder->add('reasonForStatusChange', null, array(
+                    'label' => "Reason for status change or closure:",
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+            }
         }
 
         ///////////////// Hide 7 fields (from $budgetSummary to $expectedCompletionDate) ///////////////////

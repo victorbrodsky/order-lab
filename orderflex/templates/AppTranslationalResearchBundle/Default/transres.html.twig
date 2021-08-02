@@ -253,6 +253,10 @@
                         {{ formmacros.fieldDateLabel(form.expectedExpirationDate,'allow-future-date') }}
                     {% endif %}
 
+                    {% if form.reasonForStatusChange is defined %}
+                        {{ formmacros.field_notempty(form.reasonForStatusChange,cycle) }}
+                    {% endif %}
+
                     {{ transres.projectDocument(form,project,cycle) }}
 
                     {% if cycle != "new" %}
@@ -1827,7 +1831,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#transres-project-expr-content-{{ specialtyId }}">Project Expiration Settings</a>
+                <a data-toggle="collapse" href="#transres-project-expr-content-{{ specialtyId }}">Project Expiration Settings (Only for Non-Funded Projects)</a>
             </h4>
         </div>
         <div id="transres-project-expr-content-{{ specialtyId }}" class="panel-collapse collapse">

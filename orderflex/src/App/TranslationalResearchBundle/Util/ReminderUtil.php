@@ -1008,6 +1008,12 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
+        //only for non-funded projects
+        $dql->andWhere("project.funded != TRUE");
+
+        //only with expectedExpirationDate
+        $dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+
 //        $dql->andWhere("project.state = 'final_approved'");
         $dql->andWhere("project.state = :approved");
         $params['approved'] = "final_approved";
@@ -1043,6 +1049,11 @@ class ReminderUtil
     }
     public function sendExpiritaionReminderEmail( $project, $testing=false ) {
         if( !$project ) {
+            return false;
+        }
+
+        //only for non-funded projects. clear for all funded projects.
+        if( $project->getFunded() ) {
             return false;
         }
 
@@ -1175,6 +1186,12 @@ class ReminderUtil
         $dql->where("projectSpecialty.id = :specialtyId");
         $params["specialtyId"] = $projectSpecialty->getId();
 
+        //only for non-funded projects. Ignore all funded projects
+        $dql->andWhere("project.funded != TRUE");
+
+        //only with expectedExpirationDate
+        $dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+
         //$dql->andWhere("project.state = 'final_approved'");
         $dql->andWhere("project.state = :approved");
         $params['approved'] = "final_approved";
@@ -1219,6 +1236,11 @@ class ReminderUtil
     }
     public function sendExpiredReminderEmail( $project, $testing=false ) {
         if( !$project ) {
+            return false;
+        }
+
+        //only for non-funded projects. clear for all funded projects.
+        if( $project->getFunded() ) {
             return false;
         }
 

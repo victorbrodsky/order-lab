@@ -548,6 +548,13 @@ class Project {
      * @ORM\Column(type="date", nullable=true)
      */
     private $expectedExpirationDate;
+    
+    /**
+     * Reason for status change or closure:
+     * 
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reasonForStatusChange;
 
     /**
      * Upcoming expiration notification state (Counter)
@@ -1711,8 +1718,22 @@ class Project {
 
         $this->expectedExpirationDate = $expectedExpirationDate;
     }
-    
-    
+
+    /**
+     * @return mixed
+     */
+    public function getReasonForStatusChange()
+    {
+        return $this->reasonForStatusChange;
+    }
+
+    /**
+     * @param mixed $reasonForStatusChange
+     */
+    public function setReasonForStatusChange($reasonForStatusChange)
+    {
+        $this->reasonForStatusChange = $reasonForStatusChange;
+    }
 
     /**
      * @return mixed

@@ -7532,6 +7532,12 @@ class TransResUtil
     //use the value from the “Default duration of a project request before expiration (in months)”
     // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
     public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false ) {
+
+        //only for non-funded projects. clear for all funded projects.
+        if( $project->getFunded() ) {
+            return false;
+        }
+
         if( $project->getExpectedExpirationDate() ) {
             return false;
         }

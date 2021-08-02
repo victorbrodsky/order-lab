@@ -530,19 +530,19 @@ class SiteParameterType extends AbstractType
         ////////////// EOF Budget Related Parameters /////////////////////
 
         $builder->add('projectExprDuration', null, array(
-            'label' => "Default duration of a project request before expiration in months (default is 12 months):",
+            'label' => "Default duration of a non-funded project request before expiration in months (default is 12 months):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectExprDurationEmail', null, array(
-            'label' => "Default number of months in advance of the project request expiration".
+            'label' => "Default number of months in advance of the non-funded project request expiration".
                 " date when the automatic notification requesting a progress report should".
                 " be sent (default is 6 months):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectExprDurationChangeStatus', null, array(
-            'label' => "Default number of days after the project request expiration date when".
+            'label' => "Default number of days after the non-funded project request expiration date when".
                 " the project request status should be set to 'Closed' (default is 90 days):",
             'required' => false,
             'attr' => array('class' => 'form-control')
@@ -555,7 +555,7 @@ class SiteParameterType extends AbstractType
 //            'attr' => array('class' => 'form-control')
 //        ));
         $builder->add('projectExprApplyChangeStatus', ChoiceType::class, array(
-            'label' => "Apply project request auto-closure after expiration rule to this project request type:",
+            'label' => "Apply project request auto-closure after expiration rule to this non-funded project request type:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
@@ -564,46 +564,46 @@ class SiteParameterType extends AbstractType
         //8 fields
         //1
         $builder->add('sendExpriringProjectEmail', ChoiceType::class, array(
-            'label' => "Automatically send a reminder email to submit project progress report for expiring projects:",
+            'label' => "Automatically send a reminder email to submit non-funded project progress report for expiring projects:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
         //2
         $builder->add('expiringProjectEmailFrom', null, array(
-            'label' => "Project Request Upcoming Expiration Notification E-Mail sent from (default trp-admin):",
+            'label' => "Non-Funded Project Request Upcoming Expiration Notification E-Mail sent from (default trp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('expiringProjectEmailSubject', null, array(
-            'label' => "Project Request Upcoming Expiration Notification E-Mail Subject:",
+            'label' => "Non-Funded Project Request Upcoming Expiration Notification E-Mail Subject:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('expiringProjectEmailBody', null, array(
-            'label' => "Project Request Upcoming Expiration Notification E-Mail Body:",
+            'label' => "Non-Funded Project Request Upcoming Expiration Notification E-Mail Body:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         //5
         $builder->add('sendExpiredProjectEmail', ChoiceType::class, array(
-            'label' => "Automatically send a reminder email to the [TRP] system administrator for expired projects:",
+            'label' => "Automatically send a reminder email to the [TRP] system administrator for expired non-funded projects:",
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('expiredProjectEmailFrom', null, array(
-            'label' => "Project Request Expiration Notification E-Mail sent from (default trp-admin):",
+            'label' => "Non-Funded Project Request Expiration Notification E-Mail sent from (default trp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('expiredProjectEmailSubject', null, array(
-            'label' => "Project Request Expiration Notification E-Mail Subject:",
+            'label' => "Non-Funded Project Request Expiration Notification E-Mail Subject:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('expiredProjectEmailBody', null, array(
-            'label' => "Project Request Expiration Notification E-Mail Body:",
+            'label' => "Non-Funded Project Request Expiration Notification E-Mail Body:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

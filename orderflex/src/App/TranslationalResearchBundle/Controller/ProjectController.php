@@ -1254,8 +1254,6 @@ class ProjectController extends OrderAbstractController
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
-        $transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
-
         $form = $this->createProjectForm($project,$cycle,$request); //new
 
         $messageTypeId = true;//testing
@@ -1305,7 +1303,7 @@ class ProjectController extends OrderAbstractController
 
             $project->calculateAndSetImplicitExpirationDate();
 
-            //$transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
+            $transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
 
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
