@@ -7593,14 +7593,14 @@ class TransResUtil
 
             $project->setExpectedExpirationDate($expectedExprDate);
 
-            $res = $project->getOid().": Original exprDate=".$originalExpDateStr.", new exprDate=".$expectedExprDate->format('d-m-Y');
+            $res = $project->getOid().": original expDate=".$originalExpDateStr.", new exprDate=".$expectedExprDate->format('d-m-Y');
 
             //for echo
             $createDateStr = NULL;
             if( $createDate ) {
                 $createDateStr = $createDate->format('d-m-Y');
                 $status = $project->getState();
-                $res = $project->getOid() ." (created ". $createDateStr. ", " . $status ."): exprDate=".$expectedExprDate->format('d-m-Y');
+                $res = $project->getOid() ." (created ". $createDateStr. ", " . $status ."): original expDate=$originalExpDateStr, new exprDate=".$expectedExprDate->format('d-m-Y');
             }
 
             return $res;
