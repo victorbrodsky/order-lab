@@ -2573,6 +2573,9 @@ class DefaultController extends OrderAbstractController
 
         $dql->where("project.approvalDate IS NOT NULL");
 
+        //non-funded
+        $dql->andWhere("project.funded != TRUE");
+
         //state
         //$dql->andWhere("project.state = 'final_approved'");
 
