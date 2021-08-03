@@ -1258,7 +1258,9 @@ class TransResUtil
 
                 if( $to === "final_approved" ) {
                     $project->setApprovalDate(new \DateTime());
+
                     //Reset expectedExpirationDate when project passed "Final Approval" stage.
+                    //TODO: update expiration date only once?
                     $this->calculateAndSetProjectExpectedExprDate($project); //Status changed
                 }
 
@@ -7531,6 +7533,7 @@ class TransResUtil
         return $entity;
     }
 
+    //TODO: update expiration date only once?
     //use the value from the “Default duration of a project request before expiration (in months)”
     // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
     public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false, $useProjectApprovalDate=false ) {
