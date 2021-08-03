@@ -2539,7 +2539,6 @@ class DefaultController extends OrderAbstractController
         exit("EOF populateProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
     }
 
-    //TODO: rerun script and generate expectedExpirationDate based on the approval date.
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/reset-project-expiration-date
      *
@@ -2550,7 +2549,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("resetProjectExpectedExpirationDateAction not allowed");
+        exit("resetProjectExpectedExpirationDateAction not allowed");
 
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
