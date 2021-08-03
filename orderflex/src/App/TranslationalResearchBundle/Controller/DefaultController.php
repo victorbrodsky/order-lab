@@ -2558,7 +2558,7 @@ class DefaultController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $count = 0;
         $updateCount = 0;
