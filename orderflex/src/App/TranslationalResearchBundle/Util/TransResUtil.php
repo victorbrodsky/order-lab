@@ -7533,7 +7533,7 @@ class TransResUtil
 
     //use the value from the “Default duration of a project request before expiration (in months)”
     // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
-    public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false ) {
+    public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false, $useProjectApprovalDate=false ) {
 
         //only for non-funded projects. clear for all funded projects.
         if( $project->getFunded() ) {
@@ -7566,8 +7566,20 @@ class TransResUtil
                 $expectedExprDate->modify($addMonthStr);
             }
         }
+        
+        if( $useProjectApprovalDate ) {
+            $approvalDate = $project->getApprovalDate();
+            if( $approvalDate ) {
+                $expectedExprDate = clone $approvalDate;
+                $expectedExprDate->modify($addMonthStr);
+            } else {
+                $errorMsg = $project->getOid()." approval date is NULL";
+                return $errorMsg;
+            }
+        }
 
         if( !$expectedExprDate ) {
+            //use now date
             $expectedExprDate = new \DateTime($addMonthStr);
         }
 

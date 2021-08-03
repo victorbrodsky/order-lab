@@ -2540,5 +2540,100 @@ class DefaultController extends OrderAbstractController
     }
 
     //TODO: rerun script and generate expectedExpirationDate based on the approval date.
-    //TODO: Insert calculateAndSetProjectExpectedExprDate after the "Final Approval" stage is executed
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/reset-project-expiration-date
+     *
+     * @Route("/reset-project-expiration-date/", name="translationalresearch_reset_project_expiration_date")
+     */
+    public function resetProjectExpectedExpirationDateAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("resetProjectExpectedExpirationDateAction not allowed");
+
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        $testing = true;
+
+        $count = 0;
+        $updateCount = 0;
+        $closedCount = 0;
+        $approvedCount = 0;
+        $updatedProjects = array();
+
+        //find all projects without expiration date
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->where("project.approvalDate IS NOT NULL");
+
+        //state
+        //$dql->andWhere("project.state = 'final_approved'");
+
+        //$dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        foreach($projects as $project) {
+
+//            if( $project->getExpectedExpirationDate() ) {
+//                continue;
+//            }
+
+            //                                                          $project, $useProjectSubmissionDate=false, $useProjectApprovalDate=true
+            $res = $transresUtil->calculateAndSetProjectExpectedExprDate($project,false,true);
+
+            if( $res ) {
+
+                $updatedProjects[] = $res; //$project->getId();
+
+                $status = $project->getState();
+                if( $status == 'closed' || $status == 'canceled' ) {
+                    $closedCount++;
+                }
+                if( $status == 'final_approved' ) {
+                    $approvedCount++;
+                }
+
+                if( $testing == false ) {
+                    $em->flush();
+                }
+
+                $updateCount++;
+            }
+
+            $count++;
+        }
+
+        if( $updateCount > 0 ) {
+            if ($testing == false) {
+                $em->flush();
+            }
+        }
+
+        echo "Total=".$count.", approvedCount=".$approvedCount.", closedCount=".$closedCount.", updatedCount=".$updateCount."<br>";
+
+        //EventLog
+        $msg = "Reset projects expectedExpirationDate: ".implode("; ",$updatedProjects)."<br>";
+        echo "$msg <br>";
+
+        if( $testing == false ) {
+            $eventType = "Project Updated";
+            $transresUtil->setEventLog(null,$eventType,$msg);
+        }
+
+        exit("EOF resetProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
+    }
+    
 }
