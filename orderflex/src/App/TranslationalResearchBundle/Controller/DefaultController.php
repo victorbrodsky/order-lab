@@ -2591,12 +2591,44 @@ class DefaultController extends OrderAbstractController
 //                continue;
 //            }
 
+            $originalExpDateStr = NULL;
+            $originalExpDate = $project->getExpectedExpirationDate();
+            if( $originalExpDate ) {
+                $originalExpDateStr = $originalExpDate->format('d-m-Y');
+            }
+
+            $approvalDateStr = NULL;
+            $approvalDate = $project->getApprovalDate();
+            if( $approvalDate ) {
+                $approvalDateStr = $approvalDate->format('d-m-Y');
+            }
+
+            $origExpiringCounter = $project->getExpirationNotifyCounter();
+            $origExpiredCounter = $project->getExpiredNotifyCounter();
+
             //                                                          $project, $useProjectSubmissionDate=false, $useProjectApprovalDate=true
             $res = $transresUtil->calculateAndSetProjectExpectedExprDate($project,false,true);
 
+            $expectedExprDateStr = NULL;
+            $expectedExprDate = $project->getExpectedExpirationDate();
+            if( $expectedExprDate ) {
+                $expectedExprDateStr = $expectedExprDate->format('d-m-Y');
+            }
+
+            $expiringCounter = $project->getExpirationNotifyCounter();
+            $expiredCounter = $project->getExpiredNotifyCounter();
+
+            $newRes = $count.": ".$project->getOid().": approvalDate=".$approvalDateStr.
+                ", Original exprDate=".$originalExpDateStr.
+                ", new exprDate=".$expectedExprDateStr.
+                ", expiringCounter=$origExpiringCounter->$expiringCounter, expiredCounter=$origExpiredCounter->$expiredCounter"
+            ;
+            //echo $newRes."<br>";
+            $updatedProjects[] = $newRes;
+
             if( $res ) {
 
-                $updatedProjects[] = $res; //$project->getId();
+                //$updatedProjects[] = $res; //$project->getId();
 
                 $status = $project->getState();
                 if( $status == 'closed' || $status == 'canceled' ) {
@@ -2625,7 +2657,9 @@ class DefaultController extends OrderAbstractController
         echo "Total=".$count.", approvedCount=".$approvedCount.", closedCount=".$closedCount.", updatedCount=".$updateCount."<br>";
 
         //EventLog
-        $msg = "Reset projects expectedExpirationDate: ".implode("; ",$updatedProjects)."<br>";
+        $break = "<br>";
+        //$break = "; ";
+        $msg = "Reset projects expectedExpirationDate: ".implode($break,$updatedProjects)."<br>";
         echo "$msg <br>";
 
         if( $testing == false ) {

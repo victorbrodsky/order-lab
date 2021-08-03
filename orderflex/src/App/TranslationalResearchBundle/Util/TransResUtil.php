@@ -7585,9 +7585,15 @@ class TransResUtil
 
         if( $expectedExprDate) {
 
+            $originalExpDateStr = NULL;
+            $originalExpDate = $project->getExpectedExpirationDate();
+            if( $originalExpDate ) {
+                $originalExpDateStr = $originalExpDate->format('d-m-Y');
+            }
+
             $project->setExpectedExpirationDate($expectedExprDate);
 
-            $res = $project->getOid().": exprDate=".$expectedExprDate->format('d-m-Y');
+            $res = $project->getOid().": Original exprDate=".$originalExpDateStr.", new exprDate=".$expectedExprDate->format('d-m-Y');
 
             //for echo
             $createDateStr = NULL;
