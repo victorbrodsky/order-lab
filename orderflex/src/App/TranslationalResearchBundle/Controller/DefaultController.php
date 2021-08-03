@@ -2571,7 +2571,7 @@ class DefaultController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
-        //$dql->where("project.approvalDate IS NOT NULL");
+        $dql->where("project.approvalDate IS NOT NULL");
 
         //non-funded
         $dql->andWhere("project.funded != TRUE");
