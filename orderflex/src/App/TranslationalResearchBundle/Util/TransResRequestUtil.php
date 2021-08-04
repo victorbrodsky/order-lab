@@ -3207,7 +3207,10 @@ class TransResRequestUtil
     }
     public function getTransresSiteParameterSingle( $fieldName, $transresRequest=NULL ) {
         $transresUtil = $this->container->get('transres_util');
-        $project = $transresRequest->getProject();
+        $project = NULL;
+        if( $transresRequest ) {
+            $project = $transresRequest->getProject();
+        }
         return $transresUtil->getTransresSiteProjectParameter($fieldName,$project);
 
 //        if( !$fieldName ) {
