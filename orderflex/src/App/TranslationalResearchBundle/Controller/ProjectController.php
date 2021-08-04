@@ -1307,7 +1307,8 @@ class ProjectController extends OrderAbstractController
 
             $project->calculateAndSetImplicitExpirationDate();
 
-            $transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
+            //set ExpectedExprDate only when project is final approved
+            //$transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
 
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
             $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
@@ -2229,6 +2230,11 @@ class ProjectController extends OrderAbstractController
         $project->setState($to);
 
         $project->setApprovalDate(new \DateTime());
+
+        //update expiration date only once on final_approved?
+        if( !$project->getExpectedExpirationDate() ) {
+            $transresUtil->calculateAndSetProjectExpectedExprDate($project); //approve-project
+        }
 
         $em->flush($project);
 

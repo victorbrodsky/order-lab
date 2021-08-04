@@ -1260,8 +1260,10 @@ class TransResUtil
                     $project->setApprovalDate(new \DateTime());
 
                     //Reset expectedExpirationDate when project passed "Final Approval" stage.
-                    //TODO: update expiration date only once?
-                    $this->calculateAndSetProjectExpectedExprDate($project); //Status changed
+                    //TODO: update expiration date only once on final_approved?
+                    if( !$project->getExpectedExpirationDate() ) {
+                        $this->calculateAndSetProjectExpectedExprDate($project); //Status changed
+                    }
                 }
 
                 $workflow->apply($project, $transitionName);
@@ -7533,7 +7535,8 @@ class TransResUtil
         return $entity;
     }
 
-    //TODO: update expiration date only once?
+    //TODO: update expiration date only once on final approval?
+    //Project exp date can be updated on final approval, edit project
     //use the value from the “Default duration of a project request before expiration (in months)”
     // to calculate the value (current date + this default duration) into the “Expected Expiration Date:” field.
     public function calculateAndSetProjectExpectedExprDate( $project, $useProjectSubmissionDate=false, $useProjectApprovalDate=false ) {
@@ -7543,7 +7546,7 @@ class TransResUtil
             return false;
         }
 
-        //ExpectedExpirationDate can be rest in the final approval stage
+//        //update expiration date only once
 //        if( $project->getExpectedExpirationDate() ) {
 //            return false;
 //        }

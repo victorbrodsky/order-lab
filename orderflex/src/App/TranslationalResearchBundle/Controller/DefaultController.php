@@ -2671,5 +2671,9 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF resetProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
     }
+
+    //TODO: set expectedExpirationDate to NULL for all funded projects
+    //Clear out/delete values in the “Expected expiration date” fields for all “funded” projects so they would not expire
+    //If project switch from funded to non-funded?
     
 }

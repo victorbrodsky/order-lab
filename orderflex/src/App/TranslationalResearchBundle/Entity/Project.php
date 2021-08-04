@@ -1694,6 +1694,12 @@ class Project {
      */
     public function setExpectedExpirationDate($expectedExpirationDate)
     {
+
+//        //update expiration date only once
+//        if( $this->getExpectedExpirationDate() ) {
+//            return false;
+//        }
+
         //notification should only be sent once for a given combination of project id and Expiration date:
         //if expectedExpirationDate is updated => reset expired/expiring notify counter
         if( $expectedExpirationDate != $this->expectedExpirationDate ) {

@@ -2978,6 +2978,7 @@ class RequestController extends OrderAbstractController
     public function updateApprovedProjectBudgetAction( Request $request ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
@@ -3015,6 +3016,7 @@ class RequestController extends OrderAbstractController
             if( $originalApprovedProjectBudget != $approvedProjectBudget ) {
                 
                 $project->setApprovedProjectBudget($approvedProjectBudget);
+                $project->setUpdateUser($user);
                 $em->flush();
 
                 $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);

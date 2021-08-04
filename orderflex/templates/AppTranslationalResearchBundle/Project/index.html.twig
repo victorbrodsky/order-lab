@@ -423,7 +423,9 @@
                 </td>
 
                 <td>
-                    {{ project.expectedExpirationDate|date("m/d/Y",false) }}
+                    {% if project.expectedExpirationDate %}
+                        {{ project.expectedExpirationDate|date("m/d/Y",false) }}
+                    {% endif %}
                 </td>
 
                 {#Requests#}
