@@ -312,7 +312,7 @@
                 <div class="panel-body">
 
                     {% set hideshow = "" %}
-                    {% if project.exemptIrbApproval.getName() == "Exempt" %}
+                    {% if project.exemptIrbApproval and project.exemptIrbApproval.getName() == "Exempt" %}
                         {% set hideshow = "display: none;" %}
                     {% endif %}
 
