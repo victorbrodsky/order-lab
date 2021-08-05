@@ -2717,7 +2717,7 @@ class DefaultController extends OrderAbstractController
         //state
         //$dql->andWhere("project.state = 'final_approved'");
 
-        //$dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+        $dql->andWhere("project.expectedExpirationDate IS NOT NULL");
 
         $query = $em->createQuery($dql);
         //$query->setParameters($params);
