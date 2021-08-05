@@ -2231,7 +2231,7 @@ class ProjectController extends OrderAbstractController
 
         $project->setApprovalDate(new \DateTime());
 
-        //update expiration date only once on final_approved?
+        //update expiration date only once on final_approved
         if( !$project->getExpectedExpirationDate() ) {
             $transresUtil->calculateAndSetProjectExpectedExprDate($project); //approve-project
         }
