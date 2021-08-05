@@ -2672,7 +2672,6 @@ class DefaultController extends OrderAbstractController
         exit("EOF resetProjectExpectedExpirationDateAction: total=$count, updated=$updateCount");
     }
 
-    //TODO: set expectedExpirationDate to NULL for all funded projects
     //Clear out/delete values in the “Expected expiration date” fields for all “funded” projects so they would not expire
     //If project switch from funded to non-funded?
     /**
@@ -2798,6 +2797,108 @@ class DefaultController extends OrderAbstractController
         }
 
         exit("EOF clearFundedProjectExpectedExpirationDateAction: total=$count");
+    }
+
+    /**
+     * Clear expectedExpirationDate for all non-funded projects without Approval date
+     *
+     * http://127.0.0.1/order/index_dev.php/translational-research/clear-nonfunded-project-expdate-without-approvaldate
+     *
+     * @Route("/clear-nonfunded-project-expdate-without-approvaldate/", name="translationalresearch_clear_nonfunded_project_expdate_without_approvaldate")
+     */
+    public function clearNonFundedProjectExpectedExpdateAction(Request $request) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("clearNonFundedProjectExpectedExpdateAction not allowed");
+
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $testing = false;
+        $testing = true;
+
+        $count = 0;
+        $updatedProjects = array();
+
+        //find all projects without expiration date
+        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        //$dql->where("project.approvalDate IS NOT NULL");
+
+        //non-funded
+        $dql->andWhere("project.funded != TRUE");
+
+        //no approval date
+        $dql->andWhere("project.approvalDate IS NULL");
+
+        //state
+        //$dql->andWhere("project.state = 'final_approved'");
+
+        //$dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setParameters($params);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        foreach($projects as $project) {
+
+            $originalExpDateStr = NULL;
+            $originalExpDate = $project->getExpectedExpirationDate();
+            if( $originalExpDate ) {
+                $originalExpDateStr = $originalExpDate->format('d-m-Y');
+            }
+
+            //clear expectedExpirationDate and counters
+            $project->setExpectedExpirationDate(NULL);
+            $project->setExpirationNotifyCounter(0);
+            $project->setExpiredNotifyCounter(0);
+
+            $newRes = $count.": ".$project->getOid().
+                " [".$project->getState()."]".
+                ": Clear exprDate=".$originalExpDateStr.
+                ", funded=".$project->isFunded()
+                //", new exprDate=".$expectedExprDateStr.
+                //", expiringCounter=$origExpiringCounter, expiredCounter=$origExpiredCounter"
+            ;
+            //echo $newRes."<br>";
+            $updatedProjects[] = $newRes;
+
+            if( $testing == false ) {
+                $em->flush();
+            }
+
+            $count++;
+        }
+
+        if( $count > 0 ) {
+            if ($testing == false) {
+                $em->flush();
+            }
+        }
+
+        echo "Total=".$count."<br>";
+
+        //EventLog
+        $break = "<br>";
+        //$break = "; ";
+        $msg = "Clear non-funded projects expectedExpirationDate without Approval date:<br>".implode($break,$updatedProjects)."<br>";
+        echo "$msg <br>";
+
+        if( $testing == false ) {
+            $eventType = "Project Updated";
+            $transresUtil->setEventLog(null,$eventType,$msg);
+        }
+
+        exit("EOF clearNonFundedProjectExpectedExpdateAction: total=$count");
     }
     
 }
