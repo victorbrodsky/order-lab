@@ -101,6 +101,8 @@ class TrpTest extends WebTestBase
         // in \"AppUserdirectoryBundle::Default/usermacros.html.twig\". at
         // C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\scanorder\\Scanorders2\\vendor\\twig\\twig\\src\\Template.php:581)"} []
 
+        echo "projectId=[$projectId]";
+
         $crawler = $this->client->request('GET', '/translational-research/project/show/'.$projectId);
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
