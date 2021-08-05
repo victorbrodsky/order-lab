@@ -2842,6 +2842,8 @@ class DefaultController extends OrderAbstractController
 
         //$dql->andWhere("project.expectedExpirationDate IS NOT NULL");
 
+        $dql->orderBy("project.expectedExpirationDate","ASC");
+
         $query = $em->createQuery($dql);
         //$query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
