@@ -358,7 +358,7 @@
                 <div class="panel-body">
 
                     {% set hideshow = "" %}
-                    {% if project.exemptIACUCApproval.getName() == "Exempt" %}
+                    {% if project.exemptIACUCApproval and project.exemptIACUCApproval.getName() == "Exempt" %}
                         {% set hideshow = "display: none;" %}
                     {% endif %}
 
