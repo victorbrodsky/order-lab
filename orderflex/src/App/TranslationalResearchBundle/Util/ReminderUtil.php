@@ -956,13 +956,13 @@ class ReminderUtil
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
             //1) expiring projects notification
-            ////$expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
+            $expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
 
             //2) expired projects notification
-            /////$expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
+            $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
 
             //3) auto-closure after expiration
-            $autoCloseProjectCount = $autoCloseProjectCount + $this->closeExpiredProjectPerSpecialty($projectSpecialty,$testing);
+            ////$autoCloseProjectCount = $autoCloseProjectCount + $this->closeExpiredProjectPerSpecialty($projectSpecialty,$testing);
         }
 
         if( $testing ) {
@@ -1446,9 +1446,10 @@ class ReminderUtil
             }
 
             $res = $this->autoCloseExpiredProject($project,$testing);
-            $res = true;
+            //$res = true;
             if( $res ) {
                 $projectCounter++;
+                break;
             }
         }
 

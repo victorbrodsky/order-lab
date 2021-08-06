@@ -138,9 +138,9 @@ class DefaultController extends OrderAbstractController
         //exit('111');
 
 //        //expiration date
-        $transresReminderUtil = $this->container->get('transres_reminder_util');
-        $transresReminderUtil->sendProjectExpirationReminder(true); //$testing=true
-        exit('111');
+        //$transresReminderUtil = $this->container->get('transres_reminder_util');
+        //$transresReminderUtil->sendProjectExpirationReminder(true); //$testing=true
+        //exit('111');
 
         //$transresReminderUtil = $this->container->get('transres_reminder_util');
         //$closeExpiredProject = $transresReminderUtil->closeExpiredProject(true); //$testing=true
