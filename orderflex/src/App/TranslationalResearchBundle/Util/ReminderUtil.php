@@ -1387,7 +1387,7 @@ class ReminderUtil
         $addDaysStr = "-".$projectExprDurationChangeStatus." days";
         $autoCloseDate = new \DateTime($addDaysStr); //now - duration days
         $autoCloseDateStr = $autoCloseDate->format('Y-m-d');
-        echo "autoCloseDateStr=$autoCloseDateStr <br>";
+        //echo "autoCloseDateStr=$autoCloseDateStr <br>";
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -1436,14 +1436,16 @@ class ReminderUtil
 
         foreach( $projects as $project ) {
 
-            $projectExpirationStr = "Unknown";
-            $expirationDate = $project->getExpectedExpirationDate();
-            if( $expirationDate ) {
-                $projectExpirationStr = $expirationDate->format("m/d/Y");
+            if( $testing ) {
+                $projectExpirationStr = "Unknown";
+                $expirationDate = $project->getExpectedExpirationDate();
+                if ($expirationDate) {
+                    $projectExpirationStr = $expirationDate->format("m/d/Y");
+                }
+                echo $projectCounter . ": Auto-close project " . $project->getOid() . ", state=" . $project->getState() . ", funded=" . $project->isFunded() . ", exp=" . $projectExpirationStr . "<br>";
             }
-            echo $projectCounter.": Auto-close project ".$project->getOid().", state=".$project->getState().", funded=".$project->isFunded().", exp=".$projectExpirationStr."<br>";
 
-            //$res = $this->autoCloseExpiredProject($project,$testing);
+            $res = $this->autoCloseExpiredProject($project,$testing);
             $res = true;
             if( $res ) {
                 $projectCounter++;
