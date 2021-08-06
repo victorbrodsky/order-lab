@@ -566,6 +566,13 @@ class Project {
      * @ORM\Column(type="integer", nullable=true)
      */
     private $expiredNotifyCounter;
+    /**
+     * auto-closure (Counter)
+     * This automatic status switch should only be done ONCE per project ID + Expiration Date value combination
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $autoClosureCounter;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -1712,6 +1719,10 @@ class Project {
                 $this->setExpiredNotifyCounter(0);
             }
 
+            if( $this->getAutoClosureCounter() ) {
+                $this->setAutoClosureCounter(0);
+            }
+
             //Same for auto-closed counter:
             // This automatic status switch should only be done ONCE
             // per project ID + Expiration Date value combination,
@@ -2160,6 +2171,22 @@ class Project {
         $this->expiredNotifyCounter = $expiredNotifyCounter;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAutoClosureCounter()
+    {
+        return $this->autoClosureCounter;
+    }
+
+    /**
+     * @param mixed $autoClosureCounter
+     */
+    public function setAutoClosureCounter($autoClosureCounter)
+    {
+        $this->autoClosureCounter = $autoClosureCounter;
+    }
+
     public function incrementExpirationNotifyCounter() {
         $counter = $this->getExpirationNotifyCounter();
         if( !$counter ) {
@@ -2178,6 +2205,15 @@ class Project {
         $this->setExpiredNotifyCounter($counter);
         return $counter;
     }
+    public function incrementAutoClosureCounter() {
+        $counter = $this->getAutoClosureCounter();
+        if( !$counter ) {
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+        $this->setAutoClosureCounter($counter);
+        return $counter;
+    }
     
     public function getExpirationNotifyCounterStr() {
         if( $this->getExpirationNotifyCounter() ) {
@@ -2187,6 +2223,12 @@ class Project {
     }
     public function getExpiredNotifyCounterStr() {
         if( $this->getExpiredNotifyCounter() ) {
+            return "Yes";
+        }
+        return "No";
+    }
+    public function getAutoClosureCounterStr() {
+        if( $this->getAutoClosureCounter() ) {
             return "Yes";
         }
         return "No";

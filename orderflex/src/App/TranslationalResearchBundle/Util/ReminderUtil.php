@@ -951,22 +951,27 @@ class ReminderUtil
 
         $expiringProjectCount = 0;
         $expiredProjectCount = 0;
+        $autoCloseProjectCount = 0;
 
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
         foreach($projectSpecialties as $projectSpecialty) {
             //1) expiring projects notification
-            $expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
+            ////$expiringProjectCount = $expiringProjectCount + $this->sendExpiringProjectReminderPerSpecialty($projectSpecialty,$testing);
 
             //2) expired projects notification
-            $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
+            /////$expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
+
+            //3) auto-closure after expiration
+            $autoCloseProjectCount = $autoCloseProjectCount + $this->closeExpiredProjectPerSpecialty($projectSpecialty,$testing);
         }
 
         if( $testing ) {
             echo "expiringProjectCount=$expiringProjectCount <br>";
             echo "expiredProjectCount=$expiredProjectCount <br>";
+            echo "autoCloseProjectCount=$autoCloseProjectCount <br>";
         }
         
-        return "Notification emails: expiringProjectCount=$expiringProjectCount, expiredProjectCount=$expiredProjectCount";
+        return "Notification emails: expiringProjectCount=$expiringProjectCount, expiredProjectCount=$expiredProjectCount, autoCloseProjectCount=$autoCloseProjectCount";
     }
     //Expiring - Upcoming expiration notification
     public function sendExpiringProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
@@ -1327,10 +1332,14 @@ class ReminderUtil
     }
 
     //K (cron auto-close): Auto-close project request
-    public function closeExpiredProject( $testing=false ) {
+    public function closeExpiredProject( $projectSpecialty, $testing=false ) {
 
         //Apply project request auto-closure after expiration rule to this project request type: [Yes/No] and default to “Yes” by default
         //$projectExprApplyChangeStatus
+        //$projectExprApplyChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprApplyChangeStatus',$project);
+        //if( $projectExprApplyChangeStatus === false ) {
+        //    return false;
+        //}
 
         //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
         //(leave blank to never auto-close): [90] - default to 90 (days)
@@ -1343,6 +1352,190 @@ class ReminderUtil
         //2) cron: auto-close project after $projectExprDurationChangeStatus(90 days) after expiration date
         //   if now+$projectExprDurationChangeStatus(90 days) > expectedExpirationDate(project expiration date)
 
+    }
+    //K (cron auto-close): Auto-close project request
+    public function closeExpiredProjectPerSpecialty($projectSpecialty, $testing=false) {
+
+        $transresUtil = $this->container->get('transres_util');
+        $newline = "\r\n";
+        $newline = "<br>";
+
+        //Apply project request auto-closure after expiration rule to this project request type
+        $projectExprApplyChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprApplyChangeStatus',null,$projectSpecialty);
+        if( !$projectExprApplyChangeStatus ) {
+            return false;
+        }
+
+        //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
+        $projectExprDurationChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprDurationChangeStatus',null,$projectSpecialty);
+        if( !$projectExprDurationChangeStatus ) {
+            return false;
+        }
+
+        //This automatic status switch should only be done ONCE per project ID + Expiration Date value combination (autoClosureCounter)
+
+        //now   > expirationDate + $projectExprDurationChangeStatus(days)
+        $now = new \DateTime();
+        $nowStr = $now->format('Y-m-d');
+        //echo "nowStr=$nowStr <br>";
+
+        //$projectExprDurationChangeStatus in days
+        //$projectExprDurationChangeStatus = 1; //testing
+        //$projectExprDurationChangeStatus = 365*8; //testing
+
+        //echo "projectExprDurationChangeStatus=$projectExprDurationChangeStatus <br>";
+        $addDaysStr = "-".$projectExprDurationChangeStatus." days";
+        $autoCloseDate = new \DateTime($addDaysStr); //now - duration days
+        $autoCloseDateStr = $autoCloseDate->format('Y-m-d');
+        echo "autoCloseDateStr=$autoCloseDateStr <br>";
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $dql->where("projectSpecialty.id = :specialtyId");
+        $params["specialtyId"] = $projectSpecialty->getId();
+
+        //only for non-funded projects. Ignore all funded projects
+        $dql->andWhere("project.funded != TRUE");
+
+        //only with expectedExpirationDate
+        $dql->andWhere("project.expectedExpirationDate IS NOT NULL");
+
+        //$dql->andWhere("project.state = 'final_approved'");
+        $dql->andWhere("project.state = :approved");
+        $params['approved'] = "final_approved";
+
+        //$dql->andWhere(':nowDate > project.expectedExpirationDate');
+        //$params['nowDate'] = $nowStr;
+
+        //expirationDate ------------ now
+        $dql->andWhere('(:nowDate > project.expectedExpirationDate)');
+        $params['nowDate'] = $nowStr;
+
+        //expirationDate ------------ +90 days ------------ now
+        $dql->andWhere('(:autoCloseDate > project.expectedExpirationDate)');
+        $params['autoCloseDate'] = $autoCloseDateStr;
+
+        $dql->orderBy("project.id","DESC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(
+            $params
+        );
+
+        $projects = $query->getResult();
+        if( $testing ) {
+            echo "$projectSpecialty count auto-closure projects=" . count($projects) . "$newline $newline";
+        }
+
+        $projectCounter = 0;
+
+        foreach( $projects as $project ) {
+
+            $projectExpirationStr = "Unknown";
+            $expirationDate = $project->getExpectedExpirationDate();
+            if( $expirationDate ) {
+                $projectExpirationStr = $expirationDate->format("m/d/Y");
+            }
+            echo $projectCounter.": Auto-close project ".$project->getOid().", state=".$project->getState().", funded=".$project->isFunded().", exp=".$projectExpirationStr."<br>";
+
+            //$res = $this->autoCloseExpiredProject($project,$testing);
+            $res = true;
+            if( $res ) {
+                $projectCounter++;
+            }
+        }
+
+        return $projectCounter;
+    }
+    public function autoCloseExpiredProject( $project, $testing=false ) {
+        if( !$project ) {
+            return false;
+        }
+
+        //only for non-funded projects. clear for all funded projects.
+        if( $project->getFunded() ) {
+            return false;
+        }
+
+        //AutoClosureCounter = “Notified Once” / NULL
+        $autoClosureCounter = $project->getAutoClosureCounter();
+        if( $autoClosureCounter ) {
+            return false;
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectExprApplyChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprApplyChangeStatus',$project);
+        if( $projectExprApplyChangeStatus === false ) {
+            return false;
+        }
+
+        //Default number of days after the project request expiration date when the project request status should be set to 'Closed'
+        $projectExprDurationChangeStatus = $transresUtil->getTransresSiteProjectParameter('projectExprDurationChangeStatus',$project);
+        if( !$projectExprDurationChangeStatus ) {
+            return false;
+        }
+
+        $projectExpirationStr = "Unknown";
+        $expirationDate = $project->getExpectedExpirationDate();
+        if( $expirationDate ) {
+            $projectExpirationStr = $expirationDate->format("m/d/Y");
+        }
+
+        //Close project
+        $project->setState("closed");
+
+        //AutoClosureCounter = “Notified Once” / NULL
+        $project->incrementAutoClosureCounter();
+
+        if( $testing === false ) {
+            $this->em->flush();
+        }
+
+        //////////////// email ////////////////
+        $break = "<br>";
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailSubject = "Your project request ".$project->getOid()." has been auto closed";
+
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
+        $emailBody = "Your project request ".$project->getOid().
+            " has been auto closed $projectExprDurationChangeStatus days after its expiration date $projectExpirationStr.";
+
+        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //after project canceled
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+
+        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+
+        if( $testing === false ) {
+            $emailUtil->sendEmail($requesterEmails, $emailSubject, $emailBody, $adminsCcs, $senderEmail);
+        }
+        //////////////// EOF email ////////////////
+
+        //EventLog
+        $eventType = "Project Canceled";
+        $msg = "Project auto-close notification email sent to requesters=".implode(",",$requesterEmails)."; adminsCcs=".implode(",",$adminsCcs)."<br>".
+            "Subject:<br>".$emailSubject . "<br><br>Body:<br>" . $emailBody;
+        if( $testing === false ) {
+            $transresUtil->setEventLog($project,$eventType,$msg);
+        } else {
+            echo "<br>Auto-Close msg=$msg<br>";
+        }
+
+        return true;
     }
 }
 

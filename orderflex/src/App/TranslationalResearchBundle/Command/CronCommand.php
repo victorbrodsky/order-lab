@@ -151,7 +151,7 @@ class CronCommand extends Command {
 //        ////////////// Auto-close expired projects //////////////
 //        $testing = false;
 //        //$testing = true;
-//        $closeExpiredProject = $transresReminderUtil->closeExpiredProject($testing);
+//        $closeExpiredProject = $transresReminderUtil->closeExpiredProjectPerSpecialty($testing);
 //        $results = $results . "; " . $closeExpiredProject;
 //        ////////////// EOF Auto-close expired projects //////////////
 
