@@ -2735,6 +2735,15 @@ class Project {
         }
         return $admins;
     }
+    
+    public function getExpectedExpirationDateStr() {
+        $expDateStr = NULL;
+        $expDate = $this->getExpectedExpirationDate();
+        if( $expDate ) {
+            $expDateStr = $expDate->format('m/d/Y'); //same format as in the project form
+        }
+        return $expDateStr;
+    }
 
     public function getEntityName() {
         return "Project";

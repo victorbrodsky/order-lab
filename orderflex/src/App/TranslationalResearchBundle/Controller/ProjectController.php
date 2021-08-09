@@ -27,6 +27,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1452,6 +1453,8 @@ class ProjectController extends OrderAbstractController
         $originalProjectSpecialty = $project->getProjectSpecialty();
         $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
         $originalNoBudgetLimit = $project->getNoBudgetLimit();
+        $originalState = $project->getState();
+        $originalExpDate = $project->getExpectedExpirationDate();
 
         //IRB Reviews
         $originalIrbReviews = new ArrayCollection();
@@ -1494,9 +1497,26 @@ class ProjectController extends OrderAbstractController
 
         $form->handleRequest($request);
 
+//        //TODO: "closed" -> Any except "canceled" => check exp date (do it in the JS)
+//        $currentState = $project->getState();
+//        $currentExpDate = $project->getExpectedExpirationDate();
+//        if( $originalState != $currentState ) {
+//            if( $originalExpDate == $currentExpDate ) {
+//                if ($originalState == "closed" && $currentState != "canceled") {
+//                    //if $currentExpDate is equal or older than (today’s date + 7 days)
+//                    $plusSevenDaysDate = new \DateTime('+ 7 days');
+//                    if( $currentExpDate > $plusSevenDaysDate ) {
+//                        //Please update the expected expiration date to a future date.
+//                        $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
+//                    }
+//                }
+//            }
+//        }
+//        $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //exit("Project update submitted");
+            exit("Project update submitted");
 
             $project->setUpdateUser($user);
             $project->setUpdateDate();

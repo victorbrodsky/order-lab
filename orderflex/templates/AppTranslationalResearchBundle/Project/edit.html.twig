@@ -22,6 +22,9 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+    <input type="hidden" id="projectOriginalState" value="{{ transres_util.getStateLabelByProject(project) }}" />
+    <input type="hidden" id="projectOriginalExpDateStr" value="{{ project.getExpectedExpirationDateStr() }}" />
+
     <div id="add-new-user-modal-prototype"></div>
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}

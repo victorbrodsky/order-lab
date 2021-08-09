@@ -305,6 +305,37 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
+    //TODO: "closed" -> Any except "canceled" => check exp date
+    var projectOriginalState = $("#projectOriginalState").val(); //Closed
+    var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
+    //var projectCurrentState = $("#oleg_translationalresearchbundle_project_state").select2().val();
+    var projectCurrentExpDateStr = $("#oleg_translationalresearchbundle_project_expectedExpirationDate").val();
+    var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
+    var projectCurrentStateValue = projectCurrentStateData.text; //Closed
+    console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
+    console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
+    if( projectOriginalState != projectCurrentStateValue ) {
+        if( projectOriginalExpDateStr == projectCurrentExpDateStr ) {
+            if( projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled" ) {
+                //if $currentExpDate is equal or older than (today’s date + 7 days)
+                //$plusSevenDaysDate = new \DateTime('+ 7 days');
+                // if( $currentExpDate > $plusSevenDaysDate ) {
+                //     //Please update the expected expiration date to a future date.
+                //     $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
+                // }
+            }
+        }
+    }
+    if( 1 ) {
+        var msg = "Please update the expected expiration date to a future date";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+        transresShowBtn();
+        return false;
+    } else {
+        //validate fields
+    }
+
     //transresShowBtn();
 
     //console.log("No Error");

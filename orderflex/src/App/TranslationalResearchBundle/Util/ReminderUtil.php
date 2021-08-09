@@ -962,7 +962,7 @@ class ReminderUtil
             $expiredProjectCount = $expiredProjectCount + $this->sendExpiredProjectReminderPerSpecialty($projectSpecialty,$testing);
 
             //3) auto-closure after expiration
-            ////$autoCloseProjectCount = $autoCloseProjectCount + $this->closeExpiredProjectPerSpecialty($projectSpecialty,$testing);
+            $autoCloseProjectCount = $autoCloseProjectCount + $this->closeExpiredProjectPerSpecialty($projectSpecialty,$testing);
         }
 
         if( $testing ) {
