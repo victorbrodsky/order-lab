@@ -305,55 +305,46 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
-    //TODO: "closed" -> Any except "canceled" => check exp date
-    var projectOriginalState = $("#projectOriginalState").val(); //Closed
-    var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
-    //var projectCurrentState = $("#oleg_translationalresearchbundle_project_state").select2().val();
-    var projectCurrentExpDateStr = $("#oleg_translationalresearchbundle_project_expectedExpirationDate").val();
-    var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
-    var projectCurrentStateValue = projectCurrentStateData.text; //Closed
-    console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
-    console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
-    if( projectOriginalState != projectCurrentStateValue ) {
-        //if( projectOriginalExpDateStr == projectCurrentExpDateStr ) { //exp date left unchanged
-            if( projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled" ) {
-                //if $currentExpDate is equal or older than (today’s date + 7 days)
-                //$plusSevenDaysDate = new \DateTime('+ 7 days');
-                // if( $currentExpDate > $plusSevenDaysDate ) {
-                //     //Please update the expected expiration date to a future date.
-                //     $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
-                // }
-
+    //"Closed" -> Any except "Canceled" => check exp date (only non-funded projects)
+    var projectFundedValue = $("#oleg_translationalresearchbundle_project_funded").is(":checked");
+    //console.log("projectFundedValue="+projectFundedValue);
+    if( !projectFundedValue ) {
+        var projectOriginalState = $("#projectOriginalState").val(); //Closed
+        var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
+        var projectCurrentExpDateStr = $("#oleg_translationalresearchbundle_project_expectedExpirationDate").val();
+        var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
+        var projectCurrentStateValue = projectCurrentStateData.text; //Closed
+        //console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
+        //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
+        if (projectOriginalState != projectCurrentStateValue) {
+            //if( projectOriginalExpDateStr == projectCurrentExpDateStr ) { //exp date left unchanged
+            if (projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled") {
                 //Create exp date object
-                //year, month, day, hours, minutes, seconds, milliseconds
-                //var projectCurrentExpDateObject = new Date(expYear,expMonth,expDay);
                 var timestamp = Date.parse(projectCurrentExpDateStr);
                 var projectCurrentExpDateObject = new Date(timestamp);
-
+                //Create date + 7 days object
                 var today = new Date();
                 var todayPlusSevenDaysObject = new Date();
-                todayPlusSevenDaysObject.setDate(today.getDate()+8);
-
-                console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
-                if( todayPlusSevenDaysObject >= projectCurrentExpDateObject ) {
-                    var msg = "Please update the expected expiration date "+projectCurrentExpDateStr+" to a future date, at least 7 days ahead";
+                todayPlusSevenDaysObject.setDate(today.getDate() + 7);
+                //console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
+                if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
+                    var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
                     $("#projectError").show();
                     $("#projectError").html(msg);
                     transresShowBtn();
                     return false;
                 }
             }
-        //}
+            //}
+        }
     }
-    if( 1 ) {
-        var msg = "Test error";
-        $("#projectError").show();
-        $("#projectError").html(msg);
-        transresShowBtn();
-        return false;
-    } else {
-        //validate fields
-    }
+    // if( 1 ) {
+    //     var msg = "Test error";
+    //     $("#projectError").show();
+    //     $("#projectError").html(msg);
+    //     transresShowBtn();
+    //     return false;
+    // }
 
     //transresShowBtn();
 

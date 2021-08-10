@@ -1453,8 +1453,8 @@ class ProjectController extends OrderAbstractController
         $originalProjectSpecialty = $project->getProjectSpecialty();
         $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
         $originalNoBudgetLimit = $project->getNoBudgetLimit();
-        $originalState = $project->getState();
-        $originalExpDate = $project->getExpectedExpirationDate();
+        //$originalState = $project->getState();
+        //$originalExpDate = $project->getExpectedExpirationDate();
 
         //IRB Reviews
         $originalIrbReviews = new ArrayCollection();
@@ -1476,7 +1476,6 @@ class ProjectController extends OrderAbstractController
         foreach ($project->getFinalReviews() as $review) {
             $originalFinalReviews->add($review);
         }
-        $originalProjectState = $project->getState();
         ///////////// EOF get originals /////////////
 
         $form = $this->createProjectForm($project,$cycle,$request); //edit
@@ -1497,7 +1496,7 @@ class ProjectController extends OrderAbstractController
 
         $form->handleRequest($request);
 
-//        //TODO: "closed" -> Any except "canceled" => check exp date (do it in the JS)
+//        //"closed" -> Any except "canceled" => check exp date (do it in the JS transresValidateProjectForm)
 //        $currentState = $project->getState();
 //        $currentExpDate = $project->getExpectedExpirationDate();
 //        if( $originalState != $currentState ) {
@@ -1512,7 +1511,6 @@ class ProjectController extends OrderAbstractController
 //                }
 //            }
 //        }
-//        $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -1573,7 +1571,7 @@ class ProjectController extends OrderAbstractController
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;
-//            if( $originalProjectState != $project->getState() ) {
+//            if( $originalState != $project->getState() ) {
 //                $eventResetMsg = $transresUtil->resetReviewDecision($project);
 //            }
 
