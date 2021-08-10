@@ -315,7 +315,7 @@ function transresValidateProjectForm() {
     console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
     console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
     if( projectOriginalState != projectCurrentStateValue ) {
-        if( projectOriginalExpDateStr == projectCurrentExpDateStr ) {
+        //if( projectOriginalExpDateStr == projectCurrentExpDateStr ) { //exp date left unchanged
             if( projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled" ) {
                 //if $currentExpDate is equal or older than (today’s date + 7 days)
                 //$plusSevenDaysDate = new \DateTime('+ 7 days');
@@ -323,11 +323,30 @@ function transresValidateProjectForm() {
                 //     //Please update the expected expiration date to a future date.
                 //     $form->get('expectedExpirationDate')->addError(new FormError('Please update the expected expiration date to a future date.'));
                 // }
+
+                //Create exp date object
+                //year, month, day, hours, minutes, seconds, milliseconds
+                //var projectCurrentExpDateObject = new Date(expYear,expMonth,expDay);
+                var timestamp = Date.parse(projectCurrentExpDateStr);
+                var projectCurrentExpDateObject = new Date(timestamp);
+
+                var today = new Date();
+                var todayPlusSevenDaysObject = new Date();
+                todayPlusSevenDaysObject.setDate(today.getDate()+8);
+
+                console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
+                if( todayPlusSevenDaysObject >= projectCurrentExpDateObject ) {
+                    var msg = "Please update the expected expiration date "+projectCurrentExpDateStr+" to a future date, at least 7 days ahead";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+                    transresShowBtn();
+                    return false;
+                }
             }
-        }
+        //}
     }
     if( 1 ) {
-        var msg = "Please update the expected expiration date to a future date";
+        var msg = "Test error";
         $("#projectError").show();
         $("#projectError").html(msg);
         transresShowBtn();
