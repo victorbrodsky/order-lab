@@ -2702,10 +2702,10 @@ class TransResRequestUtil
 
             $filterTypes[] = '[[hr]]';
 
-            $filterTypes[$lowercaseName] = "All ".$workQueue->getName()." Work Queue";
+            $filterTypes[$lowercaseName] = "Entire ".$workQueue->getName()." Work Queue";
 
-            $lowercaseName = $lowercaseName."-incomplete";
-            $filterTypes[$lowercaseName] = "Incomplete ".$workQueue->getName()." Work Queue";
+            $lowercaseName = $lowercaseName."-pending";
+            $filterTypes[$lowercaseName] = "Pending ".$workQueue->getName()." Work Queue";
             //$filterTypes[$workQueue->getId()] = "All ".$workQueue->getName()." Work Queue";
         }
 

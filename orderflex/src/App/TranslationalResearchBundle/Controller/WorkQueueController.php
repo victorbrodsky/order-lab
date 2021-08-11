@@ -223,7 +223,7 @@ class WorkQueueController extends OrderAbstractController
             if( $workqueue == 'all' ) {
                 return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
                     array(
-                        'title' => "All " . $title,
+                        'title' => "Entire " . $title,
                         //'filter[projectSpecialty][]' => ""
                         'filter[]' => ""
                     )
@@ -231,10 +231,10 @@ class WorkQueueController extends OrderAbstractController
             }
 
             //Case 'incomplete'
-            if( strpos($workqueue, '-incomplete') !== false ) {
+            if( strpos($workqueue, '-pending') !== false ) {
                 //echo "Case incomplete = [$workqueue]<br>";
                 //status NOT equal to “Completed”
-                $workqueueName = str_replace('-incomplete', '', $workqueue);
+                $workqueueName = str_replace('-pending', '', $workqueue);
                 $workqueueName = str_replace('-', ' ', $workqueueName);
                 //echo "workqueueName=[$workqueueName]<br>";
 
@@ -243,7 +243,7 @@ class WorkQueueController extends OrderAbstractController
 
                     $incompleteFilter = array(
                         'filter[workQueues][]' => $workqueueEntity->getId(),
-                        'title' => "Incomplete " . $title
+                        'title' => "Pending " . $title
                     );
 
                     $requestedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('requested');
@@ -295,7 +295,7 @@ class WorkQueueController extends OrderAbstractController
                     return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
                         array(
                             'filter[workQueues][]'=>$workqueueEntity->getId(),
-                            'title' => "All " . $title
+                            'title' => "Entire " . $title
                         )
                     );
                 }
@@ -381,7 +381,7 @@ class WorkQueueController extends OrderAbstractController
             }
             //$workqueueEntity = $transresUtil->getWorkQueueObject($workqueueName);
             if( count($workQueueNameArr) > 0 ) {
-                $title = $title . " " . implode(", ",$workQueueNameArr);
+                $title = $title . " for " . implode(", ",$workQueueNameArr);
             }
 
             if( count($workQueues) == 1 ) {
@@ -654,8 +654,10 @@ class WorkQueueController extends OrderAbstractController
 
         $matchingStrProductstIds = $transresUtil->getMatchingProductArrByDqlParameters($dql,$dqlParameters);
         $allProductsts = count($matchingStrProductstIds);
-        $allGlobalRequests = $transresUtil->getTotalProductsCount();
-        $title = $title . " (Matching " . $allProductsts . ", Total " . $allGlobalRequests . ")";
+        //$allGlobalRequests - This should be the total of all ordered orderables across all work requests, but only for a given “Performing Lab” (i.e. MISI or CTP)
+        //echo "workQueues count=".count($workQueues)."<br>";
+        $allGlobalRequests = $transresUtil->getTotalProductsCount($workQueues);
+        $title = $title . " (Matching Orderables " . $allProductsts . ", Total " . $allGlobalRequests . ")";
 
         $formArray = array(
             'products' => $products,

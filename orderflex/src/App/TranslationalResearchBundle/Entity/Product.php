@@ -85,7 +85,7 @@ class Product {
      */
     private $notInInvoice;
 
-    //TODO: 16- In Platform List manager, add a new list titled “Orderable Status” with the following values:
+    //16- In Platform List manager, add a new list titled “Orderable Status” with the following values:
     // “Requested”, “Pending Additional Info”, “In Progress”, and “Completed”.
     // For each ordered product in the Work request, add a field titled “Orderable Status”
     // with a single-select Select2 listing all the list values. Only show this field on

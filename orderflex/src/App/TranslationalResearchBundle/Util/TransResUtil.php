@@ -6335,12 +6335,32 @@ class TransResUtil
         return $requestIds;
     }
 
-    public function getTotalProductsCount() {
+    //TODO: filter products by work queue type (MISI or CTP)
+    public function getTotalProductsCount( $workQueues=array() ) {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
         $dql = $repository->createQueryBuilder("product");
         $dql->select('COUNT(product)');
 
+        $dqlParameters = array();
+
+        if( count($workQueues) > 0 ) {
+            //products
+            $dql->leftJoin('product.category', 'category');
+            $dql->leftJoin('category.workQueues', 'workQueues');
+
+            //prices
+            $dql->leftJoin('category.prices', 'prices');
+            $dql->leftJoin('prices.workQueues', 'priceWorkQueues');
+
+            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            $dqlParameters["workQueues"] = $workQueues;
+        }
+
         $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
 
         //$count = -1;
         $count = $query->getSingleScalarResult();
