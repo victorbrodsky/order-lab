@@ -6335,7 +6335,7 @@ class TransResUtil
         return $requestIds;
     }
 
-    //TODO: filter products by work queue type (MISI or CTP)
+    //filter products by work queue type ($workQueues as array: MISI or CTP)
     public function getTotalProductsCount( $workQueues=array() ) {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
         $dql = $repository->createQueryBuilder("product");
@@ -6352,6 +6352,12 @@ class TransResUtil
             $dql->leftJoin('category.prices', 'prices');
             $dql->leftJoin('prices.workQueues', 'priceWorkQueues');
 
+            //$dql->andWhere("workQueues.id IN (:workQueues)");
+            //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
+
+            //issue (same as in WorkQueueController, filter by $workQueues): it shows requests with both queues in default price and in specific price
+            //for example, if product has default MISI and specific CTP, this product will be shown for both MISI and CTP work queue filter
+            //TODO: must filter by project price list
             $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
             $dqlParameters["workQueues"] = $workQueues;
         }

@@ -325,6 +325,8 @@ class WorkQueueController extends OrderAbstractController
         $dql->leftJoin('product.transresRequest','transresRequest');
         $dql->leftJoin('transresRequest.project','project');
 
+        $dql->leftJoin('project.priceList','priceList');
+
         //$dql->leftJoin('project.principalInvestigators','principalInvestigators');
         //$dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
@@ -372,6 +374,20 @@ class WorkQueueController extends OrderAbstractController
         //$dqlParameters["workQueues"] = $workQueuesId;
 
         if( $workQueues && count($workQueues) > 0 ) {
+            //$dql->leftJoin('product.category','category');
+            //$dql->leftJoin('category.workQueues','workQueues');
+
+            //$dql->leftJoin('prices.priceList','pricePriceList');
+            //$dql->andWhere("priceList.id = pricePriceList.id");
+
+            //$dql->andWhere("((workQueues.id IN (:workQueues) AND priceList.id = pricePriceList.id) OR (priceWorkQueues.id IN (:workQueues) AND priceList.id = pricePriceList.id))");
+
+            //$dql->andWhere("workQueues.id IN (:workQueues)");
+            //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
+
+            //issue: it shows requests with both queues in default price and in specific price
+            //for example, if product has default MISI and specific CTP, this product will be shown for both MISI and CTP work queue filter
+            //TODO: must filter by project price list
             $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
             $dqlParameters["workQueues"] = $workQueues;
 
@@ -605,7 +621,7 @@ class WorkQueueController extends OrderAbstractController
 
         if( $priceList ) {
             if( $priceList != 'all' ) {
-                $dql->leftJoin('project.priceList','priceList');
+                //$dql->leftJoin('project.priceList','priceList');
                 if( $priceList == 'default' ) {
                     $dql->andWhere("priceList.id IS NULL");
                 } else {
