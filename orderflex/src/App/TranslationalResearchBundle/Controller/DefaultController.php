@@ -141,6 +141,32 @@ class DefaultController extends OrderAbstractController
         //$transresReminderUtil = $this->container->get('transres_reminder_util');
         //$transresReminderUtil->sendProjectExpirationReminder(true); //$testing=true
         //exit('111');
+
+//        $allFees = $transresUtil->getFees();
+//        echo "allFees=".count($allFees)."<br><br>";
+//        $totalCount = 0;
+//        $count = 0;
+//        foreach($allFees as $fee) {
+//            $exist = false;
+//            $productId = $fee->getProductId();
+//            if( $productId && strpos($productId, 'TRP-') !== false ) {
+//                $exist = true;
+//            }
+//            if( $productId && strpos($productId, 'MISI-') !== false ) {
+//                $exist = true;
+//            }
+//            if( !$exist ) {
+//                $count++;
+//                echo $count.": ".$fee->getShortInfo()."<br>";
+//            }
+//
+//            $totalCount++;
+//            echo $totalCount.": ".$fee->getShortInfo()."<br>";
+//        }
+//        echo "<br><br>";
+        
+        $res = $transresUtil->syncFeeAndWorkQueue($testing=true);
+        exit($res);
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

@@ -7561,8 +7561,61 @@ class TransResUtil
         return $entity;
     }
 
+    public function syncFeeAndWorkQueue( $testing=false ) {
+
+        //$testing = false;
+        //$testing = true;
+
+        //get only fees without Work Queues
+        $withWorkQueue = false;
+
+        $logCtp = array();
+        $ctpWorkQueue = $this->getWorkQueueObject("CTP Lab");
+        if( $ctpWorkQueue ) {
+            $trpFees = $this->getFees('TRP-',$withWorkQueue);
+            foreach ($trpFees as $trpFee) {
+                $res = $this->assignWorkQueueToFee($trpFee, $ctpWorkQueue);
+                if( $res ) {
+                    $logCtp[] = $trpFee->getShortInfo();
+                }
+            }
+        }
+
+        $logMisi = array();
+        $misiWorkQueue = $this->getWorkQueueObject("MISI Lab");
+        if( $misiWorkQueue ) {
+            $misiFees = $this->getFees('MISI-',$withWorkQueue);
+            foreach ($misiFees as $misiFee) {
+                $res = $this->assignWorkQueueToFee($misiFee, $misiWorkQueue);
+                if( $res ) {
+                    $logMisi[] = $misiFee->getShortInfo();
+                }
+            }
+        }
+
+        $ctpMsg = count($logCtp)." CTP Lab assigned: ".implode(", ",$logCtp);
+        $misiMsg = count($logMisi)." MISI Lab assigned: ".implode(", ",$logMisi);
+
+        if( $testing == false ) {
+            if( count($logCtp) > 0 || count($logMisi) > 0 ) {
+                $this->em->flush();
+            }
+
+            //event log
+            if( count($logCtp) > 0 ) {
+                $eventType = "List Updated";
+                $this->setEventLog(null,$eventType,$ctpMsg);
+            }
+            if( count($logMisi) > 0 ) {
+                $eventType = "List Updated";
+                $this->setEventLog(null,$eventType,$misiMsg);
+            }
+        }
+
+        return "Assigned Lab:<br>" . $ctpMsg . "<br><br>" . $misiMsg;
+    }
     //$productId - full or partial productId
-    public function getFees( $productId=NULL ) {
+    public function getFees( $productId=NULL, $withWorkQueue=NULL ) {
 
         $dqlParameters = array();
 
@@ -7579,6 +7632,17 @@ class TransResUtil
             $dqlParameters["productId"] = "%".$productId."%";
         }
 
+        if( $withWorkQueue !== NULL ) {
+            if( $withWorkQueue === true ) {
+                $dql->leftJoin("list.workQueues", "workQueues");
+                $dql->andWhere("workQueues IS NOT NULL");
+            }
+            if( $withWorkQueue === false ) {
+                $dql->leftJoin("list.workQueues", "workQueues");
+                $dql->andWhere("workQueues IS NULL");
+            }
+        }
+
         $dql->orderBy("list.orderinlist","ASC");
 
         $query = $this->em->createQuery($dql);
@@ -7590,23 +7654,6 @@ class TransResUtil
         $categories = $query->getResult();
 
         return $categories;
-    }
-    public function syncFeeAndWorkQueue() {
-        $ctpWorkQueue = $this->getWorkQueueObject("CTP Lab");
-        if( $ctpWorkQueue ) {
-            $trpFees = $this->getFees('TRP-');
-            foreach ($trpFees as $trpFee) {
-                $this->assignWorkQueueToFee($trpFee, $ctpWorkQueue);
-            }
-        }
-
-        $misiWorkQueue = $this->getWorkQueueObject("MISI Lab");
-        if( $misiWorkQueue ) {
-            $misiFees = $this->getFees('MISI-');
-            foreach ($misiFees as $misiFee) {
-                $this->assignWorkQueueToFee($misiFee, $misiWorkQueue);
-            }
-        }
     }
     public function assignWorkQueueToFee( $fee, $workQueue ) {
         if( !$fee ) {
@@ -7621,6 +7668,16 @@ class TransResUtil
         //add only if WorkQueue does not exists
         if( $currentWorkQueues && count($currentWorkQueues) == 0 ) {
             $fee->addWorkQueue($workQueue);
+
+            //assign Work Queue to specific price
+            foreach( $fee->getPrices() as $specificPrice ) {
+                $specificPriceWorkQueues = $specificPrice->getWorkQueues();
+                if( $specificPriceWorkQueues && count($specificPriceWorkQueues) == 0 ) {
+                    //echo "added (".$fee->getShortInfo().") $workQueue to $specificPrice <br>";
+                    $specificPrice->addWorkQueue($workQueue);
+                }
+            }
+
             //$this->em->flush();
             return true;
         }

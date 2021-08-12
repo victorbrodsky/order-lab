@@ -9939,25 +9939,18 @@ class AdminController extends OrderAbstractController
 
         //sync fees with $productId 'TRP-' and 'MISI-' => CTP or MISI Work Queues respectively
         //TODO: assign CTP or MISI Work Queues according to the $productId: all 'TRP' -> CTP Work Queue, all 'MISI' -> MISI Work Queue.
-//        $trpFees = $transresUtil->getFees('TRP-');
-//        foreach($trpFees as $trpFee) {
-//            $this->assignWorkQueueToFee($trpFee,$ctpWorkQueue);
-//        }
-//        $misiFees = $transresUtil->getFees('MISI-');
         $transresUtil->syncFeeAndWorkQueue();
 
         return round($count/10);
     }
-    public function assignWorkQueueToFee( $fee, $workQueue ) {
-        if( !$fee ) {
-            return NULL;
-        }
-        if( !$workQueue ) {
-            return NULL;
-        }
-
-
-    }
+//    public function assignWorkQueueToFee( $fee, $workQueue ) {
+//        if( !$fee ) {
+//            return NULL;
+//        }
+//        if( !$workQueue ) {
+//            return NULL;
+//        }
+//    }
 
 
     //add all MD users to "Pathology Result Signatories" (set the name of each list item to "FirstName LastName, MD" and set the "Object ID" to the corresponding user ID)
