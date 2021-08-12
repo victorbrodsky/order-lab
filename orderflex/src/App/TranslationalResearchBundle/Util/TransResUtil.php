@@ -7621,7 +7621,7 @@ class TransResUtil
         //add only if WorkQueue does not exists
         if( $currentWorkQueues && count($currentWorkQueues) == 0 ) {
             $fee->addWorkQueue($workQueue);
-            $this->em->flush();
+            //$this->em->flush();
             return true;
         }
 
