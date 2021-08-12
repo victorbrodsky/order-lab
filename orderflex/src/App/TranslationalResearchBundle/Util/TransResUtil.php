@@ -6355,7 +6355,8 @@ class TransResUtil
             //$dql->andWhere("workQueues.id IN (:workQueues)");
             //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
 
-            //issue (same as in WorkQueueController, filter by $workQueues): it shows requests with both queues in default price and in specific price
+            //issue (rare, special cases) (same as in WorkQueueController, filter by $workQueues):
+            // it shows requests with both queues in default price and in specific price
             //for example, if product has default MISI and specific CTP, this product will be shown for both MISI and CTP work queue filter
             //TODO: must filter by project price list
             $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
@@ -7516,7 +7517,7 @@ class TransResUtil
 
         return $workQueues;
     }
-    //$specialtyStr: hematopathology, ap-cp
+
     public function getWorkQueueObject($name) {
         //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
 
@@ -7558,6 +7559,73 @@ class TransResUtil
 //        }
 
         return $entity;
+    }
+
+    //$productId - full or partial productId
+    public function getFees( $productId=NULL ) {
+
+        $dqlParameters = array();
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dqlParameters["typedef"] = 'default';
+        $dqlParameters["typeadd"] = 'user-added';
+
+        if( $productId ) {
+            $dql->andWhere("list.productId LIKE :productId");
+            $dqlParameters["productId"] = "%".$productId."%";
+        }
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $categories = $query->getResult();
+
+        return $categories;
+    }
+    public function syncFeeAndWorkQueue() {
+        $ctpWorkQueue = $this->getWorkQueueObject("CTP Lab");
+        if( $ctpWorkQueue ) {
+            $trpFees = $this->getFees('TRP-');
+            foreach ($trpFees as $trpFee) {
+                $this->assignWorkQueueToFee($trpFee, $ctpWorkQueue);
+            }
+        }
+
+        $misiWorkQueue = $this->getWorkQueueObject("MISI Lab");
+        if( $misiWorkQueue ) {
+            $misiFees = $this->getFees('MISI-');
+            foreach ($misiFees as $misiFee) {
+                $this->assignWorkQueueToFee($misiFee, $misiWorkQueue);
+            }
+        }
+    }
+    public function assignWorkQueueToFee( $fee, $workQueue ) {
+        if( !$fee ) {
+            return false;
+        }
+        if( !$workQueue ) {
+            return false;
+        }
+
+        $currentWorkQueues = $fee->getWorkQueues();
+
+        //add only if WorkQueue does not exists
+        if( $currentWorkQueues && count($currentWorkQueues) == 0 ) {
+            $fee->addWorkQueue($workQueue);
+            $this->em->flush();
+            return true;
+        }
+
+        return false;
     }
 
     //Project exp date can be updated on final approval, edit project

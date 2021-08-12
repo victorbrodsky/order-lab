@@ -9807,13 +9807,19 @@ class AdminController extends OrderAbstractController
     //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
     public function generateTransResRequestCategoryType() {
 
+        $transresUtil = $this->get('transres_util');
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+
 
         //disable all where productId is NULL
         $query = $em->createQuery("UPDATE AppTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
         $numUpdated = $query->execute();
         //echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
+
+        //WorkQueueList: "MISI Lab", "CTP Lab"
+        $misiWorkQueue = $transresUtil->getWorkQueueObject("MISI Lab");
+        $ctpWorkQueue = $transresUtil->getWorkQueueObject("CTP Lab");
 
         //(rev.08/17) *Contact: Bing He 212-746-6230
         $types = array(
@@ -9912,6 +9918,18 @@ class AdminController extends OrderAbstractController
             $listEntity->setFee($fee);
             $listEntity->setFeeUnit($feeUnit);
 
+            //TODO: assign CTP or MISI Work Queues according to the $productId: all 'TRP' -> CTP Work Queue, all 'MISI' -> MISI Work Queue.
+            if( $misiWorkQueue ) {
+                if( strpos($productId, 'MISI-') !== false ) {
+                    $listEntity->addWorkQueue($misiWorkQueue);
+                }
+            }
+            if( $ctpWorkQueue ) {
+                if( strpos($productId, 'TRP-') !== false ) {
+                    $listEntity->addWorkQueue($ctpWorkQueue);
+                }
+            }
+
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
             $em->flush();
@@ -9919,7 +9937,26 @@ class AdminController extends OrderAbstractController
             $count = $count + 10;
         }
 
+        //sync fees with $productId 'TRP-' and 'MISI-' => CTP or MISI Work Queues respectively
+        //TODO: assign CTP or MISI Work Queues according to the $productId: all 'TRP' -> CTP Work Queue, all 'MISI' -> MISI Work Queue.
+//        $trpFees = $transresUtil->getFees('TRP-');
+//        foreach($trpFees as $trpFee) {
+//            $this->assignWorkQueueToFee($trpFee,$ctpWorkQueue);
+//        }
+//        $misiFees = $transresUtil->getFees('MISI-');
+        $transresUtil->syncFeeAndWorkQueue();
+
         return round($count/10);
+    }
+    public function assignWorkQueueToFee( $fee, $workQueue ) {
+        if( !$fee ) {
+            return NULL;
+        }
+        if( !$workQueue ) {
+            return NULL;
+        }
+
+
     }
 
 
