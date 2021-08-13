@@ -165,7 +165,7 @@ class DefaultController extends OrderAbstractController
 //        }
 //        echo "<br><br>";
         
-        $res = $transresUtil->syncFeeAndWorkQueue($testing=true);
+        $res = $transresUtil->syncFeeAndWorkQueue($testing=true); //$testing=true
         exit($res);
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
