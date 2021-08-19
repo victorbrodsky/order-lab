@@ -385,8 +385,10 @@ class ListController extends OrderAbstractController
         }
 
         if( method_exists($entityClass,'getWorkQueues') ) {
+            //echo "getWorkQueues <br>";
             $dql->leftJoin("ent.workQueues", "workQueues");
-            //$dql->addGroupBy('workQueues');
+            $dql->addGroupBy('workQueues');
+            $useWalker = true;
         }
 
         if( 0 && method_exists($entityClass,'getProjectSpecialties') ) {
