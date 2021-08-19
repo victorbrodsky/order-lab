@@ -6343,7 +6343,7 @@ class TransResUtil
 
         $dqlParameters = array();
 
-        if( count($workQueues) > 0 ) {
+        if( $workQueues && count($workQueues) > 0 ) {
             //products
             $dql->leftJoin('product.category', 'category');
             $dql->leftJoin('category.workQueues', 'workQueues');
