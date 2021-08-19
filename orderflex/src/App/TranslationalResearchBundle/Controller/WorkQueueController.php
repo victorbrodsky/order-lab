@@ -262,7 +262,7 @@ class WorkQueueController extends OrderAbstractController
                     }
 
                     //"Without Status"
-                    $incompleteFilter['filter[orderableStatus][4]'] = "Without Status";
+                    //$incompleteFilter['filter[orderableStatus][4]'] = "Without Status";
 
 //                    $completedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('completed');
 //                    if( $completedStatusEntity ) {

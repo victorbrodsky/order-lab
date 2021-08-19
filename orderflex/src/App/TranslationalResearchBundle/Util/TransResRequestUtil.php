@@ -6160,7 +6160,7 @@ class TransResRequestUtil
             $filterStatusArr[$status->getName()] = $status->getId();
         }
 
-        $filterStatusArr["Without Status"] = "Without Status";
+        //$filterStatusArr["Without Status"] = "Without Status";
 
         return $filterStatusArr;
     }
