@@ -344,7 +344,7 @@ class WorkQueueController extends OrderAbstractController
 
         //prices
         $dql->leftJoin('category.prices','prices');
-        $dql->leftJoin('prices.workQueues','priceWorkQueues');
+        //$dql->leftJoin('prices.workQueues','priceWorkQueues');
 
 //        $dql->leftJoin('transresRequest.submitter','submitter');
 //        $dql->leftJoin('transresRequest.contact','contact');
@@ -388,7 +388,10 @@ class WorkQueueController extends OrderAbstractController
             //issue (rare, special cases): it shows requests with both queues in default price and in specific price
             //for example, if product has default MISI and specific CTP, this product will be shown for both MISI and CTP work queue filter
             //TODO: must filter by project price list
-            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            //$dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+
+            $dql->andWhere("workQueues.id IN (:workQueues)"); //use only workQueues in the default price list
+            
             $dqlParameters["workQueues"] = $workQueues;
 
             $workQueueNameArr = array();

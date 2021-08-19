@@ -1029,6 +1029,11 @@
     {% if form.productId is defined %}
         {{ formmacros.field(form.productId) }}
     {% endif %}
+    {% if form.workQueues is defined %}
+        {{ formmacros.field(form.workQueues) }}
+    {% endif %}
+
+    <hr>
 
     {% if form.fee is defined %}
         {{ formmacros.field(form.fee) }}
@@ -1039,9 +1044,7 @@
     {% if form.initialQuantity is defined %}
         {{ formmacros.field(form.initialQuantity) }}
     {% endif %}
-    {% if form.workQueues is defined %}
-        {{ formmacros.field(form.workQueues) }}
-    {% endif %}
+
     {#{% if form.internalFee is defined %}#}
         {#{{ formmacros.field(form.internalFee) }}#}
     {#{% endif %}#}

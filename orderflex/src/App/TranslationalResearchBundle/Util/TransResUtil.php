@@ -6350,7 +6350,7 @@ class TransResUtil
 
             //prices
             $dql->leftJoin('category.prices', 'prices');
-            $dql->leftJoin('prices.workQueues', 'priceWorkQueues');
+            //$dql->leftJoin('prices.workQueues', 'priceWorkQueues');
 
             //$dql->andWhere("workQueues.id IN (:workQueues)");
             //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
@@ -6358,8 +6358,12 @@ class TransResUtil
             //issue (rare, special cases) (same as in WorkQueueController, filter by $workQueues):
             // it shows requests with both queues in default price and in specific price
             //for example, if product has default MISI and specific CTP, this product will be shown for both MISI and CTP work queue filter
+
             //TODO: must filter by project price list
-            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            //$dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+
+            $dql->andWhere("workQueues.id IN (:workQueues)"); //use only workQueues in the default price list
+
             $dqlParameters["workQueues"] = $workQueues;
         }
 
@@ -7677,13 +7681,15 @@ class TransResUtil
             $fee->addWorkQueue($workQueue);
 
             //assign Work Queue to specific price list
-            foreach( $fee->getPrices() as $specificPrice ) {
-                $specificPriceWorkQueues = $specificPrice->getWorkQueues();
-                if( $specificPriceWorkQueues && count($specificPriceWorkQueues) == 0 ) {
-                    if( $testing ) {
-                        echo "added (" . $fee->getShortInfo() . ") $workQueue to $specificPrice price list <br>";
+            if( 0 ) { //Don't use workQueues for specific price list
+                foreach ($fee->getPrices() as $specificPrice) {
+                    $specificPriceWorkQueues = $specificPrice->getWorkQueues();
+                    if ($specificPriceWorkQueues && count($specificPriceWorkQueues) == 0) {
+                        if ($testing) {
+                            echo "added (" . $fee->getShortInfo() . ") $workQueue to $specificPrice price list <br>";
+                        }
+                        $specificPrice->addWorkQueue($workQueue);
                     }
-                    $specificPrice->addWorkQueue($workQueue);
                 }
             }
 

@@ -2199,15 +2199,17 @@ class RequestController extends OrderAbstractController
 
             //$prices
             $dql->leftJoin('category.prices','prices');
-            $dql->leftJoin('prices.workQueues','priceWorkQueues');
+            //$dql->leftJoin('prices.workQueues','priceWorkQueues');
 
             $workQueuesIdsArr = array();
             foreach($workQueues as $workQueue) {
                 $workQueuesIdsArr[] = $workQueue->getId();
             }
-            //$dql->andWhere("workQueues.id IN (:workQueues)");
+
+            $dql->andWhere("workQueues.id IN (:workQueues)"); //use only workQueues in the default price list
             //$dql->andWhere("priceWorkQueues.id IN (:workQueues)");
-            $dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+            //$dql->andWhere("workQueues.id IN (:workQueues) OR priceWorkQueues.id IN (:workQueues)");
+
             $dqlParameters["workQueues"] = $workQueuesIdsArr;
 
             $advancedFilter++;
