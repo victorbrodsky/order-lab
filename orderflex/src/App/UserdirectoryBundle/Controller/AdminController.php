@@ -9939,7 +9939,12 @@ class AdminController extends OrderAbstractController
 
         //sync fees with $productId 'TRP-' and 'MISI-' => CTP or MISI Work Queues respectively
         //TODO: assign CTP or MISI Work Queues according to the $productId: all 'TRP' -> CTP Work Queue, all 'MISI' -> MISI Work Queue.
-        $transresUtil->syncFeeAndWorkQueue(true); //$testing=true
+        $syncRes = $transresUtil->syncFeeAndWorkQueue(true); //$testing=true
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $syncRes
+        );
 
         return round($count/10);
     }

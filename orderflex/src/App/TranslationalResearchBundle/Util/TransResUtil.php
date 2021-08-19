@@ -7574,7 +7574,7 @@ class TransResUtil
         if( $ctpWorkQueue ) {
             $trpFees = $this->getFees('TRP-',$withWorkQueue);
             foreach ($trpFees as $trpFee) {
-                $res = $this->assignWorkQueueToFee($trpFee, $ctpWorkQueue);
+                $res = $this->assignWorkQueueToFee($trpFee, $ctpWorkQueue, $testing);
                 if( $res ) {
                     $logCtp[] = $trpFee->getShortInfo();
                 }
@@ -7586,7 +7586,7 @@ class TransResUtil
         if( $misiWorkQueue ) {
             $misiFees = $this->getFees('MISI-',$withWorkQueue);
             foreach ($misiFees as $misiFee) {
-                $res = $this->assignWorkQueueToFee($misiFee, $misiWorkQueue);
+                $res = $this->assignWorkQueueToFee($misiFee, $misiWorkQueue, $testing);
                 if( $res ) {
                     $logMisi[] = $misiFee->getShortInfo();
                 }
@@ -7614,7 +7614,9 @@ class TransResUtil
 
         return "Assigned Lab:<br>" . $ctpMsg . "<br><br>" . $misiMsg;
     }
+    //Get fee schedules (product/services) (RequestCategoryTypeList) from DB
     //$productId - full or partial productId
+    //$withWorkQueue - NULL (don't use queues), TRUE (only with queues), FALSE (only without queues)
     public function getFees( $productId=NULL, $withWorkQueue=NULL ) {
 
         $dqlParameters = array();
@@ -7655,7 +7657,7 @@ class TransResUtil
 
         return $categories;
     }
-    public function assignWorkQueueToFee( $fee, $workQueue ) {
+    public function assignWorkQueueToFee( $fee, $workQueue, $testing=false ) {
         if( !$fee ) {
             return false;
         }
@@ -7667,18 +7669,24 @@ class TransResUtil
 
         //add only if WorkQueue does not exists
         if( $currentWorkQueues && count($currentWorkQueues) == 0 ) {
+
+            //assign Work Queue to default price list
+            if( $testing ) {
+                echo "added (" . $fee->getShortInfo() . ") $workQueue to default price list <br>";
+            }
             $fee->addWorkQueue($workQueue);
 
-            //assign Work Queue to specific price
+            //assign Work Queue to specific price list
             foreach( $fee->getPrices() as $specificPrice ) {
                 $specificPriceWorkQueues = $specificPrice->getWorkQueues();
                 if( $specificPriceWorkQueues && count($specificPriceWorkQueues) == 0 ) {
-                    //echo "added (".$fee->getShortInfo().") $workQueue to $specificPrice <br>";
+                    if( $testing ) {
+                        echo "added (" . $fee->getShortInfo() . ") $workQueue to $specificPrice price list <br>";
+                    }
                     $specificPrice->addWorkQueue($workQueue);
                 }
             }
 
-            //$this->em->flush();
             return true;
         }
 
