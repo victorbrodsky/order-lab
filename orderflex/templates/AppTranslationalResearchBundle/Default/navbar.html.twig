@@ -22,7 +22,7 @@
             <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
             {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
-            <li>
+            <li class="dropdown-submenu">
                 <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
             </li>
         {% endif %}
@@ -138,7 +138,6 @@
 
 
                     {#multi-level#}
-                    {% if 1 %}
                     <li id="nav-bar-translationalresearch-projects" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project Requests<b class="caret"></b></a>
                         <ul class="dropdown-menu multi-level">
@@ -270,8 +269,6 @@
 
                         </ul>
                     </li>
-                    {% endif %}
-
 
                     {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
@@ -303,6 +300,33 @@
                         </ul>
                     </li>
                     {#{% endif %}#}
+
+                    {#multi-level#}
+                    <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+
+                            {% if 0 %}
+                                {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
+                                {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                    <li id="nav-bar-translationalresearch-new-standalone-request">
+                                        <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+
+                            {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">My work requests</a>
+                                <ul class="dropdown-menu">
+                                    {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
 
                     {% if
                         is_granted('ROLE_TRANSRES_ADMIN') or
@@ -802,4 +826,5 @@
     </nav>
     
 {% endblock %}
+
 

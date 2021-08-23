@@ -323,41 +323,14 @@
 
 
 {% block additionalcss %}
-
-    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
-    {#{% endstylesheets %}#}
-
-    {#{% stylesheets#}
-    {#'orderassets/apptranslationalresearch/form/css/comments.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-    {#{% stylesheets#}
-    {#'orderassets/appuserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'#}
-    {#'orderassets/apporderform/form/css/handsontable.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
     {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
-
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />#}
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
-
-    {#{% stylesheets#}
-    {#'orderassets/appuserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'#}
-    {#'orderassets/appuserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
 {% endblock %}
 
 

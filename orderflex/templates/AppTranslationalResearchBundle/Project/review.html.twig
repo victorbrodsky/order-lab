@@ -111,6 +111,11 @@
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
 {#{% endblock %}#}
 
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
+{% endblock %}
+
 {% block additionaljs %}
 
     {#{% javascripts#}
