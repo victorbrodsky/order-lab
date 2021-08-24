@@ -22,7 +22,8 @@
             <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
             {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
-            <li class="dropdown-submenu">
+            <li>
+            {#<li class="dropdown-submenu">#}
                 <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
             </li>
         {% endif %}
@@ -104,6 +105,7 @@
                         {#{% endif %}#}
 
 
+                    {% if 0 %}
                     <!-- Test: Level 1 -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
@@ -135,6 +137,7 @@
                         </ul>
                     </li>
                     <!-- EOF Test: Level 1 -->
+                    {% endif %}
 
 
                     {#multi-level#}
@@ -302,6 +305,7 @@
                     {#{% endif %}#}
 
                     {#multi-level#}
+                    {% if 0 %}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
@@ -327,6 +331,7 @@
                             </li>
                         </ul>
                     </li>
+                    {% endif %}
 
                     {% if
                         is_granted('ROLE_TRANSRES_ADMIN') or
