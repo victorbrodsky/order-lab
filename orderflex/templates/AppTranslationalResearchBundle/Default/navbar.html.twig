@@ -17,13 +17,29 @@
 {% import "AppTranslationalResearchBundle/Default/navbar.html.twig" as navbarmacros %}
 
 {% macro createFilterRequestType( filterTypes ) %}
+    {% for key,values in filterTypes %}
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ key }}</a>
+            <ul class="dropdown-menu">
+                {% for value in values %}
+                    {% set filterTypeUrl = value|replace({' ':'-'}) %}
+                    <li>
+                    {#<li class="dropdown-submenu">#}
+                        <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ value }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+{% macro createFilterRequestType_ORIG( filterTypes ) %}
     {% for filterType in filterTypes %}
         {% if filterType == "[[hr]]" %}
             <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
             {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
             <li>
-            {#<li class="dropdown-submenu">#}
+                {#<li class="dropdown-submenu">#}
                 <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
             </li>
         {% endif %}
@@ -105,7 +121,7 @@
                         {#{% endif %}#}
 
 
-                    {% if 0 %}
+                    {% if 1 %}
                     <!-- Test: Level 1 -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
@@ -273,7 +289,7 @@
                         </ul>
                     </li>
 
-                    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+                    {% if 0 %}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -297,15 +313,15 @@
 
                         <hr style="margin-top: 10px; margin-bottom: 10px;">
 
-                        {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
-                        {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
+                        {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType_ORIG() %}
+                        {{ navbarmacros.createFilterRequestType_ORIG(filterRequestTypes) }}
 
                         </ul>
                     </li>
-                    {#{% endif %}#}
+                    {% endif %}
 
                     {#multi-level#}
-                    {% if 0 %}
+                    {% if 1 %}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
@@ -323,12 +339,13 @@
                             {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
 
                             {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
-                            <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">My work requests</a>
-                                <ul class="dropdown-menu">
-                                    {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
-                                </ul>
-                            </li>
+                            {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
+                            {#<li class="dropdown-submenu">#}
+                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">My work requests</a>#}
+                                {#<ul class="dropdown-menu">#}
+                                    {#{{ navbarmacros.createFilterRequestType(filterRequestTypes) }}#}
+                                {#</ul>#}
+                            {#</li>#}
                         </ul>
                     </li>
                     {% endif %}
