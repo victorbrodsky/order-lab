@@ -793,7 +793,7 @@ class ReportGenerator {
 
 
         //delete application temp folder
-        //$this->deleteDir($outdir); //testing: comment out deleteDir for temp converted to PDF files
+        $this->deleteDir($outdir); //testing: comment out deleteDir for temp converted to PDF files
 
         $res = array(
             'filename' => $fileFullReportUniqueName,
@@ -1729,6 +1729,15 @@ class ReportGenerator {
         $filename = str_replace("/","_",$filename);
         $filename = str_replace("\\","_",$filename);
         $filename = str_replace(DIRECTORY_SEPARATOR,"_",$filename);
+
+        //pdftk does not accept brackets '(', ')'
+        $filename = str_replace("(","_",$filename);
+        $filename = str_replace(")","_",$filename);
+        $filename = str_replace("[","_",$filename);
+        $filename = str_replace("]","_",$filename);
+
+        $filename = str_replace("__","_",$filename);
+        $filename = str_replace("___","_",$filename);
 
         return $filename;
     }
