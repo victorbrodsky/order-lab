@@ -2535,6 +2535,92 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         //$filterTypes = array();
 
+        $filterTypes = array();
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+        ) {
+            $elements = array(
+                "My Invoices",
+                "My Outstanding Invoices",
+                "Invoices where I am the PI",
+                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
+                "Invoices where I am the salesperson",
+                //"Unpaid Invoices sent to Me",
+                "Unpaid Invoices where I am the PI",
+            );
+            $filterTypes["My Invoices"] = $elements;
+
+            $elements = array(
+                "Latest Versions of All Invoices Except Canceled",
+                "Latest Versions of All Invoices",
+                "Latest Versions of Issued (Unpaid) Invoices",
+                "Latest Versions of Pending (Unissued) Invoices",
+                "Latest Versions of Paid Invoices",
+                "Latest Versions of Partially Paid Invoices",
+                "Latest Versions of Paid and Partially Paid Invoices",
+                "Latest Versions of Canceled Invoices",
+            );
+            $filterTypes["Latest versions"] = $elements;
+
+            $elements = array(
+                'All Invoices',
+                'All Issued Invoices',
+                'All Pending Invoices',
+            );
+            $filterTypes["All Invoices"] = $elements;
+
+            $elements = array(
+                "Old Versions of All Invoices",
+                "Old Versions of Issued (Unpaid) Invoices",
+                "Old Versions of Pending (Unissued) Invoices",
+                "Old Versions of Paid Invoices",
+                "Old Versions of Partially Paid Invoices",
+                "Old Versions of Paid and Partially Paid Invoices",
+                "Old Versions of Canceled Invoices"
+            );
+            $filterTypes["Old versions"] = $elements;
+
+            return $filterTypes;
+        } else {
+            //Show only My Invoices
+//            $filterTypes = array(
+//                //'My Invoices (I am Submitter, Salesperson or PI)',
+//                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+//                "My Invoices",
+//                "My Outstanding Invoices",
+//                "Invoices where I am the PI",
+//                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
+//                "Invoices where I am the salesperson",
+//                //"Unpaid Invoices sent to Me",
+//                "Unpaid Invoices where I am the PI",
+//            );
+
+            $elements = array(
+                //'My Invoices (I am Submitter, Salesperson or PI)',
+                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+                "My Invoices",
+                "My Outstanding Invoices",
+                "Invoices where I am the PI",
+                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
+                "Invoices where I am the salesperson",
+                //"Unpaid Invoices sent to Me",
+                "Unpaid Invoices where I am the PI",
+            );
+            $filterTypes["My Invoices"] = $elements;
+
+            return $filterTypes;
+        }
+    }
+    public function getInvoiceFilterPresetType_ORIG() {
+
+        $transresUtil = $this->container->get('transres_util');
+        //$filterTypes = array();
+
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
@@ -2780,6 +2866,39 @@ class TransResRequestUtil
 
     //get allowed filter work queue types for logged in user
     public function getWorkQueuesFilterPresetType() {
+        //$transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        //"CTP Lab Work Queue" and "MISI Lab Work Queue"
+        //$workQueues = $transresUtil->getWorkQueues();
+        $workQueues = $this->getPermittedWorkQueues($user);
+
+        $filterTypes = array();
+
+        //$filterTypes['all'] = "All Work Queue";
+
+        foreach($workQueues as $workQueue) {
+
+            $elements = array();
+
+            //CTP Lab => ctp-lab
+            $lowercaseName = strtolower($workQueue->getName()); //ctp lab
+            $lowercaseName = str_replace(' ','-',$lowercaseName);
+
+            //$filterTypes[$lowercaseName] = "Entire ".$workQueue->getName()." Work Queue";
+            $elements[$lowercaseName] = "Entire ".$workQueue->getName()." Work Queue";
+
+            $lowercaseName = $lowercaseName."-pending";
+            //$filterTypes[$lowercaseName] = "Pending ".$workQueue->getName()." Work Queue";
+            //$filterTypes[$workQueue->getId()] = "All ".$workQueue->getName()." Work Queue";
+            $elements[$lowercaseName] = "Pending ".$workQueue->getName()." Work Queue";
+
+            $filterTypes[$workQueue->getName()] = $elements;
+        }
+
+        return $filterTypes;
+    }
+    public function getWorkQueuesFilterPresetType_ORIG() {
         //$transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
 

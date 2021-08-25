@@ -263,7 +263,7 @@ function setTranslationalResearchNavBar() {
     // if( full.indexOf("/translational-research/projects/") !== -1 ) {
     //     id = 'translationalresearch-projects';
     // }
-    if( full.indexOf("/translational-research/project/new/") !== -1 ) {
+    if( full.indexOf("/translational-research/project/new") !== -1 ) {
         id = 'translationalresearch-projects';
     }
     if( full.indexOf("/translational-research/my-projects") !== -1 ) {
@@ -281,23 +281,31 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/") !== -1 && full.indexOf("projects") !== -1 ) {
         id = 'translationalresearch-projects';
     }
-    
+    if( full.indexOf("/translational-research/active-project-requests-with-approval-expiring-soon") !== -1 ) {
+        id = 'translationalresearch-projects';
+    }
+    if( full.indexOf("/translational-research/approved-project-requests-funded") !== -1 ) {
+        id = 'translationalresearch-projects';
+    }
+
 
     if( full.indexOf("/translational-research/workflow") !== -1 ) {
-        id = 'translationalresearch-project-workflow';
+        id = 'translationalresearch-configuration';
     }
     if( full.indexOf("/translational-research/list/translational-research-work-request-products-and-services") !== -1 ) {
-        id = 'translationalresearch-project-workflow';
+        id = 'translationalresearch-configuration';
     }
     if( full.indexOf("/translational-research/list/antibodies") !== -1 ) {
-        id = 'translationalresearch-project-workflow';
+        id = 'translationalresearch-configuration';
     }
     if( full.indexOf("/translational-research/request/fee-schedule") !== -1 ) {
-        id = 'translationalresearch-project-workflow';
+        id = 'translationalresearch-configuration';
     }
-
     if( full.indexOf("/translational-research/default-reviewers/") !== -1 ) {
-        id = 'translationalresearch-default-reviewers';
+        id = 'translationalresearch-configuration';
+    }
+    if( full.indexOf("/translational-research/substitute-user/") !== -1 ) {
+        id = 'translationalresearch-configuration';
     }
 
     if( full.indexOf("/translational-research/work-request/new/") !== -1 ) {

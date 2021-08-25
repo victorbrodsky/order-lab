@@ -47,6 +47,22 @@
 {% endmacro %}
 
 {% macro createFilterWorkQueuesType( filterTypes ) %}
+    {% for key,values in filterTypes %}
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ key }}</a>
+            <ul class="dropdown-menu">
+                {% for value,workQueueName in values %}
+                    {#{% set filterTypeUrl = value|replace({' ':'-'}) %}#}
+                    {% set filterTypeUrl = value|replace({' ':'-'}) %}
+                    <li>
+                        <a href="{{ path(translationalresearch_sitename~'_work_queue_index',{'workqueue':filterTypeUrl}) }}">{{ workQueueName }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+{% macro createFilterWorkQueuesType_ORIG( filterTypes ) %}
     {% for key, workQueueName in filterTypes %}
         {#<li>{{ key }}: {{ workQueue }}</li>#}
         {% if workQueueName == "[[hr]]" %}
@@ -65,6 +81,9 @@
 {% endmacro %}
 
 {% block navbar %}
+
+    {#{% set simpleMenu = 1 %}#}
+    {% set simpleMenu = 0 %}
 
     <nav class="navbar navbar-default" role="navigation">
 
@@ -121,7 +140,7 @@
                         {#{% endif %}#}
 
 
-                    {% if 1 %}
+                    {% if simpleMenu %}
                     <!-- Test: Level 1 -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
@@ -289,7 +308,7 @@
                         </ul>
                     </li>
 
-                    {% if 0 %}
+                    {% if simpleMenu %}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -321,7 +340,6 @@
                     {% endif %}
 
                     {#multi-level#}
-                    {% if 1 %}
                     <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
@@ -348,12 +366,27 @@
                             {#</li>#}
                         </ul>
                     </li>
-                    {% endif %}
 
                     {% if
                         is_granted('ROLE_TRANSRES_ADMIN') or
                         is_granted('ROLE_TRANSRES_TECHNICIAN')
                     %}
+
+                        {% if simpleMenu %}
+                        <li id="nav-bar-translationalresearch-allmenu-queues" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Queues<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+
+                                {% set filterWorkQueues = transres_request_util.getWorkQueuesFilterPresetType_ORIG() %}
+                                {{ navbarmacros.createFilterWorkQueuesType_ORIG(filterWorkQueues) }}
+
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                        {#multi-level#}
                         <li id="nav-bar-translationalresearch-allmenu-queues" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Queues<b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -373,27 +406,53 @@
                         {#is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or#}
                         {#is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')#}
                     {#%}#}
-                        {% macro createFilterType( filterTypes ) %}
-                            {% for filterType in filterTypes %}
-                                {% if filterType == "[[hr]]" %}
-                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                {% else %}
-                                    {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
-                                    <li id="nav-bar-translationalresearch-all-invoices-my">
-                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endmacro %}
-                        <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
-                                {{ navbarmacros.createFilterType(filterTypes) }}
-                            </ul>
-                        </li>
+                    {% if simpleMenu %}
+                    {% macro createFilterType( filterTypes ) %}
+                        {% for filterType in filterTypes %}
+                            {% if filterType == "[[hr]]" %}
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                            {% else %}
+                                {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
+                                <li id="nav-bar-translationalresearch-all-invoices-my">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endmacro %}
+                    <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% set filterTypes = transres_request_util.getInvoiceFilterPresetType_ORIG() %}
+                            {{ navbarmacros.createFilterType(filterTypes) }}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {% macro createInvoiceFilterType( filterTypes ) %}
+                        {% for key,values in filterTypes %}
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ key }}</a>
+                                <ul class="dropdown-menu">
+                                    {% for value in values %}
+                                        {% set filterTypeUrl = value|replace({' ':'-'}) %}
+                                        <li id="nav-bar-translationalresearch-all-invoices-my">
+                                            <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ value }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    {% endmacro %}
+                    <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
+                            {{ navbarmacros.createInvoiceFilterType(filterTypes) }}
+                        </ul>
+                    </li>
                     {#{% endif %}#}
 
+                    {% if simpleMenu %}
                     {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                         {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
 
@@ -466,6 +525,72 @@
                                     <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody List Management</a>
                                 </li>
                             {% endif %}
+
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {#multi-level#}
+                    <li id="nav-bar-translationalresearch-configuration" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee Schedule</a>
+                            </li>
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                {#Product/Service (Fee Schedule) List Management#}
+                                <li>
+                                    <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Fee schedule management</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody List Management</a>
+                                </li>
+                            {% endif %}
+
+                            {#Reviewers#}
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+
+                                {% if specialties|length > 0 %}
+                                    <li class="dropdown-submenu">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reviewers</a>
+                                        <ul class="dropdown-menu">
+                                            {% for specialty in specialties %}
+                                                <li>
+                                                    <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                                    >Default Reviewers for {{ specialty.getName() }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_substitute_user') }}">Substitute user</a>
+                                </li>
+
+                            {% endif %}
+
+                            {#Workflow diagrams#}
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Workflow diagrams</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project-requests'}) }}">Project Request Approval Status Progress</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-billing'}) }}">Work Request Billing Progress</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-completion-progress'}) }}">Work Request Completion Progress</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                         </ul>
                     </li>
