@@ -2939,12 +2939,4 @@ class DefaultController extends OrderAbstractController
         return array();
     }
 
-    /**
-     * @Route("/multi-level-test2/", name="translationalresearch_multi-level-test2", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Default/multi-level-test2.html.twig")
-     */
-    public function multiLevelMenuTest2Action( Request $request ) {
-
-        return array();
-    }
 }

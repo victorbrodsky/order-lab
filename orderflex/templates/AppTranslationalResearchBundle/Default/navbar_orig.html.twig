@@ -252,7 +252,7 @@
 
                         <hr style="margin-top: 10px; margin-bottom: 10px;">
 
-                        {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
+                        {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType_ORIG() %}
                         {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
 
                         </ul>
@@ -269,7 +269,7 @@
 
                                 {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
 
-                                {% set filterWorkQueues = transres_request_util.getWorkQueuesFilterPresetType() %}
+                                {% set filterWorkQueues = transres_request_util.getWorkQueuesFilterPresetType_ORIG() %}
                                 {{ navbarmacros.createFilterWorkQueuesType(filterWorkQueues) }}
 
                             </ul>
@@ -297,7 +297,7 @@
                         <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
+                                {% set filterTypes = transres_request_util.getInvoiceFilterPresetType_ORIG() %}
                                 {{ navbarmacros.createFilterType(filterTypes) }}
                             </ul>
                         </li>
