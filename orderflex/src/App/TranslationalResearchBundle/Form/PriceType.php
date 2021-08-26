@@ -78,7 +78,7 @@ class PriceType extends AbstractType
         if( 0 ) {
             $builder->add('workQueues', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:WorkQueueList',
-                'label' => 'Work Queues:',
+                'label' => 'Work Queue(s):',
                 'required' => false,
                 'multiple' => true,
                 'attr' => array('class' => 'combobox'),

@@ -223,7 +223,7 @@ class WorkQueueController extends OrderAbstractController
             if( $workqueue == 'all' ) {
                 return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
                     array(
-                        'title' => "Entire " . $title,
+                        'title' => urlencode("Entire " . $title),
                         //'filter[projectSpecialty][]' => ""
                         'filter[]' => ""
                     )
@@ -243,7 +243,7 @@ class WorkQueueController extends OrderAbstractController
 
                     $incompleteFilter = array(
                         'filter[workQueues][]' => $workqueueEntity->getId(),
-                        'title' => "Pending " . $title
+                        'title' => urlencode("Pending " . $title)
                     );
 
                     $requestedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('requested');
@@ -295,7 +295,7 @@ class WorkQueueController extends OrderAbstractController
                     return $this->redirectToRoute('translationalresearch_work_queue_index_filter',
                         array(
                             'filter[workQueues][]'=>$workqueueEntity->getId(),
-                            'title' => "Entire " . $title
+                            'title' => urlencode("Entire " . $title)
                         )
                     );
                 }
@@ -677,6 +677,9 @@ class WorkQueueController extends OrderAbstractController
         //echo "workQueues count=".count($workQueues)."<br>";
         $allGlobalRequests = $transresUtil->getTotalProductsCount($workQueues);
         $title = $title . " (Matching Orderables " . $allProductsts . ", Total " . $allGlobalRequests . ")";
+
+        //replace (decode url) "+" by " "
+        $title = urldecode($title);
 
         $formArray = array(
             'products' => $products,

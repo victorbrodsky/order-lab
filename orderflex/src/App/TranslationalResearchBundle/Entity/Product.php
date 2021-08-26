@@ -391,14 +391,14 @@ class Product {
         $comment = $this->getComment();
         $note = $this->getNote();
         if( $comment ) {
-            $combineComment = $combineComment . $comment;
+            $combineComment = $combineComment . "Comment: ".$comment;
         }
         if( $note ) {
             $separator = "";
             if( $combineComment ) {
                 $separator = "; ";
             }
-            $combineComment = $combineComment . $separator . $note;
+            $combineComment = $combineComment . $separator . "Note (Tech): ".$note;
         }
         
         return $combineComment;

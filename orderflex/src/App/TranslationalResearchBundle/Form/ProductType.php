@@ -260,13 +260,15 @@ class ProductType extends AbstractType
         ));
 
         if( $this->params['cycle'] != "new" ) {
-            $trpBusinessNameAbbreviation = "TRP";
-            if( isset($this->params['transresUtil']) ) {
-                $trpBusinessNameAbbreviation = $this->params['transresUtil']->getBusinessEntityAbbreviation();
-            }
+//            $trpBusinessNameAbbreviation = "TRP";
+//            if( isset($this->params['transresUtil']) ) {
+//                $trpBusinessNameAbbreviation = $this->params['transresUtil']->getBusinessEntityAbbreviation();
+//            }
+//            $noteLabel = "Note ($trpBusinessNameAbbreviation tech):";
             $builder->add('note', null, array(
                 //'label' => "Note (TRP tech):",
-                'label' => "Note ($trpBusinessNameAbbreviation tech):", //$this->trpBusinessNameAbbreviation
+                'label' => "Note (Tech):",
+                //'label' => "Note ($trpBusinessNameAbbreviation tech):", //$this->trpBusinessNameAbbreviation
                 //'label' => "Note (".$this->trpBusinessNameAbbreviation." tech):", //$this->trpBusinessNameAbbreviation
                 //'label' => "Note (".$this->params['trpBusinessNameAbbreviation']." tech):", //$this->trpBusinessNameAbbreviation
                 'required' => false,

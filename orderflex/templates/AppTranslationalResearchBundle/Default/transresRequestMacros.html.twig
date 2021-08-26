@@ -903,9 +903,15 @@
         {% set formproduct = product %}
     {% endif %}
 
+    {% if formproduct.vars.value and formproduct.vars.value.getId() %}
+        {% set formproductId = "id=product-"~formproduct.vars.value.getId() %}
+    {% else %}
+        {% set formproductId = "" %}
+    {% endif %}
+
     {% set wellclass = "alert-default well well-sm" %}
 
-    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+    <div {{ formproductId }} class="user-collection-holder alert {{ classname }} {{ wellclass }}">
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
                 {#glyphicon-duplicate is in bootstrap 4 (might not be free), current version does not have it https://bootstrapdocs.com/v3.2.0/docs/components/#}
@@ -957,10 +963,11 @@
             {{ formmacros.field(formproduct.orderableStatus) }}
         {% endif %}
 
+        {#Show it on new Work Request page for Admin (however workQueues not known until product is chosen)#}
         {% if formproduct.vars.value %}
             {% set workQueues = formproduct.vars.value.getWorkQueues() %}
             {% if workQueues and workQueues|length > 0 %}
-                {{ formmacros.simplefield( "Work Queues:", workQueues, "array-as-string", "disabled" ) }}
+                {{ formmacros.simplefield( "Work Queue(s):", workQueues, "array-as-string", "disabled" ) }}
             {% endif %}
         {% endif %}
 

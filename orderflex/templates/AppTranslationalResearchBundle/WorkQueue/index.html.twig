@@ -41,7 +41,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
+        <tbody data-link="row" class="rowlink" data-target="a.list-row-mainlink">
 
         {#{% set count = 0 %}#}
         {% for product in products %}
@@ -63,14 +63,14 @@
                 </td>
 
                 {#Work Request ID#}
-                <td class="rowlink-skip">
+                <td>
                     {#<a#}
                         {#href="{{ path(translationalresearch_sitename~'_product_show', { 'id': product.id }) }}"#}
                         {#target="_blank"#}
                     {#>{{ product.id }} {{ product }}</a>#}
 
-                    <a
-                        href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                    <a class="list-row-mainlink"
+                        href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}#product-{{ product.getId() }}"
                         target="_blank"
                         style="color:{{ idColor }}"
                         data-toggle="tooltip" title="{{ transres_request_util.getProgressStateLabelByName(transresRequest.getProgressState()) }}"
