@@ -134,6 +134,11 @@ class ProjectController extends OrderAbstractController
             }
         }
 
+        //get allowed and denied projectSpecialties
+        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+
 //        if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
 //            return $this->redirectToRoute(
 //                'translationalresearch_my_review_project_index',
@@ -146,11 +151,6 @@ class ProjectController extends OrderAbstractController
 //                )
 //            );
 //        }
-
-        //get allowed and denied projectSpecialties
-        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
-        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
-        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
         if( $routeName == "translationalresearch_pending_review_project_index" ) {
 
@@ -165,7 +165,6 @@ class ProjectController extends OrderAbstractController
             );
 
             //projectSpecialty filter[projectSpecialty][]=2
-
             foreach($projectSpecialtyAllowedArr as $projectSpecialtyAllowed) {
                 $indexParams['filter[projectSpecialty]'][] = $projectSpecialtyAllowed->getId();
             }
@@ -173,15 +172,6 @@ class ProjectController extends OrderAbstractController
             return $this->redirectToRoute(
                 'translationalresearch_project_index',
                 $indexParams
-//                array(
-//                    'filter[state][0]' => 'irb_review',
-//                    'filter[state][1]' => 'irb_missinginfo',
-//                    'filter[state][2]' => 'admin_review',
-//                    'filter[state][3]' => 'admin_missinginfo',
-//                    'filter[state][4]' => 'committee_review',
-//                    'filter[state][5]' => 'final_review',
-//                    'title' => "Project Requests Pending Review",
-//                )
             );
         }
 

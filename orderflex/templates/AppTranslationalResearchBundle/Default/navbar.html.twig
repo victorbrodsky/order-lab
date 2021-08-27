@@ -24,7 +24,6 @@
                 {% for value in values %}
                     {% set filterTypeUrl = value|replace({' ':'-'}) %}
                     <li>
-                    {#<li class="dropdown-submenu">#}
                         <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ value }}</a>
                     </li>
                 {% endfor %}
@@ -39,7 +38,6 @@
         {% else %}
             {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
             <li>
-                {#<li class="dropdown-submenu">#}
                 <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
             </li>
         {% endif %}
@@ -977,6 +975,21 @@
 
     </nav>
     
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $(".dropdown-submenu").mouseout(function() {
+                $(this).removeClass("open"); //.removeClass("activeli");
+            });
+
+        });
+    </script>
+
 {% endblock %}
 
 
