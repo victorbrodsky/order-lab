@@ -242,9 +242,9 @@
                             </li>
                             {#EOF my projects#}
 
-                            {#Active projects#}
+                            {#Active projects -> rename to -> Pending review#}
                             <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Active projects</a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pending review</a>
                                 <ul class="dropdown-menu">
                                     <li id="nav-bar-translationalresearch-my-review-projects">
                                         <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Projects with Expired {{ transres_util.getHumanName() }}</a>
@@ -512,7 +512,7 @@
                             <hr style="margin-top: 10px; margin-bottom: 10px;">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee Schedule</a>
+                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>
                             </li>
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
@@ -522,7 +522,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody List Management</a>
+                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>
                                 </li>
                             {% endif %}
 
@@ -536,7 +536,7 @@
                         <ul class="dropdown-menu">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee Schedule</a>
+                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>
                             </li>
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
@@ -547,7 +547,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody List Management</a>
+                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>
                                 </li>
                             {% endif %}
 

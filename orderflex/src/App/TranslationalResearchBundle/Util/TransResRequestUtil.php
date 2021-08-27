@@ -2553,7 +2553,7 @@ class TransResRequestUtil
                 //"Unpaid Invoices sent to Me",
                 "Unpaid Invoices where I am the PI",
             );
-            $filterTypes["My Invoices"] = $elements;
+            $filterTypes["My invoices"] = $elements;
 
             $elements = array(
                 "Latest Versions of All Invoices Except Canceled",
@@ -2572,7 +2572,7 @@ class TransResRequestUtil
                 'All Issued Invoices',
                 'All Pending Invoices',
             );
-            $filterTypes["All Invoices"] = $elements;
+            $filterTypes["All invoices"] = $elements;
 
             $elements = array(
                 "Old Versions of All Invoices",
@@ -2611,7 +2611,7 @@ class TransResRequestUtil
                 //"Unpaid Invoices sent to Me",
                 "Unpaid Invoices where I am the PI",
             );
-            $filterTypes["My Invoices"] = $elements;
+            $filterTypes["My invoices"] = $elements;
 
             return $filterTypes;
         }
