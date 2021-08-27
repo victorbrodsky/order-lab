@@ -77,7 +77,9 @@ class ProjectController extends OrderAbstractController
      * @Route("/draft-projects-where-i-am-the-requester/", name="translationalresearch_my_request_project_draft_index", methods={"GET"})
      * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index", methods={"GET"})
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index", methods={"GET"})
+     * @Route("/projects-pending-review/", name="translationalresearch_pending_review_project_index", methods={"GET"})
      * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index", methods={"GET"})
+     *
      *
      * @Route("/active-project-requests-with-expired-approval/", name="translationalresearch_active_expired_project_index", methods={"GET"})
      * @Route("/active-project-requests-with-approval-expiring-soon/", name="translationalresearch_active_expired_soon_project_index", methods={"GET"})
@@ -145,6 +147,44 @@ class ProjectController extends OrderAbstractController
 //            );
 //        }
 
+        //get allowed and denied projectSpecialties
+        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+
+        if( $routeName == "translationalresearch_pending_review_project_index" ) {
+
+            $indexParams = array(
+                'filter[state][0]' => 'irb_review',
+                'filter[state][1]' => 'irb_missinginfo',
+                'filter[state][2]' => 'admin_review',
+                'filter[state][3]' => 'admin_missinginfo',
+                'filter[state][4]' => 'committee_review',
+                'filter[state][5]' => 'final_review',
+                'title' => "Project Requests Pending Review",
+            );
+
+            //projectSpecialty filter[projectSpecialty][]=2
+
+            foreach($projectSpecialtyAllowedArr as $projectSpecialtyAllowed) {
+                $indexParams['filter[projectSpecialty]'][] = $projectSpecialtyAllowed->getId();
+            }
+
+            return $this->redirectToRoute(
+                'translationalresearch_project_index',
+                $indexParams
+//                array(
+//                    'filter[state][0]' => 'irb_review',
+//                    'filter[state][1]' => 'irb_missinginfo',
+//                    'filter[state][2]' => 'admin_review',
+//                    'filter[state][3]' => 'admin_missinginfo',
+//                    'filter[state][4]' => 'committee_review',
+//                    'filter[state][5]' => 'final_review',
+//                    'title' => "Project Requests Pending Review",
+//                )
+            );
+        }
+
         //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
         $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
@@ -187,10 +227,10 @@ class ProjectController extends OrderAbstractController
 
         $humanName = $transresUtil->getHumanName();
 
-        //get allowed and denied projectSpecialties
-        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
-        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
-        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+//        //get allowed and denied projectSpecialties
+//        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+//        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+//        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
         //////// create filter //////////
         //$filterError = true;
@@ -358,6 +398,12 @@ class ProjectController extends OrderAbstractController
 //        $reject = $filterform['closed']->getData();
         if( isset($filterform['preroute']) ) {
             $preroute = $filterform['preroute']->getData();
+        }
+
+        $filterTitle = trim($request->get('title'));
+
+        if( $filterTitle ) {
+            $title = $filterTitle;
         }
         //////// EOF create filter //////////
 
@@ -969,6 +1015,21 @@ class ProjectController extends OrderAbstractController
 
             $showOnlyMyProjects = false;
         }
+
+//        if( $routeName == "translationalresearch_pending_review_project_index" ) {
+//            //echo "testing where translationalresearch_pending_review_project_index <br>";
+//            //echo "routeName=$routeName <br>";
+//            //all statuses not equal to Closed/Canceled/Draft/Approved
+//            $pendingProjectsCriterion =
+//                "project.state LIKE '%_review' OR project.state LIKE '%_missinginfo'"
+//            ;
+//
+//            $dql->andWhere($pendingProjectsCriterion);
+//
+//            $title = "Project Requests Pending Review";
+//
+//            $showOnlyMyProjects = false;
+//        }
 
         if( $routeName == "translationalresearch_my_missinginfo_review_project_index" ) {
             //echo "testing where translationalresearch_my_missinginfo_review_project_index <br>";

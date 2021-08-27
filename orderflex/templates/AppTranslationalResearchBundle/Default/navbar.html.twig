@@ -259,6 +259,11 @@
                                             >Active Non-Funded Projects Over Budget or With No Budget</a>
                                         </li>
                                     {% endif %}
+
+                                    {#Project Requests Pending Review, same as Projects Pending My Review without My#}
+                                    <li id="nav-bar-translationalresearch-my-review-projects">
+                                        <a href="{{ path(translationalresearch_sitename~'_pending_review_project_index') }}">Project Requests Pending Review</a>
+                                    </li>
                                 </ul>
                             </li>
                             {#EOF Active projects#}
