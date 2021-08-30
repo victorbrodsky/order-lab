@@ -324,6 +324,7 @@ class WorkQueueController extends OrderAbstractController
 
         $dql->leftJoin('product.transresRequest','transresRequest');
         $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('transresRequest.documents','documents');
 
         $dql->leftJoin('project.priceList','priceList');
 

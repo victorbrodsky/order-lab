@@ -22,6 +22,8 @@
         {{ title|raw }}
     </h4>
 
+    workqueue={{ workqueue }}
+
     {{ transresRequestMacros.transresWorkQueuesFilter(filterform,advancedFilter) }}
 
     <table class="table table-hover table-condensed text-left">
@@ -29,14 +31,17 @@
             <tr>
                 <th>{{ knp_pagination_sortable(products, 'Project ID', 'project.id') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Work Request ID', 'transresRequest.id') }}</th>
-
                 <th>{{ knp_pagination_sortable(products, 'PI(s)', 'requestPrincipalInvestigatorsInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Submitter', 'requestSubmitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Product or Service', 'category.productId') }}</th>
+                <th>{{ knp_pagination_sortable(products, 'Request Documents', 'documents.originalname') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Requested Quantity', 'product.requested') }}</th>
                 <th>{{ knp_pagination_sortable(products, 'Completed Quantity', 'product.completed') }}</th>
-                <th>{{ knp_pagination_sortable(products, 'Work Queue ', 'workQueues.id') }}</th>
-                <th>{{ knp_pagination_sortable(products, 'Status ', 'orderableStatus.id') }}</th>
+                {% if not workqueue %}
+                    {#workqueue exists if single work queue choosen => hide 'Work Queue'#}
+                    <th>{{ knp_pagination_sortable(products, 'Work Queue', 'workQueues.id') }}</th>
+                {% endif %}
+                <th>{{ knp_pagination_sortable(products, 'Status', 'orderableStatus.id') }}</th>
 
                 <th>Actions</th>
             </tr>
@@ -102,6 +107,17 @@
                     </div>
                 </td>
 
+                {#Request Documents#}
+                <td class="rowlink-skip">
+                    {% for document in transresRequest.getDocuments() %}
+                        {% if document.id %}
+                            <a href="{{ document.getAbsoluteUploadFullPath() }}" target="_blank" data-toggle="tooltip" title="{{ document.getOriginalname() }}">
+                                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+
                 {#Requested Quantity#}
                 <td>
                     {{ product.getRequested() }}
@@ -112,11 +128,13 @@
                     {{ product.getCompleted() }}
                 </td>
 
+                {% if not workqueue %}
                 <td>
                     {% for workQueue in product.getWorkQueues() %}
                         {{ workQueue.getName() }}
                     {% endfor %}
                 </td>
+                {% endif %}
 
                 {#Status#}
                 {#"Orderable Status" with the following values: “Requested”, “Pending Additional Info”, “In Progress”, and “Completed”#}
@@ -142,6 +160,12 @@
                                 >Edit work request</a>
                             </li>
 
+                            {#if work request has more than 1 product => "Mark orderable as", otherwise => "Mark as"#}
+                            {% set markTitle = "Mark as" %}
+                            {% if transresRequest.getProducts()|length > 1 %}
+                                {% set markTitle = "Mark orderable as" %}
+                            {% endif  %}
+
                             {#Mark as “Completed”.#}
                             {% set thisStatus = "Completed" %}
                             {% if not product.hasStatus(thisStatus) %}
@@ -153,7 +177,7 @@
                                         href="{{
                                             path(translationalresearch_sitename~'_product_update_orderablestatus',
                                             { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
-                                        }}">Mark as "{{ thisStatus }}"</a>
+                                        }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
 
@@ -168,7 +192,7 @@
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
                                         { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
-                                        }}">Mark as "{{ thisStatus }}"</a>
+                                        }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
 
@@ -183,7 +207,7 @@
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
                                         { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
-                                        }}">Mark as "{{ thisStatus }}"</a>
+                                        }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
 
@@ -198,7 +222,7 @@
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
                                         { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
-                                        }}">Mark as "{{ thisStatus }}"</a>
+                                        }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
 
