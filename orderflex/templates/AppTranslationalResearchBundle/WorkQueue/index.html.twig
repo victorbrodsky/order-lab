@@ -22,8 +22,6 @@
         {{ title|raw }}
     </h4>
 
-    workqueue={{ workqueue }}
-
     {{ transresRequestMacros.transresWorkQueuesFilter(filterform,advancedFilter) }}
 
     <table class="table table-hover table-condensed text-left">
@@ -161,6 +159,7 @@
                             </li>
 
                             {#if work request has more than 1 product => "Mark orderable as", otherwise => "Mark as"#}
+                            {#TODO: do we change the work request according to the orderable?#}
                             {% set markTitle = "Mark as" %}
                             {% if transresRequest.getProducts()|length > 1 %}
                                 {% set markTitle = "Mark orderable as" %}
@@ -224,6 +223,40 @@
                                         { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
+                            {% endif %}
+
+                            {% if transres_permission_util.hasRequestPermission('progress-review',transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
+                                    >Change entire parent work request’s progress status</a>
+                                </li>
+                            {% endif %}
+
+                            {#Show most recent Invoice#}
+                            {#Edit most recent Invoice#}
+                            {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
+                            {% if latestInvoice and latestInvoice.oid and latestInvoice.latestVersion %}
+                                <li class="divider"></li>
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                                    <li>
+                                        <a href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">Show most recent invoice</a>
+                                    </li>
+                                {% endif %}
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                    <li>
+                                        <a href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">Edit most recent invoice</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <hr>
+                                    <li>
+                                        <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': transresRequest.id}) }}"
+                                        >View associated events</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                         </ul>

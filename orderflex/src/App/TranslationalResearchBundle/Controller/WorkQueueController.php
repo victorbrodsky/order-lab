@@ -682,12 +682,21 @@ class WorkQueueController extends OrderAbstractController
         //replace (decode url) "+" by " "
         $title = urldecode($title);
 
+        //View associated events
+        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
         $formArray = array(
             'products' => $products,
             'title' => $title,
             'workqueue' => $singleWorkqueue,
             'filterform' => $filterform->createView(),
             'advancedFilter' => $advancedFilter,
+            'eventObjectTypeId' => $eventObjectTypeId,
         );
 
         return $formArray;
