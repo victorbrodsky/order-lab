@@ -56,7 +56,7 @@ class RequestController extends OrderAbstractController
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"})
+     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"}, options={"expose"=true})
      * @Route("/work-request/new/", name="translationalresearch_new_standalone_request", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      */

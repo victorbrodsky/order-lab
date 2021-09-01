@@ -370,8 +370,19 @@
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
                     //console.log("project changed: change");
                     //var projectId = $(this).val();
-                    transresPrepopulateProjectDetails( $(this) );
-                    //transresPrepopulateProductServices( $(this) );
+
+                    if(0) {
+                        transresPrepopulateProjectDetails($(this));
+                        //transresPrepopulateProductServices( $(this) );
+                    } else {
+                        //reload page with project as it was clicked on the "New work request" from the project's action menu
+                        var projectId = $(this).val();
+                        console.log("project changed: projectId="+projectId);
+
+                        //redirect to translationalresearch_request_new with projectId
+                        var url = Routing.generate('translationalresearch_request_new',{id: projectId});
+                        location.href = url;
+                    }
                 });
             //}
 
@@ -667,7 +678,7 @@
                 return;
             }
 
-            //console.log("projectId="+projectId);
+            console.log("projectId="+projectId);
             if( projectId ) {
                 //console.log("get project account number");
 
@@ -718,6 +729,7 @@
             }
         }
 
+        //populate filteres list products according to the project type
         function transresPrepopulateProductServices( projectField ) {
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField.length ) {

@@ -318,11 +318,11 @@
 
                         {% if 0 %}
                             {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
-                        {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                            <li id="nav-bar-translationalresearch-new-standalone-request">
-                                <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
-                            </li>
-                        {% endif %}
+                            {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                <li id="nav-bar-translationalresearch-new-standalone-request">
+                                    <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                                </li>
+                            {% endif %}
                         {% endif %}
 
                         {#<li id="nav-bar-translationalresearch-my-requests">#}
@@ -348,7 +348,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
                         <ul class="dropdown-menu multi-level">
 
-                            {% if 0 %}
+                            {% if 1 %}
                                 {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
                                 {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                                     <li id="nav-bar-translationalresearch-new-standalone-request">
