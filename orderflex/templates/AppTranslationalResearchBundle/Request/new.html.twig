@@ -377,15 +377,9 @@
                     } else {
                         //reload page with project as it was clicked on the "New work request" from the project's action menu
                         var projectId = $(this).val();
-                        console.log("project changed: projectId="+projectId);
-
-                        //redirect to translationalresearch_request_new with projectId
-                        //TODO: allow to change the project multiple times?
-                        //var url = Routing.generate('translationalresearch_request_new',{id: projectId});
-                        //translationalresearch_new_standalone_request
+                        //console.log("project changed: projectId="+projectId);
+                        //redirect to translationalresearch_new_standalone_request with projectId and keep project choice field.
                         var url = Routing.generate('translationalresearch_new_standalone_request',{id: projectId});
-                        //translationalresearch_new_standalone_preset_project_request
-                        //var url = Routing.generate('translationalresearch_new_standalone_preset_project_request',{id: projectId});
                         location.href = url;
                     }
                 });

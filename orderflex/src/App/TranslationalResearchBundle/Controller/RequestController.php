@@ -54,8 +54,6 @@ class RequestController extends OrderAbstractController
 {
 
     /**
-     * //Route("/project/preset/{id}/work-request/new/", name="translationalresearch_new_standalone_preset_project_request", methods={"GET","POST"}, options={"expose"=true})
-     *
      * Creates a new request entity with formnode.
      *
      * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"}, options={"expose"=true})
@@ -2635,7 +2633,7 @@ class RequestController extends OrderAbstractController
                 $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
                 $params['project'] = $project;
-                echo "1 project=".$project."<br>";
+                //echo "1 project=".$project."<br>";
             } else {
                 $params['availableProjects'] = array($project);
             }
