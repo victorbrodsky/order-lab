@@ -133,10 +133,12 @@ class TransResRequestType extends AbstractType
 
         if( $this->params['availableProjects'] && count($this->params['availableProjects']) > 0 ) {
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
+            //echo "2 project=".$this->params['project']."<br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:Project',
                 'choice_label' => 'getProjectInfoNameWithPIsChoice',
                 'choices' => $this->params['availableProjects'],
+                'data' => $this->params['project'],
                 'label' => 'Project:',
                 //'disabled' => ($this->params['admin'] ? false : true),
                 //'disabled' => true,

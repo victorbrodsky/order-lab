@@ -54,10 +54,12 @@ class RequestController extends OrderAbstractController
 {
 
     /**
+     * //Route("/project/preset/{id}/work-request/new/", name="translationalresearch_new_standalone_preset_project_request", methods={"GET","POST"}, options={"expose"=true})
+     *
      * Creates a new request entity with formnode.
      *
      * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new", methods={"GET","POST"}, options={"expose"=true})
-     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request", methods={"GET","POST"})
+     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request", methods={"GET","POST"}, options={"expose"=true})
      * @Template("AppTranslationalResearchBundle/Request/new.html.twig")
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -92,7 +94,21 @@ class RequestController extends OrderAbstractController
 
         $title = "New Work Request";
 
+        // $_GET: get project id parameter for standalone new work request page
+        $projectId = NULL;
+        $routeName = $request->get('_route');
+        if( $routeName == "translationalresearch_new_standalone_request" ) {
+            $projectId = $request->query->get('id');
+            if( $projectId ) {
+                $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+            }
+        }
+
+        //echo "0 projectId=$projectId, project=".$project."<br>";
+        
         if( $project ) {
+
+            //exit('111');
 
             $transresRequest->setProject($project);
             $title = "New Work Request for project ID ".$project->getOid();
@@ -2583,6 +2599,7 @@ class RequestController extends OrderAbstractController
             'saveAsUpdateChangeBillingState' => false,
             //'projects' => null,
             'availableProjects' => null,
+            'project' => null,
             'billingStateChoiceArr' => $billingStateChoiceArr,
             'progressStateChoiceArr' => $progressStateChoiceArr,
             'categoryListLink' => $categoryListLink,
@@ -2617,6 +2634,8 @@ class RequestController extends OrderAbstractController
                 //getAvailableProjects($finalApproved=true, $notExpired=true, $requester=true, $reviewer=true)
                 $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
+                $params['project'] = $project;
+                echo "1 project=".$project."<br>";
             } else {
                 $params['availableProjects'] = array($project);
             }

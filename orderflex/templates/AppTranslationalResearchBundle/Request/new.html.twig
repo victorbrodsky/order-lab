@@ -380,7 +380,12 @@
                         console.log("project changed: projectId="+projectId);
 
                         //redirect to translationalresearch_request_new with projectId
-                        var url = Routing.generate('translationalresearch_request_new',{id: projectId});
+                        //TODO: allow to change the project multiple times?
+                        //var url = Routing.generate('translationalresearch_request_new',{id: projectId});
+                        //translationalresearch_new_standalone_request
+                        var url = Routing.generate('translationalresearch_new_standalone_request',{id: projectId});
+                        //translationalresearch_new_standalone_preset_project_request
+                        //var url = Routing.generate('translationalresearch_new_standalone_preset_project_request',{id: projectId});
                         location.href = url;
                     }
                 });

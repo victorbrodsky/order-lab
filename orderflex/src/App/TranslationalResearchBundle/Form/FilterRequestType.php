@@ -265,6 +265,7 @@ class FilterRequestType extends AbstractType
         if( count($this->params['availableProjects']) > 0 ) {
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
+                //echo "Use data project=".$this->params['project']."<br>";
                 $builder->add('project', EntityType::class, array(
                     'class' => 'AppTranslationalResearchBundle:Project',
                     //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
