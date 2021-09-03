@@ -34,6 +34,9 @@
     </div>
     <br>
 
+    {#on the user facing fee schedule page, show internal pricing if the #}
+    {#logged in user is associated with (PI, etc) and has any projects #}
+    {#(even closed) that have “Internal pricing” attribute associated with it#}
     {% set showSpecificFee = 1 %}
 
     <table class="table table-hover table-condensed text-left">

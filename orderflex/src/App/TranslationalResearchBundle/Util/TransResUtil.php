@@ -7814,4 +7814,98 @@ class TransResUtil
         return $expectedExpirationDateChoices;
     }
 
+
+    //on the user facing fee schedule page, show internal pricing if the logged
+    // in user is associated with (PI, etc) and has any projects (even closed)
+    // that have “Internal pricing” attribute associated with it
+    public function getUserAssociatedPriceList() {
+        
+        //get the project where this user is PI and priceList is not NULL
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+
+        //$dql->select('project');
+
+        //$dql->distinct('project.priceList');
+        $dql->select('DISTINCT (project.priceList)');
+
+        //$dql->select('DISTINCT (project.submitter)');
+
+        //projectType
+        //$dql->select('DISTINCT (project.projectType)');
+
+        if(1) {
+            $dql->leftJoin('project.priceList', 'priceList');
+            $dql->leftJoin('project.submitter', 'submitter');
+            $dql->leftJoin('project.principalInvestigators', 'principalInvestigators');
+            $dql->leftJoin('project.principalIrbInvestigator', 'principalIrbInvestigator');
+            $dql->leftJoin('project.coInvestigators', 'coInvestigators');
+            $dql->leftJoin('project.pathologists', 'pathologists');
+            $dql->leftJoin('project.billingContact', 'billingContact');
+            $dql->leftJoin('project.contacts', 'contacts');
+        }
+
+        //$dql->orderBy("project.id","DESC");
+        //$dql->groupBy('project.priceList');
+        //$dql->groupBy('project.projectType');
+        //$dql->groupBy('project.submitter');
+
+        $dqlParameters = array();
+
+        $dql->andWhere("project.priceList IS NOT NULL");
+
+        //3) logged in user is requester (only if not admin)
+        $myRequestProjectsCriterion =
+            "principalInvestigators.id = :userId OR " .
+            "principalIrbInvestigator.id = :userId OR " .
+            "coInvestigators.id = :userId OR " .
+            "pathologists.id = :userId OR " .
+            "contacts.id = :userId OR " .
+            "billingContact.id = :userId OR " .
+            "submitter.id = :userId";
+
+        //$dqlParameters["userId"] = $user->getId();
+        //$dql->andWhere($myRequestProjectsCriterion);
+
+        $query = $dql->getQuery();
+
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $projects = $query->getResult();
+        echo "projects=".count($projects)."<br>";
+
+        $priceListArr = array();
+
+        if(1) {
+            foreach ($projects as $project) {
+                //dump($project);
+                //echo "project=".$project."<br>";
+                $priceListId = $project[1];
+                echo "priceListId=".$priceListId."<br>";
+
+                $priceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($priceListId);
+                if( $priceList ) {
+                    $priceListArr[] = $priceList;
+                }
+            }
+        }
+
+        echo "priceListArr=".count($priceListArr)."<br>";
+        foreach ($priceListArr as $priceList) {
+            echo "priceList=".$priceList."<br>";
+        }
+
+        exit("111");
+        return $priceListArr;
+
+    }
 }

@@ -167,7 +167,9 @@ class DefaultController extends OrderAbstractController
         
         //$res = $transresUtil->syncFeeAndWorkQueue($testing=true); //$testing=true
         //exit($res);
-        
+
+        $transresUtil->getUserAssociatedPriceList();
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
