@@ -6485,6 +6485,7 @@ class TransResUtil
         return $transresPricesList;
     }
 
+    //Use to return array name-id for select box
     public function getDbPriceLists() {
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList');
         $dql =  $repository->createQueryBuilder("list");
@@ -6506,10 +6507,19 @@ class TransResUtil
 
         $priceLists = $query->getResult();
 
+//        if(0) {
+//            //Testing: Add 'Default' price list
+//            $priceListsArr = array('Default' => NULL);
+//            foreach ($priceLists as $priceList) {
+//                $priceListsArr[$priceList->getName()] = $priceList->getId();
+//            }
+//            return $priceListsArr;
+//        }
+
         return $priceLists;
     }
 
-    //show current review's reccomendations for committee review status for primary reviewer
+    //show current review's recommendations for committee review status for primary reviewer
     public function showProjectReviewInfo($project) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $res = null;

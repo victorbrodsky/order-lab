@@ -141,7 +141,7 @@ class ProjectType extends AbstractType
                     $builder->add('priceList', EntityType::class, array(
                         'class' => 'AppTranslationalResearchBundle:PriceTypeList',
                         'choice_label' => 'name',
-                        'label' => 'Utilize the following price list:',
+                        'label' => 'Utilize the following specific price list:',
                         'disabled' => ($this->params['admin'] ? false : true),
                         //'disabled' => true,
                         'required' => false,
@@ -162,7 +162,7 @@ class ProjectType extends AbstractType
                     $builder->add('priceList', EntityType::class, array(
                         'class' => 'AppTranslationalResearchBundle:PriceTypeList',
                         'choice_label' => 'name',
-                        'label' => 'Utilize the following price list:',
+                        'label' => 'Utilize the following specific price list:',
                         'disabled' => ($this->params['admin'] ? false : true),
                         //'disabled' => true,
                         'required' => false,

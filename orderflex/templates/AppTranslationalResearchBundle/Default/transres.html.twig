@@ -989,7 +989,7 @@
                 {% else %}
                     {% set priceListStr = null %}
                 {% endif %}
-                {{ transres.fieldPriceList(priceListStr,"Utilize the following price list:",1) }}
+                {{ transres.fieldPriceList(priceListStr,"Utilize the following specific price list:",1) }}
 
                 {% set noBudgetLimit = project.getNoBudgetLimit() %}
                 {{ transres.fieldNoBudgetLimit(noBudgetLimit,"No Budget Limit:",1) }}
@@ -1616,16 +1616,27 @@
                     id="transres_project_pricelist"
                     name="priceList[]"
                     class="combobox combobox-width" tabindex="-1"
-                    title="Utilize the following price list:"
+                    title="{{ label|raw }}"
             >
                 <option value=""></option>
                 {% for priceList in priceLists %}
-                    {% if priceList.getName() == value %}
-                        <option value="{{ priceList.getId() }}" selected>{{ priceList.getName() }}</option>
+                    {% set priceListName = priceList.getName() %}
+                    {% set priceListId = priceList.getId() %}
+                    {% if priceListName == value %}
+                        <option value="{{ priceListId }}" selected>{{ priceListName }}</option>
                     {% else %}
-                        <option value="{{ priceList.getId() }}">{{ priceList.getName() }}</option>
+                        <option value="{{ priceListId }}">{{ priceListName }}</option>
                     {% endif %}
                 {% endfor %}
+
+                {#Testing: Add 'Default' price list#}
+                {#{% for priceListName,priceListId in priceLists %}#}
+                    {#{% if priceListName == value %}#}
+                        {#<option value="{{ priceListId }}" selected>{{ priceListName }}</option>#}
+                    {#{% else %}#}
+                        {#<option value="{{ priceListId }}">{{ priceListName }}</option>#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
 
                 {#<option value=""></option>#}
                 {#<option value="2">Internal Pricing</option>#}
