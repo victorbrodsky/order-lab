@@ -37,11 +37,16 @@
     {#on the user facing fee schedule page, show internal pricing if the #}
     {#logged in user is associated with (PI, etc) and has any projects #}
     {#(even closed) that have “Internal pricing” attribute associated with it#}
-    {% set specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList() %}
-    {% if specificPriceListArr|length > 0 %}
+    {% set specificPriceListArr = NULL %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
         {% set showSpecificFee = 1 %}
     {% else %}
-        {% set showSpecificFee = 0 %}
+        {% set specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList() %}
+        {% if specificPriceListArr|length > 0 %}
+            {% set showSpecificFee = 1 %}
+        {% else %}
+            {% set showSpecificFee = 0 %}
+        {% endif %}
     {% endif %}
 
     <table class="table table-hover table-condensed text-left">
@@ -59,11 +64,8 @@
                 {#<th>{{ knp_pagination_sortable(fees, 'Work Queues', 'list.workQueues') }}</th>#}
 
                 {% if showSpecificFee %}
-                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                        {% set showSpecificFee = 1 %}
-                            {#<th>Specific Fees</th>#}
-                            <th>{{ knp_pagination_sortable(fees, 'Specific Fees', 'prices.fee') }}</th>
-                    {% endif %}
+                    {#<th>Specific Fees</th>#}
+                    <th>{{ knp_pagination_sortable(fees, 'Specific Fees', 'prices.fee') }}</th>
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
@@ -125,11 +127,14 @@
                 {#</td>#}
 
                 {% if showSpecificFee %}
-                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
-                        <td>
-                            {{ fee.getSpecificPricesInfo()|raw }}
-                        </td>
-                    {% endif %}
+                    <td>
+                        {{ fee.getSpecificPricesInfo(specificPriceListArr)|raw }}<br>
+                        {#specificPriceListArr#}
+                        {#{% for specificPriceList in specificPriceListArr %}#}
+                            {#{{ specificPriceList.getPriceInfo()|raw }}#}
+                            {#{{ specificPriceList }}#}
+                        {#{% endfor %}#}
+                    </td>
                 {% endif %}
 
                 <td>

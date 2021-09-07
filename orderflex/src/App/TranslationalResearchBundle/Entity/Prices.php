@@ -229,9 +229,25 @@ class Prices
         $this->priceList = $priceList;
     }
 
-    public function getPriceInfo()
+    public function getPriceInfo( $allowedPriceListIds=NULL )
     {
-        return $this->getPriceList().": ".$this->getFee()." (".$this->getFeeAdditionalItem().")";
+        //getPriceList => PriceTypeList
+        if( $allowedPriceListIds ) {
+           if( is_array($allowedPriceListIds) ) {
+               $priceTypeList = $this->getPriceList();
+               if( $priceTypeList ) {
+                   $priceTypeListId = $priceTypeList->getId();
+                   //echo "priceTypeListId=$priceTypeListId ?= " . implode(",",$allowedPriceListIds)."<br>";
+                   if( in_array($priceTypeListId, $allowedPriceListIds) ) {
+                       return $this->getPriceList().": ".$this->getFee()." (".$this->getFeeAdditionalItem().")";
+                   }
+               }
+           }
+        } else {
+            return $this->getPriceList().": ".$this->getFee()." (".$this->getFeeAdditionalItem().")";
+        }
+        
+        return NULL;
     }
 
 

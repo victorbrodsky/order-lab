@@ -7818,7 +7818,7 @@ class TransResUtil
     //on the user facing fee schedule page, show internal pricing if the logged
     // in user is associated with (PI, etc) and has any projects (even closed)
     // that have “Internal pricing” attribute associated with it
-    public function getUserAssociatedSpecificPriceList() {
+    public function getUserAssociatedSpecificPriceList( $asPriceTypeList=FALSE ) {
         
         //get the project where this user is PI and priceList is not NULL
 
@@ -7881,7 +7881,7 @@ class TransResUtil
         }
 
         $projects = $query->getResult();
-        echo "projects=".count($projects)."<br>";
+        //echo "projects=".count($projects)."<br>";
 
         $priceListArr = array();
 
@@ -7889,20 +7889,30 @@ class TransResUtil
             foreach ($projects as $project) {
                 //dump($project);
                 //echo "project=".$project."<br>";
-                $priceListId = $project[1];
-                echo "priceListId=".$priceListId."<br>";
 
-                $priceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($priceListId);
-                if( $priceList ) {
-                    $priceListArr[] = $priceList;
+                $priceListId = $project[1];
+                //echo "priceListId=" . $priceListId . "<br>";
+
+                if( $asPriceTypeList ) {
+                    if( $priceListId ) {
+                        $priceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($priceListId);
+                        if ($priceList) {
+                            $priceListArr[] = $priceList;
+                        }
+                    }
+                } else {
+                    $priceListArr[] = $priceListId;
                 }
             }
         }
 
-        echo "priceListArr=".count($priceListArr)."<br>";
-        foreach ($priceListArr as $priceList) {
-            echo "priceList=".$priceList."<br>";
-        }
+        //testing
+        //$priceListArr = array(3);
+
+//        echo "priceListArr=".count($priceListArr)."<br>";
+//        foreach ($priceListArr as $priceList) {
+//            echo "priceList=".$priceList."<br>";
+//        }
 
         //exit("111");
         return $priceListArr;
