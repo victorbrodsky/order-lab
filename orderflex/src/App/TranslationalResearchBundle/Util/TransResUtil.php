@@ -7818,7 +7818,7 @@ class TransResUtil
     //on the user facing fee schedule page, show internal pricing if the logged
     // in user is associated with (PI, etc) and has any projects (even closed)
     // that have “Internal pricing” attribute associated with it
-    public function getUserAssociatedPriceList() {
+    public function getUserAssociatedSpecificPriceList() {
         
         //get the project where this user is PI and priceList is not NULL
 
@@ -7867,8 +7867,8 @@ class TransResUtil
             "billingContact.id = :userId OR " .
             "submitter.id = :userId";
 
-        //$dqlParameters["userId"] = $user->getId();
-        //$dql->andWhere($myRequestProjectsCriterion);
+        $dqlParameters["userId"] = $user->getId();
+        $dql->andWhere($myRequestProjectsCriterion);
 
         $query = $dql->getQuery();
 
@@ -7904,7 +7904,7 @@ class TransResUtil
             echo "priceList=".$priceList."<br>";
         }
 
-        exit("111");
+        //exit("111");
         return $priceListArr;
 
     }

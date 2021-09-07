@@ -37,7 +37,12 @@
     {#on the user facing fee schedule page, show internal pricing if the #}
     {#logged in user is associated with (PI, etc) and has any projects #}
     {#(even closed) that have “Internal pricing” attribute associated with it#}
-    {% set showSpecificFee = 1 %}
+    {% set specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList() %}
+    {% if specificPriceListArr|length > 0 %}
+        {% set showSpecificFee = 1 %}
+    {% else %}
+        {% set showSpecificFee = 0 %}
+    {% endif %}
 
     <table class="table table-hover table-condensed text-left">
         <thead>
