@@ -109,8 +109,10 @@ $(document).ready(function() {
 
 });
 
-function newPriceListListener(holder) {
-    console.log("newPriceListListener");
+//redeclare (override) newPriceListListener function
+//function newPriceListListener(holder) {
+newPriceListListener = function(holder){
+    console.log("list newPriceListListener");
 
     var targetClass = 'select.field-priceList';
 
@@ -120,13 +122,13 @@ function newPriceListListener(holder) {
         var priceListEl = $(targetClass);
     }
 
-    console.log('total priceList count=' + priceListEl.length);
+    //console.log('total priceList count=' + priceListEl.length);
 
     if( priceListEl.length == 0 ) {
         return;
     }
 
-    console.log('_cycleShow='+_cycleShow);
+    //console.log('_cycleShow='+_cycleShow);
     if( _cycleShow ) {
         return;
     }
@@ -135,7 +137,7 @@ function newPriceListListener(holder) {
         return;
     }
 
-    console.log(".user-prices-holder exists");
+    //console.log(".user-prices-holder exists");
 
     priceListEl.on("change", function(e) {
 
@@ -151,7 +153,7 @@ function newPriceListListener(holder) {
             return;
         }
 
-        console.log("priceList change listener, val="+value+", id="+thisId);
+        //console.log("priceList change listener, val="+value+", id="+thisId);
 
         var priceListArr = [];
 
@@ -174,6 +176,7 @@ function newPriceListListener(holder) {
                         "has only one pair of the 'initial' and 'additional' unit price values per price list.";
                     $('#pricelist-error').text(error);
                     $('#pricelist-error').show();
+                    return;
 
                 } else {
                     priceListArr[priceListDataId] = true;
@@ -188,7 +191,7 @@ function newPriceListListener(holder) {
     //Remove button clicked => price list removed
     $(".remove-pricelist-btn").on("remove", function () {
         //alert("Element was removed");
-        console.log("remove-pricelist-btn click");
+        //console.log("remove-pricelist-btn click");
         $('#oleg_userdirectorybundle_genericlist_submit').show();
         $('#pricelist-error').text("");
         $('#pricelist-error').hide();

@@ -94,6 +94,11 @@ function initBaseAdd(newForm,callback) {
     }
 }
 
+function newPriceListListener(newForm) {
+    console.log("empty newPriceListListener");
+    return;
+}
+
 //get input field only
 function getBaseTitleForm( elclass ) {
 
