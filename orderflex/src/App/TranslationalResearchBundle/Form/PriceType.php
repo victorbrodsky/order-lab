@@ -62,7 +62,7 @@ class PriceType extends AbstractType
             //'disabled' => true,
             'required' => false,
             'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox combobox-width field-priceList'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
