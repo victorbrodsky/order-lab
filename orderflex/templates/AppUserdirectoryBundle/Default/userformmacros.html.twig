@@ -1237,6 +1237,8 @@
         <div id="prices" class="panel-collapse collapse {{ collapsein }}">
             <div class="panel-body">
 
+                <div id="pricelist-error" class="alert alert-danger" style="display: none; margin: 5px;"></div>
+
                 <div class="user-prices-holder">
                     {% if prices|length > 0 %}
                         {% for price in prices %}
@@ -1271,7 +1273,7 @@
 
         {% if not showFlag %}
             <div class="text-right">
-                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-default btn-sm remove-pricelist-btn" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
             </div>
         {% endif %}
 

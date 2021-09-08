@@ -1242,59 +1242,55 @@
 {% endmacro %}
 
 
-{% block additionaljs %}
+{#{% block additionaljs %}#}
 
-<script type="text/javascript">
+{#<script type="text/javascript">#}
 
-    $(document).ready(function() {
+    {#$(document).ready(function() {#}
 
-        console.log("listmacros cycle="+cycle);
-
-
-        if( $(".user-prices-holder").length > 0 ) {
-            console.log(".user-prices-holder exists");
-
-//            $(".requireTissueProcessing").on("change", function(e) {
-//                var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
-//                //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
-//                transresShowHideRequireTissueProcessing(requireTissueProcessing);
-//            });
-
-            //transres-review-submit
-            $('#oleg_userdirectorybundle_genericlist_submit').click(function(event) {
-                console.log("btn submit click");
-                //console.log($(this));
-
-                var priceListArr = [];
-                //field-priceList
-                $("select.field-priceList").each(function(){
-
-                    var priceListData = $(this).select2('data');
-                    if( priceListData ) {
-                        var priceListDataId = priceListData.id;
-                        var priceListDataText = priceListData.text;
-                        //priceListArr.push(priceListDataId);
-                        if( priceListArr[priceListDataId] ) {
-                            alert("Duplicate priceListDataId="+priceListDataId+", priceListDataText="+priceListDataText);
-                        } else {
-                            priceListArr[priceListDataId] = true;
-                        }
-                    }
-                });
-
-                alert("EOF validation");
-
-            });
-
-        }
+        {#console.log("listmacros cycle="+cycle);#}
 
 
+        {#if( $(".user-prices-holder").length > 0 ) {#}
+            {#console.log(".user-prices-holder exists");#}
 
+{#//            $(".requireTissueProcessing").on("change", function(e) {#}
+{#//                var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();#}
+{#//                //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);#}
+{#//                transresShowHideRequireTissueProcessing(requireTissueProcessing);#}
+{#//            });#}
 
+            {#//transres-review-submit#}
+            {#$('#oleg_userdirectorybundle_genericlist_submit').click(function(event) {#}
+                {#console.log("btn submit click");#}
+                {#//console.log($(this));#}
 
-    });
+                {#var priceListArr = [];#}
+                {#//field-priceList#}
+                {#$("select.field-priceList").each(function(){#}
 
-</script>
+                    {#var priceListData = $(this).select2('data');#}
+                    {#if( priceListData ) {#}
+                        {#var priceListDataId = priceListData.id;#}
+                        {#var priceListDataText = priceListData.text;#}
+                        {#//priceListArr.push(priceListDataId);#}
+                        {#if( priceListArr[priceListDataId] ) {#}
+                            {#alert("Duplicate priceListDataId="+priceListDataId+", priceListDataText="+priceListDataText);#}
+                        {#} else {#}
+                            {#priceListArr[priceListDataId] = true;#}
+                        {#}#}
+                    {#}#}
+                {#});#}
 
-{% endblock %}
+                {#alert("EOF validation");#}
+
+            {#});#}
+
+        {#}#}
+        {##}
+    {#});#}
+
+{#</script>#}
+
+{#{% endblock %}#}
 

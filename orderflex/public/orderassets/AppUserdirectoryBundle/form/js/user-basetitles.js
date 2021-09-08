@@ -87,6 +87,8 @@ function initBaseAdd(newForm,callback) {
 
     listenerFellAppRank(newForm);
 
+    newPriceListListener(newForm);
+
     if( callback ) {
         callback();
     }
