@@ -24,6 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
+ * Fee Schedule
+ *
  * @ORM\Entity
  * @ORM\Table(name="transres_requestCategoryTypeList")
  */

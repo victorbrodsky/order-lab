@@ -41,6 +41,7 @@
     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
         {% set showSpecificFee = 1 %}
     {% else %}
+        {#specificPriceListArr has priceList ids which can be seen by a user#}
         {% set specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList() %}
         {% if specificPriceListArr|length > 0 %}
             {% set showSpecificFee = 1 %}
@@ -81,7 +82,16 @@
         <tbody>
 
         {#{% set count = 0 %}#}
-        {% for fee in fees %}
+        {% set break = false %}
+        {% for fee in fees if not break %}
+
+            {#hide rows with empty prices using specificPriceListArr#}
+            {% set nonEmptyPrices = transres_util.getPriceListsWithNonEmptyPrices(fee,specificPriceListArr) %}
+            {#{% if nonEmptyPrices|length == 0 %}#}
+                {#{% set break = true %}#}
+            {#{% endif %}#}
+
+            {% if nonEmptyPrices %}
 
             <tr>
                 {#<td>#}
@@ -194,6 +204,8 @@
                     </td>
                 {% endif %}
             </tr>
+            {% endif %}
+
         {% endfor %}
         </tbody>
     </table>

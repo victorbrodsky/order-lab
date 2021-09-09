@@ -7928,4 +7928,28 @@ class TransResUtil
         return $priceListArr;
 
     }
+
+    //$fee - RequestCategoryTypeList
+    //$specificPriceListArr - array of specific prices
+    public function getPriceListsWithNonEmptyPrices( $price, $specificPriceListArr ) {
+        
+        //1) check if default fees are not NULL
+        $fee = $price->getFee();
+        $feeAdditionalItem = $price->getFeeAdditionalItem();
+        if( $fee || $feeAdditionalItem ) {
+            return TRUE;
+        }
+
+        if( $specificPriceListArr ) {
+            //2) check if $specificPriceListArr fees are not NULL
+            foreach ($specificPriceListArr as $specificPriceListId) {
+                $specificPriceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($specificPriceListId);
+                if ($specificPriceList) {
+                    return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
 }
