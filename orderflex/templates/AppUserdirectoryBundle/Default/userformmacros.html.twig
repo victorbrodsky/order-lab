@@ -1215,10 +1215,13 @@
 {% endmacro %}
 
 
-{% macro priceSection( prices, cycle, sitename, collapsein, title, usedata ) %}
+{% macro priceSection( form, cycle, sitename, collapsein, title, usedata ) %}
 
     {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set prices = form.prices %}
 
     {% if usedata %}
         <div id="form-prototype-data2"
@@ -1236,6 +1239,23 @@
         </div>
         <div id="prices" class="panel-collapse collapse {{ collapsein }}">
             <div class="panel-body">
+
+                {#<h3>Utilize the following specific price list</h3>#}
+                {#Select: External Pricing#}
+                {#<label for="external-price-list">Utilize the following specific price list:</label>#}
+                {#<select id="external-price-list" disabled>#}
+                    {#<option value="External Pricing">External Pricing</option>#}
+                {#</select>#}
+                {{ formmacros.simplefield("Utilize the following specific price list:",["External Pricing"],"combobox","disabled") }}
+                {% if form.fee is defined %}
+                    {{ formmacros.field(form.fee) }}
+                {% endif %}
+                {% if form.feeAdditionalItem is defined %}
+                    {{ formmacros.field(form.feeAdditionalItem) }}
+                {% endif %}
+                {% if form.initialQuantity is defined %}
+                    {{ formmacros.field(form.initialQuantity) }}
+                {% endif %}
 
                 <div id="pricelist-error" class="alert alert-danger" style="display: none; margin: 5px;"></div>
 
