@@ -86,7 +86,12 @@
         {% for fee in fees if not break %}
 
             {#hide rows with empty prices using specificPriceListArr#}
-            {% set nonEmptyPrices = transres_util.getPriceListsWithNonEmptyPrices(fee,specificPriceListArr) %}
+            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                {% set nonEmptyPrices = true %}
+            {% else %}
+                {% set nonEmptyPrices = transres_util.getPriceListsWithNonEmptyPrices(fee,specificPriceListArr) %}
+            {% endif %}
+
             {#{% if nonEmptyPrices|length == 0 %}#}
                 {#{% set break = true %}#}
             {#{% endif %}#}

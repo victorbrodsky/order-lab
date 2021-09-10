@@ -92,6 +92,8 @@ class RequestController extends OrderAbstractController
 
         $title = "New Work Request";
 
+        $availableProjects = NULL;
+
         // $_GET: get project id parameter for standalone new work request page
         $projectId = NULL;
         $routeName = $request->get('_route');
@@ -99,6 +101,13 @@ class RequestController extends OrderAbstractController
             $projectId = $request->query->get('id');
             if( $projectId ) {
                 $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+            }
+
+            if( !$project ) {
+                $availableProjects = $transresUtil->getAvailableProjects(true, true, true, false);
+                if( count($availableProjects) > 0 ) {
+                    $project = $availableProjects[0];
+                }
             }
         }
 
@@ -153,7 +162,7 @@ class RequestController extends OrderAbstractController
             }
         }
 
-        $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
+        $form = $this->createRequestForm($transresRequest,$cycle,$request,$availableProjects); //new
 
 //        $messageTypeId = true;//testing
 //        $formnodetrigger = 1;
@@ -2538,7 +2547,7 @@ class RequestController extends OrderAbstractController
 
         return $transresRequest;
     }
-    public function createRequestForm( TransResRequest $transresRequest, $cycle, $request )
+    public function createRequestForm( TransResRequest $transresRequest, $cycle, $request, $availableProjects=null )
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -2630,7 +2639,9 @@ class RequestController extends OrderAbstractController
 
             if( $routeName == "translationalresearch_new_standalone_request" ) {
                 //getAvailableProjects($finalApproved=true, $notExpired=true, $requester=true, $reviewer=true)
-                $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
+                if( !$availableProjects ) {
+                    $availableProjects = $transresUtil->getAvailableProjects(true, true, true, false);
+                }
                 $params['availableProjects'] = $availableProjects;
                 $params['project'] = $project;
                 //echo "1 project=".$project."<br>";

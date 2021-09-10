@@ -7944,8 +7944,12 @@ class TransResUtil
             //2) check if $specificPriceListArr fees are not NULL
             foreach ($specificPriceListArr as $specificPriceListId) {
                 $specificPriceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($specificPriceListId);
-                if ($specificPriceList) {
-                    return TRUE;
+                if( $specificPriceList ) {
+                    $specificFee = $specificPriceList->getFee();
+                    $specificFeeAdditionalItem = $specificPriceList->getFeeAdditionalItem();
+                    if( $specificFee || $specificFeeAdditionalItem ) {
+                        return TRUE;
+                    }
                 }
             }
         }
