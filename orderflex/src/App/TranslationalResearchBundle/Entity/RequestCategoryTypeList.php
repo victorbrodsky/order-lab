@@ -342,6 +342,7 @@ class RequestCategoryTypeList extends ListAbstract
         return $specialtyStr;
     }
 
+    //Sort the prices (Prices) according to the displayorder of the $priceList (PriceTypeList)
     public function getPrices()
     {
         return $this->prices;
