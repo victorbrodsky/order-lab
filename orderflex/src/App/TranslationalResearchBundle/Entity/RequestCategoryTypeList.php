@@ -462,6 +462,11 @@ class RequestCategoryTypeList extends ListAbstract
                 $res = $res . " ($" .  $feeAdditionalItem . " per additional item)";
             }
         }
+
+        if( !$res ) {
+            $res = "Please contact us for pricing";
+        }
+
         //echo $priceList.": res=$res <br>";
 
         return $res;

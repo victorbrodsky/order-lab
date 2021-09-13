@@ -189,17 +189,17 @@
 
                     <br>
                     <div class="row">
-                        <div class="col-xs-4">
+                        <div class="col-xs-4" title="Pricing">
                             {% if filterform.priceList is defined %}
                                 {{ form_widget(filterform.priceList) }}
                             {% endif %}
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-4" title="Budget">
                             {% if filterform.overBudget is defined %}
                                 {{ form_widget(filterform.overBudget) }}
                             {% endif %}
                         </div>
-                        <div class="col-xs-4" title="expiration filter for non-funded projects only">
+                        <div class="col-xs-4" title="Expiration filter for non-funded projects only">
                             {% if filterform.expectedExpirationDateChoices is defined %}
                                 {{ form_widget(filterform.expectedExpirationDateChoices) }}
                             {% endif %}

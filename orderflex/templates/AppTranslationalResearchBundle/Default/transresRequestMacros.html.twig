@@ -1194,7 +1194,7 @@
                                 {{ form_widget(filterform.completedBy, {'attr': {'placeholder': 'Completed by'}}) }}
                             {% endif %}
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-4" title="Pricing">
                             {% if filterform.priceList is defined %}
                                 {{ form_widget(filterform.priceList) }}
                             {% endif %}
@@ -1351,7 +1351,7 @@
                     <div class="col-xs-4">
                         {{ form_widget(filterform.sampleName) }}
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-4" title="Pricing">
                         {% if filterform.priceList is defined %}
                             {{ form_widget(filterform.priceList) }}
                         {% endif %}
@@ -1524,7 +1524,7 @@
                         <div class="col-xs-3">
                             {{ form_widget(filterform.fundingType) }}
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-3" title="Pricing">
                             {% if filterform.priceList is defined %}
                                 {{ form_widget(filterform.priceList) }}
                             {% endif %}

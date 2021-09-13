@@ -2061,7 +2061,8 @@ class RequestController extends OrderAbstractController
         if( $priceList ) {
             if( $priceList != 'all' ) {
                 $dql->leftJoin('project.priceList','priceList');
-                if( $priceList == 'default' ) {
+                if( $priceList == 'external' ) {
+                //if( $priceList == 'default' ) {
                     $dql->andWhere("priceList.id IS NULL");
                 } else {
                     $dql->andWhere("priceList.id = :priceListId");

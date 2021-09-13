@@ -6476,7 +6476,8 @@ class TransResUtil
 
         $transresPricesList = array();
         $transresPricesList['All'] = 'all';
-        $transresPricesList['Default'] = 'default';
+        //$transresPricesList['Default'] = 'default';
+        $transresPricesList['External'] = 'external';
 
         foreach($prices as $price) {
             $transresPricesList[$price->getName()] = $price->getId();
