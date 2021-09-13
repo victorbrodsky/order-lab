@@ -133,6 +133,7 @@ class FilterRequestType extends AbstractType
         ));
 
         if(1) {
+            //Sort the RequestCategoryTypeList->prices (Prices) according to the displayorder
             $builder->add('categories', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
                 'label' => false,

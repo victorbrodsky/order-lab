@@ -7690,18 +7690,18 @@ class TransResUtil
             }
             $fee->addWorkQueue($workQueue);
 
-            //assign Work Queue to specific price list
-            if( 0 ) { //Don't use workQueues for specific price list
-                foreach ($fee->getPrices() as $specificPrice) {
-                    $specificPriceWorkQueues = $specificPrice->getWorkQueues();
-                    if ($specificPriceWorkQueues && count($specificPriceWorkQueues) == 0) {
-                        if ($testing) {
-                            echo "added (" . $fee->getShortInfo() . ") $workQueue to $specificPrice price list <br>";
-                        }
-                        $specificPrice->addWorkQueue($workQueue);
-                    }
-                }
-            }
+//            //assign Work Queue to specific price list
+//            if( 0 ) { //Don't use workQueues for specific price list
+//                foreach ($fee->getPrices() as $specificPrice) {
+//                    $specificPriceWorkQueues = $specificPrice->getWorkQueues();
+//                    if ($specificPriceWorkQueues && count($specificPriceWorkQueues) == 0) {
+//                        if ($testing) {
+//                            echo "added (" . $fee->getShortInfo() . ") $workQueue to $specificPrice price list <br>";
+//                        }
+//                        $specificPrice->addWorkQueue($workQueue);
+//                    }
+//                }
+//            }
 
             return true;
         }

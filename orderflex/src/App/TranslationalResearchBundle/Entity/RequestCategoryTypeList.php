@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -89,6 +90,8 @@ class RequestCategoryTypeList extends ListAbstract
 //    private $internalFeeAdditionalItem;
 
     /**
+     * Order by priceList->orderinlist ORM\OrderBy({"priceList.orderinlist" = "ASC"})
+     *
      * @ORM\OneToMany(targetEntity="Prices", mappedBy="requestCategoryType", cascade={"persist","remove"})
      */
     private $prices;
@@ -343,10 +346,32 @@ class RequestCategoryTypeList extends ListAbstract
     }
 
     //Sort the prices (Prices) according to the displayorder of the $priceList (PriceTypeList)
-    public function getPrices()
+    //It's ordered by displayorder everywhere by in the code ->orderBy("list.orderinlist", "ASC")
+    public function getPrices_ORIG()
     {
-        return $this->prices;
+        //return $this->prices;
+
+        $prices = $this->prices;
+        uasort($prices, [$this, 'mySortPrices']);
+        return $prices;
+
+//        $expr = Criteria::expr();
+//        $criteria = Criteria::create()
+//            ->where($expr->neq('seq', null)) // Analog to IS NOT NULL
+//            ->leftJoin("seq.displayorder", "displayorder")
+//            ->orderBy(array('displayorder'=>'DESC'));
+//
+//        return $this->prices->matching($criteria);
     }
+    public function getPrices() {
+        $iterator = $this->prices->getIterator();
+        $iterator->uasort(function (Prices $a, Prices $b){
+            return ($a->getOrderinlist() < $b->getOrderinlist()) ? -1 : 1;
+        });
+
+        return new ArrayCollection(iterator_to_array($iterator));
+    }
+
     public function addPrice( $item )
     {
         if( !$this->prices->contains($item) ) {
@@ -365,6 +390,13 @@ class RequestCategoryTypeList extends ListAbstract
 
         return $this;
     }
+//    private function mySortPrices(Prices $price1, Prices $price2)
+//    {
+//        if ($price1->getOrderinlist() === $price2->getOrderinlist()) {
+//            return 0;
+//        }
+//        return ($price1->getOrderinlist() < $price2->getOrderinlist()) ? -1 : 1;
+//    }
 
     public function getPrice($priceList=NULL) {
         if( $priceList ) {
