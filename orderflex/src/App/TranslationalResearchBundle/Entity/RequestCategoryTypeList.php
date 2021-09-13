@@ -345,25 +345,16 @@ class RequestCategoryTypeList extends ListAbstract
         return $specialtyStr;
     }
 
-    //Sort the prices (Prices) according to the displayorder of the $priceList (PriceTypeList)
+    //Sort the prices (Prices) according to the displayorder of the $priceList (PriceTypeList) (not required in this method)
     //It's ordered by displayorder everywhere by in the code ->orderBy("list.orderinlist", "ASC")
-    public function getPrices_ORIG()
+    public function getPrices()
     {
-        //return $this->prices;
-
-        $prices = $this->prices;
-        uasort($prices, [$this, 'mySortPrices']);
-        return $prices;
-
-//        $expr = Criteria::expr();
-//        $criteria = Criteria::create()
-//            ->where($expr->neq('seq', null)) // Analog to IS NOT NULL
-//            ->leftJoin("seq.displayorder", "displayorder")
-//            ->orderBy(array('displayorder'=>'DESC'));
-//
-//        return $this->prices->matching($criteria);
+        return $this->prices;
     }
-    public function getPrices() {
+    //NOT USED: not required to sort in this method.
+    //Get prices sorted by prices(Prices)->priceList(PriceTypeList)->orderinlist
+    //https://stackoverflow.com/questions/56068345/sort-a-manytomany-relation-by-a-column-of-a-joined-table
+    public function getPricesSorted() {
         $iterator = $this->prices->getIterator();
         $iterator->uasort(function (Prices $a, Prices $b){
             return ($a->getOrderinlist() < $b->getOrderinlist()) ? -1 : 1;
@@ -390,13 +381,6 @@ class RequestCategoryTypeList extends ListAbstract
 
         return $this;
     }
-//    private function mySortPrices(Prices $price1, Prices $price2)
-//    {
-//        if ($price1->getOrderinlist() === $price2->getOrderinlist()) {
-//            return 0;
-//        }
-//        return ($price1->getOrderinlist() < $price2->getOrderinlist()) ? -1 : 1;
-//    }
 
     public function getPrice($priceList=NULL) {
         if( $priceList ) {
