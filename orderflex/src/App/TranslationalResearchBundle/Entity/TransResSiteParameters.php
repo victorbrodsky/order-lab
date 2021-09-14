@@ -639,6 +639,37 @@ class TransResSiteParameters {
     private $expiredProjectEmailBody;
     /////////////////////// EOF Project expirations ///////////////////////
 
+
+    //////////////////// Project Closure/Reactivation ////////////////////
+    /**
+     * Send project reactivation approval requests: (yes/no, default to “yes)
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendProjectReactivationRequest;
+    /**
+     * Project reactivation approval request from: [default to trpadminMailingListEmail]
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $projectReactivationFromEmail;
+    /**
+     * Project reactivation approval request email subject:” [Default to: Reactivation of a closed Project [ID] requested]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReactivationSubject;
+    /**
+     * Project reactivation approval request email body:
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $projectReactivationBody;
+    //////////////////// EOF Project Closure/Reactivation ////////////////////
+
+
+
+
     public function __construct($user=null) {
         $this->setCreator($user);
         $this->setCreateDate(new \DateTime());
@@ -2078,6 +2109,73 @@ class TransResSiteParameters {
     {
         $this->expiredProjectEmailBody = $expiredProjectEmailBody;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSendProjectReactivationRequest()
+    {
+        return $this->sendProjectReactivationRequest;
+    }
+
+    /**
+     * @param mixed $sendProjectReactivationRequest
+     */
+    public function setSendProjectReactivationRequest($sendProjectReactivationRequest)
+    {
+        $this->sendProjectReactivationRequest = $sendProjectReactivationRequest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReactivationFromEmail()
+    {
+        return $this->projectReactivationFromEmail;
+    }
+
+    /**
+     * @param mixed $projectReactivationFromEmail
+     */
+    public function setProjectReactivationFromEmail($projectReactivationFromEmail)
+    {
+        $this->projectReactivationFromEmail = $projectReactivationFromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReactivationSubject()
+    {
+        return $this->projectReactivationSubject;
+    }
+
+    /**
+     * @param mixed $projectReactivationSubject
+     */
+    public function setProjectReactivationSubject($projectReactivationSubject)
+    {
+        $this->projectReactivationSubject = $projectReactivationSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectReactivationBody()
+    {
+        return $this->projectReactivationBody;
+    }
+
+    /**
+     * @param mixed $projectReactivationBody
+     */
+    public function setProjectReactivationBody($projectReactivationBody)
+    {
+        $this->projectReactivationBody = $projectReactivationBody;
+    }
+
+
+
 
     
 

@@ -599,6 +599,34 @@ class Project {
 //     **/
 //    private $reminderEmails;
 
+    //////////////////// Project Closure/Reactivation ////////////////////
+    //view page: show if not empty
+    //edit page: always show
+    //"Reason for project closure"
+    //"Reason for project reactivation"
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $closureReason;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reactivationReason;
+    //edit page: show only to Platform Admin/Deputy Platform Admin (not TRP Admin)
+    //"Target Status" - select of possible project statuses
+    //"Target Status Requester" - select of users
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $targetState;
+    /**
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $targetStateRequester;
+    //////////////////// EOF Project Closure/Reactivation ////////////////////
+
+
 
     public function __construct($user=null) {
 
@@ -2137,6 +2165,70 @@ class Project {
     public function setStateComment($stateComment)
     {
         $this->stateComment = $stateComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClosureReason()
+    {
+        return $this->closureReason;
+    }
+
+    /**
+     * @param mixed $closureReason
+     */
+    public function setClosureReason($closureReason)
+    {
+        $this->closureReason = $closureReason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReactivationReason()
+    {
+        return $this->reactivationReason;
+    }
+
+    /**
+     * @param mixed $reactivationReason
+     */
+    public function setReactivationReason($reactivationReason)
+    {
+        $this->reactivationReason = $reactivationReason;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTargetState()
+    {
+        return $this->targetState;
+    }
+
+    /**
+     * @param mixed $targetState
+     */
+    public function setTargetState($targetState)
+    {
+        $this->targetState = $targetState;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTargetStateRequester()
+    {
+        return $this->targetStateRequester;
+    }
+
+    /**
+     * @param mixed $targetStateRequester
+     */
+    public function setTargetStateRequester($targetStateRequester)
+    {
+        $this->targetStateRequester = $targetStateRequester;
     }
 
     /**
