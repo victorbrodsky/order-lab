@@ -684,6 +684,9 @@
                                         >Close project request without notifications</a>
                                     </li>
                                 {% endif %}
+
+                                {#create a separate modal for TRP for project closure similarly as "Add New" user#}
+
                             {% endif %}
 
                             {#approve => final_approved#}
@@ -764,5 +767,10 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        function constructClosureProjectModal() {
+
+        }
+
     </script>
 {% endblock %}

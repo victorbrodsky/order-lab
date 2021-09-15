@@ -57,26 +57,37 @@
                     {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
 
                     {#Project Closure/Reactivation#}
-                    <hr>
-                    {% if form.closureReason is defined %}
-                        {{ formmacros.field(form.closureReason) }}
+                    {#{% if form.closureReason is defined %}#}
+                        {#{{ formmacros.field(form.closureReason) }}#}
                         {#{{ formmacros.field_notempty(form.closureReason,cycle) }}#}
-                    {% endif %}
-                    {% if form.reactivationReason is defined %}
-                        {{ formmacros.field(form.reactivationReason) }}
+                    {#{% endif %}#}
+                    {#{% if form.reactivationReason is defined %}#}
+                        {#{{ formmacros.field(form.reactivationReason) }}#}
                         {#{{ formmacros.field_notempty(form.reactivationReason,cycle) }}#}
-                    {% endif %}
-                    {% if form.targetState is defined %}
-                        {{ formmacros.field(form.targetState) }}
-                    {% endif %}
-                    {% if form.targetStateRequester is defined %}
-                        {{ formmacros.field(form.targetStateRequester) }}
-                    {% endif %}
+                    {#{% endif %}#}
+                    {#{% if form.targetState is defined %}#}
+                        {#{{ formmacros.field(form.targetState) }}#}
+                    {#{% endif %}#}
+                    {#{% if form.targetStateRequester is defined %}#}
+                        {#{{ formmacros.field(form.targetStateRequester) }}#}
+                    {#{% endif %}#}
                     {% if cycle != "new" %}
-                        {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "input", "disabled") }}
-                        {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "input", "disabled") }}
-                        {{ formmacros.simplefield("Target Status:", project.getTargetState(), "input", "disabled") }}
-                        {{ formmacros.simplefield("Target Status Requester:", project.getTargetStateRequester(), "input", "disabled") }}
+                        <hr>
+                        {#cycle={{ cycle }}<br>#}
+                        {#view page: show if not empty#}
+                        {#edit page: always show#}
+                        {% if cycle == "show" and project.getClosureReason() %}
+                            {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "input", "disabled") }}
+                        {% endif %}
+                        {% if cycle == "show" and project.getReactivationReason() %}
+                            {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "input", "disabled") }}
+                        {% endif %}
+
+                        {#edit page: show only to Platform Admin/Deputy Platform Admin (not TRP Admin)#}
+                        {% if cycle == "edit" and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            {{ formmacros.simplefield("Target Status:", project.getTargetState(), "input", "disabled") }}
+                            {{ formmacros.simplefield("Target Status Requester:", project.getTargetStateRequester(), "input", "disabled") }}
+                        {% endif %}
                     {% endif %}
                     {#EOF Project Closure/Reactivation#}
 
