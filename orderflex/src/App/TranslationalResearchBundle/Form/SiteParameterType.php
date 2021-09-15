@@ -608,6 +608,30 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        //////////////////// Project Closure/Reactivation ////////////////////
+        $builder->add('sendProjectReactivationRequest', ChoiceType::class, array(
+            'label' => "Send project reactivation approval requests:",
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('projectReactivationFromEmail', null, array(
+            'label' => "Project reactivation approval request from (default to trpadminMailingListEmail):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('projectReactivationSubject', null, array(
+            'label' => "Project reactivation approval request email subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('projectReactivationBody', null, array(
+            'label' => "Project reactivation approval request email body:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        //////////////////// EOF Project Closure/Reactivation ////////////////////
+
     }
     
     /**
