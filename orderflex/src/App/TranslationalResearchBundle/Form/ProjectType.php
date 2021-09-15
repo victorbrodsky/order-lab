@@ -801,6 +801,41 @@ class ProjectType extends AbstractType
             ));
         }
 
+        //////////////////// Project Closure/Reactivation ////////////////////
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('closureReason', null, array(
+                'label' => 'Reason for project closure:',
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('reactivationReason', null, array(
+                'label' => 'Reason for project reactivation:',
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            if( $this->params['SecurityAuthChecker']->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                $builder->add('targetState',ChoiceType::class, array(
+                    'label' => 'Target Status:',
+                    'required' => false,
+                    'disabled' => $this->params['disabledState'],
+                    'choices' => $this->params['stateChoiceArr'],
+                    'attr' => array('class' => 'combobox'),
+                ));
+
+                $builder->add( 'targetStateRequester', EntityType::class, array(
+                    'class' => 'AppUserdirectoryBundle:User',
+                    'label'=> "Target Status Requester:",
+                    'required'=> false,
+                    'multiple' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+                ));
+            }
+        }
+        //////////////////// EOF Project Closure/Reactivation ////////////////////
+
     }
     
     /**

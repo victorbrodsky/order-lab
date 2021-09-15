@@ -618,7 +618,7 @@ class SiteParameterType extends AbstractType
         $builder->add('projectReactivationFromEmail', null, array(
             'label' => "Project reactivation approval request from (default to trpadminMailingListEmail):",
             'required' => false,
-            'attr' => array('class' => 'textarea form-control')
+            'attr' => array('class' => 'form-control')
         ));
         $builder->add('projectReactivationSubject', null, array(
             'label' => "Project reactivation approval request email subject:",

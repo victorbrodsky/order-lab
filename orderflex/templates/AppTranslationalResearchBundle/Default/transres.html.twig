@@ -52,8 +52,33 @@
                     {{ transres.updateInfo(form,cycle) }}
 
                     {#expired notification email#}
+                    <hr>
                     {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
                     {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+
+                    {#Project Closure/Reactivation#}
+                    <hr>
+                    {% if form.closureReason is defined %}
+                        {{ formmacros.field(form.closureReason) }}
+                        {#{{ formmacros.field_notempty(form.closureReason,cycle) }}#}
+                    {% endif %}
+                    {% if form.reactivationReason is defined %}
+                        {{ formmacros.field(form.reactivationReason) }}
+                        {#{{ formmacros.field_notempty(form.reactivationReason,cycle) }}#}
+                    {% endif %}
+                    {% if form.targetState is defined %}
+                        {{ formmacros.field(form.targetState) }}
+                    {% endif %}
+                    {% if form.targetStateRequester is defined %}
+                        {{ formmacros.field(form.targetStateRequester) }}
+                    {% endif %}
+                    {% if cycle != "new" %}
+                        {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "input", "disabled") }}
+                        {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "input", "disabled") }}
+                        {{ formmacros.simplefield("Target Status:", project.getTargetState(), "input", "disabled") }}
+                        {{ formmacros.simplefield("Target Status Requester:", project.getTargetStateRequester(), "input", "disabled") }}
+                    {% endif %}
+                    {#EOF Project Closure/Reactivation#}
 
                 </div>
             </div>
@@ -256,6 +281,23 @@
                     {% if form.reasonForStatusChange is defined %}
                         {{ formmacros.field_notempty(form.reasonForStatusChange,cycle) }}
                     {% endif %}
+
+                    {#Project Closure/Reactivation#}
+                    {#{% if form.closureReason is defined %}#}
+                        {#{{ formmacros.field(form.closureReason) }}#}
+                        {#{{ formmacros.field_notempty(form.closureReason,cycle) }}#}
+                    {#{% endif %}#}
+                    {#{% if form.reactivationReason is defined %}#}
+                        {#{{ formmacros.field(form.reactivationReason) }}#}
+                        {#{{ formmacros.field_notempty(form.reactivationReason,cycle) }}#}
+                    {#{% endif %}#}
+                    {#{% if form.targetState is defined %}#}
+                        {#{{ formmacros.field(form.targetState) }}#}
+                    {#{% endif %}#}
+                    {#{% if form.targetStateRequester is defined %}#}
+                        {#{{ formmacros.field(form.targetStateRequester) }}#}
+                    {#{% endif %}#}
+                    {#EOF Project Closure/Reactivation#}
 
                     {{ transres.projectDocument(form,project,cycle) }}
 
@@ -1879,13 +1921,22 @@
                 {{ formmacros.field(form.expiredProjectEmailSubject) }}
                 {{ formmacros.field(form.expiredProjectEmailBody) }}
 
-                <hr>
-                <h4>Project Reactivation</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-project-reactivation-{{ specialtyId }}">Project Reactivation</a>
+            </h4>
+        </div>
+        <div id="transres-project-reactivation-{{ specialtyId }}" class="panel-collapse collapse">
+            <div class="panel-body">
                 {{ formmacros.field(form.sendProjectReactivationRequest) }}
                 {{ formmacros.field(form.projectReactivationFromEmail) }}
                 {{ formmacros.field(form.projectReactivationSubject) }}
                 {{ formmacros.field(form.projectReactivationBody) }}
-
             </div>
         </div>
     </div>
