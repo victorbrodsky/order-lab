@@ -350,6 +350,7 @@ class ProjectController extends OrderAbstractController
         $projectSpecialties = $filterform['projectSpecialty']->getData();
         $states = $filterform['state']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
+        $associatedUsers = $filterform['associatedUsers']->getData();
         $submitter = $filterform['submitter']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
@@ -771,6 +772,24 @@ class ProjectController extends OrderAbstractController
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
+        }
+
+        //$associatedUsers
+        if( $associatedUsers && count($associatedUsers) > 0 ) {
+
+            $showAssCriterion =
+            "principalInvestigators.id IN (:assUserIds) OR ".
+            "principalIrbInvestigator.id IN (:assUserIds) OR ".
+            "coInvestigators.id IN (:assUserIds) OR ".
+            "pathologists.id IN (:assUserIds) OR ".
+            "contacts.id IN (:assUserIds) OR ".
+            "billingContact.id IN (:assUserIds) OR ".
+            "submitter.id IN (:assUserIds)";
+
+            $dql->andWhere($showAssCriterion);
+            $dqlParameters["assUserIds"] = $associatedUsers;
+
+            $advancedFilter++;
         }
 
         if ($submitter) {

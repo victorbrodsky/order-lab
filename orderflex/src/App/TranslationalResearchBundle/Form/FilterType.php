@@ -104,6 +104,15 @@ class FilterType extends AbstractType
 //            },
         ));
 
+        $builder->add('associatedUsers', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:User',
+            'label'=> false,  
+            'required'=> false,
+            'multiple' => true,
+            'choices' => $this->params['transresUsers'],
+            'attr' => array('class'=>'combobox combobox-width')
+        ));
+
         $builder->add('submitter', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
             'label'=> false,
