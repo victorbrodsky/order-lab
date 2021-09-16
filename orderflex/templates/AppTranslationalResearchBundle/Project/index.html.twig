@@ -672,14 +672,25 @@
                             {% endif %}
 
                             {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
+                                {#<li>#}
+                                    {#<a general-data-confirm="Are you sure you want to close project {{ project.oid }}?"#}
+                                       {#href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"#}
+                                    {#>Close project request</a>#}
+                                {#</li>#}
+                                {#trp-closure-data-confirm#}
                                 <li>
-                                    <a general-data-confirm="Are you sure you want to close project {{ project.oid }}?"
+                                    <a trp-closure-data-confirm="{{ project.oid }}"
                                        href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                     >Close project request</a>
                                 </li>
                                 {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                    {#<li>#}
+                                        {#<a general-data-confirm="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"#}
+                                           {#href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"#}
+                                        {#>Close project request without notifications</a>#}
+                                    {#</li>#}
                                     <li>
-                                        <a general-data-confirm="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
+                                        <a trp-closure-data-confirm="{{ project.oid }}"
                                            href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                         >Close project request without notifications</a>
                                     </li>
@@ -766,10 +777,129 @@
     <script language="Javascript">
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
+
+            constructClosureProjectModal();
         });
 
         function constructClosureProjectModal() {
+            //$('a[general-data-confirm], button[general-data-confirm]')
+            $('a[trp-closure-data-confirm]').click(function(ev) {
 
+                var href = $(this).attr('href');
+
+                if( !$('#generalDataConfirmModal').length ) {
+                    var modalHtml =
+                            '<div id="generalDataConfirmModal" class="modal fade general-data-confirm-modal">' +
+                            '<div class="modal-dialog">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                            '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center">' +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            '<button class="btn btn-primary general-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                            '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                            '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                    $('body').append(modalHtml);
+                }
+
+                $('#generalDataConfirmModal').find('.modal-body').html( $(this).attr('general-data-confirm') );
+
+                var callbackfn = $(this).attr('general-data-callback'); //for example: "refreshpage"
+
+                if( callbackfn ) {
+                    var onclickStr = callbackfn+'("'+href+'"'+',this'+')';
+                    $('#dataConfirmOK').attr('onclick',onclickStr);
+                } else {
+                    $('#dataConfirmOK').attr('href', href);
+                }
+
+//        /////////////// add comment /////////////////////
+//        if( $(this).hasClass("status-with-comment") ) {
+//            //do it by listening .general-data-confirm-ok
+//            //console.log('add comment!');
+//            var commentHtml = '<br><br>Please provide a comment:' +
+//                '<p><textarea id="'+$(this).attr('id')+'" name="addcomment" type="textarea" class="textarea form-control addcomment_text" maxlength="5000" required></textarea></p>';
+//            $('#generalDataConfirmModal').find('.modal-body').append(commentHtml);
+//            //replace href link <a> with button
+//            $('.general-data-confirm-ok').hide();
+//            $('.data-comment-ok').show();
+//        } else {
+//            //$('#dataConfirmOK').attr('href', href); //do it automatically
+//        }
+//        /////////////// EOF add comment /////////////////////
+
+                ////////// assign correct confirmation text and button's text //////////
+                var okText = $(this).attr('data-ok');
+                var cancelText = $(this).attr('data-cancel');
+                if( typeof okText === 'undefined' ){
+                    okText = 'OK';
+                }
+                if( typeof cancelText === 'undefined' ){
+                    cancelText = 'Cancel';
+                }
+                $('#generalDataConfirmModal').find('.general-data-confirm-cancel').text( cancelText );
+
+                //console.log('okText='+okText);
+                if( okText != 'hideOkButton' ) {
+                    $('#generalDataConfirmModal').find('.general-data-confirm-ok').text( okText );
+                    $('.general-data-confirm-ok').show();
+                } else {
+                    $('.general-data-confirm-ok').hide();
+                }
+                ////////// EOF of assigning text //////////
+
+                $('#generalDataConfirmModal').modal({show:true});
+
+                //post process function, for example click all buttons on transres review page to update specific fields
+                var generalDataConfirmBtn = $(this);
+                var postprocessfn = generalDataConfirmBtn.attr('general-post-process'); //general-post-process=transresUpdateProjectSpecificBtn
+
+                //add listnere to ok button to "Please wait ..." and disable button on click
+                $('.general-data-confirm-ok').on('click', function(event){
+                    //console.log("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
+                    //alert("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
+
+                    var footer = $(this).closest('.modal-footer');
+                    footer.html('Please wait ...');
+
+                    //post process function, for example click all buttons on transres review page to update specific fields
+                    if(1) {
+                        if( postprocessfn ) {
+
+                            // if ($.isFunction(window[postprocessfn])) {
+                            //     alert("Exists: postprocessfn="+postprocessfn);
+                            // } else {
+                            //     alert("Does not exist: postprocessfn="+postprocessfn);
+                            // }
+
+                            //var fn = window[postprocessfn];
+                            //console.log("postprocessfn="+postprocessfn);
+                            //fn(generalDataConfirmBtn);
+
+                            if ($.isFunction(window[postprocessfn])) {
+                                //execute it
+                                console.log("function exists: postprocessfn="+postprocessfn);
+                                //alert("Exists: postprocessfn="+postprocessfn);
+                                var fn = window[postprocessfn];
+                                fn(generalDataConfirmBtn);
+                            } else {
+                                //alert("Does not exist: postprocessfn="+postprocessfn);
+                                console.log("function "+postprocessfn+" does not exist");
+                            }
+                        }
+                    }
+                });
+
+                return false;
+            }); //general-data-confirm click
         }
 
     </script>
