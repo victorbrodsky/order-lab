@@ -687,6 +687,7 @@
                             {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
 
                                 {% set simpleProjectClosure = true %}
+                                {% set simpleProjectClosure = false %}
 
                                 {% if simpleProjectClosure %}
                                     <li>
@@ -697,7 +698,8 @@
                                 {% else %}
                                     {#trp-closure-data-confirm#}
                                     <li>
-                                        <a trp-closure-data-confirm="{{ project.oid }}"
+                                        <a trp-closure-data-confirm="{{ project.id }}"
+                                           trp-closure-title-data="Close project request"
                                            href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                         >Close project request</a>
                                     </li>
@@ -711,7 +713,8 @@
                                         </li>
                                     {% else %}
                                         <li>
-                                            <a trp-closure-data-confirm="{{ project.oid }}"
+                                            <a trp-closure-data-confirm="{{ project.id }}"
+                                               trp-closure-title-data="Close project request without notifications"
                                                href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                             >Close project request without notifications</a>
                                         </li>
@@ -804,25 +807,35 @@
         });
 
         function constructClosureProjectModal() {
-            //$('a[general-data-confirm], button[general-data-confirm]')
             $('a[trp-closure-data-confirm]').click(function(ev) {
 
-                var href = $(this).attr('href');
+                //remove any existing modal
+                $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+                $( '.modal' ).remove();
+                $( '.modal-backdrop' ).remove();
+                $( 'body' ).removeClass( "modal-open" );
+                $('#trpDataConfirmModal').remove();
 
-                if( !$('#generalDataConfirmModal').length ) {
+                var href = $(this).attr('href');
+                //var callbackfn = $(this).attr('general-data-callback');
+                var projectId = $(this).attr('trp-closure-data-confirm');
+                var title = $(this).attr('trp-closure-title-data');
+
+                //if( !$('#trpDataConfirmModal').length ) {
+                    console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
                     var modalHtml =
-                            '<div id="generalDataConfirmModal" class="modal fade general-data-confirm-modal">' +
+                            '<div id="trpDataConfirmModal" class="modal fade trp-closure-data-confirm-modal">' +
                             '<div class="modal-dialog">' +
                             '<div class="modal-content">' +
                             '<div class="modal-header text-center">' +
                             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                            '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                            '<h3 id="dataConfirmLabel">'+title+' ID '+projectId+'</h3>' +
                             '</div>' +
                             '<div class="modal-body text-center">' +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            '<button class="btn btn-primary general-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                            '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                            '<button class="btn btn-primary trp-closure-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                            '<a class="btn btn-primary trp-closure-data-confirm-ok" id="dataConfirmOK">OK</a>' +
                             '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
                             '</div>' +
                             '</div>' +
@@ -830,18 +843,18 @@
                             '</div>';
 
                     $('body').append(modalHtml);
-                }
+                //}
 
-                $('#generalDataConfirmModal').find('.modal-body').html( $(this).attr('general-data-confirm') );
+                $('#trpDataConfirmModal').find('.modal-body').html( $(this).attr('trp-closure-data-confirm') );
 
-                var callbackfn = $(this).attr('general-data-callback'); //for example: "refreshpage"
-
-                if( callbackfn ) {
-                    var onclickStr = callbackfn+'("'+href+'"'+',this'+')';
-                    $('#dataConfirmOK').attr('onclick',onclickStr);
-                } else {
-                    $('#dataConfirmOK').attr('href', href);
-                }
+//                var callbackfn = $(this).attr('general-data-callback'); //for example: "refreshpage"
+//
+//                if( callbackfn ) {
+//                    var onclickStr = callbackfn+'("'+href+'"'+',this'+')';
+//                    $('#dataConfirmOK').attr('onclick',onclickStr);
+//                } else {
+//                    $('#dataConfirmOK').attr('href', href);
+//                }
 
 //        /////////////// add comment /////////////////////
 //        if( $(this).hasClass("status-with-comment") ) {
@@ -867,25 +880,25 @@
                 if( typeof cancelText === 'undefined' ){
                     cancelText = 'Cancel';
                 }
-                $('#generalDataConfirmModal').find('.general-data-confirm-cancel').text( cancelText );
+                $('#trpDataConfirmModal').find('.trp-closure-data-confirm-cancel').text( cancelText );
 
                 //console.log('okText='+okText);
                 if( okText != 'hideOkButton' ) {
-                    $('#generalDataConfirmModal').find('.general-data-confirm-ok').text( okText );
-                    $('.general-data-confirm-ok').show();
+                    $('#trpDataConfirmModal').find('.trp-closure-data-confirm-ok').text( okText );
+                    $('.trp-closure-data-confirm-ok').show();
                 } else {
-                    $('.general-data-confirm-ok').hide();
+                    $('.trp-closure-data-confirm-ok').hide();
                 }
                 ////////// EOF of assigning text //////////
 
-                $('#generalDataConfirmModal').modal({show:true});
+                $('#trpDataConfirmModal').modal({show:true});
 
                 //post process function, for example click all buttons on transres review page to update specific fields
                 var generalDataConfirmBtn = $(this);
                 var postprocessfn = generalDataConfirmBtn.attr('general-post-process'); //general-post-process=transresUpdateProjectSpecificBtn
 
                 //add listnere to ok button to "Please wait ..." and disable button on click
-                $('.general-data-confirm-ok').on('click', function(event){
+                $('.trp-closure-data-confirm-ok').on('click', function(event){
                     //console.log("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
                     //alert("on modal js: dataConfirmOK clicked. postprocessfn="+postprocessfn);
 
@@ -921,7 +934,17 @@
                 });
 
                 return false;
-            }); //general-data-confirm click
+            }); //trp-closure-data-confirm click
+
+//            //$('#trpDataConfirmModal').on('hidden.bs.modal', function () {
+//            $('.trp-closure-data-confirm-cancel').on('click', function(event){
+//                console.log("hidden.bs.modal");
+//                $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+//
+//                $( '.modal' ).remove();
+//                $( '.modal-backdrop' ).remove();
+//                $( 'body' ).removeClass( "modal-open" );
+//            });
         }
 
     </script>
