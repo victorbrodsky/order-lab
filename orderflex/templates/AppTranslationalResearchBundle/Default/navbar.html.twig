@@ -80,6 +80,8 @@
 
 {% block navbar %}
 
+    {#MULTI-LEVEL NAVBAR!!!#}
+
     {#{% set simpleMenu = 1 %}#}
     {% set simpleMenu = 0 %}
 
@@ -1025,4 +1027,14 @@
 
 {#{% endblock %}#}
 
+{#{% block additionalcss2 %}{% endblock %}#}
+{#Use additionalcss2 for multi-level, since additionalcss is already used by other templates#}
+{% block additionalcss2 %}
+    {# Move comments.css to the templates which are using comments: project review, request review, request new (is it required in request new ?) #}
+    {# <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
+    {# <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />#}
+    {# multi-level menu test#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/multi-level-menu.css') }}" />
+{% endblock %}
 
