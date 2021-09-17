@@ -2207,6 +2207,84 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * @Route("/close-project-ajax/", name="translationalresearch_close_project_ajax", methods={"POST"}, options={"expose"=true})
+     */
+    public function closeProjectAjaxAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+        $transresUtil = $this->container->get('transres_util');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $res = array(); //"NOTOK";
+        $res["flag"] = "NOTOK";
+
+        $type = trim( $request->get('type') );
+        $comment = trim( $request->get('comment') );
+
+        $res = NULL;
+        $project = NULL;
+        $projectId = trim( $request->get('projectId') );
+        if( $projectId ) {
+            $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        }
+
+        if( false === $transresPermissionUtil->hasProjectPermission("close",$project) ) {
+            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            $res["error"] = "No permission to close this project";
+            $res["flag"] = "NOTOK";
+
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        //Close project
+        $testing = false;
+        $originalStateStr = $project->getState();
+        $to = "closed";
+
+        $project->setState($to);
+
+        $project->updateClosureReason($comment,$user);
+
+        $em->flush($project);
+
+        $resultMsg = "Project request ".$project->getOid()." has been closed by $user";
+        $sessionNotice = $resultMsg;
+
+        if( $type == "project_close" ) {
+            //Send transition emails
+            $resultMsg = $transresUtil->sendTransitionEmail($project, $originalStateStr, $testing);
+            $sessionNotice = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
+        }
+
+        if( $type == "project_close_without_notifications" ) {
+            $resultMsg = "Project request ".$project->getOid()." has been closed by $user without sending any email notifications";
+            $sessionNotice = $resultMsg;
+        }
+
+        //event log
+        $eventType = "Review Submitted";
+        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $sessionNotice
+        //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
+        );
+
+        $res["flag"] = "OK";
+        $res["error"] = $sessionNotice;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+    /**
      * Close project
      *
      * @Route("/close-project/{id}", name="translationalresearch_project_close", methods={"GET"})
@@ -2219,6 +2297,8 @@ class ProjectController extends OrderAbstractController
         if( false === $transresPermissionUtil->hasProjectPermission("close",$project) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+        //exit('close project');
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');

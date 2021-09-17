@@ -687,7 +687,7 @@
                             {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
 
                                 {% set simpleProjectClosure = true %}
-                                {#{% set simpleProjectClosure = false %}#}
+                                {% set simpleProjectClosure = false %}
 
                                 {% if simpleProjectClosure %}
                                     <li>
@@ -700,6 +700,7 @@
                                     <li>
                                         <a trp-closure-data-confirm="{{ project.id }}"
                                            trp-closure-title-data="Close project request"
+                                           trp-closure-type-data="project_close"
                                            href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                         >Close project request</a>
                                     </li>
@@ -715,6 +716,7 @@
                                         <li>
                                             <a trp-closure-data-confirm="{{ project.id }}"
                                                trp-closure-title-data="Close project request without notifications"
+                                               trp-closure-type-data="project_close_without_notifications"
                                                href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                             >Close project request without notifications</a>
                                         </li>
@@ -803,7 +805,12 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
 
-            trpConstructClosureProjectModal();
+            //trpConstructClosureProjectModal_ORIG();
+
+            $('a[trp-closure-data-confirm]').click(function(ev) {
+                trpConstructClosureProjectModal(this);
+                return false;
+            }); //trp-closure-data-confirm click
         });
 
         function trpConstructClosureProjectModal_ORIG() {
@@ -948,90 +955,88 @@
         }
 
 
-        function trpConstructClosureProjectModal(newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {
-            fieldId = "'"+fieldId+"'";
-            sitename = "'"+sitename+"'";
-            otherUserParam = "'"+otherUserParam+"'";
+        function trpConstructClosureProjectModal(actionBtn) { //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {
+            //fieldId = "'"+fieldId+"'";
+            //sitename = "'"+sitename+"'";
+            //otherUserParam = "'"+otherUserParam+"'";
+
+            //remove any existing modal
+            $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+            $( '.modal' ).remove();
+            $( '.modal-backdrop' ).remove();
+            $( 'body' ).removeClass( "modal-open" );
+            $('#trp-project-status-modal').remove();
+
+            var href = $(actionBtn).attr('href');
+            //var callbackfn = $(this).attr('general-data-callback');
+            var projectId = $(actionBtn).attr('trp-closure-data-confirm');
+            var title = $(actionBtn).attr('trp-closure-title-data');
+            var type = $(actionBtn).attr('trp-closure-type-data');
+            type = "'"+type+"'";
+            console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
+
             var modalHtml =
-                    '<div id="user-add-new-user" class="modal fade">' +
+                    '<div id="trp-project-status-modal" class="modal fade">' + //id="user-add-new-user"
                     '<div class="modal-dialog">' +
                     '<div class="modal-content">' +
                     '<div class="modal-header text-center">' +
                     '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                    '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
+                    //'<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
+                    '<h3 id="dataConfirmLabel">'+title+' ID '+projectId+'</h3>' +
                     '</div>' +
                     '<div class="modal-body text-center">' +
-                    newUserFormHtml +
-                    '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+                    //newUserFormHtml +
+
+                    '<div class="row">' +
+                        '<div class="col-xs-6" align="right">' +
+                            '<label for="trp-project-reason">Reason for project closure:</label>' +
+                        '</div>' +
+                        '<div class="col-xs-6" align="left">' +
+                            '<input type="text" id="trp-project-reason" name="trp-project-reason" class="form-control">' +
+                        '</div>' +
+                    '</div>' +
+
+                    '<div id="add-user-danger-box" class="alert alert-danger" style="display: none; margin: 10px;"></div>' +
                     '</div>' +
                     '<div class="modal-footer">' +
                     '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                    '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="trpCloseProjectAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
+                    '<a class="btn btn-primary trp-project-status-ok-btn" id="trp-project-status-ok-btn" onclick="trpCloseProjectAction(this,'+projectId+','+type+')">OK</a>' +
+                    //'<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
                     '</div>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
 
-            if( appendHolder === undefined ) {
-                appendHolder = 'body';
-            }
-
+            var appendHolder = 'body';
             $(appendHolder).append(modalHtml);
-        }
-        function trpCloseProjectAction( addUserBtn, fieldId, sitename, otherUserParam ) {
 
-            var holder = $(addUserBtn).closest(".modal");
+            $('#trp-project-status-modal').modal({show:true});
+        }
+        function trpCloseProjectAction( okbtn, projectId, type ) {
+
+            var holder = $(okbtn).closest(".modal");
 
             holder.find('#add-user-danger-box').hide();
             holder.find('#add-user-danger-box').html(null);
 
-            var btn = document.getElementById("add-user-btn-add");
+            var btn = document.getElementById("trp-project-status-ok-btn");
             //var btn = btnEl.get(0);
             var lbtn = Ladda.create( btn );
             lbtn.start();
-            holder.find("#user-add-btn-dismiss").hide();
-            holder.find("#user-add-btn-cancel").hide();
+            //holder.find("#user-add-btn-dismiss").hide();
+            //holder.find("#user-add-btn-cancel").hide();
 
             var transTime = 500;
 
             //console.log("add New UserAction: Add New User Ajax");
 
-            var keytype = holder.find('#oleg_userdirectorybundle_user_keytype').select2('val');
-
-            var cwid = holder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val();
-            //console.log("cwid="+cwid);
-            //var userid = $("#add-new-user-userid").val();
-            //console.log("userid="+userid);
-            var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
-            //console.log("email="+email);
-            //var displayname = $("#add-new-user-displayname").val();
-            //console.log("displayname="+displayname);
-            var firstname = holder.find("#oleg_userdirectorybundle_user_infos_0_firstName").val();
-            //console.log("firstname="+firstname);
-            var lastname = holder.find("#oleg_userdirectorybundle_user_infos_0_lastName").val();
-            //console.log("lastname="+lastname);
-            var phone = holder.find("#oleg_userdirectorybundle_user_infos_0_preferredPhone").val();
-            //console.log("phone="+phone);
-            var administrativetitle = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val');
-            //console.log("administrativetitle="+administrativetitle);
-            var institution = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_institution").select2('val');
-            //console.log("institution="+institution);
+            var comment = holder.find("#trp-project-reason").val();
+            console.log("comment="+comment);
 
             var errorMsg = null;
 
-            //1) validate email
-            if( !email ) {
-                errorMsg = "Please enter a new user's email address";
-            } else {
-                if( !validateEmail(email) ) {
-                    errorMsg = "Please enter a valid user's email address";
-                }
-            }
-            if( !firstname ) {
-                errorMsg = "Please enter a new user's first name";
-            }
-            if( !lastname ) {
-                errorMsg = "Please enter a new user's last name";
+            if( !comment ) {
+                errorMsg = "Please enter a reason for project closure";
             }
 
             if( errorMsg ) {
@@ -1048,25 +1053,17 @@
             //console.log("add New UserAction: call ajax to check if user exists");
 
             //2) try to create a new user
-            var url = Routing.generate(sitename+'_add_new_user_ajax');
+            //var url = Routing.generate(sitename+'_add_new_user_ajax');
+            var url = Routing.generate('translationalresearch_close_project_ajax');
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
                 //type: "GET",
                 type: "POST",
                 data: {
-                    fieldId: fieldId,
-                    sitename: sitename,
-                    otherUserParam: otherUserParam,
-                    cwid: cwid,
-                    email: email,
-                    //displayname: displayname,
-                    firstname: firstname,
-                    lastname: lastname,
-                    phone: phone,
-                    administrativetitle: administrativetitle,
-                    institution: institution,
-                    keytype: keytype
+                    projectId: projectId,
+                    type: type,
+                    comment: comment,
                 },
                 dataType: 'json',
                 async: asyncflag
@@ -1083,16 +1080,19 @@
                     holder.find('#add-user-danger-box').show(transTime);
                 } else {
                     //console.log('OK');
-                    updateUserComboboxes(response,fieldId);
+                    //updateUserComboboxes(response,fieldId);
                     //$("#user-add-btn-dismiss").click();
                     //document.getElementById("user-add-btn-dismiss").click();
                     holder.find("#user-add-btn-dismiss").click();
                 }
 
             }).always(function() {
-                lbtn.stop();
-                holder.find("#user-add-btn-dismiss").show();
-                holder.find("#user-add-btn-cancel").show();
+
+                location.reload();
+
+                //lbtn.stop();
+                //holder.find("#user-add-btn-dismiss").show();
+                //holder.find("#user-add-btn-cancel").show();
             }).error(function(jqXHR, textStatus, errorThrown) {
                 //console.log('jqXHR:');
                 //console.log(jqXHR);

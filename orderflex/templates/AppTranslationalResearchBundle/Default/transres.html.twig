@@ -77,10 +77,10 @@
                         {#view page: show if not empty#}
                         {#edit page: always show#}
                         {% if cycle == "show" and project.getClosureReason() %}
-                            {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "input", "disabled") }}
+                            {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "textarea", "disabled") }}
                         {% endif %}
                         {% if cycle == "show" and project.getReactivationReason() %}
-                            {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "input", "disabled") }}
+                            {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "textarea", "disabled") }}
                         {% endif %}
 
                         {#edit page: show only to Platform Admin/Deputy Platform Admin (not TRP Admin)#}

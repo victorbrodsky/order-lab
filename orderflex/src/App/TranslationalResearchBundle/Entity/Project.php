@@ -2182,6 +2182,26 @@ class Project {
     {
         $this->closureReason = $closureReason;
     }
+    /**
+     * @param mixed $closureReason
+     */
+    public function updateClosureReason($closureReason,$user)
+    {
+        $oldClosureReason = $this->getClosureReason();
+
+        if( $oldClosureReason ) {
+            $oldClosureReason = $oldClosureReason . "\n\n";
+        }
+
+        //Victor Brodsky (cwid - vib9020) on MM/DD/YYYY at HH:MM: This project is expired
+        $date = new \DateTime();
+        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason;
+        $updatedClosureReason = $oldClosureReason . $closureReason;
+
+        $this->setClosureReason($updatedClosureReason);
+
+        return $updatedClosureReason;
+    }
 
     /**
      * @return mixed
