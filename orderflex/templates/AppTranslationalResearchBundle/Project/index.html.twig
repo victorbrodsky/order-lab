@@ -687,7 +687,7 @@
                             {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
 
                                 {% set simpleProjectClosure = true %}
-                                {% set simpleProjectClosure = false %}
+                                {#{% set simpleProjectClosure = false %}#}
 
                                 {% if simpleProjectClosure %}
                                     <li>
@@ -803,10 +803,10 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
 
-            constructClosureProjectModal();
+            trpConstructClosureProjectModal();
         });
 
-        function constructClosureProjectModal() {
+        function trpConstructClosureProjectModal_ORIG() {
             $('a[trp-closure-data-confirm]').click(function(ev) {
 
                 //remove any existing modal
@@ -945,6 +945,167 @@
 //                $( '.modal-backdrop' ).remove();
 //                $( 'body' ).removeClass( "modal-open" );
 //            });
+        }
+
+
+        function trpConstructClosureProjectModal(newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {
+            fieldId = "'"+fieldId+"'";
+            sitename = "'"+sitename+"'";
+            otherUserParam = "'"+otherUserParam+"'";
+            var modalHtml =
+                    '<div id="user-add-new-user" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header text-center">' +
+                    '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                    '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
+                    '</div>' +
+                    '<div class="modal-body text-center">' +
+                    newUserFormHtml +
+                    '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+                    '</div>' +
+                    '<div class="modal-footer">' +
+                    '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                    '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="trpCloseProjectAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
+            if( appendHolder === undefined ) {
+                appendHolder = 'body';
+            }
+
+            $(appendHolder).append(modalHtml);
+        }
+        function trpCloseProjectAction( addUserBtn, fieldId, sitename, otherUserParam ) {
+
+            var holder = $(addUserBtn).closest(".modal");
+
+            holder.find('#add-user-danger-box').hide();
+            holder.find('#add-user-danger-box').html(null);
+
+            var btn = document.getElementById("add-user-btn-add");
+            //var btn = btnEl.get(0);
+            var lbtn = Ladda.create( btn );
+            lbtn.start();
+            holder.find("#user-add-btn-dismiss").hide();
+            holder.find("#user-add-btn-cancel").hide();
+
+            var transTime = 500;
+
+            //console.log("add New UserAction: Add New User Ajax");
+
+            var keytype = holder.find('#oleg_userdirectorybundle_user_keytype').select2('val');
+
+            var cwid = holder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val();
+            //console.log("cwid="+cwid);
+            //var userid = $("#add-new-user-userid").val();
+            //console.log("userid="+userid);
+            var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
+            //console.log("email="+email);
+            //var displayname = $("#add-new-user-displayname").val();
+            //console.log("displayname="+displayname);
+            var firstname = holder.find("#oleg_userdirectorybundle_user_infos_0_firstName").val();
+            //console.log("firstname="+firstname);
+            var lastname = holder.find("#oleg_userdirectorybundle_user_infos_0_lastName").val();
+            //console.log("lastname="+lastname);
+            var phone = holder.find("#oleg_userdirectorybundle_user_infos_0_preferredPhone").val();
+            //console.log("phone="+phone);
+            var administrativetitle = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val');
+            //console.log("administrativetitle="+administrativetitle);
+            var institution = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_institution").select2('val');
+            //console.log("institution="+institution);
+
+            var errorMsg = null;
+
+            //1) validate email
+            if( !email ) {
+                errorMsg = "Please enter a new user's email address";
+            } else {
+                if( !validateEmail(email) ) {
+                    errorMsg = "Please enter a valid user's email address";
+                }
+            }
+            if( !firstname ) {
+                errorMsg = "Please enter a new user's first name";
+            }
+            if( !lastname ) {
+                errorMsg = "Please enter a new user's last name";
+            }
+
+            if( errorMsg ) {
+                holder.find('#add-user-danger-box').html(errorMsg);   //"Please enter a new user email address");
+                holder.find('#add-user-danger-box').show(transTime);
+
+                lbtn.stop();
+                holder.find("#user-add-btn-dismiss").show();
+                holder.find("#user-add-btn-cancel").show();
+
+                return false;
+            }
+
+            //console.log("add New UserAction: call ajax to check if user exists");
+
+            //2) try to create a new user
+            var url = Routing.generate(sitename+'_add_new_user_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "POST",
+                data: {
+                    fieldId: fieldId,
+                    sitename: sitename,
+                    otherUserParam: otherUserParam,
+                    cwid: cwid,
+                    email: email,
+                    //displayname: displayname,
+                    firstname: firstname,
+                    lastname: lastname,
+                    phone: phone,
+                    administrativetitle: administrativetitle,
+                    institution: institution,
+                    keytype: keytype
+                },
+                dataType: 'json',
+                async: asyncflag
+            }).done(function(response) {
+                //console.log(response);
+
+                if( response.flag == "NOTOK" ) {
+                    //console.log('NOTOK');
+                    lbtn.stop();
+                    holder.find("#user-add-btn-dismiss").show();
+                    holder.find("#user-add-btn-cancel").show();
+
+                    holder.find('#add-user-danger-box').html(response.error);
+                    holder.find('#add-user-danger-box').show(transTime);
+                } else {
+                    //console.log('OK');
+                    updateUserComboboxes(response,fieldId);
+                    //$("#user-add-btn-dismiss").click();
+                    //document.getElementById("user-add-btn-dismiss").click();
+                    holder.find("#user-add-btn-dismiss").click();
+                }
+
+            }).always(function() {
+                lbtn.stop();
+                holder.find("#user-add-btn-dismiss").show();
+                holder.find("#user-add-btn-cancel").show();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                //console.log('jqXHR:');
+                //console.log(jqXHR);
+                console.log('Error: ' + errorThrown);
+                //console.log('errorThrown: ' + errorThrown);
+                lbtn.stop();
+                holder.find("#user-add-btn-dismiss").show();
+                holder.find("#user-add-btn-cancel").show();
+
+                holder.find('#add-user-danger-box').html('Error : ' + errorThrown);
+                holder.find('#add-user-danger-box').show(transTime);
+            });
+
         }
 
     </script>
