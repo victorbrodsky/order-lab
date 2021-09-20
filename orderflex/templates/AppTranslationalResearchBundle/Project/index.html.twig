@@ -333,7 +333,8 @@
                 {% set trclassname = "table-row-lightred" %}
             {% endif %}
 
-            {% set projectTitle = project.getTitle() %}
+            {#{% set projectTitle = project.getTitle() %}#}
+            {% set projectTitleReason = project.getTitleAndReason() %}
 
             {% set idColor = transres_util.getPriceListColorByProject(project) %}
 
@@ -366,7 +367,7 @@
                 {% endif %}
             {% endif %}
 
-            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitle }}{{ approvedBudgetInfo }}">
+            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitleReason }}{{ approvedBudgetInfo }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
                        target="_blank"
@@ -684,10 +685,10 @@
                                 </li>
                             {% endif %}
 
-                            {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
+                            {% set simpleProjectClosure = true %}
+                            {% set simpleProjectClosure = false %}
 
-                                {% set simpleProjectClosure = true %}
-                                {% set simpleProjectClosure = false %}
+                            {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
 
                                 {% if simpleProjectClosure %}
                                     <li>
@@ -699,7 +700,7 @@
                                     {#trp-closure-data-confirm#}
                                     <li>
                                         <a trp-closure-data-confirm="{{ project.id }}"
-                                           trp-closure-title-data="Close project request"
+                                           trp-closure-title-data="Are you sure you want to close project {{ project.oid }}?"
                                            trp-closure-routename-data="translationalresearch_project_close"
                                            href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                         >Close project request</a>
@@ -715,7 +716,7 @@
                                     {% else %}
                                         <li>
                                             <a trp-closure-data-confirm="{{ project.id }}"
-                                               trp-closure-title-data="Close project request without notifications"
+                                               trp-closure-title-data="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
                                                trp-closure-routename-data="translationalresearch_project_close_without_notifications"
                                                href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                             >Close project request without notifications</a>
@@ -736,11 +737,22 @@
                                 and
                                 project.state != 'final_approved'
                             %}
-                                <li>
-                                    <a general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"
-                                       href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
-                                    >Approve project request</a>
-                                </li>
+                                {% if simpleProjectClosure or project.state != 'closed' %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"
+                                           href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                                        >Approve project request</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a
+                                            trp-closure-data-confirm="{{ project.id }}"
+                                            trp-closure-title-data="Are you sure you want to approve project {{ project.oid }}?"
+                                            trp-closure-routename-data="translationalresearch_project_close_without_notifications"
+                                            href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                                        >Approve project request</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
@@ -836,7 +848,7 @@
                             '<div class="modal-content">' +
                             '<div class="modal-header text-center">' +
                             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                            '<h3 id="dataConfirmLabel">'+title+' ID '+projectId+'</h3>' +
+                            '<h3 id="dataConfirmLabel">'+title+'</h3>' +
                             '</div>' +
                             '<div class="modal-body text-center">' +
                             '</div>' +

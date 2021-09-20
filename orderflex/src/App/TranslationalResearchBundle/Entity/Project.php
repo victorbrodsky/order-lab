@@ -2195,7 +2195,7 @@ class Project {
 
         //Victor Brodsky (cwid - vib9020) on MM/DD/YYYY at HH:MM: This project is expired
         $date = new \DateTime();
-        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason . "\n\n";
+        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason . "." . "\n\n";
         $updatedClosureReason = $closureReason . $oldClosureReason;
 
         $this->setClosureReason($updatedClosureReason);
@@ -2217,6 +2217,23 @@ class Project {
     public function setReactivationReason($reactivationReason)
     {
         $this->reactivationReason = $reactivationReason;
+    }
+
+    public function getTitleAndReason() {
+        $title = $this->getTitle();
+        $title = "'".$title."'.";
+
+        $state = $this->getState();
+
+        if( $state == "closed" ) {
+            $reason = $this->getClosureReason();
+            if( $reason ) {
+                $closedReason = "Closed as per " . $reason;
+                $title = $title . " " . $closedReason;
+            }
+        }
+
+        return $title;
     }
 
     /**
