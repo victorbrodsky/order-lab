@@ -2945,7 +2945,7 @@ class TransResUtil
     }
 
     //Use to send notification emails for project transition (awaiting review, missing info, rejected, final, closed)
-    public function sendTransitionEmail($project,$originalStateStr,$testing=false) {
+    public function sendTransitionEmail($project,$originalStateStr,$testing=false,$reason=NULL) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -3049,7 +3049,7 @@ class TransResUtil
             $subject = "Project request $oid has been rejected at the '$originalStateLabel' stage";
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
-            $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
             $body = $statusChangeMsg . $break.$break. "To view the details of this project request, please visit the link below:".$break.$projectUrl;
@@ -3084,7 +3084,7 @@ class TransResUtil
             $subject = "Project request $oid has been approved";
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
-            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
 
             //To submit a work request associated with this project request, please visit the link below: LINK-TO-NEW-WORK-REQUEST-PAGE
             $linkNewRequest = $this->container->get('router')->generate(
@@ -3169,7 +3169,7 @@ class TransResUtil
             $subject = $subject . " by " . $user;
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
-            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
 
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
@@ -6179,7 +6179,7 @@ class TransResUtil
     }
 
     //$fromStateStr and $toStateStr - state string from workflow (i.e. 'irb_review')
-    public function getNotificationMsgByStates( $fromStateStr, $toStateStr, $project ) {
+    public function getNotificationMsgByStates( $fromStateStr, $toStateStr, $project, $reason=NULL ) {
 
         $msg = null;
 
@@ -6220,7 +6220,11 @@ class TransResUtil
         if( !$msg ) {
             $user = $this->secTokenStorage->getToken()->getUser();
             $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'";
-            $msg = $msg . " by " . $user;
+            $msg = $msg . " by " . $user . ".";
+        }
+
+        if( $reason ) {
+            $msg = $msg . " Reason: " . $reason . ".";
         }
 
         return $msg;

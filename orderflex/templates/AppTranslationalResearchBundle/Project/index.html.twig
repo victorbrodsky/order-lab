@@ -700,7 +700,7 @@
                                     <li>
                                         <a trp-closure-data-confirm="{{ project.id }}"
                                            trp-closure-title-data="Close project request"
-                                           trp-closure-type-data="project_close"
+                                           trp-closure-routename-data="translationalresearch_project_close"
                                            href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                         >Close project request</a>
                                     </li>
@@ -716,7 +716,7 @@
                                         <li>
                                             <a trp-closure-data-confirm="{{ project.id }}"
                                                trp-closure-title-data="Close project request without notifications"
-                                               trp-closure-type-data="project_close_without_notifications"
+                                               trp-closure-routename-data="translationalresearch_project_close_without_notifications"
                                                href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                             >Close project request without notifications</a>
                                         </li>
@@ -971,8 +971,8 @@
             //var callbackfn = $(this).attr('general-data-callback');
             var projectId = $(actionBtn).attr('trp-closure-data-confirm');
             var title = $(actionBtn).attr('trp-closure-title-data');
-            var type = $(actionBtn).attr('trp-closure-type-data');
-            type = "'"+type+"'";
+            var routename = $(actionBtn).attr('trp-closure-routename-data');
+            routename = "'"+routename+"'";
             console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
 
             var modalHtml =
@@ -1000,7 +1000,7 @@
                     '</div>' +
                     '<div class="modal-footer">' +
                     '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                    '<a class="btn btn-primary trp-project-status-ok-btn" id="trp-project-status-ok-btn" onclick="trpCloseProjectAction(this,'+projectId+','+type+')">OK</a>' +
+                    '<a class="btn btn-primary trp-project-status-ok-btn" id="trp-project-status-ok-btn" onclick="trpCloseProjectAction(this,'+projectId+','+routename+')">OK</a>' +
                     //'<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
                     '</div>' +
                     '</div>' +
@@ -1012,7 +1012,7 @@
 
             $('#trp-project-status-modal').modal({show:true});
         }
-        function trpCloseProjectAction( okbtn, projectId, type ) {
+        function trpCloseProjectAction( okbtn, projectId, routename ) {
 
             var holder = $(okbtn).closest(".modal");
 
@@ -1030,12 +1030,12 @@
 
             //console.log("add New UserAction: Add New User Ajax");
 
-            var comment = holder.find("#trp-project-reason").val();
-            console.log("comment="+comment);
+            var reason = holder.find("#trp-project-reason").val();
+            console.log("reason="+reason);
 
             var errorMsg = null;
 
-            if( !comment ) {
+            if( !reason ) {
                 errorMsg = "Please enter a reason for project closure";
             }
 
@@ -1062,8 +1062,8 @@
                 type: "POST",
                 data: {
                     projectId: projectId,
-                    type: type,
-                    comment: comment,
+                    routename: routename,
+                    reason: reason,
                 },
                 dataType: 'json',
                 async: asyncflag

@@ -2220,8 +2220,9 @@ class ProjectController extends OrderAbstractController
         $res = array(); //"NOTOK";
         $res["flag"] = "NOTOK";
 
-        $type = trim( $request->get('type') );
-        $comment = trim( $request->get('comment') );
+        //translationalresearch_project_close translationalresearch_project_close_without_notifications
+        $routename = trim( $request->get('routename') );
+        $reason = trim( $request->get('reason') );
 
         $res = NULL;
         $project = NULL;
@@ -2242,6 +2243,18 @@ class ProjectController extends OrderAbstractController
         }
 
         //Close project
+        $result = $this->closeProject($project,$reason,$routename);
+
+        $res["flag"] = "OK";
+        $res["error"] = $result;
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+
+
+        ////////// OLD //////////////
         $testing = false;
         $originalStateStr = $project->getState();
         $to = "closed";
@@ -2300,6 +2313,16 @@ class ProjectController extends OrderAbstractController
 
         //exit('close project');
 
+        //Close project
+        $routeName = $request->get('_route');
+        $reason = NULL;
+        $this->closeProject($project,$reason,$routeName);
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+
+
+
+        /////////// OLD (below is not used) /////////////////
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -2370,6 +2393,83 @@ class ProjectController extends OrderAbstractController
         );
 
         return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    public function closeProject( $project, $reason, $routeName ) {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $testing = false;
+        $originalStateStr = $project->getState();
+        $to = "closed";
+
+        $project->setState($to);
+
+        if( $reason ) {
+            $project->updateClosureReason($reason,$user);
+        }
+
+        $em->flush($project);
+
+        /////////////////////// email and logger ////////////////////////
+//        $break = "<br>";
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        $emailSubject = "Your project request ".$project->getOid()." has been closed";
+//
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+//
+//        $emailBody = "Your project request ".$project->getOid()." has been closed by " . $user->getUsernameOptimal();
+//
+//        //comment
+//        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
+//
+//        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+//        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
+//        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+//
+//        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+//        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+//
+//        //eventlog
+//        $eventType = "Project Closed";
+//        $transresUtil->setEventLog($project,$eventType,$emailBody);
+        /////////////////////// EOF email and logger ////////////////////////
+
+
+        //$routeName = $request->get('_route');
+        $resultMsg = "Project request ".$project->getOid()." has been closed by $user";
+        $sessionNotice = $resultMsg;
+
+        if( $routeName == "translationalresearch_project_close" ) {
+            //Send transition emails
+            $resultMsg = $transresUtil->sendTransitionEmail($project, $originalStateStr, $testing,$reason);
+            $sessionNotice = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project,$reason);
+        }
+
+        if( $routeName == "translationalresearch_project_close_without_notifications" ) {
+            $resultMsg = "Project request ".$project->getOid()." has been closed by $user without sending any email notifications."
+                . " Reason: ".$reason;
+            $sessionNotice = $resultMsg;
+        }
+
+        //event log
+        $eventType = "Review Submitted";
+        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $sessionNotice
+        //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
+        );
+
+        return $sessionNotice;
     }
 
     /**

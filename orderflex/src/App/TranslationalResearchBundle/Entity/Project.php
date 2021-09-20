@@ -2189,14 +2189,14 @@ class Project {
     {
         $oldClosureReason = $this->getClosureReason();
 
-        if( $oldClosureReason ) {
-            $oldClosureReason = $oldClosureReason . "\n\n";
-        }
+//        if( $oldClosureReason ) {
+//            $oldClosureReason = $oldClosureReason . "\n\n";
+//        }
 
         //Victor Brodsky (cwid - vib9020) on MM/DD/YYYY at HH:MM: This project is expired
         $date = new \DateTime();
-        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason;
-        $updatedClosureReason = $oldClosureReason . $closureReason;
+        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason . "\n\n";
+        $updatedClosureReason = $closureReason . $oldClosureReason;
 
         $this->setClosureReason($updatedClosureReason);
 
