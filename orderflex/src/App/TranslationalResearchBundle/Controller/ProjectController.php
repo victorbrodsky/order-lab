@@ -2490,8 +2490,71 @@ class ProjectController extends OrderAbstractController
     }
     //Send project reactivation approval requests
     public function reactivationProject( $project, $reason, $routename, $targetStatus, $targetStatusRequester ) {
-        //Send email to Project reactivation approver
+        $transresUtil = $this->container->get('transres_util');
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
+        //Send email to Project reactivation approver
+        //sendProjectReactivationRequest
+        $sendReactivationEmailRequest = $transresUtil->getTransresSiteProjectParameter('sendProjectReactivationRequest',$project);
+        if( !$sendReactivationEmailRequest ) {
+            //just simply approve project
+            $sessionNotice = $this->approveProject($project);
+            return $sessionNotice;
+        }
+
+        $projectId = $project->getId();
+        $projectTitle = $project->getTitle();
+
+        $date = new \DateTime();
+        $dateStr = $date->format('m/d/Y \a\t H:i:s');
+
+        $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
+
+        if( !$reason ) {
+            $reason = "N/A";
+        }
+
+        $previoslyReason = $project->getReactivationReason();
+        if( !$previoslyReason ) {
+            $previoslyReason = "N/A";
+        }
+
+        $subject = $transresUtil->getTransresSiteProjectParameter('projectReactivationSubject',$project);
+        if( !$subject ) {
+            $subject = "Reactivation of a closed Project $projectId requested";
+        }
+
+        $body = $transresUtil->getTransresSiteProjectParameter('projectReactivationBody',$project);
+        if( !$body ) {
+            $body = "Reactivation of a closed Project [ID] titled '$projectTitle' has been requested"
+            ." by $targetStatusRequester on $dateStr with the following reason:"
+            ."<br>".$reason
+            ."<br>"."$targetStatusRequester was interested in changing the status to '$targetStatusStr'"
+            ."<br><br>"."Previously documented reason for project closure:".$previoslyReason
+            ."<br><br>"."No new work requests can be accepted for this project while it remains 'closed'."
+            ;
+        }
+
+        $from = $transresUtil->getTransresSiteProjectParameter('projectReactivationFromEmail',$project);
+        if( !$from ) {
+            $from = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+            if( !$from ) {
+                $fromArr = $transresUtil->getTransResAdminEmails($project,true,true); //send reminder email
+                if( count($fromArr) > 0 ) {
+                    $from = $fromArr[0];
+                }
+            }
+            if( !$from ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $from = $userSecUtil->getSiteSettingParameter('siteEmail');
+            }
+        }
+
+        //$adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //new project after save
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        //$emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+
+        //Session notice
         $sessionNotice = "Your request to change the status has been sent to the designated reviewer for approval and the status will be changed once approved";
 
         $this->get('session')->getFlashBag()->add(
@@ -2518,6 +2581,12 @@ class ProjectController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $this->approveProject($project);
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+
+
+        ////////// OLD. NOT USED NOW ////////////////
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -2581,6 +2650,90 @@ class ProjectController extends OrderAbstractController
         );
 
         return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    public function approveProject( $project, $reason=NULL, $reactivationReason=NULL ) {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if(
+            false === $transresPermissionUtil->hasProjectPermission("approve",$project) &&
+            false === $transresPermissionUtil->hasProjectPermission("funded-final-review",$project)
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $testing = false;
+        $originalStateStr = $project->getState();
+        $to = "final_approved";
+
+        $project->setState($to);
+
+        $project->setApprovalDate(new \DateTime());
+
+        //update expiration date only once on final_approved
+        if( !$project->getExpectedExpirationDate() ) {
+            $transresUtil->calculateAndSetProjectExpectedExprDate($project); //approve-project
+        }
+        
+        if( $reason ) {
+            $project->setReasonForStatusChange($reason);
+        }
+        
+        if( $reactivationReason ) {
+            $project->updateReactivationReason($reason,$user);
+        }
+
+        $em->flush($project);
+
+        //////////////////// email and eventlog /////////////////////////
+//        $break = "<br>";
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        $emailSubject = "Your project request ".$project->getOid()." has been approved";
+//
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+//
+//        $emailBody = "Your project request ".$project->getOid()." has been approved by " . $user->getUsernameOptimal();
+//
+//        //comment
+//        //$emailBody = $emailBody . $break.$break. "Status Comment:" . $break . $project->getStateComment();
+//
+//        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+//        $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //only admin
+//        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+//
+//        $emailBody = $emailBody . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+//        $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+//
+//        //eventlog
+//        $eventType = "Project Approved";
+//        $transresUtil->setEventLog($project,$eventType,$emailBody);
+        //////////////////// EOF email and eventlog /////////////////////////
+
+        //Send transition emails
+        $resultMsg = $transresUtil->sendTransitionEmail($project,$originalStateStr,$testing);
+
+        //event log
+        $eventType = "Review Submitted";
+        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
+
+        $noticeMsg = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $noticeMsg
+        );
+
+        return $noticeMsg;
     }
 
     /**

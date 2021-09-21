@@ -2193,7 +2193,7 @@ class Project {
 //            $oldClosureReason = $oldClosureReason . "\n\n";
 //        }
 
-        //Victor Brodsky (cwid - vib9020) on MM/DD/YYYY at HH:MM: This project is expired
+        //user name on MM/DD/YYYY at HH:MM: This project is expired
         $date = new \DateTime();
         $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason . "." . "\n\n";
         $updatedClosureReason = $closureReason . $oldClosureReason;
@@ -2210,13 +2210,25 @@ class Project {
     {
         return $this->reactivationReason;
     }
-
     /**
      * @param mixed $reactivationReason
      */
     public function setReactivationReason($reactivationReason)
     {
         $this->reactivationReason = $reactivationReason;
+    }
+    public function updateReactivationReason($reactivationReason,$user)
+    {
+        $oldReactivationReason = $this->getReactivationReason();
+
+        //user name on MM/DD/YYYY at HH:MM: This project is expired
+        $date = new \DateTime();
+        $reactivationReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $reactivationReason . "." . "\n\n";
+        $updatedReactivationReason = $reactivationReason . $oldReactivationReason;
+
+        $this->setReactivationReason($updatedReactivationReason);
+
+        return $updatedReactivationReason;
     }
 
     public function getTitleAndReason() {
