@@ -2207,9 +2207,9 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
-     * @Route("/close-project-ajax/", name="translationalresearch_close_project_ajax", methods={"POST"}, options={"expose"=true})
+     * @Route("/close-reactivation-project-ajax/", name="translationalresearch_close_reactivation_project_ajax", methods={"POST"}, options={"expose"=true})
      */
-    public function closeProjectAjaxAction(Request $request)
+    public function closeReactivationProjectAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2242,8 +2242,15 @@ class ProjectController extends OrderAbstractController
             return $response;
         }
 
-        //Close project
-        $result = $this->closeProject($project,$reason,$routename);
+        if( $routename == 'translationalresearch_project_close' || $routename == 'translationalresearch_project_close_without_notifications' ) {
+            //Close project
+            $result = $this->closeProject($project, $reason, $routename);
+        }
+
+        if( $routename == 'translationalresearch_project_approve' ) {
+            //Reactivation project
+            $result = $this->reactivationProject($project, $reason, $routename);
+        }
 
         $res["flag"] = "OK";
         $res["error"] = $result;

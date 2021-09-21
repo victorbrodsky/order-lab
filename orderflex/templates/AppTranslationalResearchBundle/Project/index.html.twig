@@ -702,6 +702,7 @@
                                         <a trp-closure-data-confirm="{{ project.id }}"
                                            trp-closure-title-data="Are you sure you want to close project {{ project.oid }}?"
                                            trp-closure-routename-data="translationalresearch_project_close"
+                                           trp-closure-reason-title-data="Reason for project closure:"
                                            href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
                                         >Close project request</a>
                                     </li>
@@ -718,6 +719,7 @@
                                             <a trp-closure-data-confirm="{{ project.id }}"
                                                trp-closure-title-data="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
                                                trp-closure-routename-data="translationalresearch_project_close_without_notifications"
+                                               trp-closure-reason-title-data="Reason for project closure:"
                                                href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
                                             >Close project request without notifications</a>
                                         </li>
@@ -748,7 +750,8 @@
                                         <a
                                             trp-closure-data-confirm="{{ project.id }}"
                                             trp-closure-title-data="Are you sure you want to approve project {{ project.oid }}?"
-                                            trp-closure-routename-data="translationalresearch_project_close_without_notifications"
+                                            trp-closure-routename-data="translationalresearch_project_approve"
+                                            trp-closure-reason-title-data="Reason for project reactivation:"
                                             href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
                                         >Approve project request</a>
                                     </li>
@@ -839,6 +842,7 @@
                 //var callbackfn = $(this).attr('general-data-callback');
                 var projectId = $(this).attr('trp-closure-data-confirm');
                 var title = $(this).attr('trp-closure-title-data');
+                var reasonTitle = $(this).attr('trp-closure-reason-title-data');
 
                 //if( !$('#trpDataConfirmModal').length ) {
                     console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
@@ -983,6 +987,7 @@
             //var callbackfn = $(this).attr('general-data-callback');
             var projectId = $(actionBtn).attr('trp-closure-data-confirm');
             var title = $(actionBtn).attr('trp-closure-title-data');
+            var reasonTitle = $(this).attr('trp-closure-reason-title-data');
             var routename = $(actionBtn).attr('trp-closure-routename-data');
             routename = "'"+routename+"'";
             console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
@@ -994,14 +999,14 @@
                     '<div class="modal-header text-center">' +
                     '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
                     //'<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
-                    '<h3 id="dataConfirmLabel">'+title+' ID '+projectId+'</h3>' +
+                    '<h3 id="dataConfirmLabel">'+title+'</h3>' +
                     '</div>' +
                     '<div class="modal-body text-center">' +
                     //newUserFormHtml +
 
                     '<div class="row">' +
                         '<div class="col-xs-6" align="right">' +
-                            '<label for="trp-project-reason">Reason for project closure:</label>' +
+                            '<label for="trp-project-reason">'+reasonTitle+'</label>' +
                         '</div>' +
                         '<div class="col-xs-6" align="left">' +
                             '<input type="text" id="trp-project-reason" name="trp-project-reason" class="form-control">' +
@@ -1066,7 +1071,7 @@
 
             //2) try to create a new user
             //var url = Routing.generate(sitename+'_add_new_user_ajax');
-            var url = Routing.generate('translationalresearch_close_project_ajax');
+            var url = Routing.generate('translationalresearch_close_reactivation_project_ajax');
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
