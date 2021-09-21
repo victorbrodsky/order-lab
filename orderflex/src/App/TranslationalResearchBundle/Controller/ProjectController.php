@@ -2242,6 +2242,9 @@ class ProjectController extends OrderAbstractController
             return $response;
         }
 
+
+        $result = NULL;
+
         if( $routename == 'translationalresearch_project_close' || $routename == 'translationalresearch_project_close_without_notifications' ) {
             //Close project
             $result = $this->closeProject($project, $reason, $routename);
@@ -2249,11 +2252,18 @@ class ProjectController extends OrderAbstractController
 
         if( $routename == 'translationalresearch_project_approve' ) {
             //Reactivation project
-            $result = $this->reactivationProject($project, $reason, $routename);
+            $targetStatus = "final_approved";
+            //$targetStatusRequester = $user;
+            $result = $this->reactivationProject($project, $reason, $routename, $targetStatus, $user);
         }
 
-        $res["flag"] = "OK";
-        $res["error"] = $result;
+        if( !$result ) {
+            $res["error"] = "Unknown error: route name '$routename'' is not valid";
+            $res["flag"] = "NOTOK";
+        } else {
+            $res["flag"] = "OK";
+            $res["error"] = $result;
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -2474,6 +2484,19 @@ class ProjectController extends OrderAbstractController
             'notice',
             $sessionNotice
         //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
+        );
+
+        return $sessionNotice;
+    }
+    //Send project reactivation approval requests
+    public function reactivationProject( $project, $reason, $routename, $targetStatus, $targetStatusRequester ) {
+        //Send email to Project reactivation approver
+
+        $sessionNotice = "Your request to change the status has been sent to the designated reviewer for approval and the status will be changed once approved";
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $sessionNotice
         );
 
         return $sessionNotice;

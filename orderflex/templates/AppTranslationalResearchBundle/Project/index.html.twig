@@ -746,10 +746,13 @@
                                         >Approve project request</a>
                                     </li>
                                 {% else %}
+                                    {#Reactivation#}
+                                    {#trp-closure-title-data="Are you sure you want to approve project {{ project.oid }}?"#}
                                     <li>
                                         <a
                                             trp-closure-data-confirm="{{ project.id }}"
-                                            trp-closure-title-data="Are you sure you want to approve project {{ project.oid }}?"
+                                            trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"
+                                            trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."
                                             trp-closure-routename-data="translationalresearch_project_approve"
                                             trp-closure-reason-title-data="Reason for project reactivation:"
                                             href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
@@ -987,10 +990,16 @@
             //var callbackfn = $(this).attr('general-data-callback');
             var projectId = $(actionBtn).attr('trp-closure-data-confirm');
             var title = $(actionBtn).attr('trp-closure-title-data');
-            var reasonTitle = $(this).attr('trp-closure-reason-title-data');
+            var reasonTitle = $(actionBtn).attr('trp-closure-reason-title-data');
+            var note = $(actionBtn).attr('trp-closure-note-data');
             var routename = $(actionBtn).attr('trp-closure-routename-data');
             routename = "'"+routename+"'";
             console.log('constructClosureProjectModal: projectId='+projectId+", title="+title);
+
+            var noteHtml = "";
+            if( note ) {
+                noteHtml = '<p>'+note+'</p>';
+            }
 
             var modalHtml =
                     '<div id="trp-project-status-modal" class="modal fade">' + //id="user-add-new-user"
@@ -1000,6 +1009,7 @@
                     '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
                     //'<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
                     '<h3 id="dataConfirmLabel">'+title+'</h3>' +
+                    noteHtml +
                     '</div>' +
                     '<div class="modal-body text-center">' +
                     //newUserFormHtml +
@@ -1017,7 +1027,7 @@
                     '</div>' +
                     '<div class="modal-footer">' +
                     '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                    '<a class="btn btn-primary trp-project-status-ok-btn" id="trp-project-status-ok-btn" onclick="trpCloseProjectAction(this,'+projectId+','+routename+')">OK</a>' +
+                    '<a class="btn btn-primary trp-project-status-ok-btn" id="trp-project-status-ok-btn" onclick="trpCloseReactivationProjectAction(this,'+projectId+','+routename+')">OK</a>' +
                     //'<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
                     '</div>' +
                     '</div>' +
@@ -1029,7 +1039,7 @@
 
             $('#trp-project-status-modal').modal({show:true});
         }
-        function trpCloseProjectAction( okbtn, projectId, routename ) {
+        function trpCloseReactivationProjectAction( okbtn, projectId, routename ) {
 
             var holder = $(okbtn).closest(".modal");
 
