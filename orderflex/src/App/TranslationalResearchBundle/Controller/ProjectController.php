@@ -2523,7 +2523,22 @@ class ProjectController extends OrderAbstractController
         if( !$subject ) {
             $subject = "Reactivation of a closed Project $projectId requested";
         }
+        /////////////// Replace [[...]]] /////////////////////
+        //<br>[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
+        if( $reason ) {
+            if (strpos($subject, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
+                $subject = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reason, $subject);
+            }
+        }
+        //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
+        if( $targetStatus ) {
+            if (strpos($subject, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
+                $targetStatusStr = $this->getStateSimpleLabelByName($targetStatus);
+                $subject = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $subject);
+            }
+        }
         $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
+        /////////////// EOF Replace [[...]]] /////////////////////
 
         $body = $transresUtil->getTransresSiteProjectParameter('projectReactivationBody',$project);
         if( !$body ) {
@@ -2553,9 +2568,23 @@ class ProjectController extends OrderAbstractController
             //To deny this project reactivation request and keep this project "closed", please visit:
             //[[PROJECT REACTIVATION DENY URL]]
         }
+
+        /////////////// Replace [[...]]] /////////////////////
         //<br>[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
+        if( $reason ) {
+            if (strpos($body, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
+                $body = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reason, $body);
+            }
+        }
         //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
+        if( $targetStatus ) {
+            if (strpos($body, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
+                $targetStatusStr = $this->getStateSimpleLabelByName($targetStatus);
+                $body = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $body);
+            }
+        }
         $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);
+        /////////////// EOF Replace [[...]]] /////////////////////
 
         $from = $transresUtil->getTransresSiteProjectParameter('projectReactivationFromEmail',$project);
         if( !$from ) {
@@ -2591,6 +2620,102 @@ class ProjectController extends OrderAbstractController
         return $sessionNotice;
     }
 
+    /**
+     * @Route("/deny-project-reactivation/{id}", name="translationalresearch_project_reactivation_deny", methods={"GET"})
+     */
+    public function denyReactivationProjectAction(Request $request, Project $project)
+    {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if (
+            false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
+            false === $transresPermissionUtil->hasProjectPermission("funded-final-review", $project)
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //Project reactivation approver: ROLE_TRANSRES_REACTIVATION_APPROVER
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER')) {
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        if ($project->getState() != 'closed') {
+            //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
+            $statusStr = $this->getStateSimpleLabelByName($project->getState());
+            $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $errorMsg
+            );
+            
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        //TODO: 233(10):
+        //“Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
+        // will remain 'Closed'. If you would like to change the status, please select it below and press “Update Status”
+        //TODO: …If the user picks a different status on the denial confirmation page and clicks “
+        //Update status”, update the status silently and show a green well below with
+        // “Status successfully updated to '[whatever status was picked]'.”
+        // Do not send an email with this subsequent status update.
+
+        //TODO: Write this event of new type “Project reactivation request denied” to the event log.
+
+        //TODO: Send a notification email to all users with TRP admin role
+
+
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    /**
+     * @Route("/approve-project-reactivation/{id}", name="translationalresearch_project_reactivation_approve", methods={"GET"})
+     */
+    public function approveReactivationProjectAction(Request $request, Project $project)
+    {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if (
+            false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
+            false === $transresPermissionUtil->hasProjectPermission("funded-final-review", $project)
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //Project reactivation approver: ROLE_TRANSRES_REACTIVATION_APPROVER
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        if( $project->getState() != 'closed' ) {
+            //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
+            $statusStr = $this->getStateSimpleLabelByName($project->getState());
+            $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $errorMsg
+            );
+            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $this->approveProject($project);
+
+        //TODO: 233(9) -
+        // Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
+        // has been updated to [TargetStatus]. If you would like to change the status,
+        // please select it below and press “Update status” (show a select2 dropdown
+        // with all statuses from Platform Manager to the left of the button)
+        //TODO: …If the user picks a different status on the approval confirmation page and
+        // clicks “Update Status”, update the status silently and show a green
+        // well below with “Status successfully updated to '[whatever status was picked]'.”
+        // Do not send an email with this subsequent status update.
+
+        //TODO: Write this event of new type “Project reactivation request approved” to the event log.
+
+        //TODO: Send a notification email to all users with TRP admin role
+        // (since they are the only ones who could changed the status away from Closed)
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
     /**
      * Approve project
      *

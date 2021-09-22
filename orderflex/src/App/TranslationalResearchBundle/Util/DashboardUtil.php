@@ -153,10 +153,10 @@ class DashboardUtil
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
-            "56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
-            "57. Number of successful log in events per site per month" => "successful-logins-site",
-            "58. Number of unique users in a given month who successful log in, per site" => "successful-unique-logins-site-month",
-            "59. Number of unique users in a given week who successful log in, per site" => "successful-unique-logins-site-week",
+            "56. Number of successfully log in events for the TRP site per month" => "successful-logins-trp",
+            "57. Number of successfully log in events per site per month" => "successful-logins-site",
+            "58. Number of unique users in a given month who successfully log in, per site" => "successful-unique-logins-site-month",
+            "59. Number of unique users in a given week who successfully log in, per site" => "successful-unique-logins-site-week",
 
             //"60. PIs with most projects" => "pis-with-most-projects",
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
@@ -6571,6 +6571,7 @@ class DashboardUtil
                 $loginCountResapp = $loginCountResapp + $loginResappCount;
             }
 
+            //($loginCountTrp on average per week); 2 total)
             $combinedData["Translational Research Users ($loginCountTrp on average per week)"] = $loginsTranslationalresearchArr;
             $combinedData["Employee Directory Users ($loginCountEmpl on average per week)"] = $loginsEmployeesArr;
             $combinedData["Fellowship Applications Users ($loginCountFellapp on average per week)"] = $loginsFellappArr;
