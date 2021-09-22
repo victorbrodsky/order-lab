@@ -4582,16 +4582,83 @@ class TransResUtil
                 $text = str_replace("[[PROJECT VALUE WITHOUT INVOICES]]", $grandTotalWithoutInvoices, $text);
             }
 
-                if( strpos($text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
-                    $expectedExpirationDate = $project->getExpectedExpirationDate();
-                    if( $expectedExpirationDate ) {
-                        //$user = $this->secTokenStorage->getToken()->getUser();
-                        //$userServiceUtil = $this->container->get('user_service_utility');
-                        //$expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
-                        $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y');
-                        $text = str_replace("[[PROJECT EXPIRATION DATE]]", $expectedExpirationDateStr, $text);
-                    }
+            if( strpos($text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
+                $expectedExpirationDate = $project->getExpectedExpirationDate();
+                if( $expectedExpirationDate ) {
+                    //$user = $this->secTokenStorage->getToken()->getUser();
+                    //$userServiceUtil = $this->container->get('user_service_utility');
+                    //$expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
+                    $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y');
+                    $text = str_replace("[[PROJECT EXPIRATION DATE]]", $expectedExpirationDateStr, $text);
                 }
+            }
+
+            //Reactivation
+            if( strpos($text, '[[PROJECT REACTIVATION REQUESTER]]') !== false ) {
+                $projectReactivationRequester = $project->getTargetStateRequester();
+                if( $projectReactivationRequester ) {
+                    $text = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $projectReactivationRequester->getUsernameShortest(), $text);
+                }
+            }
+
+            if( strpos($text, '[[CURRENT DATETIME]]') !== false ) {
+                $date = new \DateTime();
+                $dateStr = $date->format('m/d/Y \a\t H:i');
+                $text = str_replace("[[CURRENT DATETIME]]", $dateStr, $text);
+            }
+
+            //[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
+            if( strpos($text, '[[LATEST PROJECT REACTIVATION REASON]]') !== false ) {
+                $reactivationReason = $project->getReactivationReason();
+                if( $reactivationReason ) {
+                    $text = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reactivationReason, $text);
+                }
+            }
+
+            //[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function)
+            if( strpos($text, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false ) {
+                $reactivationTargetState = $project->getTargetState();
+                if( $reactivationTargetState ) {
+                    $reactivationTargetState = $this->getStateSimpleLabelByName($reactivationTargetState);
+                    $text = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reactivationTargetState, $text);
+                }
+            }
+
+            //[[PREVIOS PROJECT REACTIVATION REASON]] - previous project reactivation reason(s)
+            if( strpos($text, '[[PREVIOS PROJECT REACTIVATION REASON]]') !== false ) {
+                $reactivationReason = $project->getReactivationReason();
+                if( $reactivationReason ) {
+                    $text = str_replace("[[PREVIOS PROJECT REACTIVATION REASON]]", $reactivationReason, $text);
+                }
+            }
+
+            //[[PROJECT REACTIVATION APPROVE URL]]
+            if( strpos($text, '[[PROJECT REACTIVATION APPROVE URL]]') !== false ) {
+                $reactivationLink = $this->container->get('router')->generate(
+                    'translationalresearch_project_reactivation_approve',
+                    array(
+                        'id' => $project->getId(),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $reactivationLink = '<a href="'.$reactivationLink.'">'.$reactivationLink.'</a>';
+
+                $text = str_replace("[[PROJECT REACTIVATION APPROVE URL]]", $reactivationLink, $text);
+            }
+
+            //[[PROJECT REACTIVATION DENY URL]]
+            if( strpos($text, '[[PROJECT REACTIVATION DENY URL]]') !== false ) {
+                $reactivationLink = $this->container->get('router')->generate(
+                    'translationalresearch_project_reactivation_deny',
+                    array(
+                        'id' => $project->getId(),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $reactivationLink = '<a href="'.$reactivationLink.'">'.$reactivationLink.'</a>';
+
+                $text = str_replace("[[PROJECT REACTIVATION DENY URL]]", $reactivationLink, $text);
+            }
 
         }//project
 

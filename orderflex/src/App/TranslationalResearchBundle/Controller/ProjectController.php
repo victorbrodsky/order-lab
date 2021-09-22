@@ -2523,6 +2523,7 @@ class ProjectController extends OrderAbstractController
         if( !$subject ) {
             $subject = "Reactivation of a closed Project $projectId requested";
         }
+        $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
 
         $body = $transresUtil->getTransresSiteProjectParameter('projectReactivationBody',$project);
         if( !$body ) {
@@ -2533,7 +2534,28 @@ class ProjectController extends OrderAbstractController
             ."<br><br>"."Previously documented reason for project closure:".$previoslyReason
             ."<br><br>"."No new work requests can be accepted for this project while it remains 'closed'."
             ;
+
+            //Reactivation of a closed Project [[PROJECT ID]] titled "[[PROJECT TITLE]]" has been requested by [[PROJECT REACTIVATION REQUESTER]] on [[CURRENT DATETIME]] with the following reason:
+            //[[LATEST PROJECT REACTIVATION REASON]]
+            //
+            //[[PROJECT REACTIVATION REQUESTER]] was interested in changing the status to "[[PROJECT TARGET REACTIVATION STATUS]]"
+            //
+            //Previously documented reason for project closure: [[PREVIOS PROJECT REACTIVATION REASON]]
+            //
+            //No new work requests can be accepted for this project while it remains "closed".
+            //
+            //To review this project request, please visit:
+            //[[PROJECT SHOW URL]]
+            //
+            //To approve this project reactivation request and enable new work request submissions, please visit:
+            //[[PROJECT REACTIVATION APPROVE URL]]
+            //
+            //To deny this project reactivation request and keep this project "closed", please visit:
+            //[[PROJECT REACTIVATION DENY URL]]
         }
+        //<br>[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
+        //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
+        $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);
 
         $from = $transresUtil->getTransresSiteProjectParameter('projectReactivationFromEmail',$project);
         if( !$from ) {
@@ -2550,9 +2572,13 @@ class ProjectController extends OrderAbstractController
             }
         }
 
+        $reactivationApproverEmail = 'Project reactivation approver';
+
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true);
+
         //$adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //new project after save
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        //$emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+        //$emailUtil->sendEmail($reactivationApproverEmail,$subject,$body,$adminsCcs,$from);
 
         //Session notice
         $sessionNotice = "Your request to change the status has been sent to the designated reviewer for approval and the status will be changed once approved";

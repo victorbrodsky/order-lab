@@ -620,6 +620,8 @@ class Project {
      */
     private $targetState;
     /**
+     * Target Status Requestor
+     *
      * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
@@ -2195,7 +2197,7 @@ class Project {
 
         //user name on MM/DD/YYYY at HH:MM: This project is expired
         $date = new \DateTime();
-        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $closureReason . "." . "\n\n";
+        $closureReason = $user . " on " . $date->format('m/d/Y \a\t H:i') . ": " . $closureReason . "." . "\n\n";
         $updatedClosureReason = $closureReason . $oldClosureReason;
 
         $this->setClosureReason($updatedClosureReason);
@@ -2223,7 +2225,7 @@ class Project {
 
         //user name on MM/DD/YYYY at HH:MM: This project is expired
         $date = new \DateTime();
-        $reactivationReason = $user . " on " . $date->format('m/d/Y \a\t H:i:s') . ": " . $reactivationReason . "." . "\n\n";
+        $reactivationReason = $user . " on " . $date->format('m/d/Y \a\t H:i') . ": " . $reactivationReason . "." . "\n\n";
         $updatedReactivationReason = $reactivationReason . $oldReactivationReason;
 
         $this->setReactivationReason($updatedReactivationReason);
