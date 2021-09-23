@@ -161,11 +161,11 @@ class DashboardUtil
             //"60. PIs with most projects" => "pis-with-most-projects",
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
-            "60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
-            "61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+            //"60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
+            //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
 
-            "" => "",
-            "" => "",
+            "62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
+            "63. Patients with Call Log Entries Per Day" => "patients-calllog-per-day",
             "" => "",
             "" => "",
             "" => "",
@@ -6647,13 +6647,131 @@ class DashboardUtil
             //TODO: implement
 
         }
+
+        //"62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
+        if( $chartType == "new-and-edited-calllog-entries-per-day" ) {
+            //Dates on the X axis
+            //Quantity (1,2,3,4) on the Y axis
+            //Legend:
+            //New Call Log Entries
+            //Edited Call Log Entries
+            $transresUtil = $this->container->get('transres_util');
+
+            $newTypeArr = array("New Call Log Book Entry Submitted");
+            $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
+
+            $newArr = array();
+            $editedArr = array();
+
+            $newCount = 0;
+            $editedCount = 0;
+            $counter = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            $interval = new \DateInterval('P1W'); //P1D P1W
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+                $thisEndDate->add(new \DateInterval('P6D'));
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $newCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $newArr[$startDateLabel] = $newCalllogEntriesCount;
+                $newCount = $newCount + $newCalllogEntriesCount;
+
+                $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
+                $editedArr[$editedCalllogEntriesCount] = $editedCalllogEntriesCount;
+                $editedCount = $editedCount + $editedCalllogEntriesCount;
+
+                $counter++;
+            }
+
+            $calllogTotalCount = $newCount + $editedCount;
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["New Call Log Entries ($newCount total)"] = $newArr;
+            $combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+
+            $chartName = $chartName . " (" . $calllogTotalCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"63. Patients with Call Log Entries Per Day" => "patients-calllog-per-day",
+        if( $chartType == "patients-calllog-per-day" ) {
+            //Title: Patients with Call Log Entries Per Day
+            //Dates on the X axis
+            //Quantity (1,2,3,4) on the Y axis
+            //Legend: Patients with new call log entries
+            //The second graph would show the number of patients who got a new Call Log entry per day.
+
+            $transresUtil = $this->container->get('transres_util');
+
+            $newTypeArr = array("New Call Log Book Entry Submitted");
+            $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
+
+            $newArr = array();
+            $editedArr = array();
+
+            $newCount = 0;
+            $editedCount = 0;
+            $counter = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            $interval = new \DateInterval('P1W'); //P1D P1W
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+                $thisEndDate->add(new \DateInterval('P6D'));
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $newCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $newArr[$startDateLabel] = $newCalllogEntriesCount;
+                $newCount = $newCount + $newCalllogEntriesCount;
+
+                $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
+                $editedArr[$editedCalllogEntriesCount] = $editedCalllogEntriesCount;
+                $editedCount = $editedCount + $editedCalllogEntriesCount;
+
+                $counter++;
+            }
+
+            $calllogTotalCount = $newCount + $editedCount;
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["New Call Log Entries ($newCount total)"] = $newArr;
+            $combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+
+            $chartName = $chartName . " (" . $calllogTotalCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
         if( $chartType == "" ) {
 
         }
         if( $chartType == "" ) {
 
         }
+        if( $chartType == "" ) {
 
+        }
 
 
         //$chartsArray = array(); //testing

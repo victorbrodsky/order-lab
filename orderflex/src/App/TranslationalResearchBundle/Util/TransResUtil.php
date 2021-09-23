@@ -7158,6 +7158,73 @@ class TransResUtil
 
         return count($loggers);
     }
+    
+    public function getCalllogEntriesCount($startDate, $endDate, $eventTypeNameArr=array()) {
+
+        $site = "calllog";
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->select("logger.id");
+
+        $dql->innerJoin('logger.user', 'user');
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+//        if( $unique ) {
+//            $dql->distinct();
+//        }
+
+        //$dql->where("logger.siteName = 'translationalresearch'");
+        //$dql->where("logger.siteName = '".$site."'");
+
+        $eventTypeNameStr = "";
+        foreach($eventTypeNameArr as $eventTypeName) {
+            $eventTypeNameStrArr[] = "eventType.name = '$eventTypeName'";
+        }
+
+        if( count($eventTypeNameStrArr) > 0 ) {
+            $eventTypeNameStr = implode(" OR ",$eventTypeNameStrArr);
+        }
+
+        $dql->andWhere($eventTypeNameStr);
+
+        //$dql->andWhere("eventType.name = :eventTypeName");
+        //$dqlParameters['eventTypeName'] = $eventTypeName;
+
+        if( $site ) {
+            $dql->andWhere("logger.siteName = :siteName");
+            $dqlParameters['siteName'] = $site;
+        }
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        //$dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($loggers);
+        //return 3;
+    }
+//    public function getEditedCalllogEntriesCount($startDate, $endDate, $unique=false) {
+//        return 3;
+//    }
 
     //NOT USED
     public function getLoginsUniqueUser( $startDate, $endDate, $unique=true, $site=null ) {
