@@ -6418,10 +6418,15 @@ class DashboardUtil
             $loginCountResapp = 0;
             //$counter = 0;
 
-            $startDate->modify( 'first day of last month' );
+            //echo "1 StartDate=".$startDate->format('d-M-Y')."<br>";
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
 
             $interval = new \DateInterval('P1M');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            //echo "2 StartDate=".$startDate->format('d-M-Y')."<br>";
 
             $loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
 
@@ -6520,7 +6525,8 @@ class DashboardUtil
             $loginCountCrn = 0;
             $loginCountResapp = 0;
 
-            $startDate->modify( 'first day of last month' );
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
 
             $interval = new \DateInterval('P1W');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);

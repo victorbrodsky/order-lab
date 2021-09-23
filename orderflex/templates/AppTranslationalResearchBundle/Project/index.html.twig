@@ -687,7 +687,7 @@
 
                             {% set simpleProjectClosure = transres_util.getTransresSiteProjectParameter('sendProjectReactivationRequest',project) %}
                             {% set simpleProjectClosure = true %}
-                            {% set simpleProjectClosure = false %}
+                            {#{% set simpleProjectClosure = false %}#}
 
                             {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
 
