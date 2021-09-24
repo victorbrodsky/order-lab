@@ -7222,9 +7222,42 @@ class TransResUtil
         return count($loggers);
         //return 3;
     }
-//    public function getEditedCalllogEntriesCount($startDate, $endDate, $unique=false) {
-//        return 3;
-//    }
+    public function getCalllogPatientEntriesCount($startDate, $endDate, $unique=false) {
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppOrderformBundle:CalllogEntryMessage');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->select("patient.id");
+
+        $dql->innerJoin('message.patient', 'patient');
+
+//        if( $unique ) {
+//            $dql->distinct();
+//        }
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('message.orderdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('message.orderdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        //$dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $patients = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($patients);
+    }
 
     //NOT USED
     public function getLoginsUniqueUser( $startDate, $endDate, $unique=true, $site=null ) {

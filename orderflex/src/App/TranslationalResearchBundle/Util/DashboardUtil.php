@@ -6718,11 +6718,9 @@ class DashboardUtil
             $newTypeArr = array("New Call Log Book Entry Submitted");
             $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
 
-            $newArr = array();
-            $editedArr = array();
+            $patientsArr = array();
 
-            $newCount = 0;
-            $editedCount = 0;
+            $patientCount = 0;
             $counter = 0;
 
             //$startDate->modify( 'first day of last month' );
@@ -6741,24 +6739,17 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
-                $newCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
-                $newArr[$startDateLabel] = $newCalllogEntriesCount;
-                $newCount = $newCount + $newCalllogEntriesCount;
-
-                $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
-                $editedArr[$editedCalllogEntriesCount] = $editedCalllogEntriesCount;
-                $editedCount = $editedCount + $editedCalllogEntriesCount;
+                $calllogPatientEntriesCount = $transresUtil->getCalllogPatientEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $patientsArr[$startDateLabel] = $calllogPatientEntriesCount;
+                $patientCount = $patientCount + $calllogPatientEntriesCount;
 
                 $counter++;
             }
-
-            $calllogTotalCount = $newCount + $editedCount;
-
+            
             //($loginCountTrp on average per week; 2 total)
-            $combinedData["New Call Log Entries ($newCount total)"] = $newArr;
-            $combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+            $combinedData["Number of Patients who got a new Call Log entry"] = $patientsArr;
 
-            $chartName = $chartName . " (" . $calllogTotalCount . " Total)";
+            $chartName = $chartName . " (" . $patientCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
