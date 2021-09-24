@@ -6745,9 +6745,10 @@ class DashboardUtil
 
                 $counter++;
             }
-            
+
             //($loginCountTrp on average per week; 2 total)
             $combinedData["Number of Patients who got a new Call Log entry"] = $patientsArr;
+            //$combinedData["Number of Patients who got a new Call Log entry2"] = $patientsArr;
 
             $chartName = $chartName . " (" . $patientCount . " Total)";
 

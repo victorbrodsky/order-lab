@@ -7226,12 +7226,15 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppOrderformBundle:CalllogEntryMessage');
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
         $dql = $repository->createQueryBuilder("message");
 
         $dql->select("patient.id");
 
-        $dql->innerJoin('message.patient', 'patient');
+        $dql->leftJoin('message.patient', 'patient');
+
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->andWhere("calllogEntryMessage IS NOT NULL");
 
 //        if( $unique ) {
 //            $dql->distinct();
