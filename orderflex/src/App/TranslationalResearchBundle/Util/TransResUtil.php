@@ -7158,7 +7158,8 @@ class TransResUtil
 
         return count($loggers);
     }
-    
+
+    //Move these two methods to CallLogUtil.php
     public function getCalllogEntriesCount($startDate, $endDate, $eventTypeNameArr=array()) {
 
         $site = "calllog";
@@ -7236,9 +7237,9 @@ class TransResUtil
         $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
         $dql->andWhere("calllogEntryMessage IS NOT NULL");
 
-//        if( $unique ) {
-//            $dql->distinct();
-//        }
+        if( $unique ) {
+            $dql->distinct();
+        }
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
         $dql->andWhere('message.orderdate >= :startDate');

@@ -164,8 +164,8 @@ class DashboardUtil
             //"60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
             //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
 
-            "62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
-            "63. Patients with Call Log Entries Per Day" => "patients-calllog-per-day",
+            "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
+            "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
             "" => "",
             "" => "",
             "" => "",
