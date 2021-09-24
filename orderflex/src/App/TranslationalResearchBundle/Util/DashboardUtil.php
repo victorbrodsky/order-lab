@@ -6688,7 +6688,7 @@ class DashboardUtil
                 $newCount = $newCount + $newCalllogEntriesCount;
 
                 $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
-                $editedArr[$editedCalllogEntriesCount] = $editedCalllogEntriesCount;
+                $editedArr[$startDateLabel] = $editedCalllogEntriesCount;
                 $editedCount = $editedCount + $editedCalllogEntriesCount;
 
                 $counter++;
