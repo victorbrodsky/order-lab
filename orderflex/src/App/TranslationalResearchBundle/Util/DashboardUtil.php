@@ -153,8 +153,8 @@ class DashboardUtil
 
             "55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
 
-            "56. Number of successfully log in events for the TRP site per month" => "successful-logins-trp",
-            "57. Number of successfully log in events per site per month" => "successful-logins-site",
+            "56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
+            "57. Number of successful log in events per site per month" => "successful-logins-site",
             "58. Number of unique users in a given month who successfully log in, per site" => "successful-unique-logins-site-month",
             "59. Number of unique users in a given week who successfully log in, per site" => "successful-unique-logins-site-week",
 
@@ -1718,7 +1718,7 @@ class DashboardUtil
     public function getDashboardChart($request) {
 
         //ini_set('memory_limit', '30000M');
-        ini_set('max_execution_time', 600); //600 seconds = 10 minutes; it will set back to original value after execution of this script
+        ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
 
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
@@ -6408,7 +6408,7 @@ class DashboardUtil
             $loginsResappArr = array();
             //$loginsScanArr = array();
 
-            //$totalLoginCount = 0;
+            $totalLoginCount = 0;
             $loginCountCalllog = 0;
             $loginCountVacreq = 0;
             $loginCountFellapp = 0;
@@ -6423,17 +6423,21 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
+            //$endDate->modify( 'last day of this month' );
+
             $interval = new \DateInterval('P1M');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
 
             //echo "2 StartDate=".$startDate->format('d-M-Y')."<br>";
 
-            $loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
+            //unique users for all sites. Not equal sum of the unique users per each site.
+            //$loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
 
             foreach( $dateRange as $startDate ) {
                 //+6 days
                 $thisEndDate = clone $startDate;
-                $thisEndDate->add(new \DateInterval('P6D'));
+                //$thisEndDate->add(new \DateInterval('P6D'));
+                $thisEndDate->add(new \DateInterval('P1M'));
 
                 $startDateLabel = $startDate->format('d-M-Y');
 
@@ -6504,8 +6508,11 @@ class DashboardUtil
             $combinedData["Residency Applications Users ($loginCountAvgResapp on average per month; $loginCountResapp total)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
+            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp;
+
             //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
-            $chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            //$chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
@@ -6538,10 +6545,13 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
+            //$endDate->modify( 'last day of this month' );
+
             $interval = new \DateInterval('P1W');
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
 
-            $loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
+            //unique users for all sites. Not equal sum of the unique users per each site.
+            //$loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
 
             foreach( $dateRange as $startDate ) {
                 //+6 days
@@ -6617,8 +6627,11 @@ class DashboardUtil
             $combinedData["Residency Applications Users ($loginCountAvgResapp on average per week; $loginCountResapp total)"] = $loginsResappArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
+            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp;
+
 //            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
-            $chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            //$chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
@@ -6670,18 +6683,31 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
-            $interval = new \DateInterval('P1W'); //P1D P1W
+            $weekly = true;  //weekly
+            //$weekly = false; //daily
+
+            if( $weekly ) {
+                $interval = new \DateInterval('P1W'); //P1D P1W
+            } else {
+                $interval = new \DateInterval('P1D'); //P1D P1W
+            }
+
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
 
             foreach( $dateRange as $startDate ) {
                 //+6 days
                 $thisEndDate = clone $startDate;
-                $thisEndDate->add(new \DateInterval('P6D'));
+
+                if( $weekly ) {
+                    $thisEndDate->add(new \DateInterval('P6D'));
+                } else {
+                    $thisEndDate->add(new \DateInterval('P1D'));
+                }
 
                 $startDateLabel = $startDate->format('d-M-Y');
 
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
-                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //echo "StartDate=".$startDate->format("d-M-Y H:i:s")."; EndDate=".$thisEndDate->format("d-M-Y H:i:s")."<br>";
 
                 $newCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
                 $newArr[$startDateLabel] = $newCalllogEntriesCount;
@@ -6726,13 +6752,26 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
-            $interval = new \DateInterval('P1W'); //P1D P1W
+            $weekly = true;  //weekly
+            //$weekly = false; //daily
+
+            if( $weekly ) {
+                $interval = new \DateInterval('P1W'); //P1D P1W
+            } else {
+                $interval = new \DateInterval('P1D'); //P1D P1W
+            }
+
             $dateRange = new \DatePeriod($startDate, $interval, $endDate);
 
             foreach( $dateRange as $startDate ) {
                 //+6 days
                 $thisEndDate = clone $startDate;
-                $thisEndDate->add(new \DateInterval('P6D'));
+                //$thisEndDate->add(new \DateInterval('P6D'));
+                if( $weekly ) {
+                    $thisEndDate->add(new \DateInterval('P6D'));
+                } else {
+                    $thisEndDate->add(new \DateInterval('P1D'));
+                }
 
                 $startDateLabel = $startDate->format('d-M-Y');
 

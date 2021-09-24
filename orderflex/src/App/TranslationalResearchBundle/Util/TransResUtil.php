@@ -7135,6 +7135,8 @@ class TransResUtil
         if( $site ) {
             $dql->andWhere("logger.siteName = :siteName");
             $dqlParameters['siteName'] = $site;
+        } else {
+            //$dql->andWhere("logger.siteName IS NOT NULL");
         }
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
@@ -7202,11 +7204,11 @@ class TransResUtil
         }
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
-        $dql->andWhere('logger.creationdate >= :startDate');
+        $dql->andWhere('logger.creationdate >= :startDate'); //>=
         //$startDate->modify('-1 day');
         $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
 
-        $dql->andWhere('logger.creationdate <= :endDate');
+        $dql->andWhere('logger.creationdate <= :endDate'); //<=
         $endDate->modify('+1 day');
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
