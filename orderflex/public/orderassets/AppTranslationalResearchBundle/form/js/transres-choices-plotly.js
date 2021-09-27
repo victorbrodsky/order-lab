@@ -72,7 +72,13 @@ function transresGetCharts() {
             alert(errorThrown);
 
             console.log('Error : ' + errorThrown);
-            transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart. ",'error');
+
+            var errorMsg = "Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart."
+                + " jqXHR.responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown
+                ;
+            transresAddErrorLine(errorMsg,'error');
+
+            //transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart. ",'error');
         });
 
     }
