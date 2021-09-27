@@ -10,13 +10,14 @@ $(document).ready(function() {
 });
 
 function transresGetCharts() {
-    //console.log("get charts");
+    console.log("get charts");
 
     _totalChartCount = 0;
     _retrievedChartCount = 0;
+    var chartDataArr = [];
 
     var l = Ladda.create($('#filter-btn').get(0));
-    l.start();
+    //l.start();
 
     document.getElementById("charts").innerHTML = "";
 
@@ -51,18 +52,22 @@ function transresGetCharts() {
 
     _totalChartCount = chartTypes.length;
 
+    if( _totalChartCount > 0 ) {
+        l.start();
+    }
+
     var i;
     for (i = 0; i < _totalChartCount; i++) {
 
         //l.start();
 
         var chartIndex = chartTypes[i];
-        //console.log("chartType="+chartIndex);
+        console.log("chartType="+chartIndex);
 
         $.ajax({
             url: url,
             //timeout: _ajaxTimeout,
-            timeout: 600000, //milliseconds, 600000 => 10 min, 3000 => 3 second timeout
+            timeout: 300000, //milliseconds, 600000 => 10 min, 3000 => 3 second timeout
             type: "GET",
             data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, quantityLimit:quantityLimit, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
@@ -71,43 +76,97 @@ function transresGetCharts() {
         }).success(function(chartData) {
             //console.log('chartData=');
             //console.log(chartData);
-            transresAddChart(chartIndex,chartData);
-            _retrievedChartCount++;
+            //transresAddChart(chartIndex,chartData);
+
+            //create array of charts
+            //chartDataArr[chartIndex] = chartData;
+            chartDataArr.push(chartData);
+
+            // tryToBuildCharts(chartDataArr);
+            // if( _totalChartCount == _retrievedChartCount ) {
+            //     l.stop();
+            // }
+
         }).done(function() {
             //l.stop();
+
+            tryToBuildCharts(chartDataArr);
+            if( _totalChartCount == _retrievedChartCount ) {
+                l.stop();
+            }
+
         }).error(function(jqXHR, textStatus, errorThrown) {
+            l.stop();
+
             //alert(jqXHR.responseText);
             //alert(textStatus);
             //alert(errorThrown);
 
             console.log('Error : ' + errorThrown);
 
-            var errorMsg = "Unexpected Error 1. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart."
-                + " responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown
-                ;
+            var errorMsg = "Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart.";
+            //errorMsg = errorMsg + " responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown;
             transresAddErrorLine(errorMsg,'error');
+
+            _totalChartCount--;
 
             ////transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart. ",'error');
         });
 
     }
 
-    l.stop();
+    // if( _totalChartCount == _retrievedChartCount ) {
+    //     l.stop();
+    // }
+    //l.stop();
+}
+
+//or use promise: https://www.cognizantsoftvision.com/blog/handling-sequential-ajax-calls-using-jquery/
+function tryToBuildCharts(chartDataArr) {
+
+    _retrievedChartCount++;
+
+    console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
+    if( _totalChartCount != _retrievedChartCount ) {
+      return false;
+    }
+
+    console.log("chartDataArr:");
+    console.log(chartDataArr);
+
+    // for (var chartIndex in chartDataArr) {
+    //     console.log("chartIndex=" + chartIndex);
+    //     transresAddChart(chartIndex,chartDataArr[chartIndex]);
+    // }
+
+    var chartIndex = 0;
+    chartDataArr.forEach(function(element) {
+        //console.log(element)
+        chartIndex++;
+        transresAddChart(chartIndex,element);
+    })
 }
 
 function transresAddChart(chartIndex,chartData) {
+
+    console.log("transresAddChart="+chartIndex);
+
+    //console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
+    //if( _totalChartCount != _retrievedChartCount ) {
+    //   return false;
+    //}
 
     if( !chartData ) {
         return false;
     }
 
     if( chartData['error'] ) {
-        //console.log("newline");
+        //console.log("chartData error");
         transresAddErrorLine(chartData['error'],'error');
         return false;
     }
     if( chartData['warning'] ) {
-        //console.log("newline");
+        //console.log("chartData warning");
         transresAddErrorLine(chartData['warning'],'warning');
         return false;
     }
@@ -128,9 +187,10 @@ function transresAddChart(chartIndex,chartData) {
 
     Plotly.newPlot(divId, data, layout);
 
-    if( _totalChartCount != _retrievedChartCount ) {
-        return;
-    }
+    //console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
+    //if( _totalChartCount != _retrievedChartCount ) {
+    //    return;
+    //}
 
     var myPlot = document.getElementById(divId);
 
