@@ -58,7 +58,7 @@ function transresGetCharts() {
             type: "GET",
             data: {startDate:startDate, endDate:endDate, projectSpecialty:projectSpecialty, showLimited:showLimited, quantityLimit:quantityLimit, chartType:chartIndex, productservice:productservice },
             dataType: 'json',
-            async: false //use synchronous => wait for response.
+            async: true //false //use synchronous => wait for response.
             //async: true
         }).success(function(chartData) {
             //console.log('chartData=');

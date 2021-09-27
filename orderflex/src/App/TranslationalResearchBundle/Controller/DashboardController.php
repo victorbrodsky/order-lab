@@ -106,8 +106,9 @@ class DashboardController extends OrderAbstractController
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($chartsArray));
+        $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->setStatusCode(200);
+        $response->setContent(json_encode($chartsArray));
         return $response;
     }
 
