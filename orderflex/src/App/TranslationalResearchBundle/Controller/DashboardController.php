@@ -107,6 +107,7 @@ class DashboardController extends OrderAbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($chartsArray));
+        $response->setStatusCode(200);
         return $response;
     }
 
