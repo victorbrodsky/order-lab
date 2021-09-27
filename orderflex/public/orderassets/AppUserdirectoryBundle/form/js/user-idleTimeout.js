@@ -205,7 +205,9 @@ idleTimeoutClass.prototype.onAbort = function () {
 
 
 idleTimeoutClass.prototype.setActive = function () {
-    //console.log("setActive:");
+    console.log("setActive");
+    return;
+
     var timerIdleTime = 60 * 1000; //1 min = 60000 milliseconds
     //console.log("event active idleTimer timerIdleTime="+timerIdleTime);
     
