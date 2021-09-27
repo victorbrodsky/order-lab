@@ -73,7 +73,7 @@ function transresGetCharts() {
 
             console.log('Error : ' + errorThrown);
 
-            var errorMsg = "Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart."
+            var errorMsg = "Unexpected Error 1. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart."
                 + " jqXHR.responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown
                 ;
             transresAddErrorLine(errorMsg,'error');
