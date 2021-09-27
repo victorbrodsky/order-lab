@@ -61,14 +61,17 @@ function transresGetCharts() {
             async: false //use synchronous => wait for response.
             //async: true
         }).success(function(chartData) {
-            console.log('chartData=');
-            console.log(chartData);
+            //console.log('chartData=');
+            //console.log(chartData);
             transresAddChart(chartIndex,chartData);
         }).done(function() {
             //l.stop();
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
             transresAddErrorLine("Unexpected Error. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart. ",'error');
+            alert(jqXHR.responseText);
+            alert(textStatus);
+            alert(errorThrown);
         });
 
     }
