@@ -1,4 +1,7 @@
 
+var _totalChartCount = 0;
+var _retrievedChartCount = 0;
+
 $(document).ready(function() {
 
     //$('#filter-btn').click();
@@ -8,6 +11,9 @@ $(document).ready(function() {
 
 function transresGetCharts() {
     //console.log("get charts");
+
+    _totalChartCount = 0;
+    _retrievedChartCount = 0;
 
     var l = Ladda.create($('#filter-btn').get(0));
     l.start();
@@ -43,8 +49,10 @@ function transresGetCharts() {
 
     var url = Routing.generate('translationalresearch_single_chart');
 
+    _totalChartCount = chartTypes.length;
+
     var i;
-    for (i = 0; i < chartTypes.length; i++) {
+    for (i = 0; i < _totalChartCount; i++) {
 
         //l.start();
 
@@ -64,17 +72,18 @@ function transresGetCharts() {
             //console.log('chartData=');
             //console.log(chartData);
             transresAddChart(chartIndex,chartData);
+            _retrievedChartCount++;
         }).done(function() {
             //l.stop();
         }).error(function(jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.responseText);
-            alert(textStatus);
-            alert(errorThrown);
+            //alert(jqXHR.responseText);
+            //alert(textStatus);
+            //alert(errorThrown);
 
             console.log('Error : ' + errorThrown);
 
             var errorMsg = "Unexpected Error 1. Please make sure that your session is not timed out and you are still logged in, or select a smaller time period for this chart."
-                + " jqXHR.responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown
+                + " responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown
                 ;
             transresAddErrorLine(errorMsg,'error');
 
@@ -119,7 +128,12 @@ function transresAddChart(chartIndex,chartData) {
 
     Plotly.newPlot(divId, data, layout);
 
+    if( _totalChartCount != _retrievedChartCount ) {
+        return;
+    }
+
     var myPlot = document.getElementById(divId);
+
     myPlot.on('plotly_click', function(data){
         //console.log("data:");
         //console.log(data);
