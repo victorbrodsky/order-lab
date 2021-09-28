@@ -6683,7 +6683,8 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
-            $totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,$editedTypeArr);
+            //$totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,$editedTypeArr);
+            $totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,true);
 
             $weekly = true;  //weekly
             //$weekly = false; //daily

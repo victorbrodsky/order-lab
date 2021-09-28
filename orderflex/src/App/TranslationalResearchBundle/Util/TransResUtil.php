@@ -7220,7 +7220,7 @@ class TransResUtil
         //return 3;
     }
     //Move this method to CallLogUtil.php
-    public function getTotalUniqueCalllogEntriesCount($startDate, $endDate, $eventTypeNameArr=array()) {
+    public function getTotalUniqueCalllogEntriesCount_ORIG($startDate, $endDate, $eventTypeNameArr=array()) {
 
         $site = "calllog";
 
@@ -7277,6 +7277,46 @@ class TransResUtil
 
         return count($loggers);
         //return 3;
+    }
+    //Move this method to CallLogUtil.php
+    public function getTotalUniqueCalllogEntriesCount($startDate, $endDate, $unique=false) {
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->select("message.oid");
+
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->andWhere("calllogEntryMessage IS NOT NULL");
+
+        $dql->andWhere("message.version > 1");
+
+        if( $unique ) {
+            $dql->distinct();
+        }
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('message.orderdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('message.orderdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        //$dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $messages = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($messages);
     }
     public function getCalllogPatientEntriesCount($startDate, $endDate, $unique=false) {
         $dqlParameters = array();
