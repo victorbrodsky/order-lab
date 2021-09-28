@@ -7294,7 +7294,7 @@ class TransResUtil
         $dql->andWhere("message.version > 1");
 
         if( $unique ) {
-            $dql->distinct();
+            //$dql->distinct();
         }
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
