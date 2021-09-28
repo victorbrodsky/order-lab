@@ -6683,6 +6683,8 @@ class DashboardUtil
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
 
+            $totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,$editedTypeArr);
+
             $weekly = true;  //weekly
             //$weekly = false; //daily
 
@@ -6724,7 +6726,11 @@ class DashboardUtil
 
             //($loginCountTrp on average per week; 2 total)
             $combinedData["New Call Log Entries ($newCount total)"] = $newArr;
-            $combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+
+            //$combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+            //convert that "edited" legend only from saying "Edited Call Log Entries (2503 total)" to
+            // "X entries edited Y times in total" $totalCalllogEntriesCount
+            $combinedData["$totalCalllogEntriesCount entries edited $editedCount times in total"] = $editedArr;
 
             $chartName = $chartName . " (" . $calllogTotalCount . " Total)";
 
