@@ -6716,8 +6716,8 @@ class DashboardUtil
                 $newArr[$startDateLabel] = $newCalllogEntriesCount;
                 $newCount = $newCount + $newCalllogEntriesCount;
 
-                //$editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
-                $editedCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$thisEndDate,true);
+                $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
+                //$editedCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$thisEndDate);
                 $editedArr[$startDateLabel] = $editedCalllogEntriesCount;
                 $editedCount = $editedCount + $editedCalllogEntriesCount;
 
