@@ -2518,8 +2518,9 @@ class ProjectController extends OrderAbstractController
 //        }
 
         if( $reason ) {
-            $updateReason = "Reactivation Requested with reason: ".$reason;
+            $updateReason = "Reactivation requested with reason: ".$reason;
             $project->updateReactivationReason($updateReason,$user);
+            $em->flush($project);
         }
 
         if( !$reason ) {
@@ -2556,7 +2557,7 @@ class ProjectController extends OrderAbstractController
             ." by $targetStatusRequester on $dateStr with the following reason:"
             ."<br>".$reason
             ."<br>"."$targetStatusRequester was interested in changing the status to '$targetStatusStr'"
-            ."<br><br>"."Previously documented reason for project closure: [[PROJECT CLOSURE REASON]]" //$previoslyClosureReason
+            ."<br><br>"."Previously documented reason for project closure:<br>[[PROJECT CLOSURE REASON]]" //$previoslyClosureReason
             ."<br><br>"."No new work requests can be accepted for this project while it remains 'closed'."
             ;
 
@@ -2720,7 +2721,7 @@ class ProjectController extends OrderAbstractController
         }
 
         if( $project->getState() != 'closed' ) {
-            //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
+            //This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
             $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
             $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
             $this->get('session')->getFlashBag()->add(
@@ -2732,7 +2733,7 @@ class ProjectController extends OrderAbstractController
 
         $this->approveProject($project);
 
-        //TODO: 233(9) -
+        //TODO: 233(9) - new page
         // Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // has been updated to [TargetStatus]. If you would like to change the status,
         // please select it below and press “Update status” (show a select2 dropdown

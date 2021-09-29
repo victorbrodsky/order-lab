@@ -4611,6 +4611,7 @@ class TransResUtil
             if( strpos($text, '[[PROJECT CLOSURE REASON]]') !== false ) {
                 $closureReason = $project->getClosureReason();
                 if( $closureReason ) {
+                    $closureReason = str_replace("\n\n","<br>",$closureReason);
                     $text = str_replace("[[PROJECT CLOSURE REASON]]", $closureReason, $text);
                 }
             }
@@ -4619,6 +4620,7 @@ class TransResUtil
             if( strpos($text, '[[LATEST PROJECT REACTIVATION REASON]]') !== false ) {
                 $reactivationReason = $project->getReactivationReason();
                 if( $reactivationReason ) {
+                    $reactivationReason = str_replace("\n\n","<br>",$reactivationReason);
                     $text = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reactivationReason, $text);
                 }
             }
@@ -4628,7 +4630,7 @@ class TransResUtil
                 $reactivationTargetState = $project->getTargetState();
                 if( $reactivationTargetState ) {
                     $reactivationTargetState = $this->getStateSimpleLabelByName($reactivationTargetState);
-                    $text = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reactivationTargetState, $text);
+                    $text = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $reactivationTargetState, $text);
                 }
             }
 
@@ -4636,6 +4638,7 @@ class TransResUtil
             if( strpos($text, '[[PREVIOS PROJECT REACTIVATION REASON]]') !== false ) {
                 $reactivationReason = $project->getReactivationReason();
                 if( $reactivationReason ) {
+                    $reactivationReason = str_replace("\n\n","<br>",$reactivationReason);
                     $text = str_replace("[[PREVIOS PROJECT REACTIVATION REASON]]", $reactivationReason, $text);
                 }
             }
