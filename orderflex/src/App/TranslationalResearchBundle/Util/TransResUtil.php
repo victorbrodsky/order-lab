@@ -4607,6 +4607,14 @@ class TransResUtil
                 $text = str_replace("[[CURRENT DATETIME]]", $dateStr, $text);
             }
 
+            //[[PROJECT CLOSURE REASON]]
+            if( strpos($text, '[[PROJECT CLOSURE REASON]]') !== false ) {
+                $closureReason = $project->getClosureReason();
+                if( $closureReason ) {
+                    $text = str_replace("[[PROJECT CLOSURE REASON]]", $closureReason, $text);
+                }
+            }
+
             //[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
             if( strpos($text, '[[LATEST PROJECT REACTIVATION REASON]]') !== false ) {
                 $reactivationReason = $project->getReactivationReason();

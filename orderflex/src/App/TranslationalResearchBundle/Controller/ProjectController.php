@@ -2491,7 +2491,9 @@ class ProjectController extends OrderAbstractController
     //Send project reactivation approval requests
     public function reactivationProject( $project, $reason, $routename, $targetStatus, $targetStatusRequester ) {
         $transresUtil = $this->container->get('transres_util');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //Send email to Project reactivation approver
         //sendProjectReactivationRequest
@@ -2510,13 +2512,18 @@ class ProjectController extends OrderAbstractController
 
         $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
 
-        if( !$reason ) {
-            $reason = "N/A";
+//        $previoslyClosureReason = $project->getReactivationReason();
+//        if( !$previoslyClosureReason ) {
+//            $previoslyClosureReason = "N/A";
+//        }
+
+        if( $reason ) {
+            $updateReason = "Reactivation Requested with reason: ".$reason;
+            $project->updateReactivationReason($updateReason,$user);
         }
 
-        $previoslyReason = $project->getReactivationReason();
-        if( !$previoslyReason ) {
-            $previoslyReason = "N/A";
+        if( !$reason ) {
+            $reason = "N/A";
         }
 
         $subject = $transresUtil->getTransresSiteProjectParameter('projectReactivationSubject',$project);
@@ -2533,9 +2540,12 @@ class ProjectController extends OrderAbstractController
         //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
         if( $targetStatus ) {
             if (strpos($subject, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
-                $targetStatusStr = $this->getStateSimpleLabelByName($targetStatus);
+                $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
                 $subject = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $subject);
             }
+        }
+        if (strpos($subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
+            $subject = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $user->getUsernameShortest(), $subject);
         }
         $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
         /////////////// EOF Replace [[...]]] /////////////////////
@@ -2546,7 +2556,7 @@ class ProjectController extends OrderAbstractController
             ." by $targetStatusRequester on $dateStr with the following reason:"
             ."<br>".$reason
             ."<br>"."$targetStatusRequester was interested in changing the status to '$targetStatusStr'"
-            ."<br><br>"."Previously documented reason for project closure:".$previoslyReason
+            ."<br><br>"."Previously documented reason for project closure: [[PROJECT CLOSURE REASON]]" //$previoslyClosureReason
             ."<br><br>"."No new work requests can be accepted for this project while it remains 'closed'."
             ;
 
@@ -2555,7 +2565,7 @@ class ProjectController extends OrderAbstractController
             //
             //[[PROJECT REACTIVATION REQUESTER]] was interested in changing the status to "[[PROJECT TARGET REACTIVATION STATUS]]"
             //
-            //Previously documented reason for project closure: [[PREVIOS PROJECT REACTIVATION REASON]]
+            //Previously documented reason for project closure: [[PROJECT CLOSURE REASON]]
             //
             //No new work requests can be accepted for this project while it remains "closed".
             //
@@ -2579,9 +2589,12 @@ class ProjectController extends OrderAbstractController
         //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
         if( $targetStatus ) {
             if (strpos($body, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
-                $targetStatusStr = $this->getStateSimpleLabelByName($targetStatus);
+                $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
                 $body = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $body);
             }
+        }
+        if (strpos($subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
+            $subject = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $user->getUsernameShortest(), $subject);
         }
         $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);
         /////////////// EOF Replace [[...]]] /////////////////////
@@ -2601,13 +2614,31 @@ class ProjectController extends OrderAbstractController
             }
         }
 
-        $reactivationApproverEmail = 'Project reactivation approver';
-
         $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true);
+
+        //$reactivationApproverEmail = 'Project reactivation approver';
+        //Find user with role 'Project reactivation approver'
+        $reactivationApproverEmail = NULL;
+        $reactivationApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER"));
+        if( count($reactivationApprovers) > 0 ) {
+            $reactivationApprover = $reactivationApprovers[0];
+            $reactivationApproverEmail = $reactivationApprover->getSingleEmail(false);
+        }
+        if( !$reactivationApproverEmail ) {
+            $reactivationApproverEmail = $adminsCcs;
+        }
 
         //$adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //new project after save
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        //$emailUtil->sendEmail($reactivationApproverEmail,$subject,$body,$adminsCcs,$from);
+        $emailUtil->sendEmail($reactivationApproverEmail,$subject,$body,$adminsCcs,$from);
+
+        //Event Log
+        $eventType = "Project Reactivation Request";
+        if( is_array($reactivationApproverEmail) ) {
+            $reactivationApproverEmail = implode(", ",$reactivationApproverEmail);
+        }
+        $eventLogMsg = "Project Reactivation Approval Request with a reason: $reason. Email sent to ".$reactivationApproverEmail;
+        $transresUtil->setEventLog($project,$eventType,$eventLogMsg);
 
         //Session notice
         $sessionNotice = "Your request to change the status has been sent to the designated reviewer for approval and the status will be changed once approved";
@@ -2626,6 +2657,7 @@ class ProjectController extends OrderAbstractController
     public function denyReactivationProjectAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
+        $transresUtil = $this->container->get('transres_util');
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -2641,7 +2673,7 @@ class ProjectController extends OrderAbstractController
 
         if ($project->getState() != 'closed') {
             //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
-            $statusStr = $this->getStateSimpleLabelByName($project->getState());
+            $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
             $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -2673,6 +2705,7 @@ class ProjectController extends OrderAbstractController
     public function approveReactivationProjectAction(Request $request, Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
+        $transresUtil = $this->container->get('transres_util');
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -2688,7 +2721,7 @@ class ProjectController extends OrderAbstractController
 
         if( $project->getState() != 'closed' ) {
             //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
-            $statusStr = $this->getStateSimpleLabelByName($project->getState());
+            $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
             $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
             $this->get('session')->getFlashBag()->add(
                 'notice',
