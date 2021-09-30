@@ -17,23 +17,15 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use App\TranslationalResearchBundle\Form\ProjectChangeStatusConfirmationType;
 use App\TranslationalResearchBundle\Entity\Project;
-use App\TranslationalResearchBundle\Form\FilterType;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
-use App\TranslationalResearchBundle\Form\ProjectType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Workflow\DefinitionBuilder;
-use Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use Symfony\Component\Workflow\Transition;
 
 
 class ProjectChangeStatusController extends OrderAbstractController
@@ -152,50 +144,6 @@ class ProjectChangeStatusController extends OrderAbstractController
             $res["flag"] = "OK";
             $res["error"] = $result;
         }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($res));
-        return $response;
-
-
-        ////////// OLD //////////////
-        $testing = false;
-        $originalStateStr = $project->getState();
-        $to = "closed";
-
-        $project->setState($to);
-
-        $project->updateClosureReason($comment,$user);
-
-        $em->flush($project);
-
-        $resultMsg = "Project request ".$project->getOid()." has been closed by $user";
-        $sessionNotice = $resultMsg;
-
-        if( $type == "project_close" ) {
-            //Send transition emails
-            $resultMsg = $transresUtil->sendTransitionEmail($project, $originalStateStr, $testing);
-            $sessionNotice = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
-        }
-
-        if( $type == "project_close_without_notifications" ) {
-            $resultMsg = "Project request ".$project->getOid()." has been closed by $user without sending any email notifications";
-            $sessionNotice = $resultMsg;
-        }
-
-        //event log
-        $eventType = "Review Submitted";
-        $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
-
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $sessionNotice
-        //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
-        );
-
-        $res["flag"] = "OK";
-        $res["error"] = $sessionNotice;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -609,6 +557,22 @@ class ProjectChangeStatusController extends OrderAbstractController
         //TODO: 233(10):
         //“Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // will remain 'Closed'. If you would like to change the status, please select it below and press “Update Status”
+//        $piStr = "unknown PI";
+//        $piArr = array();
+//        foreach( $project->getPrincipalInvestigators() as $pi) {
+//            $piArr[] = $pi->getUsernameShortest();
+//        }
+//        if( count($piArr) > 0 ) {
+//            $piStr = implode("; ", $piArr);
+//        }
+        $piStr = $project->getPiStr();
+        $noticeMsg = "Thank you! The status for project request [".$project->getOid()."] '".$project->getTitle()."' ($piStr)
+        will remain 'Closed'. If you would like to change the status, please select it below and press 'Update Status'";
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $noticeMsg
+        );
+
         //TODO: …If the user picks a different status on the denial confirmation page and clicks “
         //Update status”, update the status silently and show a green well below with
         // “Status successfully updated to '[whatever status was picked]'.”
@@ -620,7 +584,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
 
 
-        return $this->redirectToRoute('translationalresearch_project_change_status_confirmation');
+        return $this->redirectToRoute('translationalresearch_project_change_status_confirmation', array('id' => $project->getId()));
     }
 
     /**
@@ -661,6 +625,15 @@ class ProjectChangeStatusController extends OrderAbstractController
         // has been updated to [TargetStatus]. If you would like to change the status,
         // please select it below and press “Update status” (show a select2 dropdown
         // with all statuses from Platform Manager to the left of the button)
+        $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
+        $piStr = $project->getPiStr();
+        $noticeMsg = "Thank you! The status for project request [".$project->getOid()."] '".$project->getTitle()."' ($piStr)
+        has been updated to '$statusStr'. If you would like to change the status, please select it below and press 'Update Status'";
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $noticeMsg
+        );
+
         //TODO: …If the user picks a different status on the approval confirmation page and
         // clicks “Update Status”, update the status silently and show a green
         // well below with “Status successfully updated to '[whatever status was picked]'.”
@@ -671,7 +644,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         //TODO: Send a notification email to all users with TRP admin role
         // (since they are the only ones who could changed the status away from Closed)
 
-        return $this->redirectToRoute('translationalresearch_project_change_status_confirmation');
+        return $this->redirectToRoute('translationalresearch_project_change_status_confirmation', array('id' => $project->getId()));
     }
 
     /**
@@ -691,14 +664,37 @@ class ProjectChangeStatusController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "new";
 
-        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest); //new
+        //Create Form
+//        $form = $this->createFormBuilder();
+//        $form->add('updateState', TextType::class, array(
+//            'label' => "Update status",
+//            'mapped' => false,
+//            'attr' => array('class'=>'form-control'),
+//        ));
+//        $form->add('updateBtn', SubmitType::class, array(
+//            'label' => "Update status",
+//            'attr' => array('class'=>'btn btn-primary'),
+//        ));
+//        $form->getForm();
+
+        $stateChoiceArr = $transresUtil->getStateChoisesArr();
+        $params = array(
+            'stateChoiceArr' => $stateChoiceArr,
+            'currentStateId' => $project->getState()
+        );
+        $form = $this->createForm(ProjectChangeStatusConfirmationType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            $newState = NULL;
+            //$newState = NULL;
+            $newState = $form['updateState']->getData();
+            //echo "newState=$newState <br>";
 
             $msg = "Status successfully updated to '$newState'.";
 

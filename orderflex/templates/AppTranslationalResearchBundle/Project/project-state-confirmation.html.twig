@@ -1,0 +1,39 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    {{ form_start(form) }}
+
+        {% if form.updateState is defined %}
+            {{ formmacros.field(form.updateState) }}
+        {% endif %}
+
+        {% if form.updateBtn is defined %}
+            <p>
+                {{ form_widget(form.updateBtn) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the project list</a>
+    </p>
+
+{% endblock %}

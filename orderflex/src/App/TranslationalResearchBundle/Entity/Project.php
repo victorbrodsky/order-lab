@@ -2644,6 +2644,17 @@ class Project {
 
         return $info;
     }
+    public function getPiStr() {
+        $piStr = "unknown PI";
+        $piArr = array();
+        foreach( $this->getPrincipalInvestigators() as $pi ) {
+            $piArr[] = $pi->getUsernameShortest();
+        }
+        if( count($piArr) > 0 ) {
+            $piStr = implode(", ", $piArr);
+        }
+        return $piStr;
+    }
 
     public function mergeHiddenFields() {
 
