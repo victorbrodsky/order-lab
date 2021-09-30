@@ -240,7 +240,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         }
 
         //event log
-        $eventType = "Review Submitted";
+        $eventType = "Project Closed";
         $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
 
         $this->get('session')->getFlashBag()->add(
@@ -508,7 +508,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $resultMsg = $transresUtil->sendTransitionEmail($project,$originalStateStr,$testing);
 
         //event log
-        $eventType = "Review Submitted";
+        $eventType = "Project Approved";
         $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
 
         $noticeMsg = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
@@ -529,6 +529,8 @@ class ProjectChangeStatusController extends OrderAbstractController
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -554,6 +556,20 @@ class ProjectChangeStatusController extends OrderAbstractController
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
+        $projectOid = $project->getOid();
+        $targetRequester = $project->getTargetStateRequester();
+        $today = new \DateTime();
+        $todayStr = $today->format('m/d/Y \a\t H:i');
+        $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
         //TODO: 233(10):
         //“Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // will remain 'Closed'. If you would like to change the status, please select it below and press “Update Status”
@@ -566,8 +582,8 @@ class ProjectChangeStatusController extends OrderAbstractController
 //            $piStr = implode("; ", $piArr);
 //        }
         $piStr = $project->getPiStr();
-        $noticeMsg = "Thank you! The status for project request [".$project->getOid()."] '".$project->getTitle()."' ($piStr)
-        will remain 'Closed'. If you would like to change the status, please select it below and press 'Update Status'";
+        $msg = "The status for project request ".$projectOid." '".$project->getTitle()."' ($piStr) will remain 'Closed'";
+        $noticeMsg = "Thank you! $msg. If you would like to change the status, please select it below and press 'Update Status'";
         $this->get('session')->getFlashBag()->add(
             'notice',
             $noticeMsg
@@ -579,9 +595,28 @@ class ProjectChangeStatusController extends OrderAbstractController
         // Do not send an email with this subsequent status update.
 
         //TODO: Write this event of new type “Project reactivation request denied” to the event log.
+        //event log
+        $eventType = "Project Reactivation Denied";
+        $transresUtil->setEventLog($project,$eventType,$msg);
 
         //TODO: Send a notification email to all users with TRP admin role
+        //Subject: Request to reactivate project [ProjectID] has been denied
+        //Body: Request to reactivate project [ProjectID] submitted by FirstName LastName on MM/DD/YYYY at HH:MM has been denied by FirstName LastName on MM/DD/YYYY at HH:MM.
+        //The current status of this project is “[current status]”.
+        //To review this project request, please visit:
+        //[Link project request view page]
+        $subject = "Request to reactivate project $projectOid has been denied";
+        $body = "Request to reactivate project $projectOid submitted by $targetRequester"
+            //." on MM/DD/YYYY at HH:MM "
+            ." has been denied by $user on $todayStr.";
+        $body = $body . "<br>" . "The current status of this project is '$statusStr'.";
+        $body = $body . "<br>To review this project request, please visit:<br>";
+        $body = $body . $projectUrl;
 
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true);
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail($adminsCcs,$subject,$body,null,$senderEmail);
 
 
         return $this->redirectToRoute('translationalresearch_project_change_status_confirmation', array('id' => $project->getId()));
@@ -594,6 +629,8 @@ class ProjectChangeStatusController extends OrderAbstractController
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -620,15 +657,28 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $this->approveProject($project);
 
+        $projectOid = $project->getOid();
+        $targetRequester = $project->getTargetStateRequester();
+        $today = new \DateTime();
+        $todayStr = $today->format('m/d/Y \a\t H:i');
+        $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
         //TODO: 233(9) - new page
         // Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // has been updated to [TargetStatus]. If you would like to change the status,
         // please select it below and press “Update status” (show a select2 dropdown
         // with all statuses from Platform Manager to the left of the button)
-        $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
         $piStr = $project->getPiStr();
-        $noticeMsg = "Thank you! The status for project request [".$project->getOid()."] '".$project->getTitle()."' ($piStr)
-        has been updated to '$statusStr'. If you would like to change the status, please select it below and press 'Update Status'";
+        $msg = "The status for project request ".$projectOid." '".$project->getTitle()."' ($piStr) has been updated to '$statusStr'";
+        $noticeMsg = "Thank you! $msg. If you would like to change the status, please select it below and press 'Update Status'";
         $this->get('session')->getFlashBag()->add(
             'notice',
             $noticeMsg
@@ -640,9 +690,29 @@ class ProjectChangeStatusController extends OrderAbstractController
         // Do not send an email with this subsequent status update.
 
         //TODO: Write this event of new type “Project reactivation request approved” to the event log.
+        //event log
+        $eventType = "Project Reactivation Approved";
+        $transresUtil->setEventLog($project,$eventType,$msg);
 
         //TODO: Send a notification email to all users with TRP admin role
         // (since they are the only ones who could changed the status away from Closed)
+        //Subject: Request to reactivate project [ProjectID] has been approved
+        //Body: Request to reactivate project [ProjectID] submitted by FirstName LastName on MM/DD/YYYY at HH:MM has been approved by FirstName LastName on MM/DD/YYYY at HH:MM.
+        //The current status of this project is “[current status]”.
+        //To review this project request, please visit:
+        //[Link project request view page]
+        $subject = "Request to reactivate project $projectOid has been approved";
+        $body = "Request to reactivate project $projectOid submitted by $targetRequester"
+        //." on MM/DD/YYYY at HH:MM "
+        ." has been approved by $user on $todayStr.";
+        $body = $body . "<br>" . "The current status of this project is '$statusStr'.";
+        $body = $body . "<br>To review this project request, please visit:<br>";
+        $body = $body . $projectUrl;
+
+        $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true);
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail($adminsCcs,$subject,$body,null,$senderEmail);
 
         return $this->redirectToRoute('translationalresearch_project_change_status_confirmation', array('id' => $project->getId()));
     }
@@ -659,24 +729,12 @@ class ProjectChangeStatusController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "new";
 
         //Create Form
-//        $form = $this->createFormBuilder();
-//        $form->add('updateState', TextType::class, array(
-//            'label' => "Update status",
-//            'mapped' => false,
-//            'attr' => array('class'=>'form-control'),
-//        ));
-//        $form->add('updateBtn', SubmitType::class, array(
-//            'label' => "Update status",
-//            'attr' => array('class'=>'btn btn-primary'),
-//        ));
-//        $form->getForm();
-
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $params = array(
             'stateChoiceArr' => $stateChoiceArr,
@@ -696,7 +754,15 @@ class ProjectChangeStatusController extends OrderAbstractController
             $newState = $form['updateState']->getData();
             //echo "newState=$newState <br>";
 
-            $msg = "Status successfully updated to '$newState'.";
+            $project->setState($newState);
+            $em->flush($project);
+
+            $msg = "Status successfully updated to '$newState'";
+
+            //event log
+            $msg = $msg . " on the project status confirmation page";
+            $eventType = "Project Status Updated";
+            $transresUtil->setEventLog($project,$eventType,$msg);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -708,7 +774,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         return array(
             'project' => $project,
             'form' => $form->createView(),
-            'title' => "Project ".$project->getOid()." change state confirmation",
+            'title' => "Project ".$project->getOid()." change status confirmation",
             'cycle' => $cycle,
         );
     }
