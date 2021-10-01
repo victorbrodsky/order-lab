@@ -338,6 +338,7 @@ function transresValidateProjectForm() {
                 //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
                 //Are you sure you would like to change the status of this project from 'Closed' to ‘….’?
                 //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
+                
 
                 // if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
                 //     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";

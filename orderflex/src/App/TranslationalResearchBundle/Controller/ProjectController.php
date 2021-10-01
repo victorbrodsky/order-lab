@@ -1524,7 +1524,7 @@ class ProjectController extends OrderAbstractController
         $originalProjectSpecialty = $project->getProjectSpecialty();
         $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
         $originalNoBudgetLimit = $project->getNoBudgetLimit();
-        $originalState = $project->getState();
+        //$originalState = $project->getState();
         //$originalExpDate = $project->getExpectedExpirationDate();
 
         //IRB Reviews
@@ -1597,6 +1597,7 @@ class ProjectController extends OrderAbstractController
             $originalStateLabel = $transresUtil->getStateLabelByName($originalStateStr);
 
             //if project state changed from 'closed' => generate change state request
+            //show reactivation confirmation modal before project edit submit => change status back to the original state
             //$projectNewState = $project->getState();
             //$result = $this->reactivationProject($project, $reason, $routename, $targetStatus, $user);
 
