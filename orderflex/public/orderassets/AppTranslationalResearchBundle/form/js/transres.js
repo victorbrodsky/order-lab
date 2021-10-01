@@ -317,7 +317,6 @@ function transresValidateProjectForm() {
         //console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
         //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
         if (projectOriginalState != projectCurrentStateValue) {
-            //if( projectOriginalExpDateStr == projectCurrentExpDateStr ) { //exp date left unchanged
             if (projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled") {
                 //Create exp date object
                 var timestamp = Date.parse(projectCurrentExpDateStr);
@@ -335,7 +334,19 @@ function transresValidateProjectForm() {
                     return false;
                 }
             }
-            //}
+            if( projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled" ) {
+                //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
+                //Are you sure you would like to change the status of this project from 'Closed' to ‘….’?
+                //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
+
+                // if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
+                //     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
+                //     $("#projectError").show();
+                //     $("#projectError").html(msg);
+                //     transresShowBtn();
+                //     return false;
+                // }
+            }
         }
     }
     // if( 1 ) {

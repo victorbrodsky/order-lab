@@ -570,7 +570,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         );
         $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 
-        //TODO: 233(10):
+        //233(10): new confirmation page
         //“Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // will remain 'Closed'. If you would like to change the status, please select it below and press “Update Status”
 //        $piStr = "unknown PI";
@@ -589,17 +589,17 @@ class ProjectChangeStatusController extends OrderAbstractController
             $noticeMsg
         );
 
-        //TODO: …If the user picks a different status on the denial confirmation page and clicks “
+        //If the user picks a different status on the denial confirmation page and clicks “
         //Update status”, update the status silently and show a green well below with
         // “Status successfully updated to '[whatever status was picked]'.”
         // Do not send an email with this subsequent status update.
 
-        //TODO: Write this event of new type “Project reactivation request denied” to the event log.
+        //Write this event of new type “Project reactivation request denied” to the event log.
         //event log
         $eventType = "Project Reactivation Denied";
         $transresUtil->setEventLog($project,$eventType,$msg);
 
-        //TODO: Send a notification email to all users with TRP admin role
+        //Send a notification email to all users with TRP admin role
         //Subject: Request to reactivate project [ProjectID] has been denied
         //Body: Request to reactivate project [ProjectID] submitted by FirstName LastName on MM/DD/YYYY at HH:MM has been denied by FirstName LastName on MM/DD/YYYY at HH:MM.
         //The current status of this project is “[current status]”.
@@ -671,7 +671,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         );
         $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 
-        //TODO: 233(9) - new page
+        //233(9) - new confirmation page
         // Thank you! The status for project request [ProjectID] “[Project Title]” (FirstNameOfPI LastNameOfPI)
         // has been updated to [TargetStatus]. If you would like to change the status,
         // please select it below and press “Update status” (show a select2 dropdown
@@ -684,17 +684,17 @@ class ProjectChangeStatusController extends OrderAbstractController
             $noticeMsg
         );
 
-        //TODO: …If the user picks a different status on the approval confirmation page and
+        //If the user picks a different status on the approval confirmation page and
         // clicks “Update Status”, update the status silently and show a green
         // well below with “Status successfully updated to '[whatever status was picked]'.”
         // Do not send an email with this subsequent status update.
 
-        //TODO: Write this event of new type “Project reactivation request approved” to the event log.
+        //Write this event of new type “Project reactivation request approved” to the event log.
         //event log
         $eventType = "Project Reactivation Approved";
         $transresUtil->setEventLog($project,$eventType,$msg);
 
-        //TODO: Send a notification email to all users with TRP admin role
+        //Send a notification email to all users with TRP admin role
         // (since they are the only ones who could changed the status away from Closed)
         //Subject: Request to reactivate project [ProjectID] has been approved
         //Body: Request to reactivate project [ProjectID] submitted by FirstName LastName on MM/DD/YYYY at HH:MM has been approved by FirstName LastName on MM/DD/YYYY at HH:MM.
