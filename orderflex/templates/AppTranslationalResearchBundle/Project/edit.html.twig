@@ -128,6 +128,16 @@
 
     <div id="projectError" class="alert alert-danger" style="display: none;"></div>
 
+    <div
+        id="project-change-state-data"
+        style="display: none;"
+        trp-closure-data-confirm="{{ project.id }}"
+        trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"
+        trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."
+        trp-closure-routename-data="translationalresearch_project_approve"
+        trp-closure-reason-title-data="Reason for project reactivation:"
+    ></div>
+
     <br>
     <p>
         <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
@@ -150,5 +160,6 @@
     {#{% endjavascripts %}#}
 
     <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-project-change-state.js') }}"></script>
 
 {% endblock %}

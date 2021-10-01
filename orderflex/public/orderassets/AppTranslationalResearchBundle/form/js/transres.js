@@ -305,15 +305,20 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
+    //get original and new (current) state
+    var projectOriginalState = $("#projectOriginalState").val(); //Closed
+    var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
+    var projectCurrentStateValue = projectCurrentStateData.text; //Closed
+
     //"Closed" -> Any except "Canceled" => check exp date (only non-funded projects)
     var projectFundedValue = $("#oleg_translationalresearchbundle_project_funded").is(":checked");
     //console.log("projectFundedValue="+projectFundedValue);
     if( !projectFundedValue ) {
-        var projectOriginalState = $("#projectOriginalState").val(); //Closed
+        //var projectOriginalState = $("#projectOriginalState").val(); //Closed
         var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
         var projectCurrentExpDateStr = $("#oleg_translationalresearchbundle_project_expectedExpirationDate").val();
-        var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
-        var projectCurrentStateValue = projectCurrentStateData.text; //Closed
+        //var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
+        //var projectCurrentStateValue = projectCurrentStateData.text; //Closed
         //console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
         //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
         if (projectOriginalState != projectCurrentStateValue) {
@@ -334,22 +339,41 @@ function transresValidateProjectForm() {
                     return false;
                 }
             }
-            if( projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled" ) {
-                //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
-                //Are you sure you would like to change the status of this project from 'Closed' to ‘….’?
-                //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
-                
-
-                // if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
-                //     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
-                //     $("#projectError").show();
-                //     $("#projectError").html(msg);
-                //     transresShowBtn();
-                //     return false;
-                // }
-            }
         }
     }
+
+    console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectOriginalState="+projectOriginalState);
+    if( projectOriginalState == "Closed" && projectOriginalState != projectCurrentStateValue ) {
+        //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
+        //Are you sure you would like to change the status of this project from 'Closed' to ‘….’?
+        //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
+
+        //show state change modal
+        console.log("show state change modal");
+
+        //change project state back to the original
+
+        var projectChangeStateData = $('#project-change-state-data');
+        var modalTitle = "Are you sure you would like to change the status of this project from "
+            + "'" + projectOriginalState + "' to '"+projectCurrentStateValue+"'?";
+        projectChangeStateData.attr('trp-closure-title-data', modalTitle);
+
+        var title = $('#project-change-state-data').attr('trp-closure-title-data');
+        console.log("new title="+title);
+        
+        trpConstructClosureProjectModal(projectChangeStateData,false,'afterFunctionEditPage');
+        transresShowBtn();
+        //return false;
+
+        // if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
+        //     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
+        //     $("#projectError").show();
+        //     $("#projectError").html(msg);
+        //     transresShowBtn();
+        //     return false;
+        // }
+    }
+
     // if( 1 ) {
     //     var msg = "Test error";
     //     $("#projectError").show();

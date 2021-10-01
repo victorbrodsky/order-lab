@@ -1585,7 +1585,7 @@ class ProjectController extends OrderAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //exit("Project update submitted");
+            exit("Project update submitted"); //testing
 
             $project->setUpdateUser($user);
             $project->setUpdateDate();
@@ -1598,8 +1598,6 @@ class ProjectController extends OrderAbstractController
 
             //if project state changed from 'closed' => generate change state request
             //show reactivation confirmation modal before project edit submit => change status back to the original state
-            //$projectNewState = $project->getState();
-            //$result = $this->reactivationProject($project, $reason, $routename, $targetStatus, $user);
 
             $msg = "Project request " . $project->getOid() . " has been successfully updated";
 
