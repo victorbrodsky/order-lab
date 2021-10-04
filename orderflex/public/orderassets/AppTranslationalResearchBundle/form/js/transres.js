@@ -343,7 +343,8 @@ function transresValidateProjectForm() {
     }
 
     console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectOriginalState="+projectOriginalState);
-    if( projectOriginalState == "Closed" && projectOriginalState != projectCurrentStateValue ) {
+    var projectChangeStateData = $('#project-change-state-data');
+    if( projectChangeStateData.length && projectOriginalState == "Closed" && projectOriginalState != projectCurrentStateValue ) {
         //If a project status is changed from 'Closed' to another and Update button is pressed on that page, show the same confirmation in 8 above
         //Are you sure you would like to change the status of this project from 'Closed' to ‘….’?
         //Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved.
@@ -352,8 +353,6 @@ function transresValidateProjectForm() {
         console.log("show state change modal");
 
         //change project state back to the original
-
-        var projectChangeStateData = $('#project-change-state-data');
         var modalTitle = "Are you sure you would like to change the status of this project from "
             + "'" + projectOriginalState + "' to '"+projectCurrentStateValue+"'?";
         projectChangeStateData.attr('trp-closure-title-data', modalTitle);

@@ -7,6 +7,10 @@ function trpConstructClosureProjectModal(actionBtn,asyncType,afterFunctionReload
     //sitename = "'"+sitename+"'";
     //otherUserParam = "'"+otherUserParam+"'";
 
+    if( afterFunctionReload ) {
+        afterFunctionReload = "'"+afterFunctionReload+"'";
+    }
+
     //remove any existing modal
     $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
     $( '.modal' ).remove();
@@ -82,10 +86,11 @@ function trpCloseReactivationProjectAction( okbtn, projectId, routename, asyncTy
     //holder.find("#user-add-btn-dismiss").hide();
     //holder.find("#user-add-btn-cancel").hide();
 
-    var callBackFunction = null;
-    if( afterFunctionName ) {
-        var callBackFunction = window[afterFunctionName];
-    }
+    // var callBackFunction = null;
+    // if( afterFunctionName ) {
+    //     console.log("create callBackFunction="+afterFunctionName);
+    //     callBackFunction = window[afterFunctionName];
+    // }
 
     var transTime = 500;
 
@@ -149,9 +154,10 @@ function trpCloseReactivationProjectAction( okbtn, projectId, routename, asyncTy
 
     }).always(function() {
 
-        //location.reload();
-        if( callBackFunction && typeof callBackFunction === 'function' ) {
-            callBackFunction();
+        console.log("create callBackFunction="+afterFunctionName);
+        if( afterFunctionName ) {
+            //console.log("callBackFunction");
+            window[afterFunctionName]();
         }
 
         //lbtn.stop();
