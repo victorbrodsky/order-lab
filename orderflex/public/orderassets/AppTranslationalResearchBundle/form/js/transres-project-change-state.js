@@ -2,6 +2,8 @@
  * Created by ch3 on 10/1/2021.
  */
 
+var _clickedSubmitBtnId = null;
+
 function trpConstructClosureProjectModal(actionBtn,asyncType,afterFunctionReload) { //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {
     //fieldId = "'"+fieldId+"'";
     //sitename = "'"+sitename+"'";
@@ -183,8 +185,11 @@ function afterFunctionReload() {
 }
 
 function afterFunctionEditPage() {
+    //Resubmit form by clicking the same submit button.
     // $(":submit").show();
     // $('#please-wait').hide();
-    //transresShowBtn();
+    transresShowBtn();
+    //transresValidateProjectForm();
+    $("#"+_clickedSubmitBtnId).click();
 }
 

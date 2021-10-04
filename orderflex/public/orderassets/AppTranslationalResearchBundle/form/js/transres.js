@@ -306,6 +306,7 @@ function transresValidateProjectForm() {
     }
 
     //get original and new (current) state
+    var projectOriginalStateValue = $("#projectOriginalStateValue").val();
     var projectOriginalState = $("#projectOriginalState").val(); //Closed
     var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
     var projectCurrentStateValue = projectCurrentStateData.text; //Closed
@@ -362,7 +363,13 @@ function transresValidateProjectForm() {
         
         trpConstructClosureProjectModal(projectChangeStateData,false,'afterFunctionEditPage');
         transresShowBtn();
-        //return false;
+
+        //change state back to the original projectOriginalStateValue
+        //resubmit with the original state by afterFunctionEditPage() => this modal will not be shown since the state is set to the original
+        $("#oleg_translationalresearchbundle_project_state").select2('val', projectOriginalStateValue);
+
+        return false;
+
 
         // if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
         //     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
@@ -391,6 +398,12 @@ function transresValidateProjectForm() {
     //var form = document.getElementById("transresProjectForm");
     //form.submit();
     //projectForm.submit(); // If all the validations succeeded
+}
+
+function transresSubmitBtnRegister(btnName) {
+    var btnNameId = "oleg_translationalresearchbundle_project_"+btnName;
+    _clickedSubmitBtnId = btnNameId;
+    console.log("_clickedSubmitBtnId="+_clickedSubmitBtnId);
 }
 
 function transresHideBtn() {

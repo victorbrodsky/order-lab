@@ -23,11 +23,11 @@
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
     <input type="hidden" id="projectOriginalState" value="{{ transres_util.getStateLabelByProject(project) }}" />
+    <input type="hidden" id="projectOriginalStateValue" value="{{ project.getState() }}" />
+
     <input type="hidden" id="projectOriginalExpDateStr" value="{{ project.getExpectedExpirationDateStr() }}" />
 
     <div id="add-new-user-modal-prototype"></div>
-
-    {% set simpleProjectClosure = transres_util.getTransresSiteProjectParameter('sendProjectReactivationRequest',project) %}
 
     {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
     {% if messageToUsers is defined and messageToUsers %}
@@ -49,6 +49,21 @@
     {% set sitename = translationalresearch_sitename %}
 
     {#{{ transres.projectHeader(project) }}#}
+
+    {% set simpleProjectClosure = transres_util.getTransresSiteProjectParameter('sendProjectReactivationRequest',project) %}
+    {#{% set simpleProjectClosure = false %}#}
+    {% if simpleProjectClosure %}
+        {#Presence of this div element with id="project-change-state-data" will indicate to use reactivation approval logic#}
+        <div
+                id="project-change-state-data"
+                style="display: none;"
+                trp-closure-data-confirm="{{ project.id }}"
+                trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"
+                trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."
+                trp-closure-routename-data="translationalresearch_project_approve"
+                trp-closure-reason-title-data="Reason for project reactivation:"
+        ></div>
+    {% endif %}
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
@@ -130,18 +145,18 @@
 
     <div id="projectError" class="alert alert-danger" style="display: none;"></div>
 
-    {% if simpleProjectClosure %}
+    {#{% if simpleProjectClosure %}#}
         {#Presence of this div element with id="project-change-state-data" will indicate to use reactivation approval logic#}
-        <div
-            id="project-change-state-data"
-            style="display: none;"
-            trp-closure-data-confirm="{{ project.id }}"
-            trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"
-            trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."
-            trp-closure-routename-data="translationalresearch_project_approve"
-            trp-closure-reason-title-data="Reason for project reactivation:"
-        ></div>
-    {% endif %}
+        {#<div#}
+            {#id="project-change-state-data"#}
+            {#style="display: none;"#}
+            {#trp-closure-data-confirm="{{ project.id }}"#}
+            {#trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"#}
+            {#trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."#}
+            {#trp-closure-routename-data="translationalresearch_project_approve"#}
+            {#trp-closure-reason-title-data="Reason for project reactivation:"#}
+        {#></div>#}
+    {#{% endif %}#}
 
     <br>
     <p>

@@ -1585,7 +1585,7 @@ class ProjectController extends OrderAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            exit("Project update submitted"); //testing
+            //exit("Project update submitted"); //testing
 
             $project->setUpdateUser($user);
             $project->setUpdateDate();

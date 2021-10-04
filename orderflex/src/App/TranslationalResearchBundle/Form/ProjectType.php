@@ -797,7 +797,7 @@ class ProjectType extends AbstractType
             $builder->add('updateProject', SubmitType::class, array(
                 'label' => 'Save Changes',  //'Update Project',
                 //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateProjectForm();')
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresSubmitBtnRegister("updateProject");')
             ));
         }
 
