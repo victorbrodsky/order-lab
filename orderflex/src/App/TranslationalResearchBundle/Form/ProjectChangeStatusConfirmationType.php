@@ -51,7 +51,7 @@ class ProjectChangeStatusConfirmationType extends AbstractType
 //            'attr' => array('class'=>'form-control'),
 //        ));
         $builder->add('updateState',ChoiceType::class, array(
-            'label' => 'State:',
+            'label' => 'Status:',
             'required' => false,
 //            'choices'  => array(
 //                'start' => 'start',

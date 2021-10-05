@@ -1941,6 +1941,13 @@ class AdminController extends OrderAbstractController
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER" => array(
+                "Translational Research Project Reactivation Approver",
+                "Project reactivation approver (change status of the closed project)",
+                90,
+                "translational-research"
+            ),
+
             "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
                 "Translational Research AP/CP Final Reviewer",
                 "Review for all states for AP/CP",

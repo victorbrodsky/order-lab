@@ -771,10 +771,13 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         }//$form->isSubmitted()
 
+        $currentState = $project->getState();
+        $currentStateStr = $transresUtil->getStateSimpleLabelByName($currentState);
+
         return array(
             'project' => $project,
             'form' => $form->createView(),
-            'title' => "Project ".$project->getOid()." change status confirmation",
+            'title' => "Confirmation of the project ".$project->getOid()." status change to '".$currentStateStr."'",
             'cycle' => $cycle,
         );
     }
