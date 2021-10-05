@@ -6668,7 +6668,8 @@ class DashboardUtil
             //Legend:
             //New Call Log Entries
             //Edited Call Log Entries
-            $transresUtil = $this->container->get('transres_util');
+            //$transresUtil = $this->container->get('transres_util');
+            $calllogUtil = $this->container->get('calllog_util');
 
             $newTypeArr = array("New Call Log Book Entry Submitted");
             $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
@@ -6684,7 +6685,7 @@ class DashboardUtil
             $startDate->modify( 'first day of this month' );
 
             //$totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,$editedTypeArr);
-            $totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,true);
+            $totalCalllogEntriesCount = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,true);
 
             $weekly = true;  //weekly
             //$weekly = false; //daily
@@ -6712,11 +6713,11 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y H:i:s")."; EndDate=".$thisEndDate->format("d-M-Y H:i:s")."<br>";
 
-                $newCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $newCalllogEntriesCount = $calllogUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
                 $newArr[$startDateLabel] = $newCalllogEntriesCount;
                 $newCount = $newCount + $newCalllogEntriesCount;
 
-                $editedCalllogEntriesCount = $transresUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
+                $editedCalllogEntriesCount = $calllogUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
                 //$editedCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$thisEndDate);
                 $editedArr[$startDateLabel] = $editedCalllogEntriesCount;
                 $editedCount = $editedCount + $editedCalllogEntriesCount;
@@ -6747,7 +6748,8 @@ class DashboardUtil
             //Legend: Patients with new call log entries
             //The second graph would show the number of patients who got a new Call Log entry per day.
 
-            $transresUtil = $this->container->get('transres_util');
+            //$transresUtil = $this->container->get('transres_util');
+            $calllogUtil = $this->container->get('calllog_util');
 
             $newTypeArr = array("New Call Log Book Entry Submitted");
             $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
@@ -6786,7 +6788,7 @@ class DashboardUtil
                 $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
-                $calllogPatientEntriesCount = $transresUtil->getCalllogPatientEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $calllogPatientEntriesCount = $calllogUtil->getCalllogPatientEntriesCount($startDate,$thisEndDate,$newTypeArr);
                 $patientsArr[$startDateLabel] = $calllogPatientEntriesCount;
                 $patientCount = $patientCount + $calllogPatientEntriesCount;
 
