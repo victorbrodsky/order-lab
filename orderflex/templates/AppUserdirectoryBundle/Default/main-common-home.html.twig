@@ -153,6 +153,10 @@
             <p><a href="{{ path('translationalresearch_home') }}">Translational Research</a></p>
         {% endif %}
 
+        {% if user_security_utility.isSiteShowLinkNavbar(dashboard_sitename) %}
+            <p><a href="{{ path('dashboard_home') }}">Dashboards</a></p>
+        {% endif %}
+
 
         {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
 

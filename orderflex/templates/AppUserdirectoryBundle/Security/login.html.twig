@@ -85,6 +85,11 @@
             {% set favicon = 'glyphicons-342-briefcase.png' %}
         {% endif %}
 
+        {% if sitename == dashboard_sitename %}
+            {% set title = "Dashboards" %}
+            {% set favicon = 'glyphicons-stats.png' %}
+        {% endif %}
+
         <title>{{ title }}</title>
 
         {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}

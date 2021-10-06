@@ -64,6 +64,10 @@
         {% include 'AppTranslationalResearchBundle/Default/navbar.html.twig' %}
     {% endif %}
 
+    {% if sitename == 'dashboard' %}
+        {% include 'AppDashboardBundle/Default/navbar.html.twig' %}
+    {% endif %}
+
 {% endblock %}
 
 {% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}

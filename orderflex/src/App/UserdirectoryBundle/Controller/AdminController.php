@@ -2825,7 +2825,8 @@ class AdminController extends OrderAbstractController
             'vacation-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
-            'translational-research' => 'translationalresearch'
+            'translational-research' => 'translationalresearch',
+            'dashboards' => 'dashboard'
         );
         return $elements;
     }
@@ -8034,6 +8035,8 @@ class AdminController extends OrderAbstractController
             $resCount = $resCount + $this->addSites( $role, '_CALLLOG_', 'call-log-book' );
 
             $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
+
+            $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboard' );
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );

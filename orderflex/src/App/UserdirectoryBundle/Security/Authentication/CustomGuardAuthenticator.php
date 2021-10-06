@@ -204,6 +204,9 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         if( strpos($route,'scan') !== false ) {
             return "scan";
         }
+        if( strpos($route,'dashboard') !== false ) {
+            return "dashboard";
+        }
 
         //get first element before '_'
         if( strpos($route,'_') !== false ) {

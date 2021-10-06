@@ -109,6 +109,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "translationalresearch_login" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
+        if( $routename == "dashboard_login" ) {
+            $sitename = $this->getParameter('dashboard.sitename');
+        }
         //exit('sitename='.$sitename);
 
         /////////////// set browser info ///////////////
@@ -303,6 +306,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "translationalresearch_idlelogout" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
+        if( $routename == "dashboard_idlelogout" ) {
+            $sitename = $this->getParameter('dashboard.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -355,6 +361,10 @@ class SecurityController extends OrderAbstractController
         if( $routename == "translationalresearch_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('translationalresearch.sitename');
             $options['event'] = "Translational Research login page visit";
+        }
+        if( $routename == "dashboard_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('dashboard.sitename');
+            $options['event'] = "Dashboard login page visit";
         }
 
 

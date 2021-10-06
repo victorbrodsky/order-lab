@@ -320,6 +320,9 @@ class SiteList extends ListAbstract
         if( $abbreviation == "crn" ) {
             return "Critical Result Notification";
         }
+        if( $abbreviation == "dashboard" ) {
+            return "Dashboards";
+        }
         return ucfirst($this->getName());
     }
 

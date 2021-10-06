@@ -120,6 +120,10 @@ class EmailUtil {
                 $sitenameAbbreviation = "deidentifier";
                 $subject = "[Deidentifier] " . $subject;
             }
+            if (strpos($url, "/dashboard/") !== false) {
+                $sitenameAbbreviation = "dashboard";
+                $subject = "[Dashboard] " . $subject;
+            }
         }
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');

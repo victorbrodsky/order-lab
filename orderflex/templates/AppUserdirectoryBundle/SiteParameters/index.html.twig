@@ -51,6 +51,10 @@
     {% set extendStr = 'AppTranslationalResearchBundle/Default/base.html.twig' %}
 {% endif %}
 
+{% if sitename == 'dashboard' %}
+    {% set extendStr = 'AppDashboardBundle/Default/base.html.twig' %}
+{% endif %}
+
 {% extends extendStr%}
 
 
@@ -1097,6 +1101,10 @@
 
     {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'AppUserdirectoryBundle/SiteParameters/scan-content.html.twig' %}
+    {% endif %}
+
+    {% if (sitename == "employees" or sitename == "dashboard") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/dashboard-content.html.twig' %}
     {% endif %}
 
     {% include 'AppUserdirectoryBundle/SiteParameters/miscellaneous.html.twig' %}

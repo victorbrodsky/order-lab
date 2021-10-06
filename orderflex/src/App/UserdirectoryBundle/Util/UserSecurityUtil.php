@@ -475,6 +475,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_TRANSRES_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('dashboard.sitename') ) {
+                $roles = array("ROLE_DASHBOARD_ADMIN");
+            }
+
         } else {
             return null;
         }
@@ -718,6 +722,9 @@ class UserSecurityUtil {
         if ($sitename == 'scan' || $sitename == null ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
+        if ($sitename == 'dashboard' || $sitename == null ) {
+            $defaultSourceSystemName = 'ORDER Dashboards';
+        }
 
         $source = $this->em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
 
@@ -770,6 +777,9 @@ class UserSecurityUtil {
         }
         if( strpos($url, $subdomain.'/scan/') !== false ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
+        }
+        if( strpos($url, $subdomain.'/dashboards/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Dashboards';
         }
 
         if( !$defaultSourceSystemName ) {

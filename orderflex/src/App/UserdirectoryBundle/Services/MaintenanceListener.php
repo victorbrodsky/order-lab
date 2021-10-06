@@ -250,6 +250,9 @@ class MaintenanceListener {
         if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }
+        if( strpos($controller,'App\DashboardBundle') !== false ) {
+            return "dashboard";
+        }
 
         return null;
     }

@@ -104,6 +104,7 @@
             {{ usermacros.siteSingleSwitchElement(calllog_sitename,'<span class="glyphicon glyphicon-phone-alt"></span>','Call Log Book') }}
             {{ usermacros.siteSingleSwitchElement(crn_sitename,'<span class="glyphicon glyphicon-pencil"></span>','Critical Result Notifications') }}
             {{ usermacros.siteSingleSwitchElement(translationalresearch_sitename,'<span class="glyphicon glyphicon-briefcase"></span>','Translational Research') }}
+            {{ usermacros.siteSingleSwitchElement(dashboard_sitename,'<span class="glyphicon glyphicon-stats"></span>','Dashboards') }}
 
         </ul>
     </li>
@@ -291,6 +292,9 @@
         {% endif %}
         {% if '/translational-research/' in currentPath %}
             {% set sitename = translationalresearch_sitename %}
+        {% endif %}
+        {% if '/dashboards/' in currentPath %}
+            {% set sitename = dashboard_sitename %}
         {% endif %}
     {% endif %}
     {#EOF get sitename#}
@@ -2454,6 +2458,9 @@
             {% endif %}
             {% if '/translational-research/' in currentPath %}
                 {% set sitename = translationalresearch_sitename %}
+            {% endif %}
+            {% if '/dashboards/' in currentPath %}
+                {% set sitename = dashboard_sitename %}
             {% endif %}
         {% endif %}
         {#EOF get sitename#}
