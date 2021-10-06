@@ -1,0 +1,49 @@
+parameters:
+
+  dashboard.sitename: dashboard
+  dashboard.uploadpath:
+
+
+twig:
+    globals:
+        dashboard_sitename: '%dashboard.sitename%'
+        dashboard_util: "@dashboard_util"
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
+
+    dashboard_authentication_handler:
+        class: App\DashboardBundle\Security\Authentication\DashboardLoginSuccessHandler
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+#    #fellowship application utilities
+#    fellapp_util:
+#            class: App\FellAppBundle\Util\FellAppUtil
+#            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#
+#
+#    fellapp_role_voter:
+#        class: App\FellAppBundle\Security\Voter\FellAppRoleVoter
+#        public: false
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: security.voter }
+#
+#    fellapp_permission_voter:
+#        class: App\FellAppBundle\Security\Voter\FellAppPermissionVoter
+#        public: false
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: security.voter }
+
+#    App\FellAppBundle\Util\CustomDefaultServiceRequest:
+#        autowire: true
+#        autoconfigure: true
+##        arguments:
+##            $accessToken: '@accessToken'
+##            $tokenType: 'OAuth'

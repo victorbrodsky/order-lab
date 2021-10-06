@@ -22,6 +22,12 @@ main_under_construction:
 
 #order is important: base bundle userdirectory must be the last one
 #    resource: "@AppDeidentifierBundle/Controller/"
+app_dashboard:
+    resource: "App/DashboardBundle/Controller/"
+    type:     annotation
+    prefix:   /dashboard
+    schemes:  ['%connection_channel%']
+
 app_deidentifier:
     resource: "App/DeidentifierBundle/Controller/"
     type:     annotation
@@ -137,6 +143,11 @@ employees_logout:
 
 #fellapp_login:
 #    path:   /fellowship-applications/login
+dashboard_login_check:
+    path:   /dashboards/login_check
+dashboard_logout:
+    path:   /dashboards/logout
+
 fellapp_login_check:
     path:   /fellowship-applications/login_check
 fellapp_logout:

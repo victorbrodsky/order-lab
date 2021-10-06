@@ -8036,7 +8036,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
 
-            $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboard' );
+            $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboard' ); //Dashboard
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );

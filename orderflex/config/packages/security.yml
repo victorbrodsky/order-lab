@@ -426,6 +426,22 @@ security:
                 path:     /translational-research
 #                always_remember_me: true
 
+        ldap_dashboard_firewall:
+            pattern: ^/dashboards
+            context: scan_auth
+            switch_user: true
+            guard:
+                authenticator: custom_guard_authenticator
+            logout:
+                path:   /dashboards/logout
+                target: /dashboards/login
+            anonymous:  true
+            access_denied_url: /dashboards/access-requests/new/create
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+                path:     /dashboards
+
         foscomment_api_firewall:
             pattern: ^/api
             #logout_on_user_change: true
@@ -656,4 +672,18 @@ security:
        - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
 
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
+
+
+       ############################## Dashboard SITE SETTINGS ##############################
+       - { path: ^/dashboards/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
+
+
 

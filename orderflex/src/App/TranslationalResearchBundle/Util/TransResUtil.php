@@ -7975,17 +7975,17 @@ class TransResUtil
             $query->setParameters($dqlParameters);
         }
 
-        $projects = $query->getResult();
-        //echo "projects=".count($projects)."<br>";
+        $projectPriceLists = $query->getResult();
+        //echo "projectPriceLists=".count($projectPriceLists)."<br>";
 
         $priceListArr = array();
 
         if(1) {
-            foreach ($projects as $project) {
-                //dump($project);
-                //echo "project=".$project."<br>";
+            foreach( $projectPriceLists as $projectPriceList ) {
+                //dump($projectPriceList);
+                //echo "projectPriceList=".$projectPriceList."<br>";
 
-                $priceListId = $project[1];
+                $priceListId = $projectPriceList[1];
                 //echo "priceListId=" . $priceListId . "<br>";
 
                 if( $asPriceTypeList ) {
@@ -8015,30 +8015,92 @@ class TransResUtil
     }
 
     //$fee - RequestCategoryTypeList
-    //$specificPriceListArr - array of specific prices
-    public function getPriceListsWithNonEmptyPrices( $price, $specificPriceListArr ) {
+    //$specificPriceListArr - array of specific price lists (PriceTypeList) that allow to view by a user
+    public function getPriceListsWithNonEmptyPrices( $fee, $specificPriceListArr ) {
         
         //1) check if default fees are not NULL
-        $fee = $price->getFee();
-        $feeAdditionalItem = $price->getFeeAdditionalItem();
+        $fee = $fee->getFee();
+        $feeAdditionalItem = $fee->getFeeAdditionalItem();
         if( $fee || $feeAdditionalItem ) {
             return TRUE;
         }
 
         if( $specificPriceListArr ) {
-            //2) check if $specificPriceListArr fees are not NULL
-            foreach ($specificPriceListArr as $specificPriceListId) {
-                $specificPriceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($specificPriceListId);
-                if( $specificPriceList ) {
-                    $specificFee = $specificPriceList->getFee();
-                    $specificFeeAdditionalItem = $specificPriceList->getFeeAdditionalItem();
-                    if( $specificFee || $specificFeeAdditionalItem ) {
-                        return TRUE;
+
+            if(0) {
+                //2) check if $specificPriceListArr fees are not NULL
+                foreach ($specificPriceListArr as $specificPriceListId) {
+                    //check if $specificPriceListType exists in one of the specific prices ($fee->getPrices())
+                    foreach ($fee->getPrices() as $specificPrice) {
+                        if ($specificPrice->getPriceList()) {
+                            if ($specificPrice->getPriceList()->getId() == $specificPriceListId) {
+                                $specificFee = $specificPrice->getFee();
+                                $specificFeeAdditionalItem = $specificPrice->getFeeAdditionalItem();
+                                if ($specificFee || $specificFeeAdditionalItem) {
+                                    return TRUE;
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+            if(0) {
+                //2) check if $specificPriceListArr (list of priceTypeList user can view) exists in the specific prices ($fee->getPrices()) as priceList
+                //via loop of existing specific prices
+                foreach ($fee->getPrices() as $specificPrice) {
+                    $thisPriceType = $specificPrice->getPriceList(); //PriceTypeList
+                    if ($thisPriceType) {
+                        if (in_array($thisPriceType, $specificPriceListArr)) {
+                            if ($thisPriceType) {
+                                $specificFee = $thisPriceType->getFee();
+                                $specificFeeAdditionalItem = $thisPriceType->getFeeAdditionalItem();
+                                if ($specificFee || $specificFeeAdditionalItem) {
+                                    return TRUE;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(1) {
+                //via doctrine
+                $specificPrices = $this->findSpecificPriceByFeePriceType($fee, $specificPriceListArr);
+                if (count($specificPrices) > 0) {
+                    return TRUE;
+                }
+            }
+
         }
 
         return FALSE;
+    }
+    
+    public function findSpecificPriceByFeePriceType($fee, $priceTypeListIds) {
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Prices');
+        $dql =  $repository->createQueryBuilder("prices");
+        $dql->select('prices');
+
+        $dql->leftJoin("prices.requestCategoryType", "requestCategoryType");
+        $dql->leftJoin("prices.priceList", "priceList");
+
+        $dql->andWhere("requestCategoryType.id = :feeId");
+        $dqlParameters["feeId"] = $fee->getId();
+
+        $dql->andWhere("priceList.id IN (:priceListIds)");
+        $dqlParameters["priceListIds"] = $priceTypeListIds;
+
+        $dql->andWhere("prices.fee IS NOT NULL OR prices.feeAdditionalItem IS NOT NULL");
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $prices = $query->getResult();
+
+        return $prices;
     }
 }
