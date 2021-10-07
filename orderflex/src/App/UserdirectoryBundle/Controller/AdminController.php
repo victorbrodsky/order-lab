@@ -2160,6 +2160,14 @@ class AdminController extends OrderAbstractController
 //                50,
 //                "translational-research"
 //            ),
+
+            "ROLE_DASHBOARD_ADMIN" => array(
+                "Dashboards Administrator",
+                "View all dashboards",
+                90,
+                "dashboard"
+            ),
+
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();

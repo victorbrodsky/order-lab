@@ -1,0 +1,120 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#   navigation menu   #}
+
+{% block navbar %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_DASHBOARD_USER') %}
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(dashboard_sitename~'_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+            {% endif %}
+        </div>
+
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+
+            {% if is_granted('ROLE_DASHBOARD_USER') %}
+
+                <ul class="nav navbar-nav navbar-left">
+
+                    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-dashboardhome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(dashboard_sitename~'_home') }}">
+                            <span class="glyphicon glyphicon-retweet"></span> Home
+                        </a>
+                    </li>
+
+
+                </ul>
+
+            {% endif %}
+
+           
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_DASHBOARD_ADMIN') %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path(dashboard_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(dashboard_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(dashboard_sitename~'_authorized_users') }}">Authorized Users</a></li>
+
+                            {% if is_granted('ROLE_DASHBOARD_ADMIN') %}
+                                <li class="divider"></li>
+                                <li><a href="{{ path(dashboard_sitename~'_logger') }}">Event Log</a></li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path(dashboard_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_DASHBOARD_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(dashboard_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(dashboard_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(dashboard_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+
