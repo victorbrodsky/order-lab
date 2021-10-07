@@ -35,7 +35,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.css') }}" />
 
-
+        {#https://stackoverflow.com/questions/18156240/use-font-awesome-icon-as-favicon#}
         {#glyphicons-39-plane.png#}
         {#{% set favicon = 'favicon.ico' %}#}
         {% set favicon = 'glyphicons-157-show-thumbnails.png' %}
@@ -87,7 +87,7 @@
 
         {% if sitename == dashboard_sitename %}
             {% set title = "Dashboards" %}
-            {% set favicon = 'glyphicons-stats.png' %}
+            {% set favicon = 'favicon-stats.png' %}
         {% endif %}
 
         <title>{{ title }}</title>

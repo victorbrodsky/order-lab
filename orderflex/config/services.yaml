@@ -49,6 +49,7 @@ imports:
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
 #    - { resource: "../src/App/*/Resources/config/services.yml" }
 #    - { resource: "../src/App/UserdirectoryBundle/Resources/config/setparameters.php" } #must run after importing services
     - { resource: "setparameters.php" } #must run after importing services
@@ -130,7 +131,8 @@ services:
     App\DeidentifierBundle\Controller\:
         resource: '../src/App/DeidentifierBundle/Controller/'
 #        tags: ['controller.service_arguments']
-
+    App\DashboardBundle\Controller\:
+        resource: '../src/App/DashboardBundle/Controller/'
 
 #    App\UserdirectoryBundle\Controller\UserController: ~
 

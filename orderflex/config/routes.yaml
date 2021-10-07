@@ -25,7 +25,7 @@ main_under_construction:
 app_dashboard:
     resource: "App/DashboardBundle/Controller/"
     type:     annotation
-    prefix:   /dashboard
+    prefix:   /dashboards
     schemes:  ['%connection_channel%']
 
 app_deidentifier:

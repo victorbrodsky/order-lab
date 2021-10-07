@@ -21,6 +21,11 @@ services:
         class: App\DashboardBundle\Security\Authentication\DashboardLoginSuccessHandler
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
+    dashboard_util:
+        class: App\DashboardBundle\Util\DashboardUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+
 #    #fellowship application utilities
 #    fellapp_util:
 #            class: App\FellAppBundle\Util\FellAppUtil
