@@ -44,4 +44,19 @@ class DefaultController extends OrderAbstractController
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 
+
+    /**
+     * @Route("/test", name="dashboard_test")
+     * @Template("AppDashboardBundle/Default/test.html.twig")
+     */
+    public function testAction( Request $request ) {
+
+        $testDataArr = array(1,2,3,4,5);
+
+        return array(
+            'sitename'=>$this->getParameter('dashboard.sitename'),
+            'mytitle' => "This is my test page",
+            'testData' => $testDataArr
+        );
+    }
 }
