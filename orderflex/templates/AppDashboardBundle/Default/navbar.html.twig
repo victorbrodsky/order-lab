@@ -47,7 +47,9 @@
 
                     <li id="nav-bar-dashboardhome" class="hidden-xs divider-vertical">
                         <a href="{{ path(dashboard_sitename~'_home') }}">
+                            {#<span class="glyphicon glyphicon-stats"></span> Home#}
                             <span class="glyphicon glyphicon-stats"></span> Home
+                            {#<span class="fa fa-bar-chart-o"></span> Home#}
                         </a>
                     </li>
 
@@ -118,3 +120,7 @@
     
 {% endblock %}
 
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}

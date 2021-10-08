@@ -73,5 +73,79 @@ class DashboardSiteParametersController extends SiteParametersController
     }
 
 
+    /**
+     * TODO: implement dashboard site settings if required (create entity DashboardSiteParameter and form type DashboardSiteParameterType)
+     * DashboardSiteParameter Show
+     *
+     * @Route("/specific-site-parameters/show/", name="dashboard_siteparameters_show_specific_site_parameters", methods={"GET"})
+     * @Template("AppDashboardBundle/SiteParameter/edit-content.html.twig")
+     */
+    public function dashboardSiteParameterShowAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('dashboard-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $dashboardSiteParameter = $this->getOrCreateNewDashboardParameters($cycle);
+        //echo "dashboardSiteParameter=".$dashboardSiteParameter->getId()."<br>";
+
+        $form = $this->createDashboardSiteParameterForm($dashboardSiteParameter,$cycle);
+
+        return array(
+            'entity' => $dashboardSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Fellowship Specific Site Parameters"
+        );
+    }
+
+    public function createDashboardSiteParameterForm($entity, $cycle) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(DashboardSiteParameterType::class, $entity, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled
+        ));
+
+        return $form;
+    }
+
+    //Get or Create a new DashboardSiteParameter
+    public function getOrCreateNewDashboardParameters( $cycle ) {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+
+        $dashboardSiteParameter = $siteParameters->getDashboardSiteParameter();
+
+        //create one DashboardSiteParameter
+        if( !$dashboardSiteParameter ) {
+            //echo "DashboardSiteParameter null <br>";
+            $dashboardSiteParameter = new DashboardSiteParameter();
+
+            $siteParameters->setDashboardSiteParameter($dashboardSiteParameter);
+            $em->flush();
+        }
+
+        return $dashboardSiteParameter;
+    }
 
 }

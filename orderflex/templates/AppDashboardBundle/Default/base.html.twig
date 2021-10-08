@@ -22,7 +22,8 @@
 {% endblock %}
 
 {% block favicon %}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon-stats.png') }}" />
+    {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon-stats.png') }}" />#}
+    <link rel="icon" type="image/x-icon" href="{{ asset('bar-chart-fill.svg') }}" />
 {% endblock %}
 
 
@@ -74,4 +75,8 @@
     {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
 {% endblock %}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}
 
