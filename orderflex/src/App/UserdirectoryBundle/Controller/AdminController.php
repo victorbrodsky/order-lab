@@ -19,6 +19,8 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 //use App\CrnBundle\Entity\CrnEntryTagsList;
+use App\DashboardBundle\Entity\ChartFilterList;
+use App\DashboardBundle\Entity\ChartTypeList;
 use App\FellAppBundle\Entity\FellAppRank;
 use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
@@ -996,12 +998,19 @@ class AdminController extends OrderAbstractController
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
 
+        //Dashboards
+        $count_generateChartTypeList = $this->generateChartTypeList();
+        $count_generateChartFilterList = $this->generateChartFilterList();
+        $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
+
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
         $logger->notice("Finished generatePlatformListManagerList");
 
         $count_populateClassUrl = $this->populateClassUrl();
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
         $logger->notice("Finished populateClassUrl");
+
+
 
 
         $msg =
@@ -1122,6 +1131,10 @@ class AdminController extends OrderAbstractController
             'WorkQueueList='.$count_WorkQueueList.', '.
             'OrderableStatusList='.$count_OrderableStatusList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
+
+            'generateChartTypeList='.$count_generateChartTypeList.', '.
+            'generateChartFilterList='.$count_generateChartFilterList.', '.
+            'generateChartTopicList='.$count_generateChartTopicList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -9821,6 +9834,138 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+
+    public function generateChartTypeList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Line",
+            "Pie",
+            "Bar",
+            "Column",
+            "Scatter",
+            "Area",
+            "Violin",
+            "Candlestick",
+            "Boxplot",
+            "Heatmap",
+            "Sunburst",
+            "Graph",
+            "Lines",
+            "Tree",
+            "Treemap",
+            "Histogram",
+            "Pareto",
+            "Box and Whisker",
+            "Waterfall",
+            "Funnel",
+            "Stock",
+            "Surface",
+            "Radar",
+            "Map",
+            "Calendar",
+            "Parallel",
+            "Sankey",
+            "Gauge",
+            "Theme River",
+            "3D Bar",
+            "3D Scatter",
+            "3D Surface",
+            "3D Map",
+            "3D Line"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ChartTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateChartTopicList() {
+
+        return NULL; //TODO: hierarchy
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Financial",
+            "Productivity",
+            "Clinical",
+            "Research",
+            "Educational",
+            "Site Utilization"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:ChartTopicList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ChartTopicList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateChartFilterList() {
+        return NULL; //TODO
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "From Date",
+            "From Time",
+            "To Date",
+            "To Time",
+            "Project Type",
+            "Pathologist",
+            "PI"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:ChartFilterList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ChartFilterList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
     //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
     public function generateTransResRequestCategoryType() {

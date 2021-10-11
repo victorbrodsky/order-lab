@@ -22,7 +22,7 @@ class DashboardController extends OrderAbstractController
 {
 
     /**
-     * single dashboard chart
+     * single dashboard chart. id - chart ID
      *
      * @Route("/chart/{id}", name="dashboard_single_chart")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
@@ -30,14 +30,18 @@ class DashboardController extends OrderAbstractController
     public function singleChartAction( Request $request, $id ) {
 
         //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+
+        $chartsArray = array();
+
         return array(
-            'title' => "Single chart"
+            'title' => "Single chart",
+            'chartsArray' => $chartsArray
         );
     }
 
 
     /**
-     * single dashboard topic
+     * single dashboard topic. id - topic ID
      *
      * @Route("/topic/{id}", name="dashboard_single_topic")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
@@ -55,7 +59,7 @@ class DashboardController extends OrderAbstractController
     }
 
     /**
-     * charts belonging to a single organizational group
+     * charts belonging to a single organizational group. id - organizational group associated with the displayed charts
      *
      * @Route("/service/{id}", name="dashboard_single_service")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
@@ -73,7 +77,7 @@ class DashboardController extends OrderAbstractController
     }
 
     /**
-     * charts belonging to a single type
+     * charts belonging to a single type. id - chart type ID
      *
      * @Route("/chart-type/{id}", name="dashboard_single_type")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
@@ -91,7 +95,7 @@ class DashboardController extends OrderAbstractController
     }
 
     /**
-     * charts belonging to a single favorite
+     * charts belonging to a single favorite. id - user ID
      *
      * @Route("/favorites/{id}", name="dashboard_single_type")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")

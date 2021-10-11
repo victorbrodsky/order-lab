@@ -116,9 +116,7 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
 
     <script type="text/javascript">
-        //if( chartsArray ) {
-            var charts = {{ chartsArray|json_encode|raw }};
-        //}
+        var charts = {{ chartsArray|json_encode|raw }};
     </script>
 
 {% endblock %}
