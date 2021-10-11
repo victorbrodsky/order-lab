@@ -1,0 +1,106 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+        <div class="row">
+            <div class="col-xs-2">
+                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-2">
+                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-2">
+                {% if filterform.projectSpecialty is defined %}
+                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                {% endif %}
+            </div>
+            {#<div class="col-xs-2">#}
+                {#{% if filterform.compareType is defined %}#}
+                    {#{{ form_widget(filterform.compareType, {'attr': {'placeholder': 'Compare Type'}}) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+            <div class="col-xs-4">
+                {% if filterform.chartType is defined %}
+                    {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart Type'}}) }}
+                {% endif %}
+            </div>
+            {#<div class="col-xs-1">#}
+                {#{% if filterform.showLimited is defined %}#}
+                    {#{{ formmacros.checkbox(filterform.showLimited) }}#}
+                    {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+            <div class="col-xs-1">
+                <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()" data-spinner-color="{{ spinnerColor }}">Filter</button>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+
+            <div class="col-xs-2">
+                {% if filterform.showLimited is defined %}
+                    {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
+                    {{ form_row(filterform.showLimited) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                {% if filterform.quantityLimit is defined %}
+                    {#{{ form_label(filterform.quantityLimit) }}&nbsp;{{ form_widget(filterform.quantityLimit) }}#}
+                    {{ form_row(filterform.quantityLimit) }}
+                {% endif %}
+            </div>
+
+            <div class="col-xs-8">
+                {% if filterform.category is defined %}
+                    {#{{ form_widget(filterform.category) }}#}
+                    {{ form_row(filterform.category) }}
+                {% endif %}
+            </div>
+        </div>
+        {{ form_end(filterform) }}
+    </div>
+
+
+    {#<div class="chart"></div>#}
+
+    <div id="charts" align="center">
+        <!-- Plotly chart will be drawn inside this DIV -->
+    </div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+        {#'@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'#}
+        {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-choices-plotly.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-choices-plotly.js') }}"></script>
+
+    {#<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
+
+    {#<script type="text/javascript">#}
+        {#var chartTypes = {{ chartTypes|json_encode|raw }};#}
+    {#</script>#}
+
+{% endblock %}
