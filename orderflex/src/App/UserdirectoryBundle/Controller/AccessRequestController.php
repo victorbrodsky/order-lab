@@ -229,7 +229,7 @@ class AccessRequestController extends OrderAbstractController
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
-            //exit('no role roleUnapproved');
+            //exit('no role roleUnapproved'); //testing
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 

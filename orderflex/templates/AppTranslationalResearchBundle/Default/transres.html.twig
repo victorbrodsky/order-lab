@@ -1768,13 +1768,20 @@
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
     {% set specialtyName = 'Default' %}
+    {% set specialtyId = 'default' %}
     {% if specialty %}
         {% set specialtyName = specialty.getUppercaseFullName() %}
+        {% set specialtyId = specialty.getId() %}
     {% endif %}
+
+    {#{% set specialtyId = 'default' %}#}
+    {#{% if specialty %}#}
+        {#{% set specialtyId = specialty.getId() %}#}
+    {#{% endif %}#}
 
     {#add test subject and body by choosing invoice#}
     {#<p>#}
-        <a href="#" data-toggle="modal" data-target="#modal_test_email_naming_notation"
+        <a href="#" data-toggle="modal" data-target="#modal_test_email_naming_notation_{{ specialtyId }}"
         >Test email subject and body naming notation for {{ specialtyName }}</a>
     {#</p>#}
     {{ transres.emailNamingNotationTest(specialty) }}
@@ -1810,10 +1817,10 @@
         {#</div>#}
     {#</div>#}
 
-    {% set specialtyId = 'default' %}
-    {% if specialty %}
-        {% set specialtyId = specialty.getId() %}
-    {% endif %}
+    {#{% set specialtyId = 'default' %}#}
+    {#{% if specialty %}#}
+        {#{% set specialtyId = specialty.getId() %}#}
+    {#{% endif %}#}
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -2298,7 +2305,7 @@
         {% set specialtyName = specialty.getUppercaseFullName() %}
     {% endif %}
 
-    <div class="modal fade" id="modal_test_email_naming_notation" tabindex="-1" role="dialog" aria-labelledby="modal_test_email_naming_notation_Label" aria-hidden="true">
+    <div class="modal fade" id="modal_test_email_naming_notation_{{ specialtyId }}" tabindex="-1" role="dialog" aria-labelledby="modal_test_email_naming_notation_Label" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width: 80%">
             <div class="modal-content">
                 <div class="modal-header">

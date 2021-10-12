@@ -479,3 +479,44 @@ function transresOpenNewUserModal(thisElement,comboboxValue) {
 
     constructNewUserModal(btnDom,sitename,otherUserParam,comboboxValue);
 }
+
+function transresTestEmailNotations(specialtyId) {
+
+    $('#transres-email-test-result').html("");
+
+    var invoiceId = null;
+    var invoiceData = $('#transres-invoice-list').select2('data');
+    //console.log("transres TestEmailNotations: "+invoiceData);
+    if( invoiceData ) {
+        invoiceId = invoiceData.id;
+    }
+    //console.log("transres TestEmailNotations: invoiceId="+invoiceId);
+    //alert("transres TestEmailNotations: invoiceId="+invoiceId);
+
+    var url = Routing.generate('translationalresearch_test_email_notation_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "GET",
+        data: {invoiceId: invoiceId, specialtyId: specialtyId },
+        dataType: 'json',
+        async: false //asyncflag
+    }).success(function(response) {
+        //console.log(response);
+
+        //$('#transres-email-test-result').val(response);
+        var modalEl = $("modal_test_email_naming_notation_"+specialtyId);
+        if( modalEl|length ) {
+            modalEl.find('#transres-email-test-result').html(response);
+        } else {
+            $('#transres-email-test-result').html(response);
+        }
+
+    }).done(function() {
+        //
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+
+}

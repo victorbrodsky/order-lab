@@ -59,43 +59,47 @@
 {% endblock %}
 
 {% block additionaljs %}
+
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
 
         });
 
-        function transresTestEmailNotations(specialtyId) {
-
-            $('#transres-email-test-result').html("");
-
-            var invoiceId = null;
-            var invoiceData = $('#transres-invoice-list').select2('data');
-            //console.log(invoiceData);
-            if( invoiceData ) {
-                invoiceId = invoiceData.id;
-            }
-            var url = Routing.generate('translationalresearch_test_email_notation_ajax');
-
-            $.ajax({
-                url: url,
-                timeout: _ajaxTimeout,
-                type: "GET",
-                data: {invoiceId: invoiceId, specialtyId: specialtyId },
-                dataType: 'json',
-                async: false //asyncflag
-            }).success(function(response) {
-                //console.log(response);
-
-                //$('#transres-email-test-result').val(response);
-                $('#transres-email-test-result').html(response);
-
-            }).done(function() {
-                //
-            }).error(function(jqXHR, textStatus, errorThrown) {
-                console.log('Error : ' + errorThrown);
-            });
-
-        }
+        //moved to transres.js
+//        function transresTestEmailNotations(specialtyId) {
+//
+//            $('#transres-email-test-result').html("");
+//
+//            var invoiceId = null;
+//            var invoiceData = $('#transres-invoice-list').select2('data');
+//            //console.log(invoiceData);
+//            if( invoiceData ) {
+//                invoiceId = invoiceData.id;
+//            }
+//            var url = Routing.generate('translationalresearch_test_email_notation_ajax');
+//
+//            $.ajax({
+//                url: url,
+//                timeout: _ajaxTimeout,
+//                type: "GET",
+//                data: {invoiceId: invoiceId, specialtyId: specialtyId },
+//                dataType: 'json',
+//                async: false //asyncflag
+//            }).success(function(response) {
+//                //console.log(response);
+//
+//                //$('#transres-email-test-result').val(response);
+//                $('#transres-email-test-result').html(response);
+//
+//            }).done(function() {
+//                //
+//            }).error(function(jqXHR, textStatus, errorThrown) {
+//                console.log('Error : ' + errorThrown);
+//            });
+//
+//        }
 
     </script>
 {% endblock %}
