@@ -8019,9 +8019,9 @@ class TransResUtil
     public function getPriceListsWithNonEmptyPrices( $fee, $specificPriceListArr ) {
         
         //1) check if default fees are not NULL
-        $fee = $fee->getFee();
+        $feeFirstItem = $fee->getFee();
         $feeAdditionalItem = $fee->getFeeAdditionalItem();
-        if( $fee || $feeAdditionalItem ) {
+        if( $feeFirstItem || $feeAdditionalItem ) {
             return TRUE;
         }
 
