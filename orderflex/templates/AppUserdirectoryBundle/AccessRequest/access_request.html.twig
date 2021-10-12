@@ -66,8 +66,13 @@
             <h3 class="text-info">Welcome to the {{ sitenamefull }}!</h3>
             </p>
 
+            {% if (question is not defined) or (question is defined and not question) %}
+                {% set question = "Would you like to receive access to this site?" %}
+            {% endif %}
+
             <p>
-            <h3 class="text-info">Would you like to receive access to this site?</h3>
+                {#<h3 class="text-info">Would you like to receive access to this site?</h3>#}
+                <h3 class="text-info">{{ question|raw }}</h3>
             </p>
 
             <br><br>

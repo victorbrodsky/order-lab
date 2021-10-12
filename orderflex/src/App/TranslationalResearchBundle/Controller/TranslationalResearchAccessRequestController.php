@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\AccessRequestController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * AccessRequest controller.
@@ -74,6 +75,20 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     public function accessRequestAction(Request $request)
     {
         return parent::accessRequestAction($request);
+    }
+
+    public function getAccessRequestQuestion() {
+        //If you would like to submit a new project request, please visit this page.
+        //link “this page” to the URL of the “New Project request page” https://view.med.cornell.edu/translational-research/project/new
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_project_new_selector',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $newProjectLink = "<a href=" . $url . ">this page</a>";
+        $question = "Would you like to receive access to this site?";
+        $question = $question . "<br>" . "If you would like to submit a new project request, please visit $newProjectLink.";
+        return $question;
     }
 
     /**

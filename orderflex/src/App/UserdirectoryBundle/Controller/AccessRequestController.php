@@ -229,6 +229,7 @@ class AccessRequestController extends OrderAbstractController
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
+            //exit('no role roleUnapproved');
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }
 
@@ -356,6 +357,8 @@ class AccessRequestController extends OrderAbstractController
         $groupnote = $this->getGroupNote();
         $reasonnote = $this->getReasonNote();
         
+        $question = $this->getAccessRequestQuestion();
+
         return array(
             'user' => $user,
             'form' => $form->createView(),
@@ -363,7 +366,8 @@ class AccessRequestController extends OrderAbstractController
             'sitenamefull' => $sitenameFull,
             'pendinguser' => true,
             'groupnote' => $groupnote,
-            'reasonnote' => $reasonnote
+            'reasonnote' => $reasonnote,
+            'question' => $question
         );
     }
     public function getParams() {
@@ -405,6 +409,10 @@ class AccessRequestController extends OrderAbstractController
         $params['requireVerifyMobilePhone'] = $requireVerifyMobilePhone;
 
         return $params;
+    }
+
+    public function getAccessRequestQuestion() {
+        return "Would you like to receive access to this site?";
     }
 
     public function getOrganizationalGroup() {
@@ -532,9 +540,7 @@ class AccessRequestController extends OrderAbstractController
             //echo "email=".$accReq->getEmail()."<br>";
         } else {
             //exit('Access Request form is not valid.');
-
-            //@Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
-
+            
             return $this->render("AppUserdirectoryBundle/AccessRequest/access_request.html.twig",
                 array(
                     'user' => $user,
