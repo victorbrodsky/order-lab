@@ -4674,6 +4674,7 @@ class TransResUtil
         }//project
 
         if( $transresRequest ) {
+            //echo "[[REQUEST ID]]=".$transresRequest->getOid()."<br>";
             $text = str_replace("[[REQUEST ID]]", $transresRequest->getOid(), $text);
 
             $creationDate = $transresRequest->getCreateDate();
@@ -4742,6 +4743,9 @@ class TransResUtil
             }
 
         }//$transresRequest
+        //else {
+            //echo "NO transresRequest!!! <br>"; //testing
+        //}
 
         if( $invoice ) {
             $text = str_replace("[[INVOICE ID]]", $invoice->getOid(), $text);

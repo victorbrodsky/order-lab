@@ -482,10 +482,19 @@ function transresOpenNewUserModal(thisElement,comboboxValue) {
 
 function transresTestEmailNotations(specialtyId) {
 
-    $('#transres-email-test-result').html("");
+    var modalElResult = $('#transres-email-test-result');
+    var modalEl = $("#modal_test_email_naming_notation_"+specialtyId);
+    if( modalEl|length ) {
+        modalElResult = modalEl.find('#transres-email-test-result');
+    }
+    // else {
+    //     modalElResult = $('#transres-email-test-result');
+    // }
+
+    modalElResult.html("");
 
     var invoiceId = null;
-    var invoiceData = $('#transres-invoice-list').select2('data');
+    var invoiceData = modalEl.find('#transres-invoice-list').select2('data');
     //console.log("transres TestEmailNotations: "+invoiceData);
     if( invoiceData ) {
         invoiceId = invoiceData.id;
@@ -506,12 +515,12 @@ function transresTestEmailNotations(specialtyId) {
         //console.log(response);
 
         //$('#transres-email-test-result').val(response);
-        var modalEl = $("modal_test_email_naming_notation_"+specialtyId);
-        if( modalEl|length ) {
-            modalEl.find('#transres-email-test-result').html(response);
-        } else {
-            $('#transres-email-test-result').html(response);
-        }
+        // if( modalEl|length ) {
+        //     modalEl.find('#transres-email-test-result').html(response);
+        // } else {
+        //     $('#transres-email-test-result').html(response);
+        // }
+        modalElResult.html(response);
 
     }).done(function() {
         //

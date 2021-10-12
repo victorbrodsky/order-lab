@@ -1842,7 +1842,9 @@ class DefaultController extends OrderAbstractController
 
         $invoiceId = $request->get('invoiceId');
         $specialtyId = $request->get('specialtyId');
-        
+
+        //echo "invoiceId=$invoiceId<br>";
+
         if( $invoiceId ) {
             $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
         }
@@ -1858,12 +1860,37 @@ class DefaultController extends OrderAbstractController
         $emailText = "";
 
         $fields = array(
+
+            //Project Request Settings
+            'specimenDetailsComment',
+            'messageToUsers',
+            'humanTissueFormNote',
+
+            //Project Expiration Settings (Only for Non-Funded Projects)
+            'expiringProjectEmailSubject',
+            'expiringProjectEmailBody',
+            'expiredProjectEmailSubject',
+            'expiredProjectEmailBody',
+
+            //Project Reactivation
+            'projectReactivationSubject',
+            'projectReactivationBody',
+
+            //Work Request Default Settings
             'requestCompletedNotifiedEmailSubject',
             'requestCompletedNotifiedEmail',
+            'emailNoteConcern',
 
+            //Packing Slip Default Settings
+            'transresPackingSlipTitle',
+            'transresPackingSlipHeadline1',
+            'transresPackingSlipHeadline2',
+
+            //Invoice Default Settings
             'transresNotificationEmailSubject',
             'transresNotificationEmail',
 
+            //Reminder Email Settings
             'invoiceReminderSubject',
             'invoiceReminderBody',
 
@@ -1882,8 +1909,15 @@ class DefaultController extends OrderAbstractController
             'completedNoInvoiceRequestReminderSubject',
             'completedNoInvoiceRequestReminderBody',
 
+            //Budget Email Settings
             'overBudgetSubject',
-            'overBudgetBody'
+            'overBudgetBody',
+
+            'approvedBudgetSubject',
+            'approvedBudgetBody',
+            'budgetLimitRemovalSubject',
+            'budgetLimitRemovalBody'
+
         );
 
         foreach($fields as $field) {
@@ -1892,6 +1926,8 @@ class DefaultController extends OrderAbstractController
                 $emailText = $emailText . $text . $newline . $newline;
             }
         }
+
+        //exit("emailText=<br><br>".$emailText);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1930,6 +1966,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $text = $transresUtil->replaceTextByNamingConvention($text, $project, $transresRequest, $invoice);
+
+        //exit("text=<br><br>".$text);
 
         return $text;
 
