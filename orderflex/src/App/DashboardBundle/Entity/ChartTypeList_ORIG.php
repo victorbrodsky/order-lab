@@ -30,12 +30,12 @@ class ChartTypeList_ORIG extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ChartTypeList_ORIG", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ChartTypeList_ORIG", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
