@@ -80,7 +80,7 @@
                     {% for user in settings.emailUsers %}
                         {% set singleEmail = user.getSingleEmail %}
                         {% if singleEmail %}
-                            <a href="mailto:{{ singleEmail }}" target="_top">{{ user.displayName() }} {{ singleEmail }}</a><br>
+                            <a href="mailto:{{ singleEmail }}" target="_top">{{ user.getDisplayName() }} {{ singleEmail }}</a><br>
                         {% endif %}
                     {% endfor %}
                 </div>

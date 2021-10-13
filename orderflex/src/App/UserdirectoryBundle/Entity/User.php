@@ -1452,12 +1452,21 @@ class User extends UserBase {
      */
     public function getDisplayName()
     {
-        $value = null;
+        $displayName = null;
         $infos = $this->getInfos();
         if( $infos && count($infos) > 0 ) {
-            $value = $infos->first()->getDisplayName();
+            $displayName = $infos->first()->getDisplayName();
         }
-        return $value;
+
+        if( !$displayName ) {
+            $displayName = $this->getFirstName() . " " . $this->getLastName();
+        }
+
+        if( !$displayName ){
+            $displayName = $this->getPrimaryUseridKeytypeStr();
+        }
+        
+        return $displayName."";
     }
 
     /**
@@ -1665,6 +1674,22 @@ class User extends UserBase {
 //        if( $displayName && !$primaryUseridKeytypeStr ){
 //            return $displayName."";
 //        }
+    }
+
+    //Get displayname or first + last name
+    public function getDisplayOrFirstLastname() {
+
+        $displayName = $this->getDisplayName();
+
+        if( !$displayName ) {
+            $displayName = $this->getFirstName() . " " . $this->getLastName();
+        }
+
+        if( !$displayName ){
+            $displayName = $this->getUserNameStr();
+        }
+
+        return $displayName."";
     }
 
 

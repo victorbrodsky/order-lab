@@ -15,31 +15,76 @@
  *  limitations under the License.
  */
 
-namespace App\DashboardBundle\Entity;
+namespace App\UserdirectoryBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
-use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="dashboard_charttypelist")
+ * Use Composite pattern:
+ * The composite pattern describes that a group of objects is to be treated in the same
+ * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
+ * to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects
+ * and compositions uniformly.
+ * Use Doctrine Extension Tree for tree manipulation.
+ *
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
+ * @ORM\Table(
+ *  name="dashboard_charttypelist",
+ *  indexes={
+ *      @ORM\Index( name="charttypelist_name_idx", columns={"name"} ),
+ *  }
+ * )
  */
-class ChartTypeList extends ListAbstract
+class ChartTypeList extends BaseCompositeNode
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="synonyms", cascade={"persist"})
-     * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="synonyms")
+     * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
-    
 
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     **/
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OrderBy({"lft" = "ASC"})
+     **/
+    protected $children;
+
+
+
+    public function __construct($author=null) {
+        parent::__construct($author);
+    }
+
+
+//    public function __toString()
+//    {
+//        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
+//            return $this->getAbbreviation()."";
+//        }
+//
+//        return $this->getName()."";
+//    }
+
+    public function getClassName()
+    {
+        return "ChartTypeList";
+    }
 
 }
