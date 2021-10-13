@@ -23,19 +23,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
 /**
+ * Dashboard Charts
+ *
  * @ORM\Entity
- * @ORM\Table(name="dashboard_chartfilterlist")
+ * @ORM\Table(name="dashboard_chartlist")
  */
-class ChartFilterList extends ListAbstract
+class ChartList extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ChartFilterList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ChartList", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ChartFilterList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ChartList", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;

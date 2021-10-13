@@ -21,10 +21,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
-//Dashboard Chart Type
+//"Dashboard Topic" (same as Organizational Groups)
 
 /**
+ *
  * Use Composite pattern:
  * The composite pattern describes that a group of objects is to be treated in the same
  * way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures
@@ -35,35 +35,35 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity(repositoryClass="App\UserdirectoryBundle\Repository\TreeRepository")
  * @ORM\Table(
- *  name="dashboard_charttypelist",
+ *  name="dashboard_topiclist",
  *  indexes={
- *      @ORM\Index( name="charttypelist_name_idx", columns={"name"} ),
+ *      @ORM\Index( name="topiclist_name_idx", columns={"name"} ),
  *  }
  * )
  */
-class ChartTypeList extends BaseCompositeNode
+class TopicList extends BaseCompositeNode
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="TopicList", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="TopicList", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="ChartTypeList", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="TopicList", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="ChartTypeList", mappedBy="parent", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="TopicList", mappedBy="parent", cascade={"persist","remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      **/
     protected $children;
@@ -75,18 +75,9 @@ class ChartTypeList extends BaseCompositeNode
     }
 
 
-//    public function __toString()
-//    {
-//        if( $this->getAbbreviation() && $this->getAbbreviation() != "" ) {
-//            return $this->getAbbreviation()."";
-//        }
-//
-//        return $this->getName()."";
-//    }
-
     public function getClassName()
     {
-        return "ChartTypeList";
+        return "TopicList";
     }
 
 }
