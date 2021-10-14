@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\UserdirectoryBundle\Entity;
+namespace App\DashboardBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;

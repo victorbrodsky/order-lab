@@ -18,9 +18,13 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
-//use App\CrnBundle\Entity\CrnEntryTagsList;
-use App\DashboardBundle\Entity\ChartFilterList;
+use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Entity\ChartTypeList;
+use App\DashboardBundle\Entity\DataSourceList;
+use App\DashboardBundle\Entity\FilterList;
+use App\DashboardBundle\Entity\TopicList;
+use App\DashboardBundle\Entity\UpdateFrequencyList;
+use App\DashboardBundle\Entity\VisualizationList;
 use App\FellAppBundle\Entity\FellAppRank;
 use App\FellAppBundle\Entity\FellAppStatus;
 use App\FellAppBundle\Entity\LanguageProficiency;
@@ -999,9 +1003,13 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateBusinessPurposes");
 
         //Dashboards
-        $count_generateChartTypeList = $this->generateChartTypeList();
+        $count_generateChartsList = $this->generateChartsList();
         $count_generateChartFilterList = $this->generateChartFilterList();
         $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
+        $count_generateChartTypeList = $this->generateChartTypeList(); //hierarchy
+        $count_generateChartDataSourceList = $this->generateChartDataSourceList();
+        $count_generateChartUpdateFrequencyList = $this->generateChartUpdateFrequencyList();
+        $count_generateChartVisualizationList = $this->generateChartVisualizationList();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
         $logger->notice("Finished generatePlatformListManagerList");
@@ -1135,6 +1143,10 @@ class AdminController extends OrderAbstractController
             'generateChartTypeList='.$count_generateChartTypeList.', '.
             'generateChartFilterList='.$count_generateChartFilterList.', '.
             'generateChartTopicList='.$count_generateChartTopicList.', '.
+            'generateChartDataSourceList='.$count_generateChartDataSourceList.', '.
+            'generateChartUpdateFrequencyList='.$count_generateChartUpdateFrequencyList.', '.
+            'generateChartVisualizationList='.$count_generateChartVisualizationList.', '.
+            'generateChartsList='.$count_generateChartsList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -9802,8 +9814,6 @@ class AdminController extends OrderAbstractController
 //
 //    }
 
-
-    //TODO
     public function generateBusinessPurposes() {
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -9835,7 +9845,10 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //hierarchical list titled ”Dashboard Chart Type” (same as Organizational Groups)
     public function generateChartTypeList() {
+        return NULL; //TODO: hierarchy
+
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -9895,8 +9908,8 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    //hierarchical list titled “Dashboard Topic” (same as Organizational Groups)
     public function generateChartTopicList() {
-
         return NULL; //TODO: hierarchy
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -9914,12 +9927,12 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:ChartTopicList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
-            $listEntity = new ChartTopicList();
+            $listEntity = new TopicList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
@@ -9931,7 +9944,6 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
     public function generateChartFilterList() {
-        return NULL; //TODO
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -9949,12 +9961,12 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:ChartFilterList')->findOneByName($name);
+            $listEntity = $em->getRepository('AppDashboardBundle:FilterList')->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
-            $listEntity = new ChartFilterList();
+            $listEntity = new FilterList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $em->persist($listEntity);
@@ -9965,7 +9977,122 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    //"Dashboard Charts" - list of existing charts from DashboardUtil.php
+    public function generateChartsList() {
 
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ChartList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateChartDataSourceList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Internal Database",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:DataSourceList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new DataSourceList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateChartUpdateFrequencyList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Live Query",
+            //"Every 1 hour",
+            //"Every 2 hours",
+            //"Every 3 hours",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:UpdateFrequencyList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new UpdateFrequencyList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    //Dashboard Visualization Method
+    public function generateChartVisualizationList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Plotly",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:VisualizationList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new VisualizationList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
     //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
     public function generateTransResRequestCategoryType() {
