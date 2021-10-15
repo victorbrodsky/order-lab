@@ -21,7 +21,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//"Dashboard Topic" (same as Organizational Groups)
+//252(3) - "Dashboard Topic" (same as Organizational Groups)
 
 /**
  *
@@ -68,22 +68,104 @@ class TopicList extends BaseCompositeNode
      **/
     protected $children;
 
-//    /**
-//     * Is it Institution?
-//     *
-//     * Organizational Group Types - mapper between the level number and level title.
-//     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
-//     * For example, OrganizationalGroupType with level=1, set this level to 1.
-//     * Default types have a positive level numbers, all other types have negative level numbers.
-//     *
-//     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
-//     */
-//    private $organizationalGroupType;
+    ///////////// Attributes //////////////////
+    /**
+     * “Associated with the following organizational groups”: [multi-select with the flat list of all organizational groups]
+     * Organizational Group
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+     **/
+    private $organizationalGroup;
+
+    /**
+     * “Dashboard Chart Topic ID” [free-text field only allowing integers]
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $oid;
+
+    //“Associated Dashboard Charts”: [multi-select with the flat list of all “Dashboard Charts” created in step 7 below]
+    /**
+     * @ORM\ManyToMany(targetEntity="ChartList", mappedBy="topics")
+     **/
+    private $charts;
+
+    //“Display Order of Associated Dashboards (for example, {“chartID1”:”10”, “chartID2”:”30”, “chartID3”:”20”}):” [3-line free-text field]
+    //Not clear: if this is an order of the chart in $charts above, then it's better to place the $charts in the wrapper with one $chart and $order
+    //If order can be the same for all charts: then use orderinlist of each chart in ChartList
+
+    //“Default Image Width in Pixels:” [one line free text]
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $width;
+
+    //”Default Image Height In Pixels:” [one line free text]
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $height;
+
+    //“Applicable Dashboard Chart Filter Fields:”: [multi-select with all “Dashboard Chart Filter Fields” created in step 4 below]
+
+    //TODO: implement favorite DB and logic: favorite topics, charts
+    //“Favorited by the following users”: [multi-select with all users]
+
+    //////////////// TO BE IMPLEMENT LATER //////////////////////
+    //"Hide ..." - is boolean?
+    //“Hide Negative X Axis Values By Default”: [one line free text]
+    //“Hide Negative Y Axis Values By Default”: [one line free text]
+    //“Hide Negative Z Axis Values By Default”: [one line free text]
+    //“Hide Zero X Axis Values By Default”: [one line free text]
+    //“Hide Zero Y Axis Values By Default”: [one line free text]
+    //“Hide Zero Z Axis Values By Default”: [one line free text]
+
+    //We should have a single, centralize access control in ChartList
+    //“Accessible to users with the following roles:” [multi-select with roles]
+    //“Deny access to users with the following roles:” [multi-select with roles]
+    //“Deny access to the following users:” [multi-select with all users]
+    //“Data can be downloaded by users with the following roles:” [multi-select with roles].
+
+    //Below are kind of json fields?
+    //“Display Order of Applicable Primary Dashboard Chart Filter Fields (for example, {“chartFilterID1”:”10”, “chartFilterID2”:”30”, “chartFilterID3”:”20”}):” [3-line free-text field]
+    //“Display Order of Applicable Secondary Dashboard Chart Filter Fields (for example, {“chartFilterID1”:”10”, “chartFilterID2”:”30”, “chartFilterID3”:”20”}):” [3-line free-text field]
+    //“Default Values for Applicable Secondary Dashboard Chart Filter Fields (for example, {“chartFilterID1”:”01/2021”, “chartFilterID2”:”Female”, “chartFilterID3”:”AP, CP”}):” [3-line free-text field]
+    //“Applicable Dashboard Data Table Column Titles”: [free text, three-line field]
+    //“Display Order of Data Table Titles (for example, {“DataTableColumnTitle01”:”10”, “DataTableColumnTitle02”:”30”, “DataTableColumnTitle03”:”20”}):” [3-line free-text field]
+    //“Additional Topic Settings:” [3-line free-text field]
+
+    //“Requested by:” [multi-select with all users]
+    //“Requested on:” [timestamp]
+    //////////////// EOF TO BE IMPLEMENT LATER //////////////////////
+
+    ///////////// EOF Attributes //////////////////
 
 
     public function __construct($author=null) {
         parent::__construct($author);
+
+        $this->charts = new ArrayCollection();
     }
+
+
+    public function addChart($item)
+    {
+        if( $item && !$this->charts->contains($item) ) {
+            $this->charts->add($item);
+        }
+        return $this;
+    }
+    public function removeChart($item)
+    {
+        $this->charts->removeElement($item);
+    }
+    public function getCharts()
+    {
+        return $this->charts;
+    }
+
 
 
     public function getClassName()

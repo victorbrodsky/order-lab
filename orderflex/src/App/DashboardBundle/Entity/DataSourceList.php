@@ -52,48 +52,50 @@ class DataSourceList extends ListAbstract
      */
     private $updateFrequency;
 
-    /**
-     * b) "Accessible to users with the following roles:" [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_datasource_accessroles",
-     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $accessRoles;
-
-    /**
-     * c) “Deny access to users with the following roles:” [multi-select with roles]
-     *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_datasource_denyroles",
-     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $denyRoles;
-
-    /**
-     * d) “Deny access to the following users:” [multi-select with all users]
-     *
-     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_datasource_denyusers",
-     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $denyUsers;
-
-    /**
-     * e) “Data can be downloaded by users with the following roles:” [multi-select with roles].
-     *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
-     * @ORM\JoinTable(name="dashboard_datasource_downloadroles",
-     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $downloadRoles;
+    //We should have a single, centralize access control in ChartList
+    //These access/deny are specified in the ChartList
+//    /**
+//     * b) "Accessible to users with the following roles:" [multi-select with roles]
+//     *
+//     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+//     * @ORM\JoinTable(name="dashboard_datasource_accessrole",
+//     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $accessRoles;
+//
+//    /**
+//     * c) “Deny access to users with the following roles:” [multi-select with roles]
+//     *
+//     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+//     * @ORM\JoinTable(name="dashboard_datasource_denyrole",
+//     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $denyRoles;
+//
+//    /**
+//     * d) “Deny access to the following users:” [multi-select with all users]
+//     *
+//     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+//     * @ORM\JoinTable(name="dashboard_datasource_denyuser",
+//     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $denyUsers;
+//
+//    /**
+//     * e) “Data can be downloaded by users with the following roles:” [multi-select with roles].
+//     *
+//     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+//     * @ORM\JoinTable(name="dashboard_datasource_downloadrole",
+//     *      joinColumns={@ORM\JoinColumn(name="datasource_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $downloadRoles;
 
 }
