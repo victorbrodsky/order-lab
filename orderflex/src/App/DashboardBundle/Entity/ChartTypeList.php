@@ -68,6 +68,18 @@ class ChartTypeList extends BaseCompositeNode
      **/
     protected $children;
 
+//    /**
+//     * Is it Institution?
+//     *
+//     * Organizational Group Types - mapper between the level number and level title.
+//     * level int in OrganizationalGroupType corresponds to this level integer: 1-Institution, 2-Department, 3-Division, 4-Service
+//     * For example, OrganizationalGroupType with level=1, set this level to 1.
+//     * Default types have a positive level numbers, all other types have negative level numbers.
+//     *
+//     * @ORM\ManyToOne(targetEntity="OrganizationalGroupType", cascade={"persist"})
+//     */
+//    private $organizationalGroupType;
+
 
 
     public function __construct($author=null) {
