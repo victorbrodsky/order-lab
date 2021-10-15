@@ -41,7 +41,13 @@ class FilterList extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
-    
 
+
+
+//TODO: Also add the following attributes on the list item edit/view pages titled:
+//
+//“Dashboard Chart Filter Field ID” [free-text field only allowing integers]
+//
+//“Accessible to users with the following roles:” [multi-select with roles]
 
 }

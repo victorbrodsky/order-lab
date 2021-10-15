@@ -69,51 +69,51 @@ class TopicList extends BaseCompositeNode
     protected $children;
 
     ///////////// Attributes //////////////////
-    /**
-     * “Associated with the following organizational groups”: [multi-select with the flat list of all organizational groups]
-     * Organizational Group
-     *
-     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
-     **/
-    private $organizationalGroup;
+    //TODO: we have auto generated ID
+//    /**
+//     * “Dashboard Chart Topic ID” [free-text field only allowing integers]
+//     *
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $oid;
 
     /**
-     * “Dashboard Chart Topic ID” [free-text field only allowing integers]
+     * “Associated Dashboard Charts”: [multi-select with the flat list of all “Dashboard Charts” created in step 7 below]
      *
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $oid;
-
-    //“Associated Dashboard Charts”: [multi-select with the flat list of all “Dashboard Charts” created in step 7 below]
-    /**
      * @ORM\ManyToMany(targetEntity="ChartList", mappedBy="topics")
      **/
     private $charts;
 
-    //“Display Order of Associated Dashboards (for example, {“chartID1”:”10”, “chartID2”:”30”, “chartID3”:”20”}):” [3-line free-text field]
-    //Not clear: if this is an order of the chart in $charts above, then it's better to place the $charts in the wrapper with one $chart and $order
-    //If order can be the same for all charts: then use orderinlist of each chart in ChartList
-
-    //“Default Image Width in Pixels:” [one line free text]
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $width;
-
-    //”Default Image Height In Pixels:” [one line free text]
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $height;
-
     //“Applicable Dashboard Chart Filter Fields:”: [multi-select with all “Dashboard Chart Filter Fields” created in step 4 below]
+    //TODO: how filter fields will be implemented?
 
     //TODO: implement favorite DB and logic: favorite topics, charts
     //“Favorited by the following users”: [multi-select with all users]
 
     //////////////// TO BE IMPLEMENT LATER //////////////////////
+    //TODO: It's already exists in ChartList?
+//    /**
+//     * “Associated with the following organizational groups”: [multi-select with the flat list of all organizational groups]
+//     * Organizational Group
+//     *
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+//     * @ORM\JoinColumn(name="institution_id", referencedColumnName="id", nullable=true)
+//     **/
+//    private $organizationalGroup;
+//
+//    //“Default Image Width in Pixels:” [one line free text]
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $width;
+//
+//    //”Default Image Height In Pixels:” [one line free text]
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $height;
+
     //"Hide ..." - is boolean?
     //“Hide Negative X Axis Values By Default”: [one line free text]
     //“Hide Negative Y Axis Values By Default”: [one line free text]
@@ -128,6 +128,9 @@ class TopicList extends BaseCompositeNode
     //“Deny access to the following users:” [multi-select with all users]
     //“Data can be downloaded by users with the following roles:” [multi-select with roles].
 
+    //“Display Order of Associated Dashboards (for example, {“chartID1”:”10”, “chartID2”:”30”, “chartID3”:”20”}):” [3-line free-text field]
+    //Not clear: if this is an order of the chart in $charts above, then it's better to place the $charts in the wrapper with one $chart and $order
+    //If order can be the same for all charts: then use orderinlist of each chart in ChartList
     //Below are kind of json fields?
     //“Display Order of Applicable Primary Dashboard Chart Filter Fields (for example, {“chartFilterID1”:”10”, “chartFilterID2”:”30”, “chartFilterID3”:”20”}):” [3-line free-text field]
     //“Display Order of Applicable Secondary Dashboard Chart Filter Fields (for example, {“chartFilterID1”:”10”, “chartFilterID2”:”30”, “chartFilterID3”:”20”}):” [3-line free-text field]
@@ -166,6 +169,20 @@ class TopicList extends BaseCompositeNode
         return $this->charts;
     }
 
+//    /**
+//     * @return string
+//     */
+//    public function getOid()
+//    {
+//        return $this->oid;
+//    }
+//    /**
+//     * @param string $oid
+//     */
+//    public function setOid($oid)
+//    {
+//        $this->oid = $oid;
+//    }
 
 
     public function getClassName()

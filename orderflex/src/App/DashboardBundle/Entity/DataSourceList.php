@@ -44,13 +44,14 @@ class DataSourceList extends ListAbstract
 
 
 
-    /**
-     * a) Update Frequency
-     *
-     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList")
-     * @ORM\JoinColumn(name="updateFrequency_id", referencedColumnName="id", nullable=true)
-     */
-    private $updateFrequency;
+    //TODO: Update Frequency already exists in ChartList
+//    /**
+//     * a) Update Frequency
+//     *
+//     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList")
+//     * @ORM\JoinColumn(name="updateFrequency_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $updateFrequency;
 
     //We should have a single, centralize access control in ChartList
     //These access/deny are specified in the ChartList

@@ -43,5 +43,6 @@ class VisualizationList extends ListAbstract
     protected $original;
     
 
+    //add an attribute on the list item edit/view pages titled “Visualization Method Settings” field (3-line text field).
 
 }
