@@ -2227,9 +2227,14 @@ class AdminController extends OrderAbstractController
                 }
 
                 //testing
-                if( isset($aliasDescription[3]) && $aliasDescription[3] == 'dashboard' ) {
-                    $this->addSites($entity,'_DASHBOARD_','dashboards');
-                }
+//                if( isset($aliasDescription[3]) && $aliasDescription[3] == 'dashboard' ) {
+//                    $this->addSites($entity,'_DASHBOARD_','dashboards');
+//                    $em->flush();
+//                    $this->get('session')->getFlashBag()->add(
+//                        'notice',
+//                        "Set dashboards site for $role"
+//                    );
+//                }
 
                 continue; //temporary disable to override alias, description, level
             }
@@ -2304,6 +2309,8 @@ class AdminController extends OrderAbstractController
             $count = $count + 10;
 
         } //foreach
+
+        //exit("EOF generate Roles");
 
         return round($count/10);
     }
@@ -8122,17 +8129,17 @@ class AdminController extends OrderAbstractController
                 $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
             }
             if( $role->getSites() && !$role->getSites()->contains($site) ) {
-                echo "add site=".$site."<br>";
+                //echo "add site=".$site."<br>";
                 $role->addSite($site);
                 $count++;
             }
         }
 
         //testing
-        foreach($role->getSites() as $site) {
-            echo "site=".$site."<br>";
-        }
-        exit("exit count=".$count.", sites=".count($role->getSites()));
+//        foreach($role->getSites() as $site) {
+//            echo "site=".$site."<br>";
+//        }
+//        exit("exit count=".$count.", sites=".count($role->getSites()));
 
         return $count;
     }
