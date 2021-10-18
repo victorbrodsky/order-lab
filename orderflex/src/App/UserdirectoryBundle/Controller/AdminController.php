@@ -1002,14 +1002,14 @@ class AdminController extends OrderAbstractController
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
 
-        //Dashboards
-        $count_generateChartsList = $this->generateChartsList();
+        //Dashboards (7 lists)
+        //$count_generateChartsList = $this->generateChartsList();
         $count_generateChartFilterList = $this->generateChartFilterList();
-        $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
-        $count_generateChartTypeList = $this->generateChartTypeList(); //hierarchy
         $count_generateChartDataSourceList = $this->generateChartDataSourceList();
         $count_generateChartUpdateFrequencyList = $this->generateChartUpdateFrequencyList();
         $count_generateChartVisualizationList = $this->generateChartVisualizationList();
+        $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
+        $count_generateChartTypeList = $this->generateChartTypeList(); //hierarchy
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
         $logger->notice("Finished generatePlatformListManagerList");
@@ -1146,7 +1146,7 @@ class AdminController extends OrderAbstractController
             'generateChartDataSourceList='.$count_generateChartDataSourceList.', '.
             'generateChartUpdateFrequencyList='.$count_generateChartUpdateFrequencyList.', '.
             'generateChartVisualizationList='.$count_generateChartVisualizationList.', '.
-            'generateChartsList='.$count_generateChartsList.', '.
+            //'generateChartsList='.$count_generateChartsList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -7539,6 +7539,15 @@ class AdminController extends OrderAbstractController
             "resappspecificindividuallist" => array('SpecificIndividualList','resappspecificindividuallist-list','Specific Individuals Meet List'),
 
             "viewmodes" => array('ViewModeList','viewmodes-list','View Mode List'),
+
+            //Dashboards (7 lists)
+            "charttypes" => array('ChartTypeList','charttypes-list','Chart Type List'),
+            "charttopics" => array('TopicList','charttopics-list','Chart Topic List'),
+            "chartfilters" => array('FilterList','chartfilters-list','Chart Filter List'),
+            "charts" => array('ChartList','charts-list','Chart List'),
+            "chartdatasources" => array('DataSourceList','chartdatasources-list','Chart Data Source List'),
+            "chartupdatefrequencies" => array('UpdateFrequencyList','chartupdatefrequencies-list','Chart Update Frequency List'),
+            "chartvisualizations" => array('VisualizationList','chartvisualizations-list','Chart Visualization List'),
         );
 
         if( $withcustom ) {
@@ -9871,12 +9880,20 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    //hierarchical list titled ”Dashboard Chart Type” (same as Organizational Groups)
+    //hierarchical list titled ”Dashboard Chart Type” (same as Organizational Groups) (charttypes)
     public function generateChartTypeList() {
-        return NULL; //TODO: hierarchy
+        //return NULL; //TODO: hierarchy
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+
+        //On this list add the “top”/root” category item titled “All Chart Types”
+        //1) create root "All Chart Types"
+        $rootName = "All Chart Types";
+        $rootEntity = $this->generateSingleChartTypeList($rootName);
+        if( !$rootEntity ) {
+            exit("Root ChartType does not exist");
+        }
 
         $types = array(
             "Line",
@@ -9915,7 +9932,7 @@ class AdminController extends OrderAbstractController
             "3D Line"
         );
 
-        $count = 10;
+        $count = 20;
         foreach( $types as $name ) {
 
             $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
@@ -9925,6 +9942,9 @@ class AdminController extends OrderAbstractController
 
             $listEntity = new ChartTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+            $listEntity->setLevel(1);
+
+            $rootEntity->addChild($listEntity);
 
             $em->persist($listEntity);
             $em->flush();
@@ -9934,7 +9954,25 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-    //hierarchical list titled “Dashboard Topic” (same as Organizational Groups)
+    public function generateSingleChartTypeList($name) {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
+        if( $listEntity ) {
+            return $listEntity;
+        }
+
+        $listEntity = new ChartTypeList();
+        $count = NULL;
+        $this->setDefaultList($listEntity,$count,$username,$name);
+        $listEntity->setLevel(0);
+
+        $em->persist($listEntity);
+        $em->flush();
+        return $listEntity;
+    }
+    //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
     public function generateChartTopicList() {
         return NULL; //TODO: hierarchy
 
@@ -9949,21 +9987,43 @@ class AdminController extends OrderAbstractController
 //        $service->setOrganizationalGroupType($levelService);
 //        $division->addChild($service);
 
-        $types = array(
-            array("All Charts","Financial"),
-            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
-            array("All Charts","Clinical"),
-            array("All Charts","Research"),
-            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
-            array("All Charts","Site Utilization")
-        );
-
-        foreach( $types as $names ) {
-
+        //1) create root "All Charts"
+        $rootName = "All Charts";
+        $rootEntity = $this->generateSingleChartTopicList($rootName);
+        if( !$rootEntity ) {
+            exit("Root ChartTopic does not exist");
         }
 
-        $count = 10;
-        foreach( $types as $name ) {
+        $types = array(
+            "Financial",
+            "Productivity",
+            "Clinical",
+            "Research",
+            "Educational",
+            "Site Utilization"
+        );
+
+//        $types = array(
+//            array("All Charts","Financial"),
+//            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
+//            array("All Charts","Clinical"),
+//            array("All Charts","Research"),
+//            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
+//            array("All Charts","Site Utilization")
+//        );
+
+        //2) create under root
+        $types = array(
+            "Financial",
+            "Productivity" => array("Turnaround Times","Specimen Tracking"),
+            "Clinical",
+            "Research",
+            "Educational" => array("Fellowship Candidate Statistics","Resident Candidate Statistics"),
+            "Site Utilization"
+        );
+
+        $count = 20;
+        foreach( $types as $name=>$childrenArr ) {
 
             $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
             if( $listEntity ) {
@@ -9972,59 +10032,80 @@ class AdminController extends OrderAbstractController
 
             $listEntity = new TopicList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+            $listEntity->setLevel(1);
+            $rootEntity->addChild($listEntity);
 
             $em->persist($listEntity);
-            $em->flush();
-
             $count = $count + 10;
+
+            //3) add children
+            if( $childrenArr ) {
+                foreach ($childrenArr as $child) {
+                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child);
+                    if ($childEntity) {
+                        continue;
+                    }
+
+                    $childEntity = new TopicList();
+                    $this->setDefaultList($childEntity, $count, $username, $name);
+                    $listEntity->setLevel(2);
+                    $listEntity->addChild($childEntity);
+
+                    $em->persist($childEntity);
+                    $count = $count + 10;
+                }
+            }
+
+            $em->flush();
         }
 
         return round($count/10);
     }
-    public function generateSingleChartTopicList($parent,$child,$level) {
-        return NULL; //TODO: hierarchy
-
+//    public function generateSingleLevelChartTopicList($names,$parent=NULL) {
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $em = $this->getDoctrine()->getManager();
+//
+//        foreach($names as $name) {
+//            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
+//            if ($listEntity) {
+//                return $listEntity;
+//            }
+//
+//            $listEntity = new TopicList();
+//            $count = NULL;
+//            $this->setDefaultList($listEntity, $count, $username, $name);
+//
+//            if( $parent ) {
+//                $parent->addChild($listEntity);
+//            }
+//
+//            $em->persist($listEntity);
+//            $em->flush();
+//        }
+//
+//        return $listEntity;
+//    }
+    public function generateSingleChartTopicList($name) {
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        //On this list add the “top”/root” category item titled “All Charts”
-        //addChild()
-//        $service = new Institution();
-//        $this->setDefaultList($service,$treeCount,$username,$servicename);
-//        $treeCount = $treeCount + 10;
-//        $service->setOrganizationalGroupType($levelService);
-//        $division->addChild($service);
-
-        $types = array(
-            array("All Charts","Financial"),
-            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
-            array("All Charts","Clinical"),
-            array("All Charts","Research"),
-            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
-            array("All Charts","Site Utilization")
-        );
-
-        $count = 10;
-        foreach( $types as $name ) {
-
-            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
-            if( $listEntity ) {
-                continue;
-            }
-
-            $listEntity = new TopicList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
-
-            $em->persist($listEntity);
-            $em->flush();
-
-            $count = $count + 10;
+        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
+        if( $listEntity ) {
+            return $listEntity;
         }
 
-        return round($count/10);
-    }
-    public function generateChartFilterList() {
+        $listEntity = new TopicList();
+        $count = NULL;
+        $this->setDefaultList($listEntity,$count,$username,$name);
+        $listEntity->setLevel(0);
 
+        $em->persist($listEntity);
+        $em->flush();
+        return $listEntity;
+    }
+    //chartfilters
+    public function generateChartFilterList() {
+        return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10057,12 +10138,13 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-    //"Dashboard Charts" - list of existing charts from DashboardUtil.php
+    //"Dashboard Charts" - list of existing charts from DashboardUtil.php (charts)
     public function generateChartsList() {
-
+        return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        //get charts from DashboardUtil.php getChartTypes()
         $types = array(
         );
 
@@ -10085,8 +10167,9 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    //chartdatasources
     public function generateChartDataSourceList() {
-
+        return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10113,8 +10196,9 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    //chartupdatefrequencies
     public function generateChartUpdateFrequencyList() {
-
+        return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10144,9 +10228,9 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-    //Dashboard Visualization Method
+    //Dashboard Visualization Method (chartvisualizations)
     public function generateChartVisualizationList() {
-
+        return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 

@@ -278,6 +278,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/viewmodes/", name="viewmodes-list", methods={"GET"})
      * @Route("/list/transrespricetypes/", name="transrespricetypes-list", methods={"GET"})
      *
+     * @Route("/list/charttypes/", name="charttypes-list", methods={"GET"})
+     * @Route("/list/charttopics/", name="charttopics-list", methods={"GET"})
+     * @Route("/list/chartfilters/", name="chartfilters-list", methods={"GET"})
+     * @Route("/list/charts/", name="charts-list", methods={"GET"})
+     * @Route("/list/chartdatasources/", name="chartdatasources-list", methods={"GET"})
+     * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies-list", methods={"GET"})
+     * @Route("/list/chartvisualizations/", name="chartvisualizations-list", methods={"GET"})
+     *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
     public function indexAction(Request $request)
@@ -897,6 +905,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/viewmodes/", name="viewmodes_create", methods={"POST"})
      * @Route("/list/transrespricetypes/", name="transrespricetypes_create", methods={"POST"})
      *
+     * @Route("/list/charttypes/", name="charttypes_create", methods={"POST"})
+     * @Route("/list/charttopics/", name="charttopics_create", methods={"POST"})
+     * @Route("/list/chartfilters/", name="chartfilters_create", methods={"POST"})
+     * @Route("/list/charts/", name="charts_create", methods={"POST"})
+     * @Route("/list/chartdatasources/", name="chartdatasources_create", methods={"POST"})
+     * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies_create", methods={"POST"})
+     * @Route("/list/chartvisualizations/", name="chartvisualizations_create", methods={"POST"})
+     *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
@@ -1238,6 +1254,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/viewmodes/new", name="viewmodes_new", methods={"GET"})
      * @Route("/list/transrespricetypes/new", name="transrespricetypes_new", methods={"GET"})
      *
+     * @Route("/list/charttypes/new", name="charttypes_new", methods={"GET"})
+     * @Route("/list/charttopics/new", name="charttopics_new", methods={"GET"})
+     * @Route("/list/chartfilters/new", name="chartfilters_new", methods={"GET"})
+     * @Route("/list/charts/new", name="charts_new", methods={"GET"})
+     * @Route("/list/chartdatasources/new", name="chartdatasources_new", methods={"GET"})
+     * @Route("/list/chartupdatefrequencies/new", name="chartupdatefrequencies_new", methods={"GET"})
+     * @Route("/list/chartvisualizations/new", name="chartvisualizations_new", methods={"GET"})
+     *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
      */
@@ -1526,6 +1550,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/viewmodes/{id}", name="viewmodes_show", methods={"GET"})
      * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_show", methods={"GET"})
      *
+     * @Route("/list/charttypes/{id}", name="charttypes_show", methods={"GET"})
+     * @Route("/list/charttopics/{id}", name="charttopics_show", methods={"GET"})
+     * @Route("/list/chartfilters/{id}", name="chartfilters_show", methods={"GET"})
+     * @Route("/list/charts/{id}", name="charts_show", methods={"GET"})
+     * @Route("/list/chartdatasources/{id}", name="chartdatasources_show", methods={"GET"})
+     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_show", methods={"GET"})
+     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_show", methods={"GET"})
+     *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
     public function showAction(Request $request,$id)
@@ -1806,6 +1838,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappspecificindividuallist/{id}/edit", name="resappspecificindividuallist_edit", methods={"GET"})
      * @Route("/list/viewmodes/{id}/edit", name="viewmodes_edit", methods={"GET"})
      * @Route("/list/transrespricetypes/{id}/edit", name="transrespricetypes_edit", methods={"GET"})
+     *
+     * @Route("/list/charttypes/{id}/edit", name="charttypes_edit", methods={"GET"})
+     * @Route("/list/charttopics/{id}/edit", name="charttopics_edit", methods={"GET"})
+     * @Route("/list/chartfilters/{id}/edit", name="chartfilters_edit", methods={"GET"})
+     * @Route("/list/charts/{id}/edit", name="charts_edit", methods={"GET"})
+     * @Route("/list/chartdatasources/{id}/edit", name="chartdatasources_edit", methods={"GET"})
+     * @Route("/list/chartupdatefrequencies/{id}/edit", name="chartupdatefrequencies_edit", methods={"GET"})
+     * @Route("/list/chartvisualizations/{id}/edit", name="chartvisualizations_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2138,6 +2178,14 @@ class ListController extends OrderAbstractController
      * @Route("/list/resappspecificindividuallist/{id}", name="resappspecificindividuallist_update", methods={"PUT"})
      * @Route("/list/viewmodes/{id}", name="viewmodes_update", methods={"PUT"})
      * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_update", methods={"PUT"})
+     *
+     * @Route("/list/charttypes/{id}", name="charttypes_update", methods={"PUT"})
+     * @Route("/list/charttopics/{id}", name="charttopics_update", methods={"PUT"})
+     * @Route("/list/chartfilters/{id}", name="chartfilters_update", methods={"PUT"})
+     * @Route("/list/charts/{id}", name="charts_update", methods={"PUT"})
+     * @Route("/list/chartdatasources/{id}", name="chartdatasources_update", methods={"PUT"})
+     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_update", methods={"PUT"})
+     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -3144,6 +3192,43 @@ class ListController extends OrderAbstractController
 //                $bundleName = "CrnBundle";
 //                break;
 
+            //Dashboards (7 lists)
+            case "charttypes":
+                $className = "ChartTypeList";
+                $displayName = "Chart Type List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "charttopics":
+                $className = "TopicList";
+                $displayName = "Chart Topic List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "chartfilters":
+                $className = "FilterList";
+                $displayName = "Chart Filter List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "charts":
+                $className = "ChartList";
+                $displayName = "Chart Type List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "chartdatasources":
+                $className = "DataSourceList";
+                $displayName = "Chart Data Source List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "chartupdatefrequencies":
+                $className = "UpdateFrequencyList";
+                $displayName = "Chart Update Frequency List";
+                $bundleName = "DashboardBundle";
+                break;
+            case "chartvisualizations":
+                $className = "VisualizationList";
+                $displayName = "Chart Visualization List";
+                $bundleName = "DashboardBundle";
+                break;
+
             case "custom000":
                 $className = "Custom000List";
                 $displayName = "Custom000 List";
@@ -3848,6 +3933,13 @@ class ListController extends OrderAbstractController
      * @Route("/list/viewmodes/{id}", name="viewmodes_delete", methods={"DELETE"})
      * @Route("/list/transrespricetypes/{id}", name="transrespricetypes_delete", methods={"DELETE"})
      *
+     * @Route("/list/charttypes/{id}", name="charttypes_delete", methods={"DELETE"})
+     * @Route("/list/charttopics/{id}", name="charttopics_delete", methods={"DELETE"})
+     * @Route("/list/chartfilters/{id}", name="chartfilters_delete", methods={"DELETE"})
+     * @Route("/list/charts/{id}", name="charts_delete", methods={"DELETE"})
+     * @Route("/list/chartdatasources/{id}", name="chartdatasources_delete", methods={"DELETE"})
+     * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_delete", methods={"DELETE"})
+     * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_delete", methods={"DELETE"})
      *
      */
     public function deleteAction(Request $request, $id)
