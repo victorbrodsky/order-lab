@@ -2226,6 +2226,11 @@ class AdminController extends OrderAbstractController
                     );
                 }
 
+                //testing
+                if( isset($aliasDescription[3]) && $aliasDescription[3] == 'dashboard' ) {
+                    $this->addSites($entity,'_DASHBOARD_','dashboards');
+                }
+
                 continue; //temporary disable to override alias, description, level
             }
 
@@ -7984,7 +7989,7 @@ class AdminController extends OrderAbstractController
         $count = $this->syncRolesDb();
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'syncRolesDb count='.$count
+            'sync RolesDb count='.$count
         );
 
         //List of Research Labs clean
@@ -8069,7 +8074,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
 
-            $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboard' ); //Dashboard
+            $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboards' ); //Dashboard
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );
@@ -8113,11 +8118,22 @@ class AdminController extends OrderAbstractController
         if( strpos($role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
             $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            if( !$site ) {
+                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+            }
             if( $role->getSites() && !$role->getSites()->contains($site) ) {
+                echo "add site=".$site."<br>";
                 $role->addSite($site);
                 $count++;
             }
         }
+
+        //testing
+        foreach($role->getSites() as $site) {
+            echo "site=".$site."<br>";
+        }
+        exit("exit count=".$count.", sites=".count($role->getSites()));
+
         return $count;
     }
     public function addSingleSite( $role, $roleStr, $sitename ) {
@@ -8125,6 +8141,9 @@ class AdminController extends OrderAbstractController
         if( strpos($role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
             $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            if( !$site ) {
+                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+            }
             if( !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
                 $count++;

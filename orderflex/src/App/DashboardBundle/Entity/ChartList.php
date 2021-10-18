@@ -43,7 +43,7 @@ class ChartList extends ListAbstract
      **/
     protected $original;
     
-    //TODO: we have auto generated ID
+    //TODO: don't need OID, we have auto generated ID
 //    /**
 //     * “Chart ID” [free-text field only allowing integers]
 //     * 
