@@ -103,6 +103,25 @@ class ChartList extends ListAbstract
     private $downloadRoles;
     ///////////////////// EOF Access Control ////////////////////
 
+    //Width and Height are repeating in TopicList
+    //“Default Image Width in Pixels:” [one line free text]
+    //”Default Image Height In Pixels:” [one line free text]
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $width;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $height;
+
+    /**
+     * Display Chart Title: [free text one line field]
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $chartTitle;
+
     //“Associated with the following organizational groups”: [multi-select with the flat list of all organizational groups] - Institution hierarchy
 //    /**
 //     * Organizational Group Types - mapper between the level number and level title.
@@ -126,20 +145,12 @@ class ChartList extends ListAbstract
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_institution",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
      */
     private $institutions;
 
     //“Associated Dashboard Topics”: [multi-select with the flat list of all “Dashboard Topics” above]
-//    /**
-//     * @ORM\ManyToMany(targetEntity="TopicList", cascade={"persist"})
-//     * @ORM\JoinTable(name="dashboard_chart_topic",
-//     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id", unique=true)}
-//     *      )
-//     */
-//    private $topics;
     /**
      * “Associated Dashboard Topics”: [multi-select with the flat list of all “Dashboard Topics” above]
      *
@@ -147,18 +158,6 @@ class ChartList extends ListAbstract
      * @ORM\JoinTable(name="dashboard_chart_topic")
      **/
     private $topics;
-
-    //Width and Height are repeating in TopicList
-    //“Default Image Width in Pixels:” [one line free text]
-    //”Default Image Height In Pixels:” [one line free text]
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $width;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $height;
 
     /**
      * Dashboard Visualization Method: [Single-select with a list of Dashboard Visualization Method items from the list manager]
@@ -169,19 +168,12 @@ class ChartList extends ListAbstract
     private $visualization;
 
     /**
-     * Display Chart Title: [free text one line field]
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $chartTitle;
-
-    /**
      * Chart Type: [multi-select with the flat list of all “Dashboard Chart Types” above]
      *
      * @ORM\ManyToMany(targetEntity="ChartTypeList", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_type",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="id", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="id")}
      *      )
      */
     private $chartTypes;
