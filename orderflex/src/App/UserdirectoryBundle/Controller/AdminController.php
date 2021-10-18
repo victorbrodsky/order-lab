@@ -9941,13 +9941,67 @@ class AdminController extends OrderAbstractController
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        //On this list add the “top”/root” category item titled “All Charts”
+        //addChild()
+//        $service = new Institution();
+//        $this->setDefaultList($service,$treeCount,$username,$servicename);
+//        $treeCount = $treeCount + 10;
+//        $service->setOrganizationalGroupType($levelService);
+//        $division->addChild($service);
+
         $types = array(
-            "Financial",
-            "Productivity",
-            "Clinical",
-            "Research",
-            "Educational",
-            "Site Utilization"
+            array("All Charts","Financial"),
+            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
+            array("All Charts","Clinical"),
+            array("All Charts","Research"),
+            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
+            array("All Charts","Site Utilization")
+        );
+
+        foreach( $types as $names ) {
+
+        }
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TopicList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateSingleChartTopicList($parent,$child,$level) {
+        return NULL; //TODO: hierarchy
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        //On this list add the “top”/root” category item titled “All Charts”
+        //addChild()
+//        $service = new Institution();
+//        $this->setDefaultList($service,$treeCount,$username,$servicename);
+//        $treeCount = $treeCount + 10;
+//        $service->setOrganizationalGroupType($levelService);
+//        $division->addChild($service);
+
+        $types = array(
+            array("All Charts","Financial"),
+            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
+            array("All Charts","Clinical"),
+            array("All Charts","Research"),
+            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
+            array("All Charts","Site Utilization")
         );
 
         $count = 10;
