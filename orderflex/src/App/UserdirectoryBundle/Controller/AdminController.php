@@ -8317,6 +8317,8 @@ class AdminController extends OrderAbstractController
      * @Route("/list/comment-tree/", name="employees_tree_commenttree_list", methods={"GET"})
      * @Route("/list/form-tree/", name="employees_tree_formnode_list", methods={"GET"})
      * @Route("/list/message-categories-tree/", name="employees_tree_messagecategories_list", methods={"GET"})
+     * @Route("/list/charttypes-tree/", name="employees_tree_charttypes_list", methods={"GET"})
+     * @Route("/list/charttopics-tree/", name="employees_tree_charttopics_list", methods={"GET"})
      */
     public function institutionTreeAction(Request $request)
     {
@@ -8439,6 +8441,19 @@ class AdminController extends OrderAbstractController
             $className = "MessageCategory";
             $title = "Message Categories Tree Management";
             $nodeshowpath = "messagecategorys_show";
+        }
+
+        if( $routeName == "employees_tree_charttypes_list" ) {
+            $bundleName = "DashboardBundle";
+            $className = "ChartTypeList";
+            $title = "Chart Types Tree Management";
+            $nodeshowpath = "charttypes_show";
+        }
+        if( $routeName == "employees_tree_charttopics_list" ) {
+            $bundleName = "DashboardBundle";
+            $className = "TopicList";
+            $title = "Chart Topics Tree Management";
+            $nodeshowpath = "charttopics_show";
         }
 
         $mapper = array(
@@ -9974,7 +9989,7 @@ class AdminController extends OrderAbstractController
     }
     //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
     public function generateChartTopicList() {
-        return NULL; //TODO: hierarchy
+        //return NULL; //TODO: hierarchy
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -10014,12 +10029,12 @@ class AdminController extends OrderAbstractController
 
         //2) create under root
         $types = array(
-            "Financial",
+            "Financial" => array(),
             "Productivity" => array("Turnaround Times","Specimen Tracking"),
-            "Clinical",
-            "Research",
+            "Clinical" => array(),
+            "Research" => array(),
             "Educational" => array("Fellowship Candidate Statistics","Resident Candidate Statistics"),
-            "Site Utilization"
+            "Site Utilization" => array()
         );
 
         $count = 20;
@@ -10105,7 +10120,7 @@ class AdminController extends OrderAbstractController
     }
     //chartfilters
     public function generateChartFilterList() {
-        return NULL; //testing
+        //return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10169,7 +10184,7 @@ class AdminController extends OrderAbstractController
     }
     //chartdatasources
     public function generateChartDataSourceList() {
-        return NULL; //testing
+        //return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10198,7 +10213,7 @@ class AdminController extends OrderAbstractController
     }
     //chartupdatefrequencies
     public function generateChartUpdateFrequencyList() {
-        return NULL; //testing
+        //return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10230,7 +10245,7 @@ class AdminController extends OrderAbstractController
     }
     //Dashboard Visualization Method (chartvisualizations)
     public function generateChartVisualizationList() {
-        return NULL; //testing
+        //return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 

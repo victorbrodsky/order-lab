@@ -43,5 +43,119 @@ class DashboardUtil
     }
 
 
+    //get topics
+    public function getFilterTopics() {
+
+        //get all enabled dashboard topics
+        $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+
+        $filterTopics = array();
+
+
+
+        return $filterTopics;
+
+        $transresUtil = $this->container->get('transres_util');
+
+        //get all enabled project specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        $allowSpecialties = array();
+        foreach($specialties as $projectSpecialty) {
+            $allowSpecialties[] = $projectSpecialty->getUppercaseFullName();
+        }
+
+        $filterTypes = array();
+
+        //My work requests
+        $elements1 = array(
+            'My Submitted Requests',
+            "My Draft Requests",
+            'Submitted Requests for My Projects',
+            'Draft Requests for My Projects',
+            //'Requests I Completed',
+            //'[[hr]]'
+        );
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
+            $elements1[] = 'Requests I Completed';
+        }
+        $filterTypes['My work requests'] = $elements1;
+
+//        $filterTypes[] = '[[hr]]';
+
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+            return $filterTypes;
+        }
+
+        //All by type
+        $elements2 = array('All Requests');
+        foreach($allowSpecialties as $allowSpecialty) {
+            $elements2[] = "All $allowSpecialty Requests";
+        }
+        $elements2[] = 'All Requests (including Drafts)';
+        $filterTypes['All by type'] = $elements2;
+//        $filterTypes[] = '[[hr]]';
+
+        //Pending by type
+        $elements3 = array('All Pending Requests');
+        //$filterTypes['Pending by type'] = 'All Pending Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $elements3[] = "All $allowSpecialty Pending Requests";
+        }
+        $filterTypes['Pending by type'] = $elements3;
+//        $filterTypes[] = '[[hr]]';
+
+        //Active by type
+        $elements4 = array('All Active Requests');
+        //$filterTypes['Active by type'] = 'All Active Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $elements4[] = "All $allowSpecialty Active Requests";
+        }
+        $filterTypes['Active by type'] = $elements4;
+//        $filterTypes[] = '[[hr]]';
+
+        //Completed by type
+        $elements5 = array('All Completed Requests');
+//        $filterTypes['Completed by type'] = 'All Completed Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $elements5[] = "All $allowSpecialty Completed Requests";
+        }
+        $filterTypes['Completed by type'] = $elements5;
+//        $filterTypes[] = '[[hr]]';
+
+        //Completed & notified by type
+        $elements6 = array('All Completed and Notified Requests');
+        //$filterTypes['Completed & notified by type'] = 'All Completed and Notified Requests';
+        foreach($allowSpecialties as $allowSpecialty) {
+            $elements6[] = "All $allowSpecialty Completed and Notified Requests";
+        }
+        $filterTypes['Completed & notified by type'] = $elements6;
+//        $filterTypes[] = '[[hr]]';
+
+        //By queues
+        //add all the Work Queues as named in the list manager + appended “ Work Queue”
+        //(So there should be two new links: “CTP Lab Work Queue” and “MISI Lab Work Queue”
+        $workQueues = $transresUtil->getWorkQueues();
+        $elements7 = array('All Requests with Work Queues');
+        //$filterTypes['By queues'] = 'All Requests with Work Queues';
+        foreach($workQueues as $workQueue) {
+            $elements7[] = $workQueue->getName()." Work Queue";
+        }
+        $filterTypes['By queues'] = $elements7;
+
+        return $filterTypes;
+    }
+
 }
 

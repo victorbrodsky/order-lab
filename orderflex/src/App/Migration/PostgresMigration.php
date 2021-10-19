@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+//Add new site entity mapping in doctrine.yml
+
 //Update:   php bin/console doctrine:schema:update --force
 //Status:   php bin/console doctrine:migrations:status
 

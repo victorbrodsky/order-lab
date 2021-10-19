@@ -16,6 +16,26 @@
 
 {#   navigation menu   #}
 
+{% import "AppDashboardBundle/Default/navbar.html.twig" as navbarmacros %}
+
+{% macro createFilterTopics( filterTopics ) %}
+    {% for key,values in filterTopics %}
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ key }}</a>
+            <ul class="dropdown-menu">
+                {% for value in values %}
+                    {% set filterTopicUrl = value|replace({' ':'-'}) %}
+                    <li>
+                        <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+
+
 {% block navbar %}
 
     <nav class="navbar navbar-default" role="navigation">
@@ -47,7 +67,6 @@
 
                     <li id="nav-bar-dashboardhome" class="hidden-xs divider-vertical">
                         <a href="{{ path(dashboard_sitename~'_home') }}">
-                            {#<span class="glyphicon glyphicon-stats"></span> Home#}
                             <span class="glyphicon glyphicon-stats"></span> Home
                             {#<span class="fa fa-bar-chart-o"></span> Home#}
                         </a>
@@ -107,6 +126,15 @@
                         </ul>
                     </li>
 
+                    <li id="nav-bar-translationalresearch-topic" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+                            {% set filterTopics = dashboard_util.getFilterTopics() %}
+                            {{ navbarmacros.createFilterTopics(filterTopics) }}
+                        </ul>
+                    </li>
+
                 {% endif %}
 
             </ul>
@@ -121,6 +149,9 @@
 {% endblock %}
 
 
-{#{% block additionalcss %}#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
-{#{% endblock %}#}
+{#Use additionalcss2 for multi-level, since additionalcss is already used by other templates#}
+{% block additionalcss2 %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/multi-level-menu.css') }}" />
+{% endblock %}
+

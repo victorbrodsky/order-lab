@@ -264,6 +264,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%crn.uploadpath%'
+        dashboard_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%dashboard.uploadpath%'
 
 #sensio_framework_extra:
 #    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead

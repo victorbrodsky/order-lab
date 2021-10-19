@@ -4020,7 +4020,7 @@ class ListController extends OrderAbstractController
 
         if( $listRootName ) {
             //return $this->redirect( $this->generateUrl($listRootName) );
-            //echo "listRootName=".$listRootName."<br>";
+            echo "listRootName=".$listRootName."<br>";
 
             $request->attributes->set('_route',$listRootName);
 

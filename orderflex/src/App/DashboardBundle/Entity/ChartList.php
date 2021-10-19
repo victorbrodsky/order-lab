@@ -61,7 +61,7 @@ class ChartList extends ListAbstract
     /**
      * "Accessible to users with the following roles:" [multi-select with roles]
      *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_accessrole",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
@@ -72,7 +72,7 @@ class ChartList extends ListAbstract
     /**
      * "Deny access to users with the following roles:" [multi-select with roles]
      *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_denyrole",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
@@ -83,7 +83,7 @@ class ChartList extends ListAbstract
     /**
      * "Deny access to the following users:" [multi-select with all users]
      *
-     * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_denyuser",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
@@ -94,7 +94,7 @@ class ChartList extends ListAbstract
     /**
      * "Data can be downloaded by users with the following roles:" [multi-select with roles].
      *
-     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
      * @ORM\JoinTable(name="dashboard_chart_downloadrole",
      *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
@@ -162,7 +162,7 @@ class ChartList extends ListAbstract
     /**
      * Dashboard Visualization Method: [Single-select with a list of Dashboard Visualization Method items from the list manager]
      *
-     * @ORM\ManyToOne(targetEntity="VisualizationList)
+     * @ORM\ManyToOne(targetEntity="VisualizationList")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $visualization;
@@ -181,7 +181,7 @@ class ChartList extends ListAbstract
     /**
      * “Dashboard Data Source:” [single-select with Dashboard Data Source from step 6 above]
      *
-     * @ORM\ManyToOne(targetEntity="DataSourceList)
+     * @ORM\ManyToOne(targetEntity="DataSourceList")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $dataSource;
@@ -189,7 +189,7 @@ class ChartList extends ListAbstract
     /**
      * “Dashboard Update Frequency:” [single-select with Dashboard Update Frequency from step 5 above]
      *
-     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList)
+     * @ORM\ManyToOne(targetEntity="UpdateFrequencyList")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $updateFrequency;

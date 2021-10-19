@@ -113,6 +113,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/TranslationalResearchBundle/Entity'
                         prefix: 'App\TranslationalResearchBundle\Entity'
                         alias: 'AppTranslationalResearchBundle'
+                    App\DashboardBundle:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/App/DashboardBundle/Entity'
+                        prefix: 'App\DashboardBundle\Entity'
+                        alias: 'AppDashboardBundle'
 #                    AppOrderformBundle: ~
 #                    AppUserdirectoryBundle: ~
 #                    AppFellAppBundle: ~

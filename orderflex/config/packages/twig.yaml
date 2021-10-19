@@ -46,6 +46,7 @@ twig:
         transres_uploadpath: 'Uploaded/%transres.uploadpath%'
         calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'
         crn_uploadpath: 'Uploaded/%crn.uploadpath%'
+        dashboard_uploadpath: 'Uploaded/%dashboard.uploadpath%'
 
         #service
         user_security_utility: "@user_security_utility"

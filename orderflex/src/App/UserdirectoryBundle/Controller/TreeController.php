@@ -61,6 +61,7 @@ class TreeController extends OrderAbstractController {
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
         //echo "entityIds=".$entityIds."<br>";
+        //echo "bundleName=".$bundleName."<br>";
 
         //get filter params
         //$filter = trim( $request->get('types') );
@@ -713,6 +714,12 @@ class TreeController extends OrderAbstractController {
                 $organizationalGroupType = "AccessionListHierarchyGroupType";
                 break;
             case "FormNode":
+                $organizationalGroupType = NULL;
+                break;
+            case "ChartTypeList":
+                $organizationalGroupType = NULL;
+                break;
+            case "TopicList":
                 $organizationalGroupType = NULL;
                 break;
 
