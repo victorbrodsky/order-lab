@@ -95,6 +95,8 @@
         {% set postPath = '_resapp' %}
     {% endif %}
 
+    {#pathbase={{ pathbase }}<br>#}
+
     {{ listmacros.listEdit( entity, edit_form, delete_form, pathbase, 'show', postPath, showEditBtn ) }}
 
 {% endblock %}

@@ -186,9 +186,11 @@ class TopicList extends BaseCompositeNode
 //    }
 
 
+    //is used to construct parent's show path the same as in ListController.php
     public function getClassName()
     {
-        return "TopicList";
+        //return "TopicList";
+        return "charttopic";
     }
 
 }

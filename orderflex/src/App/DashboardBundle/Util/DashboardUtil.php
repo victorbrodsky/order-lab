@@ -46,6 +46,8 @@ class DashboardUtil
     //get topics
     public function getFilterTopics() {
 
+        //echo "111 <br>";
+
         //get all enabled dashboard topics
         $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
             array(
@@ -54,10 +56,25 @@ class DashboardUtil
             array('orderinlist' => 'ASC')
         );
 
+        echo "topics=".count($topics)."<br>";
+
+        $parent = NULL;
+        $elements1 = array();
+        foreach($topics as $topic) {
+            echo "topic=$topic <br>";
+            if( $topic->getLevel() == 0 ) {
+                $parent = $topic."";
+            }
+            if( $topic->getLevel() == 1 ) {
+                $elements1[] = $topic . "";
+            }
+        }
 
         $filterTopics = array();
 
-
+        $filterTypes[$parent] = $elements1;
+        //dump($filterTopics);
+        //exit();
 
         return $filterTopics;
 

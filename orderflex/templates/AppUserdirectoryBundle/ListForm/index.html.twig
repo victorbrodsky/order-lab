@@ -113,6 +113,8 @@
         {% set postPath = '_resapp' %}
     {% endif %}
 
+    {#pathbase={{ pathbase }}<br>#}
+
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) }}
 
 {% endblock %}

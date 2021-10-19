@@ -69,3 +69,16 @@
 
 {% endblock %}
 
+
+{% block additionaljs %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            getJstree('UserdirectoryBundle','Institution');
+            getJstree('UserdirectoryBundle','CommentTypeList');
+            getJstree('UserdirectoryBundle','FormNode');
+            getJstree('OrderformBundle','MessageCategory');
+            getJstree('DashboardBundle','ChartTypeList');
+            getJstree('DashboardBundle','TopicList');
+        });
+    </script>
+{% endblock %}

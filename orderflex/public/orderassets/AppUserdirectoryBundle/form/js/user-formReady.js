@@ -15,6 +15,7 @@
  */
 
 /**
+ * user-formReady.js
  * Created with JetBrains PhpStorm.
  * User: oli2002
  * Date: 2/27/14
@@ -56,10 +57,13 @@ $(document).ready(function() {
     getComboboxCompositetree();
 
     //jstree in admin page for Institution tree
-    getJstree('UserdirectoryBundle','Institution');
-    getJstree('UserdirectoryBundle','CommentTypeList');
-    getJstree('UserdirectoryBundle','FormNode');
-    getJstree('OrderformBundle','MessageCategory');
+    //move to hierarchy-index.html.twig
+    // getJstree('UserdirectoryBundle','Institution');
+    // getJstree('UserdirectoryBundle','CommentTypeList');
+    // getJstree('UserdirectoryBundle','FormNode');
+    // getJstree('OrderformBundle','MessageCategory');
+    // getJstree('DashboardBundle','ChartTypeList');
+    // getJstree('DashboardBundle','TopicList');
 
     //home page institution with user leafs
     //displayInstitutionUserTree();

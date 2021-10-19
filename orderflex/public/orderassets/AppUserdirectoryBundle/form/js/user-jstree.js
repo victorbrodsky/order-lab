@@ -23,7 +23,7 @@
 //used by admin page
 function getJstree(bundleName,entityName,menu,search,closeall,type) {
 
-    //console.log('getJstree: cycle='+cycle);
+    console.log('getJstree: cycle='+cycle);
 
     if( typeof cycle === 'undefined' ) {
         var cycle = 'edit';
@@ -32,8 +32,9 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
     if( cycle.indexOf("show") == -1 ) {
 
         var targetid = ".composite-tree.composite-tree"+"-"+bundleName+"-"+entityName;
+        console.log('targetid='+targetid);
         if( $(targetid).length == 0 ) {
-            //console.log('no target='+targetid);
+            console.log('no target='+targetid);
             return;
         }
 
@@ -87,7 +88,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
 
         var treeUrl = Routing.generate('employees_get_composition_tree');
         treeUrl = treeUrl + '?'+withlazy+'opt=none&classname='+entityName+'&bundlename='+bundleName+withtype+filterStr; //$opt=
-        //console.log('user-jstree.js: treeUrl='+treeUrl);
+        console.log('user-jstree.js: treeUrl='+treeUrl);
 
         if( typeof cycle === 'undefined' ) {
             cycle = 'new';

@@ -303,6 +303,7 @@ class ListController extends OrderAbstractController
         //get object name: stain-list => stain
         $pieces = explode("-", $routeName);
         $pathbase = $pieces[0];
+        //echo "pathbase=".$pathbase."<br>";
 
         $mapper = $this->classListMapper($pathbase,$request);
         //echo "bundleName=".$mapper['bundleName']."<br>";
@@ -568,6 +569,9 @@ class ListController extends OrderAbstractController
             //echo "show create new link";
         }
         ///////////// EOF check if show "create a new entity" link //////////////
+
+        //echo "pathbase=".$pathbase."<br>";
+        //echo "routeName=".$routeName."<br>";
 
         return array(
             'entities' => $entities,
@@ -4020,7 +4024,7 @@ class ListController extends OrderAbstractController
 
         if( $listRootName ) {
             //return $this->redirect( $this->generateUrl($listRootName) );
-            echo "listRootName=".$listRootName."<br>";
+            //echo "listRootName=".$listRootName."<br>";
 
             $request->attributes->set('_route',$listRootName);
 
