@@ -10161,6 +10161,7 @@ class AdminController extends OrderAbstractController
 
         //get charts from DashboardUtil.php getChartTypes()
         $types = array(
+            
         );
 
         $count = 10;

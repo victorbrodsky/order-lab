@@ -23,7 +23,6 @@ use App\OrderformBundle\Util\OrderUtil;
 use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\ResAppBundle\Util\PdfUtil;
 use App\ResAppBundle\Util\ResAppUtil;
-use App\TranslationalResearchBundle\Util\DashboardUtil;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
 use App\TranslationalResearchBundle\Util\TransResFormNodeUtil;
@@ -109,7 +108,7 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['transres_pdf_generator'] = '?'.PdfGenerator::class;
         $subscribedServices['transres_import'] = '?'.TransResImportData::class;
-        $subscribedServices['transres_dashboard'] = '?'.DashboardUtil::class;
+        $subscribedServices['transres_dashboard'] = '?'.\App\TranslationalResearchBundle\Util\TransresDashboardUtil::class;
         $subscribedServices['transres_reminder_util'] = '?'.ReminderUtil::class;
 
         $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;
@@ -127,6 +126,8 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
         $subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
 //        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
+
+        $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;

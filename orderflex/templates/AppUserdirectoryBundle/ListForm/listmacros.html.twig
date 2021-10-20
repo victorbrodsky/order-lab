@@ -1225,6 +1225,11 @@
         {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
     {% endif %}
 
+    {#ChartList#}
+    {#{% if form.accessRoles is defined %}#}
+        {#{{ formmacros.field(form.accessRoles) }}#}
+    {#{% endif %}#}
+
 {% endmacro %}
 
 {#permissionList attributes#}

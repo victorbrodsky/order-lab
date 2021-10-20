@@ -37,7 +37,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/index", name="dashboard_home")
+     * @Route("/", name="dashboard_home")
      * @Template("AppDashboardBundle/Default/index.html.twig")
      */
     public function indexAction( Request $request ) {

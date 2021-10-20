@@ -5,7 +5,9 @@ var _retrievedChartCount = 0;
 $(document).ready(function() {
 
     //$('#filter-btn').click();
-    document.getElementById("filter-btn").click(); //chart-filter-btn
+    if( document.getElementById("filter-btn") ) {
+        document.getElementById("filter-btn").click(); //chart-filter-btn
+    }
 
 });
 

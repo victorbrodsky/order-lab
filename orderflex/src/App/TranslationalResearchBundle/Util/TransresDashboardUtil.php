@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Date: 8/25/2017
  * Time: 09:48 AM
  */
-class DashboardUtil
+class TransresDashboardUtil
 {
 
     protected $container;

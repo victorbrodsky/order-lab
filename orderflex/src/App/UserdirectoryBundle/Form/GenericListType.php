@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use App\DashboardBundle\Entity\ChartList;
 use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -562,7 +563,9 @@ class GenericListType extends AbstractType
             strtolower($this->mapper['className']) == strtolower("ResearchGroupType") ||
             strtolower($this->mapper['className']) == strtolower("CourseGroupType") ||
             strtolower($this->mapper['className']) == strtolower("PatientListHierarchyGroupType") ||
-            strtolower($this->mapper['className']) == strtolower("AccessionListHierarchyGroupType")
+            strtolower($this->mapper['className']) == strtolower("AccessionListHierarchyGroupType") ||
+            strtolower($this->mapper['className']) == strtolower("TopicList") ||
+            strtolower($this->mapper['className']) == strtolower("ChartTypeList")
         ) {
 //        if( method_exists($this->params['entity'],'getLevel') ) {
             $builder->add('level',null,array(
@@ -1164,6 +1167,30 @@ class GenericListType extends AbstractType
                 'label' => "Project specialty shown to users as a user friendly name (i.e. 'AP/CP' in 'New AP/CP Project'):",
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
+            ));
+        }
+
+        if( 0 && $this->params['entity'] instanceof ChartList ) {
+            //accessRoles
+            //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
+            $builder->add( 'accessRoles', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:Roles',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Institution:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.children","children")
+                        //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
 

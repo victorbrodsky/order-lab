@@ -38,19 +38,74 @@ class DashboardController extends OrderAbstractController
             'chartsArray' => $chartsArray
         );
     }
+    /**
+     * From transres
+     *
+     * @Route("/single-chart/", name="translationalresearch_single_chart", options={"expose"=true})
+     */
+    public function singleOrigChartAction( Request $request )
+    {
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $dashboardUtil = $this->container->get('transres_dashboard');
+
+        $chartsArray = $dashboardUtil->getDashboardChart($request);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setStatusCode(200);
+        $response->setContent(json_encode($chartsArray));
+        return $response;
+    }
 
 
     /**
      * single dashboard topic. id - topic ID
      *
-     * @Route("/topic-id/{id}", name="dashboard_single_topic_id")
+     * @Route("/topic/{id}", name="dashboard_single_topic_id")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleTopicByIdAction( Request $request, $id ) {
 
         //return array('sitename'=>$this->getParameter('dashboard.sitename'));
 
-        $chartsArray = array();
+        $em = $this->getDoctrine()->getManager();
+
+        if( !$id ) {
+            $error = "Topic name is not provided";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        $topic = $em->getRepository('AppDashboardBundle:TopicList')->find($id);
+        if( !$topic ) {
+            $error = "Topic is not found by ID '".$id."'";
+            //throw new \Exception($error);
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        //find charts by $topic
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $chartsArray = $dashboardUtil->getChartsByTopic($topic);
+
+        //$chartsArray = array();
 
         return array(
             'title' => "Single chart topic",
@@ -60,7 +115,7 @@ class DashboardController extends OrderAbstractController
     /**
      * single dashboard topic. topicName - topic name
      *
-     * @Route("/topic/{topicName}", name="dashboard_single_topic_name")
+     * @Route("/topic-name/{topicName}", name="dashboard_single_topic_name")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleTopicByNameAction( Request $request, $topicName ) {

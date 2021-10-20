@@ -62,7 +62,7 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_dashboard:
-        class: App\TranslationalResearchBundle\Util\DashboardUtil
+        class: App\TranslationalResearchBundle\Util\TransresDashboardUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_reminder_util:
