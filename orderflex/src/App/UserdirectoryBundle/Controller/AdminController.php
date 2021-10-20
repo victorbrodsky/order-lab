@@ -10055,14 +10055,14 @@ class AdminController extends OrderAbstractController
 
             //3) add children
             if( $childrenArr ) {
-                foreach ($childrenArr as $child) {
-                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child);
+                foreach ($childrenArr as $childName) {
+                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($childName);
                     if ($childEntity) {
                         continue;
                     }
 
                     $childEntity = new TopicList();
-                    $this->setDefaultList($childEntity, $count, $username, $name);
+                    $this->setDefaultList($childEntity, $count, $username, $childName);
                     $listEntity->setLevel(2);
                     $listEntity->addChild($childEntity);
 

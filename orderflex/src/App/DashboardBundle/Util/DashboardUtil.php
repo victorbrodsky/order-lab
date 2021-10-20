@@ -56,23 +56,24 @@ class DashboardUtil
             array('orderinlist' => 'ASC')
         );
 
-        echo "topics=".count($topics)."<br>";
+//        echo "topics=".count($topics)."<br>";
 
         $parent = NULL;
-        $elements1 = array();
+        $elements = array();
         foreach($topics as $topic) {
-            echo "topic=$topic <br>";
+            //echo "topic=$topic <br>";
+            //echo "level=".$topic->getLevel()."<br>";
             if( $topic->getLevel() == 0 ) {
                 $parent = $topic."";
             }
             if( $topic->getLevel() == 1 ) {
-                $elements1[] = $topic . "";
+                $elements[] = $topic . "";
             }
         }
 
         $filterTopics = array();
 
-        $filterTypes[$parent] = $elements1;
+        $filterTopics[$parent] = $elements;
         //dump($filterTopics);
         //exit();
 

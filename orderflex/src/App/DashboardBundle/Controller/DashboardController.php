@@ -43,12 +43,53 @@ class DashboardController extends OrderAbstractController
     /**
      * single dashboard topic. id - topic ID
      *
-     * @Route("/topic/{id}", name="dashboard_single_topic")
+     * @Route("/topic-id/{id}", name="dashboard_single_topic_id")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
-    public function singleTopicAction( Request $request, $id ) {
+    public function singleTopicByIdAction( Request $request, $id ) {
 
         //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+
+        $chartsArray = array();
+
+        return array(
+            'title' => "Single chart topic",
+            'chartsArray' => $chartsArray
+        );
+    }
+    /**
+     * single dashboard topic. topicName - topic name
+     *
+     * @Route("/topic/{topicName}", name="dashboard_single_topic_name")
+     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
+     */
+    public function singleTopicByNameAction( Request $request, $topicName ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        if( !$topicName ) {
+            $error = "Topic name is not provided";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        $topic = $em->getRepository('AppDashboardBundle:TopicList')->findByName($topicName);
+        if( !$topic ) {
+            $error = "Topic is not found by name '".$topicName."'";
+            //throw new \Exception($error);
+
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        //find charts by $topic
 
         $chartsArray = array();
 

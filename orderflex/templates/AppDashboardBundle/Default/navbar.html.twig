@@ -26,7 +26,8 @@
                 {% for value in values %}
                     {% set filterTopicUrl = value|replace({' ':'-'}) %}
                     <li>
-                        <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>
+                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
+                        <a href="{{ path(dashboard_sitename~'_single_topic_name',{'topicName':value}) }}">{{ value }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -73,6 +74,17 @@
                     </li>
 
 
+                    <li id="nav-bar-translationalresearch-topic" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+                            {% set filterTopics = dashboard_util.getFilterTopics() %}
+                            {#filterTopics={{ filterTopics|length }}<br>#}
+                            {{ navbarmacros.createFilterTopics(filterTopics) }}
+                        </ul>
+                    </li>
+
+
                 </ul>
 
             {#{% endif %}#}
@@ -107,6 +119,8 @@
 
                 {% endif %}
 
+
+
                 {% if is_granted('ROLE_DASHBOARD_USER') %}
 
                     <li id="nav-bar-user" class="dropdown">
@@ -123,15 +137,6 @@
 
                             <li><a href="{{ path(dashboard_sitename~'_logout') }}">Log Out</a></li>
 
-                        </ul>
-                    </li>
-
-                    <li id="nav-bar-translationalresearch-topic" class="dropdown">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic<b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-level">
-                            {% set filterTopics = dashboard_util.getFilterTopics() %}
-                            {{ navbarmacros.createFilterTopics(filterTopics) }}
                         </ul>
                     </li>
 
