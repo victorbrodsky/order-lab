@@ -1225,10 +1225,36 @@
         {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
     {% endif %}
 
-    {#ChartList#}
-    {#{% if form.accessRoles is defined %}#}
-        {#{{ formmacros.field(form.accessRoles) }}#}
-    {#{% endif %}#}
+    {############ ChartList ###############}
+    {% if form.accessRoles is defined %}
+        {{ formmacros.field(form.accessRoles) }}
+    {% endif %}
+    {% if form.denyRoles is defined %}
+        {{ formmacros.field(form.denyRoles) }}
+    {% endif %}
+    {% if form.denyUsers is defined %}
+        {{ formmacros.field(form.denyUsers) }}
+    {% endif %}
+    {% if form.downloadRoles is defined %}
+        {{ formmacros.field(form.downloadRoles) }}
+    {% endif %}
+    {% if form.width is defined %}
+        {{ formmacros.field(form.width) }}
+    {% endif %}
+    {% if form.height is defined %}
+        {{ formmacros.field(form.height) }}
+    {% endif %}
+    {% if form.chartTitle is defined %}
+        {{ formmacros.field(form.chartTitle) }}
+    {% endif %}
+    {% if form.institutions is defined %}
+        {{ formmacros.field(form.institutions) }}
+    {% endif %}
+    {% if form.topics is defined %}
+        {{ formmacros.field(form.topics) }}
+    {% endif %}
+
+    {############ EOF ChartList ###############}
 
 {% endmacro %}
 
