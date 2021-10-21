@@ -1293,7 +1293,7 @@ class GenericListType extends AbstractType
 
             $builder->add( 'topics', EntityType::class, array(
                 'class' => 'AppDashboardBundle:TopicList',
-                //'choice_label' => 'getTreeName',
+                'choice_label' => 'getTreeName',
                 'label'=>'Associated Dashboard Topics:',
                 'required'=> false,
                 'multiple' => true,
@@ -1301,6 +1301,24 @@ class GenericListType extends AbstractType
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.children","children")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level>0")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add( 'visualization', EntityType::class, array(
+                'class' => 'AppDashboardBundle:VisualizationList',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Dashboard Visualization Method:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
@@ -1309,6 +1327,61 @@ class GenericListType extends AbstractType
                         ));
                 },
             ));
+
+            $builder->add( 'chartTypes', EntityType::class, array(
+                'class' => 'AppDashboardBundle:ChartTypeList',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Dashboard Chart Types:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add( 'dataSource', EntityType::class, array(
+                'class' => 'AppDashboardBundle:DataSourceList',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Dashboard Data Source:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
+            $builder->add( 'updateFrequency', EntityType::class, array(
+                'class' => 'AppDashboardBundle:UpdateFrequencyList',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Dashboard Update Frequency:',
+                'required'=> false,
+                'multiple' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+
 
         } //if ChartList
 

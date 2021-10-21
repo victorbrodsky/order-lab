@@ -59,4 +59,80 @@ class DefaultController extends OrderAbstractController
             'testData' => $testDataArr
         );
     }
+
+    /**
+     * @Route("/set-chart-list", name="dashboard_set_chart_list")
+     * @Template("AppDashboardBundle/Default/test.html.twig")
+     */
+    public function setChartListAction( Request $request ) {
+
+        $em = $this->getDoctrine()->getManager();
+        
+        //add the nine charts 55, 56, 57, 58, 59, 60, 61, 62, 63 (with IDs of 1 through 9) to the topic of “Site Utilization”,
+        // associated with the Organizational Group of “Department of Pathology” under WCMC and “Department of Pathology” under NYP”,
+        // visible to the these roles:
+        //Dashboards-Site-Administrator-Department-Of-Pathology
+        //Dashboards-Chairman-Department-Of-Pathology
+        //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
+        //Dashboards-Administrator-Department-Of-Pathology
+        //Dashboards-Associate-Administrator-Department-Of-Pathology
+        //Dashboards-Financial-Administrator-Department-Of-Pathology
+
+        $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
+        if( !$siteUtilizationTopic ) {
+            exit("TopicList not found by name 'Site Utilization'");
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('No Institution: "WCM"');
+        }
+        if( $wcmc->getLevel() != 0 ) {
+            exit('Institution "WCM" level is not 0');
+        }
+        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        //55, 56, 57, 58, 59, 60, 61, 62, 63
+        $names = array(55, 56, 57, 58, 59, 62, 63);
+
+        $repository = $em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+
+        $selectArr = array();
+        foreach($names as $name) {
+            $selectArr[] = "list.name LIKE '".$name."%'";
+        }
+
+        $selectWhere = implode(" OR ",$selectArr);
+
+        $dql->where($selectWhere);
+
+        $query = $dql->getQuery();
+
+        $charts = $query->getResult();
+        echo "charts count=".count($charts)."<br>";
+
+        foreach($charts as $chart) {
+            echo "Process chart '$chart' <br>";
+
+            //add topic
+            $chart->addTopic($siteUtilizationTopic);
+
+            //add institution
+            $chart->addInstitution($pathology);
+        }
+
+        //$em->flush();
+
+        exit("EOF setChartListAction");
+    }
 }

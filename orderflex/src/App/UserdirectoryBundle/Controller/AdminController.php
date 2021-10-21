@@ -1003,7 +1003,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateBusinessPurposes");
 
         //Dashboards (7 lists)
-        //$count_generateChartsList = $this->generateChartsList();
+        $count_generateChartsList = $this->generateChartsList();
         $count_generateChartFilterList = $this->generateChartFilterList();
         $count_generateChartDataSourceList = $this->generateChartDataSourceList();
         $count_generateChartUpdateFrequencyList = $this->generateChartUpdateFrequencyList();
@@ -1146,7 +1146,7 @@ class AdminController extends OrderAbstractController
             'generateChartDataSourceList='.$count_generateChartDataSourceList.', '.
             'generateChartUpdateFrequencyList='.$count_generateChartUpdateFrequencyList.', '.
             'generateChartVisualizationList='.$count_generateChartVisualizationList.', '.
-            //'generateChartsList='.$count_generateChartsList.', '.
+            'generateChartsList='.$count_generateChartsList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -10009,14 +10009,14 @@ class AdminController extends OrderAbstractController
             exit("Root ChartTopic does not exist");
         }
 
-        $types = array(
-            "Financial",
-            "Productivity",
-            "Clinical",
-            "Research",
-            "Educational",
-            "Site Utilization"
-        );
+//        $types = array(
+//            "Financial",
+//            "Productivity",
+//            "Clinical",
+//            "Research",
+//            "Educational",
+//            "Site Utilization"
+//        );
 
 //        $types = array(
 //            array("All Charts","Financial"),
@@ -10155,17 +10155,28 @@ class AdminController extends OrderAbstractController
     }
     //"Dashboard Charts" - list of existing charts from DashboardUtil.php (charts)
     public function generateChartsList() {
-        return NULL; //testing
+        //return NULL; //testing
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //get charts from DashboardUtil.php getChartTypes()
-        $types = array(
-            
-        );
+//        $types = array(
+//            "pi-by-affiliation",
+//            "projects-per-pi"
+//        );
+
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $types = $dashboardUtil->getChartTypes();
+
+        //dump($types);
+        //exit("exit generateChartsList");
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name=>$abbreviation ) {
+
+            if( !$name ) {
+                continue;
+            }
 
             $listEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByName($name);
             if( $listEntity ) {
@@ -10174,6 +10185,10 @@ class AdminController extends OrderAbstractController
 
             $listEntity = new ChartList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            if( $abbreviation ) {
+                $listEntity->setAbbreviation($abbreviation);
+            }
 
             $em->persist($listEntity);
             $em->flush();

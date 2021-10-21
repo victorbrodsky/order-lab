@@ -1247,11 +1247,23 @@
     {% if form.chartTitle is defined %}
         {{ formmacros.field(form.chartTitle) }}
     {% endif %}
-    {% if form.institutions is defined %}
-        {{ formmacros.field(form.institutions) }}
-    {% endif %}
+    {#{% if form.institutions is defined %}#}
+        {#{{ formmacros.field(form.institutions) }}#}
+    {#{% endif %}#}
     {% if form.topics is defined %}
         {{ formmacros.field(form.topics) }}
+    {% endif %}
+    {% if form.visualization is defined %}
+        {{ formmacros.field(form.visualization) }}
+    {% endif %}
+    {% if form.chartTypes is defined %}
+        {{ formmacros.field(form.chartTypes) }}
+    {% endif %}
+    {% if form.dataSource is defined %}
+        {{ formmacros.field(form.dataSource) }}
+    {% endif %}
+    {% if form.updateFrequency is defined %}
+        {{ formmacros.field(form.updateFrequency) }}
     {% endif %}
 
     {############ EOF ChartList ###############}
