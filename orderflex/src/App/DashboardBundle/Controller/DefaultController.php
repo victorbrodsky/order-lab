@@ -78,6 +78,36 @@ class DefaultController extends OrderAbstractController
         //Dashboards-Associate-Administrator-Department-Of-Pathology
         //Dashboards-Financial-Administrator-Department-Of-Pathology
 
+        //Add the Site Utilization charts into this list (accessible and downloadable):
+//        Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+
+        $roles = array(
+            "Dashboards-Site-Administrator-Department-Of-Pathology",
+            "Dashboards-Chairman-Department-Of-Pathology",
+            "Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology",
+            "Dashboards-Administrator-Department-Of-Pathology",
+            "Dashboards-Associate-Administrator-Department-Of-Pathology",
+            "Dashboards-Financial-Administrator-Department-Of-Pathology",
+
+            "Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology",
+        );
+
+        $rolesArr = array();
+        foreach($roles as $role) {
+            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($role);
+            if( !$roleEntity ) {
+                exit("Can not find role by abbreviation '$role'");
+            }
+
+            $rolesArr[] = $roleEntity;
+        }
+
         $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
         if( !$siteUtilizationTopic ) {
             exit("TopicList not found by name 'Site Utilization'");
@@ -129,6 +159,12 @@ class DefaultController extends OrderAbstractController
 
             //add institution
             $chart->addInstitution($pathology);
+
+            //assign roles accessRoles, downloadRoles
+            foreach($rolesArr as $role) {
+                $chart->addAccessRole($role);
+                $chart->addDownloadRole($role);
+            }
         }
 
         //$em->flush();

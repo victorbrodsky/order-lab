@@ -1003,6 +1003,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateBusinessPurposes");
 
         //Dashboards (7 lists)
+        $count_generateDashboardRoles = $this->generateDashboardRoles();
         $count_generateChartsList = $this->generateChartsList();
         $count_generateChartFilterList = $this->generateChartFilterList();
         $count_generateChartDataSourceList = $this->generateChartDataSourceList();
@@ -1140,6 +1141,7 @@ class AdminController extends OrderAbstractController
             'OrderableStatusList='.$count_OrderableStatusList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
+            'generateDashboardRoles='.$count_generateDashboardRoles.', '.
             'generateChartTypeList='.$count_generateChartTypeList.', '.
             'generateChartFilterList='.$count_generateChartFilterList.', '.
             'generateChartTopicList='.$count_generateChartTopicList.', '.
@@ -9908,17 +9910,113 @@ class AdminController extends OrderAbstractController
         //Dashboards-Associate-Administrator-Department-Of-Pathology
         //Dashboards-Financial-Administrator-Department-Of-Pathology
 
+        //Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+        //Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+        //Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+        //Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+
         $types = array(
-            "ROLE_DASHBOARD_ADMIN" => array(
-                "Dashboards Administrator",
-                "View all dashboards",
-                90,
-                "dashboard"
+
+            "ROLE_DASHBOARD_ADMIN" => array(    //key - name
+                "Dashboards Administrator",     //0 alias
+                "View all dashboards",          //1 description
+                90,                             //2 level
+                "dashboard",                    //3 sitename
+                "Dashboards-Admin"              //4 abbreviation
             ),
 
-        );
+            //Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_MEDICAL_INFORMATICS_DIRECTOR_PATHOLOGY" => array(
+                "Dashboards Medical Director Informatics Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology"
+            ),
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+            //Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_MANAGER_INFORMATICS_PATHOLOGY" => array(
+                "Dashboards Manager Informatics Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology"
+            ),
+
+            //Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_SYS_ADMIN_INFORMATICS_PATHOLOGY" => array(
+                "Dashboards System Administrator Informatics Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_SOFTWARE_DEVELOPER_INFORMATICS_PATHOLOGY" => array(
+                "Dashboards Software Developer Informatics Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Site-Administrator-Department-Of-Pathology
+            "ROLE_DASHBOARD_SITE_ADMIN_PATHOLOGY" => array(
+                "Dashboards Site Administrator Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Site-Administrator-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Chairman-Department-Of-Pathology
+            "ROLE_DASHBOARD_CHAIRMAN_PATHOLOGY" => array(
+                "Dashboards Chairman Pathology Department",
+                "View all pathology dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Chairman-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
+            "ROLE_DASHBOARD_CHAIRMAN_ASSISTANT_PATHOLOGY" => array(
+                "Dashboards Chairman Assistant Pathology Department",
+                "View all dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Administrator-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_PATHOLOGY" => array(
+                "Dashboards Administrator Pathology Department",
+                "View all dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Administrator-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Associate-Administrator-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_ASSOCIATE_PATHOLOGY" => array(
+                "Dashboards Administrator Associate Pathology Department",
+                "View all dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Associate-Administrator-Department-Of-Pathology"
+            ),
+
+            //Dashboards-Financial-Administrator-Department-Of-Pathology
+            "ROLE_DASHBOARD_FINANCIAL_ADMIN_PATHOLOGY" => array(
+                "Dashboards Financial Administrator Pathology",
+                "View all dashboards",
+                80,
+                "dashboard",
+                "Dashboards-Financial-Administrator-Department-Of-Pathology"
+            ),
+
+
+        );
 
         $count = 10;
         foreach( $types as $role => $aliasDescription ) {
@@ -9930,68 +10028,24 @@ class AdminController extends OrderAbstractController
             $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
 
             if( $entity ) {
-                if( !$entity->getLevel() ) {
-                    $entity->setLevel($level);
-                    $em->persist($entity);
-                    $em->flush();
-                }
-
-                continue; //temporary disable to override alias, description, level
+                continue;
             }
 
-            if( !$entity ) {
-                $entity = new Roles();
-                $this->setDefaultList($entity,$count,$username,null);
-            }
+            $entity = new Roles();
+            $this->setDefaultList($entity,$count,$username,$role);
 
             $entity->setName( $role );
             $entity->setAlias( trim($alias) );
             $entity->setDescription( trim($description) );
             $entity->setLevel($level);
 
-            //set sitename
-            if( isset($aliasDescription[3]) ) {
-                //the element exists in the array. write your code here.
-                //i.e. $aliasDescription[3] === 'translational-research'
-                //$input = array("a", "b", "c", "d", "e");
-                //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
-                $roleParts = explode('_', $role); //ROLE TRANSRES IRB ...
-                $rolePartSecondArr = array_slice($roleParts, 1, 1);
-                $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
-                //exit("rolePartSecond=".$rolePartSecond);
-                $this->addSingleSite($entity,$rolePartSecond,$aliasDescription[3]);
+            //set sitename dashboard
+            $this->addSingleSiteToEntity($entity,"dashboard");
+
+            //set abbreviation
+            if( isset($aliasDescription[4]) ) {
+                $entity->setAbbreviation(trim($aliasDescription[4]));
             }
-
-//            $attrName = "Call Pager";
-//
-//            //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
-//            if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
-//                $attrValue = "(111) 111-1111";
-//                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
-//                if( count($attrs) == 0 ) {
-//                    $attr = new RoleAttributeList();
-//                    $this->setDefaultList($attr,1,$username,$attrName);
-//                    $attr->setValue($attrValue);
-//                    $entity->addAttribute($attr);
-//                }
-//            }
-//            //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
-//            if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
-//                $attrValue = "(222) 222-2222";
-//                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
-//                if( count($attrs) == 0 ) {
-//                    $attr = new RoleAttributeList();
-//                    $this->setDefaultList($attr,10,$username,$attrName);
-//                    $attr->setValue($attrValue);
-//                    $entity->addAttribute($attr);
-//                }
-//            }
-
-//            //set institution and Fellowship Subspecialty types to role
-//            $this->setInstitutionFellowship($entity,$role);
-//
-//            //set institution and Residency Specialty types to role
-//            $this->setInstitutionResidency($entity,$role);
 
             $em->persist($entity);
             $em->flush();

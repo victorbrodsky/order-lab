@@ -124,6 +124,17 @@ abstract class BaseRoleVoter extends Voter {
             return false;
         }
 
+        //if ROLE_PLATFORM_ADMIN => allow all
+        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_ADMIN')) ) {
+            //exit('admin!: '.'ROLE_PLATFORM_ADMIN');
+            return true;
+        }
+        //if ROLE_PLATFORM_ADMIN => allow all
+        if( $this->decisionManager->decide($token, array('ROLE_PLATFORM_DEPUTY_ADMIN')) ) {
+            //exit('admin!: '.'ROLE_PLATFORM_DEPUTY_ADMIN');
+            return true;
+        }
+
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
             //exit('admin!: '.'ROLE_'.$siteRoleBase.'_ADMIN');
