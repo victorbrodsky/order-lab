@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Form;
 
 use App\DashboardBundle\Entity\ChartList;
+use App\DashboardBundle\Entity\TopicList;
 use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -1384,6 +1385,26 @@ class GenericListType extends AbstractType
 
 
         } //if ChartList
+
+        if( $this->params['entity'] instanceof TopicList ) {
+            $builder->add( 'charts', EntityType::class, array(
+                'class' => 'AppDashboardBundle:ChartList',
+                //'choice_label' => 'getTreeName',
+                'label'=>'Associated Dashboard Charts:',
+                'required'=> false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox combobox-width'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        } //if TopicList
 
 
     }

@@ -105,6 +105,9 @@ class DashboardController extends OrderAbstractController
         $dashboardUtil = $this->container->get('dashboard_util');
         $chartsArray = $dashboardUtil->getChartsByTopic($topic);
 
+        dump($chartsArray);
+        exit('111');
+
         //$chartsArray = array();
 
         return array(

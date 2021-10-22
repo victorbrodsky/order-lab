@@ -136,6 +136,7 @@ class DefaultController extends OrderAbstractController
 
         $repository = $em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.topics','topics');
 
         $selectArr = array();
         foreach($names as $name) {
@@ -145,30 +146,39 @@ class DefaultController extends OrderAbstractController
         $selectWhere = implode(" OR ",$selectArr);
 
         $dql->where($selectWhere);
+        $dql->andWhere("topics IS NULL");
 
         $query = $dql->getQuery();
 
         $charts = $query->getResult();
         echo "charts count=".count($charts)."<br>";
+        $count = 0;
 
         foreach($charts as $chart) {
             echo "Process chart '$chart' <br>";
 
+            if(0) {
+                //add topic
+                $chart->addTopic($siteUtilizationTopic);
+
+                //add institution
+                $chart->addInstitution($pathology);
+
+                //assign roles accessRoles, downloadRoles
+                foreach ($rolesArr as $role) {
+                    $chart->addAccessRole($role);
+                    $chart->addDownloadRole($role);
+                }
+            }
+
             //add topic
             $chart->addTopic($siteUtilizationTopic);
 
-            //add institution
-            $chart->addInstitution($pathology);
-
-            //assign roles accessRoles, downloadRoles
-            foreach($rolesArr as $role) {
-                $chart->addAccessRole($role);
-                $chart->addDownloadRole($role);
-            }
+            $count++;
         }
 
         //$em->flush();
 
-        exit("EOF setChartListAction");
+        exit("EOF setChartListAction: count=$count");
     }
 }

@@ -200,10 +200,28 @@ class DashboardUtil
         echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
 
-        $chartsArray = array();
+        //$em = $this->getDoctrine()->getManager();
+
+        //$chartsArray = array();
+
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.topics','topics');
+
+        //$dql->where($selectWhere);
+        $dql->andWhere("topics = :topicId");
+
+        $parameters = array("topicId"=>$topic->getId());
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        echo "charts count=".count($charts)."<br>";
 
 
-        return $chartsArray;
+        return $charts;
     }
 
 }

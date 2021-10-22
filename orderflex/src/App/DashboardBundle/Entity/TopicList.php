@@ -158,12 +158,14 @@ class TopicList extends BaseCompositeNode
     {
         if( $item && !$this->charts->contains($item) ) {
             $this->charts->add($item);
+            $item->addTopic($this);
         }
         return $this;
     }
     public function removeChart($item)
     {
         $this->charts->removeElement($item);
+        $item->removeTopic($this);
     }
     public function getCharts()
     {

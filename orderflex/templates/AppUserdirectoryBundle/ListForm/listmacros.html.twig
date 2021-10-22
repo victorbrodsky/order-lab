@@ -953,9 +953,10 @@
         {{ formmacros.field(form.rgt) }}
     {% endif %}
 
-    {#{% if form.parent and form.parent is defined %}#}
-        {#{{ formmacros.field(form.parent) }}#}
-    {#{% endif %}#}
+    {#disable?#}
+    {% if form.parent and form.parent is defined %}
+        {{ formmacros.field(form.parent) }}
+    {% endif %}
 
     {% if form.accessionListTypes is defined %}
         {{ formmacros.field(form.accessionListTypes) }}
@@ -1265,8 +1266,12 @@
     {% if form.updateFrequency is defined %}
         {{ formmacros.field(form.updateFrequency) }}
     {% endif %}
-
     {############ EOF ChartList ###############}
+
+    {#TopicList#}
+    {% if form.charts is defined %}
+        {{ formmacros.field(form.charts) }}
+    {% endif %}
 
 {% endmacro %}
 

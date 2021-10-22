@@ -150,7 +150,6 @@ class ChartList extends ListAbstract
      */
     private $institutions;
 
-    //“Associated Dashboard Topics”: [multi-select with the flat list of all “Dashboard Topics” above]
     /**
      * “Associated Dashboard Topics”: [multi-select with the flat list of all “Dashboard Topics” above]
      *
@@ -274,12 +273,14 @@ class ChartList extends ListAbstract
     {
         if( $item && !$this->topics->contains($item) ) {
             $this->topics->add($item);
+            //$item->addChart($this);
         }
         return $this;
     }
     public function removeTopic($item)
     {
         $this->topics->removeElement($item);
+        //$item->removeChart($this);
     }
     public function getTopics()
     {
