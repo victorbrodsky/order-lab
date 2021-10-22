@@ -9895,6 +9895,116 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+
+    public function generateDashboardRoles() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        //Dashboards-Site-Administrator-Department-Of-Pathology
+        //Dashboards-Chairman-Department-Of-Pathology
+        //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
+        //Dashboards-Administrator-Department-Of-Pathology
+        //Dashboards-Associate-Administrator-Department-Of-Pathology
+        //Dashboards-Financial-Administrator-Department-Of-Pathology
+
+        $types = array(
+            "ROLE_DASHBOARD_ADMIN" => array(
+                "Dashboards Administrator",
+                "View all dashboards",
+                90,
+                "dashboard"
+            ),
+
+        );
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $types as $role => $aliasDescription ) {
+
+            $alias = $aliasDescription[0];
+            $description = $aliasDescription[1];
+            $level = $aliasDescription[2];
+
+            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
+
+            if( $entity ) {
+                if( !$entity->getLevel() ) {
+                    $entity->setLevel($level);
+                    $em->persist($entity);
+                    $em->flush();
+                }
+
+                continue; //temporary disable to override alias, description, level
+            }
+
+            if( !$entity ) {
+                $entity = new Roles();
+                $this->setDefaultList($entity,$count,$username,null);
+            }
+
+            $entity->setName( $role );
+            $entity->setAlias( trim($alias) );
+            $entity->setDescription( trim($description) );
+            $entity->setLevel($level);
+
+            //set sitename
+            if( isset($aliasDescription[3]) ) {
+                //the element exists in the array. write your code here.
+                //i.e. $aliasDescription[3] === 'translational-research'
+                //$input = array("a", "b", "c", "d", "e");
+                //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+                $roleParts = explode('_', $role); //ROLE TRANSRES IRB ...
+                $rolePartSecondArr = array_slice($roleParts, 1, 1);
+                $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
+                //exit("rolePartSecond=".$rolePartSecond);
+                $this->addSingleSite($entity,$rolePartSecond,$aliasDescription[3]);
+            }
+
+//            $attrName = "Call Pager";
+//
+//            //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
+//            if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
+//                $attrValue = "(111) 111-1111";
+//                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+//                if( count($attrs) == 0 ) {
+//                    $attr = new RoleAttributeList();
+//                    $this->setDefaultList($attr,1,$username,$attrName);
+//                    $attr->setValue($attrValue);
+//                    $entity->addAttribute($attr);
+//                }
+//            }
+//            //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
+//            if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
+//                $attrValue = "(222) 222-2222";
+//                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+//                if( count($attrs) == 0 ) {
+//                    $attr = new RoleAttributeList();
+//                    $this->setDefaultList($attr,10,$username,$attrName);
+//                    $attr->setValue($attrValue);
+//                    $entity->addAttribute($attr);
+//                }
+//            }
+
+//            //set institution and Fellowship Subspecialty types to role
+//            $this->setInstitutionFellowship($entity,$role);
+//
+//            //set institution and Residency Specialty types to role
+//            $this->setInstitutionResidency($entity,$role);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        //exit("EOF generate Roles");
+
+        return round($count/10);
+    }
+
     //hierarchical list titled ”Dashboard Chart Type” (same as Organizational Groups) (charttypes)
     public function generateChartTypeList() {
         //return NULL; //TODO: hierarchy
