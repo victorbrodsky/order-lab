@@ -190,14 +190,13 @@ class DashboardUtil
         return $chartTypes;
     }
     public function getChartTypeByValue($value) {
-        //$this->getChartTypes();
         $key = array_search($value, $this->getChartTypes());
         return $key;
     }
 
     public function getChartsByTopic( $topic ) {
 
-        echo "getChartsByTopic: topic=".$topic."<br>";
+        //echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
 
         //$em = $this->getDoctrine()->getManager();
@@ -218,10 +217,5269 @@ class DashboardUtil
         $query->setParameters($parameters);
 
         $charts = $query->getResult();
-        echo "charts count=".count($charts)."<br>";
+        //echo "charts count=".count($charts)."<br>";
 
 
         return $charts;
+    }
+
+
+
+    public function getChartNameWithTop($chartName,$quantityLimit) {
+//        if( !$quantityLimit ) {
+//            $quantityLimit = 10;
+//        }
+        if(0) {
+            if (strpos($chartName, "Top 10") !== false) {
+                $chartNameModified = str_replace("Top 10", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 25") !== false) {
+                $chartNameModified = str_replace("Top 25", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 35") !== false) {
+                $chartNameModified = str_replace("Top 35", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 50") !== false) {
+                $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
+            }
+        }
+        $chartNameModified = null;
+        if( $quantityLimit == "Show all" ) {
+            $quantityLimitStr = "".$quantityLimit."";
+        } else {
+            $quantityLimitStr = "Top ".$quantityLimit."";
+        }
+        if (strpos($chartName, "(Top)") !== false) {
+            $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
+        }
+        if (strpos($chartName, "Top ") !== false) {
+            $chartNameModified = str_replace("Top ","".$quantityLimitStr." ",$chartName);
+        }
+
+        if( !$chartNameModified ) {
+            $chartNameModified = $chartName;
+        }
+
+        return $chartNameModified;
+    }
+
+    public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null ) {
+
+        if( count($combinedDataArr) == 0 ) {
+            return array();
+        }
+
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+                'margin' => array('b' => 200)
+//            'yaxis' => array(
+//                'automargin' => true
+//            ),
+//            'xaxis' => array(
+//                'automargin' => true,
+//            ),
+            );
+        }
+
+        $layoutArray['title'] = $title;
+        $layoutArray['barmode'] = 'stack';
+
+        $stackDataArray = array();
+        //$stackDataSumArray = array();
+        $xAxis = "x";
+        $yAxis = "y";
+
+        foreach($combinedDataArr as $name=>$dataArr) {
+            $chartDataArray = array();
+            $labels = array();
+            $values = array();
+            foreach ($dataArr as $label => $valueData) {
+
+                if( is_array($valueData) ) {
+                    $value = $valueData["value"];
+                    $link = $valueData["link"];
+                } else {
+                    $value = $valueData;
+                    $link = null;
+                }
+
+                $labels[] = $label;
+                $values[] = $value;
+                $links[] = $link;
+
+//                if( isset($stackDataSumArray[$label]) ) {
+//                    $sumValue = $stackDataSumArray[$label] + $value;
+//                } else {
+//                    $sumValue = $value;
+//                }
+//                $stackDataSumArray[$label] = $sumValue;
+            }
+
+            //if( count($values) == 0 ) {
+            //    continue;
+            //}
+
+            $chartDataArray[$xAxis] = $labels;
+            $chartDataArray[$yAxis] = $values;
+            $chartDataArray['name'] = $name;
+            $chartDataArray['type'] = 'bar';
+            $chartDataArray['links'] = $links;
+
+            $stackDataArray[] = $chartDataArray;
+        }
+
+        if( count($values) == 0 ) {
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
+        }
+
+        $chartsArray = array(
+            'layout' => $layoutArray,
+            'data' => $stackDataArray
+        );
+
+        return $chartsArray;
+    }
+
+    //Main function to get chart data called by controller singleChartAction ("/single-chart/")
+    public function getDashboardChart( $parametersArr ) {
+
+        //ini_set('memory_limit', '30000M');
+        ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
+
+//        $startDate = $request->query->get('startDate');
+//        $endDate = $request->query->get('endDate');
+//        $projectSpecialty = $request->query->get('projectSpecialty');
+//        $showLimited = $request->query->get('showLimited');
+//        $chartType = $request->query->get('chartType');
+//        $productservice = $request->query->get('productservice');
+//        $quantityLimit = $request->query->get('quantityLimit');
+
+
+        $startDate = $parametersArr['startDate'];
+        $endDate = $parametersArr['endDate'];
+        $projectSpecialty = $parametersArr['projectSpecialty'];
+        $showLimited = $parametersArr['showLimited'];
+        $chartType = $parametersArr['chartType'];
+        $productservice = $parametersArr['productservice'];
+        $quantityLimit = $parametersArr['quantityLimit'];
+
+
+        //echo "quantityLimit=$quantityLimit<br>";
+        //echo "showLimited=$showLimited<br>";
+//        if( $quantityLimit ) {
+//            $this->quantityLimit = $quantityLimit;
+//        }
+
+        //dump($request->query);
+        //echo "startDate=".$startDate."<br>";
+        //echo "endDate=".$endDate."<br>";
+        //echo "projectSpecialty=".$projectSpecialty."<br>";
+        //exit('');
+
+        $now = new \DateTime('now');
+
+        if( !$startDate ) {
+            //set to 1900
+            //$startDate = "01/01/1900"; //10/31/2017 to DateTime
+            $startDate = $now->modify('-1 year')->format('m/d/Y');
+        }
+        if( !$endDate ) {
+            //set to today
+            $endDate = $now->format('m/d/Y');
+        }
+
+        //echo "start=".$startDate."<br>";
+        //echo "end=".$endDate."<br>";
+
+        if( $startDate ) {
+            $startDate = date_create_from_format('m/d/Y', $startDate); //10/31/2017 to DateTime
+        }
+        if( $endDate ) {
+            $endDate = date_create_from_format('m/d/Y', $endDate); //10/31/2017 to DateTime
+        }
+
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
+        }
+        //echo "start=".$startDate->format('m/d/Y')."<br>";
+        //echo "end=".$endDate->format('m/d/Y')."<br>";
+
+        $projectSpecialtyObjects = array();
+        //echo "projectSpecialty=".$projectSpecialty."<br>";
+        if( $projectSpecialty != 0 ) {
+            //echo "projectSpecialty=".$projectSpecialty."<br>";
+            $projectSpecialtyObject = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObjects[] = $projectSpecialtyObject;
+        }
+        //exit('1');
+
+        $filterArr = array(
+            'startDate'=>$startDate,
+            'endDate'=>$endDate,
+            'projectSpecialtyObjects' => $projectSpecialtyObjects,
+            'showLimited' => $showLimited,
+            'quantityLimit'=>$quantityLimit,
+            'funded' => null
+        );
+
+        $layoutArray = array(
+            'height' => $this->height,
+            'width' => $this->width,
+        );
+
+        //echo "startDate=".$startDate."<br>";
+
+        $titleCount = 0;
+        $chartName = $this->getChartTypeByValue($chartType);
+
+//        //TODO: add project specialty types according to the enabled specialties.
+//        // Replace [[projectSpecialties]] by $transresUtil->getAllowedProjectSpecialty($user)
+//        if( strpos($chartName, "[[projectSpecialties]]") !== false ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty();
+//            $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+//            //$projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+//            $projectSpecialtyAllowedStr = implode(", ", $projectSpecialtyAllowedArr);
+//            $chartName = str_replace("[[projectSpecialties]]", $projectSpecialtyAllowedStr);
+//        }
+
+        $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
+
+        $chartsArray = null;
+        $warningNoData = null;
+
+        //1. Principle Investigators by Affiliation (linked)
+        if( $chartType == "pi-by-affiliation" ) {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            //$piWcmPathologyCounter = 0;
+            //$piWcmCounter = 0;
+            //$piOtherCounter = 0;
+            $departmentAbbreviation = "Department";
+            $institutionAbbreviation = "Institution";
+            $institution = null;
+            $department = $userSecUtil->getSiteSettingParameter('transresDashboardInstitution');
+            if( $department ) {
+                $departmentAbbreviation = $department."";
+                $institution = $department->getParent();
+                if( $institution ) {
+                    $institutionAbbreviation = $institution."";
+                }
+            }
+
+            $projectsPerPi1 = array();
+            $projectsPerPi2 = array();
+            $projectsPerPi3 = array();
+            $totalProjects = 0;
+            $projectsCount1 = 0;
+            $projectsCount2 = 0;
+            $projectsCount3 = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            //echo "Projects count=".count($projects)."<br>";
+
+            foreach($projects as $project) {
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
+                $count1 = false;
+                $count2 = false;
+                $count3 = false;
+
+                foreach ($pis as $pi) {
+                    //1. Principle Investigators by Affiliation
+                    if( $this->isUserBelongsToInstitution($pi,$department) ) {
+                        //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
+                        //$piWcmPathologyCounter++;
+                        $count1 = true;
+                        $projectsPerPi1[] = $pi->getId();
+                        //$totalProjects++;
+                        //echo $totalProjects."(WCM Pathology Faculty): PI=$pi; Project ID=".$project->getId()."<br>";
+                    }
+                    elseif ( $this->isUserBelongsToInstitution($pi,$institution) ) {
+                        //WCM Other Departmental Faculty - WCM institution
+                        //Non-WCM Pathology faculty PIs
+                        //$piWcmCounter++;
+                        $count2 = true;
+                        $projectsPerPi2[] = $pi->getId();
+                        //$totalProjects++;
+                        //echo $totalProjects."(Non-WCM Pathology faculty): PI=$pi; Project ID=".$project->getId()."<br>";
+                    } else {
+                        //Other Institutions
+                        //$piOtherCounter++;
+                        $count3 = true;
+                        $projectsPerPi3[] = $pi->getId();
+                    }
+
+                }//foreach pi
+
+                if( $count1 ) {
+                    $projectsCount1++;
+                }
+                if( $count2 ) {
+                    $projectsCount2++;
+                }
+                if( $count3 ) {
+                    $projectsCount3++;
+                }
+
+            }//foreach project
+            //exit('111');
+
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $links = array();
+
+            //////////// WCM Pathology Faculty ////////////
+            $projectsPerPi1 = array_unique($projectsPerPi1);
+            $piWcmPathologyCounter = count($projectsPerPi1);
+
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi1 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF WCM Pathology Faculty ////////////
+
+            //////////// Non-WCM Pathology faculty PIs ////////////
+            $projectsPerPi2 = array_unique($projectsPerPi2);
+            $piWcmCounter = count($projectsPerPi2);
+
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi2 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Non-WCM Pathology faculty PIs ////////////
+
+            //////////// Other Institutions ////////////
+            $projectsPerPi3 = array_unique($projectsPerPi3);
+            $piOtherCounter = count($projectsPerPi3);
+
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                //'filter[]' => $projectSpecialtyObjects
+            );
+            $userIndex = 0;
+            foreach($projectsPerPi3 as $thisPi) {
+                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                $userIndex++;
+            }
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Other Institutions ///////////////
+
+            $titleTotal = $piWcmPathologyCounter + $piWcmCounter + $piOtherCounter;
+            $chartName = $this->getTitleWithTotal($chartName,$titleTotal,null,"PIs total");
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName //"1. Principle Investigators by Affiliation"
+            );
+
+            //$institutionAbbreviation = "WCM";
+            //$departmentAbbreviation = "Pathology";
+            //$piWcmPathologyCounter = 2;
+            //$piWcmCounter = 5;
+
+            $instName = $institutionAbbreviation . " " . $departmentAbbreviation;
+
+            //WCMC pathology faculty PIs with 134 projects: 26
+            //Non-WCMC pathology faculty PIs with 211 projects: 37
+            $labels = array(
+                "$instName faculty PIs with ".$projectsCount1." projects: ".$piWcmPathologyCounter,
+                //"$institutionAbbreviation Other Departmental faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
+                "Non-".$instName." faculty PIs with ".$projectsCount2." projects: ".$piWcmCounter,
+                "Other Institutions' faculty PIs with ".$projectsCount3." projects: ".$piOtherCounter
+            );
+
+            $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
+            //$values = array($piWcmPathologyCounter,$piWcmCounter);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            //$chartDataArray["textinfo"] = "value";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
+
+            //links
+            $chartDataArray["links"] = $links;
+
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+        }
+
+        //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+        //project's list might show the different matching projects, because in the filter principalInvestigators
+        // are filtered by $dql->andWhere("principalInvestigators.id IN (:principalInvestigators) OR principalIrbInvestigator.id IN (:principalInvestigators)");
+        if( $chartType == "projects-per-pi" ) {
+
+            $piProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            //echo "projects=".count($projects)."<br>";
+
+            foreach($projects as $project) {
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
+                foreach ($pis as $pi) {
+                    $userName = $pi->getUsernameOptimal();
+                    $userId = $pi->getId();
+
+                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+                    if( isset($piProjectCountArr[$userId]) && isset($piProjectCountArr[$userId]['value']) ) {
+                        $count = $piProjectCountArr[$userId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $piProjectCountArr[$userId]['value'] = $count;
+                    $piProjectCountArr[$userId]['label'] = $userName;
+                    $piProjectCountArr[$userId]['objectid'] = $userId;
+                    $piProjectCountArr[$userId]['pi'] = $userId;
+                    $piProjectCountArr[$userId]['show-path'] = "project";
+                }
+
+                $titleCount++;
+            }
+            //exit('111');
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piProjectCountTopArr = $this->getTopMultiArray($piProjectCountArr,$showOther,$quantityLimit); // getTopMultiArray(
+            $filterArr['funded'] = null;
+
+            //135 project requests (129 unique) total
+            $totalSegmentCount = $this->getTotalSegmentCount($piProjectCountTopArr);
+
+            //$chartName = $chartName . " - " . $totalCount . " total";
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            //Projects per PI
+            //                                           $dataArr,              $title,                                $type='pie', $layoutArray=null, $valuePrefixLabel=null
+            $chartsArray = $this->getChartByMultiArray( $piProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
+        }
+        ///////////////// EOF 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) /////////////////
+
+        // 3. Total number of Funded Projects per PI (Top 10)
+        if( $chartType == "funded-projects-per-pi" ) {
+            $piFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                if( $fundingNumber ) {
+
+                    //$pis = $project->getPrincipalInvestigators();
+                    $pis = $project->getAllPrincipalInvestigators();
+                    foreach ($pis as $pi) {
+                        $userName = $pi->getUsernameOptimal();
+                        $userId = $pi->getId();
+
+                        if (isset($piFundedProjectCountArr[$userId]) && isset($piFundedProjectCountArr[$userId]['value'])) {
+                            $count = $piFundedProjectCountArr[$userId]['value'] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $piFundedProjectCountArr[$userId]['value'] = $count;
+                        $piFundedProjectCountArr[$userId]['label'] = $userName;
+                        $piFundedProjectCountArr[$userId]['objectid'] = $userId;
+                        $piFundedProjectCountArr[$userId]['pi'] = $userId;
+                        $piFundedProjectCountArr[$userId]['show-path'] = "project";
+
+                        //$titleCount = $titleCount + $count;
+
+                    }//foreach $pis
+
+                    $titleCount++;
+                }//if
+
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piFundedProjectCountTopArr = $this->getTopMultiArray($piFundedProjectCountArr,$showOther,$quantityLimit);
+
+            $totalSegmentCount = $this->getTotalSegmentCount($piFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChartByMultiArray( $piFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
+
+        }
+        ///////////////// EOF 3. Total number of Funded Projects per PI (Top 10) /////////////////
+
+        //4. Total number of Non-Funded Projects per PI (Top 10)
+        if( $chartType == "nonfunded-projects-per-pi" ) {
+            $piUnFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+
+                if( $fundingNumber ) {
+                    //do nothing
+                } else {
+
+                    //$pis = $project->getPrincipalInvestigators();
+                    $pis = $project->getAllPrincipalInvestigators();
+                    foreach ($pis as $pi) {
+                        $userName = $pi->getUsernameOptimal();
+                        $userId = $pi->getId();
+
+                        if (isset($piUnFundedProjectCountArr[$userId]) && isset($piUnFundedProjectCountArr[$userId]['value'])) {
+                            $count = $piUnFundedProjectCountArr[$userId]['value'] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $piUnFundedProjectCountArr[$userId]['value'] = $count;
+                        $piUnFundedProjectCountArr[$userId]['label'] = $userName;
+                        $piUnFundedProjectCountArr[$userId]['objectid'] = $userId;
+                        $piUnFundedProjectCountArr[$userId]['pi'] = $userId;
+                        $piUnFundedProjectCountArr[$userId]['show-path'] = "project";
+
+                        //$titleCount = $titleCount + $count;
+                    }//foreach $pis
+
+                    $titleCount++;
+                }
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $piUnFundedProjectCountTopArr = $this->getTopMultiArray($piUnFundedProjectCountArr,$showOther,$quantityLimit);
+
+            $totalSegmentCount = $this->getTotalSegmentCount($piUnFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            $filterArr['funded'] = false;
+            $chartsArray = $this->getChartByMultiArray( $piUnFundedProjectCountTopArr, $filterArr, $chartName,"pie",null," : ","percent+label");
+        }
+        ///////////////// EOF 4. Total number of Non-Funded Projects per PI (Top 10) /////////////////
+
+        //5. Total Number of Projects per Pathologist Involved (Top 10)
+        if( $chartType == "projects-per-pathologist-involved" ) {
+            $pathologistProjectCountArr = array();
+            //$pathologistProjectCountMultiArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $pathologists = $project->getPathologists();
+                foreach ($pathologists as $pathologist) {
+                    $userName = $pathologist->getUsernameOptimal();
+//                    $userId = $pathologist->getId();
+//                    //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+//                    if( isset($pathologistProjectCountMultiArr[$userId]) && isset($pathologistProjectCountMultiArr[$userId]['value']) ) {
+//                        $count = $pathologistProjectCountMultiArr[$userId]['value'] + 1;
+//                    } else {
+//                        $count = 1;
+//                    }
+//                    $pathologistProjectCountMultiArr[$userId]['value'] = $count;
+//                    $pathologistProjectCountMultiArr[$userId]['label'] = $userName;
+//                    $pathologistProjectCountMultiArr[$userId]['objectid'] = $userId;
+//                    $pathologistProjectCountMultiArr[$userId]['pi'] = $userId;
+//                    //$pathologistProjectCountMultiArr[$userId]['show-path'] = "project";
+
+                    if (isset($pathologistProjectCountArr[$userName])) {
+                        $count = $pathologistProjectCountArr[$userName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $pathologistProjectCountArr[$userName] = $count;
+
+                    //$titleCount = $titleCount + $count;
+                }
+
+                $titleCount++;
+            }
+
+//            $showOther = $this->getOtherStr($showLimited,"Pathologist Involved");
+//            $piProjectCountMultiTopArr = $this->getTopMultiArray($pathologistProjectCountMultiArr,$showOther); // getTopMultiArray(
+//            $filterArr['funded'] = null;
+//            $chartsArray = $this->getChartByMultiArray( $piProjectCountMultiTopArr, $filterArr, "2a. Total number of projects per Pathologist Involved (Top 10)","pie",null," : ");
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $pathologistProjectCountTopArr = $this->getTopArray($pathologistProjectCountArr,$showOther,$quantityLimit);
+
+            $totalSegmentCount = $this->getTotalSegmentCount($pathologistProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            $chartsArray = $this->getChart($pathologistProjectCountTopArr,$chartName,'pie',$layoutArray," : ",null,null,"percent+label");
+
+        }
+        ///////////////// EOF 2a. Total number of projects per Pathologist Involved (Top 10) /////////////////
+        // 6. Total number of Funded Projects per Pathologist Involved (Top 10)
+        if( $chartType == "funded-projects-per-pathologist-involved" ) {
+            $pathologistFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+                if( $fundingNumber ) {
+
+                    $pathologists = $project->getPathologists();
+                    foreach ($pathologists as $pathologist) {
+                        $userName = $pathologist->getUsernameOptimal();
+                        if (isset($pathologistFundedProjectCountArr[$userName])) {
+                            $count = $pathologistFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistFundedProjectCountArr[$userName] = $count;
+                    }//foreach $pathologists
+
+                    $titleCount++;
+                }
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $pathologistFundedProjectCountTopArr = $this->getTopArray($pathologistFundedProjectCountArr,$showOther,$quantityLimit);
+
+            $totalSegmentCount = $this->getTotalSegmentCount($pathologistFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChart($pathologistFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
+        }
+        ///////////////// EOF 3a. Total number of Funded Projects per Pathologist Involved (Top 10) /////////////////
+        // 7. Total number of Non-Funded Projects per Pathologist Involved (Top 10)
+        if( $chartType == "nonfunded-projects-per-pathologist-involved" ) {
+            $pathologistNonFundedProjectCountArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($projects as $project) {
+                $fundingNumber = $project->getFunded();
+                if( $fundingNumber ) {
+                    //do nothing
+                } else {
+
+                    $pathologists = $project->getPathologists();
+                    foreach ($pathologists as $pathologist) {
+                        $userName = $pathologist->getUsernameOptimal();
+
+                        if (isset($pathologistNonFundedProjectCountArr[$userName])) {
+                            $count = $pathologistNonFundedProjectCountArr[$userName] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $pathologistNonFundedProjectCountArr[$userName] = $count;
+
+                        $titleCount = $titleCount + $count;
+                    }//foreach $pathologists
+
+                    $titleCount++;
+                }
+            }//foreach $projects
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $pathologistNonFundedProjectCountTopArr = $this->getTopArray($pathologistNonFundedProjectCountArr,$showOther,$quantityLimit);
+
+            $totalSegmentCount = $this->getTotalSegmentCount($pathologistNonFundedProjectCountTopArr);
+            $chartName = $this->getTitleWithTotal($chartName,$totalSegmentCount,null,"project requests ($titleCount unique) total");
+
+            //$filterArr['funded'] = true;
+            $chartsArray = $this->getChart($pathologistNonFundedProjectCountTopArr, $chartName,"pie",$layoutArray," : ",null,null,"percent+label");
+        }
+        ///////////////// EOF 4a. Total number of Non-Funded Projects per Pathologist Involved (Top 10) /////////////////
+
+
+        //Work request statistics
+        //8. Total Number of Work Requests by Funding Source
+        if( $chartType == "requests-by-funding-source" ) {
+
+            $fundedRequestCount = 0;
+            $notFundedRequestCount = 0;
+
+            $fundedProjectArr = array();
+            $unfundedProjectArr = array();
+
+            $testArr = array();
+            $testing = false;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectId = $project->getId();
+                $fundedAccountNumber = $transRequest->getFundedAccountNumber();
+                $fundedAccountNumber = trim($fundedAccountNumber);
+
+                if($testing) {
+                    //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";
+                    $testArr[$transRequest->getOid()]++;
+                    //if( $fundedAccountNumber && strval($fundedAccountNumber) !== strval(intval($fundedAccountNumber)) ) {
+                    if ($fundedAccountNumber && filter_var($fundedAccountNumber, FILTER_VALIDATE_INT) === false) {
+                        echo $transRequest->getOid() . ": NOT INTEGER: [$fundedAccountNumber] <br>";
+                    }
+                }
+
+                if( $fundedAccountNumber ) {
+                    $fundedRequestCount++;
+                    $fundedProjectArr[$projectId] = 1;
+                } else {
+                    $notFundedRequestCount++;
+                    $unfundedProjectArr[$projectId] = 1;
+                }
+            }//foreach
+
+            if($testing) {
+                foreach ($testArr as $reqId => $reqCount) {
+                    //echo $reqId." count=".$reqCount."<br>";
+                    if ($reqCount != 1) {
+                        echo $reqId . " !!!count=" . $reqCount . "<br>";
+                    }
+                }
+                //print_r($testArr);
+                exit("fundedRequestCount=$fundedRequestCount; notFundedRequestCount=$notFundedRequestCount");
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$fundedRequestCount+$notFundedRequestCount,null,"work requests total");
+
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName //"5. Total Number of Work Requests by Funding Source"
+            );
+
+            $fundedProjectCount = 0;
+            foreach($fundedProjectArr as $projectCount) {
+                $fundedProjectCount = $fundedProjectCount + $projectCount;
+            }
+
+            $unfundedProjectCount = 0;
+            foreach($unfundedProjectArr as $projectCount) {
+                $unfundedProjectCount = $unfundedProjectCount + $projectCount;
+            }
+
+            //Work Requests for 154 Funded Projects: 1298
+            $fundedLabel = "Work Requests for $fundedProjectCount Funded Projects"." : ".$fundedRequestCount;
+            //Work Requests for 12 Non-Funded Projects: 445
+            $unfundedLabel = "Work Requests for $unfundedProjectCount Non-Funded Projects"." : ".$notFundedRequestCount;
+
+            $labels = array($fundedLabel,$unfundedLabel);
+            $values = array($fundedRequestCount,$notFundedRequestCount);
+
+            $links = array();
+            //////////// Funded ////////////
+            $linkFilterArr = array(
+                'filter[progressState][0]' => 'active',
+                'filter[progressState][1]' => 'completed',
+                'filter[progressState][2]' => 'completedNotified',
+                'filter[progressState][3]' => 'pendingInvestigatorInput',
+                'filter[progressState][4]' => 'pendingHistology',
+                'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                'filter[progressState][6]' => 'pendingMolecular',
+                'filter[progressState][7]' => 'pendingCaseRetrieval',
+                'filter[progressState][8]' => 'pendingTissueMicroArray',
+                'filter[progressState][9]' => 'pendingSlideScanning',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[fundingType]' => 'Funded'
+            );
+
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_request_index_filter',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Funded ////////////
+            //////////// Non-Funded ////////////
+            $linkFilterArr = array(
+                'filter[progressState][0]' => 'active',
+                'filter[progressState][1]' => 'completed',
+                'filter[progressState][2]' => 'completedNotified',
+                'filter[progressState][3]' => 'pendingInvestigatorInput',
+                'filter[progressState][4]' => 'pendingHistology',
+                'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                'filter[progressState][6]' => 'pendingMolecular',
+                'filter[progressState][7]' => 'pendingCaseRetrieval',
+                'filter[progressState][8]' => 'pendingTissueMicroArray',
+                'filter[progressState][9]' => 'pendingSlideScanning',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+                'filter[fundingType]' => 'Non-Funded'
+            );
+
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_request_index_filter',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $links[] = $link;
+            //////////// EOF Non-Funded ////////////
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
+            $chartDataArray["links"] = $links;
+
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+        }
+
+        //9. Projects with Most Work Requests (Top 10)
+        if( $chartType == "requests-per-project" ) {
+            $requestPerProjectArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                $project = $transRequest->getProject();
+                $projectId = $project->getId();
+                $piIdArr = array();
+
+                //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                $projectIndex = $project->getOid(false);
+                $piArr = array();
+                foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                    $piArr[] = $pi->getUsernameOptimal();
+                }
+                if( count($piArr) > 0 ) {
+                    $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                }
+
+                if( isset($requestPerProjectArr[$projectId]) && isset($requestPerProjectArr[$projectId]['value']) ) {
+                    $count = $requestPerProjectArr[$projectId]['value'] + 1;
+                } else {
+                    $count = 1;
+                }
+                $requestPerProjectArr[$projectId]['value'] = $count;
+                $requestPerProjectArr[$projectId]['label'] = $projectIndex;
+                $requestPerProjectArr[$projectId]['objectid'] = $projectId;
+                $requestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                $requestPerProjectArr[$projectId]['show-path'] = "request";
+
+                $titleCount++;
+            }//foreach
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $requestPerProjectTopArr = $this->getTopMultiArray($requestPerProjectArr,$showOther,$quantityLimit);
+            $filterArr['funded'] = null;
+            $chartsArray = $this->getChartByMultiArray($requestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
+        }
+
+        //10. Funded Projects with Most Work Requests (Top 10)
+        if( $chartType == "requests-per-funded-projects" ) {
+            $fundedRequestPerProjectArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    $project = $transRequest->getProject();
+                    $projectId = $project->getId();
+                    $piIdArr = array();
+
+                    //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                    $projectIndex = $project->getOid(false);
+                    $piArr = array();
+                    foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                        $piArr[] = $pi->getUsernameOptimal();
+                    }
+                    if( count($piArr) > 0 ) {
+                        $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                    }
+
+                    if( isset($fundedRequestPerProjectArr[$projectId]) && isset($fundedRequestPerProjectArr[$projectId]['value']) ) {
+                        $count = $fundedRequestPerProjectArr[$projectId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $fundedRequestPerProjectArr[$projectId]['value'] = $count;
+                    $fundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                    $fundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                    $fundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                    $fundedRequestPerProjectArr[$projectId]['show-path'] = "request";
+                    $titleCount++;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $fundedRequestPerProjectTopArr = $this->getTopMultiArray($fundedRequestPerProjectArr,$showOther,$quantityLimit);
+            $filterArr['funded'] = true;
+            $chartsArray = $this->getChartByMultiArray( $fundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
+        }
+
+        //11. Non-Funded Projects with Most Work Requests (Top 10)
+        if( $chartType == "requests-per-nonfunded-projects" ) {
+            $unFundedRequestPerProjectArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    $project = $transRequest->getProject();
+                    $projectId = $project->getId();
+                    $piIdArr = array();
+
+                    //in the legend after the project ID show the name of the PI: projectID by username: XXXX
+                    $projectIndex = $project->getOid(false);
+                    $piArr = array();
+                    foreach($transRequest->getPrincipalInvestigators() as $pi) {
+                        $piArr[] = $pi->getUsernameOptimal();
+                    }
+                    if( count($piArr) > 0 ) {
+                        $projectIndex = $projectIndex . " by " . implode(", ",$piArr);
+                    }
+
+                    if( isset($unFundedRequestPerProjectArr[$projectId]) && isset($unFundedRequestPerProjectArr[$projectId]['value']) ) {
+                        $count = $unFundedRequestPerProjectArr[$projectId]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $unFundedRequestPerProjectArr[$projectId]['value'] = $count;
+                    $unFundedRequestPerProjectArr[$projectId]['label'] = $projectIndex;
+                    $unFundedRequestPerProjectArr[$projectId]['objectid'] = $projectId;
+                    $unFundedRequestPerProjectArr[$projectId]['pi'] = $piIdArr;
+                    $unFundedRequestPerProjectArr[$projectId]['show-path'] = "request";
+                    $titleCount++;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $unFundedRequestPerProjectTopArr = $this->getTopMultiArray($unFundedRequestPerProjectArr,$showOther,$quantityLimit);
+            $filterArr['funded'] = false;
+            $chartsArray = $this->getChartByMultiArray( $unFundedRequestPerProjectTopArr, $filterArr, $chartName,"pie",$layoutArray," : ","percent+label");
+        }
+
+        //Work request statistics: Products/Services
+        //12. Service Productivity by Products/Services (Top 35)
+        if( $chartType == "service-productivity-by-service" ) {
+            $quantityCountByCategoryArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //9. TRP Service Productivity by Category Types (Top 10)
+                        if (isset($quantityCountByCategoryArr[$categoryIndex])) {
+                            $count = $quantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                        } else {
+                            $count = $productQuantity;
+                        }
+                        $quantityCountByCategoryArr[$categoryIndex] = $count;
+                        /////////////
+                        $titleCount = $titleCount + $productQuantity;
+                    }
+                }
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
+            //                                              $piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50, $limit=10
+            $quantityCountByCategoryTopArr = $this->getTopArray(
+                $quantityCountByCategoryArr,    //$dataCountArr
+                $showOther,                     //$showOthers
+                $quantityLimit
+            //array(),                        //$descriptionArr=array()
+            //50                              //$maxLen=50
+            //35                              //$limit
+            );
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+            $chartsArray = $this->getChart($quantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
+        }
+
+        //13. Service Productivity for Funded Projects (Top 25)
+        if( $chartType == "service-productivity-by-service-per-funded-projects" ) {
+            $fundedQuantityCountByCategoryArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //10. Service Productivity for Funded Projects (Top 25)
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //10. Service Productivity for Funded Projects (Top 25)
+                            if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                            $titleCount = $titleCount + $productQuantity;
+                        }
+                    }
+                }
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
+            $fundedQuantityCountByCategoryTopArr = $this->getTopArray(
+                $fundedQuantityCountByCategoryArr,
+                $showOther,
+                $quantityLimit
+            //array(),                        //$descriptionArr=array()
+            //50,                             //$maxLen=50
+            //25                              //$limit
+            );
+            $chartsArray = $this->getChart($fundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
+        }
+
+        //14. Service Productivity for Non-Funded Projects (Top 10)
+        if( $chartType == "service-productivity-by-service-per-nonfunded-projects" ) {
+            $unFundedQuantityCountByCategoryArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        //10. TRP Service Productivity for Funded Projects (Top 10)
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //do nothing
+                        } else {
+                            //11. Service Productivity for Non-Funded Projects (Top 10)
+                            if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                            $titleCount = $titleCount + $productQuantity;
+                        }
+                    }
+                }
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            $showOther = $this->getOtherStr($showLimited,"items");
+            $unFundedQuantityCountByCategoryTopArr = $this->getTopArray(
+                $unFundedQuantityCountByCategoryArr,
+                $showOther,
+                $quantityLimit
+            //array(),                        //$descriptionArr=array()
+            //50,                             //$maxLen=50
+            //25                              //$limit
+            );
+            $chartsArray = $this->getChart($unFundedQuantityCountByCategoryTopArr, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
+        }
+
+        //"15. Service Productivity: Items for Funded vs Non-Funded Projects" => "service-productivity-by-service-compare-funded-vs-nonfunded-projects"
+        if( $chartType == "service-productivity-by-service-compare-funded-vs-nonfunded-projects" ) {
+            $fundedQuantityCountByCategoryArr = array();
+            $unFundedQuantityCountByCategoryArr = array();
+            $stackDataSumArray = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+                foreach($transRequest->getProducts() as $product) {
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getProductIdAndName();
+                        $productQuantity = $product->getQuantity();
+                        if( $transRequest->getFundedAccountNumber() ) {
+                            //10. TRP Service Productivity for Funded Projects (Top 10)
+                            if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        } else {
+                            //11. Service Productivity for Non-Funded Projects (Top 10)
+                            if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
+                                $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + $productQuantity;
+                            } else {
+                                $count = $productQuantity;
+                            }
+                            $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                        }
+                        $titleCount = $titleCount + $productQuantity;
+
+                        if( isset($stackDataSumArray[$categoryIndex]) ) {
+                            $sum = $stackDataSumArray[$categoryIndex] + $productQuantity;
+                        } else {
+                            $sum = $productQuantity;
+                        }
+                        $stackDataSumArray[$categoryIndex] = $sum;
+                    }
+                }
+            }//foreach $requests
+
+            //sort by value in key=>value
+            arsort($stackDataSumArray);
+            $fundedSortedArr = array();
+            $unfundedSortedArr = array();
+            foreach($stackDataSumArray as $categoryIndex=>$count) {
+                //echo $categoryIndex."=".$count."<br>";
+
+                if( array_key_exists($categoryIndex,$fundedQuantityCountByCategoryArr) ) {
+                    $fundedSortedArr[$categoryIndex] = $fundedQuantityCountByCategoryArr[$categoryIndex];
+                }
+
+                if( array_key_exists($categoryIndex,$unFundedQuantityCountByCategoryArr) ) {
+                    $unfundedSortedArr[$categoryIndex] = $unFundedQuantityCountByCategoryArr[$categoryIndex];
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"items total");
+            //$showOther = $this->getOtherStr($showLimited,"projects");
+            //$fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr,$showOther);
+            //$unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr,$showOther);
+
+            //increase vertical
+            $layoutArray = array(
+                'height' => $this->height*2,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 800)
+            );
+
+            $combinedTrpData = array();
+            $combinedTrpData['Funded'] = $fundedSortedArr; //$fundedQuantityCountByCategoryArr;
+            $combinedTrpData['Not-Funded'] = $unfundedSortedArr; //$unFundedQuantityCountByCategoryArr;
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack", $layoutArray);
+        }
+
+        //16. Total Fees of Items Ordered for Funded vs Non-Funded Projects
+        if( $chartType == "fees-by-requests" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $subtotalFees = 0;
+            $fundedTotalFees = 0;
+            $unFundedTotalFees = 0;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                $subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    $fundedTotalFees = $fundedTotalFees + $subtotalFee;
+                } else {
+                    $unFundedTotalFees = $unFundedTotalFees + $subtotalFee;
+                }
+
+                $titleCount++;
+            }//foreach $requests
+
+            //12. Total Fees of Items Ordered for Funded vs Non-Funded Projects (Total $)
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+            $subtotalFees = $this->getNumberFormat($subtotalFees);
+
+            $chartName = $chartName. " (Total $".$subtotalFees.")";
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName
+            );
+
+            $fundedTotalFeesLabel = $this->getNumberFormat($fundedTotalFees);
+            $unFundedTotalFeesLabel = $this->getNumberFormat($unFundedTotalFees);
+
+            $labels = array('Funded : $'.$fundedTotalFeesLabel,'Non-Funded : $'.$unFundedTotalFeesLabel);
+            $values = array($fundedTotalFees,$unFundedTotalFees);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+            /////////////////////
+
+        }
+
+        //17. Funded Projects with the Highest Total Fees (Top 10)
+        if( $chartType == "fees-by-requests-per-funded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $fundedTotalFeesByRequestArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                //17. Funded Projects with the Highest Total Fees (Top 10)
+                if( $transRequest->getFundedAccountNumber() ) {
+                    if (isset($fundedTotalFeesByRequestArr[$projectIndex])) {
+                        $totalFee = $fundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    //$totalFee = $this->getNumberFormat($totalFee);
+                    $fundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $subtotalFee;
+                }
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($fundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //18. Non-Funded Projects with the Highest Total Fees (Top 10)
+        if( $chartType == "fees-by-requests-per-nonfunded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $unFundedTotalFeesByRequestArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+
+            foreach($requests as $transRequest) {
+
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //echo "projectIndex=[".$project->getOid()."] <br>";
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
+                        $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    //$totalFee = $this->getNumberFormat($totalFee);
+                    $unFundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $subtotalFee;
+                }
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($unFundedTotalFeesByRequestTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //19. Total Fees per Investigator (Top 10)
+        if( $chartType == "fees-by-investigators" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $totalFeesByInvestigatorArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                //15. Total Fees per Investigator (Top 10)
+                if (isset($totalFeesByInvestigatorArr[$investigatorIndex])) {
+                    $totalFee = $totalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                } else {
+                    $totalFee = $subtotalFee;
+                }
+                //$totalFee = $this->getNumberFormat($totalFee);
+                $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+                /////////////////////////////
+
+                $titleCount = $titleCount + $subtotalFee;
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //20. Total Fees per Investigator (Funded) (Top 10)
+        if( $chartType == "fees-by-investigators-per-funded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $fundedTotalFeesByInvestigatorArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    if (isset($fundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                        $totalFee = $fundedTotalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    //$totalFee = $this->getNumberFormat($totalFee);
+                    $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $subtotalFee;
+                }
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($fundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //21. Total Fees per Investigator (Non-Funded) (Top 10)
+        if( $chartType == "fees-by-investigators-per-nonfunded-projects" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $unFundedTotalFeesByInvestigatorArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    //17. Total Fees per Investigator (non-Funded) (Top 10)
+                    if (isset($unFundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                        $totalFee = $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                    } else {
+                        $totalFee = $subtotalFee;
+                    }
+                    //$totalFee = $this->getNumberFormat($totalFee);
+                    $unFundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $subtotalFee;
+                }
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr,$showOther,$quantityLimit); //21vs25
+            $chartsArray = $this->getChart($unFundedTotalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //"22. Paid Invoices by Month" =>                              "fees-by-invoices-paid-per-month",
+        if( $chartType == "fees-by-invoices-paid-per-month" ) {
+
+            $paidArr = array();
+            $descriptionArr = array();
+
+            $totalPaidInvoiceFee = 0;
+
+            $invoiceStates = array("Paid in Full","Paid Partially");
+            $compareType = "date when status changed to paid in full";
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                //echo "startDateLabel=".$startDateLabel."<br>";
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
+                $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
+                //get invoices by paidDate
+
+                $startDate->modify( 'first day of next month' );
+
+                foreach( $invoices as $invoice ) {
+
+                    $paidThisInvoiceFee = intval($invoice->getPaid());
+
+
+                    if( isset($paidArr[$startDateLabel]) ) {
+                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paidThisInvoiceFee;
+                    } else {
+                        $paidDateInvoiceFee = $paidThisInvoiceFee;
+                    }
+
+                    $paidArr[$startDateLabel] = $paidDateInvoiceFee;
+                    //echo $startDateLabel.": paidThisInvoiceFee=".$paidThisInvoiceFee."<br>";
+                    //echo intval($invoice->getPaid())."<br>";
+
+                    $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paidThisInvoiceFee;
+                }
+
+                $descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
+
+            } while( $startDate < $endDate );
+
+            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."<br>"; //7591754 7.591.754
+            //exit('111');
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
+
+            //increase vertical
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300)
+            );
+
+            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
+            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
+        }
+
+        //23. Generated Invoices by Status for Funded Projects
+        if( $chartType == "fees-by-invoices-per-funded-projects" ) {
+
+            $paidInvoices = 0;
+            $unpaidInvoices = 0;
+            $totalInvoices = 0;
+            $totalFundedPaidFees = 0;
+            $totalFundedDueFees = 0;
+            $totalThisInvoiceVerificationFees = 0;
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $transRequest = $invoice->getTransresRequest();
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+                if ($transRequest->getFundedAccountNumber()) {
+                    if( $invoice->getStatus() == "Paid in Full" || $invoice->getStatus() == "Paid Partially" ) {
+                        $paidInvoices++;
+                    }
+                    if( $invoice->getStatus() == "Unpaid/Issued" ) {
+                        $unpaidInvoices++;
+                    }
+                    $totalInvoices++;
+                    $totalFundedPaidFees = $totalFundedPaidFees + $paidThisInvoiceFee;
+                    $totalFundedDueFees = $totalFundedDueFees + $dueThisInvoiceFee;
+                    $totalThisInvoiceVerificationFees = $totalThisInvoiceVerificationFees + ($paidThisInvoiceFee + $dueThisInvoiceFee);
+                }
+                //////////////////////////////////////////////
+
+            }//foreach invoices
+
+            //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+            //22. Generated Invoices by Status for Funded Projects
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                //'title' => "18. Generated Invoices from Funded Projects (Total invoiced $".$totalThisInvoiceVerificationFees."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+                'title' => $chartName." (Total invoiced $".$this->getNumberFormat($totalThisInvoiceVerificationFees)
+                    ."; Total invoices: ".$totalInvoices.", 'Paid in Full' invoices: ".$paidInvoices.")"
+            );
+
+            $labels = array(
+                $paidInvoices.' Paid Invoices'.' : $'.$this->getNumberFormat($totalFundedPaidFees),                 //78 Paid Invoices: $xx
+                $unpaidInvoices.' Unpaid (Due) Invoices'.' : $'.$this->getNumberFormat($totalFundedDueFees)  //154 Unpaid (Due) Invoices: $xx
+            );
+            $values = array($totalFundedPaidFees,$totalFundedDueFees);
+
+            $chartDataArray['values'] = $values;
+            $chartDataArray['labels'] = $labels;
+            $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+            $chartDataArray['marker'] = array('colors' => array("rgb(44, 160, 44)", "rgb(214, 39, 40)") );
+            $chartDataArray['direction'] = 'clockwise';
+            $chartDataArray["hoverinfo"] = "percent+label";
+            $dataArray[] = $chartDataArray;
+
+            $chartsArray = array(
+                'layout' => $layoutArray,
+                'data' => $dataArray
+            );
+            /////////////////////////////
+        }
+
+        //"24. Generated Invoices by Status for Non-Funded Projects (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects"
+        if( $chartType == "fees-by-invoices-per-nonfunded-projects" ) {
+            $invoicesByProjectArr = array();
+            $invoicesFeesByProjectArr = array();
+            $totalInvoices = 0;
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $projectIndex = $project->getOid(false);
+                //$pis = $project->getPrincipalInvestigators();
+                $pis = $project->getAllPrincipalInvestigators();
+                $piInfoArr = array();
+                foreach( $pis as $pi ) {
+                    if( $pi ) {
+                        $piInfoArr[] = $pi->getUsernameOptimal();
+                    }
+                }
+                if( count($piInfoArr) > 0 ) {
+                    $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+                }
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+
+                //Generated Invoices by Status for Non-Funded Projects
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    //Generated Invoices by Status per Funded Project (Top 10)
+                    if (isset($invoicesByProjectArr[$projectIndex])) {
+                        $count = $invoicesByProjectArr[$projectIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $invoicesByProjectArr[$projectIndex] = $count;
+                    //fees
+                    if (isset($invoicesFeesByProjectArr[$projectIndex])) {
+                        $totalFee = $invoicesFeesByProjectArr[$projectIndex] + $totalThisInvoiceFee;
+                    } else {
+                        $totalFee = $totalThisInvoiceFee;
+                    }
+                    //$totalFee = 123456;
+                    $invoicesFeesByProjectArr[$projectIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $totalThisInvoiceFee;
+                    $totalInvoices++;
+                }
+
+            }//foreach invoices
+
+            //invoice vs invoices
+            $invoiceStr = "invoice";
+            if( $totalInvoices > 1 ) {
+                $invoiceStr = "invoices";
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            //Generated Invoices by Status per Funded Project (Top 10)
+            $showOther = $this->getOtherStr($showLimited,"projects");
+            $invoicesByProjectTopArr = $this->getTopArray($invoicesByProjectArr,$showOther,$quantityLimit);
+            $invoicesFeesByProjectTopArr = $this->getTopArray($invoicesFeesByProjectArr,$showOther,$quantityLimit);
+            //merge two to attach fees to label
+            $invoicesByProjectTopArr = $this->attachSecondValueToFirstLabel($invoicesByProjectTopArr,$invoicesFeesByProjectTopArr," : $");
+            $chartsArray = $this->getChart($invoicesByProjectTopArr,$chartName." (".$totalInvoices." ".$invoiceStr.")",'pie',$layoutArray,null,null,null,"percent+label");
+
+            if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+                $warningNoData = "There are no invoices associated with un-funded project requests during the selected time frame.".
+                    "<br>Chart '$chartName' has not been generated.";
+            }
+        }
+
+        //25. Total Invoiced Amounts by PI (Top 10)
+        if( $chartType == "fees-by-invoices-per-pi" ) {
+            $invoicesFeesByPiArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
+
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $transRequest = $invoice->getTransresRequest();
+
+                if( $invoice ) {
+                    $investigator = $invoice->getPrincipalInvestigator();
+                    if ($investigator) {
+                        $investigatorIndex = $investigator->getUsernameOptimal();
+                    } else {
+                        $submitter = $invoice->getSubmitter();
+                        $investigatorIndex = $submitter->getUsernameOptimal();
+                    }
+                } else {
+                    $pis = $transRequest->getPrincipalInvestigators();
+                    if( count($pis) > 0 ) {
+                        $pi = $pis[0];
+                        $investigatorIndex = $pi->getUsernameOptimal();
+                    }
+                }
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                //24. Generated Invoices by Status per PI (Top 10)
+                //if( $transRequest->getFundedAccountNumber() ) { //TODO: why funded?
+                //Total fees
+                if (isset($invoicesFeesByPiArr[$investigatorIndex])) {
+                    $totalFee = $invoicesFeesByPiArr[$investigatorIndex] + $totalThisInvoiceFee;
+                } else {
+                    $totalFee = $totalThisInvoiceFee;
+                }
+                //$totalFee = 123456;
+                $invoicesFeesByPiArr[$investigatorIndex] = $totalFee;
+
+                //paid
+                if (isset($invoicePaidFeeArr[$investigatorIndex])) {
+                    $totalFee = $invoicePaidFeeArr[$investigatorIndex] + $paidThisInvoiceFee;
+                } else {
+                    $totalFee = $paidThisInvoiceFee;
+                }
+                $invoicePaidFeeArr[$investigatorIndex] = $totalFee;
+
+                //unpaid
+                if (isset($invoiceDueFeeArr[$investigatorIndex])) {
+                    $totalFee = $invoiceDueFeeArr[$investigatorIndex] + $dueThisInvoiceFee;
+                } else {
+                    $totalFee = $dueThisInvoiceFee;
+                }
+                $invoiceDueFeeArr[$investigatorIndex] = $totalFee;
+
+                $titleCount = $titleCount + $totalThisInvoiceFee;
+                $totalInvoices++;
+                //}
+
+            }//foreach invoices
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
+
+            //24. Generated Invoices by Status per PI (Top 10)
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
+            );
+
+            $showOther = $this->getOtherStr($showLimited,"PIs"); //21vs25
+            $invoicesFeesByPiArrTop = $this->getTopArray($invoicesFeesByPiArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            //$invoicesFeesByPiArrTop = $this->addValueToOther($invoicesFeesByPiArrTop);
+
+            $chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray,null,null,null,"percent+label");
+
+            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null
+            //$chartsArray = $this->getChart($invoicesFeesByPiArrTop,$chartName,'pie',$layoutArray," : $",null,null,"percent+label","for-other");
+        }
+
+        //"26. Total Invoiced Amounts of Projects per Pathologist Involved (Top 10)" =>             "fees-by-invoices-per-projects-per-pathologist-involved",
+        if( $chartType == "fees-by-invoices-per-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
+
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                foreach($pathologists as $pathologist) {
+                    $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                    //Total fees
+                    if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                        $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                    } else {
+                        $totalFee = $totalThisInvoiceFee;
+                    }
+                    $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                    //paid
+                    if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                        $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                    } else {
+                        $totalFee = $paidThisInvoiceFee;
+                    }
+                    $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                    //unpaid
+                    if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                        $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                    } else {
+                        $totalFee = $dueThisInvoiceFee;
+                    }
+                    $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+
+                    $titleCount = $titleCount + $totalThisInvoiceFee;
+                }
+
+                $totalInvoices++;
+
+            }//foreach invoices
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
+
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
+            );
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            //$invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+
+        //"27. Total Invoiced Amounts for Funded Projects per Pathologist Involved (Top 10)" =>      "fees-by-invoices-per-funded-projects-per-pathologist-involved"
+        if( $chartType == "fees-by-invoices-per-funded-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
+
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                if ($transRequest->getFundedAccountNumber()) {
+                    foreach ($pathologists as $pathologist) {
+                        $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                        //Total fees
+                        if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                            $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                        } else {
+                            $totalFee = $totalThisInvoiceFee;
+                        }
+                        $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                        //paid
+                        if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                        } else {
+                            $totalFee = $paidThisInvoiceFee;
+                        }
+                        $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                        //unpaid
+                        if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                        } else {
+                            $totalFee = $dueThisInvoiceFee;
+                        }
+                        $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+
+                        $titleCount = $titleCount + $totalThisInvoiceFee;
+                    }
+                    $totalInvoices++;
+                }
+
+            }//foreach invoices
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $chartName = $chartName." (".$totalInvoices." invoices)";
+
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
+            );
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            //$invoicesFeesByPathologistArrTop = $this->addValueToOther($invoicesFeesByPathologistArrTop);
+
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+        ///////////////// EOF "26. Total Invoiced Amounts of Funded Projects per Pathologist Involved (Top 10)" /////////////////
+
+        //"28. Total Invoiced Amounts for Non-Funded Projects per Pathologist Involved (Top 10)" =>  "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved"
+        if( $chartType == "fees-by-invoices-per-nonfunded-projects-per-pathologist-involved" ) {
+            $invoicesFeesByPathologistArr = array();
+            $invoicePaidFeeArr = array();
+            $invoiceDueFeeArr = array();
+            $totalInvoices = 0;
+
+            //get latest invoices Excluding Work requests with status=Canceled and Draft
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects);
+            foreach( $invoices as $invoice ) {
+
+                $totalThisInvoiceFee = intval($invoice->getTotal());
+                $paidThisInvoiceFee = intval($invoice->getPaid());
+                $dueThisInvoiceFee = intval($invoice->getDue());
+
+                $transRequest = $invoice->getTransresRequest();
+                $project = $transRequest->getProject();
+                $pathologists = $project->getPathologists();
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+                    foreach($pathologists as $pathologist) {
+                        $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                        //Total fees
+                        if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                            $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $totalThisInvoiceFee;
+                        } else {
+                            $totalFee = $totalThisInvoiceFee;
+                        }
+                        $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                        //paid
+                        if (isset($invoicePaidFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoicePaidFeeArr[$pathologistIndex] + $paidThisInvoiceFee;
+                        } else {
+                            $totalFee = $paidThisInvoiceFee;
+                        }
+                        $invoicePaidFeeArr[$pathologistIndex] = $totalFee;
+
+                        //unpaid
+                        if (isset($invoiceDueFeeArr[$pathologistIndex])) {
+                            $totalFee = $invoiceDueFeeArr[$pathologistIndex] + $dueThisInvoiceFee;
+                        } else {
+                            $totalFee = $dueThisInvoiceFee;
+                        }
+                        $invoiceDueFeeArr[$pathologistIndex] = $totalFee;
+
+                        $titleCount = $titleCount + $totalThisInvoiceFee;
+                    }
+                    $totalInvoices++;
+                }
+
+            }//foreach invoices
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "paid $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "limegreen",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoicePaidFeeArr
+                ),
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => " : $",
+                    'valuePostfix'  => null,
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueFeeArr
+                ),
+            );
+
+            if( $totalInvoices > 1 ) {
+                $totalInvoicesStr = "invoices";
+            } else {
+                $totalInvoicesStr = "invoice";
+            }
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit,$descriptionArr);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName." (".$totalInvoices." $totalInvoicesStr)",'pie',$layoutArray,null,null,null,"percent+label");
+
+            if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+                $warningNoData = "There are no invoices associated with un-funded project requests that specify an involved pathologist during the selected time frame.".
+                    "<br>Chart '$chartName' has not been generated.";
+            }
+        }
+
+        //"29. Total Fees per Involved Pathologist for Non-Funded Projects (Top 10)" =>  "fees-per-nonfunded-projects-per-pathologist-involved",
+        if( $chartType == "fees-per-nonfunded-projects-per-pathologist-involved" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $invoicesFeesByPathologistArr = array();
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( $transRequest->getFundedAccountNumber() ) {
+                    //do nothing
+                } else {
+
+                    $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+
+                    $project = $transRequest->getProject();
+                    $pathologists = $project->getPathologists();
+
+                    foreach ($pathologists as $pathologist) {
+                        $pathologistIndex = $pathologist->getUsernameOptimal();
+
+                        //Total fees
+                        if (isset($invoicesFeesByPathologistArr[$pathologistIndex])) {
+                            $totalFee = $invoicesFeesByPathologistArr[$pathologistIndex] + $subtotalFee;
+                        } else {
+                            $totalFee = $subtotalFee;
+                        }
+                        $invoicesFeesByPathologistArr[$pathologistIndex] = $totalFee;
+
+                        $titleCount = $titleCount + $subtotalFee;
+                    }
+                }//if
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+
+            $showOther = $this->getOtherStr($showLimited,"pathologists involved");
+            $invoicesFeesByPathologistArrTop = $this->getTopArray($invoicesFeesByPathologistArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($invoicesFeesByPathologistArrTop, $chartName,'pie',$layoutArray,": $");
+        }
+        ///////////// EOF "23. Total Invoiced Amounts of Non-Funded Projects per Pathologist Involved (Top 10)" /////////////
+
+        //"30. Total Number of Projects per Type" => "projects-per-type"
+        if( $chartType == "projects-per-type" ) {
+            $projectTypeArr = array();
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectId = $projectType->getId();
+                    $projectName = $projectType->getName();
+                } else {
+                    $projectId = "No Type";
+                    $projectName = "No Type";;
+                }
+
+                if( isset($projectTypeArr[$projectId]) && isset($projectTypeArr[$projectId]['value']) ) {
+                    $count = $projectTypeArr[$projectId]['value'] + 1;
+                } else {
+                    $count = 1;
+                }
+                $projectTypeArr[$projectId]['value'] = $count;
+                $projectTypeArr[$projectId]['label'] = $projectName;
+                $projectTypeArr[$projectId]['objectid'] = $projectId;
+                $projectTypeArr[$projectId]['pi'] = null;
+                $projectTypeArr[$projectId]['show-path'] = "project-type";
+
+                $titleCount++;
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"projects total");
+
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : ","percent+label");
+        }
+
+
+        //"31. Total Number of Requests per Business Purpose" => "requests-per-business-purpose"
+        if( $chartType == "requests-per-business-purpose" ) {
+            $requestBusinessPurposeArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+                    if (isset($requestBusinessPurposeArr[$businessPurposeName])) {
+                        $count = $requestBusinessPurposeArr[$businessPurposeName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $count;
+
+                    $titleCount++;
+                }
+            }
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"work requests total");
+
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : ",null,null,"percent+label");
+        }
+
+        //"32. Turn-around Statistics: Average number of days to complete a Work Request (based on Completed and Notified requests)" => "turn-around-statistics-days-complete-request"
+        if( $chartType == "turn-around-statistics-days-complete-request" ) {
+            $averageDays = array();
+
+            //$statuses = array("completed","completedNotified");
+            $statuses = array("completedNotified");
+
+            $globalCount = 0;
+            $globalDays = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
+                $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
+
+                $startDate->modify( 'first day of next month' );
+
+                //echo "<br>";
+                //echo "transRequests=".count($transRequests)." (".$startDateLabel.")<br>";
+
+                $daysTotal = 0;
+                $count = 0;
+
+                foreach($transRequests as $transRequest) {
+
+                    //Number of days to go from Submitted to Completed
+                    $submitted = $transRequest->getCreateDate();
+
+                    //$updated = $transRequest->getUpdateDate(); //assumption: the update date for completed requests is the same as $completedDate
+                    $completed = $transRequest->getCompletedDate();
+                    if( !$completed ) {
+                        continue;
+                    }
+
+//                    $dDiff = $submitted->diff($completed);
+//                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                    $days = $dDiff->days;
+//                    //echo "days=".$days."<br>";
+//                    $days = intval($days);
+
+                    $days = $this->calculateDays($submitted,$completed);
+
+                    if( $days > 0 ) {
+                        $daysTotal = $daysTotal + intval($days);
+                        $count++;
+                    }
+                }
+
+                //$transRequestsCount = count($transRequests);
+                //if( $transRequestsCount ) {
+                //$startDateLabel = $startDateLabel . " (" . $transRequestsCount . " requests)";
+                //}
+                $startDateLabel = $startDateLabel . " (" . count($transRequests) . " requests)";
+
+                if( $count > 0 ) {
+                    $avgDaysInt = round($daysTotal/$count);
+                    $averageDays[$startDateLabel] = $avgDaysInt;
+
+                    $globalCount++;
+                    $globalDays = $globalDays + $avgDaysInt;
+
+                } else {
+                    $averageDays[$startDateLabel] = null;
+                }
+
+
+            } while( $startDate < $endDate );
+
+//            if( $category ) {
+//                //$categoryName = $this->tokenTruncate($category->getProductIdAndName(),50);
+//                $categoryName = $category->getProductId();
+//                $categoryStr = " (".$categoryName.")";
+//            } else {
+//                $categoryStr = null;
+//            }
+//            $chartName = $chartName.$categoryStr;
+
+            //average days: number of days (5.9) to complete
+            if( $globalCount ) {
+                $avgDaysInt = round($globalDays / $globalCount);
+                $avgDaysIntStr = "number of days ($avgDaysInt) to complete";
+                $chartName = str_replace("number of days to complete",$avgDaysIntStr,$chartName);
+            }
+
+            $chartsArray = $this->getChart($averageDays,$chartName,'bar',$layoutArray);
+        }
+
+        //"33. Turn-around Statistics: Number of days to complete each Work Request (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request",
+        if( $chartType == "turn-around-statistics-days-complete-per-request" ) {
+            $averageDays = array();
+
+            $thisEndDate = clone $startDate;
+            //$thisEndDate->modify( 'first day of next month' );
+            $thisEndDate->modify('last day of this month');
+
+            //$statuses = array("completed","completedNotified");
+            $statuses = array("completedNotified");
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$productservice,$statuses);
+
+            $daysTotal = 0;
+            //$count = 0;
+
+            foreach($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+
+                $completed = $transRequest->getCompletedDate();
+                if( !$completed ) {
+                    continue;
+                }
+
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
+
+                if( $days > 0 ) {
+                    $daysTotal = $daysTotal + intval($days);
+                    //$count++;
+                }
+
+                $index = $transRequest->getOid();
+
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_show',
+                    array("id"=>$transRequest->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                if( isset($averageDays[$index]) ) {
+                    //$averageDays[$index] = $averageDays[$index] + $days;
+                    //$existingArr = $averageDays[$index];
+                    //$existingDays = $existingArr["value"];
+                    $existingDays = $averageDays[$index]["value"];
+                    $days = $days + $existingDays;
+                    //$averageDays[$index] = array("value"=>$days,"link"=>$link);
+                }
+                //minimum 1 day
+                if( !$days || $days == 0 ) {
+                    $days = 1;
+                }
+                //$averageDays[$index] = $days;
+                $averageDays[$index] = array("value"=>$days,"link"=>$link);
+
+                //$averageDays[$startDateLabel] = array("value"=>$avgDaysInt,"link"=>$link);
+                //$averageDays[$startDateLabel] = $avgDaysInt;
+
+            }//foreach
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName,
+                'margin' => array('b'=>200)
+            );
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+
+        //"34. Turn-around Statistics: Number of days to complete each Work Request by products/services (based on 'Completed and Notified' requests)" => "turn-around-statistics-days-complete-per-request-with-product",
+        if( $chartType == "turn-around-statistics-days-complete-per-request-with-product" ) {
+            $averageDays = array();
+
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify('last day of this month');
+
+            $statuses = array("completedNotified");
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);
+
+            $requestCategoryWeightQuantityArr = array();
+
+            foreach ($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+
+                $completed = $transRequest->getCompletedDate();
+                if (!$completed) {
+                    continue;
+                }
+
+                //1) calculate days
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
+
+                $index = $transRequest->getOid();
+
+                //2) calculate weight
+                $totalQuantity = 0;
+                foreach ($transRequest->getProducts() as $product) {
+                    $quantity = $product->getQuantity();
+                    $totalQuantity = $totalQuantity + intval($quantity);
+                }
+                if( $totalQuantity ) {
+                    $weight = $days / $totalQuantity;
+                } else {
+                    $weight = 1;
+                }
+
+//                $link = $this->container->get('router')->generate(
+//                    'translationalresearch_request_show',
+//                    array("id"=>$transRequest->getId()),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+
+                //3) convert quantity as weighted days
+                foreach ($transRequest->getProducts() as $product) {
+                    $quantity = $product->getQuantity();
+                    $category = $product->getCategory();
+                    if( $category ) {
+                        $categoryIndex = $category->getShortInfo();
+                        $weightedQuantity = $weight * $quantity;
+                        //minimum 1 day
+                        if( !$weightedQuantity || $weightedQuantity == 0 ) {
+                            $weightedQuantity = 1;
+                        }
+                        $requestCategoryWeightQuantityArr[$categoryIndex][$index] = $weightedQuantity;
+                        //$requestCategoryWeightQuantityArr[$categoryIndex][$index] = array("value"=>$weightedQuantity,"link"=>$link);
+                    }
+                }
+
+            }//foreach
+
+            $combinedTrpData = array();
+            foreach($requestCategoryWeightQuantityArr as $categoryIndex=>$arr) {
+                $combinedTrpData[$categoryIndex] = $arr;
+            }
+
+            //$projectIrbPhaseArr[$index] = $days;
+            //$combinedTrpData = array();
+            //$combinedTrpData['IRB Review'] = $projectIrbPhaseArr;
+            //$chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width*1.2,
+                'title' => $chartName,
+                'margin' => array('b' => 200)
+            );
+
+            //exit("Exit");
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
+        }
+
+        //"35. Turn-around Statistics: Average number of days for each project request approval phase (linked)" => "turn-around-statistics-days-project-state"
+        if( $chartType == "turn-around-statistics-days-project-state" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $reviewStates = array("irb_review","admin_review","committee_review","final_review","irb_missinginfo");
+
+            $projectStates = null;
+            //$projectStates = array('final_approved','closed','final_rejected');
+
+            //init array
+            $averageDays = array();
+            foreach($reviewStates as $state) {
+                $stateLabel = $transresUtil->getStateLabelByName($state);
+                $averageDays[$stateLabel] = 0;
+            }
+
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $projectStates);
+            //echo "### $state projects count=".count($projects)."<br>";
+
+            $totalDaysCount = 0;
+            $totalDays = 0;
+            $countArr = array();
+
+            foreach ($projects as $project) {
+                //echo "<br>############ ".$project->getOid()." ############ <br>";
+
+                foreach($reviewStates as $state) {
+
+                    $stateLabel = $transresUtil->getStateLabelByName($state);
+
+                    $days = $this->getDiffDaysByProjectState($project, $state);
+                    if ($days > 0) {
+                        if( isset($averageDays[$stateLabel]) ) {
+                            $averageDays[$stateLabel] = $averageDays[$stateLabel] + $days;
+                        } else {
+                            $averageDays[$stateLabel] = $days;
+                        }
+
+                        if( isset($countArr[$stateLabel]) ) {
+                            $countArr[$stateLabel] = $countArr[$stateLabel] + 1;
+                        } else {
+                            $countArr[$stateLabel] = 1;
+                        }
+
+                        $totalDays = $totalDays + $days;
+                        $totalDaysCount++;
+                    }
+
+                }//foreach state
+
+            }//foreach project
+
+            //exit("exit: $chartName");
+
+            //links the entire graph it to the single filtered list of ALL 128 project requests, filtered by current status = “Approved” or “Closed”
+            $linkFilterArr = array(
+                'filter[state][0]' => 'final_approved',
+                'filter[state][1]' => 'closed',
+                'filter[startDate]' => $startDateStr,
+                'filter[endDate]' => $endDateStr,
+            );
+            $link = $this->container->get('router')->generate(
+                'translationalresearch_project_index',
+                $linkFilterArr,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+
+            $averageDaysNew = array();
+            foreach($averageDays as $stateLabel=>$days) {
+                $count = $countArr[$stateLabel];
+                if( $count > 0 ) {
+                    //$stateLabel = $stateLabel . " (" . $count . " projects)";
+                    $avgDaysInt = round($days / $count);
+                    //$averageDaysNew[$stateLabel] = $avgDaysInt;
+                    $daysArr = array("value"=>$avgDaysInt, "link"=>$link);
+                    $averageDaysNew[$stateLabel] = $daysArr;
+                }
+            }
+
+            //Calculate the total by adding average IRB Review days + Average Admin Review days + Average Committee Review days +
+            // Average Final Review days and show it in the title after the word days: “Average number of days (33) for each…”
+            if( $totalDaysCount > 0 ) {
+                $averageDays = round($totalDays / $totalDaysCount);
+                if( $averageDays > 0 ) {
+                    $chartName = str_replace("Average number of days","Average number of days ($averageDays)",$chartName);
+                }
+            }
+
+            $chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
+
+            $chartsArray = $this->getChart($averageDaysNew, $chartName,'bar',$layoutArray); // getChart
+        }
+
+        //"36. Turn-around Statistics: Number of days for each project request’s approval phase" => "turn-around-statistics-days-per-project-state"
+        if( $chartType == "turn-around-statistics-days-per-project-state" ) {
+
+            $projectIrbPhaseArr = array();
+            $projectAdminPhaseArr = array();
+            $projectCommitteePhaseArr = array();
+            $projectFinalPhaseArr = array();
+
+            $reviewStates = array("irb_review","admin_review","committee_review","final_review");
+
+            //'final_approved' OR project.state = 'closed OR 'final_rejected'
+            $projectStates = null;
+            //$projectStates = array('final_approved','closed','final_rejected');
+            $projects = $this->getProjectsByFilter($startDate, $endDate, $projectSpecialtyObjects, $projectStates);
+            //echo "### $state projects count=".count($projects)."<br>";
+
+            foreach ($projects as $project) {
+
+                $index = $project->getOid();
+
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_show',
+                    array("id"=>$project->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                foreach($reviewStates as $state) {
+
+                    $days = $this->getDiffDaysByProjectState($project, $state);
+
+                    if ($days > 0) {
+                        if ($state == "irb_review") {
+                            //$projectIrbPhaseArr[$index] = $days;
+                            $projectIrbPhaseArr[$index] = array("value"=>$days,"link"=>$link);
+                        }
+                        if ($state == "admin_review") {
+                            //$projectAdminPhaseArr[$index] = $days;
+                            $projectAdminPhaseArr[$index] = array("value"=>$days,"link"=>$link);
+                        }
+                        if ($state == "committee_review") {
+                            //$projectCommitteePhaseArr[$index] = $days;
+                            $projectCommitteePhaseArr[$index] = array("value"=>$days,"link"=>$link);
+                        }
+                        if ($state == "final_review") {
+                            //$projectFinalPhaseArr[$index] = $days;
+                            $projectFinalPhaseArr[$index] = array("value"=>$days,"link"=>$link);
+                        }
+                    }
+
+                }//foreach state
+
+            }//foreach project
+
+            $chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
+
+            $irbTitle = $this->getStateTitleWithAverageDays('IRB Review',$projectIrbPhaseArr);
+            $adminTitle = $this->getStateTitleWithAverageDays('Admin Review',$projectAdminPhaseArr);
+            $committeeTitle = $this->getStateTitleWithAverageDays('Committee Review',$projectCommitteePhaseArr);
+            $finalTitle = $this->getStateTitleWithAverageDays('Final Review',$projectFinalPhaseArr);
+
+            $combinedTrpData = array();
+            $combinedTrpData[$irbTitle] = $projectIrbPhaseArr;
+            $combinedTrpData[$adminTitle] = $projectAdminPhaseArr;
+            $combinedTrpData[$committeeTitle] = $projectCommitteePhaseArr;
+            $combinedTrpData[$finalTitle] = $projectFinalPhaseArr;
+
+            $chartsArray = $this->getStackedChart($combinedTrpData, $chartName, "stack");
+        }
+
+        //third bar graph showing how many days on average it took for Invoices to go from “Issued” to “Paid”
+        //"37. Turn-around Statistics: Average number of days for invoices to be paid" =>                 "turn-around-statistics-days-paid-invoice"
+        if( $chartType == "turn-around-statistics-days-paid-invoice" ) {
+            $averageDays = array();
+
+            $invoiceStates = array("Paid in Full","Paid Partially");
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
+                //$startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true
+                $compareType = 'last invoice generation date';
+                $overdue = false;
+                //$addOneEndDay = true;
+                $addOneEndDay = false;
+                //$filterRequest = false;
+                $filterRequest = true; //this option is not set in the invoice list and the result is different after the clicking the link
+                // getInvoicesByFilter(
+                $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,$overdue,$addOneEndDay,$compareType,$filterRequest);
+
+                //link each bar to the filtered list of invoices for the corresponding month and with status “fully paid” or “partially paid”
+                //$dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Paid in Full",
+                    'filter[status][1]' => "Paid Partially",
+                    'filter[startCreateDate]' => $startDate->format('m/d/Y'),
+                    'filter[endCreateDate]' => $thisEndDate->format('m/d/Y'),
+                    'filter[version]' => "Latest"
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $startDate->modify( 'first day of next month' );
+                //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+
+                //echo "<br>";
+                //echo "invoices=".count($invoices)." (".$startDateLabel.")<br>";
+
+                $daysTotal = 0;
+                $count = 0;
+
+                foreach($invoices as $invoice) {
+                    //echo "invoice=".$invoice->getOid()."<br>";
+                    //Number of days to go from Submitted to Completed
+                    $issued = $invoice->getIssuedDate(); //“Issued”
+                    if( 0 && !$issued ) {
+                        continue;
+                        //all issued dates are pre-populated by http://127.0.0.1/order/translational-research/dashboard/graphs/populate-dates
+                        $issued = $this->getInvoiceIssuedDate($invoice);
+                    }
+                    if( !$issued ) {
+                        //exit('no issue date');
+                        continue;
+                        $issued = $invoice->getCreateDate();
+                    }
+                    $paid = $invoice->getPaidDate(); //“Paid”
+                    if( !$paid ) {
+                        //continue;
+                        $paid = $invoice->getUpdateDate(); //“Paid”
+                    }
+
+//                    $dDiff = $issued->diff($paid);
+//                    //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                    $days = $dDiff->days;
+//                    //echo "days=".$days."<br>";
+//                    $days = intval($days);
+                    $days = $this->calculateDays($issued,$paid);
+
+                    if( $days > 0 ) {
+                        $daysTotal = $daysTotal + intval($days);
+                        $count++;
+                    }
+                }
+
+                $startDateLabel = $startDateLabel . " (" . count($invoices) . " invoices)";
+
+                if( $count > 0 ) {
+                    $avgDaysInt = round($daysTotal/$count);
+                    //$averageDays[$startDateLabel] = $avgDaysInt;
+                    $averageDays[$startDateLabel] = array('value'=>$avgDaysInt,'link'=>$link);
+                } else {
+                    //$averageDays[$startDateLabel] = null;
+                    $averageDays[$startDateLabel] = array('value'=>0,'link'=>$link);
+                }
+
+            } while( $startDate < $endDate );
+
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300)
+            );
+
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray);
+        }
+
+        //"38. Turn-around Statistics: Number of days each paid and partially paid invoice took to get paid" => "turn-around-statistics-days-per-paid-invoice",
+        if( $chartType == "turn-around-statistics-days-per-paid-invoice" ) {
+            $invoiceStates = array("Paid in Full","Paid Partially");
+            $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, $invoiceStates);
+            //echo "### $state invoices count=".count($invoices)."<br>";
+
+            $countArr = array();
+
+            foreach($invoices as $invoice) {
+                //echo "invoice=".$invoice->getOid()."<br>";
+                //Number of days to go from Submitted to Completed
+                $issued = $invoice->getIssuedDate(); //“Issued”
+                if( !$issued ) {
+                    //exit('no issue date');
+                    continue;
+                    //$issued = $invoice->getCreateDate();
+                }
+                $paid = $invoice->getPaidDate(); //“Paid”
+                if( !$paid ) {
+                    //continue;
+                    $paid = $invoice->getUpdateDate(); //“Paid”
+                }
+
+//                $dDiff = $issued->diff($paid);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($issued,$paid);
+
+                if( $days > 0 ) {
+                    $invoiceIndex = $invoice->getOid();
+                    //$countArr[$invoiceIndex] = $days;
+
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_show',
+                        array("oid"=>$invoice->getId()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $countArr[$invoiceIndex] = array("value"=>$days,"link"=>$link);
+                }
+            }
+
+            //$chartName = $chartName . " (based on " . count($projects) . " approved or closed projects)";
+
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' =>  $this->width,
+                'title' => $chartName,
+                'margin' => array('b'=>200)
+            );
+
+            $chartsArray = $this->getChart($countArr, $chartName,'bar',$layoutArray);
+        }
+
+        //"39. Turn-around Statistics: Top 10 PIs with most delayed unpaid invoices" => "turn-around-statistics-pis-with-delayed-unpaid-invoices",
+        if( $chartType == "turn-around-statistics-pis-with-delayed-unpaid-invoices" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+
+            $pisUnpaidInvoicesArr = array();
+            $invoiceDueArr = array();
+
+            //get unpaid and delayd invoices
+            $invoiceStates = array("Unpaid/Issued");
+            //$invoiceStates = array("Unpaid/Issued","Pending","Paid in Full"); //testing
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+
+            foreach($invoices as $invoice) {
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $piIndex = $pi->getUsernameOptimal();
+                    if( isset($pisUnpaidInvoicesArr[$piIndex]) ) {
+                        $count = $pisUnpaidInvoicesArr[$piIndex]['value'] + 1;
+                    } else {
+                        $count = 1;
+                    }
+
+                    //$due = intval($invoice->getDue());
+
+                    //$pisUnpaidInvoicesArr[$piIndex] = $count;
+                    $todayDate = new \DateTime();
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[startCreateDate]' => $startDateStr,
+                        'filter[endCreateDate]' => $endDateStr,
+                        'filter[endDate]' => $todayDate->format('m/d/Y'),
+                        'filter[version]' => "Latest",
+                        'filter[principalInvestigator]' => $pi->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    //$pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$due);
+
+                    $due = intval($invoice->getDue());
+                    if( isset($invoiceDueArr[$piIndex]) ) {
+                        $due = $invoiceDueArr[$piIndex] + $due;
+                    }
+                    $invoiceDueArr[$piIndex] = $due;
+
+                    $pisUnpaidInvoicesArr[$piIndex] = array('value'=>$count,'link'=>$link, "due"=>$invoiceDueArr[$piIndex]);
+
+                    $titleCount++;
+                }
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            $descriptionArr = array(
+                array(
+                    'descrPrefix'   => "due $",
+                    'descrPostfix'  => null,
+                    'valuePrefix'   => ": (",
+                    'valuePostfix'  => " invoices)",
+                    'descrColor'    => "red",
+                    'descrType'     => "money",
+                    'descrValueArr' => $invoiceDueArr
+                ),
+            );
+
+            $chartName = $this->getTitleWithTotal($chartName,$titleCount,null,"invoices total");
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $pisUnpaidInvoicesArrTop = $this->getTopArray($pisUnpaidInvoicesArr,$showOther,$quantityLimit,$descriptionArr);
+
+            //attach value to other
+            //$pisUnpaidInvoicesArrTop = $this->addValueToOther($pisUnpaidInvoicesArrTop,": $","due"); //replaced by modified getTopArray
+
+            $chartsArray = $this->getChart($pisUnpaidInvoicesArrTop, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+
+        //"40. Turn-around Statistics: Top PIs with highest total amounts in unpaid, overdue invoices (linked)" => "turn-around-statistics-pis-with-highest-total-unpaid-invoices",
+        if( $chartType == "turn-around-statistics-pis-with-highest-total-unpaid-invoices" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+
+            $pisUnpaidInvoicesTotalArr = array();
+            $totalUnpaid = 0;
+
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
+
+            foreach($invoices as $invoice) {
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $piIndex = $pi->getUsernameOptimal(); // . " (".$invoice->getOid().")";
+                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $invoice->getTotal();
+                    $total = $invoice->getTotal();
+                    $totalUnpaid = $totalUnpaid + intval($total);
+
+                    if (isset($pisUnpaidInvoicesTotalArr[$piIndex])) {
+                        //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
+                        $total = $pisUnpaidInvoicesTotalArr[$piIndex]['value'] + $total;
+                    }
+                    //$pisUnpaidInvoicesTotalArr[$piIndex] = $total;
+                    $todayDate = new \DateTime();
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[startCreateDate]' => $startDateStr,
+                        'filter[endCreateDate]' => $endDateStr,
+                        'filter[endDate]' => $todayDate->format('m/d/Y'),
+                        'filter[version]' => "Latest",
+                        'filter[principalInvestigator]' => $pi->getId()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $pisUnpaidInvoicesTotalArr[$piIndex] = array('value'=>$total,'link'=>$link);
+
+                    $titleCount++;
+                }
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $chartName . " (" . $titleCount . " invoices for a total $" . $this->getNumberFormat($totalUnpaid) . ")";
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            $pisUnpaidInvoicesTotalArrTop = $this->getTopArray($pisUnpaidInvoicesTotalArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($pisUnpaidInvoicesTotalArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //"41. Turn-around Statistics: Top 10 PIs combining amounts and delay duration for unpaid, overdue invoices" => "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices",
+        if( $chartType == "turn-around-statistics-pis-combining-total-delayed-unpaid-invoices" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+
+            $pisCombinedArr = array();
+            $pisTotalUnpaidArr = array();
+            $pisDaysArr = array();
+            $pisCountArr = array();
+            $pisIdArr = array();
+
+            $totalUnpaid = 0;
+            $totalCombined = 0;
+
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
+
+            foreach($invoices as $invoice) {
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $piIndex = $pi->getUsernameOptimal();
+                    $total = $invoice->getTotal();
+                    $total = intval($total);
+                    $totalUnpaid = $totalUnpaid + $total;
+
+                    //get number of due days (months)
+                    $nowDate = new \DateTime();
+                    $dueDate = $invoice->getDueDate();
+                    if( !$dueDate ) {
+                        continue; //ignore invoices without duedate
+                    }
+                    $diff = $nowDate->diff($dueDate);
+                    $months = (($diff->format('%y') * 12) + $diff->format('%m'));  //full months difference;
+                    $days = $diff->days;
+                    //echo "days=".$days."<br>";
+                    $dueTimeNumber = intval($months);
+                    //if months is less than 1, use 1
+                    //if( !$dueTimeNumber || $dueTimeNumber <= 0 ) {
+                    //    $dueTimeNumber = 1;
+                    //}
+
+                    //multiply invoice amount by the number of associated months it has remained unpaid
+                    //for example - $100 unpaid invoice from 5 months ago => 5 x $100 + $600 invoice x 3 months ago = $2300 for this PI
+                    $combined = $total * $dueTimeNumber;
+                    $totalCombined = $totalCombined + $combined;
+
+                    //combined index
+                    if (isset($pisCombinedArr[$piIndex])) {
+                        //$count = $pisUnpaidInvoicesArr[$piIndex] + 1;
+                        $combined = $pisCombinedArr[$piIndex] + $combined;
+                    }
+                    $pisCombinedArr[$piIndex] = $combined;
+
+                    //total owed
+                    if (isset($pisTotalUnpaidArr[$piIndex])) {
+                        $total = $pisTotalUnpaidArr[$piIndex] + $total;
+                    }
+                    $pisTotalUnpaidArr[$piIndex] = $total;
+
+                    //median number of days invoice has been unpaid
+                    if (isset($pisDaysArr[$piIndex])) {
+                        $days = $pisDaysArr[$piIndex] + $days;
+                    }
+                    $pisDaysArr[$piIndex] = $days;
+
+                    //count for this PI
+                    if (isset($pisCountArr[$piIndex])) {
+                        $count = $pisCountArr[$piIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $pisCountArr[$piIndex] = $count;
+
+                    $pisIdArr[$piIndex] = $pi->getId();
+
+                    $titleCount++;
+                }
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            //in the legend titles list PI name : total owed : median number of days invoice has been unpaid
+            $pisCombinedArrNew = array();
+            foreach($pisCombinedArr as $index => $combined) {
+                //total
+                $total = $pisTotalUnpaidArr[$index];
+                //$total = $this->getNumberFormat($total);
+
+                //days
+                $days = $pisDaysArr[$index];
+                $count = $pisCountArr[$index];
+                if( $count ) {
+                    $days = round($days / $count);
+                } else {
+                    $days = "unknown";
+                }
+
+                //new index (legend)
+                $newIndex = $index . " ($" . $this->getNumberFormat($total) . " total owed, " . $days . " average number of days invoices have remained unpaid)";
+
+                //$pisCombinedArrNew[$newIndex] = $combined;
+                $todayDate = new \DateTime();
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[startCreateDate]' => $startDateStr,
+                    'filter[endCreateDate]' => $endDateStr,
+                    'filter[endDate]' => $todayDate->format('m/d/Y'),
+                    'filter[version]' => "Latest",
+                    'filter[principalInvestigator]' => $pisIdArr[$index]
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $pisCombinedArrNew[$newIndex] = array('value'=>$combined,'link'=>$link);
+            }
+
+            //$chartName = $this->getTitleWithTotal($chartName,$titleCount);
+            $chartName = $chartName . " (" . $titleCount . " invoices with a total index of " . $this->getNumberFormat($totalCombined) . ")";
+
+            $layoutArray['width'] = $layoutArray['width'] * 1.3; //1400;
+
+            $showOther = $this->getOtherStr($showLimited,"PIs");
+            //getTopArray($piProjectCountArr, $showOthers=false, $descriptionArr=array(), $maxLen=50)
+            $pisCombinedArrTop = $this->getTopArray($pisCombinedArrNew,$showOther,$quantityLimit,array(),150);
+            $chartsArray = $this->getChart($pisCombinedArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+//        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+//        if( $chartType == "compare-projectspecialty-pis_original" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $specialtyApcpObject = $transresUtil->getTrpSpecialtyObjects("ap-cp");
+//            $specialtyHemaObject = $transresUtil->getTrpSpecialtyObjects("hematopathology");
+//            $specialtyCovidObject = $transresUtil->getTrpSpecialtyObjects("covid19");
+//
+//            //$startDate,$endDate,$projectSpecialties,$states
+//            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+//            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+//            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
+//
+//            $apcpPisArr = array();
+//            $hemaPisArr = array();
+//            $covidPisArr = array();
+//            foreach($apcpProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $apcpPisArr[] = $pi->getId();
+//                }
+//            }
+//            foreach($hemaProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $hemaPisArr[] = $pi->getId();
+//                }
+//            }
+//            foreach($covidProjects as $project) {
+//                foreach($project->getAllPrincipalInvestigators() as $pi) {
+//                    $covidPisArr[] = $pi->getId();
+//                }
+//            }
+//
+//            $apcpPisArr = array_unique($apcpPisArr);
+//            $hemaPisArr = array_unique($hemaPisArr);
+//            $covidPisArr = array_unique($covidPisArr);
+//
+//            $pisDataArr = array();
+//
+//            //APCP
+//            //array(value,link)
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+//                //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
+//            );
+//            $index = 0;
+//            foreach($apcpPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                //echo "filterIndex=".$filterIndex."<br>";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$pisDataArr['AP/CP PIs'] = count($apcpPisArr);
+//            $pisDataArr['AP/CP PIs'] = array('value'=>count($apcpPisArr),'link'=>$link);
+//
+//            //Hema
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyHemaObject->getId()
+//            );
+//            $index = 0;
+//            foreach($hemaPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
+//            $pisDataArr['Hematopathology PIs'] = array('value'=>count($hemaPisArr),'link'=>$link);
+//
+//            //COVID
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                //'filter[]' => $projectSpecialtyObjects,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyCovidObject->getId()
+//            );
+//            $index = 0;
+//            foreach($covidPisArr as $piId) {
+//                $filterIndex = "filter[principalInvestigators][".$index."]";
+//                $linkFilterArr[$filterIndex] = $piId;
+//                $index++;
+//            }
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            $pisDataArr['COVID-19 PIs'] = array('value'=>count($covidPisArr),'link'=>$link);
+//
+//            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+//        }
+        //New function with dynamic specialty
+        //"42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+        if( $chartType == "compare-projectspecialty-pis" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $pisDataArr = array();
+
+            foreach( $specialtyObjects as $specialtyObject ) {
+                $pisDataArr = $this->trpPisSingleSpecialty($pisDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr);
+            }
+
+            $chartsArray = $this->getChart($pisDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+
+//        //"43. Total Number of AP/CP and Hematopathology Project Requests" => "compare-projectspecialty-projects",
+//        if( $chartType == "compare-projectspecialty-projects" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+//            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+//
+//            //$startDate,$endDate,$projectSpecialties,$states
+//            $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+//            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+//            $covidProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyCovidObject));
+//
+//            $projectsDataArr = array();
+//
+//            //APCP
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyApcpObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
+//            $projectsDataArr['AP/CP Project Requests'] = array('value'=>count($apcpProjects),'link'=>$link);
+//
+//            //Hema
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
+//            $projectsDataArr['Hematopathology Project Requests'] = array('value'=>count($hemaProjects),'link'=>$link);
+//
+//            //Covid
+//            $linkFilterArr = array(
+//                'filter[state][0]' => 'final_approved',
+//                'filter[state][1]' => 'closed',
+//                'filter[startDate]' => $startDateStr,
+//                'filter[endDate]' => $endDateStr,
+//                'filter[searchProjectType]' => null,
+//                'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
+//            );
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_project_index',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$projectsDataArr['Covidtopathology Project Requests'] = count($covidProjects);
+//            $projectsDataArr['COVID-19 Project Requests'] = array('value'=>count($covidProjects),'link'=>$link);
+//
+//            $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+//        }
+        //"43. Total Number of AP/CP and Hematopathology Project Requests" => "compare-projectspecialty-projects",
+        if( $chartType == "compare-projectspecialty-projects" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $projectsDataArr = array();
+
+            foreach( $specialtyObjects as $specialtyObject ) {
+                $projectsDataArr = $this->trpProjectsSingleSpecialty($projectsDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr);
+            }
+
+            $chartsArray = $this->getChart($projectsDataArr, $chartName,'pie',$layoutArray,null,null,null,"percent+label");
+        }
+
+        //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
+        if( $chartType == "compare-projectspecialty-projects-stack_original" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+            $covidResultStatArr = array();
+            $datesArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),null,false);
+                $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),null,false);
+                $covidProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyCovidObject),null,false);
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr[$startDateLabel] = count($apcpProjects);
+                $hemaResultStatArr[$startDateLabel] = count($hemaProjects);
+                $covidResultStatArr[$startDateLabel] = count($covidProjects);
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpProjectsData = array();
+            foreach($apcpResultStatArr as $date=>$value ) {
+                //$apcpProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Hema
+            $hemaProjectsData = array();
+            foreach($hemaResultStatArr as $date=>$value ) {
+                //$hemaProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Covid
+            $covidProjectsData = array();
+            foreach($covidResultStatArr as $date=>$value ) {
+                //$covidProjectsData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                    //'filter[projectSpecialty][]' => $specialtyCovidObject->getId(),
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $covidProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Projects
+            $combinedProjectsData = array();
+            $combinedProjectsData['AP/CP'] = $apcpProjectsData;
+            $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
+            $combinedProjectsData['COVID-19'] = $covidProjectsData;
+
+            $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
+        }
+        //"44. Total Number of AP/CP and Hematopathology Project Requests By Month" => "compare-projectspecialty-projects-stack",
+        if( $chartType == "compare-projectspecialty-projects-stack" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                foreach($specialtyObjects as $specialtyObject) {
+                    //                                            $startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                    $specialtyProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyObject),null,false);
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyProjects);
+                }
+                $startDate->modify( 'first day of next month' );
+
+            } while( $startDate < $endDate );
+
+            $combinedProjectsData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyProjectsData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $dates['startDate'],
+                        'filter[endDate]' => $dates['endDate'],
+                        'filter[searchProjectType]' => null,
+                        //'filter[projectSpecialty][]' => $specialtyHemaObject->getId(),
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $specialtyProjectsData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedProjectsData[$specialtyObject->getName()] = $specialtyProjectsData;
+            }
+
+            $chartsArray = $this->getStackedChart($combinedProjectsData, $chartName, "stack");
+        }
+
+        //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
+        if( $chartType == "compare-projectspecialty-requests_original" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+            $covidResultStatArr = array();
+            $datesArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+
+                $apcpRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyApcpObject));
+                $hemaRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyHemaObject));
+                $covidRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyCovidObject));
+
+                $startDate->modify( 'first day of next month' );
+
+                $apcpResultStatArr[$startDateLabel] = count($apcpRequests);
+                $hemaResultStatArr[$startDateLabel] = count($hemaRequests);
+                $covidResultStatArr[$startDateLabel] = count($covidRequests);
+
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpRequestsData = array();
+            foreach($apcpResultStatArr as $date=>$value ) {
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Hema
+            $hemaRequestsData = array();
+            foreach($hemaResultStatArr as $date=>$value ) {
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Covid
+            $covidRequestsData = array();
+            foreach($covidResultStatArr as $date=>$value ) {
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[progressState][0]' => 'active',
+                    'filter[progressState][1]' => 'completed',
+                    'filter[progressState][2]' => 'completedNotified',
+                    'filter[progressState][3]' => 'pendingInvestigatorInput',
+                    'filter[progressState][4]' => 'pendingHistology',
+                    'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                    'filter[progressState][6]' => 'pendingMolecular',
+                    'filter[progressState][7]' => 'pendingCaseRetrieval',
+                    'filter[progressState][8]' => 'pendingTissueMicroArray',
+                    'filter[progressState][9]' => 'pendingSlideScanning',
+                    'filter[startDate]' => $dates['startDate'],
+                    'filter[endDate]' => $dates['endDate'],
+                    'filter[searchProjectType]' => null,
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $covidRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Requests
+            $combinedRequestsData = array();
+            $combinedRequestsData['AP/CP'] = $apcpRequestsData;
+            $combinedRequestsData['Hematopathology'] = $hemaRequestsData;
+            $combinedRequestsData['COVID-19'] = $covidRequestsData;
+            $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
+        }
+        //"45. Total Number of AP/CP and Hematopathology Work Requests By Month" => "compare-projectspecialty-requests",
+        if( $chartType == "compare-projectspecialty-requests" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+
+                foreach($specialtyObjects as $specialtyObject) {
+                    $thisEndDate = clone $startDate;
+                    //$thisEndDate->modify( 'first day of next month' );
+                    $thisEndDate->modify('last day of this month');
+                    $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                    //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                    $specialtyRequests = $this->getRequestsByFilter($startDate,$thisEndDate,array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyRequests);
+                }
+
+                $startDate->modify( 'first day of next month' );
+
+            } while( $startDate < $endDate );
+
+            $combinedRequestsData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyRequestsData = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[progressState][0]' => 'active',
+                        'filter[progressState][1]' => 'completed',
+                        'filter[progressState][2]' => 'completedNotified',
+                        'filter[progressState][3]' => 'pendingInvestigatorInput',
+                        'filter[progressState][4]' => 'pendingHistology',
+                        'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                        'filter[progressState][6]' => 'pendingMolecular',
+                        'filter[progressState][7]' => 'pendingCaseRetrieval',
+                        'filter[progressState][8]' => 'pendingTissueMicroArray',
+                        'filter[progressState][9]' => 'pendingSlideScanning',
+                        'filter[startDate]' => $dates['startDate'],
+                        'filter[endDate]' => $dates['endDate'],
+                        //'filter[projectSpecialty][]' => $specialtyObject->getId(),
+                        'filter[searchProjectType]' => null,
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_request_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $specialtyRequestsData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedRequestsData[$specialtyObject->getName()] = $specialtyRequestsData;
+            }
+
+            $chartsArray = $this->getStackedChart($combinedRequestsData, $chartName, "stack");
+        }
+
+        //"46. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
+        if( $chartType == "compare-projectspecialty-invoices_original" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyCovidObject = $transresUtil->getSpecialtyObject("covid19");
+
+            $apcpResultStatArr = array();
+            $hemaResultStatArr = array();
+            $covidResultStatArr = array();
+            $datesArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+
+                $apcpInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyApcpObject));
+                $hemaInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyHemaObject));
+                $covidInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyCovidObject));
+
+                $startDate->modify( 'first day of next month' );
+
+                //$apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
+                //$hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
+                $apcpResultStatArr[$startDateLabel] = count($apcpInvoices);
+                $hemaResultStatArr[$startDateLabel] = count($hemaInvoices);
+                $covidResultStatArr[$startDateLabel] = count($covidInvoices);
+
+            } while( $startDate < $endDate );
+
+            //AP/CP
+            $apcpInvoicesData = array();
+            foreach($apcpResultStatArr as $date=>$value ) {
+                //$apcpInvoicesData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
+                    'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
+                    'filter[endCreateDate]' => $dates['endDate'],
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyApcpObject->getUppercaseShortName()
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $apcpInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Hema
+            $hemaInvoicesData = array();
+            foreach($hemaResultStatArr as $date=>$value ) {
+                //$hemaInvoicesData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
+                    'filter[startCreateDate]' => $dates['startDate'],
+                    'filter[endCreateDate]' => $dates['endDate'],
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyHemaObject->getUppercaseShortName()
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $hemaInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Covid
+            $covidInvoicesData = array();
+            foreach($covidResultStatArr as $date=>$value ) {
+                //$covidInvoicesData[$date] = $value;
+                $dates = $datesArr[$date];
+                $linkFilterArr = array(
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+                    'filter[status][5]' => 'Pending',
+                    'filter[startCreateDate]' => $dates['startDate'],
+                    'filter[endCreateDate]' => $dates['endDate'],
+                    'filter[version]' => "Latest",
+                    //'filter[idSearch]' => $specialtyCovidObject->getUppercaseShortName()
+                );
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_invoice_index_filter',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $covidInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+            }
+
+            //Invoices
+            $combinedInvoicesData = array();
+            $combinedInvoicesData['AP/CP'] = $apcpInvoicesData;
+            $combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
+            $combinedInvoicesData['COVID-19'] = $covidInvoicesData;
+            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack"); //" getStackedChart("
+        }
+        //"46. Total Number of AP/CP and Hematopathology Invoices By Month" => "compare-projectspecialty-invoices",
+        if( $chartType == "compare-projectspecialty-invoices" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $specialtyObjects = $transresUtil->getTrpSpecialtyObjects();
+
+            $datesArr = array();
+            $specialtyResultStatArr = array();
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+
+                foreach($specialtyObjects as $specialtyObject) {
+                    $thisEndDate = clone $startDate;
+                    //$thisEndDate->modify( 'first day of next month' );
+                    $thisEndDate->modify('last day of this month');
+                    $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                    //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+                    //$startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+
+                    //                                            $startDate,$endDate,$projectSpecialties,$states,$addOneEndDay
+                    $specialtyInvoices = $this->getInvoicesByFilter($startDate,$thisEndDate, array($specialtyObject));
+                    $specialtyResultStatArr[$specialtyObject->getId()][$startDateLabel] = count($specialtyInvoices);
+                }
+
+                $startDate->modify( 'first day of next month' );
+
+                //$apcpResultStatArr[$startDateLabel] = count($apcpInvoices);
+                //$hemaResultStatArr[$startDateLabel] = count($hemaInvoices);
+                //$covidResultStatArr[$startDateLabel] = count($covidInvoices);
+
+            } while( $startDate < $endDate );
+
+            $combinedInvoicesData = array();
+
+            foreach($specialtyObjects as $specialtyObject) {
+                $specialtyInvoicesData = array();
+                $linkFilterArr = array();
+                foreach($specialtyResultStatArr[$specialtyObject->getId()] as $date=>$value ) {
+                    $dates = $datesArr[$date];
+                    $linkFilterArr = array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
+                        'filter[status][5]' => 'Pending',
+                        'filter[startCreateDate]' => $dates['startDate'], //dueDate, therefore we can not filter invoices list
+                        'filter[endCreateDate]' => $dates['endDate'],
+                        'filter[version]' => "Latest",
+                        //'filter[idSearch]' => $specialtyObject->getUppercaseShortName()
+                    );
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_invoice_index_filter',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $specialtyInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+                }
+
+                $combinedInvoicesData[$specialtyObject->getName()] = $specialtyInvoicesData;
+            }
+
+            $chartsArray = $this->getStackedChart($combinedInvoicesData, $chartName, "stack"); //" getStackedChart("
+        }
+
+        //"47. Total Fees per Project Request Type" => "projects-fees-per-type",
+        if( $chartType == "projects-fees-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
+
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+                //count only projects with fees => link will give different number of projects
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $totalFee;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['projectTypeCount']) ) {
+                    $projectTypeCount = $projectTypeArr[$projectTypeId]['projectTypeCount'] + 1;
+                } else {
+                    $projectTypeCount = 1;
+                }
+                $projectTypeArr[$projectTypeId]['projectTypeCount'] = $projectTypeCount;
+                //echo $projectCount.": ".$projectTypeName . " [".$projectTypeId."]=".$projectTypeArr[$projectTypeId]['projectTypeCount']."<br>";
+
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['projectTypeCount']." projects)";
+                //$projectTypeArr[$projectTypeId]['show-path'] = null; //"project-type";
+
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                    //'filter[searchProjectType]' => $project->getId()
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
+            }//foreach
+
+//            echo "<pre>";
+//            print_r($projectTypeArr);
+//            echo "</pre>";
+//            exit('111');
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            //$chartName,$total,$prefix=null,$postfix="total"
+            $postfix = "total for ".$projectCount." projects";
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100); // function getTopMultiArray(
+
+//            $layoutArray = array(
+//                'height' => $this->height,
+//                'width' => $this->width*1.2,
+//                'title' => $chartName,
+//                'margin' => array('c' => 400)
+//            );
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label"); //function getChartByMultiArray(
+            //$chartsArray = $this->getChart($projectTypeArrTop, $chartName,'pie',$layoutArray," : $");
+        }
+
+        //"48. Total Fees per Project Request Type of Funded Projects (Top 10) (linked)" => "projects-funded-fees-per-type",
+        if( $chartType == "projects-funded-fees-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+
+                if( !$project->getFunded() ) {
+                    continue;
+                }
+
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
+
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $totalFee;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+                //$projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['projectTypeCount']) ) {
+                    $projectTypeCount = $projectTypeArr[$projectTypeId]['projectTypeCount'] + 1;
+                } else {
+                    $projectTypeCount = 1;
+                }
+                $projectTypeArr[$projectTypeId]['projectTypeCount'] = $projectTypeCount;
+
+                //$projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['projectTypeCount']." projects)";
+
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            $postfix = "total for ".$projectCount." projects";
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100);
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
+        }
+
+        //"49. Total Fees per Project Request Type of Non-Funded Projects (linked)" => "projects-unfunded-fees-per-type",
+        if( $chartType == "projects-unfunded-fees-per-type" ) {
+            $transresUtil = $this->container->get('transres_util');
+            $projectTypeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+
+            $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($projects as $project) {
+
+                if( $project->getFunded() ) {
+                    continue;
+                }
+
+                $projectType = $project->getProjectType();
+                if( $projectType ) {
+                    $projectTypeId = $projectType->getId();
+                    $projectTypeName = $projectType->getName();
+                } else {
+                    $projectTypeId = "No Type";
+                    $projectTypeName = "No Type";;
+                }
+
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $totalFee = $invoicesInfos['total'];
+                if( !$totalFee || $totalFee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $totalFee;
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['value']) ) {
+                    $totalFee = $projectTypeArr[$projectTypeId]['value'] + $totalFee;
+                }
+                $projectTypeArr[$projectTypeId]['value'] = $totalFee;
+                $projectTypeArr[$projectTypeId]['objectid'] = $projectTypeId;
+                $projectTypeArr[$projectTypeId]['pi'] = null;
+                //$projectTypeArr[$projectTypeId]['show-path'] = "project-type";
+
+                if( isset($projectTypeArr[$projectTypeId]) && isset($projectTypeArr[$projectTypeId]['projectTypeCount']) ) {
+                    $projectTypeCount = $projectTypeArr[$projectTypeId]['projectTypeCount'] + 1;
+                } else {
+                    $projectTypeCount = 1;
+                }
+                $projectTypeArr[$projectTypeId]['projectTypeCount'] = $projectTypeCount;
+
+                //$projectTypeArr[$projectTypeId]['label'] = $projectTypeName;
+                $projectTypeArr[$projectTypeId]['label'] = $projectTypeName . " (".$projectTypeArr[$projectTypeId]['projectTypeCount']." projects)";
+
+                //link
+                $linkFilterArr = array(
+                    'filter[state][0]' => 'final_approved',
+                    'filter[state][1]' => 'closed',
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[searchProjectType]' => $projectTypeId
+                );
+                $count = 0;
+                foreach($projectSpecialtyObjects as $projectSpecialtyObject) {
+                    $linkFilterArr["filter[searchProjectType][".$count."]"] = $projectSpecialtyObject->getId();
+                    $count++;
+                }
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_project_index',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectTypeArr[$projectTypeId]['link'] = $link;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            $postfix = "total for ".$projectCount." projects";
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Project Types");
+            $projectTypeArrTop = $this->getTopMultiArray($projectTypeArr,$showOther,$quantityLimit,array(),100);
+
+            $chartsArray = $this->getChartByMultiArray( $projectTypeArrTop, $filterArr, $chartName,"pie",null," : $","percent+label");
+        }
+
+        //"50. Total Fees per Work Request Business Purpose" => "requests-fees-per-business-purpose",
+        if( $chartType == "requests-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+            $projectBusinessCount = array();
+            //$testing = true;
+            $testing = false;
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $thisTransRequest) {
+
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($thisTransRequest);
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $fee;
+
+                if($testing) {
+                    echo "<br>thisTransRequest=" . $thisTransRequest->getOid() . "; fee=" . $fee . "<br>";
+                }
+
+                $businessPurposes = $thisTransRequest->getBusinessPurposes();
+
+                if( count($businessPurposes) == 0 ) {
+                    //$totalFees = $totalFees + $fee;
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+
+                    if( isset($projectBusinessCount["No Business Purpose"]) && isset($projectBusinessCount["No Business Purpose"]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'] = $projectTypeCount;
+                    //$projectBusinessCount["No Business Purpose"][$thisTransRequest->getId()] = 1;
+                }
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+                    $thisFee = $fee;
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $thisFee = $requestBusinessPurposeArr[$businessPurposeName] + $thisFee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $thisFee;
+                    if($testing) {
+                        echo "businessPurposeName=".$businessPurposeName."; fee=".$thisFee."<br>";
+                    }
+
+                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = $projectTypeCount;
+                    //$projectBusinessCount[$businessPurposeName][$thisTransRequest->getId()] = 1;
+                }
+            }
+
+            //Note: One request can have multiple buisness purposes => total in the title can be less than the sum of all work requests for each business purpose.
+            $requestBusinessPurposeNewArr = array();
+            foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
+                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+                $requestBusinessPurposeNewArr[$newLabel] = $value;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+
+            $postfix = "total for ".$projectCount." work requests";
+            $totalFees = $this->getNumberFormat($totalFees);
+            $chartName = $this->getTitleWithTotal($chartName,$totalFees,"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+
+            if($testing) {
+                echo "<br>";
+                print_r($requestBusinessPurposeNewArr);
+                echo "<br>totalFees=".$totalFees."<br>";
+                exit();
+            }
+        }
+
+        //"51. Total Fees per Work Request Business Purpose for Funded Projects" => "requests-funded-fees-per-business-purpose",
+        if( $chartType == "requests-funded-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+            $projectBusinessCount = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( !$transRequest->getProject()->getFunded() ) {
+                    continue;
+                }
+
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($transRequest);
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $fee;
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                if( count($businessPurposes) == 0 ) {
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+
+                    if( isset($projectBusinessCount["No Business Purpose"]) && isset($projectBusinessCount["No Business Purpose"]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'] = $projectTypeCount;
+                }
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+
+                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = $projectTypeCount;
+                }
+            }
+
+            //Note: One request can have multiple buisness purposes => total in the title can be less than the sum of all work requests for each business purpose.
+            $requestBusinessPurposeNewArr = array();
+            foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
+                if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
+                }
+                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+                $requestBusinessPurposeNewArr[$newLabel] = $value;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+            $postfix = "total for ".$projectCount." work requests";
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //"52. Total Fees per Work Request Business Purpose for Non-Funded Projects" => "requests-unfunded-fees-per-business-purpose",
+        if( $chartType == "requests-unfunded-fees-per-business-purpose" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestBusinessPurposeArr = array();
+            $totalFees = 0;
+            $projectCount = 0;
+            $projectBusinessCount = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                if( $transRequest->getProject()->getFunded() ) {
+                    continue;
+                }
+
+                $fee = $transresRequestUtil->getTransResRequestSubTotal($transRequest);
+                if( !$fee || $fee == 0 ) {
+                    continue;
+                }
+
+                $projectCount++;
+                $totalFees = $totalFees + $fee;
+
+                $businessPurposes = $transRequest->getBusinessPurposes();
+
+                if( count($businessPurposes) == 0 ) {
+                    if( isset($requestBusinessPurposeArr["No Business Purpose"]) ) {
+                        $fee = $requestBusinessPurposeArr["No Business Purpose"] + $fee;
+                    }
+                    $requestBusinessPurposeArr["No Business Purpose"] = $fee;
+
+                    if( isset($projectBusinessCount["No Business Purpose"]) && isset($projectBusinessCount["No Business Purpose"]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount["No Business Purpose"]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount["No Business Purpose"]['projectTypeCount'] = $projectTypeCount;
+                }
+
+                foreach($businessPurposes as $businessPurpose) {
+                    $businessPurposeName = $businessPurpose->getName();
+
+                    if( isset($requestBusinessPurposeArr[$businessPurposeName]) ) {
+                        $fee = $requestBusinessPurposeArr[$businessPurposeName] + $fee;
+                    }
+                    $requestBusinessPurposeArr[$businessPurposeName] = $fee;
+
+                    if( isset($projectBusinessCount[$businessPurposeName]) && isset($projectBusinessCount[$businessPurposeName]['projectTypeCount']) ) {
+                        $projectTypeCount = $projectBusinessCount[$businessPurposeName]['projectTypeCount'] + 1;
+                    } else {
+                        $projectTypeCount = 1;
+                    }
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = $projectTypeCount;
+                }
+            }
+
+            //Note: One request can have multiple buisness purposes => total in the title can be less than the sum of all work requests for each business purpose.
+            $requestBusinessPurposeNewArr = array();
+            foreach($requestBusinessPurposeArr as $businessPurposeName=>$value) {
+                if( !$projectBusinessCount[$businessPurposeName]['projectTypeCount'] ) {
+                    $projectBusinessCount[$businessPurposeName]['projectTypeCount'] = 1;
+                }
+                $newLabel = $businessPurposeName . " (".$projectBusinessCount[$businessPurposeName]['projectTypeCount']." work requests)";
+                $requestBusinessPurposeNewArr[$newLabel] = $value;
+            }
+
+            //do not filter by top
+            $quantityLimit = "Show all";
+            $postfix = "total for ".$projectCount." work requests";
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalFees),"$",$postfix);
+            $showOther = $this->getOtherStr($showLimited,"Business Purposes");
+            $requestBusinessPurposeArrTop = $this->getTopArray($requestBusinessPurposeNewArr,$showOther,$quantityLimit,array(),100);
+            $chartsArray = $this->getChart($requestBusinessPurposeArrTop, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
+        }
+
+        //"53. Turn-around Statistics: Number of Days each “Completed and Notified” Work Request took with the Name of who marked it as completed" => "turn-around-statistics-days-complete-per-request-with-product-by-user",
+        if( $chartType == "turn-around-statistics-days-complete-per-request-with-user" ) {
+            $averageDays = array();
+
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify('last day of this month');
+
+            $statuses = array("completedNotified");
+            $transRequests = $this->getRequestsByAdvanceFilter($startDate, $thisEndDate, $projectSpecialtyObjects, $productservice, $statuses);
+
+            foreach ($transRequests as $transRequest) {
+
+                //Number of days to go from Submitted to Completed
+                $submitted = $transRequest->getCreateDate();
+
+                $completed = $transRequest->getCompletedDate();
+                if (!$completed) {
+                    continue;
+                }
+
+//                //1) calculate days
+//                $dDiff = $submitted->diff($completed);
+//                //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//                $days = $dDiff->days;
+//                //echo "days=".$days."<br>";
+//                $days = intval($days);
+                $days = $this->calculateDays($submitted,$completed);
+
+                if( !$days || $days == 0 ) {
+                    $days = 1;
+                }
+
+                $index = $transRequest->getOid();
+                $completedUser = $transRequest->getCompletedBy();
+                if( !$completedUser ) {
+                    $completedUser = $transRequest->getUpdateUser();
+                }
+                if( $completedUser ) {
+                    $index = $index . ", " . $completedUser->getUsernameOptimal();
+                }
+
+//                if( isset($averageDays[$index]) ) {
+//                    $days = $averageDays[$index] + $days;
+//                }
+//                $averageDays[$index] = $days;
+
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_request_show',
+                    array("id"=>$transRequest->getId()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                if( isset($averageDays[$index]) && isset($averageDays[$index]['value']) ) {
+                    $days = $averageDays[$index]['value'] + $days;
+                }
+                $averageDays[$index] = array("value"=>$days,"link"=>$link);
+
+            }//foreach
+
+            $layoutArray = array(
+                'height' => $this->height*1.5,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 400)
+            );
+
+            //exit("Exit");
+
+            $valuePrefixLabel = "(";
+            $valuePostfixLabel = " days)";
+            $chartsArray = $this->getChart($averageDays, $chartName,'bar',$layoutArray,$valuePrefixLabel,$valuePostfixLabel); // getChart(
+        }
+
+        //"54. Turn-around Statistics: Top 50 most delinquent invoices" => "turn-around-statistics-delayed-unpaid-invoices-by-days",
+        if( $chartType == "turn-around-statistics-delayed-unpaid-invoices-by-days" ) {
+            $transresRequestUtil = $this->container->get('transres_request_util');
+
+            $invoiceDueDaysArr = array();
+            //$invoiceDueArr = array();
+
+            //get unpaid and delayd invoices
+            //$invoices = $transresRequestUtil->getOverdueInvoices();
+            $invoiceStates = array("Unpaid/Issued");
+            $invoices = $this->getInvoicesByFilter($startDate,$endDate,$projectSpecialtyObjects,$invoiceStates,true);
+
+            foreach($invoices as $invoice) {
+
+                $nowDate = new \DateTime();
+                $dueDate = $invoice->getDueDate();
+                if( !$dueDate ) {
+                    continue; //ignore invoices without duedate
+                }
+
+                $days = $this->calculateDays($dueDate,$nowDate);
+
+                //APCP843-REQ16111-V1 to PIFirstName PILastName X days ago on MM/DD/YY for $XXX.XX - (123) 444-5555
+                $index = $invoice->getOid();
+                $pi = $invoice->getPrincipalInvestigator();
+                if( $pi ) {
+                    $index = $index . " to " . $pi->getUsernameOptimal();
+                }
+                $index = $index . " " . $days . " days ago";
+
+//                $issuedDate = $invoice->getIssuedDate();
+//                if( $issuedDate ) {
+//                    $index = $index . " on " . $issuedDate->format("m/d/Y");
+//                } else {
+//                    $index = $index . " due on " . $dueDate->format("m/d/Y");
+//                }
+                $index = $index . " due on " . $dueDate->format("m/d/Y");
+
+                $due = $invoice->getDue();
+                if( $due ) {
+                    $index = $index . " for $" . $this->getNumberFormat($due);
+                }
+                $phone = $pi->getSinglePhone();
+                if( $phone ) {
+                    $index = $index . " - " . $phone;
+                }
+
+                //$invoiceDueDaysArr[$index] = $days;
+                $invoiceShowUrl = $transresRequestUtil->getInvoiceShowUrl($invoice,false,$invoice->getOid(),true);
+                $invoiceDueDaysArr[$index] = array('value'=>$days,'link'=>$invoiceShowUrl);
+
+                //$invoiceDueArr[$index] = $invoice->getDue();
+
+            }//foreach
+
+            //$titleCount = $titleCount . " (invoices ".count($invoices).")";
+
+            $layoutArray = array(
+                'height' => $this->height*1.5,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 700)
+            );
+
+//            $descriptionArr = array(
+//                array(
+//                    'descrPrefix'   => "due $",
+//                    'descrPostfix'  => null,
+//                    'valuePrefix'   => ": (",
+//                    'valuePostfix'  => " overdue days)",
+//                    'descrColor'    => "red",
+//                    'descrType'     => "money",
+//                    'descrValueArr' => $invoiceDueArr
+//                ),
+//            );
+            $descriptionArr = array();
+
+            //$chartName = $this->getTitleWithTotal($chartName,count($invoices));
+            //109 unpaid invoices in total
+            $chartName = $chartName . " - " . count($invoices) . " unpaid invoices in total";
+
+            //$showOther = $this->getOtherStr($showLimited,"Invoices");
+            //$limit=50
+            $invoiceDueDaysArrTop = $this->getTopArray($invoiceDueDaysArr,false,$quantityLimit,$descriptionArr,$maxLen=100);
+            arsort($invoiceDueDaysArrTop);
+            $chartsArray = $this->getChart($invoiceDueDaysArrTop, $chartName,'bar',$layoutArray);
+        }
+
+        //"55. Number of reminder emails sent per month (linked)" => "reminder-emails-per-month",
+        if( $chartType == "reminder-emails-per-month" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            if( count($projectSpecialtyObjects) > 0 ) {
+                $projectSpecialtyObject = $projectSpecialtyObjects[0];
+            } else {
+                $projectSpecialtyObject = null;
+            }
+
+            //////// Construct link ////////
+            $ProjectReminderEventTypeId = null;
+            $RequestReminderEventTypeId = null;
+            $InvoiceReminderEventTypeId = null;
+            $ProjectReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Project Reminder Email");
+            if( $ProjectReminderEventType ) {
+                $ProjectReminderEventTypeId = $ProjectReminderEventType->getId();
+            }
+            $RequestReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Work Request Reminder Email");
+            if( $RequestReminderEventType ) {
+                $RequestReminderEventTypeId = $RequestReminderEventType->getId();
+            }
+            $InvoiceReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Unpaid Invoice Reminder Email");
+            if( $InvoiceReminderEventType ) {
+                $InvoiceReminderEventTypeId = $InvoiceReminderEventType->getId();
+            }
+
+            $linkFilterArr = array(
+                //'filter[startdate]' => $startDateStr,
+                //'filter[enddate]' => $endDateStr,
+                'filter[eventType][0]' => $ProjectReminderEventTypeId,
+                'filter[eventType][1]' => $RequestReminderEventTypeId,
+                'filter[eventType][2]' => $InvoiceReminderEventTypeId
+            );
+
+//            $link = $this->container->get('router')->generate(
+//                'translationalresearch_logger',
+//                $linkFilterArr,
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+            //////// EOF Construct link ////////
+
+            $unpaidInvoicesArr = array();
+            $delayedProjectsArr = array();
+            $delayedRequestsArr = array();
+            $delayedCompletedRequestsArr = array();
+            $delayedCompletedNoInvoiceRequestsArr = array();
+            $datesArr = array();
+
+            $delayedProjectsCount = 0;
+            $delayedRequestsCount = 0;
+            $delayedCompletedRequestsCount = 0;
+            $delayedCompletedNoInvoiceRequestsCount = 0;
+            $unpaidInvoicesCount = 0;
+
+            $pendingStates = array(
+                'active',
+                'pendingInvestigatorInput',
+                'pendingHistology',
+                'pendingImmunohistochemistry',
+                'pendingMolecular',
+                'pendingCaseRetrieval',
+                'pendingTissueMicroArray',
+                'pendingSlideScanning'
+            );
+            $completedStates = array(
+                'completed'
+            );
+            $completedNoInvoiceStates = array(
+                'completedNotified'
+            );
+
+            //get startDate and add 1 month until the date is less than endDate
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $unpaidInvoicesRemindersCount = $transresUtil->getUnpaidInvoiceRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
+                $delayedProjectRemindersCount = $transresUtil->getDelayedProjectRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects);
+                $delayedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$pendingStates);
+                $delayedCompletedRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedStates);
+                $delayedCompletedNoInvoiceRequestRemindersCount = $transresUtil->getDelayedRequestRemindersCount($startDate,$thisEndDate,$projectSpecialtyObjects,$completedNoInvoiceStates);
+
+                $startDate->modify( 'first day of next month' );
+
+                $unpaidInvoicesArr[$startDateLabel] = $unpaidInvoicesRemindersCount;
+                $unpaidInvoicesCount += $unpaidInvoicesRemindersCount;
+
+                $delayedProjectsArr[$startDateLabel] = $delayedProjectRemindersCount;
+                $delayedProjectsCount += $delayedProjectRemindersCount;
+
+                $delayedRequestsArr[$startDateLabel] = $delayedRequestRemindersCount;
+                $delayedRequestsCount += $delayedRequestRemindersCount;
+
+                $delayedCompletedRequestsArr[$startDateLabel] = $delayedCompletedRequestRemindersCount;
+                $delayedCompletedRequestsCount += $delayedCompletedRequestRemindersCount;
+
+                $delayedCompletedNoInvoiceRequestsArr[$startDateLabel] = $delayedCompletedNoInvoiceRequestRemindersCount;
+                $delayedCompletedNoInvoiceRequestsCount += $delayedCompletedNoInvoiceRequestRemindersCount;
+
+            } while( $startDate < $endDate );
+
+
+            //Reminders
+            $combinedData = array();
+            //$combinedData['Unpaid Invoices'] = $unpaidInvoicesArr;
+            $delayedInvoicesData = array();
+            foreach($unpaidInvoicesArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $delayedInvoicesData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["$unpaidInvoicesCount reminder emails for unpaid Invoices"] = $delayedInvoicesData;
+
+            //$combinedData['Delayed Project Requests'] = $delayedProjectsArr;
+            //Use IRB review delayed days for all states
+            $modifiedState = "irbreview";
+            $projectReminderDelayField = 'projectReminderDelay'.$modifiedState;
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter($projectReminderDelayField, null, $projectSpecialtyObject);
+            if (!$reminderDelay) {
+                $reminderDelay = 14; //default 14 days
+            }
+            //$combinedData["Project requests taking longer than $reminderDelay days to review"] = $delayedProjectsArr;
+            //show event log
+            $delayedProjectsData = array();
+            foreach($delayedProjectsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $delayedProjectsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["$delayedProjectsCount reminder emails for project requests taking longer than $reminderDelay days to review"] = $delayedProjectsData;
+
+            //$combinedData['Delayed Pending Work Request'] = $delayedRequestsArr;
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderDelay", null, $projectSpecialtyObject);
+            if (!$reminderDelay) {
+                $reminderDelay = 28; //default 28 days
+            }
+            //$combinedData["Work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsArr;
+            $delayedRequestsData = array();
+            foreach($delayedRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $delayedRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["$delayedRequestsCount reminder emails for work requests taking longer than $reminderDelay days to complete"] = $delayedRequestsData;
+
+            //$combinedData['Delayed Completed Work Request'] = $delayedCompletedRequestsArr;
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderDelay", null, $projectSpecialtyObject);
+            if (!$reminderDelay) {
+                $reminderDelay = 4; //default 4 days
+            }
+            //$combinedData["Work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsArr;
+            $delayedCompletedRequestsData = array();
+            foreach($delayedCompletedRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $delayedCompletedRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["$delayedCompletedRequestsCount reminder emails for work requests completed for over $reminderDelay days in need of submitter notifications"] = $delayedCompletedRequestsData;
+
+            //$combinedData['Delayed Completed and Notified Work Request without Invoices'] = $delayedCompletedNoInvoiceRequestsArr;
+            $reminderDelay = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderDelay", null, $projectSpecialtyObject);
+            if (!$reminderDelay) {
+                $reminderDelay = 7; //default 7 days
+            }
+            //$combinedData["Work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsArr;
+            $delayedCompletedNoInvoiceRequestsData = array();
+            foreach($delayedCompletedNoInvoiceRequestsArr as $date=>$value ) {
+
+                $dates = $datesArr[$date];
+                $linkFilterArr['filter[startdate]'] = $dates['startDate'];
+                $linkFilterArr['filter[enddate]'] = $dates['endDate'];
+                $link = $this->container->get('router')->generate(
+                    'translationalresearch_logger',
+                    $linkFilterArr,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $delayedCompletedNoInvoiceRequestsData[$date] = array('value'=>$value,'link'=>$link);
+            }
+            $combinedData["$delayedCompletedNoInvoiceRequestsCount reminder emails for work requests completed for over $reminderDelay days without invoices"] = $delayedCompletedNoInvoiceRequestsData;
+
+            //Total emails
+            $totalEmails = $delayedProjectsCount + $delayedRequestsCount + $delayedCompletedRequestsCount + $delayedCompletedNoInvoiceRequestsCount + $unpaidInvoicesCount;
+            if( $totalEmails ) {
+                $chartName = $chartName . " ($totalEmails total)";
+            }
+
+            //TODO: increase width of the chart
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width*1.2,
+                'title' => $chartName,
+                //'margin' => array('b' => 700)
+            );
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //" function getStackedChart("
+        }
+
+        //"56. Number of successful log in events for the TRP site per month" => "successful-logins-trp",
+        if( $chartType == "successful-logins-trp" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $loginsArr = array();
+            $totalLoginCount = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
+                $totalLoginCount += $loginCount;
+
+                $startDate->modify( 'first day of next month' );
+
+                $loginsArr[$startDateLabel] = $loginCount;
+
+
+            } while( $startDate < $endDate );
+
+            $combinedData["TRP Login"] = $loginsArr;
+
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"57. Number of successful log in events per site" => "successful-logins-site"
+        if( $chartType == "successful-logins-site" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            $loginsEmployeesArr = array();
+            $loginsTranslationalresearchArr = array();
+            $loginsFellappArr = array();
+            $loginsVacreqArr = array();
+            $loginsCalllogArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
+            //$loginsScanArr = array();
+
+            $totalLoginCount = 0;
+            $loginCountCalllog = 0;
+            $loginCountVacreq = 0;
+            $loginCountFellapp = 0;
+            $loginCountEmpl = 0;
+            $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees');
+                $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
+                $totalLoginCount += $loginEmployeesCount;
+                $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
+
+                $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch');
+                $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
+                $totalLoginCount += $loginTranslationalresearchCount;
+                $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
+
+                $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp');
+                $loginsFellappArr[$startDateLabel] = $loginFellappCount;
+                $totalLoginCount += $loginFellappCount;
+                $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
+
+                $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq');
+                $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
+                $totalLoginCount += $loginVacreqCount;
+                $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
+
+                $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog');
+                $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
+                $totalLoginCount += $loginCalllogCount;
+                $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
+
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn');
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $totalLoginCount += $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp');
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $totalLoginCount += $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
+                //$loginScanCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'scan');
+                //$loginsScanArr[$startDateLabel] = $loginScanCount;
+                //$totalLoginCount += $loginScanCount;
+
+                $startDate->modify( 'first day of next month' );
+
+
+
+            } while( $startDate < $endDate );
+
+            $combinedData["Translational Research log in events ($loginCountTrp)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory log in events ($loginCountEmpl)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications log in events ($loginCountFellapp)"] = $loginsFellappArr;
+            $combinedData["Vacation Request log in events ($loginCountVacreq)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book log in events ($loginCountCalllog)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification log in events ($loginCountCrn)"] = $loginsCrnArr;
+            $combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
+            //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
+
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"58. Number of successful log in events per user" => "successful-logins-user"
+//        if( $chartType == "successful-logins-user" ) {
+//            $transresUtil = $this->container->get('transres_util');
+//
+//            $unique = true;
+//            //$unique = false;
+//
+//            //$loginsArr = array();
+//            $loginsUserArr = array();
+//            $userArr = array();
+//
+//            //$totalLoginCount = 0;
+//
+//            $startDate->modify( 'first day of last month' );
+//            do {
+//                $startDateLabel = $startDate->format('M-Y');
+//                $thisEndDate = clone $startDate;
+//                $thisEndDate->modify( 'first day of next month' );
+//                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+//                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+//
+//                $loginsArr = $transresUtil->getLoginsUniqueUser($startDate,$thisEndDate,$unique);
+//
+//                foreach($loginsArr as $loginUser) {
+//                    $loginUserId = $loginUser['id'];
+//                    if( isset($userArr[$loginUserId]) ) {
+//                        $userTitle = $userArr[$loginUserId];
+//                    } else {
+//                        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($loginUserId);
+//                        $userTitle = $user->getUsernameOptimal();
+//                        $userArr[$loginUserId] = $userTitle;
+//                    }
+//                    //$user = $loginUser['user'];
+//                    //echo "user=".$user."<br>";
+//                    $loginsUserArr[$userTitle][$startDateLabel]++;
+//                    //$loginsUserArr[$startDateLabel][$login->getUser()->getUsernameOptimal()]++;
+//
+//                    //$totalLoginCount++;
+//                }
+//
+//                //$loginsUserArr[$user->getUsernameOptimal()]++;
+//
+//                $startDate->modify( 'first day of next month' );
+//
+//            } while( $startDate < $endDate );
+//
+//            foreach($loginsUserArr as $startDateLabel=>$userDataArr) {
+//                $combinedData[$startDateLabel] = $userDataArr;
+//            }
+//
+//            //$combinedData["Translational Research Logins"] = $loginsTranslationalresearchArr;
+//
+//            //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
+//
+//            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+//        }
+        //"58. Number of unique users in a given month who successful log in, per site" => "successful-unique-logins-site-month"
+        if( $chartType == "successful-unique-logins-site-month" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            //single bar for a given week would be divided by sub-site and each bar segment should show the total number of unique user logins
+
+            $loginsEmployeesArr = array();
+            $loginsTranslationalresearchArr = array();
+            $loginsFellappArr = array();
+            $loginsVacreqArr = array();
+            $loginsCalllogArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
+            //$loginsScanArr = array();
+
+            $totalLoginCount = 0;
+            $loginCountCalllog = 0;
+            $loginCountVacreq = 0;
+            $loginCountFellapp = 0;
+            $loginCountEmpl = 0;
+            $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
+            $counter = 0;
+
+            //echo "1 StartDate=".$startDate->format('d-M-Y')."<br>";
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            //$endDate->modify( 'last day of this month' );
+
+            $interval = new \DateInterval('P1M');
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            //echo "2 StartDate=".$startDate->format('d-M-Y')."<br>";
+
+            //unique users for all sites. Not equal sum of the unique users per each site.
+            //$loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->add(new \DateInterval('P6D'));
+                $thisEndDate->add(new \DateInterval('P1M'));
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
+                $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
+                //$totalLoginCount += $loginEmployeesCount;
+                $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
+
+                $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch',true);
+                $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
+                //$totalLoginCount += $loginTranslationalresearchCount;
+                $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
+
+                $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp',true);
+                $loginsFellappArr[$startDateLabel] = $loginFellappCount;
+                //$totalLoginCount += $loginFellappCount;
+                $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
+
+                $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq',true);
+                $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
+                //$totalLoginCount += $loginVacreqCount;
+                $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
+
+                $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog',true);
+                $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
+                //$totalLoginCount += $loginCalllogCount;
+                $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
+
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp',true);
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn',true);
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                $counter++;
+            }
+
+            //Average
+            $loginCountAvgTrp = 0;
+            $loginCountAvgEmpl = 0;
+            $loginCountAvgFellapp = 0;
+            $loginCountAvgVacreq = 0;
+            $loginCountAvgCalllog = 0;
+            $loginCountAvgCrn = 0;
+            $loginCountAvgResapp = 0;
+            if( $counter > 0 ) {
+                $loginCountAvgTrp = round($loginCountTrp/$counter,2);
+                $loginCountAvgEmpl = round($loginCountEmpl/$counter,2);
+                $loginCountAvgFellapp = round($loginCountFellapp/$counter,2);
+                $loginCountAvgVacreq = round($loginCountVacreq/$counter,2);
+                $loginCountAvgCalllog = round($loginCountCalllog/$counter,2);
+                $loginCountAvgCrn = round($loginCountCrn/$counter,2);
+                $loginCountAvgResapp = round($loginCountResapp/$counter,2);
+            }
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["Translational Research Users ($loginCountAvgTrp on average per month; $loginCountTrp total)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Users ($loginCountAvgEmpl on average per month; $loginCountEmpl total)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Users ($loginCountAvgFellapp on average per month; $loginCountFellapp total)"] = $loginsFellappArr;
+            $combinedData["Vacation Request Users ($loginCountAvgVacreq on average per month; $loginCountVacreq total)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Users ($loginCountAvgCalllog on average per month; $loginCountCalllog total)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountAvgCrn on average per month; $loginCountCrn total)"] = $loginsCrnArr;
+            $combinedData["Residency Applications Users ($loginCountAvgResapp on average per month; $loginCountResapp total)"] = $loginsResappArr;
+            //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
+
+            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp;
+
+            //$chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            //$chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"59. Number of unique users in a given week who successful log in, per site" => "successful-unique-logins-site-week",
+        if( $chartType == "successful-unique-logins-site-week" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            //single bar for a given week would be divided by sub-site and each bar segment should show the total number of unique user logins
+
+            $loginsEmployeesArr = array();
+            $loginsTranslationalresearchArr = array();
+            $loginsFellappArr = array();
+            $loginsVacreqArr = array();
+            $loginsCalllogArr = array();
+            //$loginsScanArr = array();
+            $loginsCrnArr = array();
+            $loginsResappArr = array();
+
+            $totalLoginCount = 0;
+            $loginCountCalllog = 0;
+            $loginCountVacreq = 0;
+            $loginCountFellapp = 0;
+            $loginCountEmpl = 0;
+            $loginCountTrp = 0;
+            $loginCountCrn = 0;
+            $loginCountResapp = 0;
+            $counter = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            //$endDate->modify( 'last day of this month' );
+
+            $interval = new \DateInterval('P1W');
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            //unique users for all sites. Not equal sum of the unique users per each site.
+            //$loginTotalUniqueCount = $transresUtil->getLoginCount($startDate,$endDate,null,true);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+                $thisEndDate->add(new \DateInterval('P6D'));
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $loginEmployeesCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'employees',true);
+                $loginsEmployeesArr[$startDateLabel] = $loginEmployeesCount;
+                //$totalLoginCount += $loginEmployeesCount;
+                $loginCountEmpl = $loginCountEmpl + $loginEmployeesCount;
+
+                $loginTranslationalresearchCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'translationalresearch',true);
+                $loginsTranslationalresearchArr[$startDateLabel] = $loginTranslationalresearchCount;
+                //$totalLoginCount += $loginTranslationalresearchCount;
+                $loginCountTrp = $loginCountTrp + $loginTranslationalresearchCount;
+
+                $loginFellappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'fellapp',true);
+                $loginsFellappArr[$startDateLabel] = $loginFellappCount;
+                //$totalLoginCount += $loginFellappCount;
+                $loginCountFellapp = $loginCountFellapp + $loginFellappCount;
+
+                $loginVacreqCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'vacreq',true);
+                $loginsVacreqArr[$startDateLabel] = $loginVacreqCount;
+                //$totalLoginCount += $loginVacreqCount;
+                $loginCountVacreq = $loginCountVacreq + $loginVacreqCount;
+
+                $loginCalllogCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'calllog',true);
+                $loginsCalllogArr[$startDateLabel] = $loginCalllogCount;
+                //$totalLoginCount += $loginCalllogCount;
+                $loginCountCalllog = $loginCountCalllog + $loginCalllogCount;
+
+                $loginCrnCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'crn',true);
+                $loginsCrnArr[$startDateLabel] = $loginCrnCount;
+                $loginCountCrn = $loginCountCrn + $loginCrnCount;
+
+                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp',true);
+                $loginsResappArr[$startDateLabel] = $loginResappCount;
+                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
+                $counter++;
+            }
+
+            //Average
+            $loginCountAvgTrp = 0;
+            $loginCountAvgEmpl = 0;
+            $loginCountAvgFellapp = 0;
+            $loginCountAvgVacreq = 0;
+            $loginCountAvgCalllog = 0;
+            $loginCountAvgCrn = 0;
+            $loginCountAvgResapp = 0;
+            if( $counter > 0 ) {
+                $loginCountAvgTrp = round($loginCountTrp/$counter,2);
+                $loginCountAvgEmpl = round($loginCountEmpl/$counter,2);
+                $loginCountAvgFellapp = round($loginCountFellapp/$counter,2);
+                $loginCountAvgVacreq = round($loginCountVacreq/$counter,2);
+                $loginCountAvgCalllog = round($loginCountCalllog/$counter,2);
+                $loginCountAvgCrn = round($loginCountCrn/$counter,2);
+                $loginCountAvgResapp = round($loginCountResapp/$counter,2);
+            }
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["Translational Research Users ($loginCountAvgTrp on average per week; $loginCountTrp total)"] = $loginsTranslationalresearchArr;
+            $combinedData["Employee Directory Users ($loginCountAvgEmpl on average per week; $loginCountEmpl total)"] = $loginsEmployeesArr;
+            $combinedData["Fellowship Applications Users ($loginCountAvgFellapp on average per week; $loginCountFellapp total)"] = $loginsFellappArr;
+            $combinedData["Vacation Request Users ($loginCountAvgVacreq on average per week; $loginCountVacreq total)"] = $loginsVacreqArr;
+            $combinedData["Call Log Book Users ($loginCountAvgCalllog on average per week; $loginCountCalllog total)"] = $loginsCalllogArr;
+            $combinedData["Critical Result Notification Users ($loginCountAvgCrn on average per week; $loginCountCrn total)"] = $loginsCrnArr;
+            $combinedData["Residency Applications Users ($loginCountAvgResapp on average per week; $loginCountResapp total)"] = $loginsResappArr;
+            //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
+
+            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp;
+
+//            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+            //$chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
+            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"60. PIs with most projects" => "pis-with-most-projects"
+        //for 60 total their project requests in any status except Draft or Canceled
+        if( $chartType == "pis-with-most-projects" ) {
+
+        }
+
+        //"61. PIs with highest expenditures" => "pis-with-highest-expenditures"
+        //for 61 total their paid invoices with status "Paid" for the time period in the filter well
+        if( $chartType == "pis-with-highest-expenditures" ) {
+
+        }
+
+        if( $chartType == "fellapp-number-applicant-by-year" ) {
+            $transresUtil = $this->container->get('transres_util');
+
+            //get fellapp applications by year
+            //TODO: implement
+
+        }
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+            $transresUtil = $this->container->get('transres_util');
+            //TODO: implement
+
+        }
+
+        //"62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
+        if( $chartType == "new-and-edited-calllog-entries-per-day" ) {
+            //Dates on the X axis
+            //Quantity (1,2,3,4) on the Y axis
+            //Legend:
+            //New Call Log Entries
+            //Edited Call Log Entries
+            //$transresUtil = $this->container->get('transres_util');
+            $calllogUtil = $this->container->get('calllog_util');
+
+            $newTypeArr = array("New Call Log Book Entry Submitted");
+            $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
+
+            $newArr = array();
+            $editedArr = array();
+
+            $newCount = 0;
+            $editedCount = 0;
+            $counter = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            //$totalCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,$editedTypeArr);
+            $totalCalllogEntriesCount = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate,$endDate,true);
+
+            $weekly = true;  //weekly
+            //$weekly = false; //daily
+
+            if( $weekly ) {
+                $interval = new \DateInterval('P1W'); //P1D P1W
+            } else {
+                $interval = new \DateInterval('P1D'); //P1D P1W
+            }
+
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+
+                if( $weekly ) {
+                    $thisEndDate->add(new \DateInterval('P6D'));
+                } else {
+                    $thisEndDate->add(new \DateInterval('P1D'));
+                }
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y H:i:s")."; EndDate=".$thisEndDate->format("d-M-Y H:i:s")."<br>";
+
+                $newCalllogEntriesCount = $calllogUtil->getCalllogEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $newArr[$startDateLabel] = $newCalllogEntriesCount;
+                $newCount = $newCount + $newCalllogEntriesCount;
+
+                $editedCalllogEntriesCount = $calllogUtil->getCalllogEntriesCount($startDate,$thisEndDate,$editedTypeArr);
+                //$editedCalllogEntriesCount = $transresUtil->getTotalUniqueCalllogEntriesCount($startDate,$thisEndDate);
+                $editedArr[$startDateLabel] = $editedCalllogEntriesCount;
+                $editedCount = $editedCount + $editedCalllogEntriesCount;
+
+                $counter++;
+            }
+
+            $calllogTotalCount = $newCount + $editedCount;
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["New Call Log Entries ($newCount total)"] = $newArr;
+
+            //$combinedData["Edited Call Log Entries ($editedCount total)"] = $editedArr;
+            //convert that "edited" legend only from saying "Edited Call Log Entries (2503 total)" to
+            // "X entries edited Y times in total" $totalCalllogEntriesCount
+            $combinedData["$totalCalllogEntriesCount entries edited $editedCount times in total"] = $editedArr;
+
+            $chartName = $chartName . " (" . $calllogTotalCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        //"63. Patients with Call Log Entries Per Day" => "patients-calllog-per-day",
+        if( $chartType == "patients-calllog-per-day" ) {
+            //Title: Patients with Call Log Entries Per Day
+            //Dates on the X axis
+            //Quantity (1,2,3,4) on the Y axis
+            //Legend: Patients with new call log entries
+            //The second graph would show the number of patients who got a new Call Log entry per day.
+
+            //$transresUtil = $this->container->get('transres_util');
+            $calllogUtil = $this->container->get('calllog_util');
+
+            $newTypeArr = array("New Call Log Book Entry Submitted");
+            $editedTypeArr = array("Call Log Book Entry Edited","Call Log Book Entry Amended");
+
+            $patientsArr = array();
+
+            $patientCount = 0;
+            $counter = 0;
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+
+            $weekly = true;  //weekly
+            //$weekly = false; //daily
+
+            if( $weekly ) {
+                $interval = new \DateInterval('P1W'); //P1D P1W
+            } else {
+                $interval = new \DateInterval('P1D'); //P1D P1W
+            }
+
+            $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+            foreach( $dateRange as $startDate ) {
+                //+6 days
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->add(new \DateInterval('P6D'));
+                if( $weekly ) {
+                    $thisEndDate->add(new \DateInterval('P6D'));
+                } else {
+                    $thisEndDate->add(new \DateInterval('P1D'));
+                }
+
+                $startDateLabel = $startDate->format('d-M-Y');
+
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+                $calllogPatientEntriesCount = $calllogUtil->getCalllogPatientEntriesCount($startDate,$thisEndDate,$newTypeArr);
+                $patientsArr[$startDateLabel] = $calllogPatientEntriesCount;
+                $patientCount = $patientCount + $calllogPatientEntriesCount;
+
+                $counter++;
+            }
+
+            //($loginCountTrp on average per week; 2 total)
+            $combinedData["Number of Patients who got a new Call Log entry"] = $patientsArr;
+            //$combinedData["Number of Patients who got a new Call Log entry2"] = $patientsArr;
+
+            $chartName = $chartName . " (" . $patientCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+        }
+
+        if( $chartType == "" ) {
+
+        }
+        if( $chartType == "" ) {
+
+        }
+        if( $chartType == "" ) {
+
+        }
+
+
+        //$chartsArray = array(); //testing
+        //$chartsArray = null; //testing
+
+        if( !is_array($chartsArray) ) {
+            //echo "null <br>";
+            $chartKey = $this->getChartTypeByValue($chartType);
+            $chartsArray['error'] = "Chart type '$chartKey' is not valid";
+            $chartsArray['warning'] = false;
+            return $chartsArray;
+        }
+
+        if( is_array($chartsArray) && count($chartsArray) == 0 ) {
+            //echo "count is 0 <br>";
+            if( !$warningNoData ) {
+                $chartKey = $this->getChartTypeByValue($chartType);
+                $warningNoData = "Chart data is not found for '$chartKey'";
+            }
+            $chartsArray['warning'] = $warningNoData;   //"Chart data is not found for '$chartKey'";
+            $chartsArray['error'] = false;
+            return $chartsArray;
+        }
+
+
+        return $chartsArray;
     }
 
 }
