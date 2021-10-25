@@ -36,13 +36,13 @@ class DefaultController extends OrderAbstractController
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 
-    /**
-     * @Route("/", name="dashboard_home")
-     * @Template("AppDashboardBundle/Default/index.html.twig")
-     */
-    public function indexAction( Request $request ) {
-        return array('sitename'=>$this->getParameter('dashboard.sitename'));
-    }
+//    /**
+//     * @Route("/", name="dashboard_home")
+//     * @Template("AppDashboardBundle/Default/index.html.twig")
+//     */
+//    public function indexAction( Request $request ) {
+//        return array('sitename'=>$this->getParameter('dashboard.sitename'));
+//    }
 
 
     /**

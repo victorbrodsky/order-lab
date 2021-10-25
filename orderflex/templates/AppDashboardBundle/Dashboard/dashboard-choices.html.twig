@@ -1,6 +1,5 @@
-{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{% extends "AppDashboardBundle/Default/base.html.twig" %}
 
-{#{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
@@ -44,7 +43,7 @@
                 {#{% endif %}#}
             {#</div>#}
             <div class="col-xs-1">
-                <button id="filter-btn" type="button" class="btn btn-default" onclick="transresGetCharts()" data-spinner-color="{{ spinnerColor }}">Filter</button>
+                <button id="filter-btn" type="button" class="btn btn-default" onclick="plotlyGetCharts('dashboard')" data-spinner-color="{{ spinnerColor }}">Filter</button>
             </div>
         </div>
 
@@ -86,21 +85,9 @@
 
 {% block additionaljs %}
 
-    {#{% javascripts#}
-        {#'@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'#}
-        {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-choices-plotly.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
 
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
-    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-choices-plotly.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>
 
-    {#<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
-
-    {#<script type="text/javascript">#}
-        {#var chartTypes = {{ chartTypes|json_encode|raw }};#}
-    {#</script>#}
 
 {% endblock %}

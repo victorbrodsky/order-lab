@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 });
 
-function plotlyGetCharts() {
+function plotlyGetCharts( thsiSitename ) {
     console.log("get charts");
 
     _totalChartCount = 0;
@@ -50,7 +50,7 @@ function plotlyGetCharts() {
 
     var quantityLimit = $("#filter_quantityLimit").val();
 
-    var url = Routing.generate('translationalresearch_single_chart');
+    var url = Routing.generate(thsiSitename+'_single_chart');
 
     _totalChartCount = chartTypes.length;
 

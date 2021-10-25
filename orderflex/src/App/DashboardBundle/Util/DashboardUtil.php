@@ -81,6 +81,45 @@ class DashboardUtil
     }
 
     public function getChartTypes() {
+        //get chart types from DB ChartList
+//        $charts = $this->em->getRepository('AppDashboardBundle:ChartList')->findBy(
+//            array(
+//                'type' => array("default","user-added")
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        $chartArr = array();
+
+        foreach($charts as $chart) {
+            $chartArr[$chart->getName()] = $chart->getAbbreviation();
+        }
+
+        if( count($chartArr) == 0 ) {
+            $chartArr = $this->getChartTypesInit();
+        }
+
+        return $chartArr;
+    }
+
+    public function getChartTypesInit() {
 
         //Add project specialty types according to the enabled specialties.
         //Replace [[projectSpecialties]] by $transresUtil->getAllowedProjectSpecialty($user)
@@ -224,43 +263,748 @@ class DashboardUtil
     }
 
 
+    /////////////////////// methods ////////////////////////////
+    public function isUserBelongsToInstitution($user, $parentInstitution) {
+        if( !$parentInstitution ) {
+            return false;
+        }
 
-    public function getChartNameWithTop($chartName,$quantityLimit) {
-//        if( !$quantityLimit ) {
-//            $quantityLimit = 10;
+        //get all user's institutions
+        $institutions = $user->getInstitutions();
+
+        foreach($institutions as $institution) {
+            //echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
+            if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+                //echo $user.": isUserBelongsToInstitution Yes! <br>";
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getNumberFormat($number,$digits=null) {
+        //$number = 123456789;
+        return number_format($number,$digits);
+    }
+
+    public function getOtherStr( $showLimited, $otherPrefix ) {
+        if( $showLimited ) {
+            return false; //show top ten only without others
+        }
+        return $otherPrefix;
+    }
+
+    //select top 10 ($limit), BUT make sure the other PIs are still shown as "Other"
+    public function getTopArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
+        arsort($piProjectCountArr);
+
+        //$limit = 10;
+        //$limit = $this->quantityLimit;
+        //$limit = 3;
+
+        if( $limit == "Show all" ) {
+            $limit = null;
+        }
+
+        //$showOthers = true;
+        //$otherId = "All other $showOthers combined";
+        $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
+
+        $otherIndexArr = array();
+        $totalOtherValue = 0;
+        $count = 1;
+        $piProjectCountTopArr = array();
+        foreach($piProjectCountArr as $username=>$value) {
+            //$value = $this->getNumberFormat($value);
+            //echo $username.": ".$count."<br>";
+            if( $count <= $limit || !$limit ) {
+                if( $value && $value != 0 ) {
+                    //echo "add value=".$value."<br>";
+                    $piProjectCountTopArr[$username] = $value;
+                }
+            } else {
+                if( $showOthers !== false ) { //show others
+                    //echo "show Others <br>";
+                    if( is_array($value) ) {
+                        //echo "1valueArr=".$value['value']."<br>";
+                        $value = $value['value'];
+                    } else {
+                        //echo "1value=".$value."<br>";
+                        //$value = $piProjectCountTopArr[$otherId] + $value;
+                    }
+                    //echo "Original value=".$value."<br>";
+                    $totalOtherValue = $totalOtherValue + $value;
+                    if (isset($piProjectCountTopArr[$otherId])) {
+                        $value = $piProjectCountTopArr[$otherId] + intval($value);
+//                        if( is_array($value) ) {
+//                            echo "1valueArr=".$value['value']."<br>";
+//                            $value = intval($piProjectCountTopArr[$otherId]) + intval($value['value']);
+//                        } else {
+//                            echo "1value=".$value."<br>";
+//                            $value = $piProjectCountTopArr[$otherId] + $value;
+//                        }
+                    } else {
+                        //$value = 1;
+                    }
+                    //echo "res value=".$value."<br>";
+
+                    $piProjectCountTopArr[$otherId] = $value;
+
+                    //add value to description array with index "other"
+                    $otherIndexArr[$username] = $piProjectCountTopArr[$otherId];
+
+                    //echo "add value=".$value."<br>";
+                    //if( is_array($value) ) {
+                    //$totalValue = $totalValue + $value['value'];
+                    //echo "2valueArr=".$value['value']."<br>";
+                    //} else {
+                    //echo "2value=".$value."<br>";
+                    //}
+
+                }//if show others
+            }
+            $count++;
+        }
+
+        if( $maxLen ) {
+            $piProjectCountTopShortArr = array();
+            foreach($piProjectCountTopArr as $index=>$value) {
+                $index = $this->tokenTruncate($index,$maxLen);
+
+                $descr = array();
+                foreach($descriptionArr as $descriptionSingleArr) {
+                    $descrPrefix = $descriptionSingleArr['descrPrefix'];
+                    $descrPostfix = $descriptionSingleArr['descrPostfix'];
+                    $valuePrefix = $descriptionSingleArr['valuePrefix'];
+                    $valuePostfix = $descriptionSingleArr['valuePostfix'];
+                    $descrColor = $descriptionSingleArr['descrColor'];
+                    $descrType = $descriptionSingleArr['descrType'];
+                    $descrValueArr = $descriptionSingleArr['descrValueArr'];
+
+                    if( array_key_exists($index,$descrValueArr) ) {
+                        $descrValue = $descrValueArr[$index];
+                    }
+
+                    if( $index == $otherId ) {
+                        $descrValue = 0;
+                        //$valueTotal = 0;
+                        foreach($otherIndexArr as $username=>$thisValue) {
+                            if( $thisValue && array_key_exists($username,$descrValueArr) ) {
+                                $descrValue = $descrValue + $descrValueArr[$username];
+
+//                                if( is_array($value) ) {
+//                                    $valueTotal = $valueTotal + $value['value'];
+//                                } else {
+//                                    $valueTotal = $valueTotal + $value;
+//                                }
+                            }
+                        }
+                        //echo "descrValue=$descrValue <br>";
+                        //echo "valueTotal=$valueTotal <br>";
+                        //echo "totalOtherValue=$totalOtherValue <br>";
+
+                        if( is_array($value) ) {
+                            $value['value'] = $totalOtherValue; //$valueTotal;
+                        } else {
+                            $value = $totalOtherValue; //$valueTotal;
+                        }
+                    }//$index == $otherId
+
+                    if( $descrType == "money" ) {
+                        $descrValue = $this->getNumberFormat($descrValue);
+                    }
+                    if( $descrValue ) {
+                        if( $descrColor ) {
+                            $descr[] = '<span style="color:'.$descrColor.'">' . $descrPrefix . $descrValue . $descrPostfix . '</span>';
+                        } else {
+                            $descr[] = $descrPrefix . $descrValue;
+                        }
+                    }
+                }//foreach
+
+                if( count($descr) > 0 ) {
+                    if( is_array($value) ) {
+                        $valueLabel = $value['value'];
+                    } else {
+                        $valueLabel = $value;
+                    }
+                    if( strpos($valuePrefix,'$') !== false ) {
+                        $valueLabel = $this->getNumberFormat($valueLabel);
+                    } else {
+                        $valueLabel = $valueLabel;
+                    }
+
+                    //$valueLabel = $valueLabel . ": " . $value; //testing
+
+                    $index = $index . " " . $valuePrefix . $valueLabel . $valuePostfix . " (" . implode(", ",$descr) . ")";
+                }
+
+                $piProjectCountTopShortArr[$index] = $value;
+            }//foreach
+
+//            echo "<pre>";
+//            print_r($piProjectCountTopShortArr);
+//            echo "</pre>";
+//            exit('111');
+
+            return $piProjectCountTopShortArr;
+        }//if
+
+        return $piProjectCountTopArr;
+    }
+    public function getTopMultiArray($piProjectCountArr, $showOthers=false, $limit=10, $descriptionArr=array(), $maxLen=50) {
+        //arsort($piProjectCountArr);
+        usort($piProjectCountArr, function($a, $b) {
+            return $b['value'] - $a['value'];
+        });
+
+//        echo "<pre>";
+//        print_r($piProjectCountArr);
+//        echo "</pre>";
+
+        //$limit = 10;
+        //$limit = 3;
+        //$showOthers = true;
+        //if( !$showOthers ) {
+        //“Show only the top 10” - if it is checked, show only the top ten projects, if it is not checked, show the top 100
+        //$limit = 20;
+        //}
+
+        if( $limit == "Show all" ) {
+            $limit = null;
+        }
+
+        //$otherId = "All other $showOthers combined";
+        $otherId = str_replace("[[otherStr]]",$showOthers,$this->otherId);
+
+        $otherObjectids = array();
+
+        $count = 1;
+        $piProjectCountTopArr = array();
+        foreach($piProjectCountArr as $id=>$arr) {
+            $value = $arr['value'];
+            $label = $arr['label'];
+            $objectid = $arr['objectid'];
+            $pi = $arr['pi'];
+
+            $showPath = null;
+            $link = null;
+            if( isset($arr['show-path']) ) {
+                $showPath = $arr['show-path'];
+            }
+            if( isset($arr['link']) ) {
+                $link = $arr['link'];
+            }
+
+            //echo "value=".$value."<br>";
+            //echo $username.": ".$count."<br>";
+            if( $value && $value != 0 ) {
+                if ($count <= $limit || !$limit) {
+                    $piProjectCountTopArr[$id]['value'] = $value;
+                    $piProjectCountTopArr[$id]['label'] = $label;
+                    $piProjectCountTopArr[$id]['show-path'] = $showPath;
+                    $piProjectCountTopArr[$id]['link'] = $link;
+                    $piProjectCountTopArr[$id]['objectid'] = $objectid;
+                    $piProjectCountTopArr[$id]['pi'] = $pi;
+                } else {
+                    if( $showOthers !== false ) {
+                        //echo "show Others <br>";
+                        if (isset($piProjectCountTopArr[$otherId]) && isset($piProjectCountTopArr[$otherId]['value'])) {
+                            $thisValue = $piProjectCountTopArr[$otherId]['value'] + $value;
+                        } else {
+                            $thisValue = $value;
+                        }
+                        //echo $label.": ".$value."=>".$thisValue."<br>";
+                        $piProjectCountTopArr[$otherId]['value'] = $thisValue;
+                        $piProjectCountTopArr[$otherId]['label'] = $otherId;
+                        $piProjectCountTopArr[$otherId]['show-path'] = $showPath;
+                        $piProjectCountTopArr[$otherId]['link'] = $link;
+                        $piProjectCountTopArr[$otherId]['objectid'] = null;
+                        $piProjectCountTopArr[$otherId]['pi'] = $pi;
+                        $otherObjectids[] = $objectid;
+                    }
+                }
+            }
+            $count++;
+        }
+
+        if( $showOthers ) {
+            $piProjectCountTopArr[$otherId]['objectid'] = $otherObjectids;
+        }
+
+        if( $maxLen ) {
+            $piProjectCountTopShortArr = array();
+            foreach($piProjectCountTopArr as $id=>$arr) {
+
+                $value = null;
+                if( array_key_exists("value",$arr) ) {
+                    $value = $arr['value'];
+                } else {
+                    continue;
+                }
+
+//                $label = null;
+//                if( array_key_exists("label",$arr) ) {
+//                    $label = $arr['label'];
+//                }
+//
+//                $showPath = null;
+//                if( array_key_exists("show-path",$arr) ) {
+//                    $showPath = $arr['show-path'];
+//                }
+
+                $label = $arr['label'];
+                $showPath = $arr['show-path'];
+                $link = $arr['link'];
+                $pi = $arr['pi'];
+                $objectid = $arr['objectid'];
+                //echo "objectid=".$objectid."<br>";
+                $label = $this->tokenTruncate($label,$maxLen);
+                $piProjectCountTopShortArr[$id]['value'] = $value;
+                $piProjectCountTopShortArr[$id]['label'] = $label;
+                $piProjectCountTopShortArr[$id]['show-path'] = $showPath;
+                $piProjectCountTopShortArr[$id]['link'] = $link;
+                $piProjectCountTopShortArr[$id]['objectid'] = $objectid;
+                $piProjectCountTopShortArr[$id]['pi'] = $pi;
+            }
+            return $piProjectCountTopShortArr;
+        }
+
+        return $piProjectCountTopArr;
+    }
+    public function tokenTruncate($string, $your_desired_width) {
+        $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        $parts_count = count($parts);
+
+        $postfix = null;
+        $length = 0;
+        $last_part = 0;
+        for (; $last_part < $parts_count; ++$last_part) {
+            $length += strlen($parts[$last_part]);
+            if ($length > $your_desired_width) {
+                $postfix = "...";
+                break;
+            }
+        }
+
+        $res = implode(array_slice($parts, 0, $last_part));
+        $res = trim($res) . $postfix;
+        //$res = $res . $postfix;
+        //echo "res=[".$res."]<br>";
+
+        return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
+    }
+
+    public function addValueToOther($arrTop,$prefix=": $",$arrayValueKey='value') {
+        $newArrTop = array();
+        foreach($arrTop as $label => $value) {
+            if( strpos($label, $this->otherSearchStr) !== false ) {
+                if( is_array($value) ) {
+                    print_r($value);
+                    //exit('111');
+                    $value = $value[$arrayValueKey];
+                    //echo "value(other array)=$value <br>";
+                    $label = $label . $prefix . $this->getNumberFormat($value);
+                } else {
+                    //echo "value(other regular)=$value <br>";
+                    $label = $label . $prefix . $this->getNumberFormat($value);
+                }
+                //$label = $label . $prefix . $value;
+                $newArrTop[$label] = $value;
+            } else {
+//                if( is_array($value) ) {
+//                    echo "value(regular)=$value[$arrayValueKey] <br>";
+//                } else {
+//                    echo "value(regular)=$value <br>";
+//                }
+                $newArrTop[$label] = $value;
+            }
+        }//foreach
+        exit('111');
+        return $newArrTop;
+    }
+
+    public function adjustBrightness($hex, $steps) {
+        // Steps should be between -255 and 255. Negative = darker, positive = lighter
+        $steps = max(-255, min(255, $steps));
+
+        // Normalize into a six character long hex string
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 3) {
+            $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+        }
+
+        // Split into three parts: R, G and B
+        $color_parts = str_split($hex, 2);
+        $return = '#';
+
+        foreach ($color_parts as $color) {
+            $color   = hexdec($color); // Convert to decimal
+            $color   = max(0,min(255,$color + $steps)); // Adjust color
+            $return .= str_pad(dechex($color), 2, '0', STR_PAD_LEFT); // Make two char hex code
+        }
+
+        return $return;
+    }
+
+    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null) {
+
+        if( count($dataArr) == 0 ) {
+            return array();
+        }
+
+        $labels = array();
+        $values = array();
+        $links = array();
+        //$text = array();
+
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+        }
+
+        if( $title ) {
+            $layoutArray['title'] = $title;
+        }
+
+        foreach( $dataArr as $label => $valueData ) {
+            $origLabel = $label;
+            if( is_array($valueData) ) {
+                $value = $valueData["value"];
+                $link = $valueData["link"];
+            } else {
+                $value = $valueData;
+                $link = null;
+            }
+            //value
+            if ($type == "bar" || ($value && $value != 0)) {
+                if( ($valuePrefixLabel || $valuePostfixLabel) && $value ) {
+                    if (strpos($valuePrefixLabel, '$') !== false) {
+                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value) . $valuePostfixLabel;
+                    } else {
+                        $label = $label . " " . $valuePrefixLabel . $value . $valuePostfixLabel;
+                    }
+                    //echo "value=$value<br>";
+                }
+
+                if( $descriptionArr ) {
+                    if( isset($descriptionArr[$origLabel]) ) {
+                        $label = $label . $descriptionArr[$origLabel];
+                    }
+                }
+
+                $labels[] = $label;
+                $values[] = $value;
+                //$text[] = $value;
+                if( $link ) {
+                    $links[] = $link;
+                }
+            }
+        }
+
+        if( count($values) == 0 ) {
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
+        }
+
+        $xAxis = "labels";
+        $yAxis = "values";
+        if( $type == "bar" || $type == "stack" ) {
+            $xAxis = "x";
+            $yAxis = "y";
+        }
+
+        $chartDataArray = array();
+        $chartDataArray[$xAxis] = $labels;
+        $chartDataArray[$yAxis] = $values;
+        $chartDataArray['type'] = $type;
+        $chartDataArray["links"] = $links;
+
+        //color array for bars
+//        if( $type == "bar" || $type == "stack" ) {
+//            //$chartDataArray['marker']['color'] = array('rgb(142,124,195)','red','green');
+//            $colors = array();
+//            $initColor = "#3366CC";
+//            $step = 100/count($values);
+//            $count = 0;
+//            foreach($values as $value) {
+//                if($value) {
+//                    $colors[] = $this->adjustBrightness($initColor,$count);
+//                    $count = $count + 10;;
+//                } else {
+//                    $colors[] = 'white';
+//                }
+//            }
+//
+//            $chartDataArray['marker'] = array('color'=>$colors);    //['color'] = array('rgb(142,124,195)','red','green');
 //        }
-        if(0) {
-            if (strpos($chartName, "Top 10") !== false) {
-                $chartNameModified = str_replace("Top 10", "Top " . $quantityLimit, $chartName);
-            }
-            if (strpos($chartName, "Top 25") !== false) {
-                $chartNameModified = str_replace("Top 25", "Top " . $quantityLimit, $chartName);
-            }
-            if (strpos($chartName, "Top 35") !== false) {
-                $chartNameModified = str_replace("Top 35", "Top " . $quantityLimit, $chartName);
-            }
-            if (strpos($chartName, "Top 50") !== false) {
-                $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
-            }
-        }
-        $chartNameModified = null;
-        if( $quantityLimit == "Show all" ) {
-            $quantityLimitStr = "".$quantityLimit."";
-        } else {
-            $quantityLimitStr = "Top ".$quantityLimit."";
-        }
-        if (strpos($chartName, "(Top)") !== false) {
-            $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
-        }
-        if (strpos($chartName, "Top ") !== false) {
-            $chartNameModified = str_replace("Top ","".$quantityLimitStr." ",$chartName);
+
+        //$chartDataArray["text"] = "111";
+        $chartDataArray["textinfo"] = "value+percent";
+        //hoverinfo: label+text+value+percent
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $chartDataArray['direction'] = 'clockwise';
+        //$chartDataArray["hoverinfo"] = "percent+label";
+        $chartDataArray["hoverinfo"] = $hoverinfo;
+
+        $dataArray[] = $chartDataArray;
+
+        //$chartsArray['layout'] = $layoutArray;
+        //$chartsArray['data'] = $dataArray;
+
+//        echo "<pre>";
+//        print_r($dataArray);
+//        echo "</pre>";
+
+        $chartsArray = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+
+        return $chartsArray;
+    }
+    public function getChartByMultiArray( $dataArr, $filterArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $hoverinfo=null ) {
+
+        if( count($dataArr) == 0 ) {
+            return array();
         }
 
-        if( !$chartNameModified ) {
-            $chartNameModified = $chartName;
+        $startDate = $filterArr['startDate'];
+        $endDate = $filterArr['endDate'];
+        $projectSpecialtyObjects = $filterArr['projectSpecialtyObjects'];
+        $funded = $filterArr['funded'];
+
+//        $projectId = null;
+//        if( isset($filterArr['funded']) ) {
+//            $projectId = $filterArr['projectId'];
+//        }
+
+        if( $startDate ) {
+            $startDateStr = $startDate->format('m/d/Y');
+        }
+        if( $endDate ) {
+            $endDateStr = $endDate->format('m/d/Y');
         }
 
-        return $chartNameModified;
+//        echo "<pre>";
+//        print_r($dataArr);
+//        echo "</pre>";
+
+        $labels = array();
+        $values = array();
+        //$text = array();
+
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+            );
+        }
+
+        if( $title ) {
+            $layoutArray['title'] = $title;
+        }
+
+        foreach( $dataArr as $id=>$arr ) {
+            $value = $arr['value'];
+            $label = $arr['label'];
+            $objectid = $arr['objectid'];
+            $pi = $arr['pi'];
+
+            $showPath = null;
+            $link = null;
+            if( isset($arr['show-path']) ) {
+                $showPath = $arr['show-path'];
+            }
+            if( isset($arr['link']) ) {
+                $link = $arr['link'];
+            }
+
+            if( $type == "bar" || ($value && $value != 0) ) {
+                if( $valuePrefixLabel && $value ) {
+                    if( strpos($valuePrefixLabel,'$') !== false ) {
+                        $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
+                    } else {
+                        $label = $label . " " . $valuePrefixLabel . $value;
+                    }
+                }
+
+                if( $showPath == 'project' ) {
+
+                    $linkFilterArr = array(
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr,
+                        //'filter[]' => $projectSpecialtyObjects
+                    );
+
+                    if( $funded === true ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Funded';
+                    }
+                    if( $funded === false ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+                    }
+
+                    if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
+                        $userIndex = 0;
+                        foreach($objectid as $thisObjectid) {
+                            $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisObjectid;
+                            $userIndex++;
+                        }
+                    } else {
+                        $linkFilterArr['filter[principalInvestigators][]'] = $objectid;
+                    }
+
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    //$linkLabel = "link";
+                    //$label = '<font color="red">'.$label.'</font>';
+                    //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
+                    //$label = $label . " " . $link;
+                }
+
+                if( $showPath == 'request' ) {
+
+                    $linkFilterArr = array(
+                        //'filter[project]' => $objectid,
+                        'filter[projectSearch]' => $objectid, //TODO: optimization search
+                        'filter[progressState][0]' => 'active',
+                        'filter[progressState][1]' => 'completed',
+                        'filter[progressState][2]' => 'completedNotified',
+                        'filter[progressState][3]' => 'pendingInvestigatorInput',
+                        'filter[progressState][4]' => 'pendingHistology',
+                        'filter[progressState][5]' => 'pendingImmunohistochemistry',
+                        'filter[progressState][6]' => 'pendingMolecular',
+                        'filter[progressState][7]' => 'pendingCaseRetrieval',
+                        'filter[progressState][8]' => 'pendingTissueMicroArray',
+                        'filter[progressState][9]' => 'pendingSlideScanning',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr
+                    );
+
+                    if( $funded === true ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Funded';
+                    }
+                    if( $funded === false ) {
+                        $linkFilterArr['filter[fundingType]'] = 'Non-Funded';
+                    }
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+                    }
+
+                    if( strpos($id, $this->otherSearchStr) !== false ) {
+                        $linkFilterArr = null;
+                    } else {
+                        if( is_array($pi) ) {
+                            $userIndex = 0;
+                            foreach($pi as $thisPi) {
+                                $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisPi;
+                                $userIndex++;
+                            }
+                        } else {
+                            $linkFilterArr['filter[principalInvestigators][]'] = $pi;
+                        }
+                    }
+
+                    if( $linkFilterArr ) {
+                        //echo "### $label<br>";
+                        $link = $this->container->get('router')->generate(
+                            'translationalresearch_request_index_filter',
+                            $linkFilterArr,
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                    }
+                    //$linkLabel = "link";
+                    //$label = '<font color="red">'.$label.'</font>';
+                    //$label = '<a target="_blank" href="'.$link.'">'.$label.'</a>';
+                    //$label = $label . " " . $link;
+                }
+
+                if( $showPath == 'project-type' ) {
+                    $linkFilterArr = array(
+                        'filter[state][0]' => 'final_approved',
+                        'filter[state][1]' => 'closed',
+                        'filter[startDate]' => $startDateStr,
+                        'filter[endDate]' => $endDateStr,
+                        //'filter[]' => $projectSpecialtyObjects,
+                        'filter[searchProjectType]' => $objectid
+                    );
+
+                    if( count($projectSpecialtyObjects) > 0 ) {
+                        $projectSpecialtyObject = $projectSpecialtyObjects[0];
+                        $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
+                    }
+
+                    $link = $this->container->get('router')->generate(
+                        'translationalresearch_project_index',
+                        $linkFilterArr,
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                }
+
+                $labels[] = $label;
+                $values[] = $value;
+                $links[] = $link;
+                //$text[] = $value;
+            }//if bar or value
+
+        }//foreach
+
+        if( count($values) == 0 ) {
+            return array();
+            //return array('error'=>"No data found corresponding to this chart parameters");
+        }
+
+        $xAxis = "labels";
+        $yAxis = "values";
+        if( $type == "bar" || $type == "stack" ) {
+            $xAxis = "x";
+            $yAxis = "y";
+        }
+
+        $chartDataArray = array();
+        $chartDataArray[$xAxis] = $labels;
+        $chartDataArray[$yAxis] = $values;
+        $chartDataArray['type'] = $type;
+
+        $chartDataArray["links"] = $links;
+        //$chartDataArray["text"] = "111";
+        $chartDataArray["textinfo"] = "value+percent";
+        //hoverinfo: label+text+value+percent
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $chartDataArray['direction'] = 'clockwise';
+        //$chartDataArray["hoverinfo"] = "percent+label";
+        $chartDataArray["hoverinfo"] = $hoverinfo;
+
+        $dataArray[] = $chartDataArray;
+
+        //$chartsArray['layout'] = $layoutArray;
+        //$chartsArray['data'] = $dataArray;
+
+//        echo "<pre>";
+//        print_r($dataArray);
+//        echo "</pre>";
+
+        $chartsArray = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+
+        return $chartsArray;
     }
 
     public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null ) {
@@ -343,29 +1087,743 @@ class DashboardUtil
         return $chartsArray;
     }
 
+    public function attachSecondValueToFirstLabel($firstArr,$secondArr,$prefix) {
+        $resArr = array();
+        foreach($firstArr as $index=>$value) {
+            //$index = $index . " " . $prefix . $secondArr[$index];
+            if( strpos($prefix,'$') !== false ) {
+                $index = $index . " " . $prefix . $this->getNumberFormat($secondArr[$index]);
+            } else {
+                $index = $index . " " . $prefix . $secondArr[$index];
+            }
+            $resArr[$index] = $value;
+        }
+        return $resArr;
+    }
+
+    public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true) {
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        if( !$states ) {
+            $dql->where("project.state = 'final_approved' OR project.state = 'closed'");
+        } else {
+            //$dql->where("request.progressState = '".$state."'");
+            foreach($states as $state) {
+                $stateArr[] = "project.state = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("(".implode(" OR ",$stateArr).")");
+            }
+        }
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('project.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+            //$dqlParameters['startDate'] = $startDate;
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('project.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+            //$dqlParameters['endDate'] = $endDate;
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+
+    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            //$addOneEndDay=true;
+            $thisEndDate = clone $endDate;
+            if( $addOneEndDay ) {
+                $thisEndDate->modify('+1 day');
+                //$endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            //$dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+            $dqlParameters['endDate'] = $thisEndDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+    public function getRequestsByAdvanceFilter($startDate, $endDate, $projectSpecialties, $productservice, $states=null, $addOneEndDay=true) {
+        $em = $this->em;
+        //$transresUtil = $this->container->get('transres_util');
+
+        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        if( !$states ) {
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+        } else {
+            //$dql->where("request.progressState = '".$state."'");
+            foreach($states as $state) {
+                $stateArr[] = "request.progressState = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                $dql->where("(".implode(" OR ",$stateArr).")");
+            }
+        }
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $productservice ) {
+            $dql->leftJoin('request.products','products');
+            $dql->leftJoin('products.category','category');
+            $dql->andWhere("category.id = :categoryId");
+            $dqlParameters["categoryId"] = $productservice; //->getId();
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true) {
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+        $dql->leftJoin('invoice.transresRequest','request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        //$dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+        if( !$states ) {
+            //Exclude Work requests with status=Canceled and Draft
+            $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
+        } else {
+            foreach($states as $state) {
+                $stateArr[] = "invoice.status = '".$state."'";
+            }
+            if( count($stateArr) > 0 ) {
+                if( $filterRequest ) {
+                    $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+                } else {
+                    $dql->where("invoice.latestVersion = TRUE AND (".implode(" OR ",$stateArr).")");
+                }
+            }
+        }
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //$startDateCriterion = 'request.createDate >= :startDate';
+            if( $compareType == 'work request submission date' ) {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $startDateCriterion = 'invoice.createDate >= :startDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $startDateCriterion = 'invoice.paidDate >= :startDate';
+            } else {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            }
+            //echo "startDateCriterion=$startDateCriterion <br>";
+            $dql->andWhere($startDateCriterion);
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+
+            //$endDateCriterion = 'request.createDate <= :endDate';
+            if( $compareType == 'work request submission date' ) {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $endDateCriterion = 'invoice.createDate <= :endDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $endDateCriterion = 'invoice.paidDate <= :endDate';
+            } else {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            }
+            //echo "endDateCriterion=$endDateCriterion <br>";
+            $dql->andWhere($endDateCriterion);
+
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        if( $overdue ) {
+            $todayDate = new \DateTime();
+            //$todayDate->modify('+1 day'); //make sure it's overdue (not considering hours and time zone difference)
+            $dql->andWhere("invoice.dueDate IS NOT NULL AND :todayDate > invoice.dueDate");
+            $dqlParameters["todayDate"] = $todayDate->format('Y-m-d');
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+
+    public function getChartNameWithTop($chartName,$quantityLimit) {
+//        if( !$quantityLimit ) {
+//            $quantityLimit = 10;
+//        }
+        if(0) {
+            if (strpos($chartName, "Top 10") !== false) {
+                $chartNameModified = str_replace("Top 10", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 25") !== false) {
+                $chartNameModified = str_replace("Top 25", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 35") !== false) {
+                $chartNameModified = str_replace("Top 35", "Top " . $quantityLimit, $chartName);
+            }
+            if (strpos($chartName, "Top 50") !== false) {
+                $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
+            }
+        }
+        $chartNameModified = null;
+        if( $quantityLimit == "Show all" ) {
+            $quantityLimitStr = "".$quantityLimit."";
+        } else {
+            $quantityLimitStr = "Top ".$quantityLimit."";
+        }
+        if (strpos($chartName, "(Top)") !== false) {
+            $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
+        }
+        if (strpos($chartName, "Top ") !== false) {
+            $chartNameModified = str_replace("Top ","".$quantityLimitStr." ",$chartName);
+        }
+
+        if( !$chartNameModified ) {
+            $chartNameModified = $chartName;
+        }
+
+        return $chartNameModified;
+    }
+
+    public function getTitleWithTotal($chartName,$total,$prefix=null,$postfix="total") {
+        //$postfix = "total quantity";
+        //$postfix = "total";
+        //if( $prefix ) {
+        //    $postfix = "total";
+        //}
+        return $chartName . " - " . $prefix . $total . " " . $postfix;
+    }
+
+    public function getTotalSegmentCount($arr) {
+        //print_r($arr);
+        $titleCount = 0;
+        foreach($arr as $id=>$thisArr) {
+            if( is_array($thisArr) ) {
+                $titleCount = $titleCount + $thisArr['value'];
+            } else {
+                if( is_integer($thisArr) ) {
+                    $titleCount = $titleCount + intval($thisArr);
+                } else {
+                    //???
+                    $titleCount = $titleCount + intval($thisArr);
+                }
+            }
+        }
+        return $titleCount;
+    }
+
+    public function getDiffDaysByProjectState($project,$state) {
+        $transresUtil = $this->container->get('transres_util');
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+
+        //get earliest create date and latest update date
+        $startDate = null; //get enter state date
+        $endDate = null; //get exit state date
+        foreach($reviews as $review) {
+            //phase start (enter) date
+            $enterDate = $this->getPreviousStateEnterDate($project,$state);
+            if( !$enterDate ) {
+                $enterDate = $review->getCreatedate();
+            }
+            if( $startDate ) {
+                if( $enterDate < $startDate ) {
+                    $startDate = $enterDate;
+                }
+            } else {
+                $startDate = $enterDate;
+            }
+
+            //phase end (exit) date
+            if( $project->getApprovalDate() && $state == "final_review" ) {
+                $endDate = $project->getApprovalDate();
+                //echo "1 $state: ".$endDate->format("Y-m-d")."<br>";
+                if( $endDate ) {
+                    //echo "$state: ".$endDate->format("Y-m-d")."<br>";
+                    continue;
+                }
+            }
+
+            if( $state == "committee_review" ) {
+                if( $review->getPrimaryReview() ) {
+                    if ($endDate) {
+                        if ($review->getUpdatedate() > $endDate) {
+                            $endDate = $review->getUpdatedate();
+                        }
+                    } else {
+                        $endDate = $review->getUpdatedate();
+                    }
+                }
+            } else {
+                if ($endDate) {
+                    if ($review->getUpdatedate() > $endDate) {
+                        $endDate = $review->getUpdatedate();
+                    }
+                } else {
+                    $endDate = $review->getUpdatedate();
+                }
+            }
+        }//foreach review
+
+        if( !$startDate ) {
+            $startDate = $project->getCreateDate();
+        }
+
+//        if( !$endDate && $state == "final_review" ) {
+//            //echo "final state=".$state."<br>";
+//            $endDate = $project->getApprovalDate();
+//        }
+//        if( $project->getApprovalDate() && $state == "final_review" ) {
+//            $endDate = $project->getApprovalDate();
+//        }
+
+        if( !$endDate ) {
+            //echo "***state=".$state."<br>";
+            $endDate = $project->getUpdatedate();
+        } else {
+            //echo "###<br>";
+        }
+
+        if( $endDate < $startDate ) {
+            $endDate = $startDate;
+        }
+
+        if( $startDate && $endDate ) {
+            //ok
+        } else {
+            return null;
+        }
+
+        //echo $startDate->format("Y-m-d")." => ".$endDate->format("Y-m-d")." (".$state.")<br>";
+
+//        //Number of days to go from review's createdate to review's updatedate
+//        $dDiff = $startDate->diff($endDate);
+//        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+//        $days = $dDiff->days;
+//        //echo $state.": days=".$days."<br>";
+//        $days = intval($days);
+//
+//        //show minimum 1 day
+//        if( !$days || $days == 0 ) {
+//            $days = 1;
+//        }
+
+        $days = $this->calculateDays($startDate,$endDate);
+
+        return $days;
+    }
+    public function getStateExitDate($project,$state) {
+        $transresUtil = $this->container->get('transres_util');
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+
+        //get latest update date
+        $exitDate = null; //get exit state date
+        foreach($reviews as $review) {
+            if( $exitDate ) {
+                if( $review->getUpdatedate() > $exitDate ) {
+                    $exitDate = $review->getUpdatedate();
+                }
+            } else {
+                $exitDate = $review->getUpdatedate();
+            }
+        }
+        return $exitDate;
+    }
+//    public function getReviewExitDate($project,$state) {
+//        $transresUtil = $this->container->get('transres_util');
+//        $reviews = $transresUtil->getReviewsByProjectAndState($project,$state);
+//
+//        //get earliest create date and latest update date
+//        $exitDate = null; //get exit state date
+//        foreach($reviews as $review) {
+//            if( $exitDate ) {
+//                if( $review->getUpdatedate() > $exitDate ) {
+//                    $exitDate = $review->getUpdatedate();
+//                }
+//            } else {
+//                $exitDate = $review->getUpdatedate();
+//            }
+//        }
+//        return $exitDate;
+//    }
+    public function getPreviousStateEnterDate($project,$state) {
+        $date = null;
+        if( $state == "irb_review" ) {
+            $date = $project->getStartReviewDate();
+            if( !$date ) {
+                $date = $project->getCreateDate();
+                //$date = $this->getStateEnterDate($project,"irb_review");
+            }
+        }
+        if( $state == "admin_review" ) {
+            $date = $this->getStateExitDate($project,"irb_review");
+        }
+        if( $state == "committee_review" ) {
+            $date = $this->getStateExitDate($project,"admin_review");
+        }
+        if( $state == "final_review" ) {
+            $date = $this->getStateExitDate($project,"committee_review");
+        }
+        return $date;
+    }
+    public function getStateTitleWithAverageDays($irbTitle,$projectPhaseArr) {
+        $irbCount = count($projectPhaseArr);
+        if( $irbCount > 0 ) {
+            $irbDays = 0;
+            foreach ($projectPhaseArr as $index => $valueData) {
+                if( is_array($valueData) ) {
+                    $days = $valueData['value'];
+                } else {
+                    $days = $valueData;
+                }
+                $irbDays = $irbDays + $days;
+            }
+            $irbTitle = $irbTitle . " (Average " . round($irbDays/$irbCount) . " days)";
+        }
+        return $irbTitle;
+    }
+    public function getInvoiceIssuedDate($invoice) {
+        //continue;
+        //$issued = $invoice->getCreateDate();
+
+        $request = $invoice->getTransresRequest();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+        //$dql->innerJoin('logger.eventType', 'eventType');
+        //$dql->leftJoin('logger.objectType', 'objectType');
+        //$dql->leftJoin('logger.site', 'site');
+
+        //$dql->where("logger.siteName = 'translationalresearch' AND logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+        //$dql->where("logger.entityName = 'Invoice' AND logger.entityId = ".$invoice->getId());
+
+        //Work Request ID APCP843-REQ16216 billing state has been changed to Invoiced, triggered by invoice status change to Unpaid/Issued
+        $dql->where("logger.entityName = 'TransResRequest' AND logger.entityId = '".$request->getId()."'");
+
+        //$dql->andWhere("logger.event LIKE '%"."status changed to '/Unpaid/Issued"."%'"); //status changed to 'Unpaid/Issued'
+        //$dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
+        $dql->andWhere("logger.event LIKE :eventStr");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        //$search = "status changed to 'Unpaid/Issued'";
+        $search = "invoice status change to Unpaid/Issued";
+
+        //$search = "Unpaid/Issued";
+        //$search = "";
+        //$search = "status changed to ";
+        //$search2 = "status changed to 'Unpaid/Issued'";
+        $query->setParameters(
+            array(
+                'eventStr' => '%'.$search.'%',
+                //'eventStr2' => '%'.$search2.'%'
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        //try to use "Invoice PDF Issued" event "Invoice APCP668-REQ14079-V1 PDF has been sent by email ..."
+        if( count($loggers) == 0 ) {
+            $dql2 = $repository->createQueryBuilder("logger");
+            $dql2->where("logger.entityName = 'Invoice' AND logger.entityId = '".$invoice->getId()."'");
+            $dql2->andWhere("logger.event LIKE :eventStr");
+
+            $dql2->orderBy("logger.id","DESC");
+            $query2 = $this->em->createQuery($dql2);
+
+            $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
+            $query2->setParameters(
+                array(
+                    'eventStr' => '%'.$search2.'%',
+                )
+            );
+
+            $loggers = $query2->getResult();
+        }
+
+        //echo $invoice->getOid().": loggers count=".count($loggers)."<br>";
+        //foreach($loggers as $logger) {
+        //    echo "logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+        //}
+
+        if( count($loggers) > 0 ) {
+            $logger = $loggers[0];
+            //echo "@@@ logger.id=".$logger->getId()."; TransResRequest id=".$request->getId()."<br>";
+            $issued = $logger->getCreationdate();
+        } else {
+            $issued = null;
+        }
+
+        return $issued;
+    }
+
+    public function getProjectRequestInvoiceChart($apcpProjects,$resStatArr,$startDateLabel) {
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //get requests, invoices
+
+        $invoiceCount = 0;
+        $requestCount = 0;
+        foreach($apcpProjects as $project) {
+            foreach($project->getRequests() as $request) {
+                //$requestArr[] = $request;
+                $requestCount++;
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                if( $latestInvoice ) {
+                    $invoiceCount++;
+                }
+            }
+        }
+        //echo "invoiceCount=$invoiceCount<br>";
+
+        $resStatArr['projects'][$startDateLabel] = count($apcpProjects);
+        $resStatArr['requests'][$startDateLabel] = $requestCount;
+        $resStatArr['invoices'][$startDateLabel] = $invoiceCount;
+
+        return $resStatArr;
+    }
+
+    public function calculateDays($startDate,$endDate) {
+        //1) calculate days
+        $dDiff = $startDate->diff($endDate);
+        //echo $dDiff->format('%R'); // use for point out relation: smaller/greater
+        $days = $dDiff->days;
+        //echo "days=".$days."<br>";
+        $days = intval($days);
+
+        if( !$days || $days == 0 ) {
+            $days = 1;
+        }
+
+        return $days;
+    }
+
+    //function for "42. Total Number of Individual PIs involved in AP/CP and Hematopathology Projects" => "compare-projectspecialty-pis",
+    public function trpPisSingleSpecialty($pisDataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr) {
+        $projects = $this->getProjectsByFilter($startDate, $endDate, array($specialtyObject));
+
+        $pisArr = array();
+        foreach ($projects as $project) {
+            foreach ($project->getAllPrincipalInvestigators() as $pi) {
+                $pisArr[] = $pi->getId();
+            }
+        }
+
+        $pisArr = array_unique($pisArr);
+
+        //APCP
+        //array(value,link)
+        $linkFilterArr = array(
+            'filter[state][0]' => 'final_approved',
+            'filter[state][1]' => 'closed',
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            //'filter[]' => $projectSpecialtyObjects,
+            'filter[searchProjectType]' => null,
+            'filter[projectSpecialty][]' => $specialtyObject->getId(),
+            //'filter[principalInvestigators][]' => implode(",",$apcpPisArr)
+        );
+        $index = 0;
+        foreach ($pisArr as $piId) {
+            $filterIndex = "filter[principalInvestigators][" . $index . "]";
+            //echo "filterIndex=".$filterIndex."<br>";
+            $linkFilterArr[$filterIndex] = $piId;
+            $index++;
+        }
+        $link = $this->container->get('router')->generate(
+            'translationalresearch_project_index',
+            $linkFilterArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $specialtyName = $specialtyObject->getName();
+
+        $pisDataArr[$specialtyName.' PIs'] = array('value' => count($pisArr), 'link' => $link);
+
+        return $pisDataArr;
+    }
+    public function trpProjectsSingleSpecialty($dataArr,$specialtyObject,$startDate,$startDateStr,$endDate,$endDateStr) {
+        $projects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyObject));
+
+        //APCP
+        $linkFilterArr = array(
+            'filter[state][0]' => 'final_approved',
+            'filter[state][1]' => 'closed',
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[searchProjectType]' => null,
+            'filter[projectSpecialty][]' => $specialtyObject->getId(),
+        );
+        $link = $this->container->get('router')->generate(
+            'translationalresearch_project_index',
+            $linkFilterArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $specialtyName = $specialtyObject->getName();
+        $dataArr[$specialtyName.' Project Requests'] = array('value'=>count($projects),'link'=>$link);
+
+        return $dataArr;
+    }
+    /////////////////////// EOF methods ////////////////////////
+
     //Main function to get chart data called by controller singleChartAction ("/single-chart/")
-    public function getDashboardChart( $parametersArr ) {
+    public function getDashboardChart( $request, $parametersArr=NULL ) {
 
         //ini_set('memory_limit', '30000M');
         ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
 
-//        $startDate = $request->query->get('startDate');
-//        $endDate = $request->query->get('endDate');
-//        $projectSpecialty = $request->query->get('projectSpecialty');
-//        $showLimited = $request->query->get('showLimited');
-//        $chartType = $request->query->get('chartType');
-//        $productservice = $request->query->get('productservice');
-//        $quantityLimit = $request->query->get('quantityLimit');
-
-
-        $startDate = $parametersArr['startDate'];
-        $endDate = $parametersArr['endDate'];
-        $projectSpecialty = $parametersArr['projectSpecialty'];
-        $showLimited = $parametersArr['showLimited'];
-        $chartType = $parametersArr['chartType'];
-        $productservice = $parametersArr['productservice'];
-        $quantityLimit = $parametersArr['quantityLimit'];
-
+        if( $request ) {
+            $startDate = $request->query->get('startDate');
+            $endDate = $request->query->get('endDate');
+            $projectSpecialty = $request->query->get('projectSpecialty');
+            $showLimited = $request->query->get('showLimited');
+            $chartType = $request->query->get('chartType');
+            $productservice = $request->query->get('productservice');
+            $quantityLimit = $request->query->get('quantityLimit');
+        } else {
+            $startDate = $parametersArr['startDate'];
+            $endDate = $parametersArr['endDate'];
+            $projectSpecialty = $parametersArr['projectSpecialty'];
+            $showLimited = $parametersArr['showLimited'];
+            $chartType = $parametersArr['chartType'];
+            $productservice = $parametersArr['productservice'];
+            $quantityLimit = $parametersArr['quantityLimit'];
+        }
 
         //echo "quantityLimit=$quantityLimit<br>";
         //echo "showLimited=$showLimited<br>";
@@ -381,14 +1839,15 @@ class DashboardUtil
 
         $now = new \DateTime('now');
 
+        if( !$endDate ) {
+            //set to today
+            $endDate = $now->format('m/d/Y');
+        }
+
         if( !$startDate ) {
             //set to 1900
             //$startDate = "01/01/1900"; //10/31/2017 to DateTime
             $startDate = $now->modify('-1 year')->format('m/d/Y');
-        }
-        if( !$endDate ) {
-            //set to today
-            $endDate = $now->format('m/d/Y');
         }
 
         //echo "start=".$startDate."<br>";

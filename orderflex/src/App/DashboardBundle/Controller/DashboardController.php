@@ -124,9 +124,14 @@ class DashboardController extends OrderAbstractController
 //        }) }}"
 //            >Site utilization statistics</a>
 
+        $now = new \DateTime('now');
+        $endDateStr = $now->format('m/d/Y');
+        $startDateStr = $now->modify('-1 year')->format('m/d/Y');
+        
         $redirectParams = array(
-            //'filter[startDate]' => 'irb_review',
-            //'filter[endDate]' => 'irb_missinginfo',
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[projectSpecialty][]' => 0,
         );
         $count = 0;
 
@@ -135,36 +140,36 @@ class DashboardController extends OrderAbstractController
             $count++;
         }
 
-        //redirect to dashboard_dashboard_choices with chart types
+        //redirect to home page with preset filter with chart types
         return $this->redirectToRoute(
-            'dashboard_dashboard_choices',
+            'dashboard_home',
             $redirectParams
         );
 
-        ///////////////////// EOF /////////////////////
-        if( count($chartsArray) > 0 ) {
-            $chart = $chartsArray[0];
-        }
-
-        $parametersArr = array(
-            'startDate' => NULL,
-            'endDate' => NULL,
-            'projectSpecialty' => NULL,
-            'showLimited' => NULL,
-            'chartType' => $chart->getAbbreviation(),
-            'productservice' => NULL,
-            'quantityLimit' => NULL,
-        );
-
-        $dashboardUtil = $this->container->get('dashboard_util');
-        $chartsArray = $dashboardUtil->getDashboardChart($parametersArr);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        //$response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->setStatusCode(200);
-        $response->setContent(json_encode($chartsArray));
-        return $response;
+//        ///////////////////// EOF /////////////////////
+//        if( count($chartsArray) > 0 ) {
+//            $chart = $chartsArray[0];
+//        }
+//
+//        $parametersArr = array(
+//            'startDate' => NULL,
+//            'endDate' => NULL,
+//            'projectSpecialty' => NULL,
+//            'showLimited' => NULL,
+//            'chartType' => $chart->getAbbreviation(),
+//            'productservice' => NULL,
+//            'quantityLimit' => NULL,
+//        );
+//
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $chartsArray = $dashboardUtil->getDashboardChart(null,$parametersArr);
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        //$response->headers->set('Access-Control-Allow-Origin', '*');
+//        $response->setStatusCode(200);
+//        $response->setContent(json_encode($chartsArray));
+//        return $response;
 
         //$chartsArray = array();
 //        return array(
@@ -271,14 +276,15 @@ class DashboardController extends OrderAbstractController
 
 
     /**
-     * @Route("/graphs/", name="dashboard_dashboard_choices")
-     * @Template("AppTranslationalResearchBundle/Dashboard/dashboard-choices.html.twig")
+     * //("/graphs/", name="dashboard_dashboard_choices")
+     *
+     * @Route("/", name="dashboard_home")
+     * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN')
         ) {
             //ok
         } else {
@@ -289,7 +295,7 @@ class DashboardController extends OrderAbstractController
         $filterform->handleRequest($request);
 
         return array(
-            'title' => "Translational Research Dashboard",
+            'title' => "Dashboard",
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
@@ -325,7 +331,7 @@ class DashboardController extends OrderAbstractController
         }
 
         //chartTypes
-        $dashboardUtil->getChartTypes();
+        //$dashboardUtil->getChartTypes();
         $params["chartType"] = true;
         $params["chartTypes"] = $dashboardUtil->getChartTypes();
 
