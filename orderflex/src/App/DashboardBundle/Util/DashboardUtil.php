@@ -31,7 +31,7 @@ class DashboardUtil
     private $otherSearchStr = "All other ";
     //private $quantityLimit = 10;
 
-    private $lightFilter = true;
+    //private $lightFilter = true;
 
     public function __construct(EntityManagerInterface $em, ContainerInterface $container)
     {
@@ -47,6 +47,29 @@ class DashboardUtil
     public function getFilterTopics() {
 
         //echo "111 <br>";
+
+        //getIdBreadcrumbsIter
+        //printTreeSelectList
+        $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+        if( !$root ) {
+            $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByLevel(0);
+        }
+        //$nodes=array(), $nameMethod="getNodeNameWithParent", $asLabelValue=true, $types=array()
+        //$nodes=array(), $nameMethod="getNodeNameWithParent", $asLabelValue=true, $types=array()
+        //$filterTopics = $root->printTreeSelectListIncludingThis(true,array("default","user-added"));
+        //$nameMethod = "getListElement";
+        //$nameMethod = "getNodeNameWithParent";
+        //$filterTopics = $root->printTreeSelectList(array(),$nameMethod,false,array("default","user-added"));
+
+        //$filterTopics = $root->getEntityBreadcrumbs(true);
+
+        //$filterTopics = $root->getIdBreadcrumbs();
+
+        //$filterTopics = $root->printTree();
+
+        $filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
+
+        return $filterTopics;
 
         //get all enabled dashboard topics
         $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(

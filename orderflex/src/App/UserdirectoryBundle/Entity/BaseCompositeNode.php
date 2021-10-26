@@ -332,6 +332,64 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
 
         return $nodes;
     }
+
+    //make a full tree as entity
+    public function getFullTreeAsEntity( $nodes=array(), $types=array() ) {
+        //echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
+//        $nodes = array(
+//            "node1_id" => array(id, name, array(id, name, array(id, name, array()))),
+//            "node2_id" => array(id, name, array()),
+//            "node3_id" => array(id, name, array(id, name, array(id, name, array()))),
+//        );
+
+        if( count($types) > 0 ) {
+            if( in_array($this->getType(),$types) ) {
+                //ok: this type is in the provided types
+            } else {
+                //echo "Not in types:".$this."<br>";
+                return $nodes;
+            }
+        }
+
+        $childrenArr = array();
+        $id = $this->getId();
+        $name = $this->getName();
+        $nodes[] = array($id,$name,$childrenArr);
+
+        foreach( $this->getChildren() as $child ) {
+
+            if( count($types) > 0 ) {
+                if( in_array($child->getType(),$types) ) {
+                    //ok: this type is in the provided types
+                } else {
+                    //echo "Not in types:".$subCategory."<br>";
+                    continue;
+                }
+            }
+
+            //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
+            //$thisChildrenArr = array();
+            if( count($child->getChildren()) > 0 ) {
+                $childrenArr = $child->getFullTreeAsEntity($childrenArr,$types);
+            } else {
+                $id = $child->getId();
+                $name = $child->getName();
+                $childrenArr[] = array($id,$name,$childrenArr);
+            }//if/else children
+
+            //$id = $child->getId();
+            //$name = $child->getName();
+            //$childrenArr[] = array($id,$name,$childrenArr);
+
+        }
+
+        $id = $this->getId();
+        $name = $this->getName();
+        $nodes[] = array($id,$name,$childrenArr);
+
+        return $nodes;
+    }
+
     public function getListElement() {
         $element['id'] = $this->getId();
         $element['text'] = $this->getNodeNameWithParent();

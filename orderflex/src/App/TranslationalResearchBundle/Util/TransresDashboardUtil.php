@@ -53,7 +53,7 @@ class TransresDashboardUtil
     private $otherSearchStr = "All other ";
     //private $quantityLimit = 10;
 
-    private $lightFilter = true;
+    //private $lightFilter = true;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;

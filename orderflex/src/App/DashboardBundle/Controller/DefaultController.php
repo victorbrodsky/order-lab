@@ -33,6 +33,13 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
+
+        //testing
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $filterTopics = $dashboardUtil->getFilterTopics();
+        dump($filterTopics);
+        exit();
+
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 
