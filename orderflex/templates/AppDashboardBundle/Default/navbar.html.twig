@@ -18,7 +18,7 @@
 
 {% import "AppDashboardBundle/Default/navbar.html.twig" as navbarmacros %}
 
-{% macro createFilterTopics( filterTopics ) %}
+{% macro createFilterTopics_ORIG( filterTopics ) %}
     {% for parentKey,values in filterTopics %}
         <li class="dropdown-submenu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>
@@ -28,6 +28,111 @@
                     <li>
                         {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
                         <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':key}) }}">{{ value }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+{% macro createFilterTopics( filterTopics ) %}
+    {% for topicArr in filterTopics %}
+        {% set id = topicArr[0] %}
+        {% set name = topicArr[1] %}
+        {% set childrens = topicArr[2] %}
+
+        {% if childrens|length > 0 %}
+            <li class="dropdown-submenu">
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+                {% if childrens|length > 0 %}
+                    <ul class="dropdown-menu">
+                        {% for childrenArr in childrens %}
+                            {% set id1 = childrenArr[0] %}
+                            {% set name1 = childrenArr[1] %}
+                            {% set childrens1 = childrenArr[2] %}
+                            <li>
+                                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+            </li>
+        {% endif %}
+
+        {% if 0 %}
+        <li class="dropdown-submenu">
+            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ name }}</a>#}
+            <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+            {% if childrens|length > 0 %}
+                <ul class="dropdown-menu">
+                    {% for childrenArr in childrens %}
+                        {% set id1 = childrenArr[0] %}
+                        {% set name1 = childrenArr[1] %}
+                        {% set childrens1 = childrenArr[2] %}
+                        {#{% set filterTopicUrl = name1|replace({' ':'-'}) %}#}
+                        <li>
+                            {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
+                            <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>
+                        </li>
+
+                        {#{% for childrens1Arr in childrens1 %}#}
+                            {#{% set id2 = childrens1Arr[0] %}#}
+                            {#{% set name2 = childrens1Arr[1] %}#}
+                            {#{% set childrens2 = childrens1Arr[2] %}#}
+                            {#<li>#}
+                                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id2}) }}">{{ name2 }}</a>#}
+                            {#</li>#}
+
+                            {#{% for childrens2Arr in childrens2 %}#}
+                                {#{% set id3 = childrens2Arr[0] %}#}
+                                {#{% set name3 = childrens2Arr[1] %}#}
+                                {#{% set childrens3 = childrens2Arr[2] %}#}
+                                {#<li>#}
+                                    {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id3}) }}">{{ name3 }}</a>#}
+                                {#</li>#}
+                            {#{% endfor %}#}
+
+                        {#{% endfor %}#}
+
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+        {% endif %}
+
+    {% endfor %}
+{% endmacro %}
+
+{% macro createFilterServices( filterServices ) %}
+    {% for parentKey,values in filterServices %}
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>
+            <ul class="dropdown-menu">
+                {% for key,value in values %}
+                    {% set filterServiceUrl = value|replace({' ':'-'}) %}
+                    <li>
+                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterServiceUrl}) }}">{{ value }}</a>#}
+                        <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}">{{ value }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% macro createFilterTypes( filterTypes ) %}
+    {% for parentKey,values in filterTypes %}
+        <li class="dropdown-submenu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>
+            <ul class="dropdown-menu">
+                {% for key,value in values %}
+                    {% set filterTypeUrl = value|replace({' ':'-'}) %}
+                    <li>
+                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ value }}</a>#}
+                        <a href="{{ path(dashboard_sitename~'_single_type',{'id':key}) }}">{{ value }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -80,7 +185,26 @@
                         <ul class="dropdown-menu multi-level">
                             {% set filterTopics = dashboard_util.getFilterTopics() %}
                             {#filterTopics={{ filterTopics|length }}<br>#}
-                            {#{{ navbarmacros.createFilterTopics(filterTopics) }}#}
+                            {{ navbarmacros.createFilterTopics(filterTopics) }}
+                        </ul>
+                    </li>
+
+                    <li id="nav-bar-translationalresearch-service" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+                            {% set filterServices = dashboard_util.getFilterServices() %}
+                            {#filterServices={{ filterServices|length }}<br>#}
+                            {{ navbarmacros.createFilterServices(filterServices) }}
+                        </ul>
+                    </li>
+
+                    <li id="nav-bar-translationalresearch-type" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Type<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-level">
+                            {% set filterTypes = dashboard_util.getFilterTypes() %}
+                            {{ navbarmacros.createFilterTypes(filterTypes) }}
                         </ul>
                     </li>
 

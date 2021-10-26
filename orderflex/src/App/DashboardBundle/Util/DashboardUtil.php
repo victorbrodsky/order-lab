@@ -68,7 +68,6 @@ class DashboardUtil
         //$filterTopics = $root->printTree();
 
         $filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
-
         return $filterTopics;
 
         //get all enabled dashboard topics
@@ -101,6 +100,14 @@ class DashboardUtil
         //exit();
 
         return $filterTopics;
+    }
+
+    public function getFilterServices() {
+        return array();
+    }
+
+    public function getFilterTypes() {
+        return array();
     }
 
     public function getChartTypes() {

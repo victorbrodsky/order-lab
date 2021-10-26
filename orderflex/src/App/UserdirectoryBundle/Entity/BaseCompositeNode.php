@@ -333,7 +333,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         return $nodes;
     }
 
-    //make a full tree as entity
+    //make a full tree as entity except root
     public function getFullTreeAsEntity( $nodes=array(), $types=array() ) {
         //echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
 //        $nodes = array(
@@ -352,9 +352,9 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         }
 
         $childrenArr = array();
-        $id = $this->getId();
-        $name = $this->getName();
-        $nodes[] = array($id,$name,$childrenArr);
+        //$id = $this->getId();
+        //$name = $this->getName();
+        //$nodes[] = array($id,$name,$childrenArr);
 
         foreach( $this->getChildren() as $child ) {
 
@@ -368,24 +368,26 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
             }
 
             //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
-            //$thisChildrenArr = array();
+            //$childrenArr = array();
             if( count($child->getChildren()) > 0 ) {
                 $childrenArr = $child->getFullTreeAsEntity($childrenArr,$types);
             } else {
-                $id = $child->getId();
-                $name = $child->getName();
-                $childrenArr[] = array($id,$name,$childrenArr);
+                $childrenArr = array();
+                //$id = $child->getId();
+                //$name = $child->getName();
+                //$childrenArr[] = array($id,$name,$childrenArr);
             }//if/else children
 
-            //$id = $child->getId();
-            //$name = $child->getName();
+            $id = $child->getId();
+            $name = $child->getName();
             //$childrenArr[] = array($id,$name,$childrenArr);
+            $nodes[] = array($id,$name,$childrenArr);
 
         }
 
-        $id = $this->getId();
-        $name = $this->getName();
-        $nodes[] = array($id,$name,$childrenArr);
+        //$id = $this->getId();
+        //$name = $this->getName();
+        //$nodes[] = array($id,$name,$childrenArr);
 
         return $nodes;
     }
