@@ -45,11 +45,6 @@ class DashboardUtil
 
     //get topics
     public function getFilterTopics() {
-
-        //echo "111 <br>";
-
-        //getIdBreadcrumbsIter
-        //printTreeSelectList
         $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
         if( !$root ) {
             $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByLevel(0);
@@ -60,54 +55,117 @@ class DashboardUtil
         //$nameMethod = "getListElement";
         //$nameMethod = "getNodeNameWithParent";
         //$filterTopics = $root->printTreeSelectList(array(),$nameMethod,false,array("default","user-added"));
-
         //$filterTopics = $root->getEntityBreadcrumbs(true);
-
         //$filterTopics = $root->getIdBreadcrumbs();
-
         //$filterTopics = $root->printTree();
 
         $filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
         return $filterTopics;
 
-        //get all enabled dashboard topics
-        $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
-            array(
-                'type' => array("default","user-added")
-            ),
-            array('orderinlist' => 'ASC')
-        );
-
-//        echo "topics=".count($topics)."<br>";
-
-        $parent = NULL;
-        $elements = array();
-        foreach($topics as $topic) {
-            //echo "topic=$topic <br>";
-            //echo "level=".$topic->getLevel()."<br>";
-            if( $topic->getLevel() == 0 ) {
-                $parent = $topic."";
-            }
-            if( $topic->getLevel() == 1 ) {
-                $elements[$topic->getId()] = $topic . "";
-            }
-        }
-
-        $filterTopics = array();
-
-        $filterTopics[$parent] = $elements;
-        //dump($filterTopics);
-        //exit();
-
-        return $filterTopics;
+//        //get all enabled dashboard topics
+//        $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
+//            array(
+//                'type' => array("default","user-added")
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+//
+////        echo "topics=".count($topics)."<br>";
+//
+//        $parent = NULL;
+//        $elements = array();
+//        foreach($topics as $topic) {
+//            //echo "topic=$topic <br>";
+//            //echo "level=".$topic->getLevel()."<br>";
+//            if( $topic->getLevel() == 0 ) {
+//                $parent = $topic."";
+//            }
+//            if( $topic->getLevel() == 1 ) {
+//                $elements[$topic->getId()] = $topic . "";
+//            }
+//        }
+//
+//        $filterTopics = array();
+//
+//        $filterTopics[$parent] = $elements;
+//        //dump($filterTopics);
+//        //exit();
+//
+//        return $filterTopics;
     }
 
     public function getFilterServices() {
-        return array();
+        //return array();
+
+        //get all enabled services will lead to too many results
+//        $services = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
+//            array(
+//                'type' => array("default","user-added")
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+
+        //get all services presented in the dashboard charts
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.institutions", "institutions");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("institutions IS NOT NULL");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        $institutions = array();
+
+        foreach($charts as $chart) {
+            $chartInstitutions = $chart->getInstitutions();
+            foreach($chartInstitutions as $chartInstitution) {
+                $institutions[$chartInstitution->getId()] = $chartInstitution->getName();
+            }
+        }
+
+        return $institutions;
     }
 
     public function getFilterTypes() {
-        return array();
+        //get all chart types (Line, Pie, Bar ...) presented in the dashboard charts
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.chartTypes", "chartTypes");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("chartTypes IS NOT NULL");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        $chartTypes = array();
+
+        foreach($charts as $chart) {
+            $chartTypes = $chart->getChartTypes();
+            foreach($chartTypes as $chartType) {
+                $chartTypes[$chartType->getId()] = $chartType->getName();
+            }
+        }
+
+        return $chartTypes;
     }
 
     public function getChartTypes() {
@@ -264,22 +322,21 @@ class DashboardUtil
     }
 
     public function getChartsByTopic( $topic ) {
-
         //echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
-
-        //$em = $this->getDoctrine()->getManager();
-
-        //$chartsArray = array();
 
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
-        //$dql->where($selectWhere);
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("topics = :topicId");
 
-        $parameters = array("topicId"=>$topic->getId());
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            "topicId" => $topic->getId()
+        );
 
         $query = $dql->getQuery();
 
@@ -288,10 +345,64 @@ class DashboardUtil
         $charts = $query->getResult();
         //echo "charts count=".count($charts)."<br>";
 
+        return $charts;
+    }
+
+    public function getChartsByInstitution( $institution ) {
+
+        //echo "getChartsByInstitution: institution=".$institution."<br>";
+        //exit("institution=".$institution);
+
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.institutions','institutions');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("institutions.id = :institutionId");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            "institutionId" => $institution->getId()
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        //echo "charts count=".count($charts)."<br>";
 
         return $charts;
     }
 
+    public function getChartsByChartType( $chartType ) {
+
+        //echo "getChartsByChartType: chartType=".$chartType."<br>";
+        //exit("chartType=".$chartType);
+
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.chartTypes','chartTypes');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("chartTypes.id = :chartTypeId");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            "chartTypeId" => $chartType->getId()
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        //echo "charts count=".count($charts)."<br>";
+
+        return $charts;
+    }
 
     /////////////////////// methods ////////////////////////////
     public function isUserBelongsToInstitution($user, $parentInstitution) {

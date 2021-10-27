@@ -114,30 +114,48 @@
                 {% for key,value in values %}
                     {% set filterServiceUrl = value|replace({' ':'-'}) %}
                     <li>
-                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterServiceUrl}) }}">{{ value }}</a>#}
-                        <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}">{{ value }}</a>
+                        <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}" target="_blank">{{ value }}</a>
                     </li>
                 {% endfor %}
             </ul>
         </li>
     {% endfor %}
 {% endmacro %}
+{% macro createFilterFlatServices( filterServices ) %}
+    {% if filterServices|length > 0 %}
+        <ul class="dropdown-menu multi-level">
+            {% for key,value in filterServices %}
+                <li>
+                    <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}" target="_blank">{{ value }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <ul class="dropdown-menu multi-level">
+            <li>
+                <a href="javascript:;">N/A</a>
+            </li>
+        </ul>
+    {% endif %}
+{% endmacro %}
 
 {% macro createFilterTypes( filterTypes ) %}
-    {% for parentKey,values in filterTypes %}
-        <li class="dropdown-submenu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>
-            <ul class="dropdown-menu">
-                {% for key,value in values %}
-                    {% set filterTypeUrl = value|replace({' ':'-'}) %}
-                    <li>
-                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ value }}</a>#}
-                        <a href="{{ path(dashboard_sitename~'_single_type',{'id':key}) }}">{{ value }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
+    {% if filterTypes|length > 0 %}
+        <ul class="dropdown-menu multi-level">
+            {% for key,value in filterTypes %}
+                <li>
+                    <a href="{{ path(dashboard_sitename~'_single_type',{'id':key}) }}" target="_blank">{{ value }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <ul class="dropdown-menu multi-level">
+            <li>
+                <a href="javascript:;">N/A</a>
+                {#<div class="dropdown-menu1">N/A</div>#}
+            </li>
+        </ul>
+    {% endif %}
 {% endmacro %}
 
 
@@ -184,7 +202,6 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Topic<b class="caret"></b></a>
                         <ul class="dropdown-menu multi-level">
                             {% set filterTopics = dashboard_util.getFilterTopics() %}
-                            {#filterTopics={{ filterTopics|length }}<br>#}
                             {{ navbarmacros.createFilterTopics(filterTopics) }}
                         </ul>
                     </li>
@@ -192,20 +209,20 @@
                     <li id="nav-bar-translationalresearch-service" class="dropdown">
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service<b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-level">
+                        {#<ul class="dropdown-menu multi-level">#}
                             {% set filterServices = dashboard_util.getFilterServices() %}
                             {#filterServices={{ filterServices|length }}<br>#}
-                            {{ navbarmacros.createFilterServices(filterServices) }}
-                        </ul>
+                            {{ navbarmacros.createFilterFlatServices(filterServices) }}
+                        {#</ul>#}
                     </li>
 
                     <li id="nav-bar-translationalresearch-type" class="dropdown">
 
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Type<b class="caret"></b></a>
-                        <ul class="dropdown-menu multi-level">
-                            {% set filterTypes = dashboard_util.getFilterTypes() %}
+                        {% set filterTypes = dashboard_util.getFilterTypes() %}
+                        {#<ul class="dropdown-menu multi-level">#}
                             {{ navbarmacros.createFilterTypes(filterTypes) }}
-                        </ul>
+                        {#</ul>#}
                     </li>
 
 

@@ -80,7 +80,7 @@ class DashboardController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         if( !$id ) {
-            $error = "Topic name is not provided";
+            $error = "Topic id is not provided";
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 $error
@@ -132,6 +132,7 @@ class DashboardController extends OrderAbstractController
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
             'filter[projectSpecialty][]' => 0,
+            'title' => "Topic '".$topic->getName()."'"
         );
         $count = 0;
 
@@ -227,13 +228,56 @@ class DashboardController extends OrderAbstractController
      */
     public function singleServiceAction( Request $request, $id ) {
 
-        //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+        $em = $this->getDoctrine()->getManager();
 
-        $chartsArray = array();
+        if( !$id ) {
+            $error = "Service id is not provided";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
 
-        return array(
-            'title' => "Single chart service",
-            'chartsArray' => $chartsArray
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($id);
+        if( !$institution ) {
+            $error = "Institution is not found by ID '".$id."'";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        //find charts by $topic
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $chartsArray = $dashboardUtil->getChartsByInstitution($institution);
+
+        //dump($chartsArray);
+        //exit('EOF single Service Action');
+
+        $now = new \DateTime('now');
+        $endDateStr = $now->format('m/d/Y');
+        $startDateStr = $now->modify('-1 year')->format('m/d/Y');
+
+        $redirectParams = array(
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[projectSpecialty][]' => 0,
+            'title' => "Service '".$institution->getName()."'"
+        );
+        $count = 0;
+
+        foreach ($chartsArray as $chart) {
+            $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
+            $count++;
+        }
+
+        //redirect to home page with preset filter with chart types
+        return $this->redirectToRoute(
+            'dashboard_home',
+            $redirectParams
         );
     }
 
@@ -245,14 +289,64 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTypeAction( Request $request, $id ) {
 
-        //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+        $em = $this->getDoctrine()->getManager();
 
-        $chartsArray = array();
+        if( !$id ) {
+            $error = "Chart type  id is not provided";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
 
-        return array(
-            'title' => "Single chart type",
-            'chartsArray' => $chartsArray
+        $chartType = $em->getRepository('AppUserdirectoryBundle:Institution')->find($id);
+        if( !$chartType ) {
+            $error = "Chart type is not found by ID '".$id."'";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        //find charts by $topic
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $chartsArray = $dashboardUtil->getChartsByChartType($chartType);
+
+        //dump($chartsArray);
+        //exit('EOF single Service Action');
+
+        $now = new \DateTime('now');
+        $endDateStr = $now->format('m/d/Y');
+        $startDateStr = $now->modify('-1 year')->format('m/d/Y');
+
+        $redirectParams = array(
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[projectSpecialty][]' => 0,
+            'title' => "Chart type '".$chartType->getName()."'"
         );
+        $count = 0;
+
+        foreach ($chartsArray as $chart) {
+            $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
+            $count++;
+        }
+
+        //redirect to home page with preset filter with chart types
+        return $this->redirectToRoute(
+            'dashboard_home',
+            $redirectParams
+        );
+
+//        $chartsArray = array();
+//
+//        return array(
+//            'title' => "Single chart type",
+//            'chartsArray' => $chartsArray
+//        );
     }
 
     /**
@@ -276,12 +370,10 @@ class DashboardController extends OrderAbstractController
 
 
     /**
-     * //("/graphs/", name="dashboard_dashboard_choices")
-     *
-     * @Route("/", name="dashboard_home")
+     * @Route("/{title}", name="dashboard_home")
      * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      */
-    public function dashboardChoicesAction( Request $request )
+    public function dashboardChoicesAction( Request $request, $title=NULL )
     {
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN')
@@ -294,8 +386,12 @@ class DashboardController extends OrderAbstractController
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
+        if( !$title ) {
+            $title = "Dashboard";
+        }
+
         return array(
-            'title' => "Dashboard",
+            'title' => $title,
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
