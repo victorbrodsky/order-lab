@@ -68,7 +68,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/set-chart-list", name="dashboard_set_chart_list")
+     * @Route("/init-set-chart-list", name="dashboard_init_set_chart_list")
      * @Template("AppDashboardBundle/Default/test.html.twig")
      */
     public function setChartListAction( Request $request ) {
@@ -187,5 +187,63 @@ class DefaultController extends OrderAbstractController
         //$em->flush();
 
         exit("EOF setChartListAction: count=$count");
+    }
+
+    /**
+     * TODO: Set chart types (Line, Bar ...)
+     *
+     * @Route("/init-set-chart-type", name="dashboard_init_set_chart_type")
+     * @Template("AppDashboardBundle/Default/test.html.twig")
+     */
+    public function setChartTypesAction( Request $request ) {
+
+        //exit('111');
+
+        $dashboardUtil = $this->container->get('dashboard_util');
+
+        $now = new \DateTime('now');
+        $endDate = $now->format('m/d/Y');
+        $startDate = $now->modify('-1 year')->format('m/d/Y');
+
+        $charts = $dashboardUtil->getChartTypes();
+
+        $chartsArray = array();
+
+        $count = 0;
+
+        foreach($charts as $chartType) {
+
+            $parametersArr = array(
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'projectSpecialty' => NULL,
+                'showLimited' => NULL,
+                'chartType' => $chartType,
+                'productservice' => NULL,
+                'quantityLimit' => NULL
+            );
+
+            $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr);
+
+            if( isset($chartsArray['data']) ) {
+                $data = $chartsArray['data'];
+                if( isset($data[0]['type']) ) {
+                    $type = $data[0]['type'];
+                    echo $count.": ".$chartType.": type=$type <br>";
+                    //dump($data);
+                }
+            }
+
+            if( $count > 70 ) {
+                break;
+            }
+
+            $count++;
+        }
+
+        //dump($chartsArray);
+        exit('111');
+
+
     }
 }

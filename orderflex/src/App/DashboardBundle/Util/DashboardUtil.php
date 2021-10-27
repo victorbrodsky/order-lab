@@ -159,9 +159,9 @@ class DashboardUtil
         $chartTypes = array();
 
         foreach($charts as $chart) {
-            $chartTypes = $chart->getChartTypes();
-            foreach($chartTypes as $chartType) {
-                $chartTypes[$chartType->getId()] = $chartType->getName();
+            $types = $chart->getChartTypes();
+            foreach($types as $type) {
+                $chartTypes[$type->getId()] = $type->getName();
             }
         }
 
@@ -1232,10 +1232,14 @@ class DashboardUtil
         $resArr = array();
         foreach($firstArr as $index=>$value) {
             //$index = $index . " " . $prefix . $secondArr[$index];
-            if( strpos($prefix,'$') !== false ) {
-                $index = $index . " " . $prefix . $this->getNumberFormat($secondArr[$index]);
-            } else {
-                $index = $index . " " . $prefix . $secondArr[$index];
+            if( isset($secondArr[$index]) ) {
+                if (strpos($prefix, '$') !== false) {
+                    //echo "index=$index, prefix=" . $prefix . "<br>"; //testing
+                    //echo "secondArr[index]=" . $secondArr[$index] . "<br>";
+                    $index = $index . " " . $prefix . $this->getNumberFormat($secondArr[$index]);
+                } else {
+                    $index = $index . " " . $prefix . $secondArr[$index];
+                }
             }
             $resArr[$index] = $value;
         }

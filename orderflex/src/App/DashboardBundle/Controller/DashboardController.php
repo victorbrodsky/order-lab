@@ -300,7 +300,7 @@ class DashboardController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('dashboard_home') );
         }
 
-        $chartType = $em->getRepository('AppUserdirectoryBundle:Institution')->find($id);
+        $chartType = $em->getRepository('AppDashboardBundle:ChartTypeList')->find($id);
         if( !$chartType ) {
             $error = "Chart type is not found by ID '".$id."'";
             $this->get('session')->getFlashBag()->add(
@@ -352,7 +352,7 @@ class DashboardController extends OrderAbstractController
     /**
      * charts belonging to a single favorite. id - user ID
      *
-     * @Route("/favorites/{id}", name="dashboard_single_type")
+     * @Route("/favorites/{id}", name="dashboard_single_favorite")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleFavoritesAction( Request $request, $id ) {
@@ -370,10 +370,10 @@ class DashboardController extends OrderAbstractController
 
 
     /**
-     * @Route("/{title}", name="dashboard_home")
+     * @Route("/", name="dashboard_home")
      * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      */
-    public function dashboardChoicesAction( Request $request, $title=NULL )
+    public function dashboardChoicesAction( Request $request )
     {
 
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN')
@@ -386,6 +386,8 @@ class DashboardController extends OrderAbstractController
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
+
+        $title = $request->query->get('title');
         if( !$title ) {
             $title = "Dashboard";
         }
