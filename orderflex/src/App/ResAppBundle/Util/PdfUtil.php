@@ -1030,7 +1030,8 @@ class PdfUtil {
         if( $duplicateTableResApps  ) {
             //$rowArr['Status']['id'] = null;
             //$rowArr['Status']['value'] = "Duplicate in batch";
-            $duplicateArr[] = "Duplicate in batch";
+            //TODO: getDuplicateTableResApps gives an erroneous "Duplicate in batch" when csv and pdf files are processed together
+            //$duplicateArr[] = "Duplicate in batch";
         } else {
             //$rowArr['Status']['id'] = null;
             //$rowArr['Status']['value'] = "Not Duplicated";
