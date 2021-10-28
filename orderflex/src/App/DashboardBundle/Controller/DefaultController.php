@@ -242,7 +242,7 @@ class DefaultController extends OrderAbstractController
         }
 
         //dump($chartsArray);
-        exit('111');
+        exit('eof setChartTypesAction');
 
 
     }

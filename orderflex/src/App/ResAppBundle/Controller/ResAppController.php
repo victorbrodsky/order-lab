@@ -206,8 +206,8 @@ class ResAppController extends OrderAbstractController {
 
         $filter = $filterform['filter']->getData(); //Residency Track
         $search = $filterform['search']->getData();
-        $startDates = $filterform['startDates']->getData();
-        $applicationSeasonStartDates = $filterform['applicationSeasonStartDates']->getData();
+        $startDates = $filterform['startDates']->getData(); //Residency Start Year
+        $applicationSeasonStartDates = $filterform['applicationSeasonStartDates']->getData(); //Application Season Start Year
         $hidden = $filterform['hidden']->getData();
         $archived = $filterform['archived']->getData();
         $complete = $filterform['complete']->getData();
@@ -420,6 +420,7 @@ class ResAppController extends OrderAbstractController {
             $dql->andWhere("(".$orWhereStr.")");
         }
 
+        //Residency Start Year
         if( $startDates ) {
             //echo "startDate=$startDates <br>";
             if(1) {
@@ -432,11 +433,18 @@ class ResAppController extends OrderAbstractController {
                     //$startYearStr = $startDatesArr[0];
                     //$bottomDate = $startDate . "-01-01";
                     //$topDate = $startDate . "-12-31";
-                    //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDate);
-                    $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDate);
-                    $bottomDate = $startEndDates['Residency Start Date'];
-                    $topDate = $startEndDates['Residency End Date'];
+                    $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDate);
+                    $bottomDate = $startEndDates['startDate'];
+                    $topDate = $startEndDates['endDate'];
+
+                    //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDate);
+                    //$bottomDate = $startEndDates['Residency Start Date'];
+                    //$topDate = $startEndDates['Residency End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
+                    //$seasonBottomDate = $startEndDates['Season Start Date'];
+                    //$seasonTopDate = $startEndDates['Season End Date'];
+                    //echo "seasonBottomDate=$seasonBottomDate, seasonTopDate=$seasonTopDate <br>";
+
                     $startDateCriterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $startDateCriterion = implode(" OR ",$startDateCriterions);
@@ -463,6 +471,7 @@ class ResAppController extends OrderAbstractController {
             $startYearStr = $currentYear;
         }
 
+        //Application Season Start Year
         if( $applicationSeasonStartDates ) {
             //echo "applicationSeasonStartDates=$applicationSeasonStartDates <br>";
             if(1) {

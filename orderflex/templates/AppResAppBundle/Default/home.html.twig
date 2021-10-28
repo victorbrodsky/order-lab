@@ -393,7 +393,12 @@
 
                 <th>{{ knp_pagination_sortable(entities, 'Residency Track', 'residencyTrack.name') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Start Date', 'resapp.startDate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Created Date', 'resapp.createdate') }}</th>
+                <th>
+                    <div data-toggle="tooltip" title="Expected Residency Start Date">
+                        {{ knp_pagination_sortable(entities, 'Residency Start Date', 'resapp.startDate') }}
+                    </div>
+                </th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'resapp.id') }}</th>
                 {#<th>Photo</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
@@ -633,6 +638,10 @@
                     </td>
 
                     <td>
+                        {{ entity.createdate|date('m/d/Y',false) }}
+                    </td>
+
+                    <td tooltip="Expected Residency Start Date">
                         {#{{ entity.startDate|date('m/d/Y','UTC') }}#}
                         {{ entity.startDate|date('m/d/Y',false) }}
                     </td>
