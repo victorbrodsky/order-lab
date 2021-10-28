@@ -75,7 +75,12 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTopicByIdAction( Request $request, $id ) {
 
-        //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -186,6 +191,13 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTopicByNameAction( Request $request, $topicName ) {
 
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         if( !$topicName ) {
@@ -227,6 +239,13 @@ class DashboardController extends OrderAbstractController
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleServiceAction( Request $request, $id ) {
+
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -288,6 +307,13 @@ class DashboardController extends OrderAbstractController
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleTypeAction( Request $request, $id ) {
+
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -375,9 +401,8 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardChoicesAction( Request $request )
     {
-
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN')
-        ) {
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
