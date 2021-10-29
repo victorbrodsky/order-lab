@@ -544,10 +544,28 @@ class DefaultController extends OrderAbstractController
 
         $resapp = $em->getRepository("AppResAppBundle:ResidencyApplication")->find(824);
 
-        $formReports = $resapp->getFormReports();
+        foreach($resapp->getFormReports() as $file) {
+            echo "form report file=".$file."<br>";
+        }
 
-        foreach($formReports as $formReport) {
-            echo "formReport=".$formReport."<br>";
+        foreach($resapp->getReports() as $file) {
+            echo "file=".$file."<br>";
+        }
+
+        foreach($resapp->getManualReports() as $file) {
+            echo "ManualReports file=".$file."<br>";
+        }
+
+        foreach($resapp->getOldReports() as $file) {
+            echo "OldReports file=".$file."<br>";
+        }
+
+        foreach($resapp->getDocuments() as $file) {
+            echo "documents file=".$file."<br>";
+        }
+
+        foreach($resapp->getItinerarys() as $file) {
+            echo "itinerarys file=".$file."<br>";
         }
 
         exit("EOF testingAction");
