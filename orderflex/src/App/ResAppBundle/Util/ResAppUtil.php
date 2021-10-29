@@ -135,11 +135,17 @@ class ResAppUtil {
                 foreach($yearArr as $singleYear) {
                     //$bottomDate = $singleYear."-01-01";
                     //$topDate = $singleYear."-12-31";
+                    //TODO: test start year
                     //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
-                    $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($singleYear);
-                    $bottomDate = $startEndDates['Residency Start Date'];
-                    $topDate = $startEndDates['Residency End Date'];
+                    $startEndDates = $resappUtil->getAcademicYearStartEndDates($singleYear);
+                    $bottomDate = $startEndDates['startDate'];
+                    $topDate = $startEndDates['endDate'];
+
+                    //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($singleYear);
+                    //$bottomDate = $startEndDates['Residency Start Date'];
+                    //$topDate = $startEndDates['Residency End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
+
                     $criterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $criterionStr = implode(" OR ",$criterions);
@@ -148,10 +154,16 @@ class ResAppUtil {
                 //seingle year
                 //$bottomDate = $year."-01-01";
                 //$topDate = $year."-12-31";
+                //TODO: test start year
                 //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($year);
-                $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($year);
-                $bottomDate = $startEndDates['Residency Start Date'];
-                $topDate = $startEndDates['Residency End Date'];
+                $startEndDates = $resappUtil->getAcademicYearStartEndDates($year);
+                $bottomDate = $startEndDates['startDate'];
+                $topDate = $startEndDates['endDate'];
+
+                //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($year);
+                //$bottomDate = $startEndDates['Residency Start Date'];
+                //$topDate = $startEndDates['Residency End Date'];
+
                 $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }
