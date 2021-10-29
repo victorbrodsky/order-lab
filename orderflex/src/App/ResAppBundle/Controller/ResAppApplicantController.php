@@ -137,10 +137,16 @@ class ResAppApplicantController extends OrderAbstractController {
         $startDateStr = $startDate->format('Y');
         //$startDate = $startDateStr."-01-01";
         //$endDate = $startDateStr."-12-31";
-        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
-        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
-        $startDate = $startEndDates['Residency Start Date'];
-        $endDate = $startEndDates['Residency End Date'];
+
+        //TODO: test start year
+        $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDateStr);
+        $startDate = $startEndDates['startDate'];
+        $endDate = $startEndDates['endDate'];
+        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+
+        //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
+        //$startDate = $startEndDates['Residency Start Date'];
+        //$endDate = $startEndDates['Residency End Date'];
         //echo "startDate=$startDate, endDate=$endDate <br>";
         //exit('111');
 

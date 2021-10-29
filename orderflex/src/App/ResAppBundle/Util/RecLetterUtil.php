@@ -1272,6 +1272,7 @@ class RecLetterUtil {
         return true;
     }
 
+    //NOT USED in resapp: There are no reference letters to upload for resapp. It was derived from fellapp
     //send invitation email to upload recommendation letter to references
     public function sendInvitationEmailsToReferences( $resapp, $flush=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1280,6 +1281,7 @@ class RecLetterUtil {
         $resappUtil = $this->container->get('resapp_util');
 
         $sendEmailUploadLetterResApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterResApp');
+        //$sendEmailUploadLetterResApp = true;
         if( $sendEmailUploadLetterResApp ) {
 
             //check for duplicates or if one of the reference email is missing
@@ -1313,14 +1315,23 @@ class RecLetterUtil {
             $dql->andWhere("resapp.id != :resappId");
 
             //startDate
-            $startDate = $resapp->getStartDate();
+            $startDate = $resapp->getStartDate(); //Residency Start Year
             $startDateStr = $startDate->format('Y');
             //$startDate = $startDateStr."-01-01";
             //$endDate = $startDateStr."-12-31";
-            //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDateStr);
-            $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
-            $startDate = $startEndDates['Residency Start Date'];
-            $endDate = $startEndDates['Residency End Date'];
+
+            //TODO: test start year
+            $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDateStr);
+            $startDate = $startEndDates['startDate'];
+            $endDate = $startEndDates['endDate'];
+            //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+
+            //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
+            //$startDate = $startEndDates['Residency Start Date'];
+            //$endDate = $startEndDates['Residency End Date'];
+            //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+            //exit('111');
+
             $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
             $query = $this->em->createQuery($dql);

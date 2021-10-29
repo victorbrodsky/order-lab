@@ -2534,6 +2534,7 @@ class ResAppUtil {
         return $resArr;
     }
     //Get application start/end dates from resapp site setting or default site settings
+    //$currentYear is Application Season Start Year (applicationSeasonStartDate)
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
     public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {

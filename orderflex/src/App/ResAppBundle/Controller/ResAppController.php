@@ -433,7 +433,9 @@ class ResAppController extends OrderAbstractController {
                     //$startYearStr = $startDatesArr[0];
                     //$bottomDate = $startDate . "-01-01";
                     //$topDate = $startDate . "-12-31";
-                    $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($startDate);
+
+                    //TODO: test start year
+                    $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDate);
                     $bottomDate = $startEndDates['startDate'];
                     $topDate = $startEndDates['endDate'];
 

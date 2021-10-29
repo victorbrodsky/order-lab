@@ -100,6 +100,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['resapp_reportgenerator'] = '?'.\App\ResAppBundle\Util\ReportGenerator::class;
         $subscribedServices['resapp_pdfutil'] = '?'.PdfUtil::class;
         $subscribedServices['resapp_import_from_old_system_util'] = '?'.ImportFromOldSystem::class;
+        //$subscribedServices['resapp_rec_letter_util'] = '?'.\App\ResAppBundle\Util\RecLetterUtil::class;
 
         $subscribedServices['transres_util'] = '?'.TransResUtil::class;
         $subscribedServices['transres_request_util'] = '?'.TransResRequestUtil::class;

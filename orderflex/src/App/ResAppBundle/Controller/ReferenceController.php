@@ -34,6 +34,8 @@ class ReferenceController extends OrderAbstractController
 {
 
     /**
+     * NOT USED: There are no reference letters to submit. This functionality has been derived from fellowship system.
+     *
      * @Route("/invite-references-submit-letters/{id}", name="resapp_invite_references_submit_letters", methods={"GET"})
      */
     public function InviteReferencesToSubmitLettersAction(Request $request, ResidencyApplication $resapp) {

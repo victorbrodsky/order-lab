@@ -98,6 +98,11 @@ class DefaultController extends OrderAbstractController
 //        dump($startEndDates);
 //        exit('EOF');
 
+//        $em = $this->getDoctrine()->getManager();
+//        $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
+//        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(10);
+//        $resappRecLetterUtil->sendInvitationEmailsToReferences($resapp);
+
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
 
@@ -536,9 +541,13 @@ class DefaultController extends OrderAbstractController
 
 
     /**
+     * Testing missing/corrupted attached files
+     *
      * @Route("/testing/", name="resapp_testing", methods={"GET"})
      */
     public function testingAction(Request $request) {
+
+        exit("EOF testingAction");
 
         $em = $this->getDoctrine()->getManager();
 

@@ -125,10 +125,16 @@ class ReportGenerator {
         //$startYearStr = $startDate->format('Y');
         //$bottomDate = $startYearStr."-01-01";
         //$topDate = $startYearStr."-12-31";
-        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
-        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startYearStr);
-        $bottomDate = $startEndDates['Residency Start Date'];
-        $topDate = $startEndDates['Residency End Date'];
+
+        //TODO: test start year
+        $startEndDates = $resappUtil->getAcademicYearStartEndDates($startYearStr);
+        $bottomDate = $startEndDates['startDate'];
+        $topDate = $startEndDates['endDate'];
+        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+
+        //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startYearStr);
+        //$bottomDate = $startEndDates['Residency Start Date'];
+        //$topDate = $startEndDates['Residency End Date'];
 
         $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
