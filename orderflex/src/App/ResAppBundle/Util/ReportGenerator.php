@@ -1787,6 +1787,7 @@ class ReportGenerator {
         $filename = str_replace("/","_",$filename);
         $filename = str_replace("\\","_",$filename);
         $filename = str_replace(DIRECTORY_SEPARATOR,"_",$filename);
+        $filename = str_replace("'","_",$filename);
 
         return $filename;
     }

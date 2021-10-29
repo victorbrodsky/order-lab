@@ -55,7 +55,18 @@
             {#DropZone: Please drag and drop ERAS application files here#}
             {#dropzoneconfirmation-disable - disable alert when upload or remove#}
             <div class="well form-element-holder user-erasfiles dropzoneconfirmation-disable">
-                <label class="col-xs-12 control-label">Please drag and drop ERAS application PDF files and the CSV file listing them here</label>
+                <label class="col-xs-12 control-label">
+                    Please drag and drop ERAS application PDF files and the CSV file listing them here.
+                    It is recommended to upload one CSV file and the corresponding ERAS application PDF files (unzipped) together.
+                    <br>Only CSV file is able to accurately populate these application fields,
+                    while populating using only PDF files is not accurate and some fields can be missed.
+                    <br>Uploaded PDF files will be attached to the corresponding residency application using common "ERAS Application ID" and/or "AAMC ID".
+
+                    <br><br>Please make sure that all files are uploaded correctly and marked with a green check icon on the top left in the each file box.
+                    <br>Please verify that "ERAS Application" and all other important fields such as medical school and score are populated.
+
+                    <br>For more detailed instruction, please refer to the <a href="{{ path('resapp_help_page') }}" target="_blank">help page</a>.
+                 </label>
                 <div class="row withpaddingtop">
                     <div class="col-xs-12">
                         {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}

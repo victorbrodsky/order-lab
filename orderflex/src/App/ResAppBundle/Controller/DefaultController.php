@@ -39,6 +39,17 @@ class DefaultController extends OrderAbstractController
 //        return array('name' => $name);
 //    }
 
+    /**
+     * @Route("/help/", name="resapp_help_page", methods={"GET"})
+     * @Template("AppResAppBundle/Default/help.html.twig")
+     */
+    public function helpPageAction(Request $request) {
+
+        return array(
+            'title' => 'Residency Application Help: Under construction'
+        );
+    }
+
 
     /**
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="resapp_thankfordownloading", methods={"GET"})

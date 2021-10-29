@@ -1739,6 +1739,8 @@ class ReportGenerator {
         $filename = str_replace("__","_",$filename);
         $filename = str_replace("___","_",$filename);
 
+        $filename = str_replace("'","_",$filename);
+
         return $filename;
     }
 
