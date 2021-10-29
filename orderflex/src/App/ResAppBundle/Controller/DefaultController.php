@@ -533,4 +533,23 @@ class DefaultController extends OrderAbstractController
 
         exit($res);
     }
+
+
+    /**
+     * @Route("/testing/", name="resapp_testing", methods={"GET"})
+     */
+    public function testingAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $resapp = $em->getRepository("AppResAppBundle:ResidencyApplication")->find(824);
+
+        $formReports = $resapp->getFormReports();
+
+        foreach($formReports as $formReport) {
+            echo "formReport=".$formReport."<br>";
+        }
+
+        exit("EOF testingAction");
+    }
 }
