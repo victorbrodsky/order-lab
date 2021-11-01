@@ -138,7 +138,6 @@ class ResAppUtil {
                 foreach($yearArr as $singleYear) {
                     //$bottomDate = $singleYear."-01-01";
                     //$topDate = $singleYear."-12-31";
-                    //TODO: test start year
                     //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates($singleYear);
                     //$startEndDates = $resappUtil->getAcademicYearStartEndDates($singleYear);
                     //$bottomDate = $startEndDates['startDate'];
@@ -147,8 +146,8 @@ class ResAppUtil {
                     //$criterions[] = "("."resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
 
                     $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($singleYear);
-                    $bottomDate = $startEndDates['Residency Start Date'];
-                    $topDate = $startEndDates['Residency End Date'];
+                    $bottomDate = $startEndDates['Season Start Date'];
+                    $topDate = $startEndDates['Season End Date'];
                     //echo "bottomDate=$bottomDate, topDate=$topDate <br>";
                     ////applicationSeasonStartDate - Application Season Start Year
                     $criterions[] = "("."resapp.applicationSeasonStartDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
@@ -159,7 +158,6 @@ class ResAppUtil {
                 //single year
                 //$bottomDate = $year."-01-01";
                 //$topDate = $year."-12-31";
-                //TODO: test start year
                 //$startEndDates = $resappUtil->getAcademicYearStartEndDates($year);
                 //$bottomDate = $startEndDates['startDate'];
                 //$topDate = $startEndDates['endDate'];
