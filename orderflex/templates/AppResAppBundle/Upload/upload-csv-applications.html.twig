@@ -532,6 +532,16 @@
             return false;
         }
 
+
+        function dropzoneDisableButtons() {
+            //$(':input[type="submit"]').prop('disabled', true);
+            $('#oleg_resappbundle_bulkupload_upload').prop('disabled', true);
+        }
+        function dropzoneEnableButtons() {
+            //$(':input[type="submit"]').prop('disabled', false);
+            $('#oleg_resappbundle_bulkupload_upload').prop('disabled', false);
+        }
+
     </script>
 {% endblock %}
 

@@ -144,7 +144,12 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             previewTemplate: previewHtml,
             dictDefaultMessage: 'Drag and drop files here to upload or click to select a file',
             sending: function(file, xhr, formData){
-                //console.log('userid='+userid);
+
+                //disable all buttons
+                //$(':input[type="submit"]').prop('disabled', true);
+                dropzoneDisableButtons();
+
+                //console.log('dropzone: userid='+userid);
                 formData.append('userid', userid);
 
                 var filename = file.name;
@@ -162,6 +167,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
                 formData.append('authuserid', _authuser_id);
             },
             success: function(file, responseText){
+                //console.log('dropzone success');
                 //console.log('responseText='+responseText);
                 //console.log(responseText);
                 //console.log(file);
@@ -216,6 +222,12 @@ function initFileUpload( holder, data, addRemoveLinks ) {
             },
             init: function() {
 
+                //Called when all files in the queue finished uploading
+                this.on("queuecomplete", function (file) {
+                    //alert("queuecomplete: All files have uploaded ");
+                    dropzoneEnableButtons();
+                });
+
                 var withRemoveLinks = true;
                 //disable dropzone if dropzone has class file-upload-dropzone-inactive
                 if( $(this.element).hasClass('file-upload-dropzone-inactive') ) {
@@ -245,6 +257,15 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
 //    $('#jquery-fileupload').fileupload({});
 
+}
+
+function dropzoneDisableButtons() {
+    //$(':input[type="submit"]').prop('disabled', true);
+    return;
+}
+function dropzoneEnableButtons() {
+    //$(':input[type="submit"]').prop('disabled', false);
+    return;
 }
 
 function populateDropzoneWithData(thisDropzone,data,withRemoveLinks) {
