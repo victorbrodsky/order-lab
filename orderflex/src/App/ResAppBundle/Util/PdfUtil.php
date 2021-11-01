@@ -1290,10 +1290,17 @@ class PdfUtil {
 //        $startDate = $startDateStr."-07-01";
 //        $endDate = $endDateStr."-06-30";
 
-        //$startEndDates = $userServiceUtil->getAcademicYearStartEndDates();
+        //$startEndDates = $resappUtil->getAcademicYearStartEndDates();
+        //$startDate = $startEndDates['startDate'];
+        //$endDate = $startEndDates['endDate'];
+        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+
         $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
         $startDate = $startEndDates['Season Start Date'];
         $endDate = $startEndDates['Season End Date'];
+        //$bottomDate = $startEndDates['Residency Start Date'];
+        //$topDate = $startEndDates['Residency End Date'];
+        //echo "1 startDate=$startDate, endDate=$endDate <br>";
 
         $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 

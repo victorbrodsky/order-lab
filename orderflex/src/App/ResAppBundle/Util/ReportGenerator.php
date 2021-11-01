@@ -86,11 +86,11 @@ class ReportGenerator {
     }
 
 
-
+    //$startYearStr - must be Residency Start Year
     public function regenerateAllReports($startYearStr) {
 
         if( !$startYearStr ) {
-            exit("Please provide start year");
+            exit("Please provide residency start year");
         }
 
         $queue = $this->getQueue();
@@ -111,6 +111,7 @@ class ReportGenerator {
 
         return $numDeleted;
     }
+    //$startYearStr - must be Residency Start Year
     public function getResApplicationsByYear($startYearStr) {
 
         //$userServiceUtil = $this->container->get('user_service_utility');

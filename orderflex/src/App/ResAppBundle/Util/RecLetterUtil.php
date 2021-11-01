@@ -1320,7 +1320,7 @@ class RecLetterUtil {
             //$startDate = $startDateStr."-01-01";
             //$endDate = $startDateStr."-12-31";
 
-            //TODO: test start year
+            //TODO: test start year (NOTUSED for resapp)
             $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDateStr);
             $startDate = $startEndDates['startDate'];
             $endDate = $startEndDates['endDate'];

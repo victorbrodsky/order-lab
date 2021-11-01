@@ -103,6 +103,53 @@ class DefaultController extends OrderAbstractController
 //        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(10);
 //        $resappRecLetterUtil->sendInvitationEmailsToReferences($resapp);
 
+//        $resappUtil = $this->container->get('resapp_util');
+//        $em = $this->getDoctrine()->getManager();
+//        $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find(765);
+//        $startDate = $resapp->getStartDate(); //Residency Start Year
+//        $startDate = $resapp->getApplicationSeasonStartDate(); //Season Start Year
+//        $startDateStr = $startDate->format('Y');
+//        echo "startDateStr=$startDateStr<br>";
+//
+//        $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDateStr);
+//        $startDate = $startEndDates['startDate'];
+//        $endDate = $startEndDates['endDate'];
+//        echo "startDate=$startDate, endDate=$endDate <br>";
+//
+//        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
+//        $seasonStartDate = $startEndDates['Season Start Date'];
+//        $seasonEndDate = $startEndDates['Season End Date'];
+//        $residencyStartDate = $startEndDates['Residency Start Date'];
+//        $residencyEndDate = $startEndDates['Residency End Date'];
+//        echo "seasonStartDate=$seasonStartDate, seasonEndDate=$seasonEndDate <br>";
+//        echo "residencyStartDate=$residencyStartDate, residencyEndDate=$residencyEndDate <br>";
+//
+//        $resappPdfUtil = $this->get('resapp_pdfutil');
+//        $resapps = $resappPdfUtil->getEnabledResapps();
+//        echo "count=".count($resapps)."<br>";
+//        foreach($resapps as $resapp) {
+//            $seasonStartYear = $resapp->getApplicationSeasonStartDate()->format('Y-d-m');
+//            $seasonEndYear = $resapp->getApplicationSeasonEndDate()->format('Y-d-m');
+//            $residencyStartYear = $resapp->getStartDate()->format('Y-d-m');
+//            $residencyEndYear = $resapp->getEndDate()->format('Y-d-m');
+//            echo $resapp->getId().": seasonStartYear=$seasonStartYear, seasonEndYear=$seasonEndYear"." => ";
+//            echo "residencyStartYear=$residencyStartYear, residencyEndYear=$residencyEndYear"."<br>";
+//        }
+
+//        $resappRepGen = $this->container->get('resapp_reportgenerator');
+//        $startYearStr = '2022';
+//        echo "startYearStr=".$startYearStr."<br>";
+//        $resapps = $resappRepGen->getResApplicationsByYear($startYearStr);
+//        echo "count=".count($resapps)."<br>";
+//        foreach($resapps as $resapp) {
+//            $seasonStartYear = $resapp->getApplicationSeasonStartDate()->format('Y-d-m');
+//            $seasonEndYear = $resapp->getApplicationSeasonEndDate()->format('Y-d-m');
+//            $residencyStartYear = $resapp->getStartDate()->format('Y-d-m');
+//            $residencyEndYear = $resapp->getEndDate()->format('Y-d-m');
+//            echo $resapp->getId().": seasonStartYear=$seasonStartYear, seasonEndYear=$seasonEndYear"." => ";
+//            echo "residencyStartYear=$residencyStartYear, residencyEndYear=$residencyEndYear"."<br>";
+//        }
+
         return array('sitename'=>$this->getParameter('resapp.sitename'));
     }
 

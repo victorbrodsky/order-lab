@@ -133,23 +133,25 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $dql->where("residencyTrack.id = " . $resappType->getId() );
 
-        $startDate = $entity->getStartDate();
+        //start year
+        //use getStartDate for getAcademicYearStartEndDates
+        $startDate = $entity->getStartDate(); ////startDate - Residency Start Year
         $startDateStr = $startDate->format('Y');
-        //$startDate = $startDateStr."-01-01";
-        //$endDate = $startDateStr."-12-31";
-
-        //TODO: test start year
         $startEndDates = $resappUtil->getAcademicYearStartEndDates($startDateStr);
         $startDate = $startEndDates['startDate'];
         $endDate = $startEndDates['endDate'];
         //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
 
+        //use getApplicationSeasonStartDate for getResAppAcademicYearStartEndDates
+        //$startDate = $entity->getApplicationSeasonStartDate();
+        //$startDateStr = $startDate->format('Y');
         //$startEndDates = $resappUtil->getResAppAcademicYearStartEndDates($startDateStr);
         //$startDate = $startEndDates['Residency Start Date'];
         //$endDate = $startEndDates['Residency End Date'];
         //echo "startDate=$startDate, endDate=$endDate <br>";
         //exit('111');
 
+        //startDate - Residency Start Year
         $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
         $dql->andWhere("resapp.interviewScore IS NOT NULL AND resapp.interviewScore != '0'");

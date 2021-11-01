@@ -128,7 +128,9 @@ class ResAppUtilController extends OrderAbstractController
 
         $resappUtil = $this->container->get('resapp_util');
 
-        $datesArr = $resappUtil->getResAppAcademicYearStartEndDates();
+        //$currentYear=null;
+        //$formatStr="m/d/Y";
+        $datesArr = $resappUtil->getResAppAcademicYearStartEndDates(null,"m/d/Y");
 
 //        $seasonStartDate = $datesArr['Season Start Date'];
 //        $seasonEndDate = $datesArr['Season End Date'];

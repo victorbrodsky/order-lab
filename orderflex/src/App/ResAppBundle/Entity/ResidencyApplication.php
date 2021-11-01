@@ -48,7 +48,7 @@ class ResidencyApplication extends BaseUserAttributes {
     private $user;
 
     /**
-     * Residency Start Year
+     * Residency Start Year (i.e. 2022)
      * Usually: $startDate = $applicationSeasonStartDate + 1 year
      *
      * @ORM\Column(type="date", nullable=true)
@@ -61,7 +61,7 @@ class ResidencyApplication extends BaseUserAttributes {
     private $endDate;
 
     /**
-     * Application Season Start Year
+     * Application Season Start Year (i.e. 2021)
      * the year that was imported from the old site: enrolment dates in 2019 => 2019-2020
      *
      * @ORM\Column(type="date", nullable=true)

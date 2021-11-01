@@ -550,6 +550,7 @@ class ResAppController extends OrderAbstractController {
         }
 
         //use date from the filter ($seasonStartYearStr) instead of $currentYear
+        //echo "seasonStartYearStr=$seasonStartYearStr <br>";
 
         $complete = $resappUtil->getResAppByStatusAndYear('complete',$resSubspecId,$seasonStartYearStr);
         $completeTotal = $resappUtil->getResAppByStatusAndYear('complete',$resSubspecId);
@@ -2924,14 +2925,14 @@ class ResAppController extends OrderAbstractController {
      */
     public function regenerateAllReportsAction(Request $request, $year) {
 
-        //exit("This method is disabled for security reason.");
+        exit("This method is disabled for security reason.");
 
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
         if( !$year ) {
-            exit("Please provide start year");
+            exit("Please provide residency start year");
         }
 
         $resappRepGen = $this->container->get('resapp_reportgenerator');
