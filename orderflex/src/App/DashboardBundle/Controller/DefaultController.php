@@ -73,6 +73,8 @@ class DefaultController extends OrderAbstractController
      */
     public function setChartListAction( Request $request ) {
 
+        exit('setChartListAction disable');
+
         $em = $this->getDoctrine()->getManager();
         
         //add the nine charts 55, 56, 57, 58, 59, 60, 61, 62, 63 (with IDs of 1 through 9) to the topic of “Site Utilization”,
@@ -197,7 +199,7 @@ class DefaultController extends OrderAbstractController
      */
     public function setChartTypesAction( Request $request ) {
 
-        //exit('111');
+        exit('setChartTypesAction disable');
 
         $em = $this->getDoctrine()->getManager();
         $dashboardUtil = $this->container->get('dashboard_util');
