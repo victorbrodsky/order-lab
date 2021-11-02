@@ -184,7 +184,7 @@ class DefaultController extends OrderAbstractController
             $count++;
         }
 
-        //$em->flush();
+        $em->flush();
 
         exit("EOF setChartListAction: count=$count");
     }
