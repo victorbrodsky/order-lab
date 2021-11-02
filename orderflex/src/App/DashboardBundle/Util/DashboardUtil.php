@@ -168,6 +168,12 @@ class DashboardUtil
         return $chartTypes;
     }
 
+    public function getFilterFavorites() {
+        $chartFavorites = array();
+
+        return $chartFavorites;
+    }
+
     public function getChartTypes() {
         //get chart types from DB ChartList
 //        $charts = $this->em->getRepository('AppDashboardBundle:ChartList')->findBy(

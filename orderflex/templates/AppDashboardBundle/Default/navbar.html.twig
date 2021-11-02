@@ -158,7 +158,26 @@
     {% endif %}
 {% endmacro %}
 
-
+{% macro createFilterFavorites( filterFavorites ) %}
+    {#filterFavorites|length={{ filterFavorites|length }}#}
+    {% if filterFavorites|length > 0 %}
+        <ul class="dropdown-menu multi-level">
+            {% for key,value in filterFavorites %}
+                <li>
+                    <a href="{{ path(dashboard_sitename~'_single_favorite',{'id':key}) }}" target="_blank">{{ value }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {#filterFavorites|length={{ filterFavorites|length }}#}
+        <ul class="dropdown-menu multi-level">
+            <li>
+                <a href="javascript:;">N/A</a>
+                {#<div class="dropdown-menu">N/A</div>#}
+            </li>
+        </ul>
+    {% endif %}
+{% endmacro %}
 
 {% block navbar %}
 
@@ -196,6 +215,15 @@
                         </a>
                     </li>
 
+                    {#Favorites#}
+                    <li id="nav-bar-translationalresearch-favorites" class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Favorites<b class="caret"></b></a>
+                        {#<ul class="dropdown-menu multi-level">#}
+                            {% set filterFavorites = dashboard_util.getFilterFavorites() %}
+                            {{ navbarmacros.createFilterFavorites(filterFavorites) }}
+                        {#</ul>#}
+                    </li>
 
                     <li id="nav-bar-translationalresearch-topic" class="dropdown">
 

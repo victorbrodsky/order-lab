@@ -209,12 +209,15 @@ class DefaultController extends OrderAbstractController
         $charts = $dashboardUtil->getChartTypes();
 
         $chartsArray = array();
+        $chartTypeInvalidArr = array();
 
         $count = 0;
 
         foreach($charts as $chartType) {
 
             $chartType = $chartType."";
+            $type = "";
+            //echo "chartType=".$chartType."<br>";
 
             $parametersArr = array(
                 'startDate' => $startDate,
@@ -227,21 +230,20 @@ class DefaultController extends OrderAbstractController
             );
 
             $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr);
+            //dump($chartsArray); exit('111');
 
             if( isset($chartsArray['data']) ) {
                 $data = $chartsArray['data'];
                 if( isset($data[0]['type']) ) {
                     $type = $data[0]['type'];
                     $type = ucfirst($type);
-                    echo $count.": chartType=".$chartType.", type=$type <br>";
+                    //echo $count.": chartType=".$chartType.", type=$type <br>";
                     //dump($data); exit('111');
                 }
-            }
-
-            //find ChartTypeList by $chartType
-            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
-            if( !$chartTypeEntity ) {
-                exit("ChartTypeList not find by abbreviation $chartType");
+            } else {
+                echo "Chart invalid: chartType=".$chartType."<br>";
+                $chartTypeInvalidArr[] = $chartType;
+                continue;
             }
 
             //find ChartList by $chartType
@@ -250,28 +252,48 @@ class DefaultController extends OrderAbstractController
                 exit("ChartList not find by abbreviation $chartType");
             }
 
+            //check if chart type already set
+            if( count($chartEntity->getChartTypes()) > 0 ) {
+                echo $count.": $chartEntity already has type!!! <br>";
+                continue;
+            }
+
+            //echo "type=$type <br>";
+            //find ChartTypeList by $chartType
+            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
+            if( !$chartTypeEntity ) {
+                exit("ChartTypeList not find by name $type");
+            }
+
             $chartEntity->addChartType($chartTypeEntity);
 
             //testing
-            if(0) {
+            if(1) {
                 $thisChartTypeStr = NULL;
                 foreach ($chartEntity->getChartTypes() as $thisChartType) {
                     $thisChartTypeStr = $thisChartTypeStr . $thisChartType->getName() . "";
                 }
-                echo $chartEntity->getAbbreviation() . ": ChartType=" . $thisChartTypeStr . "<br>";
+                echo "ID ".$chartEntity->getId()." - ". $chartEntity->getName(). " (" . $chartEntity->getAbbreviation() . "): ChartType=" . $thisChartTypeStr . "<br>";
             }
 
 
-            if( $count > 70 ) {
+            if( $count > 200 ) {
                 break;
             }
 
             $count++;
-        }
+        }//foreach
+
+        $em->flush();
+
+        //$chartTypeInvalidArr
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $event = "Chart types are not set for invalid charts:<br>".implode(';',$chartTypeInvalidArr);
+        $userSecUtil = $this->get('user_security_utility');
+        $sitename = $this->getParameter('dashboard.sitename');
+        $userSecUtil->createUserEditEvent($sitename,$event,$user,null,$request,'Warning');
 
         //dump($chartsArray);
-        exit('eof setChartTypesAction');
-
-
+        exit('eof setChartTypesAction:<br>'.$event);
     }
 }
