@@ -288,7 +288,7 @@ class DefaultController extends OrderAbstractController
 
         //$chartTypeInvalidArr
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $event = "Chart types are not set for invalid charts:<br>".implode(';',$chartTypeInvalidArr);
+        $event = "Chart types are not set for invalid charts:<br>".implode('; ',$chartTypeInvalidArr);
         $userSecUtil = $this->get('user_security_utility');
         $sitename = $this->getParameter('dashboard.sitename');
         $userSecUtil->createUserEditEvent($sitename,$event,$user,null,$request,'Warning');
