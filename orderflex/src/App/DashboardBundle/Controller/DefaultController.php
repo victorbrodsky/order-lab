@@ -199,6 +199,7 @@ class DefaultController extends OrderAbstractController
 
         //exit('111');
 
+        $em = $this->getDoctrine()->getManager();
         $dashboardUtil = $this->container->get('dashboard_util');
 
         $now = new \DateTime('now');
@@ -212,6 +213,8 @@ class DefaultController extends OrderAbstractController
         $count = 0;
 
         foreach($charts as $chartType) {
+
+            $chartType = $chartType."";
 
             $parametersArr = array(
                 'startDate' => $startDate,
@@ -229,10 +232,35 @@ class DefaultController extends OrderAbstractController
                 $data = $chartsArray['data'];
                 if( isset($data[0]['type']) ) {
                     $type = $data[0]['type'];
-                    echo $count.": ".$chartType.": type=$type <br>";
-                    //dump($data);
+                    $type = ucfirst($type);
+                    echo $count.": chartType=".$chartType.", type=$type <br>";
+                    //dump($data); exit('111');
                 }
             }
+
+            //find ChartTypeList by $chartType
+            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
+            if( !$chartTypeEntity ) {
+                exit("ChartTypeList not find by abbreviation $chartType");
+            }
+
+            //find ChartList by $chartType
+            $chartEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+            if( !$chartEntity ) {
+                exit("ChartList not find by abbreviation $chartType");
+            }
+
+            $chartEntity->addChartType($chartTypeEntity);
+
+            //testing
+            if(0) {
+                $thisChartTypeStr = NULL;
+                foreach ($chartEntity->getChartTypes() as $thisChartType) {
+                    $thisChartTypeStr = $thisChartTypeStr . $thisChartType->getName() . "";
+                }
+                echo $chartEntity->getAbbreviation() . ": ChartType=" . $thisChartTypeStr . "<br>";
+            }
+
 
             if( $count > 70 ) {
                 break;
