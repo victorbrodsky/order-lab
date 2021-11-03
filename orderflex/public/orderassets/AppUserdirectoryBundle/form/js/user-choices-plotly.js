@@ -5,9 +5,16 @@ var _retrievedChartCount = 0;
 $(document).ready(function() {
 
     //$('#filter-btn').click();
-    if( document.getElementById("filter-btn") ) {
-        document.getElementById("filter-btn").click(); //chart-filter-btn
-    }
+    // if( document.getElementById("filter-btn") ) {
+    //     document.getElementById("filter-btn").click(); //chart-filter-btn
+    // }
+
+    //var favoriteEl = '<div> <span class="star glyphicon glyphicon-star-empty"></span> </div>';
+    //var favoriteEl = '<div> <span class="favorite-icon glyphicon glyphicon-heart-empty" style="color:orangered;"></span> </div>';
+    //$( favoriteEl ).appendTo( "#"+divId );
+    //$( favoriteEl ).appendTo( "#charts" );
+
+    //favoriteToggleButtonInit();
 
 });
 
@@ -181,6 +188,32 @@ function plotlyAddChart(chartIndex,chartData) {
     div.setAttribute('id', divId);
     document.getElementById("charts").appendChild(div);
 
+    //create favorite icon glyphicon glyphicon-heart
+    //show a toggle button with a heart glyphicon under each chart (right-justified)
+    var favoriteDivId = 'chart-favorite-' + chartIndex;
+    // var favoriteDiv = document.createElement("div");
+    // favoriteDiv.style.float = "left";
+    // favoriteDiv.style.margin = "10px";
+    // favoriteDiv.setAttribute('id', favoriteDivId);
+    // favoriteDiv.innerHTML = "Favorite Div";
+    // document.getElementById(divId).appendChild(favoriteDiv);
+
+    // var favoriteEl = '<button type="button" class="btn btn-default" ' +
+    //     'onClick="favoriteChart(\''+favoriteDivId+'\');" style="float:right;">' +
+    //     '<span class="glyphicon glyphicon-heart-empty"></span></button>';
+    //var favoriteEl = '<span class="favorite-icon glyphicon glyphicon-heart-empty" onClick="favoriteChart(\''+favoriteDivId+'\');" style="float:right;"></span>';
+    //var favoriteEl = '<span id="'+favoriteDivId+'" class="glyphicon glyphicon-heart" aria-hidden="true" style="float:right;"> Favorite</span>';
+    //var favoriteEl = '<div> <span class="star glyphicon glyphicon-star-empty"></span> </div>';
+    // var favoriteEl = '<div> <span id="'+favoriteDivId+'" class="favorite-icon glyphicon glyphicon-heart-empty" ' +
+    //     'style="color:orangered;" onClick="favoriteChart(\''+favoriteDivId+'\');"></span> </div>';
+    var favoriteEl = '<div><span id="'+favoriteDivId+'" ' +
+        'class="favorite-icon glyphicon glyphicon-heart-empty" ' +
+        'style="color:orangered; float:right;" ' +
+        'onClick="favoriteChart(this);"></span></div>';
+    //$( favoriteEl ).appendTo( "#"+divId );
+    //$( favoriteEl ).appendTo( "#start-test" );
+    $( "#"+divId ).append( favoriteEl );
+
     var layout = chartData['layout'];
     var data = chartData['data'];
 
@@ -236,3 +269,30 @@ function plotlyAddErrorLine( msg, type ) {
     //newline.setAttribute('id', divId);
     document.getElementById("charts").appendChild(divEl);
 }
+
+function favoriteChart(favoriteEl) {
+    //console.log("favorite clicked");
+    printF($(favoriteEl),"favorite clicked");
+    $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+    return;
+}
+// function favoriteChart_ORIG(chartId) {
+//     console.log("chartId="+chartId);
+//     $('#'+chartId).toggleClass("glyphicon-heart glyphicon-heart-empty");
+//     return;
+// }
+// function favoriteToggleButtonInit() {
+//     $(".favorite-icon.glyphicon").click(function() {
+//         $(this).toggleClass("glyphicon-heart glyphicon-heart-empty");
+//     });
+//
+//     $(".star.glyphicon").click(function() {
+//         console.log("star clicked");
+//         $(this).toggleClass("glyphicon-star glyphicon-star-empty");
+//     });
+//
+//     $(".heart.fa").click(function() {
+//         $(this).toggleClass("fa-heart fa-heart-o");
+//     });
+// }
+

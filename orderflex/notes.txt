@@ -645,3 +645,16 @@ git push origin master
 git push originme master
 git push bitbucket master
 
+Aperio:
+The procedure is complicated and requires manually editing the Aperio settings or the source code and it requires admin permission to modify the files.
+One way is to edit E:\Program Files (x86)\Aperio\DataServer\Authentication\Core.DataServer.LDAPIntf.dll file:
+    Change DistinguishedName to: DistinguishedName="CN=cwid,CN=Users,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+    In the right lower corner of the desktop: Stop/Start DataServer process in the Aperio eSlide Manager icon.
+    Change DistinguishedName back to: DistinguishedName="ou=NYP Users,ou=External,DC=a,DC=wcmc-ad,DC=net" SearchFilter="(objectClass=user)"
+    Stop/Start Aperio "Data Server"
+    Add user by cwid
+Repeat 1-2 for other users to be added.
+Second way (not recommended) is temporary replace the EditUser.php to the similar custom file which I wrote for this purpose.
+In my opinion, Aperio does not use the optimized add new user interface which is trying to show all users from the active directory in the "LDAP user name" field. The branch "CN=Users" has 29764 users and I think it is choking the system and it gives an error "DataServer: returned malformed XML". Currently DistinguishedName is set to "ou=NYP Users,ou=External" and it's working with this branch because it has only with 2247 users. However, it shows only the users in this branch.
+If it would be possible to re-configure DistinguishedName  to search both branches, then the best way to solve this issue is to replace the EditUser.php and associated files with the custom files and do not show the list of all users in the active directory branches.
+

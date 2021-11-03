@@ -116,7 +116,24 @@
 
     <script type="text/javascript">
         var charts = {{ chartsArray|json_encode|raw }};
+
+        $(document).ready(function() {
+
+             //$('#filter-btn').click();
+//             if( document.getElementById("filter-btn") ) {
+//                 document.getElementById("filter-btn").click(); //chart-filter-btn
+//             }
+
+        });
+
+//        function favoriteChart(chartId) {
+//            console.log("chartId="+chartId);
+//            return;
+//        }
+
     </script>
+
+
 
 {% endblock %}
 
