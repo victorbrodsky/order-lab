@@ -180,8 +180,16 @@ function plotlyAddChart(chartIndex,chartData) {
         return false;
     }
 
+    var layout = chartData['layout'];
+    var data = chartData['data'];
+    console.log("data:");
+    console.log(data);
 
-    var divId = 'chart-' + chartIndex;
+    var chartId = data[0]['id'];
+    console.log("chartId="+chartId);
+
+    //var divId = 'chart-' + chartIndex;
+    var divId = 'chart-' + chartId;
     var div = document.createElement("div");
     div.style.float = "left";
     div.style.margin = "10px";
@@ -209,16 +217,10 @@ function plotlyAddChart(chartIndex,chartData) {
     var favoriteEl = '<div><span id="'+favoriteDivId+'" ' +
         'class="favorite-icon glyphicon glyphicon-heart-empty" ' +
         'style="color:orangered; float:right;" ' +
-        'onClick="favoriteChart(this);"></span></div>';
+        'onClick="favoriteChart(this,'+chartId+');"></span></div>';
     //$( favoriteEl ).appendTo( "#"+divId );
     //$( favoriteEl ).appendTo( "#start-test" );
     $( "#"+divId ).append( favoriteEl );
-
-    var layout = chartData['layout'];
-    var data = chartData['data'];
-
-    //console.log("data:");
-    //console.log(data);
 
     Plotly.newPlot(divId, data, layout);
 
@@ -270,10 +272,34 @@ function plotlyAddErrorLine( msg, type ) {
     document.getElementById("charts").appendChild(divEl);
 }
 
-function favoriteChart(favoriteEl) {
+function favoriteChart(favoriteEl,chartId) {
     //console.log("favorite clicked");
     printF($(favoriteEl),"favorite clicked");
-    $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+    //$(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+
+    console.log("chartId="+chartId);
+
+    var url = Routing.generate('dashboard_toggle_favorite');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        type: "POST",
+        data: {
+            chartId: chartId
+        },
+        async: true,
+    }).success(function(response) {
+        console.log("dashboard_toggle_favorite="+response);
+        if( response == "OK" ) {
+            $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+        }
+    }).done(function() {
+        //lbtn.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+    
     return;
 }
 // function favoriteChart_ORIG(chartId) {

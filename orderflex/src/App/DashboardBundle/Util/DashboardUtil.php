@@ -2059,6 +2059,8 @@ class DashboardUtil
 //            $chartName = str_replace("[[projectSpecialties]]", $projectSpecialtyAllowedStr);
 //        }
 
+        $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+
         $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
 
         $chartsArray = null;
@@ -7088,6 +7090,22 @@ class DashboardUtil
             return $chartsArray;
         }
 
+        //chart is ok: add $chartObject->getId() to $chartsArray
+        if( $chartObject ) {
+            //$chartsArray = array(
+            //    'layout' => $layoutArray,
+            //    'data' => $dataArray
+            //);
+            $dataArray = $chartsArray['data'];
+            //$dataArray[] = $chartDataArray;
+            $chartDataArray = $dataArray[0];
+            $chartDataArray['id'] = $chartObject->getId();
+
+            //overwrite $chartsArray['data']
+            $dataArray = array();
+            $dataArray[] = $chartDataArray;
+            $chartsArray['data'] = $dataArray;
+        }
 
         return $chartsArray;
     }

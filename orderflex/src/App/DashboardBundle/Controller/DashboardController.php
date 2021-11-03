@@ -9,6 +9,7 @@
 namespace App\DashboardBundle\Controller;
 
 
+use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Form\FilterDashboardType;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -466,6 +467,43 @@ class DashboardController extends OrderAbstractController
         //////////// EOF Filter ////////////
 
         return $filterform;
+    }
+
+    /**
+     * @Route("/dashboard-toggle-favorite", name="dashboard_toggle_favorite", methods={"POST"}, options={"expose"=true})
+     * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
+     */
+    public function dashboardToggleFavoriteAction( Request $request )
+    {
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $result = "NOTOK";
+
+        $chartId = trim( $request->get('chartId') );
+
+        $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
+        if( !$chart ) {
+            exit("Chart not found by name 'Site Utilization'");
+        }
+
+        //echo "chart ID=".$chart->getId()."<br>";
+        //$chart->getFavoriteUser();
+
+        $result = "OK";
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setStatusCode(200);
+        $response->setContent(json_encode($result));
+        return $response;
     }
 
 }
