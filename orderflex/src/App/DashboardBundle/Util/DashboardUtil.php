@@ -173,9 +173,40 @@ class DashboardUtil
     }
 
     public function getFilterFavorites() {
-        $chartFavorites = array();
+        $user = $this->secTokenStorage->getToken()->getUser();
 
-        return $chartFavorites;
+        //get charts with this user in favoriteUsers
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->leftJoin("list.favoriteUsers", "favoriteUsers");
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("favoriteUsers.id = :userId");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            'userId' => $user->getId()
+        );
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        $chartArr = array();
+
+        foreach($charts as $chart) {
+            //$chartArr[$chart->getName()] = $chart->getAbbreviation();
+            $chartArr[$chart->getId()] = $chart->getName();
+        }
+
+        return $chartArr;
     }
 
     public function getChartTypes() {

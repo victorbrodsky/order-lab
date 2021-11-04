@@ -40,6 +40,11 @@ class DefaultController extends OrderAbstractController
 //        dump($filterTopics);
 //        exit();
 
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $results = $dashboardUtil->getFilterFavorites();
+//        dump($results);
+//        exit('111');
+
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 

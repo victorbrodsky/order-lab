@@ -384,13 +384,53 @@ class DashboardController extends OrderAbstractController
      */
     public function singleFavoritesAction( Request $request, $id ) {
 
-        //return array('sitename'=>$this->getParameter('dashboard.sitename'));
+        //TODO: implement permission for a single chart
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
 
-        $chartsArray = array();
+        $em = $this->getDoctrine()->getManager();
 
-        return array(
-            'title' => "Single chart type",
-            'chartsArray' => $chartsArray
+        if( !$id ) {
+            $error = "Chart id is not provided";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
+        if( !$chart ) {
+            $error = "Chart is not found by ID '".$id."'";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return $this->redirect( $this->generateUrl('dashboard_home') );
+        }
+
+        $now = new \DateTime('now');
+        $endDateStr = $now->format('m/d/Y');
+        $startDateStr = $now->modify('-1 year')->format('m/d/Y');
+
+        $redirectParams = array(
+            'filter[startDate]' => $startDateStr,
+            'filter[endDate]' => $endDateStr,
+            'filter[projectSpecialty][]' => 0,
+            'title' => "Chart '".$chart->getName()."'"
+        );
+
+
+        $redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
+
+        //redirect to home page with preset filter with chart types
+        return $this->redirectToRoute(
+            'dashboard_home',
+            $redirectParams
         );
     }
 
@@ -483,6 +523,7 @@ class DashboardController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $result = "NOTOK";
 
@@ -494,9 +535,20 @@ class DashboardController extends OrderAbstractController
         }
 
         //echo "chart ID=".$chart->getId()."<br>";
-        //$chart->getFavoriteUser();
+        //$chart->getFavoriteUsers();
+        //toggle favorite user
+        if( $chart->isFavorite($user) ) {
+            $chart->removeFavoriteUser($user);
+        } else {
+            $chart->addFavoriteUser($user);
+        }
 
-        $result = "OK";
+        $em->flush();
+
+        $result = array(
+            'result' => "OK",
+            'favorite' => $chart->isFavorite($user)
+        );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

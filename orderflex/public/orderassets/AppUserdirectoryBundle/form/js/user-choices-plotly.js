@@ -262,9 +262,11 @@ function plotlyAddChart(chartIndex,chartData) {
     if( favoriteFalg ) {
         glyphiconFavorite = "glyphicon-heart";
     }
-    var favoriteEl = '<div class="modebar-group"><span id="'+favoriteDivId+'" ' +
+    var favoriteEl = '<div class="modebar-group">' +
+        '<span id="'+favoriteDivId+'" ' +
         'class="favorite-icon glyphicon '+glyphiconFavorite+'" ' +
         'style="color:orangered;" ' +
+        //' data-tooltip="Favorite Chart" ' +
         'onClick="favoriteChart(this,'+chartId+');"></span></div>';
     //var favoriteEl = '<div>!!!!!!!!!!!!</div>';
     //$( favoriteEl ).appendTo( "#"+divId );
@@ -297,6 +299,9 @@ function favoriteChart(favoriteEl,chartId) {
 
     console.log("chartId="+chartId);
 
+    //toggle favorite
+    $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+
     var url = Routing.generate('dashboard_toggle_favorite');
 
     $.ajax({
@@ -308,9 +313,17 @@ function favoriteChart(favoriteEl,chartId) {
         },
         async: true,
     }).success(function(response) {
-        console.log("dashboard_toggle_favorite="+response);
-        if( response == "OK" ) {
-            $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+        var result = response['result'];
+        var favorite = response['favorite'];
+        console.log("result="+result+", favorite="+favorite);
+        if( result == "OK" ) {
+            //$(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
+            //set exact favorite
+            if( favorite ) {
+                $(favoriteEl).removeClass("glyphicon-heart-empty").addClass("glyphicon-heart");
+            } else {
+                $(favoriteEl).removeClass("glyphicon-heart").addClass("glyphicon-heart-empty");
+            }
         }
     }).done(function() {
         //lbtn.stop();
