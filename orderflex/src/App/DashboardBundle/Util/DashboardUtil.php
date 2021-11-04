@@ -113,6 +113,8 @@ class DashboardUtil
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("institutions IS NOT NULL");
 
+        $dql->orderBy("list.orderinlist","ASC");
+
         $parameters = array(
             'typedef' => 'default',
             'typeadd' => 'user-added'
@@ -144,6 +146,8 @@ class DashboardUtil
         $dql->leftJoin("list.chartTypes", "chartTypes");
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("chartTypes IS NOT NULL");
+
+        $dql->orderBy("list.orderinlist","ASC");
 
         $parameters = array(
             'typedef' => 'default',
@@ -193,6 +197,8 @@ class DashboardUtil
             'typedef' => 'default',
             'typeadd' => 'user-added'
         );
+
+        $dql->orderBy("list.orderinlist","ASC");
 
         $query = $dql->getQuery();
 
@@ -338,6 +344,8 @@ class DashboardUtil
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("topics = :topicId");
 
+        $dql->orderBy("list.orderinlist","ASC");
+
         $parameters = array(
             'typedef' => 'default',
             'typeadd' => 'user-added',
@@ -366,6 +374,8 @@ class DashboardUtil
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("institutions.id = :institutionId");
 
+        $dql->orderBy("list.orderinlist","ASC");
+
         $parameters = array(
             'typedef' => 'default',
             'typeadd' => 'user-added',
@@ -393,6 +403,8 @@ class DashboardUtil
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("chartTypes.id = :chartTypeId");
+
+        $dql->orderBy("list.orderinlist","ASC");
 
         $parameters = array(
             'typedef' => 'default',
@@ -1952,7 +1964,7 @@ class DashboardUtil
     }
     /////////////////////// EOF methods ////////////////////////
 
-    //Main function to get chart data called by controller singleChartAction ("/single-chart/")
+    //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
     public function getDashboardChart( $request, $parametersArr=NULL ) {
 
         //ini_set('memory_limit', '30000M');
@@ -2062,6 +2074,16 @@ class DashboardUtil
         $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
 
         $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
+
+        //testing: add favorite icon
+//        $favoriteDivId = 1;
+//        $chartId = 1;
+//        $favoriteIcon =
+//            '<div><span id="'.$favoriteDivId.'" ' .
+//            'class="favorite-icon glyphicon glyphicon-heart-empty" ' .
+//            'style="color:orangered; float:right;" ' .
+//            'onClick="favoriteChart(this,'.$chartId.');"></span></div>';
+//        $chartName = $favoriteIcon . " " . $chartName;
 
         $chartsArray = null;
         $warningNoData = null;
@@ -7100,7 +7122,11 @@ class DashboardUtil
             //$dataArray[] = $chartDataArray;
             $chartDataArray = $dataArray[0];
             $chartDataArray['id'] = $chartObject->getId();
-
+            
+            //add favorite flag
+            $user = $this->secTokenStorage->getToken()->getUser();
+            $chartDataArray['favorite'] = $chartObject->isFavorite($user);
+            
             //overwrite $chartsArray['data']
             $dataArray = array();
             $dataArray[] = $chartDataArray;

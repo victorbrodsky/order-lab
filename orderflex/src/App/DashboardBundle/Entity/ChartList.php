@@ -196,8 +196,16 @@ class ChartList extends ListAbstract
     //“Applicable Dashboard Chart Filter Fields”: [multi-select with the flat list of all “Dashboard Chart Filter Fields” from step 4 above]
     //TODO: how filter fields will be implemented?
 
-    //TODO: implement favorite DB and logic: favorite topics, charts
-    //“Favorited by the following users”: [multi-select with all users]
+    /**
+     * “Favorited by the following users”: [multi-select with all users]
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_chart_favoriteuser",
+     *      joinColumns={@ORM\JoinColumn(name="chart_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $favoriteUsers;
 
     //////////////// TO BE IMPLEMENT LATER //////////////////////
     //X Axis Label Title (if any): [free text one line field]
@@ -252,6 +260,7 @@ class ChartList extends ListAbstract
         $this->downloadRoles = new ArrayCollection();
         $this->institutions = new ArrayCollection();
         $this->chartTypes = new ArrayCollection();
+        $this->favoriteUsers = new ArrayCollection();
     }
 
 //    /**
@@ -479,6 +488,31 @@ class ChartList extends ListAbstract
         $this->updateFrequency = $updateFrequency;
     }
 
+    public function addFavoriteUser($item)
+    {
+        if( $item && !$this->favoriteUsers->contains($item) ) {
+            $this->favoriteUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeFavoriteUser($item)
+    {
+        $this->favoriteUsers->removeElement($item);
+    }
+    public function getFavoriteUsers()
+    {
+        return $this->favoriteUsers;
+    }
+
+
+    //return 1 if favorite, 0 otherwise
+    public function isFavorite($user) {
+        if( $user && $this->getFavoriteUsers()->contains($user) ) {
+            return true;
+        }
+
+        return false;
+    }
 
 
 }

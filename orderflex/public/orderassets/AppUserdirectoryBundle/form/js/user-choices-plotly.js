@@ -214,13 +214,13 @@ function plotlyAddChart(chartIndex,chartData) {
     //var favoriteEl = '<div> <span class="star glyphicon glyphicon-star-empty"></span> </div>';
     // var favoriteEl = '<div> <span id="'+favoriteDivId+'" class="favorite-icon glyphicon glyphicon-heart-empty" ' +
     //     'style="color:orangered;" onClick="favoriteChart(\''+favoriteDivId+'\');"></span> </div>';
-    var favoriteEl = '<div><span id="'+favoriteDivId+'" ' +
-        'class="favorite-icon glyphicon glyphicon-heart-empty" ' +
-        'style="color:orangered; float:right;" ' +
-        'onClick="favoriteChart(this,'+chartId+');"></span></div>';
-    //$( favoriteEl ).appendTo( "#"+divId );
-    //$( favoriteEl ).appendTo( "#start-test" );
-    $( "#"+divId ).append( favoriteEl );
+    // var favoriteEl = '<div><span id="'+favoriteDivId+'" ' +
+    //     'class="favorite-icon glyphicon glyphicon-heart-empty" ' +
+    //     'style="color:orangered; float:right;" ' +
+    //     'onClick="favoriteChart(this,'+chartId+');"></span></div>';
+    // //$( favoriteEl ).appendTo( "#"+divId );
+    // //$( favoriteEl ).appendTo( "#start-test" );
+    // $( "#"+divId ).append( favoriteEl );
 
     Plotly.newPlot(divId, data, layout);
 
@@ -254,6 +254,24 @@ function plotlyAddChart(chartIndex,chartData) {
             window.open(link);
         }
     });
+
+    //add favorite icon to .infolayer .g-gtitle before <text>
+    var favoriteFalg = data[0]['favorite'];
+    console.log("favoriteFalg="+favoriteFalg);
+    var glyphiconFavorite = "glyphicon-heart-empty";
+    if( favoriteFalg ) {
+        glyphiconFavorite = "glyphicon-heart";
+    }
+    var favoriteEl = '<div class="modebar-group"><span id="'+favoriteDivId+'" ' +
+        'class="favorite-icon glyphicon '+glyphiconFavorite+'" ' +
+        'style="color:orangered;" ' +
+        'onClick="favoriteChart(this,'+chartId+');"></span></div>';
+    //var favoriteEl = '<div>!!!!!!!!!!!!</div>';
+    //$( favoriteEl ).appendTo( "#"+divId );
+    //$( favoriteEl ).appendTo( "#start-test" );
+    //$(myPlot).find('.infolayer').find('.g-gtitle').append( favoriteEl );
+    //$('.modebar').append( favoriteEl );
+    $('#'+divId).find('.modebar').prepend( favoriteEl );
 }
 
 function plotlyAddErrorLine( msg, type ) {
