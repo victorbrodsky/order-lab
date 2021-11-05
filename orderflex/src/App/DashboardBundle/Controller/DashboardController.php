@@ -422,7 +422,7 @@ class DashboardController extends OrderAbstractController
             $redirectParams['title'] = $title;
             //$redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
 
-            $counter = 0;
+            $counter = 1;
             foreach($idsArr as $chartId) {
                 $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
                 if( !$chart ) {

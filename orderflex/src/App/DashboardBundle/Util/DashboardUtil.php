@@ -209,16 +209,22 @@ class DashboardUtil
         foreach($charts as $chart) {
             //$chartArr[$chart->getName()] = $chart->getAbbreviation();
             $chartArr[$chart->getId()] = $chart->getName();
+            //$chartArr[1] = $chart->getName();
             $chartIdArr[] = $chart->getId();
         }
+        //dump($chartArr);
 
+        //TODO: fix array merge
         if( count($chartIdArr) > 1 ) {
             $chartAllArr = array();
             $chartIds = implode('-',$chartIdArr);
             $chartAllArr['all-favorites-'.$chartIds] = 'All';
             //$chartAllArr[$chartIds] = 'All';
-            $chartArr = array_merge($chartAllArr, $chartArr);
+            //$finalChartArr = array_merge($chartAllArr, $chartArr);
+            $chartArr = $chartAllArr + $chartArr;
+            //return $finalChartArr;
         }
+        //dump($chartArr);
 
         return $chartArr;
     }
@@ -367,7 +373,9 @@ class DashboardUtil
 
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
-            "" => "",
+
+            "64. Total amount of paid and unpaid invoices" => "total-amount-paid-unpaid-invoices",
+
             "" => "",
             "" => "",
         );
@@ -7124,9 +7132,13 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        if( $chartType == "" ) {
+        //"64. Total amount of paid and unpaid invoices" => "total-amount-paid-unpaid-invoices" per fiscal year
+        //similar to 22. Paid Invoices by Month
+        if( $chartType == "total-amount-paid-unpaid-invoices" ) {
 
         }
+
+
         if( $chartType == "" ) {
 
         }
