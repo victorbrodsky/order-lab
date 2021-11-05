@@ -452,6 +452,14 @@ class DashboardController extends OrderAbstractController
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
 
+        //chartType
+        $chartTypes = $filterform['chartType']->getData();
+        if( $chartTypes && count($chartTypes) > 3 ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                'Please click Filter button to generate multiple charts'
+            );
+        }
 
         $title = $request->query->get('title');
         if( !$title ) {

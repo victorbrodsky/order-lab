@@ -4,10 +4,19 @@ var _retrievedChartCount = 0;
 
 $(document).ready(function() {
 
-    //$('#filter-btn').click();
-    // if( document.getElementById("filter-btn") ) {
+    //$('if( document.getElementById("filter-btn") ) {
     //     document.getElementById("filter-btn").click(); //chart-filter-btn
-    // }
+    // }#filter-btn').click();
+    //
+
+    //click filter button if number of charts less or equal 3
+    var chartTypesLen = $('#filter_chartType').select2('data').length;
+    //console.log("chartTypesLen="+chartTypesLen);
+    if( chartTypesLen < 4 ) {
+        if( document.getElementById("filter-btn") ) {
+            document.getElementById("filter-btn").click(); //chart-filter-btn
+        }
+    }
 
     //var favoriteEl = '<div> <span class="star glyphicon glyphicon-star-empty"></span> </div>';
     //var favoriteEl = '<div> <span class="favorite-icon glyphicon glyphicon-heart-empty" style="color:orangered;"></span> </div>';
@@ -19,7 +28,7 @@ $(document).ready(function() {
 });
 
 function plotlyGetCharts( thsiSitename ) {
-    console.log("get charts");
+    //console.log("get charts");
 
     _totalChartCount = 0;
     _retrievedChartCount = 0;
@@ -71,7 +80,7 @@ function plotlyGetCharts( thsiSitename ) {
         //l.start();
 
         var chartIndex = chartTypes[i];
-        console.log("chartType="+chartIndex);
+        //console.log("chartType="+chartIndex);
 
         $.ajax({
             url: url,
@@ -135,13 +144,13 @@ function tryToBuildCharts(chartDataArr) {
 
     _retrievedChartCount++;
 
-    console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
+    //console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
     if( _totalChartCount != _retrievedChartCount ) {
       return false;
     }
 
-    console.log("chartDataArr:");
-    console.log(chartDataArr);
+    //console.log("chartDataArr:");
+    //console.log(chartDataArr);
 
     // for (var chartIndex in chartDataArr) {
     //     console.log("chartIndex=" + chartIndex);
@@ -158,7 +167,7 @@ function tryToBuildCharts(chartDataArr) {
 
 function plotlyAddChart(chartIndex,chartData) {
 
-    console.log("plotlyAddChart="+chartIndex);
+    //console.log("plotlyAddChart="+chartIndex);
 
     //console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
     //if( _totalChartCount != _retrievedChartCount ) {
@@ -182,11 +191,11 @@ function plotlyAddChart(chartIndex,chartData) {
 
     var layout = chartData['layout'];
     var data = chartData['data'];
-    console.log("data:");
-    console.log(data);
+    //console.log("data:");
+    //console.log(data);
 
     var chartId = data[0]['id'];
-    console.log("chartId="+chartId);
+    //console.log("chartId="+chartId);
 
     //var divId = 'chart-' + chartIndex;
     var divId = 'chart-' + chartId;
@@ -257,7 +266,7 @@ function plotlyAddChart(chartIndex,chartData) {
 
     //add favorite icon to .infolayer .g-gtitle before <text>
     var favoriteFalg = data[0]['favorite'];
-    console.log("favoriteFalg="+favoriteFalg);
+    //console.log("favoriteFalg="+favoriteFalg);
     var glyphiconFavorite = "glyphicon-heart-empty";
     if( favoriteFalg ) {
         glyphiconFavorite = "glyphicon-heart";
@@ -297,7 +306,7 @@ function favoriteChart(favoriteEl,chartId) {
     printF($(favoriteEl),"favorite clicked");
     //$(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
 
-    console.log("chartId="+chartId);
+    //console.log("chartId="+chartId);
 
     //toggle favorite
     $(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
@@ -315,7 +324,7 @@ function favoriteChart(favoriteEl,chartId) {
     }).success(function(response) {
         var result = response['result'];
         var favorite = response['favorite'];
-        console.log("result="+result+", favorite="+favorite);
+        //console.log("result="+result+", favorite="+favorite);
         if( result == "OK" ) {
             //$(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
             //set exact favorite
