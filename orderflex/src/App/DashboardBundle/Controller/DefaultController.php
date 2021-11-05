@@ -63,6 +63,8 @@ class DefaultController extends OrderAbstractController
      */
     public function testAction( Request $request ) {
 
+        exit('testAction disable');
+
         $testDataArr = array(1,2,3,4,5);
 
         return array(

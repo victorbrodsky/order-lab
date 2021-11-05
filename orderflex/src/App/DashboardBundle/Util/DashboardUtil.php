@@ -200,10 +200,24 @@ class DashboardUtil
         $charts = $query->getResult();
 
         $chartArr = array();
+        $chartIdArr = array();
+
+//        if( count($charts) > 1 ) {
+//            $chartArr['all-favorites'] = 'All';
+//        }
 
         foreach($charts as $chart) {
             //$chartArr[$chart->getName()] = $chart->getAbbreviation();
             $chartArr[$chart->getId()] = $chart->getName();
+            $chartIdArr[] = $chart->getId();
+        }
+
+        if( count($chartIdArr) > 1 ) {
+            $chartAllArr = array();
+            $chartIds = implode('-',$chartIdArr);
+            $chartAllArr['all-favorites-'.$chartIds] = 'All';
+            //$chartAllArr[$chartIds] = 'All';
+            $chartArr = array_merge($chartAllArr, $chartArr);
         }
 
         return $chartArr;

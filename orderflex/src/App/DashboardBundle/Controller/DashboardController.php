@@ -402,17 +402,6 @@ class DashboardController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('dashboard_home') );
         }
 
-        $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
-        if( !$chart ) {
-            $error = "Chart is not found by ID '".$id."'";
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                $error
-            );
-
-            return $this->redirect( $this->generateUrl('dashboard_home') );
-        }
-
         $now = new \DateTime('now');
         $endDateStr = $now->format('m/d/Y');
         $startDateStr = $now->modify('-1 year')->format('m/d/Y');
@@ -421,11 +410,44 @@ class DashboardController extends OrderAbstractController
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
             'filter[projectSpecialty][]' => 0,
-            'title' => "Chart '".$chart->getName()."'"
+            //'title' => $title
         );
 
+        if( strpos($id, 'all-favorites-') !== false ) {
+            //multiple charts
+            $id = str_replace('all-favorites-','',$id); //now id=1-2-4-7
+            $idsArr = explode('-',$id);
 
-        $redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
+            $title = "Favorite charts";
+            $redirectParams['title'] = $title;
+            //$redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
+
+            $counter = 0;
+            foreach($idsArr as $chartId) {
+                $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
+                if( !$chart ) {
+                    continue;
+                }
+                $redirectParams['filter[chartType]['.$counter.']'] = $chart->getAbbreviation();
+                $counter++;
+            }
+
+        } else {
+            //single chart
+            $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
+            if( !$chart ) {
+                $error = "Chart is not found by ID '".$id."'";
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $error
+                );
+
+                return $this->redirect( $this->generateUrl('dashboard_home') );
+            }
+            $title = "Favorite chart '".$chart->getName()."'";
+            $redirectParams['title'] = $title;
+            $redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
+        }
 
         //redirect to home page with preset filter with chart types
         return $this->redirectToRoute(
