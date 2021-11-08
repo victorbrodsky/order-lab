@@ -385,7 +385,7 @@ class DashboardController extends OrderAbstractController
     public function singleFavoritesAction( Request $request, $id ) {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -428,6 +428,11 @@ class DashboardController extends OrderAbstractController
                 if( !$chart ) {
                     continue;
                 }
+
+                if( $this->isViewPermitted($chart) === false ) {
+                    continue;
+                }
+
                 $redirectParams['filter[chartType]['.$counter.']'] = $chart->getAbbreviation();
                 $counter++;
             }
@@ -444,6 +449,11 @@ class DashboardController extends OrderAbstractController
 
                 return $this->redirect( $this->generateUrl('dashboard_home') );
             }
+
+            if( $this->isViewPermitted($chart) === false ) {
+                return $this->redirect( $this->generateUrl('dashboard_home') );
+            }
+
             $title = "Favorite chart '".$chart->getName()."'";
             $redirectParams['title'] = $title;
             $redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
@@ -456,6 +466,20 @@ class DashboardController extends OrderAbstractController
         );
     }
 
+    public function isViewPermitted($chart) {
+        if( $this->get('security.authorization_checker')->isGranted('read', $chart) === true ) {
+            $error = "You do not have access to this chart '".$chart->getName()."'. Please request access by contacting your site administrator.";
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $error
+            );
+
+            return true;
+        }
+        exit('Not permitted');
+
+        return false;
+    }
 
 
     /**

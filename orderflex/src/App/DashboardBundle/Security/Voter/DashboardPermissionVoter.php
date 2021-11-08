@@ -42,16 +42,80 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return 'dashboard';  //Site abbreviation
     }
 
+    //isGranted("read", "Accession") or isGranted("read", $accession)
+    //$attribute: string i.e. "read"
+    //$subject: string (i.e. "FellowshipApplication") or entity
+    protected function supports($attribute, $subject) {
+        //return false; //testing
+        exit('dashboard: support');
 
+        //$siteRoleBase = $this->getSiteRoleBase();
+        //$sitename = $this->getSitename();
+
+        $attribute = $this->convertAttribute($attribute);
+
+        // if the attribute isn't one we support, return false
+        if( !$this->supportAttribute($attribute, $subject) ) {
+            return false;
+        }
+
+        //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
+        //Don't use ChartList in PermissionObjectList
+        //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
+
+        //echo "Supported voter: attribute=".$attribute."; subject=".$subject."<br>";
+        return true;
+    }
+
+    protected function usePermissionObjectList() {
+        echo "dashboard: usePermissionObjectList <br>";
+        return false;
+    }
+
+//    protected function canView_ORIG($subject, TokenInterface $token) {
+//        //exit('dashboard canView');
+//
+//        if( parent::canView($subject,$token) ) {
+//            //exit('dashboard parent canView parent ok');
+//            return $this->dashboardAdditionalCheck($subject,$token);
+//            //return true;
+//        }
+//        //exit('dashboard canView false');
+//
+//        return false;
+//    }
+    //Can view according to chart's: accessRoles, denyRoles and denyUsers
+    //usage: $this->get('security.authorization_checker')->isGranted('view', $chart)
     protected function canView($subject, TokenInterface $token) {
-        //exit('dashboard canView');
+        exit('dashboard canView');
 
-        if( parent::canView($subject,$token) ) {
-            //exit('dashboard parent canView parent ok');
-            return $this->dashboardAdditionalCheck($subject,$token);
-            //return true;
+        $user = $token->getUser();
+
+        if( !$user instanceof User ) {
+            return false;
+        }
+
+        // if they can edit, they can view
+        if( $this->canEdit($subject, $token) ) {
+            //echo "Base canView: user can edit <br>";
+            return true;
+        }
+
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
+
+        //ROLE_DASHBOARD_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true;
         }
         //exit('dashboard canView false');
+
+        //denyRoles: if user has denyRoles => return false;
+
+        //denyUsers: if user is in denyUsers => return false;
+
+        //accessRoles: if user has accessRoles => return true;
 
         return false;
     }

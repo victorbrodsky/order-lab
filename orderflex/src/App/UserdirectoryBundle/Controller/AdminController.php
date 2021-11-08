@@ -10330,12 +10330,20 @@ class AdminController extends OrderAbstractController
 //        );
 
         $dashboardUtil = $this->container->get('dashboard_util');
-        $types = $dashboardUtil->getChartTypes();
+        $types = $dashboardUtil->getChartTypesInit();
 
         //dump($types);
         //exit("exit generateChartsList");
 
-        $count = 10;
+        $listCharts = $em->getRepository('AppDashboardBundle:ChartList')->findAll();
+        if( count($listCharts) > 0 ) {
+            $newList = false;
+        } else {
+            $newList = true;
+        }
+
+        $count = 10; //new init
+
         foreach( $types as $name=>$abbreviation ) {
 
             if( !$name ) {
@@ -10348,7 +10356,14 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new ChartList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            if( $newList ) {
+                $index = $count;
+            } else {
+                $index = NULL;
+            }
+
+            $this->setDefaultList($listEntity,$index,$username,$name);
 
             if( $abbreviation ) {
                 $listEntity->setAbbreviation($abbreviation);

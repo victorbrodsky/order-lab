@@ -365,7 +365,7 @@ class DashboardUtil
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
 
-            "64. Total amount of paid and unpaid invoices" => "total-amount-paid-unpaid-invoices",
+            "64. Total amount of paid and unpaid invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year",
 
             "" => "",
             "" => "",
@@ -7123,10 +7123,72 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"64. Total amount of paid and unpaid invoices" => "total-amount-paid-unpaid-invoices" per fiscal year
+        //"64. Total amount of paid and unpaid invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year" per fiscal year
         //similar to 22. Paid Invoices by Month
-        if( $chartType == "total-amount-paid-unpaid-invoices" ) {
+        if( $chartType == "total-amount-paid-unpaid-invoices-per-year" ) {
+            $paidArr = array();
+            $descriptionArr = array();
 
+            $totalPaidInvoiceFee = 0;
+
+            $invoiceStates = array("Paid in Full","Paid Partially");
+            $compareType = "date when status changed to paid in full";
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this year' );
+
+            //fiscal year => take all available years as $startDate
+
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                //echo "startDateLabel=".$startDateLabel."<br>";
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this year');
+                echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+
+                $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
+                //get invoices by paidDate
+
+                $startDate->modify( 'first day of next year' );
+
+                foreach( $invoices as $invoice ) {
+
+                    $paidThisInvoiceFee = intval($invoice->getPaid());
+
+
+                    if( isset($paidArr[$startDateLabel]) ) {
+                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paidThisInvoiceFee;
+                    } else {
+                        $paidDateInvoiceFee = $paidThisInvoiceFee;
+                    }
+
+                    $paidArr[$startDateLabel] = $paidDateInvoiceFee;
+                    //echo $startDateLabel.": paidThisInvoiceFee=".$paidThisInvoiceFee."<br>";
+                    //echo intval($invoice->getPaid())."<br>";
+
+                    $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paidThisInvoiceFee;
+                }
+
+                $descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
+
+            } while( $startDate < $endDate );
+
+            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."<br>"; //7591754 7.591.754
+            //exit('111');
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
+
+            //increase vertical
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300)
+            );
+
+            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
+            $chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
         }
 
 
