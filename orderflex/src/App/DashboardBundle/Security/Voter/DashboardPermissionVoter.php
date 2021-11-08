@@ -25,12 +25,13 @@
 namespace App\DashboardBundle\Security\Voter;
 
 
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-
+//Role Voter check for the role's permission based on the object-action: isGranted("read", "Accession") or isGranted("read", $accession)
 class DashboardPermissionVoter extends BasePermissionVoter
 {
 
@@ -47,7 +48,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     //$subject: string (i.e. "FellowshipApplication") or entity
     protected function supports($attribute, $subject) {
         //return false; //testing
-        exit('dashboard: support');
+        //exit('dashboard: support');
 
         //$siteRoleBase = $this->getSiteRoleBase();
         //$sitename = $this->getSitename();
@@ -67,11 +68,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return true;
     }
 
-    protected function usePermissionObjectList() {
-        echo "dashboard: usePermissionObjectList <br>";
-        return false;
-    }
-
 //    protected function canView_ORIG($subject, TokenInterface $token) {
 //        //exit('dashboard canView');
 //
@@ -87,7 +83,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     //Can view according to chart's: accessRoles, denyRoles and denyUsers
     //usage: $this->get('security.authorization_checker')->isGranted('view', $chart)
     protected function canView($subject, TokenInterface $token) {
-        exit('dashboard canView');
+        //exit('dashboard canView');
 
         $user = $token->getUser();
 
@@ -96,10 +92,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
 
         // if they can edit, they can view
-        if( $this->canEdit($subject, $token) ) {
-            //echo "Base canView: user can edit <br>";
-            return true;
-        }
+//        if( $this->canEdit($subject, $token) ) {
+//            //exit('can edit!');
+//            //echo "Base canView: user can edit <br>";
+//            return true;
+//        }
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
@@ -107,15 +104,73 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //ROLE_DASHBOARD_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
             //exit('admin!');
-            return true;
+            //return true; //remove for testing
         }
         //exit('dashboard canView false');
 
-        //denyRoles: if user has denyRoles => return false;
-
         //denyUsers: if user is in denyUsers => return false;
+        if( $subject->getDenyUsers()->contains($user) ) {
+            return false;
+        }
+
+        //denyRoles: if user has denyRoles => return false;
+        $denyRoles = $subject->getDenyRoles();
+        $userRoles = $user->getSiteRoles('dashboard');
+        foreach( $userRoles as $userRole ) {
+            if( $userRole && $denyRoles->contains($userRole) ) {
+                return false;
+            }
+        }
 
         //accessRoles: if user has accessRoles => return true;
+//        $accessRoles = $subject->getAccessRoles();
+//        $userRoles = $user->getSiteRoles('dashboard');
+//        foreach( $userRoles as $userRole ) {
+//            if( $userRole && $denyRoles->contains($userRole) ) {
+//                return false;
+//            }
+//        }
+        if( $this->userHasChartAccessRoles($user,$subject) ) {
+            exit("chart has user access roles");
+            return true;
+        }
+
+        exit("chart can not View");
+        return false;
+    }
+
+    public function userHasChartAccessRoles($user,$chart) {
+
+        $userRoles = $user->getSiteRoles('dashboard');
+        dump($userRoles);
+
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.accessRoles", "accessRoles");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("list.id = :chartId");
+        $dql->andWhere("accessRoles IN (:userRoles)");
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            'chartId' => $chart->getId(),
+            'userRoles' => $userRoles
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        echo "charts=".count($charts)."<br>";
+
+        if( count($charts) > 0 ) {
+            return true;
+        }
 
         return false;
     }

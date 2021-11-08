@@ -25,6 +25,13 @@ services:
         class: App\DashboardBundle\Util\DashboardUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    dashboard_role_voter:
+          class: App\DashboardBundle\Security\Voter\DashboardRoleVoter
+          public: false
+          arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+          tags:
+              - { name: security.voter }
+
     dashboard_permission_voter:
         class: App\DashboardBundle\Security\Voter\DashboardPermissionVoter
         public: false

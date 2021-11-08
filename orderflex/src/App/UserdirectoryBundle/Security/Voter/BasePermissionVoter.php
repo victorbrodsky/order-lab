@@ -78,34 +78,29 @@ abstract class BasePermissionVoter extends Voter {
 
         //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
         //$permissionObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
-        if( $this->usePermissionObjectList() ) {
-            $className = $this->getClassName($subject);
+        $className = $this->getClassName($subject);
 
-            //echo "className=".$className."<br>";
-            //echo "sitename=".$sitename."<br>";
+        //echo "className=".$className."<br>";
+        //echo "sitename=".$sitename."<br>";
 
-            $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
-            $dql = $repository->createQueryBuilder("list");
-            $dql->select('list');
-            $dql->leftJoin('list.sites', 'sites');
-            $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
-            $query = $this->em->createQuery($dql);
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
+        $dql = $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin('list.sites', 'sites');
+        $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
+        $query = $this->em->createQuery($dql);
 
-            $query->setParameters(
-                array(
-                    'objectname' => $className,
-                    'sitename' => $sitename
-                )
-            );
+        $query->setParameters(
+            array(
+                'objectname' => $className,
+                'sitename' => $sitename
+            )
+        );
 
-            $permissionObjects = $query->getResult();
-            //echo "permissionObjects count=".count($permissionObjects)."<br>";
+        $permissionObjects = $query->getResult();
+        //echo "permissionObjects count=".count($permissionObjects)."<br>";
 
-            if (count($permissionObjects) > 0) {
-                return true;
-            }
-        } else {
-            //exit('base: support OK');
+        if (count($permissionObjects) > 0) {
             return true;
         }
         //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
@@ -122,10 +117,10 @@ abstract class BasePermissionVoter extends Voter {
         }
         return false;
     }
-    protected function usePermissionObjectList() {
-        //echo "base: usePermissionObjectList <br>";
-        return true;
-    }
+//    protected function usePermissionObjectList() {
+//        //echo "base: usePermissionObjectList <br>";
+//        return true;
+//    }
 
 
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"

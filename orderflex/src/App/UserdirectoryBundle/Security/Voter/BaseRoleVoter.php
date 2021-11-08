@@ -105,6 +105,7 @@ abstract class BaseRoleVoter extends Voter {
             return false;
         }
 
+        //exit('siteSpecificRoleSupport OK ');
         return true;
     }
 
@@ -115,8 +116,9 @@ abstract class BaseRoleVoter extends Voter {
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";
         //echo 'attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
-        $user = $token->getUser();
         //return true;
+
+        $user = $token->getUser();
 
         if( !$user instanceof User ) {
             // the user must be logged in; if not, deny access

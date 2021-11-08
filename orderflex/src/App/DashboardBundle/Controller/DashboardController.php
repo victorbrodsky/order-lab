@@ -476,8 +476,8 @@ class DashboardController extends OrderAbstractController
 
             return true;
         }
-        exit('Not permitted');
 
+        exit('Not permitted');
         return false;
     }
 
@@ -489,7 +489,7 @@ class DashboardController extends OrderAbstractController
     public function dashboardChoicesAction( Request $request )
     {
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
