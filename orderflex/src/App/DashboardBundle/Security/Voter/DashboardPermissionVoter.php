@@ -101,13 +101,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
 
-        //ROLE_DASHBOARD_ADMIN can do anything
-        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
-            //exit('admin!');
-            //return true; //remove for testing
-        }
-        //exit('dashboard canView false');
-
         //denyUsers: if user is in denyUsers => return false;
         if( $subject->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
@@ -118,7 +111,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $denyRoles = $subject->getDenyRoles();
         //$userRoles = $user->getSiteRoles('dashboard');
         $securityUtil = $this->container->get('user_security_utility');
-        $userRoles = $securityUtil->getUserRolesBySite($user,'dashboard');
+        $userRoles = $securityUtil->getUserRolesBySite($user,$sitename);
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
                 //exit("chart has DenyRoles");
@@ -126,14 +119,14 @@ class DashboardPermissionVoter extends BasePermissionVoter
             }
         }
 
+        //ROLE_DASHBOARD_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true; //remove for testing
+        }
+        //exit('dashboard canView false');
+
         //accessRoles: if user has accessRoles => return true;
-//        $accessRoles = $subject->getAccessRoles();
-//        $userRoles = $user->getSiteRoles('dashboard');
-//        foreach( $userRoles as $userRole ) {
-//            if( $userRole && $denyRoles->contains($userRole) ) {
-//                return false;
-//            }
-//        }
         if( $this->userHasChartAccessRoles($user,$subject) ) {
             //exit("chart has user access roles");
             return true;
@@ -145,14 +138,10 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
     public function userHasChartAccessRoles($user,$chart) {
         $securityUtil = $this->container->get('user_security_utility');
-//        $userRoles = $securityUtil->getUserRolesBySite($user,'dashboard');
-//        dump($userRoles);
-//        $userRolesId = array();
-//        foreach($userRoles as $roleEntity) {
-//            $userRolesId[] = $roleEntity->getId();
-//        }
-        $userRolesId = $securityUtil->getUserRoleIdsBySite($user,'dashboard');
-        dump($userRolesId);
+
+        $sitename = $this->getSitename();
+        $userRolesId = $securityUtil->getUserRoleIdsBySite($user,$sitename);
+        //dump($userRolesId);
 
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
@@ -176,7 +165,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $query->setParameters($parameters);
 
         $charts = $query->getResult();
-        echo "charts=".count($charts)."<br>";
+        //echo "charts=".count($charts)."<br>";
 
         if( count($charts) > 0 ) {
             return true;
@@ -192,6 +181,13 @@ class DashboardPermissionVoter extends BasePermissionVoter
             return $this->dashboardAdditionalCheck($subject,$token);
         }
         //exit('dashboard canEdit false');
+
+        //ROLE_DASHBOARD_ADMIN can do anything
+        $siteRoleBase = $this->getSiteRoleBase();
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true; //remove for testing
+        }
 
         return false;
     }

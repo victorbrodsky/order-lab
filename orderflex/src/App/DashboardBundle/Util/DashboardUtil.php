@@ -2008,6 +2008,24 @@ class DashboardUtil
     }
     /////////////////////// EOF methods ////////////////////////
 
+//    public function isViewPermitted($chart, $withFlash=true) {
+//        if( $this->secAuth->isGranted('read', $chart) === true ) {
+//
+//            if( $withFlash ) {
+//                $error = "You do not have access to this chart '" . $chart->getName() . "'. Please request access by contacting your site administrator.";
+//                $this->get('session')->getFlashBag()->add(
+//                    'warning',
+//                    $error
+//                );
+//            }
+//
+//            return true;
+//        }
+//
+//        //exit('Not permitted');
+//        return false;
+//    }
+
     //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
     public function getDashboardChart( $request, $parametersArr=NULL ) {
 
@@ -2116,6 +2134,15 @@ class DashboardUtil
 //        }
 
         $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        if( $this->secAuth->isGranted('read', $chartObject) === false ) {
+            //get admin email
+            $userSecUtil = $this->container->get('user_security_utility');
+            $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $error = "You do not have access to this chart '".$chartObject->getName()."'. Please request access by contacting your site administrator $adminemail.";
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
+        }
 
         $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
 

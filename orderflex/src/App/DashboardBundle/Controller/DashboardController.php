@@ -48,7 +48,6 @@ class DashboardController extends OrderAbstractController
     public function singleOrigChartAction( Request $request )
     {
 
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -76,7 +75,6 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTopicByIdAction( Request $request, $id ) {
 
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -114,22 +112,6 @@ class DashboardController extends OrderAbstractController
         //dump($chartsArray);
         //exit('111');
 
-
-//        <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
-//        {
-//            'filter[startDate]':startDate,
-//            'filter[endDate]':endDate,
-//            'filter[projectSpecialty][]':0,
-//            'filter[chartType][1]':'reminder-emails-per-month',
-//            'filter[chartType][2]':'successful-logins-trp',
-//            'filter[chartType][3]':'successful-logins-site',
-//            'filter[chartType][4]':'successful-unique-logins-site-month',
-//            'filter[chartType][5]':'successful-unique-logins-site-week',
-//            'filter[chartType][6]':'new-and-edited-calllog-entries-per-day',
-//            'filter[chartType][7]':'patients-calllog-per-day',
-//        }) }}"
-//            >Site utilization statistics</a>
-
         $now = new \DateTime('now');
         $endDateStr = $now->format('m/d/Y');
         $startDateStr = $now->modify('-1 year')->format('m/d/Y');
@@ -145,7 +127,7 @@ class DashboardController extends OrderAbstractController
         foreach ($chartsArray as $chart) {
 
             if( $this->isViewPermitted($chart) === false ) {
-                exit('chart '.$chart->getName().' not permitted');
+                //exit('chart '.$chart->getName().' not permitted');
                 continue;
             }
 
@@ -158,86 +140,60 @@ class DashboardController extends OrderAbstractController
             'dashboard_home',
             $redirectParams
         );
-
-//        ///////////////////// EOF /////////////////////
-//        if( count($chartsArray) > 0 ) {
-//            $chart = $chartsArray[0];
+    }
+//    /**
+//     * single dashboard topic. topicName - topic name
+//     *
+//     * @Route("/topic-name/{topicName}", name="dashboard_single_topic_name")
+//     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
+//     */
+//    public function singleTopicByNameAction( Request $request, $topicName ) {
+//
+//        //TODO: implement permission for a single chart
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
 //        }
 //
-//        $parametersArr = array(
-//            'startDate' => NULL,
-//            'endDate' => NULL,
-//            'projectSpecialty' => NULL,
-//            'showLimited' => NULL,
-//            'chartType' => $chart->getAbbreviation(),
-//            'productservice' => NULL,
-//            'quantityLimit' => NULL,
-//        );
+//        $em = $this->getDoctrine()->getManager();
 //
-//        $dashboardUtil = $this->container->get('dashboard_util');
-//        $chartsArray = $dashboardUtil->getDashboardChart(null,$parametersArr);
+//        if( !$topicName ) {
+//            $error = "Topic name is not provided";
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                $error
+//            );
+//            return $this->redirect( $this->generateUrl('dashboard_home') );
+//        }
 //
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//        //$response->headers->set('Access-Control-Allow-Origin', '*');
-//        $response->setStatusCode(200);
-//        $response->setContent(json_encode($chartsArray));
-//        return $response;
-
-        //$chartsArray = array();
+//        $topic = $em->getRepository('AppDashboardBundle:TopicList')->findByName($topicName);
+//        if( !$topic ) {
+//            $error = "Topic is not found by name '".$topicName."'";
+//            //throw new \Exception($error);
+//
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                $error
+//            );
+//
+//            return $this->redirect( $this->generateUrl('dashboard_home') );
+//        }
+//
+//        //TODO: find charts by $topic name
+//
+////        if( $this->isViewPermitted($chart) === false ) {
+////            exit('chart '.$chart->getName().' not permitted');
+////            continue;
+////        }
+//
+//        $chartsArray = array();
+//
 //        return array(
 //            'title' => "Single chart topic",
 //            'chartsArray' => $chartsArray
 //        );
-    }
-    /**
-     * single dashboard topic. topicName - topic name
-     *
-     * @Route("/topic-name/{topicName}", name="dashboard_single_topic_name")
-     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
-     */
-    public function singleTopicByNameAction( Request $request, $topicName ) {
-
-        //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        if( !$topicName ) {
-            $error = "Topic name is not provided";
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                $error
-            );
-            return $this->redirect( $this->generateUrl('dashboard_home') );
-        }
-
-        $topic = $em->getRepository('AppDashboardBundle:TopicList')->findByName($topicName);
-        if( !$topic ) {
-            $error = "Topic is not found by name '".$topicName."'";
-            //throw new \Exception($error);
-
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                $error
-            );
-
-            return $this->redirect( $this->generateUrl('dashboard_home') );
-        }
-
-        //find charts by $topic
-
-        $chartsArray = array();
-
-        return array(
-            'title' => "Single chart topic",
-            'chartsArray' => $chartsArray
-        );
-    }
+//    }
 
     /**
      * charts belonging to a single organizational group. id - organizational group associated with the displayed charts
@@ -247,7 +203,6 @@ class DashboardController extends OrderAbstractController
      */
     public function singleServiceAction( Request $request, $id ) {
 
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -296,6 +251,12 @@ class DashboardController extends OrderAbstractController
         $count = 0;
 
         foreach ($chartsArray as $chart) {
+
+            if( $this->isViewPermitted($chart) === false ) {
+                //exit('chart '.$chart->getName().' not permitted');
+                continue;
+            }
+
             $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
             $count++;
         }
@@ -315,7 +276,6 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTypeAction( Request $request, $id ) {
 
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -364,6 +324,12 @@ class DashboardController extends OrderAbstractController
         $count = 0;
 
         foreach ($chartsArray as $chart) {
+
+            if( $this->isViewPermitted($chart) === false ) {
+                //exit('chart '.$chart->getName().' not permitted');
+                continue;
+            }
+
             $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
             $count++;
         }
@@ -373,13 +339,6 @@ class DashboardController extends OrderAbstractController
             'dashboard_home',
             $redirectParams
         );
-
-//        $chartsArray = array();
-//
-//        return array(
-//            'title' => "Single chart type",
-//            'chartsArray' => $chartsArray
-//        );
     }
 
     /**
@@ -390,7 +349,6 @@ class DashboardController extends OrderAbstractController
      */
     public function singleFavoritesAction( Request $request, $id ) {
 
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -474,16 +432,20 @@ class DashboardController extends OrderAbstractController
 
     public function isViewPermitted($chart) {
         if( $this->get('security.authorization_checker')->isGranted('read', $chart) === true ) {
-            $error = "You do not have access to this chart '".$chart->getName()."'. Please request access by contacting your site administrator.";
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                $error
-            );
-
             return true;
         }
 
-        exit('Not permitted');
+        //get admin email
+        $userSecUtil = $this->container->get('user_security_utility');
+        $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
+
+        $error = "You do not have access to this chart '".$chart->getName()."'. Please request access by contacting your site administrator $adminemail.";
+        $this->get('session')->getFlashBag()->add(
+            'warning',
+            $error
+        );
+
+        //exit('Not permitted');
         return false;
     }
 
@@ -494,7 +456,6 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardChoicesAction( Request $request )
     {
-        //TODO: implement permission for a single chart
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
@@ -555,7 +516,6 @@ class DashboardController extends OrderAbstractController
         }
 
         //chartTypes
-        //$dashboardUtil->getChartTypes();
         $params["chartType"] = true;
         $params["chartTypes"] = $dashboardUtil->getChartTypes();
 
@@ -575,8 +535,7 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardToggleFavoriteAction( Request $request )
     {
-        //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -591,8 +550,12 @@ class DashboardController extends OrderAbstractController
 
         $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
         if( !$chart ) {
-            exit("Chart not found by name 'Site Utilization'");
+            exit("Chart not found by ID $chartId");
         }
+
+//        if( $this->isViewPermitted($chart) === false ) {
+//            exit("No permission to add this chart to favorites");
+//        }
 
         //echo "chart ID=".$chart->getId()."<br>";
         //$chart->getFavoriteUsers();

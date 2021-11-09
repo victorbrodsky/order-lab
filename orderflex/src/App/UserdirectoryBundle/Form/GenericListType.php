@@ -1171,6 +1171,7 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //Dashboard CharList
         if( $this->params['entity'] instanceof ChartList ) {
             //accessRoles
             //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
@@ -1183,13 +1184,15 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        //->leftJoin("list.children","children")
+                        ->leftJoin("list.sites","sites")
                         //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
                         ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->andWhere("sites.abbreviation = :siteAbbreviation")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
+                            'siteAbbreviation' => 'dashboard'
                         ));
                 },
             ));
@@ -1203,11 +1206,14 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
+                        ->leftJoin("list.sites","sites")
                         ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->andWhere("sites.abbreviation = :siteAbbreviation")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
+                            'siteAbbreviation' => 'dashboard'
                         ));
                 },
             ));
@@ -1246,11 +1252,14 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
+                        ->leftJoin("list.sites","sites")
                         ->where("(list.type = :typedef OR list.type = :typeadd)")
+                        ->andWhere("sites.abbreviation = :siteAbbreviation")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
+                            'siteAbbreviation' => 'dashboard'
                         ));
                 },
             ));
