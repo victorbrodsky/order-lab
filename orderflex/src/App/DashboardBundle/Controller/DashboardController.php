@@ -49,7 +49,7 @@ class DashboardController extends OrderAbstractController
     {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -77,7 +77,7 @@ class DashboardController extends OrderAbstractController
     public function singleTopicByIdAction( Request $request, $id ) {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -143,6 +143,12 @@ class DashboardController extends OrderAbstractController
         $count = 0;
 
         foreach ($chartsArray as $chart) {
+
+            if( $this->isViewPermitted($chart) === false ) {
+                exit('chart '.$chart->getName().' not permitted');
+                continue;
+            }
+
             $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
             $count++;
         }
@@ -193,7 +199,7 @@ class DashboardController extends OrderAbstractController
     public function singleTopicByNameAction( Request $request, $topicName ) {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -242,7 +248,7 @@ class DashboardController extends OrderAbstractController
     public function singleServiceAction( Request $request, $id ) {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -310,7 +316,7 @@ class DashboardController extends OrderAbstractController
     public function singleTypeAction( Request $request, $id ) {
 
         //TODO: implement permission for a single chart
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));

@@ -1091,6 +1091,19 @@ class UserSecurityUtil {
 
         return $userSiteRoles;
     }
+    public function getUserRoleIdsBySite( $user, $sitename, $associated=true ) {
+        $userSiteRoles = array();
+
+        $roles = $this->getRolesBySite($sitename,$associated);
+
+        foreach( $roles as $roleObject ) {
+            if( $roleObject && $user->hasRole($roleObject->getName()) ) {
+                $userSiteRoles[] = $roleObject->getId();
+            }
+        }
+
+        return $userSiteRoles;
+    }
 
     public function getRolesByRoleNames( $roles, $glueStr=", " ) {
         $strRoles = array();

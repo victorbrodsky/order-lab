@@ -110,14 +110,18 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         //denyUsers: if user is in denyUsers => return false;
         if( $subject->getDenyUsers()->contains($user) ) {
+            //exit("chart has DenyUsers");
             return false;
         }
 
         //denyRoles: if user has denyRoles => return false;
         $denyRoles = $subject->getDenyRoles();
-        $userRoles = $user->getSiteRoles('dashboard');
+        //$userRoles = $user->getSiteRoles('dashboard');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userRoles = $securityUtil->getUserRolesBySite($user,'dashboard');
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
+                //exit("chart has DenyRoles");
                 return false;
             }
         }
@@ -131,18 +135,24 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //            }
 //        }
         if( $this->userHasChartAccessRoles($user,$subject) ) {
-            exit("chart has user access roles");
+            //exit("chart has user access roles");
             return true;
         }
 
-        exit("chart can not View");
+        //exit("chart can not View");
         return false;
     }
 
     public function userHasChartAccessRoles($user,$chart) {
-
-        $userRoles = $user->getSiteRoles('dashboard');
-        dump($userRoles);
+        $securityUtil = $this->container->get('user_security_utility');
+//        $userRoles = $securityUtil->getUserRolesBySite($user,'dashboard');
+//        dump($userRoles);
+//        $userRolesId = array();
+//        foreach($userRoles as $roleEntity) {
+//            $userRolesId[] = $roleEntity->getId();
+//        }
+        $userRolesId = $securityUtil->getUserRoleIdsBySite($user,'dashboard');
+        dump($userRolesId);
 
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
@@ -158,7 +168,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
             'typedef' => 'default',
             'typeadd' => 'user-added',
             'chartId' => $chart->getId(),
-            'userRoles' => $userRoles
+            'userRoles' => $userRolesId
         );
 
         $query = $dql->getQuery();
