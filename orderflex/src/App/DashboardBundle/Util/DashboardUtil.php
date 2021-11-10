@@ -7172,7 +7172,7 @@ class DashboardUtil
                 $thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
                 $thisEndDate->modify('last day of this year');
-                echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y").": ";
 
                 $invoices = $this->getInvoicesByFilter($startDate,$thisEndDate,$projectSpecialtyObjects,$invoiceStates,false,true,$compareType);
                 //get invoices by paidDate

@@ -497,9 +497,16 @@ class DashboardController extends OrderAbstractController
         foreach($projectSpecialties as $projectSpecialty) {
             $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
         }
+
+        $endDate = new \DateTime('now');
+        $startDate = new \DateTime('now');
+        //set to today
+        //$endDate = $endDate->modify('-3 year');
+        $startDate = $startDate->modify('-1 year');//->format('m/d/Y');
+
         $params = array(
-            //'startDate' => $today,
-            //'endDate' => $today
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             "projectSpecialty" => true,
             "projectSpecialties" => $projectSpecialtiesWithAll,
             "compareType" => false,
@@ -544,8 +551,6 @@ class DashboardController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $result = "NOTOK";
-
         $chartId = trim( $request->get('chartId') );
 
         $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
@@ -553,6 +558,8 @@ class DashboardController extends OrderAbstractController
             exit("Chart not found by ID $chartId");
         }
 
+        //Allow add/remove favorite without permission check?
+        //Not permitted chart will no be visible anyway.
 //        if( $this->isViewPermitted($chart) === false ) {
 //            exit("No permission to add this chart to favorites");
 //        }
