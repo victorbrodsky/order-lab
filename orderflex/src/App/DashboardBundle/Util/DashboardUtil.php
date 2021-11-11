@@ -7246,7 +7246,7 @@ class DashboardUtil
             //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
             //exit('111');
 
-            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalPaidInvoiceFee),"$","Total");
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
 
             //increase vertical
             $layoutArray = array(
@@ -7259,15 +7259,20 @@ class DashboardUtil
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             //$chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
 
-            $combinedData["Paid"] = $paidArr;
-            $combinedData["Due"] = $dueArr;
+            $totalPaidInvoiceFee = $this->getNumberFormat($totalPaidInvoiceFee);
+            $totalDueInvoiceFee = $this->getNumberFormat($totalDueInvoiceFee);
 
-            $chartName = $chartName . " (" . $totalPaidInvoiceFee . " Total)";
+            $combinedData["Paid $".$totalPaidInvoiceFee] = $paidArr;
+            $combinedData["Due $".$totalDueInvoiceFee] = $dueArr;
+
+            //$chartName = $chartName . " (" . $totalPaidInvoiceFee . " Total)";
+            //$chartName = $chartName . " (" . "total=".$totalInvoiceFee.", paid=". $totalPaidInvoiceFee . ", due=".$totalDueInvoiceFee.")";
+            $chartName = $chartName . " (" . "Paid ". $totalPaidInvoiceFee . ", Due ".$totalDueInvoiceFee.")";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
 
-            dump($chartsArray);
-            exit('111');
+            //dump($chartsArray);
+            //exit('111');
         }
 
         //"65. Total amount of paid and unpaid invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year" per fiscal year
