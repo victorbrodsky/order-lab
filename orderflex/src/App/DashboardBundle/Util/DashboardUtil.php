@@ -7391,7 +7391,7 @@ class DashboardUtil
             return $chartsArray;
         }
 
-        dump($chartsArray);
+        //dump($chartsArray);
 
         //chart is ok: add $chartObject->getId() to $chartsArray
         if( $chartObject ) {
