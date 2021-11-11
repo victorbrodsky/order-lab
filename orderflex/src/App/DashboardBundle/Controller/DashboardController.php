@@ -58,6 +58,9 @@ class DashboardController extends OrderAbstractController
 
         $chartsArray = $dashboardUtil->getDashboardChart($request);
 
+        //dump($chartsArray);
+        //exit('EOF singleOrigChartAction');
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         //$response->headers->set('Access-Control-Allow-Origin', '*');

@@ -189,12 +189,14 @@ function plotlyAddChart(chartIndex,chartData) {
         return false;
     }
 
+    var chartId = chartData['chartId'];
     var layout = chartData['layout'];
     var data = chartData['data'];
+    var favoriteFalg = chartData['favorite'];
     //console.log("data:");
     //console.log(data);
 
-    var chartId = data[0]['id'];
+    //var chartId = data[0]['id'];
     //console.log("chartId="+chartId);
 
     //var divId = 'chart-' + chartIndex;
@@ -265,7 +267,7 @@ function plotlyAddChart(chartIndex,chartData) {
     });
 
     //add favorite icon to .infolayer .g-gtitle before <text>
-    var favoriteFalg = data[0]['favorite'];
+    //var favoriteFalg = data[0]['favorite'];
     //console.log("favoriteFalg="+favoriteFalg);
     var glyphiconFavorite = "glyphicon-heart-empty";
     if( favoriteFalg ) {

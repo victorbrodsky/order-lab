@@ -6682,6 +6682,10 @@ class DashboardUtil
             $chartName = $chartName . " (" . $totalLoginCount . " Total)";
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+
+            //dump($loginsEmployeesArr);
+            //dump($loginsResappArr);
+            //dump($chartsArray);
         }
 
         //"58. Number of successful log in events per user" => "successful-logins-user"
@@ -7387,26 +7391,43 @@ class DashboardUtil
             return $chartsArray;
         }
 
+        dump($chartsArray);
+
         //chart is ok: add $chartObject->getId() to $chartsArray
         if( $chartObject ) {
             //$chartsArray = array(
             //    'layout' => $layoutArray,
             //    'data' => $dataArray
             //);
-            $dataArray = $chartsArray['data'];
+            //$layoutArray = $chartsArray['layout'];
+            //$dataArray = $chartsArray['data'];
+
             //$dataArray[] = $chartDataArray;
-            $chartDataArray = $dataArray[0];
-            $chartDataArray['id'] = $chartObject->getId();
+            //$chartDataArray = $dataArray[0];
+            //$chartDataArray['id'] = $chartObject->getId();
             
             //add favorite flag
             $user = $this->secTokenStorage->getToken()->getUser();
-            $chartDataArray['favorite'] = $chartObject->isFavorite($user);
+            //$chartDataArray['favorite'] = $chartObject->isFavorite($user);
             
             //overwrite $chartsArray['data']
-            $dataArray = array();
-            $dataArray[] = $chartDataArray;
-            $chartsArray['data'] = $dataArray;
+            //$dataArray = array();
+            //$dataArray[] = $chartDataArray;
+            //$chartsArray['data'] = $dataArray;
+
+//            $chartsArray = array(
+//                'chartId' => $chartObject->getId(),
+//                'favorite' => $chartObject->isFavorite($user),
+//                'layout' => $layoutArray,
+//                'data' => $dataArray
+//            );
+
+            $user = $this->secTokenStorage->getToken()->getUser();
+            $chartsArray['chartId'] = $chartObject->getId();
+            $chartsArray['favorite'] = $chartObject->isFavorite($user);
         }
+
+        //dump($chartsArray);
 
         return $chartsArray;
     }
