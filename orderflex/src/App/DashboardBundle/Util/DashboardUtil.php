@@ -1221,13 +1221,16 @@ class DashboardUtil
             $layoutArray = array(
                 'height' => $this->height,
                 'width' => $this->width,
-                'margin' => array('b' => 200)
+                'margin' => array('b' => 200),
 //            'yaxis' => array(
 //                'automargin' => true
 //            ),
 //            'xaxis' => array(
 //                'automargin' => true,
 //            ),
+//                'yaxis' => array(
+//                    'tickformat' => "d" //"digit"
+//                ),
             );
         }
 
@@ -7257,8 +7260,8 @@ class DashboardUtil
                 $totalInvoicesCount = $totalInvoicesCount + count($invoices);
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
-                $paidArr[$startDateLabel] = intval($thisDateTotalPaid);
-                $dueArr[$startDateLabel] = intval($thisDateTotalDue);
+                $paidArr[$startDateLabel] = $thisDateTotalPaid;
+                $dueArr[$startDateLabel] = $thisDateTotalDue;
 
             } while( $startDate < $endDate );
 
@@ -7268,12 +7271,15 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
 
             //increase vertical
-//            $layoutArray = array(
-//                'height' => $this->height*1.3,
-//                'width' => $this->width,
-//                'title' => $chartName,
-//                'margin' => array('b' => 300)
-//            );
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b' => 300),
+                'yaxis' => array(
+                    'tickformat' => "$"."n" //"digit"
+                ),
+            );
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             //$chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
@@ -7289,7 +7295,7 @@ class DashboardUtil
             $chartName = $chartName . ", " . $totalInvoicesCount . " total invoices" .
                 " (" . "Paid $". $totalPaidInvoiceFee . ", Due $".$totalDueInvoiceFee.")";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack",$layoutArray);
 
             //dump($chartsArray);
             //exit('111');
@@ -7402,8 +7408,14 @@ class DashboardUtil
 
 //                $paidArr[$startDateLabel] = $paidDateInvoiceFee;
 //                $dueArr[$startDateLabel] = $dueDateInvoiceFee;
-                $paidArr[$startDateLabel] = intval($thisDateTotalPaid);
-                $dueArr[$startDateLabel] = intval($thisDateTotalDue);
+
+                //layout(xaxis = list(tickformat = "digits"))  tickformat = "digit" or tickformat = "000"
+                //$thisDateTotalPaid = floatval($thisDateTotalPaid);
+                //$thisDateTotalDue = floatval($thisDateTotalDue);
+                //echo "thisDateTotalPaid=".$thisDateTotalPaid."; thisDateTotalDue=".$thisDateTotalDue."<br>";
+
+                $paidArr[$startDateLabel] = $thisDateTotalPaid;
+                $dueArr[$startDateLabel] = $thisDateTotalDue;
 //                $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
 //                $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
 
@@ -7418,13 +7430,15 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
 
             //increase vertical
-//            $layoutArray = array(
-//                'height' => $this->height*1.3,
-//                'width' => $this->width,
-//                'title' => $chartName,
-//                'margin' => array('b' => 300)
-//            );
-            $layoutArray = NULL;
+            $layoutArray = array(
+                'height' => $this->height*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                //'margin' => array('b' => 300),
+                'yaxis' => array(
+                    'tickformat' => "$"."n" //"digit"
+                ),
+            );
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             //$chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
@@ -7435,6 +7449,8 @@ class DashboardUtil
             $combinedData = array();
             $combinedData["Paid $".$totalPaidInvoiceFee] = $paidArr;
             $combinedData["Due $".$totalDueInvoiceFee] = $dueArr;
+            //$combinedData[$totalPaidInvoiceFee] = $paidArr;
+            //$combinedData[$totalDueInvoiceFee] = $dueArr;
 
             //$chartName = $chartName . " (" . $totalPaidInvoiceFee . " Total)";
             //$chartName = $chartName . " (" . "total=".$totalInvoiceFee.", paid=". $totalPaidInvoiceFee . ", due=".$totalDueInvoiceFee.")";
