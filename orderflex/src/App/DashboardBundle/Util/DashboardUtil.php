@@ -7260,8 +7260,10 @@ class DashboardUtil
                 $totalInvoicesCount = $totalInvoicesCount + count($invoices);
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
-                $paidArr[$startDateLabel] = $thisDateTotalPaid;
-                $dueArr[$startDateLabel] = $thisDateTotalDue;
+//                $paidArr[$startDateLabel] = $thisDateTotalPaid;
+//                $dueArr[$startDateLabel] = $thisDateTotalDue;
+                $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
+                $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
 
             } while( $startDate < $endDate );
 
@@ -7277,7 +7279,7 @@ class DashboardUtil
                 'title' => $chartName,
                 'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."r" //"digit"
+                    'tickformat' => "$"."n" //"digit"
                 ),
             );
 
@@ -7414,10 +7416,10 @@ class DashboardUtil
                 //$thisDateTotalDue = floatval($thisDateTotalDue);
                 //echo "thisDateTotalPaid=".$thisDateTotalPaid."; thisDateTotalDue=".$thisDateTotalDue."<br>";
 
-                $paidArr[$startDateLabel] = $thisDateTotalPaid;
-                $dueArr[$startDateLabel] = $thisDateTotalDue;
-//                $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
-//                $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
+//                $paidArr[$startDateLabel] = $thisDateTotalPaid;
+//                $dueArr[$startDateLabel] = $thisDateTotalDue;
+                $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
+                $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
 
                 $totalInvoicesCount = $totalInvoicesCount + count($invoices);
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
@@ -7437,7 +7439,7 @@ class DashboardUtil
                 'title' => $chartName,
                 //'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."r" //"digit"
+                    'tickformat' => "$"."n" //"digit"
                 ),
             );
 
