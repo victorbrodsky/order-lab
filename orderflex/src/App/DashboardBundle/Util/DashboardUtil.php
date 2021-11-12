@@ -7334,14 +7334,17 @@ class DashboardUtil
                     $startDate->modify('first day of next month');
                 }
 
-                $thisDateTotalPaid = 0;
-                $thisDateTotalDue = 0;
+                $thisDateTotalPaid = 0.00;
+                $thisDateTotalDue = 0.00;
 
                 foreach( $invoices as $invoice ) {
 
-                    $paid = intval($invoice->getPaid());
-                    $due = intval($invoice->getDue());
-                    $total = intval($invoice->getTotal());
+//                    $paid = intval($invoice->getPaid());
+//                    $due = intval($invoice->getDue());
+//                    $total = intval($invoice->getTotal());
+                    $paid = floatval($invoice->getPaid());
+                    $due = floatval($invoice->getDue());
+                    $total = floatval($invoice->getTotal());
 //                    $paid = $invoice->getPaid();
 //                    $due = $invoice->getDue();
 //                    $total = $invoice->getTotal();
@@ -7371,12 +7374,14 @@ class DashboardUtil
                     $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paid;
                     $totalDueInvoiceFee = $totalDueInvoiceFee + $due;
                     $totalInvoiceFee = $totalInvoiceFee + $total;
-                }
+                } //foreach invoice in date range
 
 //                $paidArr[$startDateLabel] = $paidDateInvoiceFee;
 //                $dueArr[$startDateLabel] = $dueDateInvoiceFee;
-                $paidArr[$startDateLabel] = $thisDateTotalPaid;
-                $dueArr[$startDateLabel] = $thisDateTotalDue;
+                $paidArr[$startDateLabel] = intval($thisDateTotalPaid);
+                $dueArr[$startDateLabel] = intval($thisDateTotalDue);
+//                $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
+//                $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
 
                 $totalInvoicesCount = $totalInvoicesCount + count($invoices);
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
