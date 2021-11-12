@@ -1243,6 +1243,7 @@ class DashboardUtil
             $chartDataArray = array();
             $labels = array();
             $values = array();
+            $links = array();
             foreach ($dataArr as $label => $valueData) {
 
                 if( is_array($valueData) ) {
@@ -7382,6 +7383,7 @@ class DashboardUtil
             $totalPaidInvoiceFee = $this->getNumberFormat($totalPaidInvoiceFee);
             $totalDueInvoiceFee = $this->getNumberFormat($totalDueInvoiceFee);
 
+            $combinedData = array();
             $combinedData["Paid $".$totalPaidInvoiceFee] = $paidArr;
             $combinedData["Due $".$totalDueInvoiceFee] = $dueArr;
 
