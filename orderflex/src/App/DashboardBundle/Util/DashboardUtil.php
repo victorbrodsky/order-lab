@@ -7212,26 +7212,32 @@ class DashboardUtil
                     $startDate->modify('first day of next month');
                 }
 
+                $thisDateTotalPaid = 0.00;
+                $thisDateTotalDue = 0.00;
+
                 foreach( $invoices as $invoice ) {
 
                     $paid = intval($invoice->getPaid());
                     $due = intval($invoice->getDue());
                     $total = intval($invoice->getTotal());
 
-                    if( isset($paidArr[$startDateLabel]) ) {
-                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paid;
-                    } else {
-                        $paidDateInvoiceFee = $paid;
-                    }
+                    $thisDateTotalPaid = $thisDateTotalPaid + $paid;
+                    $thisDateTotalDue = $thisDateTotalDue + $due;
 
-                    if( isset($dueArr[$startDateLabel]) ) {
-                        $dueDateInvoiceFee = $dueArr[$startDateLabel] + $due;
-                    } else {
-                        $dueDateInvoiceFee = $due;
-                    }
+//                    if( isset($paidArr[$startDateLabel]) ) {
+//                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paid;
+//                    } else {
+//                        $paidDateInvoiceFee = $paid;
+//                    }
+//
+//                    if( isset($dueArr[$startDateLabel]) ) {
+//                        $dueDateInvoiceFee = $dueArr[$startDateLabel] + $due;
+//                    } else {
+//                        $dueDateInvoiceFee = $due;
+//                    }
 
-                    $paidArr[$startDateLabel] = $paidDateInvoiceFee;
-                    $dueArr[$startDateLabel] = $dueDateInvoiceFee;
+                    //$paidArr[$startDateLabel] = $paidDateInvoiceFee;
+                    //$dueArr[$startDateLabel] = $dueDateInvoiceFee;
                     //echo $startDateLabel.": paid=".$paid."<br>";
                     //echo intval($invoice->getPaid())."<br>";
 
@@ -7243,6 +7249,9 @@ class DashboardUtil
                 $totalInvoicesCount = $totalInvoicesCount + count($invoices);
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
+                $paidArr[$startDateLabel] = intval($thisDateTotalPaid);
+                $dueArr[$startDateLabel] = intval($thisDateTotalDue);
+
             } while( $startDate < $endDate );
 
             //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
@@ -7251,12 +7260,12 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
 
             //increase vertical
-            $layoutArray = array(
-                'height' => $this->height*1.3,
-                'width' => $this->width,
-                'title' => $chartName,
-                'margin' => array('b' => 300)
-            );
+//            $layoutArray = array(
+//                'height' => $this->height*1.3,
+//                'width' => $this->width,
+//                'title' => $chartName,
+//                'margin' => array('b' => 300)
+//            );
 
             //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
             //$chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
