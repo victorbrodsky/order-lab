@@ -1584,11 +1584,11 @@ class DashboardUtil
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
 
-        $projects = $query->getResult();
+        $invoices = $query->getResult();
 
-        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+        //echo implode(",",$projectSpecialtyNamesArr)." Invoices=".count($invoices)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
 
-        return $projects;
+        return $invoices;
     }
 
     public function getChartNameWithTop($chartName,$quantityLimit) {
@@ -7175,7 +7175,15 @@ class DashboardUtil
             $totalDueInvoiceFee = 0;
             $totalInvoiceFee = 0;
 
-            $invoiceStates = array("Paid in Full","Paid Partially","Unpaid/Issued");
+            //$invoiceStates = array("Paid in Full","Paid Partially","Unpaid/Issued");
+            $invoiceStates = array(
+                "Paid in Full",
+                "Paid Partially",
+                "Unpaid/Issued",
+                "Pending",
+                "Refunded Fully",
+                "Refunded Partially"
+            );
             //$compareType = "date when status changed to paid in full";
             $compareType = "last invoice generation date";
 
@@ -7306,7 +7314,14 @@ class DashboardUtil
             $totalDueInvoiceFee = 0;
             $totalInvoiceFee = 0;
 
-            $invoiceStates = array("Paid in Full","Paid Partially","Unpaid/Issued");
+            $invoiceStates = array(
+                "Paid in Full",
+                "Paid Partially",
+                "Unpaid/Issued",
+                "Pending",
+                "Refunded Fully",
+                "Refunded Partially"
+            );
             //$compareType = "date when status changed to paid in full";
             $compareType = "last invoice generation date";
 
