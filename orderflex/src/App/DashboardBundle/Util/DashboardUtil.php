@@ -7277,7 +7277,7 @@ class DashboardUtil
                 'title' => $chartName,
                 'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."d" //"digit"
+                    'tickformat' => "$"."r" //"digit"
                 ),
             );
 
@@ -7437,7 +7437,7 @@ class DashboardUtil
                 'title' => $chartName,
                 //'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."d" //"digit"
+                    'tickformat' => "$"."r" //"digit"
                 ),
             );
 
