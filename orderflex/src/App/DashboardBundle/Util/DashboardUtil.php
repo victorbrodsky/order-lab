@@ -7277,7 +7277,7 @@ class DashboardUtil
                 'title' => $chartName,
                 'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."n" //"digit"
+                    'tickformat' => "$"."decimal" //"digit"
                 ),
             );
 
@@ -7430,13 +7430,14 @@ class DashboardUtil
             $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
 
             //increase vertical
+            //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
             $layoutArray = array(
                 'height' => $this->height*1.3,
                 'width' => $this->width,
                 'title' => $chartName,
                 //'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."n" //"digit"
+                    'tickformat' => "$"."decimal" //"digit"
                 ),
             );
 
