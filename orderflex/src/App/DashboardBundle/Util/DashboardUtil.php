@@ -852,7 +852,15 @@ class DashboardUtil
         return $return;
     }
 
-    public function getChart( $dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=null, $hoverinfo=null) {
+    public function getChart( $dataArr,
+                              $title,
+                              $type='pie',
+                              $layoutArray=null,
+                              $valuePrefixLabel=null,
+                              $valuePostfixLabel=null,
+                              $descriptionArr=null,
+                              $hoverinfo=null
+    ) {
 
         if( count($dataArr) == 0 ) {
             return array();
@@ -1211,7 +1219,7 @@ class DashboardUtil
         return $chartsArray;
     }
 
-    public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null ) {
+    public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null, $hoverinfo=null ) {
 
         if( count($combinedDataArr) == 0 ) {
             return array();
@@ -1278,6 +1286,13 @@ class DashboardUtil
             $chartDataArray['name'] = $name;
             $chartDataArray['type'] = 'bar';
             $chartDataArray['links'] = $links;
+
+            if( $hoverinfo ) {
+                $chartDataArray["hoverinfo"] = $hoverinfo; //"x+y"; //"x+y"; //"x+y+name";
+                //$chartDataArray["textinfo"] = "value"; //"label"; //"value+percent";
+                //$chartDataArray["hovertemplate"] = "%{y}";
+                //$chartDataArray["texttemplate"] = "%{y}";
+            }
 
             $stackDataArray[] = $chartDataArray;
         }
@@ -7273,7 +7288,7 @@ class DashboardUtil
             $chartName = $chartName . ", " . $totalInvoicesCount . " total invoices" .
                 " (" . "Paid $". $totalPaidInvoiceFee . ", Due $".$totalDueInvoiceFee.")";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack",$layoutArray);
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack",$layoutArray,"x+y");
 
             //dump($chartsArray);
             //exit('111');
@@ -7384,8 +7399,11 @@ class DashboardUtil
                 'title' => $chartName,
                 //'margin' => array('b' => 300),
                 'yaxis' => array(
-                    'tickformat' => "$"."n" //"digit"
+                    'tickformat' => "$"."n", //"digit"
+                    //'showticklabels' => false,
+                    //'tickvals' => null
                 ),
+                //'showlegend' => false
             );
 
             $totalPaidInvoiceFee = $this->getNumberFormat($totalPaidInvoiceFee);
@@ -7398,7 +7416,7 @@ class DashboardUtil
             $chartName = $chartName . ", " . $totalInvoicesCount . " total invoices" .
                 " (" . "Paid $". $totalPaidInvoiceFee . ", Due $".$totalDueInvoiceFee.")";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray, "x+y"); //public function getStackedChart
 
             //dump($chartsArray);
             //exit('111');
