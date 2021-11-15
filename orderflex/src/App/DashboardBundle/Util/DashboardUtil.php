@@ -7159,7 +7159,7 @@ class DashboardUtil
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
-        //"64. Total amount of paid and unpaid invoices per month" => "total-amount-paid-unpaid-invoices-per-month"
+        //"64. Total amount of paid/due for issued invoices per month" => "total-amount-paid-unpaid-invoices-per-month"
         //similar to 22. Paid Invoices by Month
         //Similar to 46. stack
         if( $chartType == "total-amount-paid-unpaid-invoices-per-month" ) {
@@ -7303,7 +7303,7 @@ class DashboardUtil
             //exit('111');
         }
 
-        //"65. Total amount of paid and unpaid invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year" per fiscal year
+        //"65. Total amount of paid/due for issued invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year" per fiscal year
         //similar to 22. Paid Invoices by Month
         //Similar to 46. stack
         if( $chartType == "total-amount-paid-unpaid-invoices-per-year" ) {
@@ -7332,6 +7332,10 @@ class DashboardUtil
             );
             //$compareType = "date when status changed to paid in full";
             $compareType = "last invoice generation date";
+
+            //ignore filter start date and set it to previous 5 years
+            $now = new \DateTime('now');
+            $startDate = $now->modify('-5 years');
 
             //$startDate->modify( 'first day of last month' );
             if( $perYear ) {
@@ -7370,54 +7374,18 @@ class DashboardUtil
                 $thisDateTotalDue = 0.00;
 
                 foreach( $invoices as $invoice ) {
-
-//                    $paid = intval($invoice->getPaid());
-//                    $due = intval($invoice->getDue());
-//                    $total = intval($invoice->getTotal());
                     $paid = floatval($invoice->getPaid());
                     $due = floatval($invoice->getDue());
                     $total = floatval($invoice->getTotal());
-//                    $paid = $invoice->getPaid();
-//                    $due = $invoice->getDue();
-//                    $total = $invoice->getTotal();
 
                     $thisDateTotalPaid = $thisDateTotalPaid + $paid;
                     $thisDateTotalDue = $thisDateTotalDue + $due;
-
-//                    if( isset($paidArr[$startDateLabel]) ) {
-//                        $paidDateInvoiceFee = $paidArr[$startDateLabel] + $paid;
-//                    } else {
-//                        $paidDateInvoiceFee = $paid;
-//                    }
-//
-//                    if( isset($dueArr[$startDateLabel]) ) {
-//                        $dueDateInvoiceFee = $dueArr[$startDateLabel] + $due;
-//                    } else {
-//                        $dueDateInvoiceFee = $due;
-//                    }
-
-                    //$paidArr[$startDateLabel] = $paidDateInvoiceFee;
-                    //$dueArr[$startDateLabel] = $dueDateInvoiceFee;
-                    //$paidArr[$startDateLabel] = array("label",$paidDateInvoiceFee);
-                    //$dueArr[$startDateLabel] = array("label",$dueDateInvoiceFee);
-                    //echo $startDateLabel.": paid=".$paid."<br>";
-                    //echo intval($invoice->getPaid())."<br>";
 
                     $totalPaidInvoiceFee = $totalPaidInvoiceFee + $paid;
                     $totalDueInvoiceFee = $totalDueInvoiceFee + $due;
                     $totalInvoiceFee = $totalInvoiceFee + $total;
                 } //foreach invoice in date range
 
-//                $paidArr[$startDateLabel] = $paidDateInvoiceFee;
-//                $dueArr[$startDateLabel] = $dueDateInvoiceFee;
-
-                //layout(xaxis = list(tickformat = "digits"))  tickformat = "digit" or tickformat = "000"
-                //$thisDateTotalPaid = floatval($thisDateTotalPaid);
-                //$thisDateTotalDue = floatval($thisDateTotalDue);
-                //echo "thisDateTotalPaid=".$thisDateTotalPaid."; thisDateTotalDue=".$thisDateTotalDue."<br>";
-
-//                $paidArr[$startDateLabel] = $thisDateTotalPaid;
-//                $dueArr[$startDateLabel] = $thisDateTotalDue;
                 $paidArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalPaid);
                 $dueArr[$startDateLabel] = $this->getNumberFormat($thisDateTotalDue);
 
@@ -7443,21 +7411,13 @@ class DashboardUtil
                 ),
             );
 
-            //$dataArr, $title, $type='pie', $layoutArray=null, $valuePrefixLabel=null, $valuePostfixLabel=null, $descriptionArr=array()
-            //$chartsArray = $this->getChart($paidArr,$chartName,'bar',$layoutArray,"$",null,$descriptionArr,"percent+label");
-
             $totalPaidInvoiceFee = $this->getNumberFormat($totalPaidInvoiceFee);
             $totalDueInvoiceFee = $this->getNumberFormat($totalDueInvoiceFee);
 
             $combinedData = array();
             $combinedData["Paid $".$totalPaidInvoiceFee] = $paidArr;
             $combinedData["Due $".$totalDueInvoiceFee] = $dueArr;
-            //$combinedData[$totalPaidInvoiceFee] = $paidArr;
-            //$combinedData[$totalDueInvoiceFee] = $dueArr;
 
-            //$chartName = $chartName . " (" . $totalPaidInvoiceFee . " Total)";
-            //$chartName = $chartName . " (" . "total=".$totalInvoiceFee.", paid=". $totalPaidInvoiceFee . ", due=".$totalDueInvoiceFee.")";
-            //$chartName = $chartName . " (" . "Paid ". $totalPaidInvoiceFee . ", Due ".$totalDueInvoiceFee.")";
             $chartName = $chartName . ", " . $totalInvoicesCount . " total invoices" .
                 " (" . "Paid $". $totalPaidInvoiceFee . ", Due $".$totalDueInvoiceFee.")";
 
