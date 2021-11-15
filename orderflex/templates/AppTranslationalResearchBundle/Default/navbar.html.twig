@@ -633,7 +633,7 @@
                     </li>
 
 
-                    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                    {% if 0 and is_granted('ROLE_TRANSRES_ADMIN') or 0 and is_granted('ROLE_TRANSRES_EXECUTIVE') %}
 
                         {% set startDate = "now"|date_modify("-1 year")|date("m/d/Y") %}
                         {% set endDate = "now"|date("m/d/Y") %}
@@ -642,6 +642,15 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
+                                <li>
+                                    <a href="{{ path(dashboard_sitename~'_single_topic_id',
+                                    {
+                                        'id':12,
+                                    }) }}"
+                                    >TRP charts</a>
+                                </li>
+
+                                {% if 0 %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_choices',
                                     {
@@ -886,6 +895,8 @@
                                     {#<a href="{{ path(translationalresearch_sitename~'_dashboard_financial_invoice',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty][]':0, 'filter[compareType]':'work request submission date'}) }}"#}
                                     {#>Financial statistics based on invoices</a>#}
                                 {#</li>#}
+
+                                {% endif %}
 
                             </ul>
                         </li>
