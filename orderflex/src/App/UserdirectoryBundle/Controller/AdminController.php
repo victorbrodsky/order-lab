@@ -10354,6 +10354,10 @@ class AdminController extends OrderAbstractController
             if( $listEntity ) {
                 continue;
             }
+            $listEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($abbreviation);
+            if( $listEntity ) {
+                continue;
+            }
 
             $listEntity = new ChartList();
 
