@@ -365,8 +365,8 @@ class DashboardUtil
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
 
-            "64. Total amount of paid and unpaid invoices per month" => "total-amount-paid-unpaid-invoices-per-month",
-            "65. Total amount of paid and unpaid invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year",
+            "64. Total amount of paid/due for issued invoices per month" => "total-amount-paid-unpaid-invoices-per-month",
+            "65. Total amount of paid/due for issued invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year",
 
             "" => "",
             "" => "",
