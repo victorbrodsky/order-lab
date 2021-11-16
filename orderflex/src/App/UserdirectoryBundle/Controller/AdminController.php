@@ -9982,7 +9982,7 @@ class AdminController extends OrderAbstractController
             //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
             "ROLE_DASHBOARD_CHAIRMAN_ASSISTANT_PATHOLOGY" => array(
                 "Dashboards Chairman Assistant Pathology Department",
-                "View all dashboards",
+                "",
                 80,
                 "dashboard",
                 "Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology"
@@ -9991,7 +9991,7 @@ class AdminController extends OrderAbstractController
             //Dashboards-Administrator-Department-Of-Pathology
             "ROLE_DASHBOARD_ADMIN_PATHOLOGY" => array(
                 "Dashboards Administrator Pathology Department",
-                "View all dashboards",
+                "",
                 80,
                 "dashboard",
                 "Dashboards-Administrator-Department-Of-Pathology"
@@ -10000,7 +10000,7 @@ class AdminController extends OrderAbstractController
             //Dashboards-Associate-Administrator-Department-Of-Pathology
             "ROLE_DASHBOARD_ADMIN_ASSOCIATE_PATHOLOGY" => array(
                 "Dashboards Administrator Associate Pathology Department",
-                "View all dashboards",
+                "",
                 80,
                 "dashboard",
                 "Dashboards-Associate-Administrator-Department-Of-Pathology"
@@ -10009,12 +10009,918 @@ class AdminController extends OrderAbstractController
             //Dashboards-Financial-Administrator-Department-Of-Pathology
             "ROLE_DASHBOARD_FINANCIAL_ADMIN_PATHOLOGY" => array(
                 "Dashboards Financial Administrator Pathology",
-                "View all dashboards",
+                "",
                 80,
                 "dashboard",
                 "Dashboards-Financial-Administrator-Department-Of-Pathology"
             ),
 
+            //all other roles
+//            Dashboards-Administrator-of-Grants-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_GRANT_PATHOLOGY" => array(
+                "Dashboards Grant Administrator Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Administrator-of-Grants-Department-Of-Pathology"
+            ),
+
+//            Dashboards-Administrator-of-Research-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_RESEARCH_PATHOLOGY" => array(
+                "Dashboards Research Administrator Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Administrator-of-Research-Department-Of-Pathology"
+            ),
+//            Dashboards-Administrator-of-Outreach-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_OUTREACH_PATHOLOGY" => array(
+                "Dashboards Outreach Administrator Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Administrator-of-Outreach-Department-Of-Pathology"
+            ),
+//            Dashboards-Administrator-of-Billing-Department-Of-Pathology
+            "ROLE_DASHBOARD_ADMIN_BILLING_PATHOLOGY" => array(
+                "Dashboards Billing Administrator Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Administrator-of-Billing-Department-Of-Pathology"
+            ),
+//            Dashboards-Vice-Chair-of-Clinical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY" => array(
+                "Dashboards Vice Chair Clinical Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Vice-Chair-of-Clinical-Pathology-Department-Of-Pathology"
+            ),
+//            Dashboards-Vice-Chair-of-Anatomic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_VICE_CHAIR_ANATOMIC_PATHOLOGY" => array(
+                "Dashboards Vice Chair Anatomic Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Vice-Chair-of-Anatomic-Pathology-Department-Of-Pathology"
+            ),
+//            Dashboards-Vice-Chair-of-Research-Department-Of-Pathology
+            "ROLE_DASHBOARD_VICE_CHAIR_RESEARCH_PATHOLOGY" => array(
+                "Dashboards Vice Chair Research Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Vice-Chair-of-Research-Department-Of-Pathology"
+            ),
+//            Dashboards-Vice-Chair-of-Experimental-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_VICE_CHAIR_EXPERIMENTAL_PATHOLOGY" => array(
+                "Dashboards Vice Chair Experimental Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Vice-Chair-of-Experimental-Pathology-Department-Of-Pathology"
+            ),
+//            Dashboards-Vice-Chair-of-Education-Department-Of-Pathology
+            "ROLE_DASHBOARD_VICE_CHAIR_EDUCATIONAL_PATHOLOGY" => array(
+                "Dashboards Vice Chair Education Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Vice-Chair-of-Education-Department-Of-Pathology"
+            ),
+//            Dashboards-Residency-Program-Director-Department-Of-Pathology
+            "ROLE_DASHBOARD_DIRECTOR_RESIDENCY_PATHOLOGY" => array(
+                "Dashboards Director Residency Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Residency-Program-Director-Department-Of-Pathology"
+            ),
+//            Dashboards-Residency-Program-Coordinator-Department-Of-Pathology
+            "ROLE_DASHBOARD_COORDINATOR_RESIDENCY_PATHOLOGY" => array(
+                "Dashboards Coordinator Residency Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Residency-Program-Coordinator-Department-Of-Pathology"
+            ),
+//            Dashboards-Fellowship-Program-Director-Department-Of-Pathology
+            "ROLE_DASHBOARD_DIRECTOR_FELLOWSHIP_PATHOLOGY" => array(
+                "Dashboards Director Fellowship Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Fellowship-Program-Director-Department-Of-Pathology"
+            ),
+//            Dashboards-Fellowship-Program-Coordinator-Department-Of-Pathology
+            "ROLE_DASHBOARD_COORDINATOR_FELLOWSHIP_PATHOLOGY" => array(
+                "Dashboards Coordinator Fellowship Pathology",
+                "",
+                50,
+                "dashboard",
+                "Dashboards-Fellowship-Program-Coordinator-Department-Of-Pathology"
+            ),
+//            Dashboards-Histology-Lab-Director-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Chief-Physician-Assistant-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Physician-Assistant-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Accessioning-Manager-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Chief-Resident-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Resident-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Fellow-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Director-of-Surgical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-of-Surgical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Assistant-to-Director-of-Surgical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Director-of-Cytopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Assistant-to-Director-of-Cytopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-of-Cytopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Hematopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Hematopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Molecular-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Molecular-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Genomic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Genomic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Breast-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Breast-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Dermatopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Dermatopathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Gastrointestinal-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Gastrointestinal-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Liver-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Liver-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Genitourinary-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Genitourinary-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Gynecologic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Gynecologic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Perinatal-and-Obstetrical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Perinatal-and-Obstetrical-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Pediatric-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Pediatric-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Pulmonary-and-Thoracic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Pulmonary-and-Thoracic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Cardicac-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Cardiac-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Renal-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Renal-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Ophthalmologic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Ophthalmologic-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Neuropathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Neuropathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Head-and-Neck-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Head-and-Neck-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Bone-and-Soft-Tissue-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Bone-and-Soft-Tissue-Pathology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Autopsy-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Autopsy-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Diener-Autopsy-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Clinical-Chemistry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Clinical-Chemistry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Core-Laboratory-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Core-Laboratory-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Transfusion-Medicine-and-Cellular-Therapy-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Transfusion-Medicine-and-Cellular-Therapy-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Routine-and-Special-Coagulation-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Routine-and-Special-Coagulation-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Endocrinology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Endocrinology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Routine-and-Special-Hematology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Routine-and-Special-Hematology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Immunochemistry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Immunochemistry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Immunology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Immunology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Immunobiology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Immunobiology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Serology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Serology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Flow-Cytometry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Flow-Cytometry-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Immunohematology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Immunohematology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Microbiology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Microbiology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Molecular-Diagnostics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Molecular-Diagnostics-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Toxicology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Toxicology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Mycology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Mycology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Therapeutic-Drug-Monitoring-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Therapeutic-Drug-Monitoring-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Parasitology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Parasitology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Medical-Director-Virology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Manager-Virology-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Course-Director-for-Medical-Students-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Course-Director-for-Postgraduate-Education-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-Administrator-Quality-Assurance-Department-Of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
+//            Dashboards-TRP-Administrator-Department-of-Pathology
+            "ROLE_DASHBOARD_" => array(
+                "Dashboards alias",
+                "",
+                50,
+                "dashboard",
+                "Dashboards"
+            ),
 
         );
 
@@ -10024,6 +10930,14 @@ class AdminController extends OrderAbstractController
             $alias = $aliasDescription[0];
             $description = $aliasDescription[1];
             $level = $aliasDescription[2];
+
+            //Ignore not finished roles
+            if( $alias == "Dashboards alias" ) {
+                continue;
+            }
+            if( strpos($alias, 'alias') !== false ) {
+                continue;
+            }
 
             $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
 
