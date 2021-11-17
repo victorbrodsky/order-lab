@@ -85,7 +85,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     protected function canView($subject, TokenInterface $token) {
         //exit('dashboard canView');
 
-        return false;
+        return true;
 
         $user = $token->getUser();
 
