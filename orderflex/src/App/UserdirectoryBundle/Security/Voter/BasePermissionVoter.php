@@ -71,6 +71,8 @@ abstract class BasePermissionVoter extends Voter {
 
         $attribute = $this->convertAttribute($attribute);
 
+        //echo "attribute=$attribute, subject=$subject<br>";
+
         // if the attribute isn't one we support, return false
         if( !$this->supportAttribute($attribute, $subject) ) {
             return false;
@@ -128,6 +130,7 @@ abstract class BasePermissionVoter extends Voter {
     {
 
         $attribute = $this->convertAttribute($attribute);
+        //echo "attribute=$attribute <br>";
 
         $user = $token->getUser();
 

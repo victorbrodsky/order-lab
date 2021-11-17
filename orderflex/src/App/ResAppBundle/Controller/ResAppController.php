@@ -62,13 +62,32 @@ class ResAppController extends OrderAbstractController {
     public function indexAction(Request $request) {
         //echo "resapp home <br>";
 
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
         $route = $request->get('_route');
         //echo "route".$route."<br>";
         //exit();
 
         if( $route == "resapp_home" ) {
-            if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
-                return $this->redirect( $this->generateUrl('resapp-nopermission') );
+            if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ) {
+                //echo 'no permission home <br>';
+//                if(0) {
+//                    //TODO: check if user has Interview or Observer role
+//                    $sitename = $this->getParameter('resapp.sitename');
+//                    $partialRoleName = "ROLE_RESAPP_INTERVIEWER_";
+//                    if ($em->getRepository('AppUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user, $sitename, $partialRoleName)) {
+//                        //exit('redirect to resapp_myinterviewees');
+//                        return $this->redirect($this->generateUrl('resapp_myinterviewees'));
+//                    }
+//                    //TODO: check Observer role?
+//                    return $this->redirect($this->generateUrl('resapp-nopermission'));
+//                }
+                //check if user can Interview
+                if( $this->get('security.authorization_checker')->isGranted("create","Interview") ) {
+                    return $this->redirect($this->generateUrl('resapp_myinterviewees'));
+                }
             }
         }
 
@@ -99,12 +118,12 @@ class ResAppController extends OrderAbstractController {
             }
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
 
         //echo "resapp user ok <br>";
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $resappUtil = $this->container->get('resapp_util');
         $userServiceUtil = $this->get('user_service_utility');
 

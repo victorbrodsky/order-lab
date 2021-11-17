@@ -48,10 +48,13 @@ class DashboardPermissionVoter extends BasePermissionVoter
     //$subject: string (i.e. "FellowshipApplication") or entity
     protected function supports($attribute, $subject) {
         //return false; //testing
+        //return true; //testing
+
+        //echo "attribute=$attribute, subject=$subject<br>";
         //exit('dashboard: support');
 
-        //$siteRoleBase = $this->getSiteRoleBase();
-        //$sitename = $this->getSitename();
+        $siteRoleBase = $this->getSiteRoleBase();
+        $sitename = $this->getSitename();
 
         $attribute = $this->convertAttribute($attribute);
 
@@ -63,6 +66,54 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
         //Don't use ChartList in PermissionObjectList
         //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
+
+        //attribute is action (read, edit ...) or role ROLE_DASHBOARD_...
+        if( strpos($attribute, 'ROLE_') !== false ) {
+            //echo 'true';
+            if( strpos($attribute, '_DASHBOARD_') === false ) {
+                //echo 'false';
+                return false;
+            }
+        }
+
+        //TODO: make dashboard support to work without PermissionObjectList
+        //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
+        //$permissionObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
+        if( $subject ) {
+            $className = $this->getClassName($subject);
+
+            //echo "className=".$className."<br>";
+            //echo "sitename=".$sitename."<br>";
+
+            $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
+            $dql = $repository->createQueryBuilder("list");
+            $dql->select('list');
+            $dql->leftJoin('list.sites', 'sites');
+            $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameters(
+                array(
+                    'objectname' => $className,
+                    'sitename' => $sitename
+                )
+            );
+
+            $permissionObjects = $query->getResult();
+            //echo "permissionObjects count=".count($permissionObjects)."<br>";
+
+            if (count($permissionObjects) > 0) {
+                //exit('dashboard: support true');
+                return true;
+            } else {
+                //exit('dashboard: support false');
+                return false;
+            }
+        }
+        //////////// EOF check if the $subject (className string or object) is in PermissionObjectList ////////////
+
+        //exit('dashboard: support');
+        //exit('dashboard: support true');
 
         //echo "Supported voter: attribute=".$attribute."; subject=".$subject."<br>";
         return true;
@@ -85,7 +136,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     protected function canView($subject, TokenInterface $token) {
         //exit('dashboard canView');
 
-        return true;
+        //return false;
 
         $user = $token->getUser();
 

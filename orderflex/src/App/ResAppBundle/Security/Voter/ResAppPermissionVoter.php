@@ -45,6 +45,7 @@ class ResAppPermissionVoter extends BasePermissionVoter
 
     protected function canView($subject, TokenInterface $token) {
         //exit('resapp canView');
+        //echo "subject=".$subject."<br>"; //ResidencyApplication
 
         //can view if user is an interviewer or observer
         if( is_object($subject) ) {
@@ -92,6 +93,7 @@ class ResAppPermissionVoter extends BasePermissionVoter
     }
 
     public function isObserverOrInterviewer($subject,$token) {
+        //echo "isObserverOrInterviewer <br>";
         if( is_object($subject) ) {
             $user = $token->getUser();
 
@@ -110,6 +112,8 @@ class ResAppPermissionVoter extends BasePermissionVoter
                 return true;
             }
         }
+
+        //echo "user is not interviewer nor observer!!! <br>";
 
         return false;
     }
