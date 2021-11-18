@@ -69,6 +69,7 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
 //            return false;
 //        }
 
+        //exit('siteSpecificRoleSupport OK '.$this->getSiteRoleBase());
         return true;
     }
 

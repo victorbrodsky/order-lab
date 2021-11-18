@@ -52,7 +52,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         //echo "attribute=$attribute, subject=$subject<br>";
         //attribute=ROLE_TRANSRES_ADMIN__COVID19, subject=
-        //attribute=read, subject=1. Principle Investigators by Affiliation (linked)
+        //attribute=read, subject=1. Principle Investigators by Affiliation (linked) (ChartList)
 
         //echo "subjectId=".$subject->getId()."<br>";
         //$this->getId(); //testing: make error stack
@@ -76,11 +76,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //check if attribute is dashboard role. if yes => support true
         if( strpos($attribute, 'ROLE_') !== false ) {
             //echo 'true';
-            if( strpos($attribute, '_DASHBOARD_') === false ) {
-                //echo 'false';
-                return false;
-            } else {
+            if( strpos($attribute, '_DASHBOARD_') !== false ) {
+                //echo 'true';
                 return true;
+            } else {
+                return false;
             }
         }
 

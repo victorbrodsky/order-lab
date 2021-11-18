@@ -65,9 +65,11 @@ abstract class BaseRoleVoter extends Voter {
 
         //support USERDIRECTORY roles only
         if( strpos($attribute, 'ROLE_'.$siteRoleBase.'_') === false ) {
+            //echo("no support $siteRoleBase <br>");
             return false;
         }
 
+        //echo("!!! support $siteRoleBase <br>");
         return $this->siteSpecificRoleSupport($attribute, $subject, $sitename, $siteRoleBase);
     }
 
