@@ -10122,8 +10122,8 @@ class AdminController extends OrderAbstractController
                 "Dashboards-Fellowship-Program-Coordinator-Department-Of-Pathology"
             ),
 //            Dashboards-Histology-Lab-Director-Department-Of-Pathology
-            "ROLE_DASHBOARD_DIRECTOR_HISTOLOGY_PATHOLOGY" => array(
-                "Dashboards Director Histology Pathology",
+            "ROLE_DASHBOARD_DIRECTOR_HISTOLOGY_LAB_PATHOLOGY" => array(
+                "Dashboards Director Histology Lab Pathology",
                 "",
                 50,
                 "dashboard",
@@ -10610,316 +10610,316 @@ class AdminController extends OrderAbstractController
                 "Dashboards-Medical-Director-Transfusion-Medicine-and-Cellular-Therapy-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Transfusion-Medicine-and-Cellular-Therapy-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_TRANSFUSION_MEDICINE_CELLULAR_THERAPY_PATHOLOGY" => array(
+                "Dashboards Manager Transfusion Medicine and Cellular Therapy Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Transfusion-Medicine-and-Cellular-Therapy-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_TRANSFUSION_MEDICINE_BLOOD_BANK_PATHOLOGY" => array(
+                "Dashboards Medical Director Transfusion Medicine and Blood Bank Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_TRANSFUSION_MEDICINE_BLOOD_BANK_PATHOLOGY" => array(
+                "Dashboards Manager Transfusion Medicine and Blood Bank Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Transfusion-Medicine-and-Blood-Bank-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Routine-and-Special-Coagulation-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_ROUTINE_SPECIAL_COAGULATION_PATHOLOGY" => array(
+                "Dashboards Medical Director Routine and Special Coagulation Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Routine-and-Special-Coagulation-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Routine-and-Special-Coagulation-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_ROUTINE_SPECIAL_COAGULATION_PATHOLOGY" => array(
+                "Dashboards Manager Routine and Special Coagulation Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Routine-and-Special-Coagulation-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Endocrinology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_ENDOCRINOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Endocrinology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Endocrinology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Endocrinology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_ENDOCRINOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Endocrinology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Endocrinology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Routine-and-Special-Hematology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_ROUTINE_SPECIAL_HEMATOLOGY" => array(
+                "Dashboards Medical Director Routine and Special Hematology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Routine-and-Special-Hematology"
             ),
 //            Dashboards-Manager-Routine-and-Special-Hematology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_ROUTINE_SPECIAL_HEMATOLOGY" => array(
+                "Dashboards Manager Routine and Special Hematology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Routine-and-Special-Hematology"
             ),
 //            Dashboards-Medical-Director-Immunochemistry-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_IMMUNOCHEMISTRY_PATHOLOGY" => array(
+                "Dashboards Medical Director Immunochemistry Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Immunochemistry-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Immunochemistry-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_IMMUNOCHEMISTRY_PATHOLOGY" => array(
+                "Dashboards Manager Immunochemistry Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Immunochemistry-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Immunology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_IMMUNOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Immunology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Immunology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Immunology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_IMMUNOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Immunology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Immunology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Immunobiology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_IMMUNOBIOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Immunobiology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Immunobiology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Immunobiology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_IMMUNOBIOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Immunobiology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Immunobiology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Serology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_SEROLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Serology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Serology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Serology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_SEROLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Serology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Serology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Flow-Cytometry-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_FLOW_CYTOMETRY_PATHOLOGY" => array(
+                "Dashboards Medical Director Flow Cytometry Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Flow-Cytometry-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Flow-Cytometry-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_FLOW_CYTOMETRY_PATHOLOGY" => array(
+                "Dashboards Manager Flow Cytometry Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Flow-Cytometry-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Immunohematology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_IMMUNOHEMATOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Immunohematology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Immunohematology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Immunohematology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_IMMUNOHEMATOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Immunohematology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Immunohematology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Microbiology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_MICROBIOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Microbiology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Microbiology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Microbiology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_MICROBIOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Microbiology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Microbiology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Molecular-Diagnostics-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_MOLECULAR_DIAGNOSTICS_PATHOLOGY" => array(
+                "Dashboards Medical Director Molecular Diagnostics Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Molecular-Diagnostics-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Molecular-Diagnostics-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_MOLECULAR_DIAGNOSTICS_PATHOLOGY" => array(
+                "Dashboards Manager Molecular Diagnostics Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Molecular-Diagnostics-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Toxicology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_TOXICOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Toxicology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Toxicology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Toxicology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_TOXICOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Toxicology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Toxicology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Mycology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_MYCOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Mycology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Mycology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Mycology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_MYCOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Mycology Pathology",
                 "",
                 50,
                 "dashboard",
                 "Dashboards"
             ),
 //            Dashboards-Medical-Director-Therapeutic-Drug-Monitoring-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_THERAPEUTIC_DRUG_MONITORING_PATHOLOGY" => array(
+                "Dashboards Medical Director Therapeutic Drug Monitoring Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Therapeutic-Drug-Monitoring-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Therapeutic-Drug-Monitoring-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_THERAPEUTIC_DRUG_MONITORING_PATHOLOGY" => array(
+                "Dashboards Manager Therapeutic Drug Monitoring Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Therapeutic-Drug-Monitoring-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Parasitology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_PARASITOLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Parasitology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Parasitology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Parasitology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_PARASITOLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Parasitology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Parasitology-Department-Of-Pathology"
             ),
 //            Dashboards-Medical-Director-Virology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MEDICAL_DIRECTOR_VIROLOGY_PATHOLOGY" => array(
+                "Dashboards Medical Director Virology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Medical-Director-Virology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Virology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_MANAGER_VIROLOGY_PATHOLOGY" => array(
+                "Dashboards Manager Virology Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Manager-Virology-Department-Of-Pathology"
             ),
 //            Dashboards-Course-Director-for-Medical-Students-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_COURSE_DIRECTOR_MEDICAL_STUDENTS_PATHOLOGY" => array(
+                "Dashboards Course Director for Medical Students Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Course-Director-for-Medical-Students-Department-Of-Pathology"
             ),
 //            Dashboards-Course-Director-for-Postgraduate-Education-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_COURSE_DIRECTOR_POSTGRADUATE_EDUCATION_PATHOLOGY" => array(
+                "Dashboards Course Director for Postgraduate Education Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Course-Director-for-Postgraduate-Education-Department-Of-Pathology"
             ),
 //            Dashboards-Administrator-Quality-Assurance-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_ADMINISTRATOR_QUALITY_ASSURANCE_PATHOLOGY" => array(
+                "Dashboards Administrator Quality Assurance Department Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-Administrator-Quality-Assurance-Department-Of-Pathology"
             ),
 //            Dashboards-TRP-Administrator-Department-of-Pathology
-            "ROLE_DASHBOARD_" => array(
-                "Dashboards alias",
+            "ROLE_DASHBOARD_ADMINISTRATOR_TRP_PATHOLOGY" => array(
+                "Dashboards TRP Administrator Pathology",
                 "",
                 50,
                 "dashboard",
-                "Dashboards"
+                "Dashboards-TRP-Administrator-Department-of-Pathology"
             ),
 
         );

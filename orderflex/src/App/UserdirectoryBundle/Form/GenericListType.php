@@ -1179,6 +1179,7 @@ class GenericListType extends AbstractType
                 'class' => 'AppUserdirectoryBundle:Roles',
                 //'choice_label' => 'getTreeName',
                 'label'=>'Accessible to users with the following roles:',
+                'choice_label' => 'getAlias',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -1201,6 +1202,7 @@ class GenericListType extends AbstractType
                 'class' => 'AppUserdirectoryBundle:Roles',
                 //'choice_label' => 'getTreeName',
                 'label'=>'Deny access to users with the following roles:',
+                'choice_label' => 'getAlias',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -1247,6 +1249,7 @@ class GenericListType extends AbstractType
                 'class' => 'AppUserdirectoryBundle:Roles',
                 //'choice_label' => 'getTreeName',
                 'label'=>'Data can be downloaded by users with the following roles:',
+                'choice_label' => 'getAlias',
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -1284,7 +1287,7 @@ class GenericListType extends AbstractType
             
             $builder->add( 'institutions', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:Institution',
-                //'choice_label' => 'getTreeName',
+                'choice_label' => 'getTreeName',
                 'label'=>'Associated with the following organizational groups:',
                 'required'=> false,
                 'multiple' => true,
@@ -1293,6 +1296,7 @@ class GenericListType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.children","children")
                         ->where("list.type = :typedef OR list.type = :typeadd")
+                        //->orderBy("list.orderinlist, list.level","ASC")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',

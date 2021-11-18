@@ -84,7 +84,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
             }
         }
 
-        //TODO: make dashboard support to work without PermissionObjectList
+        //make dashboard support to work without PermissionObjectList
         //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
         //$permissionObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
         if( $subject ) {
@@ -93,6 +93,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
             //echo "className=".$className."<br>";
             //echo "sitename=".$sitename."<br>";
 
+            //make dashboard support to work without PermissionObjectList
             if( $className == "ChartList" ) {
                 return true;
             }
