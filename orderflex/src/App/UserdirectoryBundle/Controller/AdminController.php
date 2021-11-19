@@ -7307,19 +7307,30 @@ class AdminController extends OrderAbstractController
             $url = $userServiceUtil->classNameUrlMapper($entityName);
             //echo "url=".$url."<br>";
 
+            $flushFlag = false;
+
             if( $entityName == "Patient" ) {
                 //add SiteList scan
                 $scanSite = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan');
-                $listEntity->addExclusivelySite($scanSite);
+                $res = $listEntity->addExclusivelySite($scanSite); //get add result: true if added
+                if( $res ) {
+                    $flushFlag = true;
+                }
             }
 
-            $listEntity->setUrl($url);
+            $currentUrl = $listEntity->getUrl();
+            if( $currentUrl != $url ) {
+                $listEntity->setUrl($url);
+                $flushFlag = true;
+            }
 
-            $em->persist($listEntity);
-            $em->flush();
-            //echo "Set url=[".$url."]<br><br>";
+            if( $flushFlag ) {
+                $em->persist($listEntity);
+                $em->flush();
+                //echo "Set url=[".$url."]<br><br>";
+                $count++;
+            }
 
-            $count++;
         }
 
         //exit("populateClassUrl count=".$count);
@@ -11050,6 +11061,8 @@ class AdminController extends OrderAbstractController
             $count = $count + 10;
         }
 
+        $count = $count - 10;
+
         return round($count/10);
     }
     public function generateSingleChartTypeList($name) {
@@ -11156,6 +11169,8 @@ class AdminController extends OrderAbstractController
 
             $em->flush();
         }
+
+        $count = $count - 10;
 
         return round($count/10);
     }

@@ -90,7 +90,9 @@ class EventObjectTypeList extends ListAbstract
     {
         if( $item && !$this->exclusivelySites->contains($item) ) {
             $this->exclusivelySites->add($item);
+            return true;
         }
+        return false;
     }
     public function removeExclusivelySite($item)
     {
