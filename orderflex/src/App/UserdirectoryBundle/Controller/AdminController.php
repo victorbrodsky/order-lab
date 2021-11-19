@@ -10927,9 +10927,9 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $role => $aliasDescription ) {
 
-            $alias = $aliasDescription[0];
-            $description = $aliasDescription[1];
-            $level = $aliasDescription[2];
+            $alias = trim($aliasDescription[0]);
+            $description = trim($aliasDescription[1]);
+            $level = trim($aliasDescription[2]);
 
             //Ignore not finished roles
             if( $alias == "Dashboards alias" ) {
@@ -10939,7 +10939,10 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
+            $role = str_replace("-","_",$role);
+            $role = str_replace(" ","_",$role);
+
+            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
 
             if( $entity ) {
                 continue;
@@ -10948,9 +10951,11 @@ class AdminController extends OrderAbstractController
             $entity = new Roles();
             $this->setDefaultList($entity,$count,$username,$role);
 
-            $entity->setName( $role );
-            $entity->setAlias( trim($alias) );
-            $entity->setDescription( trim($description) );
+            $entity->setName($role);
+            $entity->setAlias($alias);
+            if( $description ) {
+                $entity->setDescription($description);
+            }
             $entity->setLevel($level);
 
             //set sitename dashboard
