@@ -129,6 +129,7 @@ class OrderAbstractController extends AbstractController {
 //        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
 
         $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
+        $subscribedServices['dashboard_init'] = '?'.\App\DashboardBundle\Util\DashboardInit::class;
 
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
