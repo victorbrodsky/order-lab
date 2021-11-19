@@ -3053,7 +3053,8 @@ class AdminController extends OrderAbstractController
                 'Pathology Informatics' => array(
                     'Scanning Service',
                 ),
-                'Pathology Fellowship Programs'
+                'Pathology Fellowship Programs',
+                'Center for Translational Pathology'
             ),
             'Pediatrics' => array(
                 'Cardiology',
@@ -11119,7 +11120,7 @@ class AdminController extends OrderAbstractController
 //            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
 //            array("All Charts","Clinical"),
 //            array("All Charts","Research"),
-//            array("All Charts","Educational",array("Fellowship Candidate Statistics","Resident Candidate Statistics")),
+//            array("All Charts","Educational",array("Fellowship Candidate Statistics","Residency Candidate Statistics")),
 //            array("All Charts","Site Utilization")
 //        );
 
@@ -11129,7 +11130,7 @@ class AdminController extends OrderAbstractController
             "Productivity" => array("Turnaround Times","Specimen Tracking"),
             "Clinical" => array(),
             "Research" => array(),
-            "Educational" => array("Fellowship Candidate Statistics","Resident Candidate Statistics"),
+            "Educational" => array("Fellowship Candidate Statistics","Residency Candidate Statistics"),
             "Site Utilization" => array()
         );
 

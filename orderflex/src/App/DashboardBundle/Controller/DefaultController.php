@@ -84,7 +84,7 @@ class DefaultController extends OrderAbstractController
         exit('setChartListAction disable');
 
         $em = $this->getDoctrine()->getManager();
-        
+
         //add the nine charts 55, 56, 57, 58, 59, 60, 61, 62, 63 (with IDs of 1 through 9) to the topic of “Site Utilization”,
         // associated with the Organizational Group of “Department of Pathology” under WCMC and “Department of Pathology” under NYP”,
         // visible to the these roles:
@@ -305,5 +305,129 @@ class DefaultController extends OrderAbstractController
 
         //dump($chartsArray);
         exit('eof setChartTypesAction:<br>'.$event);
+    }
+
+    /**
+     * @Route("/init-set-chart-list-institution", name="dashboard_init_set_chart_list")
+     * @Template("AppDashboardBundle/Default/test.html.twig")
+     */
+    public function setChartListInstitutionAction( Request $request ) {
+
+        exit('setChartListAction disable');
+
+        $em = $this->getDoctrine()->getManager();
+
+        //add the nine charts 55, 56, 57, 58, 59, 60, 61, 62, 63 (with IDs of 1 through 9) to the topic of “Site Utilization”,
+        // associated with the Organizational Group of “Department of Pathology” under WCMC and “Department of Pathology” under NYP”,
+        // visible to the these roles:
+        //Dashboards-Site-Administrator-Department-Of-Pathology
+        //Dashboards-Chairman-Department-Of-Pathology
+        //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
+        //Dashboards-Administrator-Department-Of-Pathology
+        //Dashboards-Associate-Administrator-Department-Of-Pathology
+        //Dashboards-Financial-Administrator-Department-Of-Pathology
+
+        //Add the Site Utilization charts into this list (accessible and downloadable):
+//        Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+//        Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+
+        $roles = array(
+            "Dashboards-Site-Administrator-Department-Of-Pathology",
+            "Dashboards-Chairman-Department-Of-Pathology",
+            "Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology",
+            "Dashboards-Administrator-Department-Of-Pathology",
+            "Dashboards-Associate-Administrator-Department-Of-Pathology",
+            "Dashboards-Financial-Administrator-Department-Of-Pathology",
+
+            "Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology",
+        );
+
+        $rolesArr = array();
+        foreach($roles as $role) {
+            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($role);
+            if( !$roleEntity ) {
+                exit("Can not find role by abbreviation '$role'");
+            }
+
+            $rolesArr[] = $roleEntity;
+        }
+
+        $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
+        if( !$siteUtilizationTopic ) {
+            exit("TopicList not found by name 'Site Utilization'");
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('No Institution: "WCM"');
+        }
+        if( $wcmc->getLevel() != 0 ) {
+            exit('Institution "WCM" level is not 0');
+        }
+        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        //55, 56, 57, 58, 59, 60, 61, 62, 63
+        $names = array(55, 56, 57, 58, 59, 62, 63);
+
+        $repository = $em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.topics','topics');
+
+        $selectArr = array();
+        foreach($names as $name) {
+            $selectArr[] = "list.name LIKE '".$name."%'";
+        }
+
+        $selectWhere = implode(" OR ",$selectArr);
+
+        $dql->where($selectWhere);
+        $dql->andWhere("topics IS NULL");
+
+        $query = $dql->getQuery();
+
+        $charts = $query->getResult();
+        echo "charts count=".count($charts)."<br>";
+        $count = 0;
+
+        foreach($charts as $chart) {
+            echo "Process chart '$chart' <br>";
+
+            if(0) {
+                //add topic
+                $chart->addTopic($siteUtilizationTopic);
+
+                //add institution
+                $chart->addInstitution($pathology);
+
+                //assign roles accessRoles, downloadRoles
+                foreach ($rolesArr as $role) {
+                    $chart->addAccessRole($role);
+                    $chart->addDownloadRole($role);
+                }
+            }
+
+            //add topic
+            $chart->addTopic($siteUtilizationTopic);
+
+            $count++;
+        }
+
+        $em->flush();
+
+        exit("EOF setChartListAction: count=$count");
     }
 }

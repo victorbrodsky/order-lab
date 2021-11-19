@@ -278,7 +278,7 @@ class DashboardUtil
 
         $chartTypes = array(
             //PI/Project statistics
-            "1. Principle Investigators by Affiliation (linked)" =>                   "pi-by-affiliation",
+            "1. Principal Investigators by Affiliation (Linked)" =>                   "pi-by-affiliation",
             "2. Total Number of Projects per PI (Top) (linked)" =>                    "projects-per-pi",
             "3. Total Number of Funded Projects per PI (Top) (linked)" =>             "funded-projects-per-pi",
             "4. Total Number of Non-Funded Projects per PI (Top) (linked)" =>         "nonfunded-projects-per-pi",
@@ -2179,7 +2179,7 @@ class DashboardUtil
         $chartsArray = null;
         $warningNoData = null;
 
-        //1. Principle Investigators by Affiliation (linked)
+        //1. Principal Investigators by Affiliation (Linked)
         if( $chartType == "pi-by-affiliation" ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
