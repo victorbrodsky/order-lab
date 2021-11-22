@@ -1055,17 +1055,183 @@ class DashboardInit
         return $roles;
     }
 
+    public function getCharts() {
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.institutions", "institutions");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        //$dql->andWhere("institutions IS NOT NULL");
 
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        return $charts;
+    }
+
+    //add institutions, topics, roles to the charts
     public function initCharts() {
-        $res = $this->assignInstitutionToCharts();
+
+        $this->assignInstitutionToCharts();
+
+//        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//        $dql->leftJoin("list.institutions", "institutions");
+//        $dql->where("list.type = :typedef OR list.type = :typeadd");
+//        $dql->andWhere("institutions IS NOT NULL");
+//
+//        $dql->orderBy("list.orderinlist","ASC");
+//
+//        $parameters = array(
+//            'typedef' => 'default',
+//            'typeadd' => 'user-added'
+//        );
+//
+//        $query = $dql->getQuery();
+//
+//        $query->setParameters($parameters);
+//
+//        $charts = $query->getResult();
+//
+////        foreach($charts as $chart) {
+////            $res = $this->assignInstitutionsToChart($chart);
+////            $res = $this->assignTopicsToChart($chart);
+////            $res = $this->assignRolesToChart($chart);
+////        }
+
     }
 
     public function assignInstitutionToCharts() {
         //4- Set all charts except 57, 58, 59, 62, 63
         //to the “Institution” of:
         //Weill Cornell Medical College > Pathology and Laboratory Medicine > Center for Translational Pathology
+        $exceptionTrpStrArr = array("57. ", "58. ", "59. ", "62. ", "63. ");
+
+//        5- Set charts 57, 58, 59
+//        to the institution of:
+//        Weill Cornell Medical College > Pathology and Laboratory Medicine > Pathology Informatics
+        $pathInformaticsArr = array("57. ", "58. ", "59. ");
+
+//        6- Set charts 62, 63
+//        to the institution of:
+//        Weill Cornell Medical College > Pathology and Laboratory Medicine
+        $pathologyArr = array("62. ", "63. ");
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('No Institution: "WCM"');
+        }
+        if( $wcmc->getLevel() != 0 ) {
+            exit('Institution "WCM" level is not 0');
+        }
+        $pathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        $trp = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Center for Translational Pathology",
+            $pathology,
+            $mapper
+        );
+        if( !$trp ) {
+            exit("Institution not found by name 'Center for Translational Pathology'");
+        }
+
+        $informatics = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology Informatics",
+            $pathology,
+            $mapper
+        );
+        if( !$informatics ) {
+            exit("Institution not found by name 'Pathology Informatics'");
+        }
+
+        $charts = $this->getCharts();
+
+        $count = 0;
+
+        foreach($charts as $chart) {
+
+            $processFlag = true;
+            $chartName = $chart->getName();
+            $chartInstitutions = $chart->getInstitutions();
+
+            ///////////// 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
+            foreach( $exceptionTrpStrArr as $exceptionTrpStr ) {
+                if (strpos($chartName, $exceptionTrpStr) !== false) {
+                    //echo 'true';
+                    $processFlag = false;
+                    break;
+                }
+
+                if ($trp && !$chartInstitutions->contains($trp)) {
+                    $chart->addInstitution($trp);
+                    $count++;
+                }
+            }
+
+            if( $processFlag ) {
+                //skip chart
+                //continue;
+
+                //4 add Center for Translational Pathology
+                if ($trp && !$chartInstitutions->contains($trp)) {
+                    $chart->addInstitution($trp);
+                    $count++;
+                }
+            }
+            ///////////// EOF 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
+
+            //////////// 5 - Set charts 57, 58, 59 to 'Pathology Informatics' ////////////
+            foreach( $pathInformaticsArr as $pathInformaticsPartName ) {
+                if (strpos($chartName, $pathInformaticsPartName) !== false) {
+                    //echo 'true';
+                    if ($informatics && !$chartInstitutions->contains($informatics)) {
+                        $chart->addInstitution($informatics);
+                        $count++;
+                    }
+                }
+            }
+            //////////// EOF 5 - Set charts 57, 58, 59 to 'Pathology Informatics' ////////////
 
 
+            //////////// 6- Set charts 62, 63 to Pathology and Laboratory Medicine ////////////
+            foreach( $pathologyArr as $pathologyPartName ) {
+                if (strpos($chartName, $pathologyPartName) !== false) {
+                    //echo 'true';
+                    if ($pathology && !$chartInstitutions->contains($pathology)) {
+                        $chart->addInstitution($pathology);
+                        $count++;
+                    }
+                }
+            }
+            //////////// EOF 6- Set charts 62, 63 to Pathology and Laboratory Medicine ////////////
+
+        }//foreach
+
+        if( $count > 0 ) {
+            //$this->em->flush();
+        }
+
+        exit('TRP added count='.$count);
     }
 
 }
