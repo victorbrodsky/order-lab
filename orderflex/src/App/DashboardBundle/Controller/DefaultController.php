@@ -45,6 +45,9 @@ class DefaultController extends OrderAbstractController
 //        dump($results);
 //        exit('111');
 
+        $dashboardInitUtil = $this->container->get('dashboard_init');
+        $res = $dashboardInitUtil->initCharts();
+        exit($res);
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }

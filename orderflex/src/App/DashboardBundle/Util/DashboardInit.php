@@ -1082,37 +1082,16 @@ class DashboardInit
     //add institutions, topics, roles to the charts
     public function initCharts() {
 
-        $this->assignInstitutionToCharts();
+        $resInst = $this->assignInstitutionsToCharts();
 
-//        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
-//        $dql =  $repository->createQueryBuilder("list");
-//        $dql->select('list');
-//        $dql->leftJoin("list.institutions", "institutions");
-//        $dql->where("list.type = :typedef OR list.type = :typeadd");
-//        $dql->andWhere("institutions IS NOT NULL");
-//
-//        $dql->orderBy("list.orderinlist","ASC");
-//
-//        $parameters = array(
-//            'typedef' => 'default',
-//            'typeadd' => 'user-added'
-//        );
-//
-//        $query = $dql->getQuery();
-//
-//        $query->setParameters($parameters);
-//
-//        $charts = $query->getResult();
-//
-////        foreach($charts as $chart) {
-////            $res = $this->assignInstitutionsToChart($chart);
-////            $res = $this->assignTopicsToChart($chart);
-////            $res = $this->assignRolesToChart($chart);
-////        }
+        $resTopic = $this->assignTopicsToCharts();
 
+        $resRole = $this->assignRolesToCharts();
+
+        return $resInst . "; " .$resTopic . "; " . $resRole;
     }
 
-    public function assignInstitutionToCharts() {
+    public function assignInstitutionsToCharts() {
         //4- Set all charts except 57, 58, 59, 62, 63
         //to the “Institution” of:
         //Weill Cornell Medical College > Pathology and Laboratory Medicine > Center for Translational Pathology
@@ -1174,6 +1153,8 @@ class DashboardInit
             $chartName = $chart->getName();
             $chartInstitutions = $chart->getInstitutions();
 
+            echo "Process chart $chartName <br>";
+
             ///////////// 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
             foreach( $exceptionTrpStrArr as $exceptionTrpStr ) {
                 if (strpos($chartName, $exceptionTrpStr) !== false) {
@@ -1182,10 +1163,11 @@ class DashboardInit
                     break;
                 }
 
-                if ($trp && !$chartInstitutions->contains($trp)) {
-                    $chart->addInstitution($trp);
-                    $count++;
-                }
+//                if ($trp && !$chartInstitutions->contains($trp)) {
+//                    $chart->addInstitution($trp);
+//                    echo "- Added TRP <br>";
+//                    $count++;
+//                }
             }
 
             if( $processFlag ) {
@@ -1195,6 +1177,7 @@ class DashboardInit
                 //4 add Center for Translational Pathology
                 if ($trp && !$chartInstitutions->contains($trp)) {
                     $chart->addInstitution($trp);
+                    echo "- Added TRP <br>";
                     $count++;
                 }
             }
@@ -1206,8 +1189,12 @@ class DashboardInit
                     //echo 'true';
                     if ($informatics && !$chartInstitutions->contains($informatics)) {
                         $chart->addInstitution($informatics);
+                        echo "-- Added Institution $informatics<br>";
                         $count++;
+                    } else {
+                        echo "-- Already exists Institution $informatics<br>";
                     }
+                    break;
                 }
             }
             //////////// EOF 5 - Set charts 57, 58, 59 to 'Pathology Informatics' ////////////
@@ -1219,8 +1206,12 @@ class DashboardInit
                     //echo 'true';
                     if ($pathology && !$chartInstitutions->contains($pathology)) {
                         $chart->addInstitution($pathology);
+                        echo "--- Added Institution $pathology<br>";
                         $count++;
+                    } else {
+                        echo "--- Already exists Institution $pathology<br>";
                     }
+                    break;
                 }
             }
             //////////// EOF 6- Set charts 62, 63 to Pathology and Laboratory Medicine ////////////
@@ -1231,7 +1222,42 @@ class DashboardInit
             //$this->em->flush();
         }
 
-        exit('TRP added count='.$count);
+        exit('Added Institutions count='.$count);
+    }
+
+    function assignTopicsToCharts() {
+        $charts = $this->getCharts();
+
+        //Financial > Translational Research
+        //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
+
+        //Productivity > Turnaround Time > Translational Research
+        //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
+
+        //Productivity > Translational Research
+        //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
+
+        //Productivity > Pathologist Involvement in Translational Research
+        //5, 6, 7, 26, 27, 28, 29
+
+        //Research > Translational Projects
+        //1, 2, 3, 4, 5
+
+        //Site Utilization > Platform
+        //57, 58, 59
+
+        //Site Utilization > Call Log
+        //62, 63
+
+        $count = 0;
+
+        foreach($charts as $chart) {
+
+
+
+        }
+
+        exit('Added Topics count='.$count);
     }
 
 }
