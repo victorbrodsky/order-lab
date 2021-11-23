@@ -1228,6 +1228,7 @@ class DashboardInit
     function assignTopicsToCharts() {
         $charts = $this->getCharts();
 
+        //7- topics 
         //Financial > Translational Research
         //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
 

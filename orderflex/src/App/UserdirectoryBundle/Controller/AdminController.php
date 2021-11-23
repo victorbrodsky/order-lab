@@ -821,8 +821,9 @@ class AdminController extends OrderAbstractController
         //$userServiceUtil = $this->get('user_service_utility');
         //$userServiceUtil->createCronsLinux();
         //exit('eof createCronsLinux');
-        $count_generateChartsList = $this->generateChartsList();
-        exit('eof generateChartsList');
+        //$count_generateChartsList = $this->generateChartsList();
+        $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
+        exit('eof generate Charts test');
 
         //$default_time_zone = $this->getParameter('default_time_zone');
 
@@ -10071,19 +10072,12 @@ class AdminController extends OrderAbstractController
     }
     //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
     public function generateChartTopicList() {
-        //return NULL; //TODO: hierarchy
+        //return NULL;
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //On this list add the “top”/root” category item titled “All Charts”
-        //addChild()
-//        $service = new Institution();
-//        $this->setDefaultList($service,$treeCount,$username,$servicename);
-//        $treeCount = $treeCount + 10;
-//        $service->setOrganizationalGroupType($levelService);
-//        $division->addChild($service);
-
         //1) create root "All Charts"
         $rootName = "All Charts";
         $rootEntity = $this->generateSingleChartTopicList($rootName);
@@ -10091,99 +10085,96 @@ class AdminController extends OrderAbstractController
             exit("Root ChartTopic does not exist");
         }
 
-//        $types = array(
-//            "Financial",
-//            "Productivity",
-//            "Clinical",
-//            "Research",
-//            "Educational",
-//            "Site Utilization"
-//        );
-
-//        $types = array(
-//            array("All Charts","Financial"),
-//            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
-//            array("All Charts","Clinical"),
-//            array("All Charts","Research"),
-//            array("All Charts","Educational",array("Fellowship Candidate Statistics","Residency Candidate Statistics")),
-//            array("All Charts","Site Utilization")
-//        );
-
         //2) create under root
         $types = array(
-            "Financial" => array(),
-            "Productivity" => array("Turnaround Times","Specimen Tracking"),
+            "Financial" => array("Translational Research"),
+            //level 1
+            "Productivity" => array(
+                //level 2
+                "Turnaround Times" => array(
+                    //level 3
+                    "Translational Research"
+                ),
+                "Specimen Tracking",
+                "Translational Research",
+                "Pathologist Involvement in Translational Research"
+            ),
             "Clinical" => array(),
-            "Research" => array(),
+            "Research" => array("Translational Projects"),
             "Educational" => array("Fellowship Candidate Statistics","Residency Candidate Statistics"),
-            "Site Utilization" => array()
+            "Site Utilization" => array("Platform","Call Log")
         );
 
+        $processedFlag = false;
         $count = 20;
-        foreach( $types as $name=>$childrenArr ) {
+        foreach( $types as $name=>$child2Arr ) {
 
             $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
             if( $listEntity ) {
-                continue;
-            }
+                //continue;
+            } else {
+                //1) add level 1
+                $listEntity = new TopicList();
+                $this->setDefaultList($listEntity,$count,$username,$name);
+                $listEntity->setLevel(1);
+                $rootEntity->addChild($listEntity);
 
-            $listEntity = new TopicList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
-            $listEntity->setLevel(1);
-            $rootEntity->addChild($listEntity);
+                $em->persist($listEntity);
+                $processedFlag = true;
+                $count = $count + 10;
 
-            $em->persist($listEntity);
-            $count = $count + 10;
+                //2) add level 2
+                if( $child2Arr ) {
+                    foreach ($child2Arr as $child2Name => $child3Arr) {
+                        $child2Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child2Name);
+                        if ($child2Entity) {
+                            //continue;
+                        } else {
+                            $child2Entity = new TopicList();
+                            $this->setDefaultList($child2Entity, $count, $username, $child2Name);
+                            $listEntity->setLevel(2);
+                            $listEntity->addChild($child2Entity);
 
-            //3) add children
-            if( $childrenArr ) {
-                foreach ($childrenArr as $childName) {
-                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($childName);
-                    if ($childEntity) {
-                        continue;
-                    }
+                            $em->persist($child2Entity);
+                            $processedFlag = true;
+                            $count = $count + 10;
 
-                    $childEntity = new TopicList();
-                    $this->setDefaultList($childEntity, $count, $username, $childName);
-                    $listEntity->setLevel(2);
-                    $listEntity->addChild($childEntity);
+                            //3) add level 3
+                            if( $child3Arr ) {
+                                foreach ($child3Arr as $child3Name) {
+                                    $child3Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child3Name);
+                                    if ($child3Entity) {
+                                        continue;
+                                    } else {
+                                        $child3Entity = new TopicList();
+                                        $this->setDefaultList($child3Entity, $count, $username, $child2Name);
+                                        $listEntity->setLevel(3);
+                                        $listEntity->addChild($child3Entity);
 
-                    $em->persist($childEntity);
-                    $count = $count + 10;
-                }
-            }
+                                        $em->persist($child3Entity);
+                                        $processedFlag = true;
+                                        $count = $count + 10;
+                                    }
+                                }//foreach $child3Arr
+                            }
+                        }//if $child2Arr
+                    }//foreach $child2Arr
 
-            $em->flush();
+                }//if $child2Arr
+            }//if $listEntity
+        }//foreach $types ($child1Arr)
+
+        dump($rootEntity->printTree("<br>","=>"));
+        exit("eof topic test");
+
+        if( $processedFlag ) {
+            //$em->flush();
         }
 
         $count = $count - 10;
 
         return round($count/10);
     }
-//    public function generateSingleLevelChartTopicList($names,$parent=NULL) {
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
-//        $em = $this->getDoctrine()->getManager();
-//
-//        foreach($names as $name) {
-//            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
-//            if ($listEntity) {
-//                return $listEntity;
-//            }
-//
-//            $listEntity = new TopicList();
-//            $count = NULL;
-//            $this->setDefaultList($listEntity, $count, $username, $name);
-//
-//            if( $parent ) {
-//                $parent->addChild($listEntity);
-//            }
-//
-//            $em->persist($listEntity);
-//            $em->flush();
-//        }
-//
-//        return $listEntity;
-//    }
     public function generateSingleChartTopicList($name) {
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -10202,6 +10193,7 @@ class AdminController extends OrderAbstractController
         $em->flush();
         return $listEntity;
     }
+
     //chartfilters
     public function generateChartFilterList() {
         //return NULL; //testing

@@ -263,19 +263,38 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
 
-    public function printTree() {
+    public function printTree( $delimeter=null, $arrow=null ) {
 
         echo $this;
+        if( $arrow ) {
+            echo $arrow;
+        }
+        if( $delimeter ) {
+            echo "$delimeter";
+        }
 
         foreach( $this->getChildren() as $subCategory ) {
 
             if( count($subCategory->getChildren()) > 0 ) {
-                $subCategory->printTree();
+                $subCategory->printTree($delimeter,$arrow);
+                if( $arrow ) {
+                    echo $arrow;
+                }
+                if( $delimeter ) {
+                    //echo "$delimeter";
+                }
             } else {
                 echo $subCategory;
+                if( $arrow ) {
+                    echo $arrow;
+                }
+                if( $delimeter ) {
+                    echo "$delimeter";
+                }
             }
 
         }
+
 
     }
 
