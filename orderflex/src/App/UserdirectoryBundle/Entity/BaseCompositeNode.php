@@ -263,39 +263,36 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
 
-    public function printTree( $delimeter=null, $arrow=null ) {
+    public function printTree( $delimeter=null ) {
 
-        echo $this;
-        if( $arrow ) {
-            echo $arrow;
+        if( $delimeter ) {
+            echo $this->addSpaces($this->getLevel());
         }
+        echo $this;
         if( $delimeter ) {
             echo "$delimeter";
         }
 
         foreach( $this->getChildren() as $subCategory ) {
-
             if( count($subCategory->getChildren()) > 0 ) {
-                $subCategory->printTree($delimeter,$arrow);
-                if( $arrow ) {
-                    echo $arrow;
-                }
-                if( $delimeter ) {
-                    //echo "$delimeter";
-                }
+                $subCategory->printTree($delimeter);
             } else {
-                echo $subCategory;
-                if( $arrow ) {
-                    echo $arrow;
+                if( $delimeter ) {
+                    echo $this->addSpaces($subCategory->getLevel());
                 }
+                echo $subCategory;
                 if( $delimeter ) {
                     echo "$delimeter";
                 }
             }
-
         }
-
-
+    }
+    public function addSpaces($level) {
+        $spaces = "";
+        for( $x = 1; $x <= intval($level); $x++ ) {
+            $spaces = $spaces . "-";
+        }
+        return $spaces.$level.":";
     }
 
     //make select ID as "name_id"
