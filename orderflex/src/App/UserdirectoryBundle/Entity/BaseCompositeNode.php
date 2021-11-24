@@ -349,15 +349,67 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         return $nodes;
     }
 
+//    //make a full tree as entity except root
+//    public function getFullTreeAsEntity_ORIG( $nodes=array(), $types=array() ) {
+//        //echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
+////        $nodes = array(
+////            "node1_id" => array(id, name, array(id, name, array(id, name, array()))),
+////            "node2_id" => array(id, name, array()),
+////            "node3_id" => array(id, name, array(id, name, array(id, name, array()))),
+////        );
+//
+//        if( count($types) > 0 ) {
+//            if( in_array($this->getType(),$types) ) {
+//                //ok: this type is in the provided types
+//            } else {
+//                //echo "Not in types:".$this."<br>";
+//                return $nodes;
+//            }
+//        }
+//
+//        $childrenArr = array();
+//        //$id = $this->getId();
+//        //$name = $this->getName();
+//        //$nodes[] = array($id,$name,$childrenArr);
+//
+//        foreach( $this->getChildren() as $child ) {
+//
+//            if( count($types) > 0 ) {
+//                if( in_array($child->getType(),$types) ) {
+//                    //ok: this type is in the provided types
+//                } else {
+//                    //echo "Not in types:".$subCategory."<br>";
+//                    continue;
+//                }
+//            }
+//
+//            //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
+//            //$childrenArr = array();
+//            if( count($child->getChildren()) > 0 ) {
+//                $childrenArr = $child->getFullTreeAsEntity($childrenArr,$types);
+//            } else {
+//                $childrenArr = array();
+//                //$id = $child->getId();
+//                //$name = $child->getName();
+//                //$childrenArr[] = array($id,$name,$childrenArr);
+//            }//if/else children
+//
+//            $id = $child->getId();
+//            $name = $child->getName();
+//            //$childrenArr[] = array($id,$name,$childrenArr);
+//            $nodes[] = array($id,$name,$childrenArr);
+//
+//        }
+//
+//        //$id = $this->getId();
+//        //$name = $this->getName();
+//        //$nodes[] = array($id,$name,$childrenArr);
+//
+//        return $nodes;
+//    }
     //make a full tree as entity except root
     public function getFullTreeAsEntity( $nodes=array(), $types=array() ) {
         //echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
-//        $nodes = array(
-//            "node1_id" => array(id, name, array(id, name, array(id, name, array()))),
-//            "node2_id" => array(id, name, array()),
-//            "node3_id" => array(id, name, array(id, name, array(id, name, array()))),
-//        );
-
         if( count($types) > 0 ) {
             if( in_array($this->getType(),$types) ) {
                 //ok: this type is in the provided types
@@ -366,11 +418,6 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
                 return $nodes;
             }
         }
-
-        $childrenArr = array();
-        //$id = $this->getId();
-        //$name = $this->getName();
-        //$nodes[] = array($id,$name,$childrenArr);
 
         foreach( $this->getChildren() as $child ) {
 
@@ -384,26 +431,18 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
             }
 
             //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
-            //$childrenArr = array();
             if( count($child->getChildren()) > 0 ) {
+                $childrenArr = array();
                 $childrenArr = $child->getFullTreeAsEntity($childrenArr,$types);
             } else {
                 $childrenArr = array();
-                //$id = $child->getId();
-                //$name = $child->getName();
-                //$childrenArr[] = array($id,$name,$childrenArr);
             }//if/else children
 
             $id = $child->getId();
             $name = $child->getName();
-            //$childrenArr[] = array($id,$name,$childrenArr);
             $nodes[] = array($id,$name,$childrenArr);
 
         }
-
-        //$id = $this->getId();
-        //$name = $this->getName();
-        //$nodes[] = array($id,$name,$childrenArr);
 
         return $nodes;
     }

@@ -18,49 +18,49 @@
 
 {% import "AppDashboardBundle/Default/navbar.html.twig" as navbarmacros %}
 
-{% macro createFilterTopics_ORIG( filterTopics ) %}
-    {% for parentKey,values in filterTopics %}
-        <li class="dropdown-submenu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>
-            <ul class="dropdown-menu">
-                {% for key,value in values %}
-                    {% set filterTopicUrl = value|replace({' ':'-'}) %}
-                    <li>
+{#{% macro createFilterTopics_ORIG( filterTopics ) %}#}
+    {#{% for parentKey,values in filterTopics %}#}
+        {#<li class="dropdown-submenu">#}
+            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>#}
+            {#<ul class="dropdown-menu">#}
+                {#{% for key,value in values %}#}
+                    {#{% set filterTopicUrl = value|replace({' ':'-'}) %}#}
+                    {#<li>#}
                         {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
-                        <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':key}) }}">{{ value }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-{% endmacro %}
-{% macro createFilterTopics_TWOLEVEL( filterTopics ) %}
-    {% for topicArr in filterTopics %}
-        {% set id = topicArr[0] %}
-        {% set name = topicArr[1] %}
-        {% set childrens = topicArr[2] %}
+                        {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':key}) }}">{{ value }}</a>#}
+                    {#</li>#}
+                {#{% endfor %}#}
+            {#</ul>#}
+        {#</li>#}
+    {#{% endfor %}#}
+{#{% endmacro %}#}
+{#{% macro createFilterTopics_TWOLEVEL( filterTopics ) %}#}
+    {#{% for topicArr in filterTopics %}#}
+        {#{% set id = topicArr[0] %}#}
+        {#{% set name = topicArr[1] %}#}
+        {#{% set childrens = topicArr[2] %}#}
 
-        {% if childrens|length > 0 %}
-            <li class="dropdown-submenu">
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
-                {% if childrens|length > 0 %}
-                    <ul class="dropdown-menu">
-                        {% for childrenArr in childrens %}
-                            {% set id1 = childrenArr[0] %}
-                            {% set name1 = childrenArr[1] %}
-                            {% set childrens1 = childrenArr[2] %}
-                            <li>
-                                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </li>
-        {% else %}
-            <li>
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
-            </li>
-        {% endif %}
+        {#{% if childrens|length > 0 %}#}
+            {#<li class="dropdown-submenu">#}
+                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>#}
+                {#{% if childrens|length > 0 %}#}
+                    {#<ul class="dropdown-menu">#}
+                        {#{% for childrenArr in childrens %}#}
+                            {#{% set id1 = childrenArr[0] %}#}
+                            {#{% set name1 = childrenArr[1] %}#}
+                            {#{% set childrens1 = childrenArr[2] %}#}
+                            {#<li>#}
+                                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>#}
+                            {#</li>#}
+                        {#{% endfor %}#}
+                    {#</ul>#}
+                {#{% endif %}#}
+            {#</li>#}
+        {#{% else %}#}
+            {#<li>#}
+                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>#}
+            {#</li>#}
+        {#{% endif %}#}
 
         {#{% if 0 %}#}
         {#<li class="dropdown-submenu">#}
@@ -103,40 +103,9 @@
         {#</li>#}
         {#{% endif %}#}
 
-    {% endfor %}
-{% endmacro %}
-{% macro createFilterTopics( filterTopics ) %}
-    {% for topicArr in filterTopics %}
-        {% set id = topicArr[0] %}
-        {% set name = topicArr[1] %}
-        {% set childrens = topicArr[2] %}
-
-        {% if childrens|length > 0 %}
-            <li class="dropdown-submenu">
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
-                {% if childrens|length > 0 %}
-                    <ul class="dropdown-menu">
-                        {{ _self.createFilterTopics(childrens) }}
-                        {#{% for childrenArr in childrens %}#}
-                            {#{% set id1 = childrenArr[0] %}#}
-                            {#{% set name1 = childrenArr[1] %}#}
-                            {#{% set childrens1 = childrenArr[2] %}#}
-                            {#<li>#}
-                                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>#}
-                            {#</li>#}
-                        {#{% endfor %}#}
-                    </ul>
-                {% endif %}
-            </li>
-        {% else %}
-            <li>
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
-            </li>
-        {% endif %}
-
-    {% endfor %}
-{% endmacro %}
-{#{% macro createFilterTopics(links) %}#}
+    {#{% endfor %}#}
+{#{% endmacro %}#}
+{#{% macro createFilterTopicsSimpleTree(links) %}#}
     {#{% for link in links %}#}
         {#<li>#}
             {#<a href="{{ link.href }}">{{ link.name }}</a>#}
@@ -148,6 +117,30 @@
         {#</li>#}
     {#{% endfor %}#}
 {#{% endmacro %}#}
+{% macro createFilterTopics( filterTopics ) %}
+    {% for topicArr in filterTopics %}
+        {% set id = topicArr[0] %}
+        {% set name = topicArr[1] %}
+        {% set childrens = topicArr[2] %}
+
+        {#{% if childrens|length > 0 %}#}
+        {% if childrens %}
+            <li class="dropdown-submenu">
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+                {#{% if childrens|length > 0 %}#}
+                    <ul class="dropdown-menu">
+                        {{ _self.createFilterTopics(childrens) }}
+                    </ul>
+                {#{% endif %}#}
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+            </li>
+        {% endif %}
+
+    {% endfor %}
+{% endmacro %}
 
 {% macro createFilterServices( filterServices ) %}
     {% for parentKey,values in filterServices %}

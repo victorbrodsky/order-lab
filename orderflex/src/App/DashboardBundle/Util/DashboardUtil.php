@@ -59,7 +59,8 @@ class DashboardUtil
         //$filterTopics = $root->getIdBreadcrumbs();
         //$filterTopics = $root->printTree();
 
-        $filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
+        //$filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
+        $filterTopics = $root->getFullTreeAsEntity();
         
         return $filterTopics;
 
