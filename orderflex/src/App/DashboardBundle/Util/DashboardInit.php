@@ -1261,4 +1261,8 @@ class DashboardInit
         //exit('Added Topics count='.$count);
     }
 
+    function assignRolesToCharts() {
+
+    }
+
 }
