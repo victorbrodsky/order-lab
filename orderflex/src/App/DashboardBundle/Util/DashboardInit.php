@@ -1082,6 +1082,8 @@ class DashboardInit
     //add institutions, topics, roles to the charts
     public function initCharts() {
 
+        return NULL;
+
         $resInst = $this->assignInstitutionsToCharts();
 
         $resTopic = $this->assignTopicsToCharts();
