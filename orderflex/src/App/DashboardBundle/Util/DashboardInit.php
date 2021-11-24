@@ -1222,7 +1222,7 @@ class DashboardInit
             //$this->em->flush();
         }
 
-        exit('Added Institutions count='.$count);
+        //exit('Added Institutions count='.$count);
     }
 
     function assignTopicsToCharts() {

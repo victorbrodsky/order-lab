@@ -822,8 +822,8 @@ class AdminController extends OrderAbstractController
         //$userServiceUtil->createCronsLinux();
         //exit('eof createCronsLinux');
         //$count_generateChartsList = $this->generateChartsList();
-        $count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
-        exit('eof generate Charts test');
+        //$count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
+        //exit('eof generate Charts test');
 
         //$default_time_zone = $this->getParameter('default_time_zone');
 
@@ -10368,8 +10368,8 @@ class AdminController extends OrderAbstractController
             }//foreach
         }
 
-        dump($rootEntity->printTree("<br>"));
-        exit("eof topic test: $addedCount");
+        //dump($rootEntity->printTree("<br>"));
+        //exit("eof topic test: $addedCount");
 
         if( $addedCount > 0 ) {
             $em = $this->getDoctrine()->getManager();
