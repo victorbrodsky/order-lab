@@ -1258,7 +1258,7 @@ class DashboardInit
 
         }
 
-        exit('Added Topics count='.$count);
+        //exit('Added Topics count='.$count);
     }
 
 }
