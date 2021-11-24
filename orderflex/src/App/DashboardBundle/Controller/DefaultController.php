@@ -35,10 +35,10 @@ class DefaultController extends OrderAbstractController
     public function aboutAction( Request $request ) {
 
         //testing
-        $dashboardUtil = $this->container->get('dashboard_util');
-        $filterTopics = $dashboardUtil->getFilterTopics();
-        dump($filterTopics);
-        exit();
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $filterTopics = $dashboardUtil->getFilterTopics();
+//        dump($filterTopics);
+//        exit();
 
 //        $dashboardUtil = $this->container->get('dashboard_util');
 //        $results = $dashboardUtil->getFilterFavorites();
