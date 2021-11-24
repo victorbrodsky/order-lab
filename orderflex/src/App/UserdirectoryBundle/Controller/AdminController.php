@@ -10304,9 +10304,6 @@ class AdminController extends OrderAbstractController
     }
     //TODO:
     public function generateChartTopicList() {
-        //$username = $this->get('security.token_storage')->getToken()->getUser();
-        //$em = $this->getDoctrine()->getManager();
-
         //On this list add the “top”/root” category item titled “All Charts”
         //1) create root "All Charts"
         $rootName = "All Charts";
@@ -10324,7 +10321,7 @@ class AdminController extends OrderAbstractController
         //2) create under root
         $types = array(
             "Financial" => array(
-                "Translational Research2"//=> array()
+                "Translational Research"// => array()
             ),
             //level 1
             "Productivity" => array(
@@ -10352,49 +10349,47 @@ class AdminController extends OrderAbstractController
         );
 
         $addedCount = 0;
-        $processedFlag = false;
-        $count = 20;
         $level = 1;
 
-        foreach( $types as $name=>$childrens ) {
-            if (!$name) {
-                continue;
-            }
-
-//            echo "$name children=".count($childrens)."<br>";
-//            if( count($childrens) > 0 ) {
-//                echo " #####children=".$childrens[0]."<br>";
-//            }
-
-            if( !is_array($childrens) ) {
+        if ($this->isAssoc($types)) {
+            foreach( $types as $name=>$childrens ) {
+                if (!$name) {
+                    continue;
+                }
+                $addedCount = $this->generateHierarchyTopics( $rootEntity, $name, $level, $childrens, $mapper, $addedCount );
+            }//foreach key=>value
+        } else {
+            foreach( $types as $name ) {
+                if (!$name) {
+                    continue;
+                }
                 $childrens = array();
-            }
-
-            $addedCount = $addedCount + $this->generateHierarchyTopics( $rootEntity, $name, $level, $childrens, $mapper, $addedCount );
+                $addedCount = $this->generateHierarchyTopics( $rootEntity, $name, $level, $childrens, $mapper, $addedCount );
+            }//foreach
         }
 
         dump($rootEntity->printTree("<br>"));
-        exit("eof topic test");
+        exit("eof topic test: $addedCount");
 
         if( $addedCount > 0 ) {
-            //$em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
         }
 
         return $addedCount;
     }
-    public function generateHierarchyTopics( $parentEntity, $name, $level, $childrens, $mapper, $addedCount=0 ) {
-
+    public function generateHierarchyTopics( $parentEntity, $name, $level, $childrens, $mapper, $addedCount=0 )
+    {
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        if( !$name ) {
+        if (!$name) {
             return NULL;
         }
         //echo "adding $level-".$name."<br>";
         //findByChildnameAndParent
-        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name,$parentEntity,$mapper);
-        if( $listEntity ) {
-            //continue;
+        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name, $parentEntity, $mapper);
+        if ($listEntity) {
             //echo "already exists:".$name."<br>";
         } else {
             //1) add level 1
@@ -10410,25 +10405,35 @@ class AdminController extends OrderAbstractController
             $addedCount = $addedCount + 1;
         }
 
-        //isset($childrens) && $childrens &&
-        if( is_array($childrens) ) {
+        if ($this->isAssoc($childrens)) {
             foreach ($childrens as $childName => $childChildrenArr) {
                 if (!$childName) {
                     continue;
                 }
                 $childLevel = $level + 1;
-
-                if( !is_array($childChildrenArr) ) {
-                    $childChildrenArr = array();
-                }
-
-                $addedCount = $addedCount + $this->generateHierarchyTopics($listEntity, $childName, $childLevel, $childChildrenArr, $mapper, $addedCount);
+                $addedCount = $this->generateHierarchyTopics($listEntity, $childName, $childLevel, $childChildrenArr, $mapper, $addedCount);
             }
         } else {
-            echo "childrens is noy array=$childrens <br>";
+//            echo "simple array <br>";
+//            if( count($childrens) > 0 ) {
+//                echo " #####children=".$childrens[0]."<br>";
+//            }
+            foreach ($childrens as $childName) {
+                if (!$childName) {
+                    continue;
+                }
+                $childLevel = $level + 1;
+                $childChildrenArr = array();
+                $addedCount = $this->generateHierarchyTopics($listEntity, $childName, $childLevel, $childChildrenArr, $mapper, $addedCount);
+            }
         }
 
         return $addedCount;
+    }
+    function isAssoc(array $arr)
+    {
+        if (array() === $arr) return false;
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     public function generateSingleChartTopicList($name) {
