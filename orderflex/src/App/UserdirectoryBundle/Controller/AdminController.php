@@ -10072,237 +10072,237 @@ class AdminController extends OrderAbstractController
     }
 
     //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
-    public function generateChartTopicList_OLD() {
-        //return NULL; //TODO: hierarchy
-
-        $username = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-
-        //On this list add the “top”/root” category item titled “All Charts”
-        //addChild()
-//        $service = new Institution();
-//        $this->setDefaultList($service,$treeCount,$username,$servicename);
-//        $treeCount = $treeCount + 10;
-//        $service->setOrganizationalGroupType($levelService);
-//        $division->addChild($service);
-
-        //1) create root "All Charts"
-        $rootName = "All Charts";
-        $rootEntity = $this->generateSingleChartTopicList($rootName);
-        if( !$rootEntity ) {
-            exit("Root ChartTopic does not exist");
-        }
-
+//    public function generateChartTopicList_OLD() {
+//        //return NULL; //TODO: hierarchy
+//
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //On this list add the “top”/root” category item titled “All Charts”
+//        //addChild()
+////        $service = new Institution();
+////        $this->setDefaultList($service,$treeCount,$username,$servicename);
+////        $treeCount = $treeCount + 10;
+////        $service->setOrganizationalGroupType($levelService);
+////        $division->addChild($service);
+//
+//        //1) create root "All Charts"
+//        $rootName = "All Charts";
+//        $rootEntity = $this->generateSingleChartTopicList($rootName);
+//        if( !$rootEntity ) {
+//            exit("Root ChartTopic does not exist");
+//        }
+//
+////        $types = array(
+////            "Financial",
+////            "Productivity",
+////            "Clinical",
+////            "Research",
+////            "Educational",
+////            "Site Utilization"
+////        );
+//
+////        $types = array(
+////            array("All Charts","Financial"),
+////            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
+////            array("All Charts","Clinical"),
+////            array("All Charts","Research"),
+////            array("All Charts","Educational",array("Fellowship Candidate Statistics","Residency Candidate Statistics")),
+////            array("All Charts","Site Utilization")
+////        );
+//
+//        //2) create under root
 //        $types = array(
-//            "Financial",
-//            "Productivity",
-//            "Clinical",
-//            "Research",
-//            "Educational",
-//            "Site Utilization"
+//            "Financial" => array(),
+//            "Productivity" => array("Turnaround Times","Specimen Tracking"),
+//            "Clinical" => array(),
+//            "Research" => array(),
+//            "Educational" => array("Fellowship Candidate Statistics","Residency Candidate Statistics"),
+//            "Site Utilization" => array()
 //        );
-
-//        $types = array(
-//            array("All Charts","Financial"),
-//            array("All Charts","Productivity",array("Turnaround Times","Specimen Tracking")),
-//            array("All Charts","Clinical"),
-//            array("All Charts","Research"),
-//            array("All Charts","Educational",array("Fellowship Candidate Statistics","Residency Candidate Statistics")),
-//            array("All Charts","Site Utilization")
-//        );
-
-        //2) create under root
-        $types = array(
-            "Financial" => array(),
-            "Productivity" => array("Turnaround Times","Specimen Tracking"),
-            "Clinical" => array(),
-            "Research" => array(),
-            "Educational" => array("Fellowship Candidate Statistics","Residency Candidate Statistics"),
-            "Site Utilization" => array()
-        );
-
-        $count = 20;
-        foreach( $types as $name=>$childrenArr ) {
-
-            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
-            if( $listEntity ) {
-                continue;
-            }
-
-            $listEntity = new TopicList();
-            $this->setDefaultList($listEntity,$count,$username,$name);
-            $listEntity->setLevel(1);
-            $rootEntity->addChild($listEntity);
-
-            $em->persist($listEntity);
-            $count = $count + 10;
-
-            //3) add children
-            if( $childrenArr ) {
-                foreach ($childrenArr as $childName) {
-                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($childName);
-                    if ($childEntity) {
-                        continue;
-                    }
-
-                    $childEntity = new TopicList();
-                    $this->setDefaultList($childEntity, $count, $username, $childName);
-                    $listEntity->setLevel(2);
-                    $listEntity->addChild($childEntity);
-
-                    $em->persist($childEntity);
-                    $count = $count + 10;
-                }
-            }
-
-            $em->flush();
-        }
-
-        $count = $count - 10;
-
-        return round($count/10);
-    }
+//
+//        $count = 20;
+//        foreach( $types as $name=>$childrenArr ) {
+//
+//            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
+//            if( $listEntity ) {
+//                continue;
+//            }
+//
+//            $listEntity = new TopicList();
+//            $this->setDefaultList($listEntity,$count,$username,$name);
+//            $listEntity->setLevel(1);
+//            $rootEntity->addChild($listEntity);
+//
+//            $em->persist($listEntity);
+//            $count = $count + 10;
+//
+//            //3) add children
+//            if( $childrenArr ) {
+//                foreach ($childrenArr as $childName) {
+//                    $childEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($childName);
+//                    if ($childEntity) {
+//                        continue;
+//                    }
+//
+//                    $childEntity = new TopicList();
+//                    $this->setDefaultList($childEntity, $count, $username, $childName);
+//                    $listEntity->setLevel(2);
+//                    $listEntity->addChild($childEntity);
+//
+//                    $em->persist($childEntity);
+//                    $count = $count + 10;
+//                }
+//            }
+//
+//            $em->flush();
+//        }
+//
+//        $count = $count - 10;
+//
+//        return round($count/10);
+//    }
     //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
-    public function generateChartTopicList_OLD1() {
-        //return NULL;
-
-        $username = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-
-        //On this list add the “top”/root” category item titled “All Charts”
-        //1) create root "All Charts"
-        $rootName = "All Charts";
-        $rootEntity = $this->generateSingleChartTopicList($rootName);
-        if( !$rootEntity ) {
-            exit("Root ChartTopic does not exist");
-        }
-
-        $mapper = array(
-            'prefix' => 'App',
-            'bundleName' => 'DashboardBundle',
-            'className' => 'TopicList'
-        );
-
-        //2) create under root
-        $types = array(
-            "Financial" => array("Translational Research"),
-            //level 1
-            "Productivity" => array(
-                //level 2
-                "Turnaround Times" => array(
-                    //level 3
-                    "Translational Research" => array()
-                ),
-                "Specimen Tracking" => array(),
-                "Translational Research" => array(),
-                "Pathologist Involvement in Translational Research" => array()
-            ),
-            "Clinical" => array(),
-            "Research" => array(
-                "Translational Projects" => array()
-            ),
-            "Educational" => array(
-                "Fellowship Candidate Statistics" => array(),
-                "Residency Candidate Statistics" => array()
-            ),
-            "Site Utilization" => array(
-                "Platform" => array() ,
-                "Call Log" => array()
-            )
-        );
-
-        $processedFlag = false;
-        $count = 20;
-        foreach( $types as $name=>$child2Arr ) {
-            if( !$name ) {
-                continue;
-            }
-            echo "adding 1-".$name."<br>";
-            //findByChildnameAndParent
-            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name,$rootEntity,$mapper);
-            if( $listEntity ) {
-                //continue;
-                echo "already exists:".$name."<br>";
-            } else {
-                //1) add level 1
-                $listEntity = new TopicList();
-                $this->setDefaultList($listEntity, $count, $username, $name);
-                $listEntity->setLevel(1);
-                $rootEntity->addChild($listEntity);
-
-                $em->persist($listEntity);
-                $processedFlag = true;
-                $count = $count + 10;
-                echo "add 1-" . $name . "<br>";
-            }
-
-            //2) add level 2
-            if( $child2Arr ) {
-                foreach ($child2Arr as $child2Name => $child3Arr) {
-                    if( !$child2Name ) {
-                        continue;
-                    }
-                    echo "adding 2-".$child2Name."<br>";
-                    //$child2Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child2Name);
-                    $child2Entity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($child2Name,$listEntity,$mapper);
-                    if ($child2Entity) {
-                        echo "already exists:".$child2Name."<br>";
-                        //continue;
-                    } else {
-                        $child2Entity = new TopicList();
-                        $this->setDefaultList($child2Entity, $count, $username, $child2Name);
-                        $child2Entity->setLevel(2);
-                        $listEntity->addChild($child2Entity);
-
-                        $em->persist($child2Entity);
-                        $processedFlag = true;
-                        $count = $count + 10;
-                        echo "add 2-" . $name . "<br>";
-                    }
-
-                    //3) add level 3
-                    if( $child3Arr ) {
-                        foreach ($child3Arr as $child3Name) {
-                            if( !$child3Name ) {
-                                continue;
-                            }
-                            echo "adding 3-".$child3Name."<br>";
-                            //$child3Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child3Name);
-                            $child3Entity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($child3Name,$child2Entity,$mapper);
-                            if ($child3Entity) {
-                                //continue;
-                                echo "already exists:".$child3Name."<br>";
-                            } else {
-                                $child3Entity = new TopicList();
-                                $this->setDefaultList($child3Entity, $count, $username, $child3Name);
-                                $child3Entity->setLevel(3);
-                                $child2Entity->addChild($child3Entity);
-
-                                $em->persist($child3Entity);
-                                $processedFlag = true;
-                                $count = $count + 10;
-                                echo "add 3-".$name."<br>";
-                            }
-                        }//foreach $child3Arr
-                    }//if $child3Arr
-
-                }//foreach $child2Arr
-            }//if $child2Arr
-
-        }//foreach $types ($child1Arr)
-
-        dump($rootEntity->printTree("<br>"));
-        exit("eof topic test");
-
-        if( $processedFlag ) {
-            //$em->flush();
-        }
-
-        $count = $count - 10;
-
-        return round($count/10);
-    }
-    //TODO:
+//    public function generateChartTopicList_OLD1() {
+//        //return NULL;
+//
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $em = $this->getDoctrine()->getManager();
+//
+//        //On this list add the “top”/root” category item titled “All Charts”
+//        //1) create root "All Charts"
+//        $rootName = "All Charts";
+//        $rootEntity = $this->generateSingleChartTopicList($rootName);
+//        if( !$rootEntity ) {
+//            exit("Root ChartTopic does not exist");
+//        }
+//
+//        $mapper = array(
+//            'prefix' => 'App',
+//            'bundleName' => 'DashboardBundle',
+//            'className' => 'TopicList'
+//        );
+//
+//        //2) create under root
+//        $types = array(
+//            "Financial" => array("Translational Research"),
+//            //level 1
+//            "Productivity" => array(
+//                //level 2
+//                "Turnaround Times" => array(
+//                    //level 3
+//                    "Translational Research" => array()
+//                ),
+//                "Specimen Tracking" => array(),
+//                "Translational Research" => array(),
+//                "Pathologist Involvement in Translational Research" => array()
+//            ),
+//            "Clinical" => array(),
+//            "Research" => array(
+//                "Translational Projects" => array()
+//            ),
+//            "Educational" => array(
+//                "Fellowship Candidate Statistics" => array(),
+//                "Residency Candidate Statistics" => array()
+//            ),
+//            "Site Utilization" => array(
+//                "Platform" => array() ,
+//                "Call Log" => array()
+//            )
+//        );
+//
+//        $processedFlag = false;
+//        $count = 20;
+//        foreach( $types as $name=>$child2Arr ) {
+//            if( !$name ) {
+//                continue;
+//            }
+//            echo "adding 1-".$name."<br>";
+//            //findByChildnameAndParent
+//            $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name,$rootEntity,$mapper);
+//            if( $listEntity ) {
+//                //continue;
+//                echo "already exists:".$name."<br>";
+//            } else {
+//                //1) add level 1
+//                $listEntity = new TopicList();
+//                $this->setDefaultList($listEntity, $count, $username, $name);
+//                $listEntity->setLevel(1);
+//                $rootEntity->addChild($listEntity);
+//
+//                $em->persist($listEntity);
+//                $processedFlag = true;
+//                $count = $count + 10;
+//                echo "add 1-" . $name . "<br>";
+//            }
+//
+//            //2) add level 2
+//            if( $child2Arr ) {
+//                foreach ($child2Arr as $child2Name => $child3Arr) {
+//                    if( !$child2Name ) {
+//                        continue;
+//                    }
+//                    echo "adding 2-".$child2Name."<br>";
+//                    //$child2Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child2Name);
+//                    $child2Entity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($child2Name,$listEntity,$mapper);
+//                    if ($child2Entity) {
+//                        echo "already exists:".$child2Name."<br>";
+//                        //continue;
+//                    } else {
+//                        $child2Entity = new TopicList();
+//                        $this->setDefaultList($child2Entity, $count, $username, $child2Name);
+//                        $child2Entity->setLevel(2);
+//                        $listEntity->addChild($child2Entity);
+//
+//                        $em->persist($child2Entity);
+//                        $processedFlag = true;
+//                        $count = $count + 10;
+//                        echo "add 2-" . $name . "<br>";
+//                    }
+//
+//                    //3) add level 3
+//                    if( $child3Arr ) {
+//                        foreach ($child3Arr as $child3Name) {
+//                            if( !$child3Name ) {
+//                                continue;
+//                            }
+//                            echo "adding 3-".$child3Name."<br>";
+//                            //$child3Entity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($child3Name);
+//                            $child3Entity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($child3Name,$child2Entity,$mapper);
+//                            if ($child3Entity) {
+//                                //continue;
+//                                echo "already exists:".$child3Name."<br>";
+//                            } else {
+//                                $child3Entity = new TopicList();
+//                                $this->setDefaultList($child3Entity, $count, $username, $child3Name);
+//                                $child3Entity->setLevel(3);
+//                                $child2Entity->addChild($child3Entity);
+//
+//                                $em->persist($child3Entity);
+//                                $processedFlag = true;
+//                                $count = $count + 10;
+//                                echo "add 3-".$name."<br>";
+//                            }
+//                        }//foreach $child3Arr
+//                    }//if $child3Arr
+//
+//                }//foreach $child2Arr
+//            }//if $child2Arr
+//
+//        }//foreach $types ($child1Arr)
+//
+//        dump($rootEntity->printTree("<br>"));
+//        exit("eof topic test");
+//
+//        if( $processedFlag ) {
+//            //$em->flush();
+//        }
+//
+//        $count = $count - 10;
+//
+//        return round($count/10);
+//    }
+    //Generate Topic with recursion
     public function generateChartTopicList() {
         //On this list add the “top”/root” category item titled “All Charts”
         //1) create root "All Charts"
@@ -10389,7 +10389,7 @@ class AdminController extends OrderAbstractController
         //echo "adding $level-".$name."<br>";
         //findByChildnameAndParent
         $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name, $parentEntity, $mapper);
-        if ($listEntity) {
+        if( $listEntity ) {
             //echo "already exists:".$name."<br>";
         } else {
             //1) add level 1
