@@ -10163,7 +10163,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
     //hierarchical list titled “Dashboard Topic” (same as Organizational Groups) (charttopics)
-    public function generateChartTopicList() {
+    public function generateChartTopicList_OLD1() {
         //return NULL;
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -10302,6 +10302,135 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    //TODO:
+    public function generateChartTopicList() {
+        //$username = $this->get('security.token_storage')->getToken()->getUser();
+        //$em = $this->getDoctrine()->getManager();
+
+        //On this list add the “top”/root” category item titled “All Charts”
+        //1) create root "All Charts"
+        $rootName = "All Charts";
+        $rootEntity = $this->generateSingleChartTopicList($rootName);
+        if( !$rootEntity ) {
+            exit("Root ChartTopic does not exist");
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'DashboardBundle',
+            'className' => 'TopicList'
+        );
+
+        //2) create under root
+        $types = array(
+            "Financial" => array(
+                "Translational Research2"//=> array()
+            ),
+            //level 1
+            "Productivity" => array(
+                //level 2
+                "Turnaround Times" => array(
+                    //level 3
+                    "Translational Research" => array()
+                ),
+                "Specimen Tracking" => array(),
+                "Translational Research" => array(),
+                "Pathologist Involvement in Translational Research" => array()
+            ),
+            "Clinical" => array(),
+            "Research" => array(
+                "Translational Projects" => array()
+            ),
+            "Educational" => array(
+                "Fellowship Candidate Statistics" => array(),
+                "Residency Candidate Statistics" => array()
+            ),
+            "Site Utilization" => array(
+                "Platform" => array() ,
+                "Call Log" => array()
+            )
+        );
+
+        $addedCount = 0;
+        $processedFlag = false;
+        $count = 20;
+        $level = 1;
+
+        foreach( $types as $name=>$childrens ) {
+            if (!$name) {
+                continue;
+            }
+
+//            echo "$name children=".count($childrens)."<br>";
+//            if( count($childrens) > 0 ) {
+//                echo " #####children=".$childrens[0]."<br>";
+//            }
+
+            if( !is_array($childrens) ) {
+                $childrens = array();
+            }
+
+            $addedCount = $addedCount + $this->generateHierarchyTopics( $rootEntity, $name, $level, $childrens, $mapper, $addedCount );
+        }
+
+        dump($rootEntity->printTree("<br>"));
+        exit("eof topic test");
+
+        if( $addedCount > 0 ) {
+            //$em->flush();
+        }
+
+        return $addedCount;
+    }
+    public function generateHierarchyTopics( $parentEntity, $name, $level, $childrens, $mapper, $addedCount=0 ) {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        if( !$name ) {
+            return NULL;
+        }
+        //echo "adding $level-".$name."<br>";
+        //findByChildnameAndParent
+        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name,$parentEntity,$mapper);
+        if( $listEntity ) {
+            //continue;
+            //echo "already exists:".$name."<br>";
+        } else {
+            //1) add level 1
+            $listEntity = new TopicList();
+            $this->setDefaultList($listEntity, NULL, $username, $name);
+            $listEntity->setLevel($level);
+            $parentEntity->addChild($listEntity);
+
+            $em->persist($listEntity);
+            //$processedFlag = true;
+            //$count = $count + 10;
+            //echo "add $level-" . $name . "<br>";
+            $addedCount = $addedCount + 1;
+        }
+
+        //isset($childrens) && $childrens &&
+        if( is_array($childrens) ) {
+            foreach ($childrens as $childName => $childChildrenArr) {
+                if (!$childName) {
+                    continue;
+                }
+                $childLevel = $level + 1;
+
+                if( !is_array($childChildrenArr) ) {
+                    $childChildrenArr = array();
+                }
+
+                $addedCount = $addedCount + $this->generateHierarchyTopics($listEntity, $childName, $childLevel, $childChildrenArr, $mapper, $addedCount);
+            }
+        } else {
+            echo "childrens is noy array=$childrens <br>";
+        }
+
+        return $addedCount;
+    }
+
     public function generateSingleChartTopicList($name) {
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -10318,6 +10447,7 @@ class AdminController extends OrderAbstractController
 
         $em->persist($listEntity);
         $em->flush();
+
         return $listEntity;
     }
 
