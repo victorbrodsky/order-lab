@@ -424,6 +424,13 @@ class TreeController extends OrderAbstractController {
         //echo "action=".$action."<br>";
         //echo "className=".$className."<br>";
 
+        if( !$pid ) {
+            $pid = NULL;
+        }
+
+        //$logger = $this->container->get('logger');
+        //$logger->notice("nodeid=$nodeid, nodetext=$nodetext, action=$action, pid=$pid, className=$className");
+
         $combobox = false;
         //$userpositions = false;
 
@@ -442,6 +449,8 @@ class TreeController extends OrderAbstractController {
         $mapper = $this->classMapper($bundleName,$className);
 
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $node = NULL;
 
         if( $nodeid ) {
             //postgres does not accept empty id
@@ -506,7 +515,11 @@ class TreeController extends OrderAbstractController {
             if( !$node ) {
 
                 $username = $this->get('security.token_storage')->getToken()->getUser();
-                $parent = $treeRepository->find($pid);
+
+                $parent = NULL;
+                if( $pid ) {
+                    $parent = $treeRepository->find($pid);
+                }
 
                 if( $parent ) {
                     $parentLevel = $parent->getLevel();

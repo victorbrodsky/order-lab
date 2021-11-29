@@ -598,7 +598,8 @@ class ApproverController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //echo " => userId=".$id."<br>";
+        //echo "instid=".$instid."<br>";
+        //echo "roleId=".$roleId."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -617,6 +618,7 @@ class ApproverController extends OrderAbstractController
         $params = array(
             'cycle' => 'create',
             'readonly' => false,
+            'btnName' => "User"
         );
         $form = $this->createForm(VacReqUserComboboxType::class,null,array('form_custom_value'=>$params));
 
@@ -628,11 +630,12 @@ class ApproverController extends OrderAbstractController
         //$usersArr = array();
 
         foreach( $users as $thisUser ) {
-            //echo "user=".$user."<br>";
+            //echo "Add thisUser=".$thisUser.", role=".$role."<br>";
             $thisUser->addRole($role);
             $em->persist($thisUser);
             //$usersArr = $thisUser;
         }
+        //exit('111');
 
         //$users = $request->query->get('users');
         //$users = trim($users);
