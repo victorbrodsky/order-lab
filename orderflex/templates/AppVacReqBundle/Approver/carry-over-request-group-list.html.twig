@@ -31,7 +31,7 @@
                 <strong>Approver(s)</strong>
                 <br>
                 {% for approver in approvers %}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': approver.id }) }}">{{ approver }}</a>
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': approver.id }) }}">{{ approver.getUserNameStr(true) }}</a>
                     <br>
                 {% endfor %}
             </div>
@@ -40,7 +40,7 @@
                 <strong>Submitter(s)</strong>
                 <br>
                 {% for submitter in submitters %}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter }}</a>
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter.getUserNameStr(true) }}</a>
                     <br>
                 {% endfor %}
             </div>

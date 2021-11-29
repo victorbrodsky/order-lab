@@ -56,7 +56,7 @@
                 {% for approver in approvers %}
                     {#{{ approver }}#}
                     {#({{ approver.getSiteRoles('APPROVER')|join(', ') }})#}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': approver.id }) }}">{{ approver }}</a>
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': approver.id }) }}">{{ approver.getUserNameStr(true) }}</a>
                     <br>
                 {% endfor %}
             </div>
@@ -67,7 +67,7 @@
                 {% for submitter in submitters %}
                     {#{{ submitter }}#}
                     {#({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})#}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter }}</a>
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter.1getUserNameStr(true) }}</a>
                     <br>
                 {% endfor %}
             </div>

@@ -1638,7 +1638,23 @@ class User extends UserBase {
     }
 
     //show user's FirstName LastName - userName (userNameType)
-    public function getUserNameStr() {
+    public function getUserNameStr( $showStatus=false) {
+
+        //Add (No longer works)
+        //$curdate = date("Y-m-d", time());
+        //$query->leftJoin("user.employmentStatus", "employmentStatus");
+        //$currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        //echo "showStatus=$showStatus <br>";
+        $noLongerWorks = "";
+        if( $showStatus ) {
+            $terminatedStr = $this->getEmploymentTerminatedStr();
+            //echo "terminatedStr=$terminatedStr <br>";
+            if( $terminatedStr ) {
+                $noLongerWorks = " (No longer works)";
+            }
+        }
+        //$noLongerWorks = " (".$this->getEmploymentTerminatedStr().")";
+        //$noLongerWorks = " (111)";
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
         $displayName = $this->getDisplayName();
@@ -1648,32 +1664,16 @@ class User extends UserBase {
         }
 
         if( $displayName && $primaryUseridKeytypeStr ) {
-            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr();
+            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr().$noLongerWorks;
         }
 
         if( $primaryUseridKeytypeStr && !$displayName ){
-            return $primaryUseridKeytypeStr."";
+            return $primaryUseridKeytypeStr."".$noLongerWorks;
         }
 
         if( $displayName && !$primaryUseridKeytypeStr ){
-            return $displayName."";
+            return $displayName."".$noLongerWorks;
         }
-
-        //Old user name string representation
-//        $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
-//        $displayName = $this->getDisplayName();
-//
-//        if( $displayName && $primaryUseridKeytypeStr ) {
-//            return $primaryUseridKeytypeStr." - ".$displayName;
-//        }
-//
-//        if( $primaryUseridKeytypeStr && !$displayName ){
-//            return $primaryUseridKeytypeStr."";
-//        }
-//
-//        if( $displayName && !$primaryUseridKeytypeStr ){
-//            return $displayName."";
-//        }
     }
 
     //Get displayname or first + last name

@@ -18,7 +18,7 @@
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {#{{ entity }}#}
-<a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.id }) }}">{{ entity }}</a>
+<a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.id }) }}">{{ entity.getUserNameStr(true) }}</a>
 
 <form id="vacreq_orginst_user_management_{{ entity.id }}_{{ roleId }}" method="POST">
 

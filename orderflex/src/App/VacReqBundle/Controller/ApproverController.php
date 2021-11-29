@@ -123,13 +123,16 @@ class ApproverController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
+        //$onlyWorking = true;
+        $onlyWorking = false;
+
         //find role approvers by institution
         $approvers = array();
         $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -139,9 +142,9 @@ class ApproverController extends OrderAbstractController
 //        $roleSubmitter = $roleSubmitters[0];
 //        //echo "roleSubmitter=".$roleSubmitter."<br>";
 //        if( $roleSubmitter ) {
-//            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+//            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
 //        }s
-        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,true);
+        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,$onlyWorking);
 
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
@@ -181,6 +184,8 @@ class ApproverController extends OrderAbstractController
         //echo " => institutionId=".$institutionId."<br>";
 
         $em = $this->getDoctrine()->getManager();
+        //$onlyWorking = true;
+        $onlyWorking = false;
 
         //find role approvers by institution
         $approvers = array();
@@ -188,7 +193,7 @@ class ApproverController extends OrderAbstractController
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -198,8 +203,9 @@ class ApproverController extends OrderAbstractController
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
+        //echo "submitters=".count($submitters)."<br>";
 
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
@@ -239,6 +245,8 @@ class ApproverController extends OrderAbstractController
         //echo " => institutionId=".$institutionId."<br>";
 
         $em = $this->getDoctrine()->getManager();
+        //$onlyWorking = true;
+        $onlyWorking = false;
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -248,7 +256,7 @@ class ApproverController extends OrderAbstractController
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -264,7 +272,7 @@ class ApproverController extends OrderAbstractController
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",true);
+            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
 
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
@@ -851,6 +859,9 @@ class ApproverController extends OrderAbstractController
     public function removeVacReqGroupByInstitution($instid,$rolePartialName,$request=null) {
         $em = $this->getDoctrine()->getManager();
 
+        //$onlyWorking = true;
+        $onlyWorking = false;
+        
         $roleName = null;
         $userNamesArr = array();
 
@@ -871,7 +882,7 @@ class ApproverController extends OrderAbstractController
 
         //2) remove approver role from all users
         if( $role ) {
-            $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",true);
+            $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",$onlyWorking);
             foreach( $users as $user ) {
                 $user->removeRole($roleName);
                 $userNamesArr[] = $user."";

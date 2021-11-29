@@ -36,6 +36,17 @@ class DefaultController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
     public function aboutAction( Request $request ) {
+
+        //testing
+//        $em = $this->getDoctrine()->getManager();
+//        $roleApprover = "ROLE_VACREQ_APPROVER_BROOKLYNMETHODIST";
+//        $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover,"infos.lastName",false);
+//        echo "approvers=".count($approvers)."<br>";
+//        $roleSubmitter = "ROLE_VACREQ_SUBMITTER_BROOKLYNMETHODIST";
+//        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter,"infos.lastName",false);
+//        echo "submitters=".count($submitters)."<br>";
+//        exit('111');
+        
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
 
