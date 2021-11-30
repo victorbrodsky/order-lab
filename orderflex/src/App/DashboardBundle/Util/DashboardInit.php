@@ -1262,15 +1262,44 @@ class DashboardInit
             $financial,
             $mapper
         );
+        //$financialTrpArr = array();//testing
 
-        //Productivity > Turnaround Time > Translational Research
+        //2) Productivity > Turnaround Time > Translational Research
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
+        $prodTurntimeTrpArr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
+        $productivity = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Productivity",
+            $root,
+            $mapper
+        );
+        $productivityTurntime = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Turnaround Time",
+            $productivity,
+            $mapper
+        );
+        $productivityTurntimeTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Translational Research",
+            $productivityTurntime,
+            $mapper
+        );
 
-        //Productivity > Translational Research
+        //3) Productivity > Translational Research
         //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
+        $prodTrpArr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56");
+        $productivityTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Translational Research",
+            $productivity,
+            $mapper
+        );
 
-        //Productivity > Pathologist Involvement in Translational Research
+        //4) Productivity > Pathologist Involvement in Translational Research
         //5, 6, 7, 26, 27, 28, 29
+        $prodPathArr = array("5. ", "6. ", "7. ", "26. ", "27. ", "28. ", "29. ");
+        $productivityPath = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Pathologist Involvement in Translational Research",
+            $productivity,
+            $mapper
+        );
 
         //Research > Translational Projects
         //1, 2, 3, 4, 5
@@ -1288,29 +1317,61 @@ class DashboardInit
             //$chartId = $chart->getId();
             $chartName = $chart->getName();
 
-//            //1) Financial > Translational Research
-//            if( in_array($chartId,$financialTrpArr) ) {
-//                $res1 = $chart->addTopic($financialTrp);
-//                if( $res1 ) {
-//                    echo $chart . "-- Added Topic $financialTrp<br>";
-//                } else {
-//                    echo $chart."-- Already exists Topic $financialTrp<br>";
-//                }
-//                $count++;
-//            }
-//            else {
-//                echo $chart."-- Already exists Topic $financialTrp<br>";
-//            }
             //1) Financial > Translational Research
             foreach( $financialTrpArr as $financialTrpPartName ) {
                 if (strpos($chartName, $financialTrpPartName) !== false) {
                     //echo 'true';
-                    $res1 = $chart->addTopic($financialTrp);
-                    if( $res1 ) {
-                        echo $chart . "-- Added Topic $financialTrp<br>";
+                    $res = $chart->addTopic($financialTrp);
+                    if( $res ) {
+                        echo $chartName . "-- Added Topic $financialTrp<br>";
                         $count++;
                     } else {
-                        echo $chart."-- Already exists Topic $financialTrp<br>";
+                        echo $chartName."-- Not Added Topic $financialTrp<br>";
+                    }
+                    break;
+                }
+            }
+
+            //2) Productivity > Turnaround Time > Translational Research
+            foreach( $prodTurntimeTrpArr as $partName ) {
+                if( strpos($chartName, $partName) !== false ) {
+                    //echo 'true';
+                    $res = $chart->addTopic($productivityTurntimeTrp);
+                    if( $res ) {
+                        echo $chartName . "-- Added Topic Turntime $productivityTurntimeTrp<br>";
+                        $count++;
+                    } else {
+                        echo $chartName."-- Not Added Topic Turntime $productivityTurntimeTrp<br>";
+                    }
+                    break;
+                }
+            }
+
+            //3) Productivity > Translational Research
+            foreach( $prodTrpArr as $partName ) {
+                if( strpos($chartName, $partName) !== false ) {
+                    //echo 'true';
+                    $res = $chart->addTopic($productivityTrp);
+                    if( $res ) {
+                        echo $chartName . "-- Added Topic prod $productivityTrp<br>";
+                        $count++;
+                    } else {
+                        echo $chartName."-- Not Added Topic prod $productivityTrp<br>";
+                    }
+                    break;
+                }
+            }
+
+            //4) Productivity > Pathologist Involvement in Translational Research
+            foreach( $prodPathArr as $partName ) {
+                if( strpos($chartName, $partName) !== false ) {
+                    //echo 'true';
+                    $res = $chart->addTopic($productivityPath);
+                    if( $res ) {
+                        echo $chartName . "-- Added Topic $productivityPath<br>";
+                        $count++;
+                    } else {
+                        echo $chartName."-- Not Added Topic $productivityPath<br>";
                     }
                     break;
                 }
