@@ -283,8 +283,9 @@ class ChartList extends ListAbstract
         if( $item && !$this->topics->contains($item) ) {
             $this->topics->add($item);
             //$item->addChart($this);
+            return $this;
         }
-        return $this;
+        return NULL;
     }
     public function removeTopic($item)
     {

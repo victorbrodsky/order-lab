@@ -1082,12 +1082,15 @@ class DashboardInit
     //add institutions, topics, roles to the charts
     public function initCharts() {
 
-        return NULL;
+        //return NULL;
 
-        $resInst = $this->assignInstitutionsToCharts();
+        $resInst = NULL;
+        //$resInst = $this->assignInstitutionsToCharts();
 
+        $resTopic = NULL;
         $resTopic = $this->assignTopicsToCharts();
 
+        $resRole = NULL;
         $resRole = $this->assignRolesToCharts();
 
         return $resInst . "; " .$resTopic . "; " . $resRole;
@@ -1228,11 +1231,37 @@ class DashboardInit
     }
 
     function assignTopicsToCharts() {
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'DashboardBundle',
+            'className' => 'TopicList'
+        );
+        $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+        if( !$root ) {
+            exit('No Root: "All Charts"');
+        }
+        if( $root->getLevel() != 0 ) {
+            exit('Root "All Charts" level is not 0');
+        }
+
         $charts = $this->getCharts();
 
         //7- topics 
-        //Financial > Translational Research
+        //1) Financial > Translational Research
         //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
+        $financialTrpArr = array("16. ", "17. ","18. ","19. ","20. ","21. ","22. ","23. ","24. ",
+            "25. ","26. ","27. ","28. ","29. ","47. ","48. ","49. ","50. ","51. ","52. ","55. ","64. ","65. ");
+        $financial = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Financial",
+            $root,
+            $mapper
+        );
+        $financialTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Translational Research",
+            $financial,
+            $mapper
+        );
 
         //Productivity > Turnaround Time > Translational Research
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
@@ -1256,11 +1285,46 @@ class DashboardInit
 
         foreach($charts as $chart) {
 
+            //$chartId = $chart->getId();
+            $chartName = $chart->getName();
+
+//            //1) Financial > Translational Research
+//            if( in_array($chartId,$financialTrpArr) ) {
+//                $res1 = $chart->addTopic($financialTrp);
+//                if( $res1 ) {
+//                    echo $chart . "-- Added Topic $financialTrp<br>";
+//                } else {
+//                    echo $chart."-- Already exists Topic $financialTrp<br>";
+//                }
+//                $count++;
+//            }
+//            else {
+//                echo $chart."-- Already exists Topic $financialTrp<br>";
+//            }
+            //1) Financial > Translational Research
+            foreach( $financialTrpArr as $financialTrpPartName ) {
+                if (strpos($chartName, $financialTrpPartName) !== false) {
+                    //echo 'true';
+                    $res1 = $chart->addTopic($financialTrp);
+                    if( $res1 ) {
+                        echo $chart . "-- Added Topic $financialTrp<br>";
+                        $count++;
+                    } else {
+                        echo $chart."-- Already exists Topic $financialTrp<br>";
+                    }
+                    break;
+                }
+            }
 
 
         }
 
+        if( $count > 0 ) {
+            //$this->em->flush();
+        }
+
         //exit('Added Topics count='.$count);
+        return $count;
     }
 
     function assignRolesToCharts() {
