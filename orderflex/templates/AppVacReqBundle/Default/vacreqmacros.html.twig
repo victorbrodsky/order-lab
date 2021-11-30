@@ -426,7 +426,8 @@
 {% macro personAwayInfo( user, phone, vacreq_sitename ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
-    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.getDisplayName() }}</a>
+    {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.getDisplayName() }}</a>#}
+    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': user.id }) }}">{{ user.getDisplayOrFirstLastname(true) }}</a>
 
     {% set singleEmail = user.getSingleEmail %}
     {% if singleEmail %}

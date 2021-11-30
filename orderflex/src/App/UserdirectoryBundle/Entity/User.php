@@ -1638,12 +1638,9 @@ class User extends UserBase {
     }
 
     //show user's FirstName LastName - userName (userNameType)
-    public function getUserNameStr( $showStatus=false) {
+    public function getUserNameStr( $showStatus=false ) {
 
         //Add (No longer works)
-        //$curdate = date("Y-m-d", time());
-        //$query->leftJoin("user.employmentStatus", "employmentStatus");
-        //$currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
         //echo "showStatus=$showStatus <br>";
         $noLongerWorks = "";
         if( $showStatus ) {
@@ -1653,8 +1650,6 @@ class User extends UserBase {
                 $noLongerWorks = " (No longer works)";
             }
         }
-        //$noLongerWorks = " (".$this->getEmploymentTerminatedStr().")";
-        //$noLongerWorks = " (111)";
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
         $displayName = $this->getDisplayName();
@@ -1677,7 +1672,7 @@ class User extends UserBase {
     }
 
     //Get displayname or first + last name
-    public function getDisplayOrFirstLastname() {
+    public function getDisplayOrFirstLastname( $showStatus=false ) {
 
         $displayName = $this->getDisplayName();
 
@@ -1689,7 +1684,18 @@ class User extends UserBase {
             $displayName = $this->getUserNameStr();
         }
 
-        return $displayName."";
+        //Add (No longer works)
+        //echo "showStatus=$showStatus <br>";
+        $noLongerWorks = "";
+        if( $showStatus ) {
+            $terminatedStr = $this->getEmploymentTerminatedStr();
+            //echo "terminatedStr=$terminatedStr <br>";
+            if( $terminatedStr ) {
+                $noLongerWorks = " (No longer works)";
+            }
+        }
+
+        return $displayName."".$noLongerWorks;
     }
 
 

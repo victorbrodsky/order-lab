@@ -133,7 +133,7 @@ class VacReqUtil
 
 
     //find role approvers by institution
-    public function getRequestApprovers( $entity, $institutionType="institution" ) {
+    public function getRequestApprovers( $entity, $institutionType="institution", $onlyWorking=false ) {
 
         $institution = $entity->getInstitution();
 //        if( $institutionType == "institution" ) {
@@ -183,7 +183,7 @@ class VacReqUtil
         $roleApprover = $roleApprovers[0];
 
         if( $roleApprover ) {
-            $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",true);
+            $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
 
         return $approvers;
@@ -191,7 +191,7 @@ class VacReqUtil
 
     //$groupId - group (institution) ID
     //$rolePartialName - "ROLE_VACREQ_SUBMITTER", "ROLE_VACREQ_APPROVER", "ROLE_VACREQ_SUPERVISOR"
-    public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER" ) {
+    public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false ) {
         $users = array();
 
         $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
@@ -201,7 +201,7 @@ class VacReqUtil
 
         //echo "role=".$role."<br>";
         if( $role ) {
-            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",true);
+            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",$onlyWorking);
         }
 
         return $users;
@@ -2645,7 +2645,7 @@ class VacReqUtil
 
 
     //find the first upper supervisor of this user's group
-    public function getClosestSupervisor( $user ) {
+    public function getClosestSupervisor( $user, $onlyWorking=false ) {
 
         //1) get the submitter group Id of this user
         $groupParams = array('asObjectRole'=>true);
@@ -2658,7 +2658,7 @@ class VacReqUtil
         foreach( $supervisorRoles as $supervisorRole ) {
             //echo "supervisorRole=".$supervisorRole."<br>";
 //            //find users with this role
-            $supervisors = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",true);
+            $supervisors = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",$onlyWorking);
             foreach( $supervisors as $supervisor ) {
                 $supervisorsArr[] = $supervisor;
             }

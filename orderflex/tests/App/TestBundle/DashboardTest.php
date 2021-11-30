@@ -130,6 +130,20 @@ class DashboardTest extends WebTestBase
         );
     }
 
+    public function testAuthorizedAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/dashboards/authorized-users/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Authorized Users for Dashboard")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Full Name")')->count()
+        );
+    }
+
+
 
 
 

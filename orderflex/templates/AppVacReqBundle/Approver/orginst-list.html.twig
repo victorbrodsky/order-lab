@@ -67,7 +67,7 @@
                 {% for submitter in submitters %}
                     {#{{ submitter }}#}
                     {#({{ submitter.getSiteRoles('SUBMITTER')|join(', ') }})#}
-                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter.1getUserNameStr(true) }}</a>
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}">{{ submitter.getUserNameStr(true) }}</a>
                     <br>
                 {% endfor %}
             </div>
