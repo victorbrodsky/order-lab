@@ -1162,7 +1162,8 @@ class DashboardInit
 
             ///////////// 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
             foreach( $exceptionTrpStrArr as $exceptionTrpStr ) {
-                if (strpos($chartName, $exceptionTrpStr) !== false) {
+                //if (strpos($chartName, $exceptionTrpStr) !== false) {
+                if( $this->compareChartName($chartName,$exceptionTrpStr) ) {
                     //echo 'true';
                     $processFlag = false;
                     break;
@@ -1190,7 +1191,8 @@ class DashboardInit
 
             //////////// 5 - Set charts 57, 58, 59 to 'Pathology Informatics' ////////////
             foreach( $pathInformaticsArr as $pathInformaticsPartName ) {
-                if (strpos($chartName, $pathInformaticsPartName) !== false) {
+                //if (strpos($chartName, $pathInformaticsPartName) !== false) {
+                if( $this->compareChartName($chartName,$pathInformaticsPartName) ) {
                     //echo 'true';
                     if ($informatics && !$chartInstitutions->contains($informatics)) {
                         $chart->addInstitution($informatics);
@@ -1207,7 +1209,8 @@ class DashboardInit
 
             //////////// 6- Set charts 62, 63 to Pathology and Laboratory Medicine ////////////
             foreach( $pathologyArr as $pathologyPartName ) {
-                if (strpos($chartName, $pathologyPartName) !== false) {
+                //if (strpos($chartName, $pathologyPartName) !== false) {
+                if( $this->compareChartName($chartName,$pathologyPartName) ) {
                     //echo 'true';
                     if ($pathology && !$chartInstitutions->contains($pathology)) {
                         $chart->addInstitution($pathology);
@@ -1258,14 +1261,22 @@ class DashboardInit
             $root,
             $mapper
         );
+        if( !$financial ) {
+            exit("Error: not found: Financial");
+        }
         $financialTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Translational Research",
             $financial,
             $mapper
         );
+        if( !$financialTrp ) {
+            exit("Error: not found: Financial > Translational Research");
+        } else {
+            echo "Financial > Translational Research ID=".$financialTrp->getId()."<br>";
+        }
         //$financialTrpArr = array();//testing
 
-        //2) Productivity > Turnaround Time > Translational Research
+        //2) Productivity > Turnaround Times > Translational Research
         $charts2Arr = array();
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
         $prodTurntimeTrpArr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
@@ -1274,26 +1285,41 @@ class DashboardInit
             $root,
             $mapper
         );
+        if( !$productivity ) {
+            exit("Error: not found: Productivity");
+        }
         $productivityTurntime = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
-            "Turnaround Time",
+            "Turnaround Times",
             $productivity,
             $mapper
         );
+        if( !$productivityTurntime ) {
+            exit("Error: not found: Productivity>Turnaround Times");
+        }
         $productivityTurntimeTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Translational Research",
             $productivityTurntime,
             $mapper
         );
+        if( !$productivityTurntimeTrp ) {
+            exit("Error: not found: Productivity > Turnaround Times > Translational Research");
+        } else {
+            echo "Productivity > Turnaround Times > Translational Research ID=".$productivityTurntimeTrp->getId()."<br>";
+        }
+        //exit('111');
 
         //3) Productivity > Translational Research
         $charts3Arr = array();
         //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
-        $prodTrpArr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56");
+        $prodTrpArr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56. ");
         $productivityTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Translational Research",
             $productivity,
             $mapper
         );
+        if( !$productivityTrp ) {
+            exit("Error: not found: Productivity > Translational Research");
+        }
 
         //4) Productivity > Pathologist Involvement in Translational Research
         $charts4Arr = array();
@@ -1304,6 +1330,9 @@ class DashboardInit
             $productivity,
             $mapper
         );
+        if( !$productivityPath ) {
+            exit("Error: not found: Productivity > Pathologist Involvement in Translational Research");
+        }
 
         //5) Research > Translational Projects
         $charts5Arr = array();
@@ -1321,22 +1350,35 @@ class DashboardInit
 
         foreach($charts as $chart) {
 
+//            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
+//                foreach($chart->getTopics() as $topic) {
+//                    echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
+//                }
+//            }
+
             //$chartId = $chart->getId();
             //$chartName = $chart->getName();
 
             //1) Financial > Translational Research
-            //$charts1Arr = $this->addSpecificTopic($chart,$financialTrp,$financialTrpArr,$charts1Arr);
+            //echo "Try to add topic financialTrp ID=".$financialTrp->getId()."<br>";
+            $charts1Arr = $this->addSpecificTopic($chart,$financialTrp,$financialTrpArr,$charts1Arr);
 
-            //2) Productivity > Turnaround Time > Translational Research
-            //$charts2Arr = $this->addSpecificTopic($chart,$productivityTurntimeTrp,$prodTurntimeTrpArr,$charts2Arr);
+            //2) Productivity > Turnaround Times > Translational Research
+            //echo "Try to add topic productivityTurntimeTrp ID=".$productivityTurntimeTrp->getId()."<br>";
+            $charts2Arr = $this->addSpecificTopic($chart,$productivityTurntimeTrp,$prodTurntimeTrpArr,$charts2Arr);
 
             //3) Productivity > Translational Research
-            //$charts3Arr = $this->addSpecificTopic($chart,$productivityTrp,$prodTrpArr,$charts3Arr);
+            $charts3Arr = $this->addSpecificTopic($chart,$productivityTrp,$prodTrpArr,$charts3Arr);
 
             //4) Productivity > Pathologist Involvement in Translational Research
             $charts4Arr = $this->addSpecificTopic($chart,$productivityPath,$prodPathArr,$charts4Arr);
 
 
+//            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
+//                foreach($chart->getTopics() as $topic) {
+//                    echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
+//                }
+//            }
         }
 
         //echo "";
@@ -1370,13 +1412,19 @@ class DashboardInit
             //if( $partName == $firstPartName ) {
             if( $this->compareChartName($chartName,$partialName) ) {
                 //echo 'true <br>';
-                $res = $chart->addTopic($addTopic);
-                if( $res ) {
-                    echo $chartName . "-- Added Topic $addTopic<br>";
+//                $res = $chart->addTopic($addTopic);
+//                if( $res ) {
+//                    //echo $chartName . "-- Added Topic $addTopic<br>";
+//                    $chartsResArr[] = $chartName;
+//                } else {
+//                    //echo $chartName."-- Not Added Topic $addTopic<br>";
+//                }
+
+                if( $this->chartHasTopic($chart,$addTopic) === false ) {
+                    $chart->addTopic($addTopic);
                     $chartsResArr[] = $chartName;
-                } else {
-                    echo $chartName."-- Not Added Topic $addTopic<br>";
                 }
+
                 break;
             }
         }
@@ -1386,10 +1434,26 @@ class DashboardInit
         $partNameArr = explode(". ",$chartName);
         $firstPartName = $partNameArr[0]; //65
         $firstPartName = $firstPartName . ". ";
-        echo "Compare: [$partialName]?=[$firstPartName] <br>";
+        //echo "Compare: [$partialName]?=[$firstPartName] <br>";
         if( $partialName == $firstPartName ) {
             return true;
         }
+        return false;
+    }
+    function chartHasTopic( $chart, $topic ) {
+
+        $topics = $chart->getTopics();
+        if( $topic && $topics->contains($topic) ) {
+            return true;
+        }
+
+//        foreach($chart->getTopics() as $thisTopic) {
+//            //echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
+//            if( $topic->getId() === $thisTopic->getId() ) {
+//                return true;
+//            }
+//        }
+
         return false;
     }
 
