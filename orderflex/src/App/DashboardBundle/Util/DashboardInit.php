@@ -1091,7 +1091,7 @@ class DashboardInit
         $resTopic = $this->assignTopicsToCharts();
 
         $resRole = NULL;
-        $resRole = $this->assignRolesToCharts();
+        //$resRole = $this->assignRolesToCharts();
 
         return $resInst . "; " .$resTopic . "; " . $resRole;
     }
@@ -1249,6 +1249,7 @@ class DashboardInit
 
         //7- topics 
         //1) Financial > Translational Research
+        $charts1Arr = array();
         //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
         $financialTrpArr = array("16. ", "17. ","18. ","19. ","20. ","21. ","22. ","23. ","24. ",
             "25. ","26. ","27. ","28. ","29. ","47. ","48. ","49. ","50. ","51. ","52. ","55. ","64. ","65. ");
@@ -1265,6 +1266,7 @@ class DashboardInit
         //$financialTrpArr = array();//testing
 
         //2) Productivity > Turnaround Time > Translational Research
+        $charts2Arr = array();
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
         $prodTurntimeTrpArr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
         $productivity = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
@@ -1284,6 +1286,7 @@ class DashboardInit
         );
 
         //3) Productivity > Translational Research
+        $charts3Arr = array();
         //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
         $prodTrpArr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56");
         $productivityTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
@@ -1293,6 +1296,7 @@ class DashboardInit
         );
 
         //4) Productivity > Pathologist Involvement in Translational Research
+        $charts4Arr = array();
         //5, 6, 7, 26, 27, 28, 29
         $prodPathArr = array("5. ", "6. ", "7. ", "26. ", "27. ", "28. ", "29. ");
         $productivityPath = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
@@ -1301,13 +1305,16 @@ class DashboardInit
             $mapper
         );
 
-        //Research > Translational Projects
+        //5) Research > Translational Projects
+        $charts5Arr = array();
         //1, 2, 3, 4, 5
 
-        //Site Utilization > Platform
+        //6) Site Utilization > Platform
+        $charts6Arr = array();
         //57, 58, 59
 
-        //Site Utilization > Call Log
+        //7) Site Utilization > Call Log
+        $charts7Arr = array();
         //62, 63
 
         $count = 0;
@@ -1315,70 +1322,30 @@ class DashboardInit
         foreach($charts as $chart) {
 
             //$chartId = $chart->getId();
-            $chartName = $chart->getName();
+            //$chartName = $chart->getName();
 
             //1) Financial > Translational Research
-            foreach( $financialTrpArr as $financialTrpPartName ) {
-                if (strpos($chartName, $financialTrpPartName) !== false) {
-                    //echo 'true';
-                    $res = $chart->addTopic($financialTrp);
-                    if( $res ) {
-                        echo $chartName . "-- Added Topic $financialTrp<br>";
-                        $count++;
-                    } else {
-                        echo $chartName."-- Not Added Topic $financialTrp<br>";
-                    }
-                    break;
-                }
-            }
+            //$charts1Arr = $this->addSpecificTopic($chart,$financialTrp,$financialTrpArr,$charts1Arr);
 
             //2) Productivity > Turnaround Time > Translational Research
-            foreach( $prodTurntimeTrpArr as $partName ) {
-                if( strpos($chartName, $partName) !== false ) {
-                    //echo 'true';
-                    $res = $chart->addTopic($productivityTurntimeTrp);
-                    if( $res ) {
-                        echo $chartName . "-- Added Topic Turntime $productivityTurntimeTrp<br>";
-                        $count++;
-                    } else {
-                        echo $chartName."-- Not Added Topic Turntime $productivityTurntimeTrp<br>";
-                    }
-                    break;
-                }
-            }
+            //$charts2Arr = $this->addSpecificTopic($chart,$productivityTurntimeTrp,$prodTurntimeTrpArr,$charts2Arr);
 
             //3) Productivity > Translational Research
-            foreach( $prodTrpArr as $partName ) {
-                if( strpos($chartName, $partName) !== false ) {
-                    //echo 'true';
-                    $res = $chart->addTopic($productivityTrp);
-                    if( $res ) {
-                        echo $chartName . "-- Added Topic prod $productivityTrp<br>";
-                        $count++;
-                    } else {
-                        echo $chartName."-- Not Added Topic prod $productivityTrp<br>";
-                    }
-                    break;
-                }
-            }
+            //$charts3Arr = $this->addSpecificTopic($chart,$productivityTrp,$prodTrpArr,$charts3Arr);
 
             //4) Productivity > Pathologist Involvement in Translational Research
-            foreach( $prodPathArr as $partName ) {
-                if( strpos($chartName, $partName) !== false ) {
-                    //echo 'true';
-                    $res = $chart->addTopic($productivityPath);
-                    if( $res ) {
-                        echo $chartName . "-- Added Topic $productivityPath<br>";
-                        $count++;
-                    } else {
-                        echo $chartName."-- Not Added Topic $productivityPath<br>";
-                    }
-                    break;
-                }
-            }
+            $charts4Arr = $this->addSpecificTopic($chart,$productivityPath,$prodPathArr,$charts4Arr);
 
 
         }
+
+        //echo "";
+        dump($charts1Arr);
+        dump($charts2Arr);
+        dump($charts3Arr);
+        dump($charts4Arr);
+
+        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr);
 
         if( $count > 0 ) {
             //$this->em->flush();
@@ -1386,6 +1353,44 @@ class DashboardInit
 
         //exit('Added Topics count='.$count);
         return $count;
+    }
+    function addSpecificTopic( $chart, $addTopic, $chartPartialNameArr, $chartsResArr ) {
+        //$chartsResArr = array();
+        $chartName = $chart->getName();
+        foreach( $chartPartialNameArr as $partialName ) {
+            //echo substr('abcdef', 0, 4);  //abcd
+            //$firstPartName = substr($partName, 0, 4);
+            //65. Total amount of paid/due for issued invoices per fiscal year
+//            $partNameArr = explode(". ",$chartName);
+//            $firstPartName = $partNameArr[0]; //65
+//            $firstPartName = $firstPartName . ". ";
+//            //echo "Compare: [$chartName]?=[$partName] <br>";
+//            echo "Compare: [$partialName]?=[$firstPartName] <br>";
+            //if( strpos($chartName, $partName) !== false ) {
+            //if( $partName == $firstPartName ) {
+            if( $this->compareChartName($chartName,$partialName) ) {
+                //echo 'true <br>';
+                $res = $chart->addTopic($addTopic);
+                if( $res ) {
+                    echo $chartName . "-- Added Topic $addTopic<br>";
+                    $chartsResArr[] = $chartName;
+                } else {
+                    echo $chartName."-- Not Added Topic $addTopic<br>";
+                }
+                break;
+            }
+        }
+        return $chartsResArr;
+    }
+    function compareChartName( $chartName, $partialName ) {
+        $partNameArr = explode(". ",$chartName);
+        $firstPartName = $partNameArr[0]; //65
+        $firstPartName = $firstPartName . ". ";
+        echo "Compare: [$partialName]?=[$firstPartName] <br>";
+        if( $partialName == $firstPartName ) {
+            return true;
+        }
+        return false;
     }
 
     function assignRolesToCharts() {
