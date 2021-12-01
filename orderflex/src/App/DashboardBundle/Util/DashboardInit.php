@@ -1337,14 +1337,57 @@ class DashboardInit
         //5) Research > Translational Projects
         $charts5Arr = array();
         //1, 2, 3, 4, 5
+        $prodResTrpArr = array("1. ", "2. ", "3. ", "4. ", "5. ");
+        $research = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Research",
+            $root,
+            $mapper
+        );
+        if( !$research ) {
+            exit("Error: not found: Research");
+        }
+        $researchTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Translational Projects",
+            $research,
+            $mapper
+        );
+        if( !$researchTrp ) {
+            exit("Error: not found: Translational Projects");
+        }
 
         //6) Site Utilization > Platform
         $charts6Arr = array();
         //57, 58, 59
+        $prodPlatformArr = array("57. ", "58. ", "59. ");
+        $siteutil = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Site Utilization",
+            $root,
+            $mapper
+        );
+        if( !$siteutil ) {
+            exit("Error: not found: Site Utilization");
+        }
+        $siteutilPlatform = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Platform",
+            $siteutil,
+            $mapper
+        );
+        if( !$siteutilPlatform ) {
+            exit("Error: not found: Platform");
+        }
 
         //7) Site Utilization > Call Log
         $charts7Arr = array();
         //62, 63
+        $prodCalllogArr = array("62. ", "63. ");
+        $siteutilCalllog = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Call Log",
+            $siteutil,
+            $mapper
+        );
+        if( !$siteutilCalllog ) {
+            exit("Error: not found: Call Log");
+        }
 
         $count = 0;
 
@@ -1373,6 +1416,15 @@ class DashboardInit
             //4) Productivity > Pathologist Involvement in Translational Research
             $charts4Arr = $this->addSpecificTopic($chart,$productivityPath,$prodPathArr,$charts4Arr);
 
+            //5) Research > Translational Projects
+            $charts5Arr = $this->addSpecificTopic($chart,$researchTrp,$prodResTrpArr,$charts5Arr);
+
+            //6) Site Utilization > Platform
+            $charts6Arr = $this->addSpecificTopic($chart,$siteutilPlatform,$prodPlatformArr,$charts6Arr);
+
+            //7) Site Utilization > Call Log
+            $charts7Arr = $this->addSpecificTopic($chart,$siteutilCalllog,$prodCalllogArr,$charts7Arr);
+
 
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
 //                foreach($chart->getTopics() as $topic) {
@@ -1386,8 +1438,12 @@ class DashboardInit
         dump($charts2Arr);
         dump($charts3Arr);
         dump($charts4Arr);
+        dump($charts5Arr);
+        dump($charts6Arr);
+        dump($charts7Arr);
 
-        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr);
+        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
+        +count($charts6Arr)+count($charts7Arr);
 
         if( $count > 0 ) {
             //$this->em->flush();
