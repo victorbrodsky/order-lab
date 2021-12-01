@@ -1085,15 +1085,15 @@ class DashboardInit
         //return NULL;
 
         $resInst = 0;
-        //$resInst = $this->assignInstitutionsToCharts($testing);
+        $resInst = $this->assignInstitutionsToCharts($testing);
 
         $resTopic = 0;
-        //$resTopic = $this->assignTopicsToCharts($testing);
+        $resTopic = $this->assignTopicsToCharts($testing);
 
         $resRole = 0;
         $resRole = $this->assignRolesToCharts($testing);
 
-        return $resInst . "; " .$resTopic . "; " . $resRole;
+        return $resInst + $resTopic + $resRole;
     }
 
     public function assignInstitutionsToCharts( $testing=false ) {
@@ -1228,11 +1228,12 @@ class DashboardInit
 
         if( $count > 0 ) {
             if( !$testing ) {
-                //$this->em->flush();
+                $this->em->flush();
             }
         }
 
         //exit('Added Institutions count='.$count);
+        return $count;
     }
 
     function assignTopicsToCharts( $testing=false ) {
@@ -1458,20 +1459,22 @@ class DashboardInit
 //        }
 
         //echo "";
-        dump($charts1Arr);
-        dump($charts2Arr);
-        dump($charts3Arr);
-        dump($charts4Arr);
-        dump($charts5Arr);
-        dump($charts6Arr);
-        dump($charts7Arr);
+
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
         +count($charts6Arr)+count($charts7Arr);
 
         if( $count > 0 ) {
-            if( !$testing ) {
-                //$this->em->flush();
+            if( $testing ) {
+                dump($charts1Arr);
+                dump($charts2Arr);
+                dump($charts3Arr);
+                dump($charts4Arr);
+                dump($charts5Arr);
+                dump($charts6Arr);
+                dump($charts7Arr);
+            } else {
+                $this->em->flush();
             }
         }
 
@@ -1523,28 +1526,98 @@ class DashboardInit
     function assignRolesToCharts( $testing=false ) {
         $count = 0;
 
-        //1) Assign all charts except 57, 58, 59, 62, 63 the roles of
+        //1) 9- Assign all charts except 57, 58, 59, 62, 63 the roles of
         // “Dashboards-Administrator-of-Research-Department-Of-Pathology” and
         // “Dashboards-Administrator-Department-Of-Pathology” and
         // “Dashboards-Chairman-Department-Of-Pathology”
         // to enable uses with those roles to view the dashboards.
+        $charts1Arr = array();
         $addChart1Arr = array(57, 58, 59, 62, 63);
+        $roles1Arr = array(
+            //Abbreviation
+            "Dashboards-Administrator-of-Research-Department-Of-Pathology",
+            "Dashboards-Administrator-Department-Of-Pathology",
+            "Dashboards-Chairman-Department-Of-Pathology"
+        );
 
+        //10- Give the charts 57, 58, 59, 62, 63 the role of
+        // “Dashboards-Administrator-Department-Of-Pathology” and
+        // “Dashboards-Chairman-Department-Of-Pathology”
+        $charts2Arr = array();
+        $addChart2Arr = array(57, 58, 59, 62, 63);
+        $roles2Arr = array(
+            "Dashboards-Administrator-Department-Of-Pathology",
+            "Dashboards-Chairman-Department-Of-Pathology"
+        );
+
+        //13- Give the charts 62, 63 the role of “Dashboards-Vice-Chair-of-Clinical-Pathology-Department-Of-Pathology”
+        $charts3Arr = array();
+        $addChart3Arr = array(62, 63);
+        $roles3Arr = array(
+            "Dashboards-Vice-Chair-of-Clinical-Pathology-Department-Of-Pathology"
+        );
 
         $charts = $this->getCharts();
         foreach( $charts as $chart ) {
-
+            $charts1Arr = $this->addSpecificRoles($chart,$roles1Arr,$addChart1Arr,$charts1Arr);
+            $charts2Arr = $this->addSpecificRoles($chart,$roles2Arr,$addChart2Arr,$charts2Arr);
+            $charts3Arr = $this->addSpecificRoles($chart,$roles3Arr,$addChart3Arr,$charts3Arr);
         }
 
+        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr);
 
         if( $count > 0 ) {
-            if( !$testing ) {
-                //$this->em->flush();
+            if( $testing ) {
+                dump($charts1Arr);
+                dump($charts2Arr);
+                dump($charts3Arr);
+            } else {
+                $this->em->flush();
             }
         }
 
         //exit('Added Roles count='.$count);
         return $count;
+    }
+    function addSpecificRoles( $chart, $rolesArr, $chartPartialNameArr, $chartsResArr ) {
+        $chartName = $chart->getName();
+        foreach( $chartPartialNameArr as $partialName ) {
+            if( $this->compareChartNameByInt($chartName,$partialName) ) {
+                foreach($rolesArr as $roleAbbreviation) {
+                    $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($roleAbbreviation);
+                    if( !$role ) {
+                        exit("Role not found by abbreviation=".$roleAbbreviation);
+                    }
+                    if ($this->chartHasRole($chart, $role) === false) {
+                        $chart->addAccessRole($role);
+                        $chartsResArr[] = $chartName;
+                    }
+                }
+
+                break;
+            }
+        }
+        return $chartsResArr;
+    }
+    function compareChartNameByInt( $chartName, $partialName ) {
+        //$chartName: 55. Number of reminder emails sent per month (linked)
+        //$partialName: 55
+        $partNameArr = explode(". ",$chartName);
+        $firstPartName = $partNameArr[0]; //55
+        $firstPartName = $firstPartName . "";
+        //echo "Compare: [$partialName]?=[$firstPartName] <br>";
+        if( $partialName == $firstPartName ) {
+            return true;
+        }
+        return false;
+    }
+    //check if role is in accessRoles
+    function chartHasRole( $chart, $role ) {
+        $roles = $chart->getAccessRoles();
+        if( $role && $roles->contains($role) ) {
+            return true;
+        }
+        return false;
     }
 
 }

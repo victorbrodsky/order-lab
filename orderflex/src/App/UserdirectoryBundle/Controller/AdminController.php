@@ -10553,8 +10553,11 @@ class AdminController extends OrderAbstractController
             $count = $count + 10;
         }
 
+        //run after populating chart and topic
         $dashboardInit = $this->get('dashboard_init');
-        $dashboardInit->initCharts();
+        $chartInitCount = $dashboardInit->initCharts();
+
+        $count = $count + $chartInitCount;
 
         return round($count/10);
     }
