@@ -1080,23 +1080,23 @@ class DashboardInit
     }
 
     //add institutions, topics, roles to the charts
-    public function initCharts() {
+    public function initCharts( $testing=false ) {
 
         //return NULL;
 
-        $resInst = NULL;
-        //$resInst = $this->assignInstitutionsToCharts();
+        $resInst = 0;
+        //$resInst = $this->assignInstitutionsToCharts($testing);
 
-        $resTopic = NULL;
-        $resTopic = $this->assignTopicsToCharts();
+        $resTopic = 0;
+        //$resTopic = $this->assignTopicsToCharts($testing);
 
-        $resRole = NULL;
-        //$resRole = $this->assignRolesToCharts();
+        $resRole = 0;
+        $resRole = $this->assignRolesToCharts($testing);
 
         return $resInst . "; " .$resTopic . "; " . $resRole;
     }
 
-    public function assignInstitutionsToCharts() {
+    public function assignInstitutionsToCharts( $testing=false ) {
         //4- Set all charts except 57, 58, 59, 62, 63
         //to the “Institution” of:
         //Weill Cornell Medical College > Pathology and Laboratory Medicine > Center for Translational Pathology
@@ -1183,7 +1183,7 @@ class DashboardInit
                 //4 add Center for Translational Pathology
                 if ($trp && !$chartInstitutions->contains($trp)) {
                     $chart->addInstitution($trp);
-                    echo "- Added TRP <br>";
+                    echo "- 1Added TRP <br>";
                     $count++;
                 }
             }
@@ -1196,10 +1196,10 @@ class DashboardInit
                     //echo 'true';
                     if ($informatics && !$chartInstitutions->contains($informatics)) {
                         $chart->addInstitution($informatics);
-                        echo "-- Added Institution $informatics<br>";
+                        echo "-- 2Added Institution $informatics<br>";
                         $count++;
                     } else {
-                        echo "-- Already exists Institution $informatics<br>";
+                        echo "-- 2Already exists Institution $informatics<br>";
                     }
                     break;
                 }
@@ -1214,10 +1214,10 @@ class DashboardInit
                     //echo 'true';
                     if ($pathology && !$chartInstitutions->contains($pathology)) {
                         $chart->addInstitution($pathology);
-                        echo "--- Added Institution $pathology<br>";
+                        echo "--- 3Added Institution $pathology<br>";
                         $count++;
                     } else {
-                        echo "--- Already exists Institution $pathology<br>";
+                        echo "--- 3Already exists Institution $pathology<br>";
                     }
                     break;
                 }
@@ -1227,13 +1227,15 @@ class DashboardInit
         }//foreach
 
         if( $count > 0 ) {
-            //$this->em->flush();
+            if( !$testing ) {
+                //$this->em->flush();
+            }
         }
 
         //exit('Added Institutions count='.$count);
     }
 
-    function assignTopicsToCharts() {
+    function assignTopicsToCharts( $testing=false ) {
 
         $mapper = array(
             'prefix' => 'App',
@@ -1254,7 +1256,7 @@ class DashboardInit
         //1) Financial > Translational Research
         $charts1Arr = array();
         //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
-        $financialTrpArr = array("16. ", "17. ","18. ","19. ","20. ","21. ","22. ","23. ","24. ",
+        $addChart1Arr = array("16. ", "17. ","18. ","19. ","20. ","21. ","22. ","23. ","24. ",
             "25. ","26. ","27. ","28. ","29. ","47. ","48. ","49. ","50. ","51. ","52. ","55. ","64. ","65. ");
         $financial = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Financial",
@@ -1279,7 +1281,7 @@ class DashboardInit
         //2) Productivity > Turnaround Times > Translational Research
         $charts2Arr = array();
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
-        $prodTurntimeTrpArr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
+        $addChart2Arr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
         $productivity = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Productivity",
             $root,
@@ -1311,7 +1313,7 @@ class DashboardInit
         //3) Productivity > Translational Research
         $charts3Arr = array();
         //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
-        $prodTrpArr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56. ");
+        $addChart3Arr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56. ");
         $productivityTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Translational Research",
             $productivity,
@@ -1324,7 +1326,7 @@ class DashboardInit
         //4) Productivity > Pathologist Involvement in Translational Research
         $charts4Arr = array();
         //5, 6, 7, 26, 27, 28, 29
-        $prodPathArr = array("5. ", "6. ", "7. ", "26. ", "27. ", "28. ", "29. ");
+        $addChart4Arr = array("5. ", "6. ", "7. ", "26. ", "27. ", "28. ", "29. ");
         $productivityPath = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Pathologist Involvement in Translational Research",
             $productivity,
@@ -1337,7 +1339,7 @@ class DashboardInit
         //5) Research > Translational Projects
         $charts5Arr = array();
         //1, 2, 3, 4, 5
-        $prodResTrpArr = array("1. ", "2. ", "3. ", "4. ", "5. ");
+        $addChart5Arr = array("1. ", "2. ", "3. ", "4. ", "5. ");
         $research = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Research",
             $root,
@@ -1358,7 +1360,7 @@ class DashboardInit
         //6) Site Utilization > Platform
         $charts6Arr = array();
         //57, 58, 59
-        $prodPlatformArr = array("57. ", "58. ", "59. ");
+        $addChart6Arr = array("57. ", "58. ", "59. ");
         $siteutil = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Site Utilization",
             $root,
@@ -1379,7 +1381,7 @@ class DashboardInit
         //7) Site Utilization > Call Log
         $charts7Arr = array();
         //62, 63
-        $prodCalllogArr = array("62. ", "63. ");
+        $addChart7Arr = array("62. ", "63. ");
         $siteutilCalllog = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
             "Call Log",
             $siteutil,
@@ -1404,26 +1406,26 @@ class DashboardInit
 
             //1) Financial > Translational Research
             //echo "Try to add topic financialTrp ID=".$financialTrp->getId()."<br>";
-            $charts1Arr = $this->addSpecificTopic($chart,$financialTrp,$financialTrpArr,$charts1Arr);
+            $charts1Arr = $this->addSpecificTopic($chart,$financialTrp,$addChart1Arr,$charts1Arr);
 
             //2) Productivity > Turnaround Times > Translational Research
             //echo "Try to add topic productivityTurntimeTrp ID=".$productivityTurntimeTrp->getId()."<br>";
-            $charts2Arr = $this->addSpecificTopic($chart,$productivityTurntimeTrp,$prodTurntimeTrpArr,$charts2Arr);
+            $charts2Arr = $this->addSpecificTopic($chart,$productivityTurntimeTrp,$addChart2Arr,$charts2Arr);
 
             //3) Productivity > Translational Research
-            $charts3Arr = $this->addSpecificTopic($chart,$productivityTrp,$prodTrpArr,$charts3Arr);
+            $charts3Arr = $this->addSpecificTopic($chart,$productivityTrp,$addChart3Arr,$charts3Arr);
 
             //4) Productivity > Pathologist Involvement in Translational Research
-            $charts4Arr = $this->addSpecificTopic($chart,$productivityPath,$prodPathArr,$charts4Arr);
+            $charts4Arr = $this->addSpecificTopic($chart,$productivityPath,$addChart4Arr,$charts4Arr);
 
             //5) Research > Translational Projects
-            $charts5Arr = $this->addSpecificTopic($chart,$researchTrp,$prodResTrpArr,$charts5Arr);
+            $charts5Arr = $this->addSpecificTopic($chart,$researchTrp,$addChart5Arr,$charts5Arr);
 
             //6) Site Utilization > Platform
-            $charts6Arr = $this->addSpecificTopic($chart,$siteutilPlatform,$prodPlatformArr,$charts6Arr);
+            $charts6Arr = $this->addSpecificTopic($chart,$siteutilPlatform,$addChart6Arr,$charts6Arr);
 
             //7) Site Utilization > Call Log
-            $charts7Arr = $this->addSpecificTopic($chart,$siteutilCalllog,$prodCalllogArr,$charts7Arr);
+            $charts7Arr = $this->addSpecificTopic($chart,$siteutilCalllog,$addChart7Arr,$charts7Arr);
 
 
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
@@ -1432,6 +1434,28 @@ class DashboardInit
 //                }
 //            }
         }
+
+//        if( count($charts1Arr) != count($addChart1Arr) ) {
+//            exit("Count error 1");
+//        }
+//        if( count($charts2Arr) != count($addChart2Arr) ) {
+//            exit("Count error 2");
+//        }
+//        if( count($charts3Arr) != count($addChart3Arr) ) {
+//            exit("Count error 3");
+//        }
+//        if( count($charts4Arr) != count($addChart4Arr) ) {
+//            exit("Count error 4");
+//        }
+//        if( count($charts5Arr) != count($addChart5Arr) ) {
+//            exit("Count error 5");
+//        }
+//        if( count($charts6Arr) != count($addChart6Arr) ) {
+//            exit("Count error 6");
+//        }
+//        if( count($charts7Arr) != count($addChart7Arr) ) {
+//            exit("Count error 7");
+//        }
 
         //echo "";
         dump($charts1Arr);
@@ -1446,36 +1470,18 @@ class DashboardInit
         +count($charts6Arr)+count($charts7Arr);
 
         if( $count > 0 ) {
-            //$this->em->flush();
+            if( !$testing ) {
+                //$this->em->flush();
+            }
         }
 
         //exit('Added Topics count='.$count);
         return $count;
     }
     function addSpecificTopic( $chart, $addTopic, $chartPartialNameArr, $chartsResArr ) {
-        //$chartsResArr = array();
         $chartName = $chart->getName();
         foreach( $chartPartialNameArr as $partialName ) {
-            //echo substr('abcdef', 0, 4);  //abcd
-            //$firstPartName = substr($partName, 0, 4);
-            //65. Total amount of paid/due for issued invoices per fiscal year
-//            $partNameArr = explode(". ",$chartName);
-//            $firstPartName = $partNameArr[0]; //65
-//            $firstPartName = $firstPartName . ". ";
-//            //echo "Compare: [$chartName]?=[$partName] <br>";
-//            echo "Compare: [$partialName]?=[$firstPartName] <br>";
-            //if( strpos($chartName, $partName) !== false ) {
-            //if( $partName == $firstPartName ) {
             if( $this->compareChartName($chartName,$partialName) ) {
-                //echo 'true <br>';
-//                $res = $chart->addTopic($addTopic);
-//                if( $res ) {
-//                    //echo $chartName . "-- Added Topic $addTopic<br>";
-//                    $chartsResArr[] = $chartName;
-//                } else {
-//                    //echo $chartName."-- Not Added Topic $addTopic<br>";
-//                }
-
                 if( $this->chartHasTopic($chart,$addTopic) === false ) {
                     $chart->addTopic($addTopic);
                     $chartsResArr[] = $chartName;
@@ -1513,8 +1519,32 @@ class DashboardInit
         return false;
     }
 
-    function assignRolesToCharts() {
+    //8- Add all roles listed in the previous ticket
+    function assignRolesToCharts( $testing=false ) {
+        $count = 0;
 
+        //1) Assign all charts except 57, 58, 59, 62, 63 the roles of
+        // “Dashboards-Administrator-of-Research-Department-Of-Pathology” and
+        // “Dashboards-Administrator-Department-Of-Pathology” and
+        // “Dashboards-Chairman-Department-Of-Pathology”
+        // to enable uses with those roles to view the dashboards.
+        $addChart1Arr = array(57, 58, 59, 62, 63);
+
+
+        $charts = $this->getCharts();
+        foreach( $charts as $chart ) {
+
+        }
+
+
+        if( $count > 0 ) {
+            if( !$testing ) {
+                //$this->em->flush();
+            }
+        }
+
+        //exit('Added Roles count='.$count);
+        return $count;
     }
 
 }

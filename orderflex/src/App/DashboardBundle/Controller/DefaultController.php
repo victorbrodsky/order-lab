@@ -45,8 +45,50 @@ class DefaultController extends OrderAbstractController
 //        dump($results);
 //        exit('111');
 
+//        $em = $this->getDoctrine()->getManager();
+//        $res = "Test topics";
+//        $dashboardInitUtil = $this->container->get('dashboard_init');
+//        $chart = $em->getRepository('AppDashboardBundle:ChartList')->findOneByName('16. Total Fees of Items Ordered for Funded vs Non-Funded Projects');
+//        if( !$chart ) {
+//            exit('Chart not found');
+//        }
+//
+//        $mapper = array(
+//            'prefix' => 'App',
+//            'bundleName' => 'DashboardBundle',
+//            'className' => 'TopicList'
+//        );
+//        $root = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+//        if( !$root ) {
+//            exit('No Root: "All Charts"');
+//        }
+//        if( $root->getLevel() != 0 ) {
+//            exit('Root "All Charts" level is not 0');
+//        }
+//        $financial = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+//            "Financial",
+//            $root,
+//            $mapper
+//        );
+//        if( !$financial ) {
+//            exit("Error: not found: Financial");
+//        }
+//        $financialTrp = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+//            "Translational Research",
+//            $financial,
+//            $mapper
+//        );
+//        if( !$financialTrp ) {
+//            exit("Error: not found: Translational Research");
+//        }
+//        $charts1Arr = array();
+//        $addChart1Arr = array("16. ");
+//        $charts1Arr = $dashboardInitUtil->addSpecificTopic($chart,$financialTrp,$addChart1Arr,$charts1Arr);
+//        $em->flush();
+//        dump($charts1Arr);
+
         $dashboardInitUtil = $this->container->get('dashboard_init');
-        $res = $dashboardInitUtil->initCharts();
+        $res = $dashboardInitUtil->initCharts($testing=true);
         exit($res);
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
