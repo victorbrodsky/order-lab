@@ -1093,7 +1093,10 @@ class DashboardInit
         $resRole = 0;
         $resRole = $this->assignRolesToCharts($testing);
 
-        return $resInst + $resTopic + $resRole;
+        $resAdd = 0;
+        $resAdd = assignAdditionalTopicsAndRolesToCharts($testing);
+
+        return $resInst + $resTopic + $resRole + $resAdd;
     }
 
     public function assignInstitutionsToCharts( $testing=false ) {
@@ -1618,6 +1621,154 @@ class DashboardInit
             return true;
         }
         return false;
+    }
+
+    function assignAdditionalTopicsAndRolesToCharts( $testing=false ) {
+
+        //From #252 (12)
+        //add the nine charts 55, 56, 57, 58, 59, 60, 61, 62, 63 (with IDs of 1 through 9) to the topic of “Site Utilization”,
+        // associated with the Organizational Group of “Department of Pathology” under WCMC and “Department of Pathology” under NYP”,
+        // visible to the these roles:
+        //Dashboards-Site-Administrator-Department-Of-Pathology
+        //Dashboards-Chairman-Department-Of-Pathology
+        //Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology
+        //Dashboards-Administrator-Department-Of-Pathology
+        //Dashboards-Associate-Administrator-Department-Of-Pathology
+        //Dashboards-Financial-Administrator-Department-Of-Pathology
+
+        //From #252 (7)
+        //Add the Site Utilization charts into this list (accessible and downloadable):
+        //        Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology
+        //        Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology
+        //        Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
+        //        Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
+
+        exit('setChartListAction disable');
+
+        $em = $this->em;
+
+        $roles = array(
+            "Dashboards-Site-Administrator-Department-Of-Pathology",
+            "Dashboards-Chairman-Department-Of-Pathology",
+            "Dashboards-Assistant-to-the-Chairman-Department-Of-Pathology",
+            "Dashboards-Administrator-Department-Of-Pathology",
+            "Dashboards-Associate-Administrator-Department-Of-Pathology",
+            "Dashboards-Financial-Administrator-Department-Of-Pathology",
+
+            "Dashboards-Medical-Director-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Manager-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology",
+            "Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology",
+        );
+
+        $rolesArr = array();
+        foreach($roles as $role) {
+            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($role);
+            if( !$roleEntity ) {
+                exit("Can not find role by abbreviation '$role'");
+            }
+
+            $rolesArr[] = $roleEntity;
+        }
+
+        $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
+        if( !$siteUtilizationTopic ) {
+            exit("TopicList not found by name 'Site Utilization'");
+        }
+
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('No Institution: "WCM"');
+        }
+        if( $wcmc->getLevel() != 0 ) {
+            exit('Institution "WCM" level is not 0');
+        }
+        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        if( !$pathology ) {
+            exit('No Institution: "WCM Pathology and Laboratory Medicine"');
+        }
+
+        //“Department of Pathology” under NYP”
+        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        if( !$nyp ) {
+            exit('No Institution: "NYP"');
+        }
+        if( $nyp->getLevel() != 0 ) {
+            exit('Institution "NYP" level is not 0');
+        }
+        $nypPathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $nyp,
+            $mapper
+        );
+        if( !$nypPathology ) {
+            exit('No Institution: "NYP Pathology and Laboratory Medicine"');
+        }
+
+                    //55, 56, 57, 58, 59, 60, 61, 62, 63
+        $names = array(55, 56, 57, 58, 59, 62, 63);
+
+        $repository = $em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.topics','topics');
+
+        $selectArr = array();
+        foreach($names as $name) {
+            $selectArr[] = "list.name LIKE '".$name.".%'";
+        }
+
+        $selectWhere = implode(" OR ",$selectArr);
+
+        $dql->where($selectWhere);
+        $dql->andWhere("topics IS NULL");
+
+        $query = $dql->getQuery();
+
+        $charts = $query->getResult();
+        echo "charts count=".count($charts)."<br>";
+        $count = 0;
+
+        foreach($charts as $chart) {
+            echo "Process chart '$chart' <br>";
+
+            //add topic
+            $chart->addTopic($siteUtilizationTopic);
+
+            //add institution
+            $chart->addInstitution($pathology);
+            $chart->addInstitution($nypPathology);
+
+            //assign roles accessRoles, downloadRoles
+            foreach ($rolesArr as $role) {
+                $chart->addAccessRole($role);
+                $chart->addDownloadRole($role);
+            }
+
+            $count++;
+        }//foreach
+
+        if( $count > 0 ) {
+            if( !$testing ) {
+                $em->flush();
+            }
+        }
+
+        //exit("EOF setChartListAction: count=$count");
+        return $count;
+    }
+
+    //Set chart types (Line, Bar ...)
+    function assignTypeToCharts() {
+
     }
 
 }

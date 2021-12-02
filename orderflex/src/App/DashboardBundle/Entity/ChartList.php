@@ -301,8 +301,9 @@ class ChartList extends ListAbstract
     {
         if( $item && !$this->accessRoles->contains($item) ) {
             $this->accessRoles->add($item);
+            return $this;
         }
-        return $this;
+        return NULL;
     }
     public function removeAccessRole($item)
     {
@@ -349,8 +350,9 @@ class ChartList extends ListAbstract
     {
         if( $item && !$this->downloadRoles->contains($item) ) {
             $this->downloadRoles->add($item);
+            return $this;
         }
-        return $this;
+        return NULL;
     }
     public function removeDownloadRole($item)
     {
@@ -365,8 +367,9 @@ class ChartList extends ListAbstract
     {
         if( $item && !$this->institutions->contains($item) ) {
             $this->institutions->add($item);
+            return $this;
         }
-        return $this;
+        return NULL;
     }
     public function removeInstitution($item)
     {
