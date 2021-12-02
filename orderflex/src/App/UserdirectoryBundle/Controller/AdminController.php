@@ -8711,8 +8711,8 @@ class AdminController extends OrderAbstractController
         //run after populating chart and topic
         $dashboardInit = $this->get('dashboard_init');
 
-        $testing = true;
-        //$testing = false;
+        //$testing = true;
+        $testing = false;
 
         $chartInitCount = $dashboardInit->initCharts($testing);
 
