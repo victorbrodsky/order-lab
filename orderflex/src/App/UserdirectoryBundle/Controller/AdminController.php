@@ -8699,6 +8699,31 @@ class AdminController extends OrderAbstractController
         //exit("Form Node Tree generated: ".$count);
     }
 
+    /**
+     * @Route("/list/init-dashboard-charts", name="user_init_dashboard_charts", methods={"GET"})
+     */
+    public function initDashboardChartsAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //run after populating chart and topic
+        $dashboardInit = $this->get('dashboard_init');
+
+        $testing = true;
+        //$testing = false;
+
+        $chartInitCount = $dashboardInit->initCharts($testing);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Initialized '.$chartInitCount.' charts'
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
+
     //Blood Product Transfused
     public function generateBloodProductTransfused() {
 
@@ -10554,10 +10579,9 @@ class AdminController extends OrderAbstractController
         }
 
         //run after populating chart and topic
-        $dashboardInit = $this->get('dashboard_init');
-        $chartInitCount = $dashboardInit->initCharts();
-
-        $count = $count + $chartInitCount;
+        //$dashboardInit = $this->get('dashboard_init');
+        //$chartInitCount = $dashboardInit->initCharts();
+        //$count = $count + $chartInitCount;
 
         return round($count/10);
     }

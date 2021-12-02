@@ -92,6 +92,7 @@ class DefaultController extends OrderAbstractController
 
         $dashboardInitUtil = $this->container->get('dashboard_init');
         $res = $dashboardInitUtil->assignAdditionalTopicsAndRolesToCharts($testing=true);
+        $res = $dashboardInitUtil->assignTypesToCharts($testing=true);
         exit($res);
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));

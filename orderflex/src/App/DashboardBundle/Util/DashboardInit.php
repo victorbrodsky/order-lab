@@ -1094,9 +1094,12 @@ class DashboardInit
         $resRole = $this->assignRolesToCharts($testing);
 
         $resAdd = 0;
-        $resAdd = assignAdditionalTopicsAndRolesToCharts($testing);
+        $resAdd = $this->assignAdditionalTopicsAndRolesToCharts($testing);
 
-        return $resInst + $resTopic + $resRole + $resAdd;
+        $resTypes = 0;
+        $resTypes = $this->assignTypesToCharts($testing);
+
+        return $resInst + $resTopic + $resRole + $resAdd + $resTypes;
     }
 
     public function assignInstitutionsToCharts( $testing=false ) {
@@ -1643,7 +1646,7 @@ class DashboardInit
         //        Dashboards-System-Administrator-Pathology-Informatics-Department-Of-Pathology
         //        Dashboards-Software-Developer-Pathology-Informatics-Department-Of-Pathology
 
-        exit('setChartListAction disable');
+        //exit('assignAdditionalTopicsAndRolesToCharts disable');
 
         $em = $this->em;
 
@@ -1714,12 +1717,17 @@ class DashboardInit
             exit('No Institution: "NYP Pathology and Laboratory Medicine"');
         }
 
-                    //55, 56, 57, 58, 59, 60, 61, 62, 63
-        $names = array(55, 56, 57, 58, 59, 62, 63);
+                     //55, 56, 57, 58, 59, 60, 61, 62, 63
+        $names = array(55, 56, 57, 58, 59, 60, 61, 62, 63);
+        //$names = array(55, 56, 57, 58, 59, 62, 63);
 
         $repository = $em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
+
         $dql->leftJoin('list.topics','topics');
+        $dql->leftJoin('list.institutions','institutions');
+        $dql->leftJoin('list.accessRoles','accessRoles');
+        $dql->leftJoin('list.downloadRoles','downloadRoles');
 
         $selectArr = array();
         foreach($names as $name) {
@@ -1729,45 +1737,194 @@ class DashboardInit
         $selectWhere = implode(" OR ",$selectArr);
 
         $dql->where($selectWhere);
-        $dql->andWhere("topics IS NULL");
+
+        if( 0 ) {
+            $dql->andWhere("topics IS NULL");
+            $dql->andWhere("institutions IS NULL");
+            $dql->andWhere("accessRoles IS NULL");
+            $dql->andWhere("downloadRoles IS NULL");
+        }
 
         $query = $dql->getQuery();
 
         $charts = $query->getResult();
         echo "charts count=".count($charts)."<br>";
-        $count = 0;
+
+        $totalCount = 0;
+        $processedCharts = array();
 
         foreach($charts as $chart) {
             echo "Process chart '$chart' <br>";
 
+            $count = 0;
+
             //add topic
-            $chart->addTopic($siteUtilizationTopic);
+            $resTopic = $chart->addTopic($siteUtilizationTopic);
+            if( $resTopic ) {
+                echo "Topic added ";
+                $count++;
+            }
 
             //add institution
-            $chart->addInstitution($pathology);
-            $chart->addInstitution($nypPathology);
+            $resInst = $chart->addInstitution($pathology);
+            if( $resInst ) {
+                echo "WCM Pathology added ";
+                $count++;
+            }
+
+            $resInst = $chart->addInstitution($nypPathology);
+            if( $resInst ) {
+                echo "NYP Pathology added ";
+                $count++;
+            }
 
             //assign roles accessRoles, downloadRoles
             foreach ($rolesArr as $role) {
-                $chart->addAccessRole($role);
-                $chart->addDownloadRole($role);
+                $resRolesThis = $chart->addAccessRole($role);
+                if( $resRolesThis ) {
+                    echo "Access role $role added ";
+                    $count++;
+                }
+                $resRolesThis = $chart->addDownloadRole($role);
+                if( $resRolesThis ) {
+                    echo "Download role $role added ";
+                    $count++;
+                }
             }
 
-            $count++;
+            if( $count > 0 ) {
+                $processedCharts[] = $chart->getName();
+                $totalCount++;
+            }
+
+        }//foreach
+
+        if( $totalCount > 0 ) {
+            if( !$testing ) {
+                $em->flush();
+            } else {
+                dump($processedCharts);
+            }
+        }
+
+        //exit("EOF assignAdditionalTopicsAndRolesToCharts: totalCount=$totalCount");
+        return $totalCount;
+    }
+
+    //Set chart types (Line, Bar ...)
+    function assignTypesToCharts( $testing=false ) {
+
+        //exit('assignTypesToCharts disable');
+
+        $em = $this->em;
+        $dashboardUtil = $this->container->get('dashboard_util');
+
+        $now = new \DateTime('now');
+        $endDate = $now->format('m/d/Y');
+        $startDate = $now->modify('-1 year')->format('m/d/Y');
+
+        $charts = $dashboardUtil->getChartTypes();
+
+        $chartsArray = array();
+        $chartTypeInvalidArr = array();
+
+        $processedCharts = array();
+        $count = 0;
+
+        foreach($charts as $chartType) {
+
+            $chartType = $chartType."";
+            $type = "";
+            //echo "chartType=".$chartType."<br>";
+
+            $parametersArr = array(
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'projectSpecialty' => NULL,
+                'showLimited' => NULL,
+                'chartType' => $chartType,
+                'productservice' => NULL,
+                'quantityLimit' => NULL
+            );
+
+            $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr);
+            //dump($chartsArray); exit('111');
+
+            if( isset($chartsArray['data']) ) {
+                $data = $chartsArray['data'];
+                if( isset($data[0]['type']) ) {
+                    $type = $data[0]['type'];
+                    $type = ucfirst($type);
+                    //echo $count.": chartType=".$chartType.", type=$type <br>";
+                    //dump($data); exit('111');
+                }
+            } else {
+                echo "Chart invalid: chartType=".$chartType."<br>";
+                $chartTypeInvalidArr[] = $chartType;
+                continue;
+            }
+
+            //find ChartList by $chartType
+            $chartEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+            if( !$chartEntity ) {
+                exit("ChartList not find by abbreviation $chartType");
+            }
+
+            //check if chart type already set
+            if( count($chartEntity->getChartTypes()) > 0 ) {
+                echo $count.": $chartEntity already has a type!!! <br>";
+                continue;
+            }
+
+            //echo "type=$type <br>";
+            //find ChartTypeList by $chartType
+            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
+            if( !$chartTypeEntity ) {
+                exit("ChartTypeList not find by name $type");
+            }
+
+            $res = $chartEntity->addChartType($chartTypeEntity);
+            if( $res ) {
+                $processedCharts[] = $chartEntity->getName();
+                $count++;
+            }
+
+            //testing
+            if(1) {
+                $thisChartTypeStr = NULL;
+                foreach ($chartEntity->getChartTypes() as $thisChartType) {
+                    $thisChartTypeStr = $thisChartTypeStr . $thisChartType->getName() . "";
+                }
+                echo "ID ".$chartEntity->getId()." - ". $chartEntity->getName().
+                    " (" . $chartEntity->getAbbreviation() . "): ChartType=" . $thisChartTypeStr . "<br>";
+            }
+
+
+            if( $count > 200 ) {
+                break;
+            }
+
         }//foreach
 
         if( $count > 0 ) {
             if( !$testing ) {
                 $em->flush();
+            } else {
+                dump($processedCharts);
+                dump($chartTypeInvalidArr);
             }
         }
 
-        //exit("EOF setChartListAction: count=$count");
-        return $count;
-    }
+        //$chartTypeInvalidArr
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $event = "Chart types are not set for invalid charts:<br>".implode('; ',$chartTypeInvalidArr);
+//        $userSecUtil = $this->get('user_security_utility');
+//        $sitename = $this->getParameter('dashboard.sitename');
+//        $userSecUtil->createUserEditEvent($sitename,$event,$user,null,$request,'Warning');
 
-    //Set chart types (Line, Bar ...)
-    function assignTypeToCharts() {
+        //dump($chartsArray);
+        //exit('eof setChartTypesAction:<br>'.$event);
+        return $count;
 
     }
 

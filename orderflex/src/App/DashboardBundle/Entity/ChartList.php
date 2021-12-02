@@ -384,8 +384,9 @@ class ChartList extends ListAbstract
     {
         if( $item && !$this->chartTypes->contains($item) ) {
             $this->chartTypes->add($item);
+            return $this;
         }
-        return $this;
+        return NULL;
     }
     public function removeChartType($item)
     {
