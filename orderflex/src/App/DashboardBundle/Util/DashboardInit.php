@@ -1754,7 +1754,7 @@ class DashboardInit
         $processedCharts = array();
 
         foreach($charts as $chart) {
-            echo "Process chart '$chart' <br>";
+            echo "<br>Process chart '$chart' <br>";
 
             $count = 0;
 
