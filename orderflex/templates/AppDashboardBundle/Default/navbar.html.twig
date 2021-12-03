@@ -252,14 +252,15 @@
                     </li>
 
                     {#Favorites#}
-                    <li id="nav-bar-translationalresearch-favorites" class="dropdown">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Favorites<b class="caret"></b></a>
-                        {#<ul class="dropdown-menu multi-level">#}
-                            {% set filterFavorites = dashboard_util.getFilterFavorites() %}
-                            {{ navbarmacros.createFilterFavorites(filterFavorites) }}
-                        {#</ul>#}
-                    </li>
+                    {% set filterFavorites = dashboard_util.getFilterFavorites() %}
+                    {% if filterFavorites|length > 0 %}
+                        <li id="nav-bar-translationalresearch-favorites" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Favorites<b class="caret"></b></a>
+                            {#<ul class="dropdown-menu multi-level">#}
+                                {{ navbarmacros.createFilterFavorites(filterFavorites) }}
+                            {#</ul>#}
+                        </li>
+                    {% endif %}
 
                     <li id="nav-bar-translationalresearch-topic" class="dropdown">
 
