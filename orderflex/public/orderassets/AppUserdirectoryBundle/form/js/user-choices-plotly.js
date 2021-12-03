@@ -10,10 +10,14 @@ $(document).ready(function() {
     //
 
     //click filter button if number of charts less or equal 3
+    var useWarning = $("#useWarning").val();
     var chartTypesLen = $('#filter_chartType').select2('data').length;
+    if( !useWarning ) {
+        chartTypesLen = 0;
+    }
     //console.log("chartTypesLen="+chartTypesLen);
-    if( chartTypesLen < 4 ) {
-        if( document.getElementById("filter-btn") ) {
+    if (chartTypesLen < 4) {
+        if (document.getElementById("filter-btn")) {
             document.getElementById("filter-btn").click(); //chart-filter-btn
         }
     }

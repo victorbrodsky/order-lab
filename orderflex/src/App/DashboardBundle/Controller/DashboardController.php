@@ -123,7 +123,8 @@ class DashboardController extends OrderAbstractController
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
             'filter[projectSpecialty][]' => 0,
-            'title' => "Topic '".$topic->getName()."'"
+            'title' => "Topic '".$topic->getName()."'",
+            'auto' => true
         );
         $count = 0;
 
@@ -249,7 +250,8 @@ class DashboardController extends OrderAbstractController
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
             'filter[projectSpecialty][]' => 0,
-            'title' => "Service '".$institution->getName()."'"
+            'title' => "Service '".$institution->getName()."'",
+            'auto' => true
         );
         $count = 0;
 
@@ -469,8 +471,35 @@ class DashboardController extends OrderAbstractController
         $filterform->handleRequest($request);
 
         //chartType
+        $useWarning = true;
+        $autoLoad = $request->query->get('auto');
+        if( isset($autoLoad) ) {
+            if( $autoLoad ) {
+                //echo "auto is true <br>";
+                $useWarning = false;
+            } else {
+                //echo "auto is false <br>";
+            }
+        } else {
+            //echo "auto not set <br>";
+            //$useWarning = true;
+        }
+//        if( $useWarning ) {
+//            echo "useWarning is true <br>";
+//            $useWarning = false;
+//        } else {
+//            echo "useWarning is false <br>";
+//        }
+        //exit('111');
+        $chartTypesCount = 0;
         $chartTypes = $filterform['chartType']->getData();
-        if( $chartTypes && count($chartTypes) > 3 ) {
+        if( $chartTypes ) {
+            $chartTypesCount = count($chartTypes);
+        }
+        if( !$useWarning ) {
+            $chartTypesCount = 0;
+        }
+        if( $chartTypesCount > 3 ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
                 'Please click Filter button to generate multiple charts'
@@ -487,6 +516,7 @@ class DashboardController extends OrderAbstractController
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
+            'useWarning' => $useWarning
         );
     }
 

@@ -1563,20 +1563,35 @@ class DashboardInit
             "Dashboards-Vice-Chair-of-Clinical-Pathology-Department-Of-Pathology"
         );
 
+        //23- Give all charts the role of “Dashboards-Associate-Administrator-Department-Of-Pathology”
+        $roleAdminAbbreviation = "Dashboards-Associate-Administrator-Department-Of-Pathology";
+        $roleAdmin = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($roleAdminAbbreviation);
+        if( !$roleAdmin ) {
+            exit("Role not found by abbreviation=".$roleAdminAbbreviation);
+        }
+        $resAdminArr = array();
+
         $charts = $this->getCharts();
         foreach( $charts as $chart ) {
             $charts1Arr = $this->addSpecificRoles($chart,$roles1Arr,$addChart1Arr,$charts1Arr);
             $charts2Arr = $this->addSpecificRoles($chart,$roles2Arr,$addChart2Arr,$charts2Arr);
             $charts3Arr = $this->addSpecificRoles($chart,$roles3Arr,$addChart3Arr,$charts3Arr);
+
+            //23- Give all charts the role of “Dashboards-Associate-Administrator-Department-Of-Pathology”
+            if( $chart->addAccessRole($roleAdmin) ) {
+                //echo $chart.": add admin role <br>";
+                $resAdminArr[] = $chart->getName();
+            }
         }
 
-        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr);
+        $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($resAdminArr);
 
         if( $count > 0 ) {
             if( $testing ) {
                 dump($charts1Arr);
                 dump($charts2Arr);
                 dump($charts3Arr);
+                dump($resAdminArr);
             } else {
                 $this->em->flush();
             }

@@ -90,10 +90,11 @@ class DefaultController extends OrderAbstractController
         //$dashboardInitUtil = $this->container->get('dashboard_init');
         //$res = $dashboardInitUtil->initCharts($testing=true);
 
-//        $dashboardInitUtil = $this->container->get('dashboard_init');
+        //$dashboardInitUtil = $this->container->get('dashboard_init');
 //        $res = $dashboardInitUtil->assignAdditionalTopicsAndRolesToCharts($testing=true);
 //        $res = $dashboardInitUtil->assignTypesToCharts($testing=true);
-//        exit($res);
+        //$res = $dashboardInitUtil->assignRolesToCharts($testing=true);
+        //exit($res);
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
@@ -125,6 +126,8 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
+     * NOT USED: moved to /list/init-dashboard-charts
+     * 
      * @Route("/init-set-chart-list", name="dashboard_init_set_chart_list")
      * @Template("AppDashboardBundle/Default/test.html.twig")
      */
@@ -249,6 +252,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
+     * NOT USED: moved to /list/init-dashboard-charts
      * Set chart types (Line, Bar ...)
      *
      * @Route("/init-set-chart-type", name="dashboard_init_set_chart_type")
