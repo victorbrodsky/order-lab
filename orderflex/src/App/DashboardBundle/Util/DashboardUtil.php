@@ -7030,14 +7030,15 @@ class DashboardUtil
             $perYear = true;
             //$perMonth = true;
 
+            //TODO: use shifted year: current year + 2 years
+            //TODO: fiscal year or calendar year range?
+
             if( $perYear ) {
                 $startDate->modify('first day of january this year');
             }
             if( $perMonth ) {
                 $startDate->modify('first day of this month');
             }
-
-            //fiscal year or calendar year range?
 
             $totalCount = 0;
 
@@ -7113,15 +7114,16 @@ class DashboardUtil
             $perYear = true;
             $perMonth = false;
 
+            //TODO: use shifted year: current year + 2 years
+            //TODO: fiscal year or calendar year range?
+
             if( $perYear ) {
                 $startDate->modify('first day of january this year');
             }
             if( $perMonth ) {
                 $startDate->modify('first day of this month');
             }
-
-            //fiscal year or calendar year range?
-
+            
             $totalCount = 0;
 
             do {
