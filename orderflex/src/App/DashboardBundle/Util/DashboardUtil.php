@@ -362,7 +362,7 @@ class DashboardUtil
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
             "60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
-            //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+            "61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
 
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
@@ -7020,13 +7020,16 @@ class DashboardUtil
 
         }
 
+        //"60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
         if( $chartType == "fellapp-number-applicant-by-year" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
-            //get fellapp applications by year
-            //TODO: implement
+            //$perYear = false;
+            //$perMonth = false;
 
-            //$startDate->modify( 'first day of last month' );
+            $perYear = true;
+            $perMonth = false;
+
             if( $perYear ) {
                 $startDate->modify('first day of january this year');
             }
@@ -7034,7 +7037,9 @@ class DashboardUtil
                 $startDate->modify('first day of this month');
             }
 
-            //fiscal year => take all available years as $startDate
+            //fiscal year or calendar year range?
+
+            $totalCount = 0;
 
             do {
                 $startDateLabel = $startDate->format('Y');
@@ -7075,30 +7080,108 @@ class DashboardUtil
             //increase vertical
             //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
             $layoutArray = array(
-                'height' => $this->height*1.3,
+                'height' => $this->height,//*1.3,
                 'width' => $this->width,
                 'title' => $chartName,
-                //'margin' => array('b' => 300),
-                'yaxis' => array(
-                    'tickformat' => "$"."n", //"digit"
-                    //'showticklabels' => false,
-                    //'tickvals' => null
+                'margin' => array('b'=>200),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
                 ),
                 //'showlegend' => false
             );
-
-            $combinedData = array();
-            $combinedData[] = $fellappArr;
+            //$layoutArray = NULL;//array();
 
             $chartName = $chartName . ", Total " . $totalCount . " applications";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray, "x+y"); //public function getStackedChart
+            //stacked char
+            //$combinedData = array();
+            //$combinedData[] = $fellappArr;
+            //$chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
+
+            //bar chart
+            $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
         }
 
+        //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
         if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
-            $transresUtil = $this->container->get('transres_util');
-            //TODO: implement
+            $fellappUtil = $this->container->get('fellapp_util');
 
+            //$perYear = false;
+            //$perMonth = false;
+
+            $perYear = true;
+            $perMonth = false;
+
+            if( $perYear ) {
+                $startDate->modify('first day of january this year');
+            }
+            if( $perMonth ) {
+                $startDate->modify('first day of this month');
+            }
+
+            //fiscal year or calendar year range?
+
+            $totalCount = 0;
+
+            do {
+                $startDateLabel = $startDate->format('Y');
+                //echo "startDateLabel=".$startDateLabel."<br>";
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                if( $perYear ) {
+                    $thisEndDate->modify('last day of december this year');
+                }
+                if( $perMonth ) {
+                    $thisEndDate->modify('last day of this month');
+                }
+                //echo "StartDate=".$startDate->format("d-M-Y")."; thisEndDate=".$thisEndDate->format("d-M-Y").": <br>";
+
+                $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
+
+                if( $perYear ) {
+                    $startDate->modify('first day of january next year');
+                }
+                if( $perMonth ) {
+                    $startDate->modify('first day of next month');
+                }
+
+                $fellappsCount = count($fellapps);
+                $totalCount = $totalCount + $fellappsCount;
+
+                $fellappArr[$startDateLabel] = $fellappsCount;
+
+                //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
+
+            } while( $startDate < $endDate );
+
+            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
+            //exit('111');
+
+            //$chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
+
+            //increase vertical
+            //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
+            $layoutArray = array(
+                'height' => $this->height,//*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b'=>200),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
+                ),
+                //'showlegend' => false
+            );
+            //$layoutArray = NULL;//array();
+
+            $chartName = $chartName . ", Total " . $totalCount . " applications";
+
+            //stacked char
+            //$combinedData = array();
+            //$combinedData[] = $fellappArr;
+            //$chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
+
+            //bar chart
+            $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
         }
 
         //"62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
@@ -7407,7 +7490,8 @@ class DashboardUtil
             //fiscal year => take all available years as $startDate
 
             do {
-                $startDateLabel = $startDate->format('M-Y');
+                //$startDateLabel = $startDate->format('M-Y');
+                $startDateLabel = $startDate->format('Y');
                 //echo "startDateLabel=".$startDateLabel."<br>";
                 $thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
@@ -7472,6 +7556,9 @@ class DashboardUtil
                     'tickformat' => "$"."n", //"digit"
                     //'showticklabels' => false,
                     //'tickvals' => null
+                ),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
                 ),
                 //'showlegend' => false
             );
