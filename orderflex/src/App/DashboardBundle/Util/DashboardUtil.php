@@ -7146,10 +7146,28 @@ class DashboardUtil
                     $startDate->modify('first day of next month');
                 }
 
+                $scoreAvg = 0;
+                $scoreCounter = 0;
+                $scoreSumTotal = 0;
+                foreach($fellapps as $fellapp) {
+                    $scoreSum = $fellapp->getUsmleSum();
+                    //echo $fellapp->getId().": scoreSum=$scoreSum <br>";
+                    if( $scoreSum ) {
+                        //echo $fellapp->getId().": scoreSum=$scoreSum <br>";
+                        $scoreSumTotal = $scoreSumTotal + $scoreSum;
+                        $scoreCounter++;
+                    }
+                }
+                if( $scoreCounter > 0 ) {
+                    //echo "$scoreSumTotal / $scoreCounter <br>";
+                    $scoreAvg = round($scoreSumTotal / $scoreCounter);
+                    //$scoreAvg = ($scoreSumTotal / $scoreCounter);
+                }
+
                 $fellappsCount = count($fellapps);
                 $totalCount = $totalCount + $fellappsCount;
 
-                $fellappArr[$startDateLabel] = $fellappsCount;
+                $fellappArr[$startDateLabel] = $scoreAvg;
 
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
@@ -7174,7 +7192,7 @@ class DashboardUtil
             );
             //$layoutArray = NULL;//array();
 
-            $chartName = $chartName . ", Total " . $totalCount . " applications";
+            $chartName = $chartName . " (" . $totalCount . " applications in total)";
 
             //stacked char
             //$combinedData = array();

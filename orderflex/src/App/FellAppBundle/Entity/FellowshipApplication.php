@@ -1359,6 +1359,18 @@ class FellowshipApplication extends BaseUserAttributes {
         
         return $usmleArr;
     }
+    public function getUsmleSum() {
+        $scoreSum = 0;
+        foreach($this->getUsmleArr() as $score) {
+            if( $score && $score != '-' ) {
+                $score = intval($score);
+                if( $score > 0 && $score <= 300 ) {
+                    $scoreSum = $scoreSum + $score;
+                }
+            }
+        }
+        return $scoreSum;
+    }
     
     public function getComlexArr() {
         $comlexArr = array();
