@@ -7024,11 +7024,11 @@ class DashboardUtil
         if( $chartType == "fellapp-number-applicant-by-year" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
-            //$perYear = false;
-            //$perMonth = false;
+            $perYear = false;
+            $perMonth = false;
 
             $perYear = true;
-            $perMonth = false;
+            //$perMonth = true;
 
             if( $perYear ) {
                 $startDate->modify('first day of january this year');
@@ -7043,6 +7043,7 @@ class DashboardUtil
 
             do {
                 $startDateLabel = $startDate->format('Y');
+
                 //echo "startDateLabel=".$startDateLabel."<br>";
                 $thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
@@ -7085,13 +7086,13 @@ class DashboardUtil
                 'title' => $chartName,
                 'margin' => array('b'=>200),
                 'xaxis' => array(
-                    'tickformat' =>  "d",
+                    //'tickformat' =>  "d",
                 ),
                 //'showlegend' => false
             );
             //$layoutArray = NULL;//array();
 
-            $chartName = $chartName . ", Total " . $totalCount . " applications";
+            $chartName = $chartName . " (" . $totalCount . " applications in total)";
 
             //stacked char
             //$combinedData = array();
