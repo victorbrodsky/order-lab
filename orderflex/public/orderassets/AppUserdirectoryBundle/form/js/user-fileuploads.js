@@ -20,7 +20,7 @@
 
 //dropzone globals
 var _dz_maxFiles = 20;
-var _dz_maxFilesize = 10; //MB
+var _dz_maxFilesize = 64; //MB
 
 
 // Prevent Dropzone from auto discovering this element

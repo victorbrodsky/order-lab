@@ -7025,7 +7025,7 @@ class DashboardUtil
 
             //get fellapp applications by year
             //TODO: implement
-            
+
             //$startDate->modify( 'first day of last month' );
             if( $perYear ) {
                 $startDate->modify('first day of january this year');
