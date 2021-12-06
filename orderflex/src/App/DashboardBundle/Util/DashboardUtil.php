@@ -7192,7 +7192,7 @@ class DashboardUtil
             );
             //$layoutArray = NULL;//array();
 
-            $chartName = $chartName . " (" . $totalCount . " applications in total)";
+            $chartName = $chartName . " (" . $totalCount . " applications in total; USMLE Step 1,2, and 3)";
 
             //stacked char
             //$combinedData = array();
