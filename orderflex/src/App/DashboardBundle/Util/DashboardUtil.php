@@ -7060,6 +7060,8 @@ class DashboardUtil
 
                 $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
 
+                $academicStartDate->modify('+ 1 year');
+
 //                if( $perYear ) {
 //                    $startDate->modify('first day of january next year');
 //                }
@@ -7089,7 +7091,7 @@ class DashboardUtil
                 'title' => $chartName,
                 'margin' => array('b'=>200),
                 'xaxis' => array(
-                    //'tickformat' =>  "d",
+                    'tickformat' =>  "d",
                 ),
                 //'showlegend' => false
             );

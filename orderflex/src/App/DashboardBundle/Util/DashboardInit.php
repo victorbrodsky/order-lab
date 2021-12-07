@@ -1398,6 +1398,26 @@ class DashboardInit
             exit("Error: not found: Call Log");
         }
 
+        //8) 21- assign the appropriate Educational topic to charts 60 and 61
+        $charts8Arr = array();
+        $addChart8Arr = array("60. ", "61. ");
+        $educational = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Educational",
+            $root,
+            $mapper
+        );
+        if( !$educational ) {
+            exit("Error: not found: Educational");
+        }
+        $educationalFellapp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Fellowship Candidate Statistics",
+            $educational,
+            $mapper
+        );
+        if( !$educationalFellapp ) {
+            exit("Error: not found: Educational->Fellowship Candidate Statistics");
+        }
+
         $count = 0;
 
         foreach($charts as $chart) {
@@ -1434,6 +1454,8 @@ class DashboardInit
             //7) Site Utilization > Call Log
             $charts7Arr = $this->addSpecificTopic($chart,$siteutilCalllog,$addChart7Arr,$charts7Arr);
 
+            //8) Educational->Fellowship Candidate Statistics
+            $charts8Arr = $this->addSpecificTopic($chart,$educationalFellapp,$addChart8Arr,$charts8Arr);
 
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
 //                foreach($chart->getTopics() as $topic) {
@@ -1468,7 +1490,7 @@ class DashboardInit
 
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
-        +count($charts6Arr)+count($charts7Arr);
+        +count($charts6Arr)+count($charts7Arr)+count($charts8Arr);
 
         if( $count > 0 ) {
             if( $testing ) {
@@ -1479,6 +1501,7 @@ class DashboardInit
                 dump($charts5Arr);
                 dump($charts6Arr);
                 dump($charts7Arr);
+                dump($charts8Arr);
             } else {
                 $this->em->flush();
             }
