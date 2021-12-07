@@ -7024,46 +7024,48 @@ class DashboardUtil
         if( $chartType == "fellapp-number-applicant-by-year" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
-            $perYear = false;
-            $perMonth = false;
-
-            $perYear = true;
+            //$perYear = false;
+            //$perMonth = false;
+            //$perYear = true;
             //$perMonth = true;
 
             //TODO: use shifted year: current year + 2 years
-            //TODO: fiscal year or calendar year range?
+            //TODO: academic year or calendar year range?
 
-            if( $perYear ) {
-                $startDate->modify('first day of january this year');
-            }
-            if( $perMonth ) {
-                $startDate->modify('first day of this month');
-            }
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            $endYearInt = intval($endYear);
+
+            //$startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true,+2);
+            $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true);
+            $academicStartDate = $startEndDates['startDate'];
+            $academicEndDate = $startEndDates['endDate'];
 
             $totalCount = 0;
 
             do {
-                $startDateLabel = $startDate->format('Y');
+                $startDateLabel = $academicStartDate->format('Y');
+                $startDateInt = intval($startDateLabel);
 
                 //echo "startDateLabel=".$startDateLabel."<br>";
-                $thisEndDate = clone $startDate;
+                //$thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
-                if( $perYear ) {
-                    $thisEndDate->modify('last day of december this year');
-                }
-                if( $perMonth ) {
-                    $thisEndDate->modify('last day of this month');
-                }
+//                if( $perYear ) {
+//                    $thisEndDate->modify('last day of december this year');
+//                }
+//                if( $perMonth ) {
+//                    $thisEndDate->modify('last day of this month');
+//                }
                 //echo "StartDate=".$startDate->format("d-M-Y")."; thisEndDate=".$thisEndDate->format("d-M-Y").": <br>";
 
                 $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
 
-                if( $perYear ) {
-                    $startDate->modify('first day of january next year');
-                }
-                if( $perMonth ) {
-                    $startDate->modify('first day of next month');
-                }
+//                if( $perYear ) {
+//                    $startDate->modify('first day of january next year');
+//                }
+//                if( $perMonth ) {
+//                    $startDate->modify('first day of next month');
+//                }
 
                 $fellappsCount = count($fellapps);
                 $totalCount = $totalCount + $fellappsCount;
@@ -7072,7 +7074,7 @@ class DashboardUtil
 
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
-            } while( $startDate < $endDate );
+            } while( $startDateInt < $endYearInt );
 
             //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
             //exit('111');
@@ -7111,42 +7113,45 @@ class DashboardUtil
             //$perYear = false;
             //$perMonth = false;
 
-            $perYear = true;
-            $perMonth = false;
+            //$perYear = true;
+            //$perMonth = false;
+
+            //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
 
             //TODO: use shifted year: current year + 2 years
-            //TODO: fiscal year or calendar year range?
+            //TODO: academic year or calendar year range?
+            //$startYear = $fellappUtil->getDefaultAcademicStartYear();
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            $endYearInt = intval($endYear);
 
-            if( $perYear ) {
-                $startDate->modify('first day of january this year');
-            }
-            if( $perMonth ) {
-                $startDate->modify('first day of this month');
-            }
+            //$startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true,+2);
+            $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true);
+            $academicStartDate = $startEndDates['startDate'];
+            $academicEndDate = $startEndDates['endDate'];
+            //echo "academicStartDate=".$academicStartDate->format('d-m-Y').", academicEndDate=".$academicEndDate->format('d-m-Y')."<br>";
+            //exit('111');
+
+//            if( $perYear ) {
+//                $startDate->modify('first day of january this year');
+//            }
+//            if( $perMonth ) {
+//                $startDate->modify('first day of this month');
+//            }
             
             $totalCount = 0;
 
             do {
-                $startDateLabel = $startDate->format('Y');
+                $startDateLabel = $academicStartDate->format('Y');
+                $startDateInt = intval($startDateLabel);
                 //echo "startDateLabel=".$startDateLabel."<br>";
-                $thisEndDate = clone $startDate;
+                //$thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
-                if( $perYear ) {
-                    $thisEndDate->modify('last day of december this year');
-                }
-                if( $perMonth ) {
-                    $thisEndDate->modify('last day of this month');
-                }
-                //echo "StartDate=".$startDate->format("d-M-Y")."; thisEndDate=".$thisEndDate->format("d-M-Y").": <br>";
+                //echo "StartDate=".$academicStartDate->format("d-M-Y")."; endYearInt=".$endYearInt.": <br>";
 
                 $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
 
-                if( $perYear ) {
-                    $startDate->modify('first day of january next year');
-                }
-                if( $perMonth ) {
-                    $startDate->modify('first day of next month');
-                }
+                $academicStartDate->modify('+ 1 year');
 
                 $scoreAvg = 0;
                 $scoreCounter = 0;
@@ -7173,7 +7178,7 @@ class DashboardUtil
 
                 //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
 
-            } while( $startDate < $endDate );
+            } while( $startDateInt < $endYearInt );
 
             //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
             //exit('111');
@@ -7195,6 +7200,7 @@ class DashboardUtil
             //$layoutArray = NULL;//array();
 
             $chartName = $chartName . " (" . $totalCount . " applications in total; USMLE Step 1,2, and 3)";
+            //exit('$chartName='.$chartName);
 
             //stacked char
             //$combinedData = array();
