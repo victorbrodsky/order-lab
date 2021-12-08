@@ -1371,6 +1371,48 @@ class FellowshipApplication extends BaseUserAttributes {
         }
         return $scoreSum;
     }
+
+    public function getAllUsmleArr() {
+
+        $examination = NULL;
+        $usmleArr = array();
+
+        //we should have only 1 examination per applicant
+        $examinations = $this->getExaminations();
+        if( count($examinations) > 0 ) {
+            $examination = $examinations[0];
+        }
+
+        if( !$examination ) {
+            return $usmleArr;
+        }
+
+        if(
+            !$examination->getUSMLEStep1Score() &&
+            !$examination->getUSMLEStep2CKScore() &&
+            !$examination->getUSMLEStep3Score()
+        ) {
+            return $usmleArr;
+        }
+
+        if( $examination->getUSMLEStep1Score() ) {
+            $usmleArr[1] = $examination->getUSMLEStep1Score();
+        } else {
+            $usmleArr[1] = NULL;
+        }
+        if( $examination->getUSMLEStep2CKScore() ) {
+            $usmleArr[2] = $examination->getUSMLEStep2CKScore();
+        } else {
+            $usmleArr[2] = NULL;
+        }
+        if( $examination->getUSMLEStep3Score() ) {
+            $usmleArr[3] = $examination->getUSMLEStep3Score();
+        } else {
+            $usmleArr[3] = NULL;
+        }
+
+        return $usmleArr;
+    }
     
     public function getComlexArr() {
         $comlexArr = array();

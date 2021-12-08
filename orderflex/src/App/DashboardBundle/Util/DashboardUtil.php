@@ -7105,11 +7105,13 @@ class DashboardUtil
             //$chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
 
             //bar chart
-            $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
+            //$chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
+
+            $chartsArray = $this->getViolinChart($fellappArr,$chartName,'violin',$layoutArray);
         }
 
         //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year_SIMPLE" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //$perYear = false;
@@ -7211,6 +7213,123 @@ class DashboardUtil
 
             //bar chart
             $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
+
+            //violin
+
+        }
+        //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+            $fellappUtil = $this->container->get('fellapp_util');
+
+            //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
+
+            //TODO: use shifted year: current year + 2 years
+            //TODO: academic year or calendar year range?
+            //$startYear = $fellappUtil->getDefaultAcademicStartYear();
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            $endYearInt = intval($endYear);
+
+            //$startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true,+2);
+            $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true);
+            $academicStartDate = $startEndDates['startDate'];
+            $academicEndDate = $startEndDates['endDate'];
+            //echo "academicStartDate=".$academicStartDate->format('d-m-Y').", academicEndDate=".$academicEndDate->format('d-m-Y')."<br>";
+            //exit('111');
+
+            $usmle1 = array();
+            $usmle2 = array();
+            $usmle3 = array();
+            $comlex1 = array();
+            $comlex2 = array();
+            $comlex3 = array();
+
+            $usmleCounter1 = 0;
+            $usmleCounter2 = 0;
+            $usmleCounter3 = 0;
+            $comlexCounter1 = 0;
+            $comlexCounter2 = 0;
+            $comlexCounter3 = 0;
+
+            $totalCount = 0;
+
+            do {
+                $startDateLabel = $academicStartDate->format('Y');
+                $startDateInt = intval($startDateLabel);
+                //echo "startDateLabel=".$startDateLabel."<br>";
+                //echo "StartDate=".$academicStartDate->format("d-M-Y")."; endYearInt=".$endYearInt.": <br>";
+
+                $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
+
+                $academicStartDate->modify('+ 1 year');
+
+                $scoreAvg = 0;
+                $scoreCounter = 0;
+                $scoreSumTotal = 0;
+                foreach($fellapps as $fellapp) {
+                    $usmleArr = $fellapp->getAllUsmleArr();
+                    if( count($usmleArr) > 0 ) {
+                        if( $usmleArr[1] !== NULL ) {
+                            $usmle1[] =  array_sum($usmle1) + $usmleArr[1];
+                            $usmleCounter1++;
+                        }
+                        if( $usmleArr[2] !== NULL ) {
+                            $usmle2[] =  array_sum($usmle2) + $usmleArr[2];
+                            $usmleCounter2++;
+                        }
+                        if( $usmleArr[3] !== NULL ) {
+                            $usmle3[] =  array_sum($usmle3) + $usmleArr[3];
+                            $usmleCounter3++;
+                        }
+                    }
+                }
+                if( $scoreCounter > 0 ) {
+                    //echo "$scoreSumTotal / $scoreCounter <br>";
+                    $scoreAvg = round($scoreSumTotal / $scoreCounter);
+                    //$scoreAvg = ($scoreSumTotal / $scoreCounter);
+                }
+
+                $fellappsCount = count($fellapps);
+                $totalCount = $totalCount + $fellappsCount;
+
+                $fellappArr[$startDateLabel] = $scoreAvg;
+
+                //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
+
+            } while( $startDateInt < $endYearInt );
+
+            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
+            //exit('111');
+
+            //$chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
+
+            //increase vertical
+            //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
+            $layoutArray = array(
+                'height' => $this->height,//*1.3,
+                'width' => $this->width,
+                'title' => $chartName,
+                'margin' => array('b'=>200),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
+                ),
+                //'showlegend' => false
+            );
+            //$layoutArray = NULL;//array();
+
+            $chartName = $chartName . " (" . $totalCount . " applications in total; USMLE Step 1,2, and 3)";
+            //exit('$chartName='.$chartName);
+
+            //stacked char
+            //$combinedData = array();
+            //$combinedData[] = $fellappArr;
+            //$chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
+
+            //bar chart
+            $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
+
+            //violin
+
         }
 
         //"62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
