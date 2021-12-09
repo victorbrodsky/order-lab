@@ -1372,7 +1372,7 @@ class DashboardUtil
                 //$values = array(1, 2, 3, 1, 3, 4, 5, 2, 1, 3, 4, 2, 3, 4, 1, 1,);
 
                 $chartDataArray[$xAxis] = $labels;
-                $chartDataArray[$yAxis] = $values;
+                $chartDataArray[$yAxis] = $valueData; //$values;
                 $chartDataArray['name'] = $name;
                 $chartDataArray['type'] = $type;
                 $chartDataArray['legendgroup'] = $name;
@@ -1399,8 +1399,8 @@ class DashboardUtil
             'data' => $violinDataArray
         );
 
-        dump($chartsArray);
-        exit(111);
+        //dump($chartsArray);
+        //exit(111);
 
         return $chartsArray;
     }
