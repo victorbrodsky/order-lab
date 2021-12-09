@@ -251,6 +251,37 @@ function plotlyAddChart(chartIndex,chartData) {
     // };
     // var data = [trace1, trace2];
 
+    var dataY1 = [2,3,1,4,2,3,5,1,1,2];
+    var dataY2 = [2,3,1,4,2,3,5,1,1,2];
+
+    var data = [{
+        type: 'violin',
+        y: dataY1, //unpack(rows, 'total_bill'),
+        points: 'none',
+        box: {
+            visible: true
+        },
+        boxpoints: false,
+        line: {
+            color: 'black'
+        },
+        fillcolor: '#8dd3c7',
+        opacity: 0.6,
+        meanline: {
+            visible: true
+        },
+        x0: "Total Bill"
+    }];
+
+
+    var layout = {
+        title: "",
+        yaxis: {
+            zeroline: false
+        }
+
+    };
+
     Plotly.newPlot(divId, data, layout);
 
     //console.log("_totalChartCount="+_totalChartCount+", _retrievedChartCount="+_retrievedChartCount);
