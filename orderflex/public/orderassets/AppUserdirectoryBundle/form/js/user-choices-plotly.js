@@ -251,36 +251,93 @@ function plotlyAddChart(chartIndex,chartData) {
     // };
     // var data = [trace1, trace2];
 
-    var dataY1 = [2,3,1,4,2,3,5,1,1,2];
-    var dataY2 = [2,3,1,4,2,3,5,1,1,2];
+    var dataX = ['Sun','Mon','Tue','Sun','Mon','Tue']; //6
+    var dataY1 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"]; //9 //[2.1,3.3,1.4,4.1,2.8,3.2,5.2,1.1,1.1,2.5,2,3,4,5,6,7,1];
+    var dataY2 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"]; //9 //[2,3,1,4,2,3,5,1,1,2,3,4,5,2,3,4,1,1,32,43,4,43,2];
+
+    var dataX = ['Sun','Mon','Tue','Sun','Mon','Tue','Sun','Mon','Tue']; //9
+    var dataY1 = ["16.99", "10.34", "21.01", "16.99", "10.34", "21.01", "21.01", "10.34", "21.01"]; //9
+    //var dataY2 = ["16.99", "10.34", "21.01", "16.99", "10.34", "21.01", "21.01", "10.34", "21.01"];
+
+    if(0) {
+        var data = [{
+            type: 'violin',
+            y: dataY1, //unpack(rows, 'total_bill'),
+            points: 'none',
+            box: {
+                visible: true
+            },
+            boxpoints: false,
+            line: {
+                color: 'black'
+            },
+            fillcolor: '#8dd3c7',
+            opacity: 0.6,
+            meanline: {
+                visible: true
+            },
+            x0: "Total Bill"
+        }];
+        var layout = {
+            title: "",
+            yaxis: {
+                zeroline: false
+            }
+
+        };
+    }
+
+    // need to fix data
+
+    //d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/violin_data.csv", function(err, rows){
 
     var data = [{
         type: 'violin',
-        y: dataY1, //unpack(rows, 'total_bill'),
-        points: 'none',
+        x: dataX, //unpack(rows, 'day'),
+        y: dataY1,//unpack(rows, 'total_bill'),
+        legendgroup: 'M',
+        scalegroup: 'M',
+        name: 'M',
         box: {
             visible: true
         },
-        boxpoints: false,
         line: {
-            color: 'black'
+            color: 'blue',
         },
-        fillcolor: '#8dd3c7',
-        opacity: 0.6,
         meanline: {
             visible: true
+        }
+    },
+    {
+        type: 'violin',
+        x: dataX, //(rows, 'day'),
+        y: dataY2, //unpack(rows, 'total_bill'),
+        legendgroup: 'F',
+        scalegroup: 'F',
+        name: 'F',
+        box: {
+            visible: true
         },
-        x0: "Total Bill"
-    }];
-
+        line: {
+            color: 'pink',
+        },
+        meanline: {
+            visible: true
+        }
+    }
+    ];
 
     var layout = {
-        title: "",
+        title: "Grouped Violin Plot",
         yaxis: {
             zeroline: false
-        }
-
+        },
+        violinmode: 'group'
     };
+
+        //Plotly.newPlot('myDiv', data, layout);
+    //});
+
 
     Plotly.newPlot(divId, data, layout);
 
