@@ -7177,7 +7177,7 @@ class DashboardUtil
         }
 
         //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year-SIMPLE" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //$perYear = false;
@@ -7284,7 +7284,7 @@ class DashboardUtil
 
         }
         //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year_STAT" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
