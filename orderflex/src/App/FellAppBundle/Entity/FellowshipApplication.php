@@ -1387,31 +1387,40 @@ class FellowshipApplication extends BaseUserAttributes {
             return $usmleArr;
         }
 
+        $score1 = NULL;
+        $score2 = NULL;
+        $score3 = NULL;
+
+        if( $this->isUsmleValid($examination->getUSMLEStep1Score()) ) {
+            $score1 = $examination->getUSMLEStep1Score();
+        }
+        if( $this->isUsmleValid($examination->getUSMLEStep2CKScore()) ) {
+            $score2 = $examination->getUSMLEStep2CKScore();
+        }
+        if( $this->isUsmleValid($examination->getUSMLEStep3Score()) ) {
+            $score3 = $examination->getUSMLEStep3Score();
+        }
+
         if(
-            !$examination->getUSMLEStep1Score() &&
-            !$examination->getUSMLEStep2CKScore() &&
-            !$examination->getUSMLEStep3Score()
+            !$score1 &&
+            !$score2 &&
+            !$score3
         ) {
             return $usmleArr;
         }
 
-        if( $examination->getUSMLEStep1Score() ) {
-            $usmleArr[1] = $examination->getUSMLEStep1Score();
-        } else {
-            $usmleArr[1] = NULL;
-        }
-        if( $examination->getUSMLEStep2CKScore() ) {
-            $usmleArr[2] = $examination->getUSMLEStep2CKScore();
-        } else {
-            $usmleArr[2] = NULL;
-        }
-        if( $examination->getUSMLEStep3Score() ) {
-            $usmleArr[3] = $examination->getUSMLEStep3Score();
-        } else {
-            $usmleArr[3] = NULL;
-        }
+        $usmleArr[1] = $score1;
+        $usmleArr[2] = $score2;
+        $usmleArr[3] = $score3;
 
         return $usmleArr;
+    }
+
+    public function isUsmleValid( $score ) {
+        if( is_numeric($score) && $score !== NULL && $score > 0 && $score <= 300 ) {
+            return true;
+        }
+        return false;
     }
     
     public function getComlexArr() {
@@ -1446,6 +1455,56 @@ class FellowshipApplication extends BaseUserAttributes {
         //print_r($comlexArr);
         
         return $comlexArr;
+    }
+
+    public function getAllComlexArr() {
+
+        $examination = NULL;
+        $comlexArr = array();
+
+        //we should have only 1 examination per applicant
+        $examinations = $this->getExaminations();
+        if( count($examinations) > 0 ) {
+            $examination = $examinations[0];
+        }
+
+        if( !$examination ) {
+            return $comlexArr;
+        }
+
+        $score1 = NULL;
+        $score2 = NULL;
+        $score3 = NULL;
+
+        if( $this->isComlexValid($examination->getCOMLEXLevel1Score()) ) {
+            $score1 = $examination->getCOMLEXLevel1Score();
+        }
+        if( $this->isComlexValid($examination->getCOMLEXLevel2Score()) ) {
+            $score2 = $examination->getCOMLEXLevel2Score();
+        }
+        if( $this->isComlexValid($examination->getCOMLEXLevel3Score()) ) {
+            $score3 = $examination->getCOMLEXLevel3Score();
+        }
+
+        if(
+            !$score1 &&
+            !$score2 &&
+            !$score3
+        ) {
+            return $comlexArr;
+        }
+
+        $comlexArr[1] = $score1;
+        $comlexArr[2] = $score2;
+        $comlexArr[3] = $score3;
+
+        return $comlexArr;
+    }
+    public function isComlexValid( $score ) {
+        if( is_numeric($score) && $score !== NULL && $score > 0 && $score <= 300 ) {
+            return true;
+        }
+        return false;
     }
     
     public function daysAfterInterviewDate() {

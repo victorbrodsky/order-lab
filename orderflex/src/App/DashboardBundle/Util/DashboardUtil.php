@@ -1348,15 +1348,13 @@ class DashboardUtil
         //15.42,        1.57,   Male,   No,     Sun,    Dinner, 2
         foreach($combinedDataArr as $name=>$dataArr) {
             $chartDataArray = array();
-            $labels = array();
-            $values = array();
-            $links = array();
-
-            $labels = array('Sun', 'Mon', 'Tue', 'Sun', 'Mon', 'Tue');
-            $dataArr = array("16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04");
+            //$labels = array('Sun', 'Mon', 'Tue', 'Sun', 'Mon', 'Tue', 'Mon', 'Tue', 'Mon');
+            //$values = array("16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04");
+            $labels = $dataArr['labels'];
+            $values = $dataArr['values'];
 
             $chartDataArray[$xAxis] = $labels;
-            $chartDataArray[$yAxis] = $dataArr;
+            $chartDataArray[$yAxis] = $values;
             $chartDataArray['name'] = $name;
             $chartDataArray['type'] = $type;
             $chartDataArray['legendgroup'] = $name;
@@ -1364,33 +1362,6 @@ class DashboardUtil
             $chartDataArray['box'] = array('visible' => true);
             $chartDataArray['meanline'] = array('visible' => true);
             $violinDataArray[] = $chartDataArray;
-
-//            foreach ($dataArr as $label => $valueData) {
-//                $link = null;
-//                $value = $valueData;
-//                $labels[] = $label;
-//                $values[] = $value;
-//                $links[] = $link;
-//
-//                //$labels = array('2017', '2018', '2019');
-//                //$values = array(1, 2, 3, 1, 3, 4, 5, 2, 1, 3, 4, 2, 3, 4, 1, 1,);
-//
-//                $chartDataArray[$xAxis] = $labels;
-//                $chartDataArray[$yAxis] = $valueData; //$values;
-//                $chartDataArray['name'] = $name;
-//                $chartDataArray['type'] = $type;
-//                $chartDataArray['legendgroup'] = $name;
-//                $chartDataArray['scalegroup'] = $name;
-//                $chartDataArray['box'] = array('visible' => true);
-//                $chartDataArray['meanline'] = array('visible' => true);
-//
-//                if ($hoverinfo) {
-//                    $chartDataArray["hoverinfo"] = $hoverinfo; //"x+y"; //"x+y"; //"x+y+name";
-//                }
-//
-//                //$violinDataArray[] = $chartDataArray;
-//            }//foreach
-//            $violinDataArray[] = $chartDataArray;
         }//foreach
 
         if( count($violinDataArray) == 0 ) {
@@ -7332,23 +7303,29 @@ class DashboardUtil
             //echo "academicStartDate=".$academicStartDate->format('d-m-Y').", academicEndDate=".$academicEndDate->format('d-m-Y')."<br>";
             //exit('111');
 
+            $usmleYearArr = array();
+            $comlexYearArr = array();
+
             $totalScoreArr = array();
             $totalUsmleArr = array();
             $totalComlexArr = array();
 
-            $usmle1 = array();
-            $usmle2 = array();
-            $usmle3 = array();
-            $comlex1 = array();
-            $comlex2 = array();
-            $comlex3 = array();
+//            $usmle1 = array();
+//            $usmle2 = array();
+//            $usmle3 = array();
+//            $comlex1 = array();
+//            $comlex2 = array();
+//            $comlex3 = array();
 
-            $usmleCounter1 = 0;
-            $usmleCounter2 = 0;
-            $usmleCounter3 = 0;
-            $comlexCounter1 = 0;
-            $comlexCounter2 = 0;
-            $comlexCounter3 = 0;
+//            $usmleCounter1 = 0;
+//            $usmleCounter2 = 0;
+//            $usmleCounter3 = 0;
+//            $comlexCounter1 = 0;
+//            $comlexCounter2 = 0;
+//            $comlexCounter3 = 0;
+
+            $usmleValueArr = array();
+            $comlexValueArr = array();
 
             $totalCount = 0;
 
@@ -7362,8 +7339,8 @@ class DashboardUtil
 
                 $academicStartDate->modify('+ 1 year');
 
-                $usmleSingleYearArr = array();
-                $comlexSingleYearArr = array();
+                //$usmleSingleYearArr = array();
+                //$comlexSingleYearArr = array();
 
                 foreach($fellapps as $fellapp) {
 
@@ -7378,48 +7355,36 @@ class DashboardUtil
                     $usmleArr = $fellapp->getAllUsmleArr();
                     if( count($usmleArr) > 0 ) {
                         if( $usmleArr[1] !== NULL ) {
-                            //$usmle1[] =  array_sum($usmle1) + $usmleArr[1];
-                            //$usmleCounter1++;
                             $usmleScoreSumTotal = $usmleScoreSumTotal + $usmleArr[1];
                             $usmleScoreCounter++;
                         }
                         if( $usmleArr[2] !== NULL ) {
-                            //$usmle2[] =  array_sum($usmle2) + $usmleArr[2];
-                            //$usmleCounter2++;
                             $usmleScoreSumTotal = $usmleScoreSumTotal + $usmleArr[2];
                             $usmleScoreCounter++;
                         }
                         if( $usmleArr[3] !== NULL ) {
-                            //$usmle3[] =  array_sum($usmle3) + $usmleArr[3];
-                            //$usmleCounter3++;
                             $usmleScoreSumTotal = $usmleScoreSumTotal + $usmleArr[3];
                             $usmleScoreCounter++;
                         }
                     }
 
                     if( $usmleScoreCounter > 0 ) {
-                        //echo "$usmleScoreSumTotal / $usmleScoreCounter <br>";
                         $usmleScoreAvg = round($usmleScoreSumTotal / $usmleScoreCounter);
-                        $usmleSingleYearArr[] = $usmleScoreAvg;
+                        $usmleValueArr[] = $usmleScoreAvg;
+                        $usmleYearArr[] = $startDateLabel;
                     }
 
-                    $comlexArr = $fellapp->getAllUsmleArr();
+                    $comlexArr = $fellapp->getAllComlexArr();
                     if( count($comlexArr) > 0 ) {
                         if( $comlexArr[1] !== NULL ) {
-                            //$usmle1[] =  array_sum($usmle1) + $usmleArr[1];
-                            //$usmleCounter1++;
                             $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[1];
                             $comlexScoreCounter++;
                         }
                         if( $comlexArr[2] !== NULL ) {
-                            //$usmle2[] =  array_sum($usmle2) + $usmleArr[2];
-                            //$usmleCounter2++;
                             $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[2];
                             $comlexScoreCounter++;
                         }
                         if( $comlexArr[3] !== NULL ) {
-                            //$usmle3[] =  array_sum($usmle3) + $usmleArr[3];
-                            //$usmleCounter3++;
                             $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[3];
                             $comlexScoreCounter++;
                         }
@@ -7428,7 +7393,8 @@ class DashboardUtil
                     if( $comlexScoreCounter > 0 ) {
                         //echo "$usmleScoreSumTotal / $usmleScoreCounter <br>";
                         $comlexScoreAvg = round($comlexScoreSumTotal / $comlexScoreCounter);
-                        $comlexSingleYearArr[] = $comlexScoreAvg;
+                        $comlexValueArr[] = $comlexScoreAvg;
+                        $comlexYearArr[] = $startDateLabel;
                     }
 
                 }//foreach fellapp
@@ -7436,53 +7402,21 @@ class DashboardUtil
                 $fellappsCount = count($fellapps);
                 $totalCount = $totalCount + $fellappsCount;
 
-                //$totalScoreArr[$startDateLabel] = array($totalUsmleArr,$totalComlexArr);
-                $totalUsmleArr[$startDateLabel] = $usmleSingleYearArr;
-                $totalComlexArr[$startDateLabel] = $comlexSingleYearArr;
-
-                //$fellappArr[$startDateLabel] = $scoreAvg;
-
-                //$descriptionArr[$startDateLabel] = " (" . count($invoices) . " invoices)";
-
             } while( $startDateInt < $endYearInt );
-
-            //echo "totalPaidInvoiceFee=".$totalPaidInvoiceFee."; totalDueInvoiceFee=".$totalDueInvoiceFee."; totalInvoiceFee=".$totalInvoiceFee."<br>"; //7591754 7.591.754
-            //exit('111');
-
-            //$chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($totalInvoiceFee),"$","Total");
-
-            //increase vertical
-            //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
-            $layoutArray = array(
-                'height' => $this->height,//*1.3,
-                'width' => $this->width,
-                'title' => $chartName,
-                'margin' => array('b'=>200),
-                'xaxis' => array(
-                    'tickformat' =>  "d",
-                ),
-                //'showlegend' => false
-            );
-            $layoutArray = NULL;//array();
 
             $chartName = $chartName . " (" . $totalCount . " applications in total; USMLE Step 1,2, and 3)";
             //exit('$chartName='.$chartName);
 
-            //stacked char
-            //$combinedData = array();
-            //$combinedData[] = $fellappArr;
-            //$chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray); //public function getStackedChart
-
-            //bar chart
-            //$chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
-
             $combinedData = array();
-            $combinedData['USMLE'] = $totalUsmleArr;
-            $combinedData['COMLEX'] = $totalComlexArr;
+            $combinedData['USMLE']['labels'] = $usmleYearArr;
+            $combinedData['USMLE']['values'] = $usmleValueArr;
+
+            $combinedData['COMLEX']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX']['values'] = $comlexValueArr;
 
             //violin
             //$combinedDataArr, $title, $type="violin", $layoutArray=null, $hoverinfo=null
-            $chartsArray = $this->getViolinChart($combinedData,$chartName,'violin',$layoutArray);
+            $chartsArray = $this->getViolinChart($combinedData,$chartName,'violin');
         }
 
         //"62. New and Edited Call Log Entries Per Day" => "new-and-edited-calllog-entries-per-day",
