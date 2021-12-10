@@ -1351,45 +1351,49 @@ class DashboardUtil
             $labels = array();
             $values = array();
             $links = array();
-            foreach ($dataArr as $label => $valueData) {
 
-//                if (is_array($valueData)) {
-//                    $value = $valueData["value"];
-//                    $link = $valueData["link"];
-//                } else {
-//                    $value = $valueData;
-//                    $link = null;
-//                }
+            $labels = array('Sun', 'Mon', 'Tue', 'Sun', 'Mon', 'Tue');
+            $dataArr = array("16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04");
 
-                $link = null;
-                $value = $valueData;
-
-                $labels[] = $label;
-                $values[] = $value;
-                $links[] = $link;
-
-                //$labels = array('2017', '2018', '2019');
-                //$values = array(1, 2, 3, 1, 3, 4, 5, 2, 1, 3, 4, 2, 3, 4, 1, 1,);
-
-                $chartDataArray[$xAxis] = $labels;
-                $chartDataArray[$yAxis] = $valueData; //$values;
-                $chartDataArray['name'] = $name;
-                $chartDataArray['type'] = $type;
-                $chartDataArray['legendgroup'] = $name;
-                $chartDataArray['scalegroup'] = $name;
-                $chartDataArray['box'] = array('visible' => true);
-                $chartDataArray['meanline'] = array('visible' => true);
-
-                if ($hoverinfo) {
-                    $chartDataArray["hoverinfo"] = $hoverinfo; //"x+y"; //"x+y"; //"x+y+name";
-                }
-
-                //$violinDataArray[] = $chartDataArray;
-            }//foreach
+            $chartDataArray[$xAxis] = $labels;
+            $chartDataArray[$yAxis] = $dataArr;
+            $chartDataArray['name'] = $name;
+            $chartDataArray['type'] = $type;
+            $chartDataArray['legendgroup'] = $name;
+            $chartDataArray['scalegroup'] = $name;
+            $chartDataArray['box'] = array('visible' => true);
+            $chartDataArray['meanline'] = array('visible' => true);
             $violinDataArray[] = $chartDataArray;
+
+//            foreach ($dataArr as $label => $valueData) {
+//                $link = null;
+//                $value = $valueData;
+//                $labels[] = $label;
+//                $values[] = $value;
+//                $links[] = $link;
+//
+//                //$labels = array('2017', '2018', '2019');
+//                //$values = array(1, 2, 3, 1, 3, 4, 5, 2, 1, 3, 4, 2, 3, 4, 1, 1,);
+//
+//                $chartDataArray[$xAxis] = $labels;
+//                $chartDataArray[$yAxis] = $valueData; //$values;
+//                $chartDataArray['name'] = $name;
+//                $chartDataArray['type'] = $type;
+//                $chartDataArray['legendgroup'] = $name;
+//                $chartDataArray['scalegroup'] = $name;
+//                $chartDataArray['box'] = array('visible' => true);
+//                $chartDataArray['meanline'] = array('visible' => true);
+//
+//                if ($hoverinfo) {
+//                    $chartDataArray["hoverinfo"] = $hoverinfo; //"x+y"; //"x+y"; //"x+y+name";
+//                }
+//
+//                //$violinDataArray[] = $chartDataArray;
+//            }//foreach
+//            $violinDataArray[] = $chartDataArray;
         }//foreach
 
-        if( count($values) == 0 ) {
+        if( count($violinDataArray) == 0 ) {
             return array();
             //return array('error'=>"No data found corresponding to this chart parameters");
         }
