@@ -1327,9 +1327,9 @@ class DashboardUtil
 
         if( !$layoutArray ) {
             $layoutArray = array(
-                //'height' => $this->height,
-                //'width' => $this->width,
-                //'margin' => array('b' => 200),
+                'height' => $this->height,
+                'width' => $this->width,
+                'margin' => array('b' => 200),
                 'yaxis' => array(
                     'zeroline' => false
                 ),
