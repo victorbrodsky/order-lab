@@ -1501,7 +1501,9 @@ class FellowshipApplication extends BaseUserAttributes {
         return $comlexArr;
     }
     public function isComlexValid( $score ) {
-        if( is_numeric($score) && $score !== NULL && $score > 0 && $score <= 300 ) {
+        //if( is_numeric($score) && $score !== NULL && $score > 0 && $score <= 300 )
+        if( is_numeric($score) && $score !== NULL && $score > 0 )
+        {
             return true;
         }
         return false;
