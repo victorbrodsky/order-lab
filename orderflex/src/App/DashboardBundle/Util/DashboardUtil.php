@@ -7404,7 +7404,7 @@ class DashboardUtil
 
             } while( $startDateInt < $endYearInt );
 
-            $chartName = $chartName . " (" . $totalCount . " applications in total; USMLE Step 1,2, and 3)";
+            $chartName = $chartName . " (" . $totalCount . " applications in total)";
             //exit('$chartName='.$chartName);
 
             $combinedData = array();
