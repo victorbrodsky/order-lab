@@ -362,7 +362,7 @@ class DashboardUtil
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
             "60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
-            "61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+            "61. Average sum of the USMLE and COMLEX scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
 
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
@@ -7177,7 +7177,7 @@ class DashboardUtil
         }
 
         //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year_SIMPLE" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //$perYear = false;
@@ -7227,7 +7227,7 @@ class DashboardUtil
                 $scoreCounter = 0;
                 $scoreSumTotal = 0;
                 foreach($fellapps as $fellapp) {
-                    $scoreSum = $fellapp->getUsmleSum();
+                    $scoreSum = $fellapp->getUsmleAvergae();
                     //echo $fellapp->getId().": scoreSum=$scoreSum <br>";
                     if( $scoreSum ) {
                         //echo $fellapp->getId().": scoreSum=$scoreSum <br>";
@@ -7284,7 +7284,7 @@ class DashboardUtil
 
         }
         //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+        if( $chartType == "fellapp-average-usmle-scores-by-year_STAT" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
