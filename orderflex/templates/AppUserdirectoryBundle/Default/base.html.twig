@@ -30,6 +30,9 @@
         {#{{ encore_entry_link_tags('entry') }}#}
     {#{% endblock %}#}
 
+    {% block stylesheets %}
+        {#{{ encore_entry_link_tags('app') }}#}
+    {% endblock %}
 
     {#{% stylesheets#}
         {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
@@ -291,7 +294,15 @@
         {% block additionaljs %}{% endblock %}
 
 
+        {#{% block javascripts %}#}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {#{% endblock %}#}
+
     </div>
+
+    {% block javascripts %}
+        {#{{ encore_entry_script_tags('app') }}#}
+    {% endblock %}
 
 </body>
          

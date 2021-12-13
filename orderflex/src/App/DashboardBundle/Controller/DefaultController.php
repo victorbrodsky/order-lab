@@ -361,6 +361,15 @@ class DefaultController extends OrderAbstractController
     }
 
 
+    //@Template("AppDashboardBundle/Default/index.html.twig")
+    /**
+     * @Route("/react/{reactRouting}", name="dashboard_home_react", defaults={"reactRouting": null})
+     */
+    public function index()
+    {
+        return $this->render('AppDashboardBundle/Default/index.html.twig');
+    }
+
     /**
      * Test React
      * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react

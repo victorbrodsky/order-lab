@@ -673,3 +673,9 @@ Weill Cornell Medical College
 
 Attending Pathologist
 New York Presbyterian Hospital
+
+React:
+https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
+New files (node.js dependencies, Node Package Manager (NPM)): yarn.lock, package.json
+On live server: yarn install
+On dev: yarn encore dev --watch
