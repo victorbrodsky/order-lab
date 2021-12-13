@@ -7099,7 +7099,8 @@ class DashboardUtil
 
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
-
+            $startDate->modify('-4 year');
+            $endDate->modify('+1 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
@@ -7191,6 +7192,8 @@ class DashboardUtil
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
             //$startYear = $fellappUtil->getDefaultAcademicStartYear();
+            $startDate->modify('-4 year');
+            $endDate->modify('+1 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
@@ -7292,6 +7295,8 @@ class DashboardUtil
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
             //$startYear = $fellappUtil->getDefaultAcademicStartYear();
+            $startDate->modify('-4 year');
+            $endDate->modify('+1 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
