@@ -289,55 +289,55 @@ function plotlyAddChart(chartIndex,chartData) {
 
     // need to fix data
 
-    if(0) {
-        var dataX = ['Sun', 'Mon', 'Tue', 'Sun', 'Mon', 'Tue']; //6
-        var dataY1 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"];
-        var dataY2 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"];
-
-        var data = [{
-            type: 'violin',
-            x: dataX, //unpack(rows, 'day'),
-            y: dataY1,//unpack(rows, 'total_bill'),
-            legendgroup: 'M',
-            scalegroup: 'M',
-            name: 'M',
-            box: {
-                visible: true
-            },
-            line: {
-                color: 'blue',
-            },
-            meanline: {
-                visible: true
-            }
-        },
-            {
-                type: 'violin',
-                x: dataX, //(rows, 'day'),
-                y: dataY2, //unpack(rows, 'total_bill'),
-                legendgroup: 'F',
-                scalegroup: 'F',
-                name: 'F',
-                box: {
-                    visible: true
-                },
-                line: {
-                    color: 'pink',
-                },
-                meanline: {
-                    visible: true
-                }
-            }
-        ];
-
-        var layout = {
-            title: "Grouped Violin Plot",
-            yaxis: {
-                zeroline: false
-            },
-            violinmode: 'group'
-        };
-    }
+    // if(0) {
+    //     var dataX = ['Sun', 'Mon', 'Tue', 'Sun', 'Mon', 'Tue']; //6
+    //     var dataY1 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"];
+    //     var dataY2 = ["16.99", "10.34", "21.01", "23.68", "24.59", "25.29", "8.77", "26.88", "15.04"];
+    //
+    //     var data = [{
+    //         type: 'violin',
+    //         x: dataX, //unpack(rows, 'day'),
+    //         y: dataY1,//unpack(rows, 'total_bill'),
+    //         legendgroup: 'M',
+    //         scalegroup: 'M',
+    //         name: 'M',
+    //         box: {
+    //             visible: true
+    //         },
+    //         line: {
+    //             color: 'blue',
+    //         },
+    //         meanline: {
+    //             visible: true
+    //         }
+    //     },
+    //         {
+    //             type: 'violin',
+    //             x: dataX, //(rows, 'day'),
+    //             y: dataY2, //unpack(rows, 'total_bill'),
+    //             legendgroup: 'F',
+    //             scalegroup: 'F',
+    //             name: 'F',
+    //             box: {
+    //                 visible: true
+    //             },
+    //             line: {
+    //                 color: 'pink',
+    //             },
+    //             meanline: {
+    //                 visible: true
+    //             }
+    //         }
+    //     ];
+    //
+    //     var layout = {
+    //         title: "Grouped Violin Plot",
+    //         yaxis: {
+    //             zeroline: false
+    //         },
+    //         violinmode: 'group'
+    //     };
+    // }
 
 
     Plotly.newPlot(divId, data, layout);
