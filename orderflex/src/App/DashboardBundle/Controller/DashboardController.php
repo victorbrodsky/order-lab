@@ -456,8 +456,10 @@ class DashboardController extends OrderAbstractController
 
 
     /**
+     * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
+     *
      * @Route("/", name="dashboard_home")
-     * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
+     * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
      */
     public function dashboardChoicesAction( Request $request )
     {
@@ -516,7 +518,8 @@ class DashboardController extends OrderAbstractController
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
-            'useWarning' => $useWarning
+            'useWarning' => $useWarning,
+            'testflag' => "11111"
         );
     }
 

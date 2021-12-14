@@ -374,7 +374,7 @@ class DefaultController extends OrderAbstractController
      * Test React
      * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
      *
-     * @Route("/api/users", name="users")
+     * @Route("/api/users", name="dashboard_api_users", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getUsers()

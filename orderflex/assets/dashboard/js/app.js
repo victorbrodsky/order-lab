@@ -10,6 +10,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 //import '../css/app.css';
 
+//https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
 //https://stackoverflow.com/questions/63124161/attempted-import-error-switch-is-not-exported-from-react-router-dom
 //react-router-dom v6
 
@@ -19,6 +20,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/app.css';
 import Home from './components/Home';
 
+
+function plotlyGetChartsReact( thsiSitename ) {
+    console.log("get charts");
+}
 
 ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
 

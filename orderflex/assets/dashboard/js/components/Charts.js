@@ -5,26 +5,33 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-class Users extends Component {
+class Charts extends Component {
     constructor() {
         super();
-        this.state = { users: [], loading: true};
+        this.state = { charts: [], loading: true};
+
+        //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
+        window.ChartsComponent = this;
     }
 
     componentDidMount() {
-        this.getUsers();
+        this.getCharts();
     }
 
-    getUsers() {
+    plotlyGetChartsReact(thsiSitename) {
+        console.log("get react charts");
+    }
+
+    getCharts() {
         //var url = "http://127.0.0.1/order/index_dev.php/dashboards/api/charts";
         //var url = "http://127.0.0.1/order/dashboards/api/users";
         //var url = "http://jsonplaceholder.typicode.com/users";
-        //var url = "/dashboards/api/charts"; //http://127.0.0.1/dashboards/api/charts
-        //var url = $.getJSON("/dashboards/api/charts");
-        var url = Routing.generate('dashboard_api_users'); //use FOSJsRoutingBundle
-        axios.get(url).then(users => {
-            this.setState({ users: users.data, loading: false})
-    })
+        //var url = "/api/charts";
+        //Get chart id from the chart filter, then get chart data, then build chart
+        var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
+        axios.get(url).then(charts => {
+            this.setState({ charts: charts.data, loading: false})
+        })
     }
 
     render() {
@@ -34,7 +41,7 @@ class Users extends Component {
             <section className="row-section">
             <div className="container">
             <div className="row">
-            <h2 className="text-center"><span>List of users</span>Created with <i
+            <h2 className="text-center"><span>List of charts</span>Created with <i
         className="fa fa-heart"></i> by yemiwebby</h2>
         </div>
         {loading ? (
@@ -43,18 +50,18 @@ class Users extends Component {
             </div>
     ) : (
         <div className={'row'}>
-            { this.state.users.map(user =>
-            <div className="col-md-10 offset-md-1 row-block" key={user.id}>
+            { this.state.charts.map(chart =>
+            <div className="col-md-10 offset-md-1 row-block" key={chart.id}>
     <ul id="sortable">
             <li>
             <div className="media">
             <div className="media-left align-self-center">
             <img className="rounded-circle"
-        src={user.imageURL}/>
+        src={chart.imageURL}/>
     </div>
         <div className="media-body">
-            <h4>{user.name}</h4>
-        <p>{user.description}</p>
+            <h4>{chart.name}</h4>
+        <p>{chart.description}</p>
         </div>
         <div className="media-right align-self-center">
             <a href="#" className="btn btn-default">Contact Now</a>
@@ -72,4 +79,4 @@ class Users extends Component {
     )
     }
 }
-export default Users;
+export default Charts;

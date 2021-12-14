@@ -31,7 +31,11 @@ $(document).ready(function() {
 
 });
 
-function plotlyGetCharts( thsiSitename ) {
+function plotlyGetChartsReact(thisSitename) {
+    window.ChartsComponent.plotlyGetChartsReact('dashboard');
+}
+
+function plotlyGetCharts( thisSitename ) {
     //console.log("get charts");
 
     _totalChartCount = 0;
@@ -70,7 +74,7 @@ function plotlyGetCharts( thsiSitename ) {
 
     var quantityLimit = $("#filter_quantityLimit").val();
 
-    var url = Routing.generate(thsiSitename+'_single_chart');
+    var url = Routing.generate(thisSitename+'_single_chart');
 
     _totalChartCount = chartTypes.length;
 

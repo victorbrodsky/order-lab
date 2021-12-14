@@ -13,8 +13,16 @@ class Home extends Component {
         super();
         this.testflag = $('#testflag').val();
     }
-    
+
     render() {
+
+        var optionParam;
+        if( this.testflag ) {
+            optionParam = <li className="nav-item">{this.testflag}</li>
+        } else {
+            optionParam = null;
+        }
+
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,9 +35,10 @@ class Home extends Component {
                             <li className="nav-item">
                                 <Link className={"nav-link"} to={"/users"}> Users </Link>
                             </li>
-                            <li className="nav-item">
-                                {this.testflag}
-                            </li>
+                            {optionParam}
+                            {this.testflag &&
+                            <li className="nav-item">{this.testflag}</li>
+                            }
                         </ul>
                     </div>
                 </nav>

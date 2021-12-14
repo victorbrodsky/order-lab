@@ -16,9 +16,10 @@ class Users extends Component {
     }
 
     getUsers() {
-        var url = "http://127.0.0.1/order/index_dev.php/dashboards/api/users";
+        //var url = "http://127.0.0.1/order/index_dev.php/dashboards/api/users";
         //var url = "http://127.0.0.1/order/dashboards/api/users";
         //var url = "http://jsonplaceholder.typicode.com/users";
+        var url = Routing.generate('dashboard_api_users'); //use FOSJsRoutingBundle
         axios.get(url).then(users => {
             this.setState({ users: users.data, loading: false})
     })
@@ -28,12 +29,12 @@ class Users extends Component {
         const loading = this.state.loading;
         return(
             <div>
-            <section className="row-section">
-            <div className="container">
-            <div className="row">
-            <h2 className="text-center"><span>List of users</span>Created with <i
-        className="fa fa-heart"></i> by yemiwebby</h2>
-        </div>
+                <section className="row-section">
+                <div className="container">
+                <div className="row">
+                    <h2 className="text-center"><span>List of users</span>Created with <i
+                        className="fa fa-heart"></i></h2>
+                </div>
         {loading ? (
         <div className={'row text-center'}>
             <span className="fa fa-spin fa-spinner fa-4x"></span>
