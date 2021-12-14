@@ -13,6 +13,9 @@ class Home extends Component {
     constructor() {
         super();
         this.testflag = $('#testflag').val();
+
+        //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
+        window.ReactHomeComponent = this;
     }
 
     sayHello() {

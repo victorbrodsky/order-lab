@@ -32,7 +32,7 @@ $(document).ready(function() {
 });
 
 function plotlyGetChartsReact(thisSitename) {
-    window.ChartsComponent.plotlyGetChartsReact('dashboard');
+    window.ReactHomeComponent.sayHello();
 }
 
 function plotlyGetCharts( thisSitename ) {

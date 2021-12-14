@@ -18,6 +18,10 @@ class Charts extends Component {
         this.getCharts();
     }
 
+    alertMessage(){
+        console.log("Called from outside");
+    }
+
     plotlyGetChartsReact(thsiSitename) {
         console.log("get react charts");
     }
