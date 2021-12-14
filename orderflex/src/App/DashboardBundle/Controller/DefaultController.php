@@ -367,7 +367,7 @@ class DefaultController extends OrderAbstractController
      */
     public function index()
     {
-        return $this->render('AppDashboardBundle/Default/index.html.twig');
+        return $this->render('AppDashboardBundle/Default/index.html.twig', array('testflag'=>'testflag1'));
     }
 
     /**

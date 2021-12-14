@@ -1,5 +1,7 @@
 // ./assets/js/components/Users.js
 
+//http://127.0.0.1/order/index_dev.php/dashboards/api/users
+
 import React, {Component} from 'react';
 import axios from 'axios';
 
@@ -14,7 +16,10 @@ class Users extends Component {
     }
 
     getUsers() {
-        axios.get(`http://127.0.0.1/order/index_dev.php/dashboards/api/users`).then(users => {
+        var url = "http://127.0.0.1/order/index_dev.php/dashboards/api/users";
+        //var url = "http://127.0.0.1/order/dashboards/api/users";
+        //var url = "http://jsonplaceholder.typicode.com/users";
+        axios.get(url).then(users => {
             this.setState({ users: users.data, loading: false})
     })
     }

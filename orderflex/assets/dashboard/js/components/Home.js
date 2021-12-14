@@ -9,6 +9,11 @@ import Posts from './Posts';
 
 class Home extends Component {
 
+    constructor() {
+        super();
+        this.testflag = $('#testflag').val();
+    }
+    
     render() {
         return (
             <div>
@@ -22,11 +27,14 @@ class Home extends Component {
                             <li className="nav-item">
                                 <Link className={"nav-link"} to={"/users"}> Users </Link>
                             </li>
+                            <li className="nav-item">
+                                {this.testflag}
+                            </li>
                         </ul>
                     </div>
                 </nav>
                 <Routes >
-                    <Route exact from="/" to="order/index_dev.php/dashboards/react/users" />
+                    <Route exact from="/" to="/users" />
                     <Route path="/users" element={<Users/>} />
                     <Route path="/posts" element={<Posts/>} />
                 </Routes >
