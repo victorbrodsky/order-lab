@@ -2116,13 +2116,13 @@ class DashboardUtil
 //        return false;
 //    }
 
-    //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
-    public function getDashboardChart( $request, $parametersArr=NULL ) {
+    public function getRequestParameters($request) {
+        $parametersArr= array();
 
-        //ini_set('memory_limit', '30000M');
-        ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
+        $processed = false;
 
-        if( $request ) {
+        if( $request->isMethod('GET') ) {
+            //echo "request is GET <br>";
             $startDate = $request->query->get('startDate');
             $endDate = $request->query->get('endDate');
             $projectSpecialty = $request->query->get('projectSpecialty');
@@ -2130,7 +2130,80 @@ class DashboardUtil
             $chartType = $request->query->get('chartType');
             $productservice = $request->query->get('productservice');
             $quantityLimit = $request->query->get('quantityLimit');
+            $processed = true;
+        }
+        elseif( $request->isMethod('POST') ) {
+            //echo "request is POST <br>";
+            $startDate = $request->get('startDate');
+            $endDate = $request->get('endDate');
+            $projectSpecialty = $request->get('projectSpecialty');
+            $showLimited = $request->get('showLimited');
+            $chartType = $request->get('chartType');
+            $productservice = $request->get('productservice');
+            $quantityLimit = $request->get('quantityLimit');
+            $processed = true;
         } else {
+            //exit('Logical error: request is not GET or POST');
+        }
+
+        if( $processed ) {
+            $parametersArr['startDate'] = $startDate;
+            $parametersArr['endDate'] = $endDate;
+            $parametersArr['projectSpecialty'] = $projectSpecialty;
+            $parametersArr['showLimited'] = $showLimited;
+            $parametersArr['chartType'] = $chartType;
+            $parametersArr['productservice'] = $productservice;
+            $parametersArr['quantityLimit'] = $quantityLimit;
+        }
+
+        return $parametersArr;
+    }
+
+    //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
+    public function getDashboardChart( $request, $parametersArr=NULL ) {
+
+        //ini_set('memory_limit', '30000M');
+        ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
+
+        if( $request ) {
+
+//            if( $request->isMethod('GET') ) {
+//                echo "request is GET <br>";
+//                $startDate = $request->query->get('startDate');
+//                $endDate = $request->query->get('endDate');
+//                $projectSpecialty = $request->query->get('projectSpecialty');
+//                $showLimited = $request->query->get('showLimited');
+//                $chartType = $request->query->get('chartType');
+//                $productservice = $request->query->get('productservice');
+//                $quantityLimit = $request->query->get('quantityLimit');
+//            }
+//            elseif( $request->isMethod('POST') ) {
+//                echo "request is POST <br>";
+//                $startDate = $request->query->get('startDate');
+//                $endDate = $request->query->get('endDate');
+//                $projectSpecialty = $request->query->get('projectSpecialty');
+//                $showLimited = $request->query->get('showLimited');
+//                $chartType = $request->get('chartType');
+//                $productservice = $request->query->get('productservice');
+//                $quantityLimit = $request->query->get('quantityLimit');
+//            } else {
+//                exit('Logical error: request is not GET or POST');
+//            }
+
+            $parametersArr = $this->getRequestParameters($request);
+        }
+//        else {
+//
+//            $startDate = $parametersArr['startDate'];
+//            $endDate = $parametersArr['endDate'];
+//            $projectSpecialty = $parametersArr['projectSpecialty'];
+//            $showLimited = $parametersArr['showLimited'];
+//            $chartType = $parametersArr['chartType'];
+//            $productservice = $parametersArr['productservice'];
+//            $quantityLimit = $parametersArr['quantityLimit'];
+//        }
+
+        if( $parametersArr ) {
             $startDate = $parametersArr['startDate'];
             $endDate = $parametersArr['endDate'];
             $projectSpecialty = $parametersArr['projectSpecialty'];
@@ -2138,6 +2211,11 @@ class DashboardUtil
             $chartType = $parametersArr['chartType'];
             $productservice = $parametersArr['productservice'];
             $quantityLimit = $parametersArr['quantityLimit'];
+        } else {
+            $error = "Logical error: missing parameters";
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
         }
 
         //echo "quantityLimit=$quantityLimit<br>";
@@ -2150,7 +2228,8 @@ class DashboardUtil
         //echo "startDate=".$startDate."<br>";
         //echo "endDate=".$endDate."<br>";
         //echo "projectSpecialty=".$projectSpecialty."<br>";
-        //exit('');
+        //echo "chartType=$chartType <br>";
+        //exit('111');
 
         $now = new \DateTime('now');
 
@@ -2224,6 +2303,13 @@ class DashboardUtil
 //        }
 
         $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        if( !$chartObject ) {
+            $error = "Logical error: chart not found by abbreviation [$chartType]";
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
+        }
+
         if( $this->secAuth->isGranted('read', $chartObject) === false ) {
             //get admin email
             $userSecUtil = $this->container->get('user_security_utility');

@@ -26,7 +26,7 @@ class DashboardController extends OrderAbstractController
     /**
      * single dashboard chart. id - chart ID
      *
-     * @Route("/chart/{id}", name="dashboard_single_chart")
+     * @Route("/chart/{id}", name="dashboard_single_chart_id")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
      */
     public function singleChartAction( Request $request, $id ) {

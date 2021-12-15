@@ -28,7 +28,9 @@ class Home extends Component {
 // onclick={this.sayHello}
 // data-spinner-color="{{ spinnerColor }}"
 // >Filter</button>
-    
+
+    /*<Route path={`${match.path}/chart:id`}><Users/></Route>*/
+
     render() {
 
         var optionParam;
@@ -37,6 +39,9 @@ class Home extends Component {
         } else {
             optionParam = null;
         }
+
+        //let match = useMatch();
+        //let navigate = useNavigate();
 
         var returnEl = (
             <div>

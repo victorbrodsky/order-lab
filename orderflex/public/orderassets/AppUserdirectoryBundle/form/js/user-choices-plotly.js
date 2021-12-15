@@ -16,8 +16,9 @@ $(document).ready(function() {
         chartTypesLen = 0;
     }
     //console.log("chartTypesLen="+chartTypesLen);
-    if (chartTypesLen < 4) {
+    if( chartTypesLen > 0 && chartTypesLen < 4 ) {
         if (document.getElementById("filter-btn")) {
+            console.log("filter-btn auto clicked");
             document.getElementById("filter-btn").click(); //chart-filter-btn
         }
     }
@@ -32,7 +33,7 @@ $(document).ready(function() {
 });
 
 function plotlyGetChartsReact(thisSitename) {
-    window.ReactHomeComponent.sayHello();
+    window.ChartsComponent.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {

@@ -157,6 +157,10 @@ class DashboardPermissionVoter extends BasePermissionVoter
             return false;
         }
 
+        if( !$subject ) {
+            return false;
+        }
+
         // if they can edit, they can view
 //        if( $this->canEdit($subject, $token) ) {
 //            //exit('can edit!');

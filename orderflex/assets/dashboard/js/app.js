@@ -19,13 +19,16 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/app.css';
 import Home from './components/Home';
+import Charts from './components/Charts';
 
 
 function plotlyGetChartsReact( thsiSitename ) {
     console.log("get charts");
 }
 
-ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
+// ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
+
+ReactDOM.render(<Router><Charts /></Router>, document.getElementById('root'));
 
 const REACT_VERSION = React.version;
 // ReactDOM.render(
