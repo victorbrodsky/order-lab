@@ -6,6 +6,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
 //import { Routes ,Route, Redirect, Link, withRouter } from 'react-router-dom';
+import SingleChart from './SingleChart';
 
 class Charts extends Component {
     constructor() {
@@ -25,7 +26,7 @@ class Charts extends Component {
     }
 
     plotlyGetChartsReact(thisSitename) {
-        //console.log("get react charts");
+        console.log("get react charts");
         this.getCharts(thisSitename);
     }
 
@@ -146,47 +147,38 @@ class Charts extends Component {
 
     getCharts(thisSitename) {
 
-        var l = Ladda.create($('#filter-btn').get(0));
-
-        //var url = "http://127.0.0.1/order/index_dev.php/dashboards/api/charts";
-        //var url = "http://127.0.0.1/order/dashboards/api/users";
-        //var url = "http://jsonplaceholder.typicode.com/users";
-        //var url = "/api/charts";
-
-        //Get chart id from the chart filter, then get chart data, then build chart
-        //var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
-        var url = Routing.generate(thisSitename+'_single_chart');
+        //console.log("getCharts thisSitename="+thisSitename);
 
         document.getElementById("charts").innerHTML = "";
 
-        var startDate = $("#filter_startDate").val();
+        let startDate = $("#filter_startDate").val();
         //console.log("startDate="+startDate);
 
-        var endDate = $("#filter_endDate").val();
+        let endDate = $("#filter_endDate").val();
         //console.log("endDate="+endDate);
 
-        var projectSpecialty = $("#filter_projectSpecialty").select2("val");
+        let projectSpecialty = $("#filter_projectSpecialty").select2("val");
         //console.log("projectSpecialty="+projectSpecialty);
 
-        var chartTypes = $("#filter_chartType").select2("val");
+        let chartTypes = $("#filter_chartType").select2("val");
 
         //filter_chartType
-        var productservice = $("#filter_category").select2("val");
+        let productservice = $("#filter_category").select2("val");
         //console.log("productservice:");
         //console.log(productservice);
 
         //var showLimited = $("#filter_showLimited:checked").val();
         //console.log("showLimited="+showLimited);
 
-        var showLimited = 0;
+        let showLimited = 0;
         if( $("#filter_showLimited").is(":checked") ) {
             showLimited = 1;
         }
         //console.log("showLimited="+showLimited);
 
-        var quantityLimit = $("#filter_quantityLimit").val();
+        let quantityLimit = $("#filter_quantityLimit").val();
 
-        var totalChartCount = chartTypes.length;
+        let totalChartCount = chartTypes.length;
         //console.log("totalChartCount="+totalChartCount);
 
         if( totalChartCount == 0 ) {
@@ -194,19 +186,104 @@ class Charts extends Component {
             ReactDOM.render(element, document.getElementById('error-message'));
         }
 
-        var retrievedChartCount = 0;
-        l.start();
+        let retrievedChartCount = 0;
+        //l.start();
 
-        var chartDataArr = [];
+        let chartDataArr = [];
 
-        var i;
-        for (i = 0; i < totalChartCount; i++) {
-            var chartIndex = chartTypes[i];
+        let chartHolder = document.getElementsByClassName("some_class")
+
+        for(let i = 0; i < totalChartCount; i++) {
+            let chartIndex = chartTypes[i];
             //console.log("chartIndex="+chartIndex);
             //https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/
             // axios.get(url).then(charts => {
             //     this.setState({ charts: charts.data, loading: false})
             // })
+
+            //create div
+            let divId = 'chart-' + chartIndex;
+            let div = document.createElement("div");
+            div.style.float = "left";
+            div.style.margin = "10px";
+            div.setAttribute('id', divId);
+            document.getElementById("charts").appendChild(div);
+
+            ReactDOM.render(
+                <SingleChart
+                    startDate={startDate}
+                    endDate={endDate}
+                    projectSpecialty={projectSpecialty}
+                    productservice={productservice}
+                    showLimited={showLimited}
+                    quantityLimit={quantityLimit}
+                    chartIndex={chartIndex}
+                />,
+                document.getElementById(divId)
+            )
+        }
+
+        // var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
+        // axios.get(url).then(charts => {
+        //     this.setState({ charts: charts.data, loading: false})
+        // })
+    }
+
+    getCharts_ORIG(thisSitename) {
+
+        console.log("getCharts thisSitename="+thisSitename);
+
+        var l = Ladda.create($('#filter-btn').get(0));
+
+        //Get chart id from the chart filter, then get chart data, then build chart
+        //var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
+        let url = Routing.generate(thisSitename+'_single_chart');
+
+        document.getElementById("charts").innerHTML = "";
+
+        let startDate = $("#filter_startDate").val();
+        //console.log("startDate="+startDate);
+
+        let endDate = $("#filter_endDate").val();
+        //console.log("endDate="+endDate);
+
+        let projectSpecialty = $("#filter_projectSpecialty").select2("val");
+        //console.log("projectSpecialty="+projectSpecialty);
+
+        let chartTypes = $("#filter_chartType").select2("val");
+
+        //filter_chartType
+        let productservice = $("#filter_category").select2("val");
+        //console.log("productservice:");
+        //console.log(productservice);
+
+        //var showLimited = $("#filter_showLimited:checked").val();
+        //console.log("showLimited="+showLimited);
+
+        let showLimited = 0;
+        if( $("#filter_showLimited").is(":checked") ) {
+            showLimited = 1;
+        }
+        //console.log("showLimited="+showLimited);
+
+        let quantityLimit = $("#filter_quantityLimit").val();
+
+        let totalChartCount = chartTypes.length;
+        //console.log("totalChartCount="+totalChartCount);
+
+        if( totalChartCount == 0 ) {
+            const element = <div>Please select chart</div>;
+            ReactDOM.render(element, document.getElementById('error-message'));
+        }
+
+        let retrievedChartCount = 0;
+        l.start();
+
+        let chartDataArr = [];
+
+        for(let i = 0; i < totalChartCount; i++) {
+            let chartIndex = chartTypes[i];
+            //console.log("chartIndex="+chartIndex);
 
             axios({
                 method: 'post',
@@ -222,8 +299,6 @@ class Charts extends Component {
                 }
             })
             .then((result) => {
-                //console.log(result);
-                //chartDataArr.push(result);
                 this.plotlyAddChartReact(result);
 
                 retrievedChartCount++;
@@ -240,17 +315,8 @@ class Charts extends Component {
                 this.addErrorLine(errorMsg,'error');
 
                 l.stop();
-
-                //const element = <div>{errorMsg}</div>;
-                //ReactDOM.render(element, document.getElementById('error-message'));
-
             });
         }
-
-        // var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
-        // axios.get(url).then(charts => {
-        //     this.setState({ charts: charts.data, loading: false})
-        // })
     }
 
     render() {
@@ -278,51 +344,6 @@ class Charts extends Component {
         );
 
         return (renderObject);
-    }
-
-    render_ORIG() {
-        const loading = this.state.loading;
-        return(
-            <div>
-                <section className="row-section">
-                    <div className="container">
-                        <div className="row">
-                            <h2 className="text-center"><span>List of charts</span>Created with <i
-                                className="fa fa-heart"></i> by yemiwebby</h2>
-                        </div>
-                        {loading ? (
-                            <div className={'row text-center'}>
-                                <span className="fa fa-spin fa-spinner fa-4x"></span>
-                            </div>
-                        ) : (
-                            <div className={'row'}>
-                                { this.state.charts.map(chart =>
-                                    <div className="col-md-10 offset-md-1 row-block" key={chart.id}>
-                                        <ul id="sortable">
-                                            <li>
-                                                <div className="media">
-                                                    <div className="media-left align-self-center">
-                                                        <img className="rounded-circle"
-                                                                src={chart.imageURL}/>
-                                                    </div>
-                                                    <div className="media-body">
-                                                        <h4>{chart.name}</h4>
-                                                        <p>{chart.description}</p>
-                                                    </div>
-                                                    <div className="media-right align-self-center">
-                                                        <a href="#" className="btn btn-default">Contact Now</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </section>
-            </div>
-        )
     }
 }
 export default Charts;

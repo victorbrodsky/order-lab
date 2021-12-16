@@ -34,6 +34,7 @@ $(document).ready(function() {
 
 function plotlyGetChartsReact(thisSitename) {
     window.ChartsComponent.plotlyGetChartsReact(thisSitename);
+    //plotlyGetCharts(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {

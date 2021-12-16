@@ -22,9 +22,9 @@ import Home from './components/Home';
 import Charts from './components/Charts';
 
 
-function plotlyGetChartsReact( thsiSitename ) {
-    console.log("get charts");
-}
+// function plotlyGetChartsReact( thsiSitename ) {
+//     console.log("app.js: plotlyGetChartsReact");
+// }
 
 // ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
 
