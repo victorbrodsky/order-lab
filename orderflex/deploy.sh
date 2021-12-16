@@ -55,6 +55,9 @@ function prep()
     echo "*** Install assets ***"
     php $PROJECT_LOCAL_PATH/bin/console assets:install
 
+    #echo "*** Install yarn package.json based on yarn.lock ***"
+    #yarn install --frozen-lockfile
+
     echo "********* Prepare development/testing *********"
 
     #echo "*** Clear cache ***"

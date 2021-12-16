@@ -675,14 +675,22 @@ Attending Pathologist
 New York Presbyterian Hospital
 
 React:
+Install yarn: https://classic.yarnpkg.com/lang/en/docs/install/#centos-stable:
+curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+sudo yum install yarn
+yarn --version
+
 https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
 New files (node.js dependencies, Node Package Manager (NPM)): yarn.lock, package.json
-On live server: yarn install
+On live server: yarn install --frozen-lockfile
 On dev: yarn encore dev --watch
+On deploy, create a production build: yarn encore production
 
 apache how to check if Log4js installed:
 https://serverfault.com/questions/1086065/how-do-i-check-if-log4j-is-installed-on-my-server
 Check command: wget https://raw.githubusercontent.com/rubo77/log4j_checker_beta/main/log4j_checker_beta.sh -q -O - | bash
+Windows: dir C:\*log4j*.jar /s
 echo "checking for log4j vulnerability...";
 OUTPUT="$(locate log4j|grep -v log4js)"
 if [ "$OUTPUT" ]; then
