@@ -218,6 +218,8 @@ class Charts extends Component {
                     showLimited={showLimited}
                     quantityLimit={quantityLimit}
                     chartIndex={chartIndex}
+                    chartDivId={divId}
+                    chartDiv={div}
                 />,
                 document.getElementById(divId)
             )

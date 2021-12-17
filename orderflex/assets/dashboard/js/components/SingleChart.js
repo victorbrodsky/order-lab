@@ -32,7 +32,7 @@ class SingleChart extends Component {
         ReactDOM.render(error, document.getElementById('error-message'));
     }
 
-    plotlyAddChartReact(resultData) {
+    plotlyAddChartReact(resultData, chartDiv) {
 
         //const loading = this.state.loading;
 
@@ -60,38 +60,44 @@ class SingleChart extends Component {
 
         //plotlyAddChart(chartData['chartId'],chartData);
 
-        this.createChart(chartData['chartId'],chartData);
+        this.createChart(chartData['chartId'],chartData, chartDiv);
 
     }
 
-    createChart(chartIndex,chartData) {
-        var chartId = chartData['chartId'];
-        var layout = chartData['layout'];
-        var data = chartData['data'];
-        var favoriteFalg = chartData['favorite'];
+    createChart( chartIndex, chartData, plotElement ) {
+        let chartId = chartData['chartId'];
+        let layout = chartData['layout'];
+        let data = chartData['data'];
+        let favoriteFalg = chartData['favorite'];
         //console.log("data:");
         //console.log(data);
 
         //var chartId = data[0]['id'];
-        //console.log("chartId="+chartId);
+        console.log("chartId="+chartId);
 
-        //var divId = 'chart-' + chartIndex;
-        var divId = 'chart-' + chartId;
+        /*//var divId = 'chart-' + chartIndex;
+        var chartDivId = 'chart-' + chartId;
         var div = document.createElement("div");
         div.style.float = "left";
         div.style.margin = "10px";
         div.setAttribute('id', divId);
-        document.getElementById("charts").appendChild(div);
+        document.getElementById("charts").appendChild(div);*/
 
         //create favorite icon glyphicon glyphicon-heart
         //show a toggle button with a heart glyphicon under each chart (right-justified)
-        var favoriteDivId = 'chart-favorite-' + chartIndex;
+        let favoriteDivId = 'chart-favorite-' + chartIndex;
 
-        Plotly.newPlot(divId, data, layout);
+        //let divId = this.props.chartDivId;
+        //console.log("2 Chart chartDivId="+plotElement.id);
 
-        var myPlot = document.getElementById(divId);
+        //let plotElement = this.props.chartDiv; //document.getElementById(chartDivId)
 
-        myPlot.on('plotly_click', function(data){
+        //Plotly.newPlot(plotElement, data, layout);
+        Plotly.react(plotElement, data, layout);
+
+        //let plotElement = document.getElementById(chartDivId);
+
+        plotElement.on('plotly_click', function(data){
             //console.log("data:");
             //console.log(data);
             var index = 0;
@@ -129,11 +135,15 @@ class SingleChart extends Component {
             //' data-tooltip="Favorite Chart" ' +
             'onClick="favoriteChart(this,'+chartId+');"></span></div>';
         //var favoriteEl = '<div>!!!!!!!!!!!!</div>';
-        //$( favoriteEl ).appendTo( "#"+divId );
+        //$( favoriteEl ).appendTo( "#"+chartDivId );
         //$( favoriteEl ).appendTo( "#start-test" );
-        //$(myPlot).find('.infolayer').find('.g-gtitle').append( favoriteEl );
+        //$(plotElement).find('.infolayer').find('.g-gtitle').append( favoriteEl );
         //$('.modebar').append( favoriteEl );
-        $('#'+divId).find('.modebar').prepend( favoriteEl );
+
+        //$('#'+chartDivId).find('.modebar').prepend( favoriteEl );
+
+        //$('#'+plotElement.id).find('.modebar').prepend( favoriteEl );
+        $(plotElement).find('.modebar').prepend( favoriteEl );
     }
 
     getChartData(thisSitename) {
@@ -181,8 +191,6 @@ class SingleChart extends Component {
         })
         .then((result) => {
             //console.log(result);
-            //this.plotlyAddChartReact(result);
-            //this.setState({ chartData: result})
             this.setState({ chartData: result, loading: false})
             console.log("2 loading="+this.state.loading);
         }, (error) => {
@@ -199,26 +207,41 @@ class SingleChart extends Component {
         });
     }
 
-    /*{this.plotlyAddChartReact(this.state.chartData)}*/
+    /*let renderObject1 = (
+     <div>
+     <section className="row-section">
+     <div className="container">
+     {loading ? (
+     <div className={'row text-center'}>
+     <span className="fa fa-spin fa-spinner fa-4x"></span>
+     </div>
+     ) : (
+     <div className={'row'}>
+     {this.plotlyAddChartReact(this.state.chartData,chartDivId)}
+     </div>
+     )}
+     </div>
+     </section>
+     </div>
+     );*/
+
     render() {
         const loading = this.state.loading;
         console.log("loading="+loading);
 
+        const chartDiv = this.props.chartDiv;
+
         let renderObject = (
-            <div>
-                <section className="row-section">
-                    <div className="container">
-                        {loading ? (
-                            <div className={'row text-center'}>
-                                <span className="fa fa-spin fa-spinner fa-4x"></span>
-                            </div>
-                        ) : (
-                            <div className={'row'}>
-                                {this.plotlyAddChartReact(this.state.chartData)}
-                            </div>
-                        )}
+            <div className="container">
+                {loading ? (
+                    <div className={'row text-center'}>
+                        <span className="fa fa-spin fa-spinner fa-4x"></span>
                     </div>
-                </section>
+                ) : (
+                    <div>
+                        {this.plotlyAddChartReact(this.state.chartData,chartDiv)}
+                    </div>
+                )}
             </div>
         );
 
