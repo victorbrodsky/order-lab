@@ -27,20 +27,19 @@
     {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon-stats-copied.png') }}" />#}
 {% endblock %}
 
-
 {% block mainjs %}
 
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
 
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
 
@@ -64,7 +63,7 @@
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
     <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
 
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
 
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
@@ -81,12 +80,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
 {% endblock %}
 
-{#{% block stylesheets %}#}
-    {#{{ encore_entry_link_tags('app') }}#}
+{#{% block stylesheets_base %}#}
+    {#{{ encore_entry_link_tags('dashboard_base') }}#}
 {#{% endblock %}#}
-
-{#{% block javascripts %}#}
-    {#{{ encore_entry_script_tags('app') }}#}
+{#{% block javascripts_base %}#}
+    {#{{ encore_entry_script_tags('dashboard_base') }}#}
 {#{% endblock %}#}
 
 

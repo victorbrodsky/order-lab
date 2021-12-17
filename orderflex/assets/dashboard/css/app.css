@@ -13,7 +13,9 @@
 
 
 .row-section{
-    float:left; width:100%; background: #42275a;  /* fallback for old browsers */
+    float:left;
+    width:100%;
+    /*background: #42275a;  !* fallback for old browsers *!*/
 }
 .row-section h2{float:left; width:100%; color:#fff; margin-bottom:30px; font-size: 14px;}
 .row-section h2 span{font-family: 'Libre Baskerville', serif; display:block; font-size:45px; text-transform:none; margin-bottom:20px; margin-top:30px;font-weight:700;}
@@ -30,7 +32,7 @@
 .btn-default{background:#6B456A; color:#fff; border-radius:30px; border:none; font-size:16px;}
 .fa-spin {
     margin: 0 auto;
-    color: white;
+    color: #42275a;
 }
 body {
     background-color: lightgray;

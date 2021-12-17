@@ -30,6 +30,9 @@
         {#{{ encore_entry_link_tags('entry') }}#}
     {#{% endblock %}#}
 
+    {% block stylesheets_base %}
+        {#{{ encore_entry_link_tags('dashboard_base') }}#}
+    {% endblock %}
     {% block stylesheets %}
         {#{{ encore_entry_link_tags('app') }}#}
     {% endblock %}
@@ -248,7 +251,6 @@
         </div>
         {% endblock %}
 
-
         {% block mainjs %}
 
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
@@ -259,7 +261,7 @@
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/select2.js') }}"></script>
-            <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
@@ -273,7 +275,7 @@
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
-            <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/cropper.min.js') }}"></script>
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-crop-avatar.js') }}"></script>
@@ -300,6 +302,9 @@
 
     </div>
 
+    {% block javascripts_base %}
+        {#{{ encore_entry_script_tags('app') }}#}
+    {% endblock %}
     {% block javascripts %}
         {#{{ encore_entry_script_tags('app') }}#}
     {% endblock %}

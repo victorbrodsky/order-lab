@@ -28,7 +28,8 @@ Encore
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
-    .addEntry('dashboard', './assets/dashboard/js/app.js')
+    //.addEntry('dashboard_base', './assets/dashboard/js/dashboard_base.js')
+    .addEntry('dashboard', './assets/dashboard/js/dashboard.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
