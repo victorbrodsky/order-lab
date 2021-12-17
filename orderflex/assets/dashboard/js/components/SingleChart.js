@@ -17,7 +17,7 @@ class SingleChart extends Component {
     }
 
     componentDidMount() {
-        console.log("1 loading="+this.state.loading);
+        //console.log("1 loading="+this.state.loading);
         this.getChartData('dashboard');
     }
 
@@ -73,7 +73,7 @@ class SingleChart extends Component {
         //console.log(data);
 
         //var chartId = data[0]['id'];
-        console.log("chartId="+chartId);
+        //console.log("chartId="+chartId);
 
         /*//var divId = 'chart-' + chartIndex;
         var chartDivId = 'chart-' + chartId;
@@ -169,7 +169,7 @@ class SingleChart extends Component {
         let quantityLimit = this.props.quantityLimit; //$("#filter_quantityLimit").val();
 
         let chartIndex = this.props.chartIndex;
-        console.log("chartIndex="+chartIndex);
+        //console.log("chartIndex="+chartIndex);
 
         if( chartIndex === null ) {
             const element = <div>Logical error: chart is not defined</div>;
@@ -192,7 +192,7 @@ class SingleChart extends Component {
         .then((result) => {
             //console.log(result);
             this.setState({ chartData: result, loading: false})
-            console.log("2 loading="+this.state.loading);
+            //console.log("2 loading="+this.state.loading);
         }, (error) => {
             //console.log(error);
             var errorMsg = "Unexpected Error. " +
@@ -227,7 +227,7 @@ class SingleChart extends Component {
 
     render() {
         const loading = this.state.loading;
-        console.log("loading="+loading);
+        //console.log("loading="+loading);
 
         const chartDiv = this.props.chartDiv;
 

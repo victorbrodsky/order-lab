@@ -31,7 +31,7 @@ class Charts extends Component {
     }
 
     addErrorLine(msg, type) {
-        let error
+        let error;
         if( type == 'error' ) {
             error = <div className={'alert alert-danger'}>{msg}</div>
         }
@@ -41,6 +41,101 @@ class Charts extends Component {
         ReactDOM.render(error, document.getElementById('error-message'));
     }
 
+
+
+    getCharts(thisSitename) {
+
+        //console.log("getCharts thisSitename="+thisSitename);
+
+        document.getElementById("charts").innerHTML = "";
+
+        let startDate = $("#filter_startDate").val();
+        //console.log("startDate="+startDate);
+
+        let endDate = $("#filter_endDate").val();
+        //console.log("endDate="+endDate);
+
+        let projectSpecialty = $("#filter_projectSpecialty").select2("val");
+        //console.log("projectSpecialty="+projectSpecialty);
+
+        let chartTypes = $("#filter_chartType").select2("val");
+
+        //filter_chartType
+        let productservice = $("#filter_category").select2("val");
+        //console.log("productservice:");
+        //console.log(productservice);
+
+        //var showLimited = $("#filter_showLimited:checked").val();
+        //console.log("showLimited="+showLimited);
+
+        let showLimited = 0;
+        if( $("#filter_showLimited").is(":checked") ) {
+            showLimited = 1;
+        }
+        //console.log("showLimited="+showLimited);
+
+        let quantityLimit = $("#filter_quantityLimit").val();
+
+        let totalChartCount = chartTypes.length;
+        //console.log("totalChartCount="+totalChartCount);
+
+        if( totalChartCount == 0 ) {
+            const element = <div>Please select chart</div>;
+            ReactDOM.render(element, document.getElementById('error-message'));
+        }
+
+        let retrievedChartCount = 0;
+        //l.start();
+
+        let chartDataArr = [];
+
+        let chartHolder = document.getElementsByClassName("some_class")
+
+        for(let i = 0; i < totalChartCount; i++) {
+            let chartIndex = chartTypes[i];
+            //console.log("chartIndex="+chartIndex);
+            //https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/
+            // axios.get(url).then(charts => {
+            //     this.setState({ charts: charts.data, loading: false})
+            // })
+
+            //create chart div
+            let divId = 'chart-' + chartIndex;
+            let div = document.createElement("div");
+            div.style.float = "left";
+            div.style.margin = "10px";
+            div.setAttribute('id', divId);
+            document.getElementById("charts").appendChild(div);
+
+            ReactDOM.render(
+                <SingleChart
+                    startDate={startDate}
+                    endDate={endDate}
+                    projectSpecialty={projectSpecialty}
+                    productservice={productservice}
+                    showLimited={showLimited}
+                    quantityLimit={quantityLimit}
+                    chartIndex={chartIndex}
+                    chartDivId={divId}
+                    chartDiv={div}
+                />,
+                document.getElementById(divId)
+            )
+        }
+
+        // var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
+        // axios.get(url).then(charts => {
+        //     this.setState({ charts: charts.data, loading: false})
+        // })
+    }
+
+
+
+
+
+
+
+    //NOT USED
     plotlyAddChartReact(resultData) {
 
         //const loading = this.state.loading;
@@ -73,6 +168,7 @@ class Charts extends Component {
 
     }
 
+    //NOT USED
     createChart(chartIndex,chartData) {
         var chartId = chartData['chartId'];
         var layout = chartData['layout'];
@@ -145,92 +241,7 @@ class Charts extends Component {
         $('#'+divId).find('.modebar').prepend( favoriteEl );
     }
 
-    getCharts(thisSitename) {
-
-        //console.log("getCharts thisSitename="+thisSitename);
-
-        document.getElementById("charts").innerHTML = "";
-
-        let startDate = $("#filter_startDate").val();
-        //console.log("startDate="+startDate);
-
-        let endDate = $("#filter_endDate").val();
-        //console.log("endDate="+endDate);
-
-        let projectSpecialty = $("#filter_projectSpecialty").select2("val");
-        //console.log("projectSpecialty="+projectSpecialty);
-
-        let chartTypes = $("#filter_chartType").select2("val");
-
-        //filter_chartType
-        let productservice = $("#filter_category").select2("val");
-        //console.log("productservice:");
-        //console.log(productservice);
-
-        //var showLimited = $("#filter_showLimited:checked").val();
-        //console.log("showLimited="+showLimited);
-
-        let showLimited = 0;
-        if( $("#filter_showLimited").is(":checked") ) {
-            showLimited = 1;
-        }
-        //console.log("showLimited="+showLimited);
-
-        let quantityLimit = $("#filter_quantityLimit").val();
-
-        let totalChartCount = chartTypes.length;
-        //console.log("totalChartCount="+totalChartCount);
-
-        if( totalChartCount == 0 ) {
-            const element = <div>Please select chart</div>;
-            ReactDOM.render(element, document.getElementById('error-message'));
-        }
-
-        let retrievedChartCount = 0;
-        //l.start();
-
-        let chartDataArr = [];
-
-        let chartHolder = document.getElementsByClassName("some_class")
-
-        for(let i = 0; i < totalChartCount; i++) {
-            let chartIndex = chartTypes[i];
-            //console.log("chartIndex="+chartIndex);
-            //https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/
-            // axios.get(url).then(charts => {
-            //     this.setState({ charts: charts.data, loading: false})
-            // })
-
-            //create div
-            let divId = 'chart-' + chartIndex;
-            let div = document.createElement("div");
-            div.style.float = "left";
-            div.style.margin = "10px";
-            div.setAttribute('id', divId);
-            document.getElementById("charts").appendChild(div);
-
-            ReactDOM.render(
-                <SingleChart
-                    startDate={startDate}
-                    endDate={endDate}
-                    projectSpecialty={projectSpecialty}
-                    productservice={productservice}
-                    showLimited={showLimited}
-                    quantityLimit={quantityLimit}
-                    chartIndex={chartIndex}
-                    chartDivId={divId}
-                    chartDiv={div}
-                />,
-                document.getElementById(divId)
-            )
-        }
-
-        // var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
-        // axios.get(url).then(charts => {
-        //     this.setState({ charts: charts.data, loading: false})
-        // })
-    }
-
+    //NOT USED
     getCharts_ORIG(thisSitename) {
 
         console.log("getCharts thisSitename="+thisSitename);
