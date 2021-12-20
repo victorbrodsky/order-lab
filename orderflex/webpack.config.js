@@ -28,7 +28,7 @@ Encore
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
-    //.addEntry('dashboard_base', './assets/dashboard/js/dashboard_base.js')
+    // .addEntry('dashboard_base', './assets/dashboard/js/dashboard_base.js')
     .addEntry('dashboard', './assets/dashboard/js/dashboard.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -68,7 +68,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()

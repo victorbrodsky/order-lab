@@ -21,6 +21,10 @@
     "dependencies": {
         "@babel/plugin-proposal-class-properties": "^7.16.0",
         "@babel/plugin-transform-runtime": "^7.16.4",
-        "react-router-dom": "^6.1.1"
+        "jquery": "^3.6.0",
+        "plotly": "^1.0.6",
+        "react-router-dom": "^6.1.1",
+        "select2": "^4.1.0-rc.0",
+        "spin": "^0.0.1"
     }
 }

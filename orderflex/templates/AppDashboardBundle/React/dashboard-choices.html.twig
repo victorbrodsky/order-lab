@@ -8,6 +8,11 @@
 
 {% block content %}
 
+    {% if cycle is not defined %}
+        {% set cycle = "show" %}
+    {% endif %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="useWarning" value="{{ useWarning }}" />
 
     {% if testflag is defined %}
@@ -100,9 +105,11 @@
 
 
 {% block stylesheets %}
+    {#{{ parent() }}#}
     {{ encore_entry_link_tags('dashboard') }}
 {% endblock %}
 {% block javascripts %}
+    {#{{ parent() }}#}
     {{ encore_entry_script_tags('dashboard') }}
 {% endblock %}
 

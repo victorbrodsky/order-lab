@@ -38,6 +38,10 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
+    if( typeof cycle === "undefined" ) {
+        var cycle = 'show';
+    }
+
     //console.log('cycle=('+cycle+')');
     if( cycle !== 'download' ) {
         //console.log('init idleTimeout');
@@ -49,6 +53,7 @@ $(document).ready(function() {
     }
 
 });
+
 
 
 function idleTimeoutClass() { }
