@@ -24,6 +24,123 @@ class DashboardController extends OrderAbstractController
 {
 
     /**
+     * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
+     *
+     * @Route("/", name="dashboard_home")
+     * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
+     */
+    public function dashboardChoicesAction( Request $request )
+    {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
+
+        $filterform = $this->getFilter();
+        $filterform->handleRequest($request);
+
+        //chartType
+        $useWarning = true;
+        $autoLoad = $request->query->get('auto');
+        if( isset($autoLoad) ) {
+            if( $autoLoad ) {
+                //echo "auto is true <br>";
+                $useWarning = false;
+            } else {
+                //echo "auto is false <br>";
+            }
+        } else {
+            //echo "auto not set <br>";
+            //$useWarning = true;
+        }
+//        if( $useWarning ) {
+//            echo "useWarning is true <br>";
+//            $useWarning = false;
+//        } else {
+//            echo "useWarning is false <br>";
+//        }
+        //exit('111');
+        $chartTypesCount = 0;
+        $chartTypes = $filterform['chartType']->getData();
+        if( $chartTypes ) {
+            $chartTypesCount = count($chartTypes);
+        }
+        if( !$useWarning ) {
+            $chartTypesCount = 0;
+        }
+        if( $chartTypesCount > 3 ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                'Please click Filter button to generate multiple charts'
+            );
+        }
+
+        $title = $request->query->get('title');
+        if( !$title ) {
+            $title = "Dashboard";
+        }
+
+        return array(
+            'title' => $title,
+            'filterform' => $filterform->createView(),
+            'chartsArray' => array(),
+            'spinnerColor' => '#85c1e9',
+            'useWarning' => $useWarning,
+            'testflag' => "11111"
+        );
+    }
+
+    public function getFilter( $showLimited=false, $withCompareType=false ) {
+        $transresUtil = $this->container->get('transres_util');
+        $dashboardUtil = $this->container->get('dashboard_util');
+        //////////// Filter ////////////
+        //default date range from today to 1 year back
+        $projectSpecialtiesWithAll = array('All'=>0);
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
+        foreach($projectSpecialties as $projectSpecialty) {
+            $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
+        }
+
+        $endDate = new \DateTime('now');
+        $startDate = new \DateTime('now');
+        //set to today
+        //$endDate = $endDate->modify('-3 year');
+        $startDate = $startDate->modify('-1 year');//->format('m/d/Y');
+
+        $params = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            "projectSpecialty" => true,
+            "projectSpecialties" => $projectSpecialtiesWithAll,
+            "compareType" => false,
+            "showLimited" => true,
+            "category" => true
+        );
+
+        if( $withCompareType ) {
+            $params["compareType"] = true;
+        }
+
+        if( $showLimited ) {
+            $params["showLimited"] = $showLimited;
+        }
+
+        //chartTypes
+        $params["chartType"] = true;
+        $params["chartTypes"] = $dashboardUtil->getChartTypes();
+
+
+        $filterform = $this->createForm(FilterDashboardType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+        //////////// EOF Filter ////////////
+
+        return $filterform;
+    }
+
+    /**
      * single dashboard chart. id - chart ID
      *
      * @Route("/chart/{id}", name="dashboard_single_chart_id")
@@ -452,124 +569,6 @@ class DashboardController extends OrderAbstractController
 
         //exit('Not permitted');
         return false;
-    }
-
-
-    /**
-     * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
-     *
-     * @Route("/", name="dashboard_home")
-     * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
-     */
-    public function dashboardChoicesAction( Request $request )
-    {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
-        }
-
-        $filterform = $this->getFilter();
-        $filterform->handleRequest($request);
-
-        //chartType
-        $useWarning = true;
-        $autoLoad = $request->query->get('auto');
-        if( isset($autoLoad) ) {
-            if( $autoLoad ) {
-                //echo "auto is true <br>";
-                $useWarning = false;
-            } else {
-                //echo "auto is false <br>";
-            }
-        } else {
-            //echo "auto not set <br>";
-            //$useWarning = true;
-        }
-//        if( $useWarning ) {
-//            echo "useWarning is true <br>";
-//            $useWarning = false;
-//        } else {
-//            echo "useWarning is false <br>";
-//        }
-        //exit('111');
-        $chartTypesCount = 0;
-        $chartTypes = $filterform['chartType']->getData();
-        if( $chartTypes ) {
-            $chartTypesCount = count($chartTypes);
-        }
-        if( !$useWarning ) {
-            $chartTypesCount = 0;
-        }
-        if( $chartTypesCount > 3 ) {
-            $this->get('session')->getFlashBag()->add(
-                'pnotify',
-                'Please click Filter button to generate multiple charts'
-            );
-        }
-
-        $title = $request->query->get('title');
-        if( !$title ) {
-            $title = "Dashboard";
-        }
-
-        return array(
-            'title' => $title,
-            'filterform' => $filterform->createView(),
-            'chartsArray' => array(),
-            'spinnerColor' => '#85c1e9',
-            'useWarning' => $useWarning,
-            'testflag' => "11111"
-        );
-    }
-
-    public function getFilter( $showLimited=false, $withCompareType=false ) {
-        $transresUtil = $this->container->get('transres_util');
-        $dashboardUtil = $this->container->get('dashboard_util');
-        //////////// Filter ////////////
-        //default date range from today to 1 year back
-        $projectSpecialtiesWithAll = array('All'=>0);
-        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
-        foreach($projectSpecialties as $projectSpecialty) {
-            $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
-        }
-
-        $endDate = new \DateTime('now');
-        $startDate = new \DateTime('now');
-        //set to today
-        //$endDate = $endDate->modify('-3 year');
-        $startDate = $startDate->modify('-1 year');//->format('m/d/Y');
-
-        $params = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            "projectSpecialty" => true,
-            "projectSpecialties" => $projectSpecialtiesWithAll,
-            "compareType" => false,
-            "showLimited" => true,
-            "category" => true
-        );
-
-        if( $withCompareType ) {
-            $params["compareType"] = true;
-        }
-
-        if( $showLimited ) {
-            $params["showLimited"] = $showLimited;
-        }
-
-        //chartTypes
-        $params["chartType"] = true;
-        $params["chartTypes"] = $dashboardUtil->getChartTypes();
-
-
-        $filterform = $this->createForm(FilterDashboardType::class, null,array(
-            'method' => 'GET',
-            'form_custom_value'=>$params
-        ));
-        //////////// EOF Filter ////////////
-
-        return $filterform;
     }
 
     /**
