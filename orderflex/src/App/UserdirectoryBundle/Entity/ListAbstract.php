@@ -157,6 +157,15 @@ abstract class ListAbstract
      */
     protected $version;
 
+
+    /**
+     * Additional attributes in JSON format (e.g.
+     * {"attributeGroupTitle":{"attribute01Title":"attribute01Value","attribute02Title":"attribute02Value"}} )
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $textAttribute;
+
 //    /**
 //     * @ORM\Column(type="string", nullable=true)
 //     */
@@ -543,6 +552,23 @@ abstract class ListAbstract
     {
         return $this->fulltitle;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTextAttribute()
+    {
+        return $this->textAttribute;
+    }
+
+    /**
+     * @param mixed $textAttribute
+     */
+    public function setTextAttribute($textAttribute)
+    {
+        $this->textAttribute = $textAttribute;
+    }
+
 
 //    /**
 //     * @param mixed $fulltitlemedium

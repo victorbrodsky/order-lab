@@ -208,6 +208,11 @@ class ListType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('textAttribute',null,array(
+            'label' => 'Additional attributes in JSON format:',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
 
     }
 
