@@ -86,6 +86,103 @@ class TopicList extends BaseCompositeNode
      **/
     private $charts;
 
+    ///////////////////// Access Control ////////////////////
+    //We should have a single, centralize access control in ChartList
+    //“Accessible to users with the following roles:” [multi-select with roles]
+    //“Deny access to users with the following roles:” [multi-select with roles]
+    //“Deny access to the following users:” [multi-select with all users]
+    //“Data can be downloaded by users with the following roles:” [multi-select with roles].
+    /**
+     * "Accessible to users with the following roles:" [multi-select with roles]
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_accessrole",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $accessRoles;
+
+    /**
+     * "Deny access to users with the following roles:" [multi-select with roles]
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_denyrole",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $denyRoles;
+
+    /**
+     * "Deny access to the following users:" [multi-select with all users]
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_denyuser",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $denyUsers;
+
+    /**
+     * "Data can be downloaded by users with the following roles:" [multi-select with roles].
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Roles", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_downloadrole",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $downloadRoles;
+    ///////////////////// EOF Access Control ////////////////////
+
+    /**
+     * “Favorited by the following users”: [multi-select with all users]
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_favoriteuser",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $favoriteUsers;
+
+    /**
+     * Requested by
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="requester_id", referencedColumnName="id")
+     */
+    private $requester;
+
+    /**
+     * Requested on
+     *
+     * @var \DateTime
+     * @ORM\Column(name="requesteddate", type="datetime", nullable=true)
+     */
+    private $requestedDate;
+
+    /**
+     * "Associated with the following organizational groups": [multi-select with the flat list of all organizational groups] - Institution hierarchy
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
+     * @ORM\JoinTable(name="dashboard_topic_institution",
+     *      joinColumns={@ORM\JoinColumn(name="topic_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     *      )
+     */
+    private $institutions;
+
+    /**
+     * Topic Comment
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $topicComment;
+
+
     //“Applicable Dashboard Chart Filter Fields:”: [multi-select with all “Dashboard Chart Filter Fields” created in step 4 below]
     //TODO: how filter fields will be implemented?
 
@@ -151,6 +248,13 @@ class TopicList extends BaseCompositeNode
         parent::__construct($author);
 
         $this->charts = new ArrayCollection();
+
+        $this->accessRoles = new ArrayCollection();
+        $this->denyRoles = new ArrayCollection();
+        $this->denyUsers = new ArrayCollection();
+        $this->downloadRoles = new ArrayCollection();
+        $this->institutions = new ArrayCollection();
+        $this->favoriteUsers = new ArrayCollection();
     }
 
 
@@ -186,6 +290,163 @@ class TopicList extends BaseCompositeNode
 //    {
 //        $this->oid = $oid;
 //    }
+
+    public function addAccessRole($item)
+    {
+        if( $item && !$this->accessRoles->contains($item) ) {
+            $this->accessRoles->add($item);
+            return $this;
+        }
+        return NULL;
+    }
+    public function removeAccessRole($item)
+    {
+        $this->accessRoles->removeElement($item);
+    }
+    public function getAccessRoles()
+    {
+        return $this->accessRoles;
+    }
+
+    public function addDenyRole($item)
+    {
+        if( $item && !$this->denyRoles->contains($item) ) {
+            $this->denyRoles->add($item);
+        }
+        return $this;
+    }
+    public function removeDenyRole($item)
+    {
+        $this->denyRoles->removeElement($item);
+    }
+    public function getDenyRoles()
+    {
+        return $this->denyRoles;
+    }
+
+    public function addDenyUser($item)
+    {
+        if( $item && !$this->denyUsers->contains($item) ) {
+            $this->denyUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeDenyUser($item)
+    {
+        $this->denyUsers->removeElement($item);
+    }
+    public function getDenyUsers()
+    {
+        return $this->denyUsers;
+    }
+
+    public function addDownloadRole($item)
+    {
+        if( $item && !$this->downloadRoles->contains($item) ) {
+            $this->downloadRoles->add($item);
+            return $this;
+        }
+        return NULL;
+    }
+    public function removeDownloadRole($item)
+    {
+        $this->downloadRoles->removeElement($item);
+    }
+    public function getDownloadRoles()
+    {
+        return $this->downloadRoles;
+    }
+
+    public function addInstitution($item)
+    {
+        if( $item && !$this->institutions->contains($item) ) {
+            $this->institutions->add($item);
+            return $this;
+        }
+        return NULL;
+    }
+    public function removeInstitution($item)
+    {
+        $this->institutions->removeElement($item);
+    }
+    public function getInstitutions()
+    {
+        return $this->institutions;
+    }
+    public function addFavoriteUser($item)
+    {
+        if( $item && !$this->favoriteUsers->contains($item) ) {
+            $this->favoriteUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeFavoriteUser($item)
+    {
+        $this->favoriteUsers->removeElement($item);
+    }
+    public function getFavoriteUsers()
+    {
+        return $this->favoriteUsers;
+    }
+
+
+    //return 1 if favorite, 0 otherwise
+    public function isFavorite($user) {
+        if( $user && $this->getFavoriteUsers()->contains($user) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequester()
+    {
+        return $this->requester;
+    }
+
+    /**
+     * @param mixed $requester
+     */
+    public function setRequester($requester)
+    {
+        $this->requester = $requester;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRequestedDate()
+    {
+        return $this->requestedDate;
+    }
+
+    /**
+     * @param \DateTime $requestedDate
+     */
+    public function setRequestedDate($requestedDate)
+    {
+        $this->requestedDate = $requestedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTopicComment()
+    {
+        return $this->topicComment;
+    }
+
+    /**
+     * @param mixed $topicComment
+     */
+    public function setTopicComment($topicComment)
+    {
+        $this->topicComment = $topicComment;
+    }
+
 
 
     //is used to construct parent's show path the same as in ListController.php

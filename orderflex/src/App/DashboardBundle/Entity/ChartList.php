@@ -207,6 +207,44 @@ class ChartList extends ListAbstract
      **/
     private $favoriteUsers;
 
+    /**
+     * Path to pre-generated default image for this chart
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $imagePath;
+
+    /**
+     * Timestamp for the pre-generated default image for this chart
+     *
+     * @var \DateTime
+     * @ORM\Column(name="imagedate", type="datetime", nullable=true)
+     */
+    private $imageDate;
+
+    /**
+     * Chart Comment
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $chartComment;
+
+    /**
+     * Requested by
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="requester_id", referencedColumnName="id")
+     */
+    private $requester;
+
+    /**
+     * Requested on
+     *
+     * @var \DateTime
+     * @ORM\Column(name="requesteddate", type="datetime", nullable=true)
+     */
+    private $requestedDate;
+
     //////////////// TO BE IMPLEMENT LATER //////////////////////
     //X Axis Label Title (if any): [free text one line field]
     //Default X axis units: [free text one line field]
@@ -508,6 +546,88 @@ class ChartList extends ListAbstract
     {
         return $this->favoriteUsers;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param mixed $imagePath
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->imagePath = $imagePath;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getImageDate()
+    {
+        return $this->imageDate;
+    }
+
+    /**
+     * @param \DateTime $imageDate
+     */
+    public function setImageDate($imageDate)
+    {
+        $this->imageDate = $imageDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChartComment()
+    {
+        return $this->chartComment;
+    }
+
+    /**
+     * @param mixed $chartComment
+     */
+    public function setChartComment($chartComment)
+    {
+        $this->chartComment = $chartComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequester()
+    {
+        return $this->requester;
+    }
+
+    /**
+     * @param mixed $requester
+     */
+    public function setRequester($requester)
+    {
+        $this->requester = $requester;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRequestedDate()
+    {
+        return $this->requestedDate;
+    }
+
+    /**
+     * @param \DateTime $requestedDate
+     */
+    public function setRequestedDate($requestedDate)
+    {
+        $this->requestedDate = $requestedDate;
+    }
+
+
 
 
     //return 1 if favorite, 0 otherwise
