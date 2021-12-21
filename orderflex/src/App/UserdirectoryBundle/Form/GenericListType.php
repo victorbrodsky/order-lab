@@ -1173,99 +1173,99 @@ class GenericListType extends AbstractType
 
         //Dashboard CharList
         if( $this->params['entity'] instanceof ChartList ) {
-            //accessRoles
-            //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
-            $builder->add( 'accessRoles', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Roles',
-                //'choice_label' => 'getTreeName',
-                'label'=>'Accessible to users with the following roles:',
-                'choice_label' => 'getAlias',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.sites","sites")
-                        //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->andWhere("sites.abbreviation = :siteAbbreviation")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'siteAbbreviation' => 'dashboard'
-                        ));
-                },
-            ));
-
-            $builder->add( 'denyRoles', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Roles',
-                //'choice_label' => 'getTreeName',
-                'label'=>'Deny access to users with the following roles:',
-                'choice_label' => 'getAlias',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.sites","sites")
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->andWhere("sites.abbreviation = :siteAbbreviation")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'siteAbbreviation' => 'dashboard'
-                        ));
-                },
-            ));
-
+//            //accessRoles
+//            //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
+//            $builder->add( 'accessRoles', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:Roles',
+//                //'choice_label' => 'getTreeName',
+//                'label'=>'Accessible to users with the following roles:',
+//                'choice_label' => 'getAlias',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.sites","sites")
+//                        //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+//                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+//                        ->andWhere("sites.abbreviation = :siteAbbreviation")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                            'siteAbbreviation' => 'dashboard'
+//                        ));
+//                },
+//            ));
+//
+//            $builder->add( 'denyRoles', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:Roles',
+//                //'choice_label' => 'getTreeName',
+//                'label'=>'Deny access to users with the following roles:',
+//                'choice_label' => 'getAlias',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.sites","sites")
+//                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+//                        ->andWhere("sites.abbreviation = :siteAbbreviation")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                            'siteAbbreviation' => 'dashboard'
+//                        ));
+//                },
+//            ));
+//
+////            $builder->add( 'denyUsers', EntityType::class, array(
+////                'class' => 'AppUserdirectoryBundle:User',
+////                'label'=> "Deny access to the following users:",
+////                'required'=> false,
+////                'multiple' => false,
+////                'attr' => array('class'=>'combobox combobox-width'),
+////                'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+////            ));
 //            $builder->add( 'denyUsers', EntityType::class, array(
 //                'class' => 'AppUserdirectoryBundle:User',
 //                'label'=> "Deny access to the following users:",
 //                'required'=> false,
-//                'multiple' => false,
+//                'multiple' => true,
 //                'attr' => array('class'=>'combobox combobox-width'),
-//                'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.employmentStatus", "employmentStatus")
+//                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+//                        ->leftJoin("list.infos", "infos")
+//                        ->orderBy("infos.displayName","ASC");
+//                },
 //            ));
-            $builder->add( 'denyUsers', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
-                'label'=> "Deny access to the following users:",
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
-                        ->orderBy("infos.displayName","ASC");
-                },
-            ));
-
-            $builder->add( 'downloadRoles', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Roles',
-                //'choice_label' => 'getTreeName',
-                'label'=>'Data can be downloaded by users with the following roles:',
-                'choice_label' => 'getAlias',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.sites","sites")
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->andWhere("sites.abbreviation = :siteAbbreviation")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'siteAbbreviation' => 'dashboard'
-                        ));
-                },
-            ));
+//
+//            $builder->add( 'downloadRoles', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:Roles',
+//                //'choice_label' => 'getTreeName',
+//                'label'=>'Data can be downloaded by users with the following roles:',
+//                'choice_label' => 'getAlias',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.sites","sites")
+//                        ->where("(list.type = :typedef OR list.type = :typeadd)")
+//                        ->andWhere("sites.abbreviation = :siteAbbreviation")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                            'siteAbbreviation' => 'dashboard'
+//                        ));
+//                },
+//            ));
 
             $builder->add('width',null,array(
                 'label' => "Default Image Width in Pixels:",
@@ -1285,25 +1285,25 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
             
-            $builder->add( 'institutions', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
-                'choice_label' => 'getTreeName',
-                'label'=>'Associated with the following organizational groups:',
-                'required'=> false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.children","children")
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        //->orderBy("list.orderinlist, list.level","ASC")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-            ));
+//            $builder->add( 'institutions', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:Institution',
+//                'choice_label' => 'getTreeName',
+//                'label'=>'Associated with the following organizational groups:',
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.children","children")
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        //->orderBy("list.orderinlist, list.level","ASC")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
 
             $builder->add( 'topics', EntityType::class, array(
                 'class' => 'AppDashboardBundle:TopicList',
@@ -1396,6 +1396,52 @@ class GenericListType extends AbstractType
                 },
             ));
 
+            $builder->add('imagePath',null,array(
+                'label' => "Path to pre-generated default image for this chart:",
+                'required' => false,
+                'attr' => array('class'=>'textarea form-control'),
+            ));
+
+            $builder->add('imageDate',null,array(
+                'label' => "Timestamp for the pre-generated default image for this chart:",
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class'=>'datepicker form-control allow-future-date'),
+            ));
+
+            $builder->add('chartComment',null,array(
+                'label' => "Chart Comment:",
+                'required' => false,
+                'attr' => array('class'=>'textarea form-control'),
+            ));
+
+//            $builder->add( 'requester', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:User',
+//                'label'=> "Requested by:",
+//                'required'=> false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.employmentStatus", "employmentStatus")
+//                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                        ->leftJoin("list.infos", "infos")
+//                        ->orderBy("infos.displayName","ASC");
+//                },
+//            ));
+//
+//            $builder->add('requestedDate',null,array(
+//                'label' => "Requested on:",
+//                'required' => false,
+//                'widget' => 'single_text',
+//                'format' => 'MM/dd/yyyy',
+//                'attr' => array('class'=>'datepicker form-control allow-future-date'),
+//            ));
+
+            $this->commonChartFields($builder);
+
 
         } //if ChartList
 
@@ -1417,9 +1463,174 @@ class GenericListType extends AbstractType
                         ));
                 },
             ));
+
+            $builder->add('topicComment',null,array(
+                'label' => "Topic Comment:",
+                'required' => false,
+                'attr' => array('class'=>'textarea form-control'),
+            ));
+
+            $this->commonChartFields($builder);
         } //if TopicList
 
 
+    }
+
+    public function commonChartFields($builder) {
+        $builder->add('favoriteUsers', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:User',
+            'label'=> "Favorited by the following users:",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add('institutions', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Institution',
+            'choice_label' => 'getTreeName',
+            'label'=>'Associated with the following organizational groups:',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.children","children")
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    //->orderBy("list.orderinlist, list.level","ASC")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        //accessRoles
+        //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
+        $builder->add('accessRoles', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Roles',
+            //'choice_label' => 'getTreeName',
+            'label'=>'Accessible to users with the following roles:',
+            'choice_label' => 'getAlias',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.sites","sites")
+                    //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
+                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+                    ->andWhere("sites.abbreviation = :siteAbbreviation")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'siteAbbreviation' => 'dashboard'
+                    ));
+            },
+        ));
+
+        $builder->add('denyRoles', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Roles',
+            //'choice_label' => 'getTreeName',
+            'label'=>'Deny access to users with the following roles:',
+            'choice_label' => 'getAlias',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.sites","sites")
+                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+                    ->andWhere("sites.abbreviation = :siteAbbreviation")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'siteAbbreviation' => 'dashboard'
+                    ));
+            },
+        ));
+
+//            $builder->add( 'denyUsers', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:User',
+//                'label'=> "Deny access to the following users:",
+//                'required'=> false,
+//                'multiple' => false,
+//                'attr' => array('class'=>'combobox combobox-width'),
+//                'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+//            ));
+        $builder->add('denyUsers', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:User',
+            'label'=> "Deny access to the following users:",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add('downloadRoles', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Roles',
+            //'choice_label' => 'getTreeName',
+            'label'=>'Data can be downloaded by users with the following roles:',
+            'choice_label' => 'getAlias',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.sites","sites")
+                    ->where("(list.type = :typedef OR list.type = :typeadd)")
+                    ->andWhere("sites.abbreviation = :siteAbbreviation")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        'siteAbbreviation' => 'dashboard'
+                    ));
+            },
+        ));
+
+        $builder->add('requester', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:User',
+            'label'=> "Requested by:",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add('requestedDate',null,array(
+            'label' => "Requested on:",
+            'required' => false,
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control allow-future-date'),
+        ));
     }
     
     /**

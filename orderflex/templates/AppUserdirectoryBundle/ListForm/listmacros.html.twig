@@ -1247,6 +1247,9 @@
     {% if form.downloadRoles is defined %}
         {{ formmacros.field(form.downloadRoles) }}
     {% endif %}
+    {% if form.favoriteUsers is defined %}
+        {{ formmacros.field(form.favoriteUsers) }}
+    {% endif %}
     {% if form.width is defined %}
         {{ formmacros.field(form.width) }}
     {% endif %}
@@ -1274,6 +1277,28 @@
     {% if form.updateFrequency is defined %}
         {{ formmacros.field(form.updateFrequency) }}
     {% endif %}
+
+    {% if form.requester is defined %}
+        {{ formmacros.field(form.requester) }}
+    {% endif %}
+    {% if form.requestedDate is defined %}
+        {{ formmacros.field(form.requestedDate) }}
+    {% endif %}
+
+    {% if form.topicComment is defined %}
+        {{ formmacros.field(form.topicComment) }}
+    {% endif %}
+    {% if form.chartComment is defined %}
+        {{ formmacros.field(form.chartComment) }}
+    {% endif %}
+
+    {% if form.imagePath is defined %}
+        {{ formmacros.field(form.imagePath) }}
+    {% endif %}
+    {% if form.imageDate is defined %}
+        {{ formmacros.field(form.imageDate) }}
+    {% endif %}
+
     {############ EOF ChartList ###############}
 
     {#TopicList#}
