@@ -2159,6 +2159,52 @@ class DashboardUtil
         return $parametersArr;
     }
 
+    public function getSessionFlashBag( $asString=true, $clear=true ) {
+        $notices = $this->container->get('session')->getFlashBag()->get('notice', []);
+        $warnings = $this->container->get('session')->getFlashBag()->get('warning', []);
+        $errors = $this->container->get('session')->getFlashBag()->get('error', []);
+
+        if( $clear ) {
+            $errors = $this->container->get('session')->getFlashBag()->clear();
+        }
+
+        if( $asString ) {
+
+            $resString = NULL;
+
+            if( count($notices) > 0 ) {
+                if( $resString ) {
+                    $resString = $resString . "; ";
+                }
+                $resString = $resString . "Notices: " . implode(', ', $notices);
+            }
+
+            if( count($warnings) > 0 ) {
+                if( $resString ) {
+                    $resString = $resString . "; ";
+                }
+                $resString = $resString . "Warnings: " . implode(', ', $warnings);
+            }
+
+            if( count($errors) > 0 ) {
+                if( $resString ) {
+                    $resString = $resString . "; ";
+                }
+                $resString = $resString . "Errors: " . implode(', ', $errors);
+            }
+
+            return $resString;
+        }
+
+        $flashBag = array(
+            'notice' => $notices,
+            'warning' => $warnings,
+            'error' => $errors,
+        );
+
+        return $flashBag;
+    }
+
     //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
     public function getDashboardChart( $request, $parametersArr=NULL ) {
 
@@ -2314,7 +2360,14 @@ class DashboardUtil
             //get admin email
             $userSecUtil = $this->container->get('user_security_utility');
             $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
-            $error = "You do not have access to this chart '".$chartObject->getName()."'. Please request access by contacting your site administrator $adminemail.";
+            $error = "You do not have access to this chart '".$chartObject->getName().
+                "'. Please request access by contacting your site administrator $adminemail.";
+
+            $flashBagArr = $this->getSessionFlashBag();
+            if( $flashBagArr ) {
+                $error = $error . " " . $flashBagArr;
+            }
+
             $chartsArray['warning'] = false;
             $chartsArray['error'] = $error;
             return $chartsArray;

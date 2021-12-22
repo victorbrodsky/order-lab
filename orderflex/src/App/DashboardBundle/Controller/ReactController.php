@@ -90,4 +90,43 @@ class ReactController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * Test React
+     * https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
+     *
+     * @Route("/api/session-flash-bag", name="dashboard_api_session_flash_bag", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getSessionFlashBagAction()
+    {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+        }
+
+        $dashboardUtil = $this->container->get('dashboard_util');
+
+        $flashBag = $dashboardUtil->getSessionFlashBag();
+
+//        $notices = $this->container->get('session')->getFlashBag()->get('notice', []);
+//        $warnings = $this->container->get('session')->getFlashBag()->get('warning', []);
+//        $errors = $this->container->get('session')->getFlashBag()->get('error', []);
+//
+//        $flashBag = array(
+//            'notice' => $notices,
+//            'warning' => $warnings,
+//            'error' => $errors,
+//        );
+
+        $response = new Response();
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        $response->setContent(json_encode($flashBag));
+
+        return $response;
+    }
+
 }

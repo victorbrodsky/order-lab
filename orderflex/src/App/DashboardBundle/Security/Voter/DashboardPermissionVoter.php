@@ -177,7 +177,17 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //            return false;
 //        }
 
-        if( $this->userIsDeniedByChart($user,$subject) || $this->userIsDeniedByTopic($user,$subject) ) {
+        //testing session bag
+//        $this->container->get('session')->getFlashBag()->add(
+//            'warning',
+//            'Session bag testing.'
+//        );
+//        return false;
+
+        if( $this->userIsDeniedByChart($user,$subject) ) {
+            return false;
+        }
+        if( $this->userIsDeniedByTopic($user,$subject) ) {
             return false;
         }
 
@@ -215,22 +225,31 @@ class DashboardPermissionVoter extends BasePermissionVoter
     }
 
     public function userIsDeniedByChart($user,$chart) {
+        //return true; //testing
         if( $chart->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
-            return false;
+            $this->container->get('session')->getFlashBag()->add(
+                'warning',
+                'User is denied by chart ' . $chart . '.'
+            );
+            return true;
         }
-        return true;
+        return false;
     }
     public function userIsDeniedByTopic($user,$chart) {
         foreach( $chart->getTopics() as $topic ) {
             if( $topic->getDenyUsers()->contains($user) ) {
                 //exit("chart has DenyUsers");
-                return false;
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    'User is denied by topic ' . $topic . '.'
+                );
+                return true;
             }
         }
-        return true;
+        return false;
     }
-    
+
     public function userHasChartDenyRoles($user,$chart) {
         $denyRoles = $chart->getDenyRoles();
         //$userRoles = $user->getSiteRoles('dashboard');
@@ -239,9 +258,10 @@ class DashboardPermissionVoter extends BasePermissionVoter
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
                 //exit("chart has DenyRoles");
-                return false;
+                return true;
             }
         }
+        return false;
     }
     public function userHasTopicDenyRoles($user,$chart) {
         foreach( $chart->getTopics() as $topic ) {
@@ -252,11 +272,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
             foreach( $userRoles as $userRole ) {
                 if( $userRole && $denyRoles->contains($userRole) ) {
                     //exit("chart has DenyRoles");
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
 

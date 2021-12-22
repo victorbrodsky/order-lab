@@ -27,6 +27,9 @@ class Charts extends Component {
 
     plotlyGetChartsReact(thisSitename) {
         console.log("get react charts");
+        //$("#error-message").empty();
+        //$("#error-message").html('');
+
         $("#hidden-filter").show();
         this.getCharts(thisSitename);
     }
