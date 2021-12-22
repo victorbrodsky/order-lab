@@ -58,7 +58,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //$this->getId(); //testing: make error stack
         //exit('dashboard: support');
 
-        $siteRoleBase = $this->getSiteRoleBase();
+        //$siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
 
         $attribute = $this->convertAttribute($attribute);
@@ -169,24 +169,32 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //        }
 
         $siteRoleBase = $this->getSiteRoleBase();
-        $sitename = $this->getSitename();
+        //$sitename = $this->getSitename();
 
         //denyUsers: if user is in denyUsers => return false;
-        if( $subject->getDenyUsers()->contains($user) ) {
-            //exit("chart has DenyUsers");
+//        if( $subject->getDenyUsers()->contains($user) ) {
+//            //exit("chart has DenyUsers");
+//            return false;
+//        }
+
+        if( $this->userIsDeniedByChart($user,$subject) || $this->userIsDeniedByTopic($user,$subject) ) {
             return false;
         }
 
         //denyRoles: if user has denyRoles => return false;
-        $denyRoles = $subject->getDenyRoles();
-        //$userRoles = $user->getSiteRoles('dashboard');
-        $securityUtil = $this->container->get('user_security_utility');
-        $userRoles = $securityUtil->getUserRolesBySite($user,$sitename);
-        foreach( $userRoles as $userRole ) {
-            if( $userRole && $denyRoles->contains($userRole) ) {
-                //exit("chart has DenyRoles");
-                return false;
-            }
+//        $denyRoles = $subject->getDenyRoles();
+//        //$userRoles = $user->getSiteRoles('dashboard');
+//        $securityUtil = $this->container->get('user_security_utility');
+//        $userRoles = $securityUtil->getUserRolesBySite($user,$sitename);
+//        foreach( $userRoles as $userRole ) {
+//            if( $userRole && $denyRoles->contains($userRole) ) {
+//                //exit("chart has DenyRoles");
+//                return false;
+//            }
+//        }
+
+        if( $this->userHasChartDenyRoles($user,$subject) || $this->userHasTopicDenyRoles($user,$subject) ) {
+            return false;
         }
 
         //ROLE_DASHBOARD_ADMIN can do anything
@@ -197,7 +205,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //exit('dashboard canView false');
 
         //accessRoles: if user has accessRoles => return true;
-        if( $this->userHasChartAccessRoles($user,$subject) ) {
+        if( $this->userHasChartAccessRoles($user,$subject) || $this->userHasTopicAccessRoles($user,$subject) ) {
             //exit("chart has user access roles");
             return true;
         }
@@ -205,6 +213,52 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //exit("chart can not View");
         return false;
     }
+
+    public function userIsDeniedByChart($user,$chart) {
+        if( $chart->getDenyUsers()->contains($user) ) {
+            //exit("chart has DenyUsers");
+            return false;
+        }
+        return true;
+    }
+    public function userIsDeniedByTopic($user,$chart) {
+        foreach( $chart->getTopics() as $topic ) {
+            if( $topic->getDenyUsers()->contains($user) ) {
+                //exit("chart has DenyUsers");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public function userHasChartDenyRoles($user,$chart) {
+        $denyRoles = $chart->getDenyRoles();
+        //$userRoles = $user->getSiteRoles('dashboard');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userRoles = $securityUtil->getUserRolesBySite($user,$this->getSitename());
+        foreach( $userRoles as $userRole ) {
+            if( $userRole && $denyRoles->contains($userRole) ) {
+                //exit("chart has DenyRoles");
+                return false;
+            }
+        }
+    }
+    public function userHasTopicDenyRoles($user,$chart) {
+        foreach( $chart->getTopics() as $topic ) {
+            $denyRoles = $topic->getDenyRoles();
+            //$userRoles = $user->getSiteRoles('dashboard');
+            $securityUtil = $this->container->get('user_security_utility');
+            $userRoles = $securityUtil->getUserRolesBySite($user,$this->getSitename());
+            foreach( $userRoles as $userRole ) {
+                if( $userRole && $denyRoles->contains($userRole) ) {
+                    //exit("chart has DenyRoles");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     public function userHasChartAccessRoles($user,$chart) {
         $securityUtil = $this->container->get('user_security_utility');
@@ -243,6 +297,45 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         return false;
     }
+
+    public function userHasTopicAccessRoles($user,$chart) {
+        $securityUtil = $this->container->get('user_security_utility');
+
+        $sitename = $this->getSitename();
+        $userRolesId = $securityUtil->getUserRoleIdsBySite($user,$sitename);
+        //dump($userRolesId);
+
+        $repository = $this->em->getRepository('AppDashboardBundle:TopicList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.accessRoles", "accessRoles");
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->andWhere("list.id = :chartId");
+        $dql->andWhere("accessRoles IN (:userRoles)");
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            'chartId' => $chart->getId(),
+            'userRoles' => $userRolesId
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        //echo "charts=".count($charts)."<br>";
+
+        if( count($charts) > 0 ) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     protected function canEdit($subject, TokenInterface $token) {
         //exit('dashboard canEdit');
