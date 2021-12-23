@@ -179,7 +179,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         //testing session bag
 //        $this->container->get('session')->getFlashBag()->add(
-//            'warning',
+//            'permissionwarning',
 //            'Session bag testing.'
 //        );
 //        return false;
@@ -228,10 +228,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //return true; //testing
         if( $chart->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
-            $this->container->get('session')->getFlashBag()->add(
-                'warning',
-                'User is denied by chart ' . $chart . '.'
-            );
+//            $this->container->get('session')->getFlashBag()->add(
+//                'permissionwarning',
+//                "User is denied by chart '" . $chart . "'."
+//            );
+            $this->setPermissionErrorSession($chart,"User is denied by chart '" . $chart . "'.");
             return true;
         }
         return false;
@@ -240,10 +241,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         foreach( $chart->getTopics() as $topic ) {
             if( $topic->getDenyUsers()->contains($user) ) {
                 //exit("chart has DenyUsers");
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    'User is denied by topic ' . $topic . '.'
-                );
+//                $this->container->get('session')->getFlashBag()->add(
+//                    'permissionwarning',
+//                    "User is denied by topic '" . $topic . "'."
+//                );
+                $this->setPermissionErrorSession($chart,"User is denied by topic '" . $topic . "'.");
                 return true;
             }
         }
@@ -258,6 +260,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
                 //exit("chart has DenyRoles");
+//                $this->container->get('session')->getFlashBag()->add(
+//                    'permissionwarning',
+//                    "Role '$userRole' is denied by chart '" . $chart . "'."
+//                );
+                $this->setPermissionErrorSession($chart,"Role '$userRole' is denied by chart '" . $chart . "'.");
                 return true;
             }
         }
@@ -272,6 +279,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
             foreach( $userRoles as $userRole ) {
                 if( $userRole && $denyRoles->contains($userRole) ) {
                     //exit("chart has DenyRoles");
+//                    $this->container->get('session')->getFlashBag()->add(
+//                        'permissionwarning',
+//                        "Role '$userRole' is denied by topic '" . $topic . "'."
+//                    );
+                    $this->setPermissionErrorSession($chart,"Role '$userRole' is denied by topic '" . $topic . "'.");
                     return true;
                 }
             }
@@ -354,6 +366,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
 
         return false;
+    }
+
+    public function setPermissionErrorSession($chart,$error) {
+        $session = $this->container->get('session');
+        $session->set('permission-error-'.$chart->getId(), $error);
     }
 
 

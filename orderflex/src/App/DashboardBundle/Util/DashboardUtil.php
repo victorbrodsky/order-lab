@@ -2160,9 +2160,13 @@ class DashboardUtil
     }
 
     public function getSessionFlashBag( $asString=true, $clear=true ) {
+        //dump($this->container->get('session')->getFlashBag());
+        //exit('111');
+
         $notices = $this->container->get('session')->getFlashBag()->get('notice', []);
         $warnings = $this->container->get('session')->getFlashBag()->get('warning', []);
         $errors = $this->container->get('session')->getFlashBag()->get('error', []);
+        $permissionWarning = $this->container->get('session')->getFlashBag()->get('permissionwarning', []);
 
         if( $clear ) {
             $errors = $this->container->get('session')->getFlashBag()->clear();
@@ -2171,6 +2175,13 @@ class DashboardUtil
         if( $asString ) {
 
             $resString = NULL;
+
+            if( count($permissionWarning) > 0 ) {
+                if( $resString ) {
+                    $resString = $resString . "; ";
+                }
+                $resString = $resString . "Permission Warning: " . implode(', ', $permissionWarning);
+            }
 
             if( count($notices) > 0 ) {
                 if( $resString ) {
@@ -2203,6 +2214,23 @@ class DashboardUtil
         );
 
         return $flashBag;
+    }
+    public function getPermissionErrorSession( $chart, $clear=true ) {
+        $error = NULL;
+
+        $session = $this->container->get('session');
+        //dump($session);
+        //exit('111');
+
+        if( $session ) {
+            $error = $session->get('permission-error-' . $chart->getId());
+        }
+
+        if( $clear ) {
+            $session->get('permission-error-' . $chart->getId())->clear();
+        }
+
+        return $error;
     }
 
     //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
@@ -2363,9 +2391,10 @@ class DashboardUtil
             $error = "You do not have access to this chart '".$chartObject->getName().
                 "'. Please request access by contacting your site administrator $adminemail.";
 
-            $flashBagArr = $this->getSessionFlashBag();
-            if( $flashBagArr ) {
-                $error = $error . " " . $flashBagArr;
+            //$flashBagStr = $this->getSessionFlashBag();
+            $permissionErrorStr = $this->getPermissionErrorSession($chart);
+            if( $permissionErrorStr ) {
+                $error = $error . " " . $permissionErrorStr;
             }
 
             $chartsArray['warning'] = false;

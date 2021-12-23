@@ -96,6 +96,22 @@ class DefaultController extends OrderAbstractController
         //$res = $dashboardInitUtil->assignRolesToCharts($testing=true);
         //exit($res);
 
+        //testing permission error in session
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $permissionErrorStr = NULL;
+        $em = $this->getDoctrine()->getManager();
+        $chartObject = $em->getRepository('AppDashboardBundle:ChartList')->find(60); //62.
+        if( !$chartObject ) {
+            $error = "Logical error: chart not found by id 60";
+            exit($error);
+        }
+
+        if( $this->get('security.authorization_checker')->isGranted('read', $chartObject) === false ) {
+            //$flashBagStr = $this->getSessionFlashBag();
+            $permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
+        }
+        exit("Error: ".$permissionErrorStr);
+
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 

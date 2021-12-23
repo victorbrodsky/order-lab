@@ -1612,7 +1612,7 @@ class GenericListType extends AbstractType
             'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Requested by:",
             'required'=> false,
-            'multiple' => true,
+            'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
