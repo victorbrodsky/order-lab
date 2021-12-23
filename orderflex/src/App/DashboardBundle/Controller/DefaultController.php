@@ -97,20 +97,30 @@ class DefaultController extends OrderAbstractController
         //exit($res);
 
         //testing permission error in session
-        $dashboardUtil = $this->container->get('dashboard_util');
-        $permissionErrorStr = NULL;
-        $em = $this->getDoctrine()->getManager();
-        $chartObject = $em->getRepository('AppDashboardBundle:ChartList')->find(60); //62.
-        if( !$chartObject ) {
-            $error = "Logical error: chart not found by id 60";
-            exit($error);
-        }
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $permissionErrorStr = NULL;
+//        $em = $this->getDoctrine()->getManager();
+//        $chartObject = $em->getRepository('AppDashboardBundle:ChartList')->find(60); //62.
+//        if( !$chartObject ) {
+//            $error = "Logical error: chart not found by id 60";
+//            exit($error);
+//        }
+//        if( $this->get('security.authorization_checker')->isGranted('read', $chartObject) === false ) {
+//            //$flashBagStr = $this->getSessionFlashBag();
+//            //$permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
+//        }
+//        $permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
+//        exit("Error: ".$permissionErrorStr);
 
-        if( $this->get('security.authorization_checker')->isGranted('read', $chartObject) === false ) {
-            //$flashBagStr = $this->getSessionFlashBag();
-            $permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
+        $securityUtil = $this->container->get('user_security_utility');
+        $userRole = "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY";
+        $roleStr = $securityUtil->getRoleAliasByName($userRole);
+        if( !$roleStr ) {
+            echo "Role not found by [$userRole] <br>";
+        } else {
+            echo "Role found!!! by [$userRole] <br>";
         }
-        exit("Error: ".$permissionErrorStr);
+        exit();
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }

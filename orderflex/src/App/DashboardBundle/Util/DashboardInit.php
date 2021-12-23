@@ -538,7 +538,7 @@ class DashboardInit
                 "Dashboards-Medical-Director-Pulmonary-and-Thoracic-Pathology-Department-Of-Pathology"
             ),
 //            Dashboards-Manager-Pulmonary-and-Thoracic-Pathology-Department-Of-Pathology
-            "ROLE_DASHBOARD_" => array(
+            "ROLE_DASHBOARD_MANAGER_PULMONARY_THORACIC_PATHOLOGY" => array(
                 "Dashboards Manager Pulmonary and Thoracic Pathology",
                 "",
                 50,

@@ -2216,21 +2216,27 @@ class DashboardUtil
         return $flashBag;
     }
     public function getPermissionErrorSession( $chart, $clear=true ) {
-        $error = NULL;
+        $sessionAttribute = NULL;
 
         $session = $this->container->get('session');
         //dump($session);
-        //exit('111');
 
         if( $session ) {
-            $error = $session->get('permission-error-' . $chart->getId());
+            if( $clear ) {
+                //remove(): Deletes an attribute by name and returns its value.
+                $sessionAttribute = $session->remove('permission-error-' . $chart->getId());
+            } else {
+                $sessionAttribute = $session->get('permission-error-' . $chart->getId());
+            }
+
+            //echo "sessionAttribute=$sessionAttribute <br>";
+            //$error = $sessionAttribute;
         }
 
-        if( $clear ) {
-            $session->get('permission-error-' . $chart->getId())->clear();
-        }
+        //$session = $this->container->get('session');
+        //dump($session);
 
-        return $error;
+        return $sessionAttribute;
     }
 
     //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
@@ -2392,7 +2398,7 @@ class DashboardUtil
                 "'. Please request access by contacting your site administrator $adminemail.";
 
             //$flashBagStr = $this->getSessionFlashBag();
-            $permissionErrorStr = $this->getPermissionErrorSession($chart);
+            $permissionErrorStr = $this->getPermissionErrorSession($chartObject);
             if( $permissionErrorStr ) {
                 $error = $error . " " . $permissionErrorStr;
             }

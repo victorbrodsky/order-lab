@@ -154,10 +154,12 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $user = $token->getUser();
 
         if( !$user instanceof User ) {
+            //exit('dashboard canView: not User');
             return false;
         }
 
         if( !$subject ) {
+            //exit('dashboard canView: not Subject');
             return false;
         }
 
@@ -182,12 +184,15 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //            'permissionwarning',
 //            'Session bag testing.'
 //        );
-//        return false;
+        //$this->setPermissionErrorSession($subject,"Session attribute testing");
+        //return false;
 
         if( $this->userIsDeniedByChart($user,$subject) ) {
+            //exit('userIsDeniedByChart!');
             return false;
         }
         if( $this->userIsDeniedByTopic($user,$subject) ) {
+            //exit('userIsDeniedByTopic!');
             return false;
         }
 
@@ -204,6 +209,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //        }
 
         if( $this->userHasChartDenyRoles($user,$subject) || $this->userHasTopicDenyRoles($user,$subject) ) {
+            //exit('user has deny role!');
             return false;
         }
 
@@ -229,10 +235,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
         if( $chart->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
 //            $this->container->get('session')->getFlashBag()->add(
-//                'permissionwarning',
+//                'warning',
 //                "User is denied by chart '" . $chart . "'."
 //            );
             $this->setPermissionErrorSession($chart,"User is denied by chart '" . $chart . "'.");
+            //dump($session = $this->container->get('session'));
             return true;
         }
         return false;
@@ -259,12 +266,25 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $userRoles = $securityUtil->getUserRolesBySite($user,$this->getSitename());
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
-                //exit("chart has DenyRoles");
+                //exit("chart has DenyRoles [$userRole]: ".$userRole->getId());
 //                $this->container->get('session')->getFlashBag()->add(
 //                    'permissionwarning',
 //                    "Role '$userRole' is denied by chart '" . $chart . "'."
 //                );
-                $this->setPermissionErrorSession($chart,"Role '$userRole' is denied by chart '" . $chart . "'.");
+                //$userRole = "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY";
+                //$roleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($userRole);
+                //$roleStr = $roleEntity."";
+//                if( $roleEntity ) {
+//                    $roleStr = $roleEntity->getAlias();
+//                } else {
+//                    $roleStr = "!!! Role not found by name [$userRole]!!!";
+//                }
+                $roleStr = $userRole->getAlias(); //$securityUtil->getRoleAliasByName($userRole);
+                if( !$roleStr ) {
+                    exit("Role not found by [$userRole]");
+                    $roleStr = $userRole;
+                }
+                $this->setPermissionErrorSession($chart,"Role '$roleStr' is denied by chart '" . $chart . "'.");
                 return true;
             }
         }
@@ -277,13 +297,21 @@ class DashboardPermissionVoter extends BasePermissionVoter
             $securityUtil = $this->container->get('user_security_utility');
             $userRoles = $securityUtil->getUserRolesBySite($user,$this->getSitename());
             foreach( $userRoles as $userRole ) {
+                $userRole = trim($userRole);
                 if( $userRole && $denyRoles->contains($userRole) ) {
                     //exit("chart has DenyRoles");
 //                    $this->container->get('session')->getFlashBag()->add(
 //                        'permissionwarning',
 //                        "Role '$userRole' is denied by topic '" . $topic . "'."
 //                    );
-                    $this->setPermissionErrorSession($chart,"Role '$userRole' is denied by topic '" . $topic . "'.");
+                    $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($userRole);
+                    $roleStr = $userRole."";
+                    if( $role ) {
+                        $roleStr = $role->getAlias();
+                    } else {
+                        //$roleStr = "Role not found by name $userRole";
+                    }
+                    $this->setPermissionErrorSession($chart,"Role '$roleStr' is denied by topic '" . $topic . "'.");
                     return true;
                 }
             }

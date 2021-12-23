@@ -126,7 +126,7 @@
         {#{% if childrens|length > 0 %}#}
         {% if childrens %}
             <li class="dropdown-submenu">
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target1="_blank">{{ name }}</a>
                 {#{% if childrens|length > 0 %}#}
                     <ul class="dropdown-menu">
                         {{ _self.createFilterTopics(childrens) }}
