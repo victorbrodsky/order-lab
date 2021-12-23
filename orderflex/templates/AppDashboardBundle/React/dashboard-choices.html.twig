@@ -19,12 +19,13 @@
         <input type="hidden" id="testflag" value="{{ testflag }}" />
     {% endif %}
 
+
     <h4 class="text-info" align="center">
         {{ title|raw }}
     </h4>
-    <br>
+    {#<br>#}
 
-    <div class="well form-search">
+    <div class="form-search">
         {{ form_start(filterform) }}
 
         {% set simpleFilter = false %}
@@ -48,9 +49,9 @@
                         {#{{ form_widget(filterform.compareType, {'attr': {'placeholder': 'Compare Type'}}) }}#}
                     {#{% endif %}#}
                 {#</div>#}
-                <div class="col-xs-5" data-toggle="tooltip" title="Chart Type">
+                <div class="col-xs-5" data-toggle="tooltip" title="Chart">
                     {% if filterform.chartType is defined %}
-                        {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart Type'}}) }}
+                        {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
                     {% endif %}
                 </div>
                 {#<div class="col-xs-1">#}
@@ -91,7 +92,16 @@
             </div>
         {% else %}
 
-            <div id="hidden-filter" class="row" style="margin-bottom: 7px; display: none;">
+            <div class="row">
+                <div class="col-xs-11" data-toggle="tooltip" title="Chart">
+                    {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
+                </div>
+                <div class="col-xs-1">
+                    <button id="filter-btn" type="button" class="btn btn-default" onclick="plotlyGetChartsReact('dashboard')" data-spinner-color="{{ spinnerColor }}">Show</button>
+                </div>
+            </div>
+
+            <div id="hidden-filter" class="row" style="margin-top: 10px; display: none;">
                 <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
                     {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
                 </div>
@@ -122,15 +132,6 @@
                         {{ form_widget(filterform.category) }}
                         {#{{ form_row(filterform.category) }}#}
                     {% endif %}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-11" data-toggle="tooltip" title="Chart Type">
-                    {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart Type'}}) }}
-                </div>
-                <div class="col-xs-1">
-                    <button id="filter-btn" type="button" class="btn btn-default" onclick="plotlyGetChartsReact('dashboard')" data-spinner-color="{{ spinnerColor }}">Show</button>
                 </div>
             </div>
 

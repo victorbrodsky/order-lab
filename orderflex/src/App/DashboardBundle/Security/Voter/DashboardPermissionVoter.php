@@ -132,18 +132,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return true;
     }
 
-//    protected function canView_ORIG($subject, TokenInterface $token) {
-//        //exit('dashboard canView');
-//
-//        if( parent::canView($subject,$token) ) {
-//            //exit('dashboard parent canView parent ok');
-//            return $this->dashboardAdditionalCheck($subject,$token);
-//            //return true;
-//        }
-//        //exit('dashboard canView false');
-//
-//        return false;
-//    }
     //Can view according to chart's: accessRoles, denyRoles and denyUsers
     //usage: $this->get('security.authorization_checker')->isGranted('view', $chart)
     protected function canView($subject, TokenInterface $token) {
@@ -174,19 +162,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //$sitename = $this->getSitename();
 
         //denyUsers: if user is in denyUsers => return false;
-//        if( $subject->getDenyUsers()->contains($user) ) {
-//            //exit("chart has DenyUsers");
-//            return false;
-//        }
-
-        //testing session bag
-//        $this->container->get('session')->getFlashBag()->add(
-//            'permissionwarning',
-//            'Session bag testing.'
-//        );
         //$this->setPermissionErrorSession($subject,"Session attribute testing");
         //return false;
-
         if( $this->userIsDeniedByChart($user,$subject) ) {
             //exit('userIsDeniedByChart!');
             return false;
@@ -197,17 +174,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
 
         //denyRoles: if user has denyRoles => return false;
-//        $denyRoles = $subject->getDenyRoles();
-//        //$userRoles = $user->getSiteRoles('dashboard');
-//        $securityUtil = $this->container->get('user_security_utility');
-//        $userRoles = $securityUtil->getUserRolesBySite($user,$sitename);
-//        foreach( $userRoles as $userRole ) {
-//            if( $userRole && $denyRoles->contains($userRole) ) {
-//                //exit("chart has DenyRoles");
-//                return false;
-//            }
-//        }
-
         if( $this->userHasChartDenyRoles($user,$subject) || $this->userHasTopicDenyRoles($user,$subject) ) {
             //exit('user has deny role!');
             return false;
@@ -234,10 +200,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //return true; //testing
         if( $chart->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
-//            $this->container->get('session')->getFlashBag()->add(
-//                'warning',
-//                "User is denied by chart '" . $chart . "'."
-//            );
             $this->setPermissionErrorSession($chart,"User is denied by chart '" . $chart . "'.");
             //dump($session = $this->container->get('session'));
             return true;
@@ -248,14 +210,20 @@ class DashboardPermissionVoter extends BasePermissionVoter
         foreach( $chart->getTopics() as $topic ) {
             if( $topic->getDenyUsers()->contains($user) ) {
                 //exit("chart has DenyUsers");
-//                $this->container->get('session')->getFlashBag()->add(
-//                    'permissionwarning',
-//                    "User is denied by topic '" . $topic . "'."
-//                );
                 $this->setPermissionErrorSession($chart,"User is denied by topic '" . $topic . "'.");
                 return true;
             }
+            //TODO: check all parents
+            if( $this->userIsDeniedByParentTopics($user,$chart,$topic) ) {
+                //$error = "User is denied by topic's parent '" . $topic . "'.";
+                //$this->setPermissionErrorSession($chart,$error);
+                return true;
+            }
         }
+        return false;
+    }
+    public function userIsDeniedByParentTopics($user,$chart,$topic) {
+        //return true;
         return false;
     }
 
@@ -267,18 +235,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
         foreach( $userRoles as $userRole ) {
             if( $userRole && $denyRoles->contains($userRole) ) {
                 //exit("chart has DenyRoles [$userRole]: ".$userRole->getId());
-//                $this->container->get('session')->getFlashBag()->add(
-//                    'permissionwarning',
-//                    "Role '$userRole' is denied by chart '" . $chart . "'."
-//                );
-                //$userRole = "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY";
-                //$roleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($userRole);
-                //$roleStr = $roleEntity."";
-//                if( $roleEntity ) {
-//                    $roleStr = $roleEntity->getAlias();
-//                } else {
-//                    $roleStr = "!!! Role not found by name [$userRole]!!!";
-//                }
                 $roleStr = $userRole->getAlias(); //$securityUtil->getRoleAliasByName($userRole);
                 if( !$roleStr ) {
                     //exit("Role not found by [$userRole]");
@@ -299,10 +255,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
             foreach( $userRoles as $userRole ) {
                 if( $userRole && $denyRoles->contains($userRole) ) {
                     //exit("chart has DenyRoles");
-//                    $this->container->get('session')->getFlashBag()->add(
-//                        'permissionwarning',
-//                        "Role '$userRole' is denied by topic '" . $topic . "'."
-//                    );
                     $roleStr = $userRole->getAlias(); //$securityUtil->getRoleAliasByName($userRole);
                     if( !$roleStr ) {
                         //exit("Role not found by [$userRole]");
@@ -311,6 +263,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
                     $this->setPermissionErrorSession($chart,"Role '$roleStr' is denied by topic '" . $topic . "'.");
                     return true;
                 }
+                //TODO: check all parents
             }
         }
         return false;
