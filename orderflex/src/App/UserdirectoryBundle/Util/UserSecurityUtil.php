@@ -2391,10 +2391,7 @@ class UserSecurityUtil {
         $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($name);
         if( $role ) {
             return $role->getAlias();
-        } 
-//        else {
-//            return "!!!Role not found by [$name]!!!";
-//        }
+        }
         return null;
     }
 

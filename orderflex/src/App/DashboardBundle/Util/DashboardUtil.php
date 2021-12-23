@@ -2216,6 +2216,7 @@ class DashboardUtil
         return $flashBag;
     }
     public function getPermissionErrorSession( $chart, $clear=true ) {
+        //Use session to get error attribute
         $sessionAttribute = NULL;
 
         $session = $this->container->get('session');

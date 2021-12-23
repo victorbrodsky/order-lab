@@ -281,7 +281,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
 //                }
                 $roleStr = $userRole->getAlias(); //$securityUtil->getRoleAliasByName($userRole);
                 if( !$roleStr ) {
-                    exit("Role not found by [$userRole]");
+                    //exit("Role not found by [$userRole]");
                     $roleStr = $userRole;
                 }
                 $this->setPermissionErrorSession($chart,"Role '$roleStr' is denied by chart '" . $chart . "'.");
@@ -297,19 +297,16 @@ class DashboardPermissionVoter extends BasePermissionVoter
             $securityUtil = $this->container->get('user_security_utility');
             $userRoles = $securityUtil->getUserRolesBySite($user,$this->getSitename());
             foreach( $userRoles as $userRole ) {
-                $userRole = trim($userRole);
                 if( $userRole && $denyRoles->contains($userRole) ) {
                     //exit("chart has DenyRoles");
 //                    $this->container->get('session')->getFlashBag()->add(
 //                        'permissionwarning',
 //                        "Role '$userRole' is denied by topic '" . $topic . "'."
 //                    );
-                    $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($userRole);
-                    $roleStr = $userRole."";
-                    if( $role ) {
-                        $roleStr = $role->getAlias();
-                    } else {
-                        //$roleStr = "Role not found by name $userRole";
+                    $roleStr = $userRole->getAlias(); //$securityUtil->getRoleAliasByName($userRole);
+                    if( !$roleStr ) {
+                        //exit("Role not found by [$userRole]");
+                        $roleStr = $userRole;
                     }
                     $this->setPermissionErrorSession($chart,"Role '$roleStr' is denied by topic '" . $topic . "'.");
                     return true;
@@ -397,6 +394,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     }
 
     public function setPermissionErrorSession($chart,$error) {
+        //Use session to store error attribute
         $session = $this->container->get('session');
         $session->set('permission-error-'.$chart->getId(), $error);
     }

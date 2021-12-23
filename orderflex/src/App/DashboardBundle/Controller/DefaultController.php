@@ -112,15 +112,15 @@ class DefaultController extends OrderAbstractController
 //        $permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
 //        exit("Error: ".$permissionErrorStr);
 
-        $securityUtil = $this->container->get('user_security_utility');
-        $userRole = "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY";
-        $roleStr = $securityUtil->getRoleAliasByName($userRole);
-        if( !$roleStr ) {
-            echo "Role not found by [$userRole] <br>";
-        } else {
-            echo "Role found!!! by [$userRole] <br>";
-        }
-        exit();
+//        $securityUtil = $this->container->get('user_security_utility');
+//        $userRole = "ROLE_DASHBOARD_VICE_CHAIR_CLINICAL_PATHOLOGY";
+//        $roleStr = $securityUtil->getRoleAliasByName($userRole);
+//        if( !$roleStr ) {
+//            echo "Role not found by [$userRole] <br>";
+//        } else {
+//            echo "Role found!!! by [$userRole] <br>";
+//        }
+//        exit();
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
