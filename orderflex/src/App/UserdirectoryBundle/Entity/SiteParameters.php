@@ -22,6 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+//When adding new fields:
+// 1) temporarily comment out "- { resource: "setparameters.php" }" in services.yaml
+// 2) clean cache: php bin/console cache:clear
+// 3) enable back - { resource: "setparameters.php" } in services.yaml
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_siteParameters")
@@ -1240,10 +1245,18 @@ class SiteParameters {
      */
     private $vacreqSiteParameter;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
+//     */
+//    private $dashboardSiteParameter;
+
     /**
      * @ORM\OneToOne(targetEntity="TelephonySiteParameter", cascade={"persist","remove"})
      */
     private $telephonySiteParameter;
+    
+
+
 
 
     function __construct( $addobjects=true )
@@ -4322,6 +4335,21 @@ class SiteParameters {
     {
         $this->telephonySiteParameter = $telephonySiteParameter;
     }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getDashboardSiteParameter()
+//    {
+//        return $this->dashboardSiteParameter;
+//    }
+//    /**
+//     * @param mixed $dashboardSiteParameter
+//     */
+//    public function setDashboardSiteParameter($dashboardSiteParameter)
+//    {
+//        $this->dashboardSiteParameter = $dashboardSiteParameter;
+//    }
 
     
 

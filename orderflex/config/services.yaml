@@ -52,7 +52,7 @@ imports:
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
 #    - { resource: "../src/App/*/Resources/config/services.yml" }
 #    - { resource: "../src/App/UserdirectoryBundle/Resources/config/setparameters.php" } #must run after importing services
-    - { resource: "setparameters.php" } #must run after importing services
+#    - { resource: "setparameters.php" } #must run after importing services
 
 services:
     # default configuration for services in *this* file

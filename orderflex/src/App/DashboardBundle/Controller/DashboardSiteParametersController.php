@@ -18,6 +18,8 @@
 namespace App\DashboardBundle\Controller;
 
 
+use App\DashboardBundle\Entity\DashboardSiteParameter;
+use App\DashboardBundle\Form\DashboardSiteParameterType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -74,7 +76,6 @@ class DashboardSiteParametersController extends SiteParametersController
 
 
     /**
-     * TODO: implement dashboard site settings if required (create entity DashboardSiteParameter and form type DashboardSiteParameterType)
      * DashboardSiteParameter Show
      *
      * @Route("/specific-site-parameters/show/", name="dashboard_siteparameters_show_specific_site_parameters", methods={"GET"})
@@ -97,7 +98,7 @@ class DashboardSiteParametersController extends SiteParametersController
             'entity' => $dashboardSiteParameter,
             'form'   => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Fellowship Specific Site Parameters"
+            'title' => "Dashboard Specific Site Parameters"
         );
     }
 
