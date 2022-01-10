@@ -948,19 +948,19 @@ class SiteParameters {
      */
     private $academicYearEnd;
 
-    /**
-     * Not Used: Moved to VacReqSiteParameter
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $holidaysUrl;
+//    /**
+//     * Not Used: Moved to VacReqSiteParameter
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $holidaysUrl;
 
-    /**
-     * Not Used: Moved to VacReqSiteParameter
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $vacationAccruedDaysPerMonth;
+//    /**
+//     * Not Used: Moved to VacReqSiteParameter
+//     *
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $vacationAccruedDaysPerMonth;
 
     //Live Site Root URL: http://c.med.cornell.edu/order/
     /**
@@ -1245,17 +1245,15 @@ class SiteParameters {
      */
     private $vacreqSiteParameter;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
-//     */
-//    private $dashboardSiteParameter;
-
     /**
      * @ORM\OneToOne(targetEntity="TelephonySiteParameter", cascade={"persist","remove"})
      */
     private $telephonySiteParameter;
-    
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
+//     */
+//    private $dashboardSiteParameter;
 
 
 
@@ -3260,37 +3258,37 @@ class SiteParameters {
         $this->academicYearEnd = $academicYearEnd;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHolidaysUrl()
-    {
-        return $this->holidaysUrl;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getHolidaysUrl()
+//    {
+//        return $this->holidaysUrl;
+//    }
+//
+//    /**
+//     * @param mixed $holidaysUrl
+//     */
+//    public function setHolidaysUrl($holidaysUrl)
+//    {
+//        $this->holidaysUrl = $holidaysUrl;
+//    }
 
-    /**
-     * @param mixed $holidaysUrl
-     */
-    public function setHolidaysUrl($holidaysUrl)
-    {
-        $this->holidaysUrl = $holidaysUrl;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getVacationAccruedDaysPerMonth()
-    {
-        return $this->vacationAccruedDaysPerMonth;
-    }
-
-    /**
-     * @param mixed $vacationAccruedDaysPerMonth
-     */
-    public function setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth)
-    {
-        $this->vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonth;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getVacationAccruedDaysPerMonth()
+//    {
+//        return $this->vacationAccruedDaysPerMonth;
+//    }
+//
+//    /**
+//     * @param mixed $vacationAccruedDaysPerMonth
+//     */
+//    public function setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth)
+//    {
+//        $this->vacationAccruedDaysPerMonth = $vacationAccruedDaysPerMonth;
+//    }
 
     /**
      * @return mixed
@@ -4336,20 +4334,20 @@ class SiteParameters {
         $this->telephonySiteParameter = $telephonySiteParameter;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getDashboardSiteParameter()
-//    {
-//        return $this->dashboardSiteParameter;
-//    }
-//    /**
-//     * @param mixed $dashboardSiteParameter
-//     */
-//    public function setDashboardSiteParameter($dashboardSiteParameter)
-//    {
-//        $this->dashboardSiteParameter = $dashboardSiteParameter;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getDashboardSiteParameter()
+    {
+        return $this->dashboardSiteParameter;
+    }
+    /**
+     * @param mixed $dashboardSiteParameter
+     */
+    public function setDashboardSiteParameter($dashboardSiteParameter)
+    {
+        $this->dashboardSiteParameter = $dashboardSiteParameter;
+    }
 
     
 

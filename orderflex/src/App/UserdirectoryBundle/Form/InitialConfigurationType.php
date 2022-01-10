@@ -224,10 +224,10 @@ class InitialConfigurationType extends AbstractType
             'classtype' => 'usernametype'
         ));
 
-        $builder->add('holidaysUrl',null,array(
-            'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('holidaysUrl',null,array(
+//            'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
+//            'attr' => array('class'=>'form-control')
+//        ));
 
 
 

@@ -726,17 +726,17 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'holidaysUrl' )
-            $builder->add('holidaysUrl',null,array(
-                'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
-                'attr' => array('class'=>'form-control')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'holidaysUrl' )
+//            $builder->add('holidaysUrl',null,array(
+//                'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
+//                'attr' => array('class'=>'form-control')
+//            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacationAccruedDaysPerMonth' )
-            $builder->add('vacationAccruedDaysPerMonth',null,array(
-                'label'=>'Vacation days accrued per month by faculty (2):',
-                'attr' => array('class'=>'form-control')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacationAccruedDaysPerMonth' )
+//            $builder->add('vacationAccruedDaysPerMonth',null,array(
+//                'label'=>'Vacation days accrued per month by faculty (2):',
+//                'attr' => array('class'=>'form-control')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'enableMetaphone' )
             $builder->add('enableMetaphone',null,array(

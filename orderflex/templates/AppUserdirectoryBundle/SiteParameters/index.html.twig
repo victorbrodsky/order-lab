@@ -939,49 +939,49 @@
 
 
             {#VacReq settings are moved to an independent VacReqSiteSettings#}
-            {% if 0 %}
-                <tr>
-                    <td class="rowlink-skip" colspan="3" align="center">
-                        <h3>Business/Vacation Request:</h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Academic Year Start</td>
-                    <td>
-                        {% if entity.academicYearStart %}
-                            {{ entity.academicYearStart|date('M d','UTC') }}
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearStart'}) }}">Edit</a></td>
-                </tr>
-                <tr>
-                    <td>Academic Year End</td>
-                    <td>
-                        {% if entity.academicYearEnd %}
-                            {{ entity.academicYearEnd|date('M d','UTC') }}
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearEnd'}) }}">Edit</a></td>
-                </tr>
-                <tr>
-                    <td>Link to list of holidays (http://intranet.med.cornell.edu/hr/)</td>
-                    <td>
-                        {% if entity.holidaysUrl %}
-                            {{ entity.holidaysUrl }}
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'holidaysUrl'}) }}">Edit</a></td>
-                </tr>
-                <tr>
-                    <td>Vacation days accrued per month by faculty (2)</td>
-                    <td>
-                        {% if entity.vacationAccruedDaysPerMonth %}
-                            {{ entity.vacationAccruedDaysPerMonth }}
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacationAccruedDaysPerMonth'}) }}">Edit</a></td>
-                </tr>
-            {% endif %}
+            {#{% if 0 %}#}
+                {#<tr>#}
+                    {#<td class="rowlink-skip" colspan="3" align="center">#}
+                        {#<h3>Business/Vacation Request:</h3>#}
+                    {#</td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td>Academic Year Start</td>#}
+                    {#<td>#}
+                        {#{% if entity.academicYearStart %}#}
+                            {#{{ entity.academicYearStart|date('M d','UTC') }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                    {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearStart'}) }}">Edit</a></td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td>Academic Year End</td>#}
+                    {#<td>#}
+                        {#{% if entity.academicYearEnd %}#}
+                            {#{{ entity.academicYearEnd|date('M d','UTC') }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                    {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearEnd'}) }}">Edit</a></td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td>Link to list of holidays (http://intranet.med.cornell.edu/hr/)</td>#}
+                    {#<td>#}
+                        {#{% if entity.holidaysUrl %}#}
+                            {#{{ entity.holidaysUrl }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                    {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'holidaysUrl'}) }}">Edit</a></td>#}
+                {#</tr>#}
+                {#<tr>#}
+                    {#<td>Vacation days accrued per month by faculty (2)</td>#}
+                    {#<td>#}
+                        {#{% if entity.vacationAccruedDaysPerMonth %}#}
+                            {#{{ entity.vacationAccruedDaysPerMonth }}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                    {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacationAccruedDaysPerMonth'}) }}">Edit</a></td>#}
+                {#</tr>#}
+            {#{% endif %}#}
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
