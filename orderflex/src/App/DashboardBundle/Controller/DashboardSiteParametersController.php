@@ -102,6 +102,44 @@ class DashboardSiteParametersController extends SiteParametersController
         );
     }
 
+    /**
+     * @Route("/specific-site-parameters/edit-page/", name="dashboard_siteparameters_edit_specific_site_parameters", methods={"GET", "POST"})
+     * @Template("AppDashboardBundle/SiteParameter/edit.html.twig")
+     */
+    public function dashboardSiteParameterEditAction( Request $request ) {
+
+        //exit('dashboardSiteParameterEditAction');
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('dashboard-nopermission') );
+        }
+
+        $cycle = "edit";
+
+        $dashboardSiteParameter = $this->getOrCreateNewDashboardParameters($cycle);
+        //echo "dashboardSiteParameter=".$dashboardSiteParameter->getId()."<br>";
+
+        $form = $this->createDashboardSiteParameterForm($dashboardSiteParameter,$cycle);
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+            $em = $this->getDoctrine()->getManager();
+
+            //exit('submit');
+            $em->persist($dashboardSiteParameter);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('dashboard_siteparameters'));
+        }
+
+        return array(
+            'entity' => $dashboardSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Update Dashboard Specific Site Parameters"
+        );
+    }
+
     public function createDashboardSiteParameterForm($entity, $cycle) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
