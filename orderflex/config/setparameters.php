@@ -49,31 +49,39 @@
 //    return false;
 //}
 
-if( ! function_exists('getDBParameter') ) {
-    function getDBParameter( $row, $originalParam, $name ) {
-        //1) try as it is
-        if( array_key_exists($name, $row) ) {
-            //echo "1 parameter=".$row[$name]."<br>";
-            return trim($row[$name]);
-        }
+$useDb = true;
+//$useDb = false; //use when new fields are added to the "SiteParameters" entity
 
-        //2) try with lowercase for postgresql
-        $name = strtolower($name);
-        if( array_key_exists($name, $row) ) {
-            //echo "2 parameter=".$row[$name]."<br>";
-            return trim($row[$name]);
-        }
+if( $useDb ) {
 
-        return $originalParam;
+    if (!function_exists('getDBParameter')) {
+        function getDBParameter($row, $originalParam, $name)
+        {
+            //1) try as it is
+            if (array_key_exists($name, $row)) {
+                //echo "1 parameter=".$row[$name]."<br>";
+                return trim($row[$name]);
+            }
+
+            //2) try with lowercase for postgresql
+            $name = strtolower($name);
+            if (array_key_exists($name, $row)) {
+                //echo "2 parameter=".$row[$name]."<br>";
+                return trim($row[$name]);
+            }
+
+            return $originalParam;
+        }
     }
-}
-if( ! function_exists('isWindows') ) {
-    function isWindows() {
-        if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
-            //Windows
-            return true;
+    if (!function_exists('isWindows')) {
+        function isWindows()
+        {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                //Windows
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 }
 
@@ -139,7 +147,11 @@ $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 //exit("1");
-$conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+if( $useDb ) {
+    $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+} else {
+    $conn = NULL;
+}
 //exit("2");
 
 //testing
@@ -147,59 +159,61 @@ $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 //echo "connected=".$connected."<br>";
 //echo "conn name=".$conn->getName()."<br>"; // connection 1
 
-$table = 'user_siteParameters';
+if( $conn ) {
 
-$schemaManager = $conn->getSchemaManager();
+    $table = 'user_siteParameters';
+
+    $schemaManager = $conn->getSchemaManager();
 //exit("3");
 
-if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
+    if ($conn && $schemaManager->tablesExist(array($table)) == true) {
 
-    //exit("connected!");
-    //echo("table true<br>");
+        //exit("connected!");
+        //echo("table true<br>");
 
-    $sql = "SELECT * FROM ".$table;
-    $params = $conn->query($sql); // Simple, but has several drawbacks
+        $sql = "SELECT * FROM " . $table;
+        $params = $conn->query($sql); // Simple, but has several drawbacks
 
-    //var_dump($params);
-    //echo "count=".count($params)."<br>";
-    //var_dump($params->fetch());
+        //var_dump($params);
+        //echo "count=".count($params)."<br>";
+        //var_dump($params->fetch());
 
-    ////////// condition to continue for empty and not empty DB ////////////
-    $continue = true;
-    if($params) {
-    } else {
-        $continue = false;
-        //exit('!params');
-    }
+        ////////// condition to continue for empty and not empty DB ////////////
+        $continue = true;
+        if ($params) {
+        } else {
+            $continue = false;
+            //exit('!params');
+        }
 //    if(is_array($params)) {
 //    } else {
 //        //it is not array even if DB exists
 //        $continue = false;
 //        exit('!is_array($params)');
 //    }
-    if( $continue && (is_object($params) || is_array($params)) ) {
-    } else {
-        $continue = false;
-        //exit('!is_object($params)');
-    }
+        if ($continue && (is_object($params) || is_array($params))) {
+        } else {
+            $continue = false;
+            //exit('!is_object($params)');
+        }
 //    if( $continue && (is_object($params) || is_array($params)) && count($params) >= 1 ) {
 //    } else {
 //        $continue = false;
 //        //exit('!count($params) >= 1)');
 //    }
-    $row = $params->fetch();
-    if( $continue && (is_object($row) || is_array($row)) && count($row) == 0 ) {
-        $continue = false;
-        //exit('!count($row) == 0');
-    }
-    ////////// condition to continue for empty and not empty DB ////////////
-
-    //exit('111');
-
-    //if( $params && is_array($params) && count($params) >= 1 ) {
-    if( $continue ) {
+        $row = $params->fetch();
+        if ($continue && (is_object($row) || is_array($row)) && count($row) == 0) {
+            $continue = false;
+            //exit('!count($row) == 0');
+        }
+        ////////// condition to continue for empty and not empty DB ////////////
 
         //exit('111');
+
+        //if( $params && is_array($params) && count($params) >= 1 ) {
+        if ($continue) {
+
+            //exit('111');
 
 //        $aDLDAPServerAddress = null;
 //        $aDLDAPServerPort = null;
@@ -209,68 +223,68 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        $ldapExePath = null;
 //        $ldapExeFilename = null;
 
-        $smtpServerAddress = null;
-        $defaultSiteEmail = null;
-        $institution_url = null;
-        $institution_name = null;
-        $subinstitution_url = null;
-        $subinstitution_name = null;
-        $department_url = null;
-        $department_name = null;
-        $showcopyrightonfooter = false;
+            $smtpServerAddress = null;
+            $defaultSiteEmail = null;
+            $institution_url = null;
+            $institution_name = null;
+            $subinstitution_url = null;
+            $subinstitution_name = null;
+            $department_url = null;
+            $department_name = null;
+            $showcopyrightonfooter = false;
 
-        //third party software html to pdf
-        $wkhtmltopdfpath = null;
-        //set default Third-Party Software Dependencies for Linux used in container
-        if( !isWindows() ) {
-            //$wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf";
-        }
+            //third party software html to pdf
+            $wkhtmltopdfpath = null;
+            //set default Third-Party Software Dependencies for Linux used in container
+            if (!isWindows()) {
+                //$wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+                $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf";
+            }
 
-        //titles
-        $mainhome_title = null;
-        $listmanager_title = null;
-        $eventlog_title = null;
-        $sitesettings_title = null;
-        $contentabout_page = null;  //not used: now contentabout_page is getting from DB directly on the about page
-        //$underlogin_msg_user = null;
-        //$underlogin_msg_scan = null;
+            //titles
+            $mainhome_title = null;
+            $listmanager_title = null;
+            $eventlog_title = null;
+            $sitesettings_title = null;
+            $contentabout_page = null;  //not used: now contentabout_page is getting from DB directly on the about page
+            //$underlogin_msg_user = null;
+            //$underlogin_msg_scan = null;
 
-        //maintenance
+            //maintenance
 //        $maintenance = null;
 //        $maintenanceenddate = null;
 //        $maintenanceloginmsg = null;
 //        $maintenancelogoutmsg = null;
 
-        //Symfony DB
-        $database_host = null;
-        $database_port = null;
-        $database_name = null;
-        $database_user = null;
-        $database_password = null;
+            //Symfony DB
+            $database_host = null;
+            $database_port = null;
+            $database_name = null;
+            $database_user = null;
+            $database_password = null;
 
-        //pacsvendor DB
-        $database_host_pacsvendor = null;
-        $database_port_pacsvendor = null;
-        $database_name_pacsvendor = null;
-        $database_user_pacsvendor = null;
-        $database_password_pacsvendor = null;
+            //pacsvendor DB
+            $database_host_pacsvendor = null;
+            $database_port_pacsvendor = null;
+            $database_name_pacsvendor = null;
+            $database_user_pacsvendor = null;
+            $database_password_pacsvendor = null;
 
-        //set path to binary for knp_snappy
-        //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/App/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
-        //$knp_snappy_path = str_replace("/","\\\\",$knp_snappy_path);
-        //"\"C:\\Program Files (x86)\\pacsvendor\\pacsname\\htdocs\\order\\scanorder\\Scanorders2\\src\\App\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        //$knp_snappy_path_pdf = '"\"'.$knp_snappy_path.'wkhtmltopdf.exe'.'\""';
-        //$knp_snappy_path_image = '"\"'.$knp_snappy_path.'wkhtmltoimage.exe'.'\""';
-        //$container->setParameter('knp_snappy.pdf.binary',$knp_snappy_path_pdf);
-        //$container->setParameter('knp_snappy.image.binary',$knp_snappy_path_image);
-        //echo "knp_snappy.pdf.binary=".$container->getParameter('knp_snappy.pdf.binary')."<br>";
+            //set path to binary for knp_snappy
+            //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/App/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
+            //$knp_snappy_path = str_replace("/","\\\\",$knp_snappy_path);
+            //"\"C:\\Program Files (x86)\\pacsvendor\\pacsname\\htdocs\\order\\scanorder\\Scanorders2\\src\\App\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+            //$knp_snappy_path_pdf = '"\"'.$knp_snappy_path.'wkhtmltopdf.exe'.'\""';
+            //$knp_snappy_path_image = '"\"'.$knp_snappy_path.'wkhtmltoimage.exe'.'\""';
+            //$container->setParameter('knp_snappy.pdf.binary',$knp_snappy_path_pdf);
+            //$container->setParameter('knp_snappy.image.binary',$knp_snappy_path_image);
+            //echo "knp_snappy.pdf.binary=".$container->getParameter('knp_snappy.pdf.binary')."<br>";
 
-        //while( $row = $params->fetch() ) { //we have only 1 row of siteParameters
-        if( $row ) {
+            //while( $row = $params->fetch() ) { //we have only 1 row of siteParameters
+            if ($row) {
 
-            //print_r($row);
-            //exit('111');
+                //print_r($row);
+                //exit('111');
 
 //            if( array_key_exists('aDLDAPServerAddress', $row) )
 //                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
@@ -289,242 +303,243 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //                $ldapExeFilename = $row['ldapExeFilename'];
 //            }
 
-            //if( array_key_exists('smtpServerAddress', $row) ) {
+                //if( array_key_exists('smtpServerAddress', $row) ) {
 //            if( $param = getDBParameter($row,'wkhtmltopdfpath') ) {
 //                $smtpServerAddress = $param;
 //            }
-            $smtpServerAddress = getDBParameter($row,$smtpServerAddress,'wkhtmltopdfpath');
+                $smtpServerAddress = getDBParameter($row, $smtpServerAddress, 'wkhtmltopdfpath');
 
-            //if( array_key_exists('siteEmail', $row) )
+                //if( array_key_exists('siteEmail', $row) )
 //            if( $param = getDBParameter($row,'siteEmail') ) {
 //                $defaultSiteEmail = $param;
 //            }
-            $defaultSiteEmail = getDBParameter($row,$defaultSiteEmail,'siteEmail');
+                $defaultSiteEmail = getDBParameter($row, $defaultSiteEmail, 'siteEmail');
 
-            //if( array_key_exists('institutionurl', $row) )
+                //if( array_key_exists('institutionurl', $row) )
 //            if( $param = getDBParameter($row,'institutionurl') ) {
 //                $institution_url = $param;
 //            }
-            $institution_url = getDBParameter($row,$institution_url,'institutionurl');
+                $institution_url = getDBParameter($row, $institution_url, 'institutionurl');
 
-            //if( array_key_exists('institutionname', $row) )
+                //if( array_key_exists('institutionname', $row) )
 //            if( $param = getDBParameter($row,'institutionname') ) {
 //                $institution_name = $param;
 //            }
-            $institution_name = getDBParameter($row,$institution_name,'institutionname');
+                $institution_name = getDBParameter($row, $institution_name, 'institutionname');
 
-            //if( array_key_exists('subinstitutionurl', $row) )
+                //if( array_key_exists('subinstitutionurl', $row) )
 //            if( $param = getDBParameter($row,'subinstitutionurl') ) {
 //                $subinstitution_url = $param;
 //            }
-            $subinstitution_url = getDBParameter($row,$subinstitution_url,'subinstitutionurl');
+                $subinstitution_url = getDBParameter($row, $subinstitution_url, 'subinstitutionurl');
 
-            //if( array_key_exists('subinstitutionname', $row) )
+                //if( array_key_exists('subinstitutionname', $row) )
 //            if( $param = getDBParameter($row,'subinstitutionname') ) {
 //                $subinstitution_name = $param;
 //            }
-            $subinstitution_name = getDBParameter($row,$subinstitution_name,'subinstitutionname');
+                $subinstitution_name = getDBParameter($row, $subinstitution_name, 'subinstitutionname');
 
-            //if( array_key_exists('departmenturl', $row) )
-            //if( $param = getDBParameter($row,$department_url,'departmenturl') ) {
-            //    $department_url = $param;
-            //}
-            $department_url = getDBParameter($row,$department_url,'departmenturl');
+                //if( array_key_exists('departmenturl', $row) )
+                //if( $param = getDBParameter($row,$department_url,'departmenturl') ) {
+                //    $department_url = $param;
+                //}
+                $department_url = getDBParameter($row, $department_url, 'departmenturl');
 
 //            if( array_key_exists('departmentname', $row) )
 //                $department_name = $row['departmentname'];
-            $department_name = getDBParameter($row,$department_name,'departmentname');
+                $department_name = getDBParameter($row, $department_name, 'departmentname');
 
 //            if( array_key_exists('showCopyrightOnFooter', $row) )
 //                $showcopyrightonfooter = $row['showCopyrightOnFooter'];
-            $showcopyrightonfooter = getDBParameter($row,$showcopyrightonfooter,'showCopyrightOnFooter');
+                $showcopyrightonfooter = getDBParameter($row, $showcopyrightonfooter, 'showCopyrightOnFooter');
 
-            //third party software html to pdf
-            //echo "EOF wkhtmltopdfpath=".getDBParameter($row,'wkhtmltopdfpath')."<br>";
-            //echo "EOF wkhtmltopdfpathLinux=".getDBParameter($row,'wkhtmltopdfpathLinux')."<br>";
-            if( isWindows() ) {
-                //Windows
+                //third party software html to pdf
+                //echo "EOF wkhtmltopdfpath=".getDBParameter($row,'wkhtmltopdfpath')."<br>";
+                //echo "EOF wkhtmltopdfpathLinux=".getDBParameter($row,'wkhtmltopdfpathLinux')."<br>";
+                if (isWindows()) {
+                    //Windows
 //                if( $param = getDBParameter($row,'wkhtmltopdfpath') ) {
 //                    $wkhtmltopdfpath = $param;
 //                }
-                $wkhtmltopdfpath = getDBParameter($row,$wkhtmltopdfpath,'wkhtmltopdfpath');
-            } else {
-                //Linux
+                    $wkhtmltopdfpath = getDBParameter($row, $wkhtmltopdfpath, 'wkhtmltopdfpath');
+                } else {
+                    //Linux
 //                if( $param = getDBParameter($row,'wkhtmltopdfpathLinux') ) {
 //                    $wkhtmltopdfpath = $param;
 //                }
-                $wkhtmltopdfpath = getDBParameter($row,$wkhtmltopdfpath,'wkhtmltopdfpathLinux');
-            }
+                    $wkhtmltopdfpath = getDBParameter($row, $wkhtmltopdfpath, 'wkhtmltopdfpathLinux');
+                }
 
-            //employees
-            //$employeesuploadpath = $row['employeesuploadpath'];
-            $employeesuploadpath = getDBParameter($row,$employeesuploadpath,'employeesuploadpath');
+                //employees
+                //$employeesuploadpath = $row['employeesuploadpath'];
+                $employeesuploadpath = getDBParameter($row, $employeesuploadpath, 'employeesuploadpath');
 
-            //$employeesavataruploadpath = $row['avataruploadpath'];
-            $employeesavataruploadpath = getDBParameter($row,$employeesavataruploadpath,'avataruploadpath');
+                //$employeesavataruploadpath = $row['avataruploadpath'];
+                $employeesavataruploadpath = getDBParameter($row, $employeesavataruploadpath, 'avataruploadpath');
 
-            //scan
-            //$scanuploadpath = $row['scanuploadpath'];
-            $scanuploadpath = getDBParameter($row,$scanuploadpath,'scanuploadpath');
+                //scan
+                //$scanuploadpath = $row['scanuploadpath'];
+                $scanuploadpath = getDBParameter($row, $scanuploadpath, 'scanuploadpath');
 
-            //fellapp
+                //fellapp
 //            if (array_key_exists('fellappuploadpath', $row)) {
 //                $fellappuploadpath = $row['fellappuploadpath'];
 //            }
-            $fellappuploadpath = getDBParameter($row,$fellappuploadpath,'fellappuploadpath');
+                $fellappuploadpath = getDBParameter($row, $fellappuploadpath, 'fellappuploadpath');
 
-            //resapp
-            $resappuploadpath = getDBParameter($row,$resappuploadpath,'resappuploadpath');
+                //resapp
+                $resappuploadpath = getDBParameter($row, $resappuploadpath, 'resappuploadpath');
 
-            //vacreq
+                //vacreq
 //            if (array_key_exists('vacrequploadpath', $row)) {
 //                $vacrequploadpath = $row['vacrequploadpath'];
 //            }
-            $vacrequploadpath = getDBParameter($row,$vacrequploadpath,'vacrequploadpath');
+                $vacrequploadpath = getDBParameter($row, $vacrequploadpath, 'vacrequploadpath');
 
-            //transres
+                //transres
 //            if (array_key_exists('transresuploadpath', $row)) {
 //                $transresuploadpath = $row['transresuploadpath'];
 //            }
-            $transresuploadpath = getDBParameter($row,$transresuploadpath,'transresuploadpath');
+                $transresuploadpath = getDBParameter($row, $transresuploadpath, 'transresuploadpath');
 
-            $callloguploadpath = getDBParameter($row,$callloguploadpath,'callloguploadpath');
+                $callloguploadpath = getDBParameter($row, $callloguploadpath, 'callloguploadpath');
 
-            $crnuploadpath = getDBParameter($row,$crnuploadpath,'crnuploadpath');
+                $crnuploadpath = getDBParameter($row, $crnuploadpath, 'crnuploadpath');
 
-            $dashboarduploadpath = getDBParameter($row,$dashboarduploadpath,'dashboarduploadpath');
+                $dashboarduploadpath = getDBParameter($row, $dashboarduploadpath, 'dashboarduploadpath');
 
-            //titles
+                //titles
 //            if( array_key_exists('mainHomeTitle', $row) )
 //                $mainhome_title = $row['mainHomeTitle'];
-            $mainhome_title = getDBParameter($row,$mainhome_title,'mainHomeTitle');
+                $mainhome_title = getDBParameter($row, $mainhome_title, 'mainHomeTitle');
 
 //            if( array_key_exists('listManagerTitle', $row) )
 //                $listmanager_title = $row['listManagerTitle'];
-            $listmanager_title = getDBParameter($row,$listmanager_title,'listManagerTitle');
+                $listmanager_title = getDBParameter($row, $listmanager_title, 'listManagerTitle');
 
 //            if( array_key_exists('eventLogTitle', $row) )
 //                $eventlog_title = $row['eventLogTitle'];
-            $eventlog_title = getDBParameter($row,$eventlog_title,'eventLogTitle');
+                $eventlog_title = getDBParameter($row, $eventlog_title, 'eventLogTitle');
 
 //            if( array_key_exists('siteSettingsTitle', $row) )
 //                $sitesettings_title = $row['siteSettingsTitle'];
-            $sitesettings_title = getDBParameter($row,$sitesettings_title,'siteSettingsTitle');
+                $sitesettings_title = getDBParameter($row, $sitesettings_title, 'siteSettingsTitle');
 
 //            if( array_key_exists('contentAboutPage', $row) )
 //                $contentabout_page = $row['contentAboutPage'];
-            $contentabout_page = getDBParameter($row,$contentabout_page,'contentAboutPage');
+                $contentabout_page = getDBParameter($row, $contentabout_page, 'contentAboutPage');
 
-            //$underlogin_msg_user = $row['underLoginMsgUser'];
-            //$underlogin_msg_scan = $row['underLoginMsgScan'];
-            //echo "mainhome_title=".$mainhome_title."<br>";
+                //$underlogin_msg_user = $row['underLoginMsgUser'];
+                //$underlogin_msg_scan = $row['underLoginMsgScan'];
+                //echo "mainhome_title=".$mainhome_title."<br>";
 
 //            $maintenance = $row['maintenance'];
 //            $maintenanceenddate = $row['maintenanceenddate'];
 //            $maintenanceloginmsg = $row['maintenanceloginmsg'];
 //            $maintenancelogoutmsg = $row['maintenancelogoutmsg'];
-            //echo "department_url=".$department_url."<br>";
+                //echo "department_url=".$department_url."<br>";
 
-            //Symfony DB
+                //Symfony DB
 //            if( array_key_exists('dbServerAddress', $row) )
 //                $database_host = $row['dbServerAddress'];
-            $database_host = getDBParameter($row,$database_host,'dbServerAddress');
+                $database_host = getDBParameter($row, $database_host, 'dbServerAddress');
 
 //            if( array_key_exists('dbServerPort', $row) )
 //                $database_port = $row['dbServerPort'];
-            $database_port = getDBParameter($row,$database_port,'dbServerPort');
+                $database_port = getDBParameter($row, $database_port, 'dbServerPort');
 
 //            if( array_key_exists('dbDatabaseName', $row) )
 //                $database_name = $row['dbDatabaseName'];
-            $database_name = getDBParameter($row,$database_name,'dbDatabaseName');
+                $database_name = getDBParameter($row, $database_name, 'dbDatabaseName');
 
 //            if( array_key_exists('dbServerAccountUserName', $row) )
 //                $database_user = $row['dbServerAccountUserName'];
-            $database_user = getDBParameter($row,$database_user,'dbServerAccountUserName');
+                $database_user = getDBParameter($row, $database_user, 'dbServerAccountUserName');
 
 //            if( array_key_exists('dbServerAccountPassword', $row) )
 //                $database_password = $row['dbServerAccountPassword'];
-            $database_password = getDBParameter($row,$database_password,'dbServerAccountPassword');
+                $database_password = getDBParameter($row, $database_password, 'dbServerAccountPassword');
 
-            //pacsvendor DB
+                //pacsvendor DB
 //            if( array_key_exists('pacsvendorSlideManagerDBServerAddress', $row) )
 //                $database_host_pacsvendor = $row['pacsvendorSlideManagerDBServerAddress'];
-            $database_host_pacsvendor = getDBParameter($row,$database_host_pacsvendor,'pacsvendorSlideManagerDBServerAddress');
+                $database_host_pacsvendor = getDBParameter($row, $database_host_pacsvendor, 'pacsvendorSlideManagerDBServerAddress');
 
 //            if( array_key_exists('pacsvendorSlideManagerDBServerPort', $row) )
 //                $database_port_pacsvendor = $row['pacsvendorSlideManagerDBServerPort'];
-            $database_port_pacsvendor = getDBParameter($row,$database_port_pacsvendor,'pacsvendorSlideManagerDBServerPort');
+                $database_port_pacsvendor = getDBParameter($row, $database_port_pacsvendor, 'pacsvendorSlideManagerDBServerPort');
 
 //            if( array_key_exists('pacsvendorSlideManagerDBName', $row) )
 //                $database_name_pacsvendor = $row['pacsvendorSlideManagerDBName'];
-            $database_name_pacsvendor = getDBParameter($row,$database_name_pacsvendor,'pacsvendorSlideManagerDBName');
+                $database_name_pacsvendor = getDBParameter($row, $database_name_pacsvendor, 'pacsvendorSlideManagerDBName');
 
 //            if( array_key_exists('pacsvendorSlideManagerDBUserName', $row) )
 //                $database_user_pacsvendor = $row['pacsvendorSlideManagerDBUserName'];
-            $database_user_pacsvendor = getDBParameter($row,$database_user_pacsvendor,'pacsvendorSlideManagerDBUserName');
+                $database_user_pacsvendor = getDBParameter($row, $database_user_pacsvendor, 'pacsvendorSlideManagerDBUserName');
 
 //            if( array_key_exists('pacsvendorSlideManagerDBPassword', $row) )
 //                $database_password_pacsvendor = $row['pacsvendorSlideManagerDBPassword'];
-            $database_password_pacsvendor = getDBParameter($row,$database_password_pacsvendor,'pacsvendorSlideManagerDBPassword');
+                $database_password_pacsvendor = getDBParameter($row, $database_password_pacsvendor, 'pacsvendorSlideManagerDBPassword');
 
-            $connection_channel = getDBParameter($row,$connection_channel,'connectionChannel');
-            //echo "connection_channel=[".$connection_channel."]\n";
+                $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
+                //echo "connection_channel=[".$connection_channel."]\n";
 
-        }//while
+            }//while
 
-        $container->setParameter('connection_channel',$connection_channel);
+            $container->setParameter('connection_channel', $connection_channel);
 
-        $container->setParameter('mailer_host',$smtpServerAddress);
-        $container->setParameter('default_system_email',$defaultSiteEmail);
+            $container->setParameter('mailer_host', $smtpServerAddress);
+            $container->setParameter('default_system_email', $defaultSiteEmail);
 
-        //footer params
-        $container->setParameter('institution_url',$institution_url);
-        $container->setParameter('institution_name',$institution_name);
-        $container->setParameter('subinstitution_url',$subinstitution_url);
-        $container->setParameter('subinstitution_name',$subinstitution_name);
-        $container->setParameter('department_url',$department_url);
-        $container->setParameter('department_name',$department_name);
-        $container->setParameter('showcopyrightonfooter',$showcopyrightonfooter);
+            //footer params
+            $container->setParameter('institution_url', $institution_url);
+            $container->setParameter('institution_name', $institution_name);
+            $container->setParameter('subinstitution_url', $subinstitution_url);
+            $container->setParameter('subinstitution_name', $subinstitution_name);
+            $container->setParameter('department_url', $department_url);
+            $container->setParameter('department_name', $department_name);
+            $container->setParameter('showcopyrightonfooter', $showcopyrightonfooter);
 
-        //third party software html to pdf
-        //echo "set wkhtmltopdfpath=$wkhtmltopdfpath<br>";
-        //$container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');
-        $container->setParameter('wkhtmltopdfpath',$wkhtmltopdfpath);
+            //third party software html to pdf
+            //echo "set wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+            //$container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');
+            $container->setParameter('wkhtmltopdfpath', $wkhtmltopdfpath);
 
-        //uploads
-        $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
-        $container->setParameter('employees.uploadpath',$employeesuploadpath);
-        $container->setParameter('scan.uploadpath',$scanuploadpath);
-        if( $fellappuploadpath )
-            $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
-        if( $resappuploadpath )
-            $container->setParameter('resapp.uploadpath',$resappuploadpath);
-        if( $vacrequploadpath )
-            $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
-        if( $transresuploadpath )
-            $container->setParameter('transres.uploadpath',$transresuploadpath);
-        if( $callloguploadpath )
-            $container->setParameter('calllog.uploadpath',$callloguploadpath);
-        if( $crnuploadpath )
-            $container->setParameter('crn.uploadpath',$crnuploadpath);
-        if( $dashboarduploadpath )
-            $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
+            //uploads
+            $container->setParameter('employees.avataruploadpath', $employeesavataruploadpath);
+            $container->setParameter('employees.uploadpath', $employeesuploadpath);
+            $container->setParameter('scan.uploadpath', $scanuploadpath);
+            if ($fellappuploadpath)
+                $container->setParameter('fellapp.uploadpath', $fellappuploadpath);
+            if ($resappuploadpath)
+                $container->setParameter('resapp.uploadpath', $resappuploadpath);
+            if ($vacrequploadpath)
+                $container->setParameter('vacreq.uploadpath', $vacrequploadpath);
+            if ($transresuploadpath)
+                $container->setParameter('transres.uploadpath', $transresuploadpath);
+            if ($callloguploadpath)
+                $container->setParameter('calllog.uploadpath', $callloguploadpath);
+            if ($crnuploadpath)
+                $container->setParameter('crn.uploadpath', $crnuploadpath);
+            if ($dashboarduploadpath) {
+                $container->setParameter('dashboard.uploadpath', $dashboarduploadpath);
+            }
 
-        //titles
-        $mainhome_title = str_replace("%","%%",$mainhome_title);
-        $container->setParameter('mainhome_title',$mainhome_title);
-        $listmanager_title = str_replace("%","%%",$listmanager_title);
-        $container->setParameter('listmanager_title',$listmanager_title);
-        $eventlog_title = str_replace("%","%%",$eventlog_title);
-        $container->setParameter('eventlog_title',$eventlog_title);
-        $sitesettings_title = str_replace("%","%%",$sitesettings_title);
-        $container->setParameter('sitesettings_title',$sitesettings_title);
+            //titles
+            $mainhome_title = str_replace("%", "%%", $mainhome_title);
+            $container->setParameter('mainhome_title', $mainhome_title);
+            $listmanager_title = str_replace("%", "%%", $listmanager_title);
+            $container->setParameter('listmanager_title', $listmanager_title);
+            $eventlog_title = str_replace("%", "%%", $eventlog_title);
+            $container->setParameter('eventlog_title', $eventlog_title);
+            $sitesettings_title = str_replace("%", "%%", $sitesettings_title);
+            $container->setParameter('sitesettings_title', $sitesettings_title);
 
-        //The percent sign inside a parameter or argument, as part of the string, must be escaped with another percent sign: % -> %%
-        $contentabout_page = str_replace("%","%%",$contentabout_page);
-        $container->setParameter('contentabout_page',$contentabout_page);
+            //The percent sign inside a parameter or argument, as part of the string, must be escaped with another percent sign: % -> %%
+            $contentabout_page = str_replace("%", "%%", $contentabout_page);
+            $container->setParameter('contentabout_page', $contentabout_page);
 
-        //ldap
+            //ldap
 //        if( $aDLDAPServerAddress )
 //            $container->setParameter('ldaphost',$aDLDAPServerAddress);
 //        if( $aDLDAPServerPort )
@@ -540,17 +555,17 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        if( $ldapExeFilename )
 //            $container->setParameter('ldapexefilename',$ldapExeFilename);
 
-        //maintenance
+            //maintenance
 //        $container->setParameter('maintenance',$maintenance);
 //        $container->setParameter('maintenanceenddate',$maintenanceenddate);
 //        $container->setParameter('maintenanceloginmsg',$maintenanceloginmsg);
 //        $container->setParameter('maintenancelogoutmsg',$maintenancelogoutmsg);
-        //echo "maint=".$this->container->getParameter('maintenance')."<br>";
-        //echo "department_url=".$department_url."<br>";
-        //echo "container department_url=".$this->container->getParameter('department_url')."<br>";
+            //echo "maint=".$this->container->getParameter('maintenance')."<br>";
+            //echo "department_url=".$department_url."<br>";
+            //echo "container department_url=".$this->container->getParameter('department_url')."<br>";
 
-        //TODO: assign a new parameters for DB does not work
-        //Symfony DB
+            //TODO: assign a new parameters for DB does not work
+            //Symfony DB
 //        echo "database_host=[".$database_host."]<br>";
 //        echo "database_port=[".$database_port."]<br>";
 //        echo "database_name=[".$database_name."]<br>";
@@ -568,15 +583,17 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        if( $database_password )
 //            $container->setParameter('database_password',$database_password);
 
+        } else {
+            //var_dump($params);
+            //exit("params are not valid<br>");
+        }//if param
+
+
     } else {
-        //var_dump($params);
-        //exit("params are not valid<br>");
-    }//if param
+        //exit("table false<br>");
+        //echo("table false<br>");
+    } //if $conn && $schemaManager
 
-
-} else {
-    //exit("table false<br>");
-    //echo("table false<br>");
-} //if
+}//if $conn
 
 

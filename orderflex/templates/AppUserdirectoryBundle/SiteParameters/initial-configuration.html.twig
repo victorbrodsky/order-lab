@@ -90,7 +90,9 @@
             </div>
         </div>
 
-        {{ formmacros.field(form.holidaysUrl) }}
+        {% if form.holidaysUrl is defined %}
+            {{ formmacros.field(form.holidaysUrl) }}
+        {% endif %}
 
 
         <br>

@@ -24,8 +24,9 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 //When adding new fields:
 // 1) temporarily comment out "- { resource: "setparameters.php" }" in services.yaml
-// 2) clean cache: php bin/console cache:clear
-// 3) enable back - { resource: "setparameters.php" } in services.yaml
+// 2) delete cache manually
+// 3) process steps listed in the header of the PostgresqlMigration.php
+// 4) enable back - { resource: "setparameters.php" } in services.yaml
 
 /**
  * @ORM\Entity
@@ -1081,6 +1082,11 @@ class SiteParameters {
     private $crnSiteParameter;
 
     /**
+     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
+     */
+    private $dashboardSiteParameter;
+
+    /**
      * Navbar Employee List Filter Institution #1: [Dropdown with WCM selected]
      *
      * @ORM\ManyToOne(targetEntity="Institution")
@@ -1249,11 +1255,6 @@ class SiteParameters {
      * @ORM\OneToOne(targetEntity="TelephonySiteParameter", cascade={"persist","remove"})
      */
     private $telephonySiteParameter;
-
-//    /**
-//     * @ORM\OneToOne(targetEntity="App\DashboardBundle\Entity\DashboardSiteParameter", cascade={"persist","remove"})
-//     */
-//    private $dashboardSiteParameter;
 
 
 
