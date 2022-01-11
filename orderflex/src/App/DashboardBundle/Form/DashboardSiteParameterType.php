@@ -72,7 +72,7 @@ class DashboardSiteParameterType extends AbstractType
             'choice_label' => 'name',
             'label' => 'Default Dashboard Topic:',
             'required'=> false,
-            'multiple' => true,
+            'multiple' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

@@ -37,8 +37,36 @@ class DashboardController extends OrderAbstractController
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
         }
 
+        $dashboardUtil = $this->container->get('dashboard_util');
+
+        //2) If none, add Default Dashboard Topic
+        //3) If none, add Default Dashboard Charts
+
+
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
+
+        $title = NULL;
+//        if( isset($filterform["title"]) ) {
+//            $title = $filterform["title"]->getData();
+//        }
+        if( $request->query->has('title') ) {
+            $title = $filterform["title"]->getData();
+        }
+        echo "title=$title<br>";
+
+        //Redirect if filter is empty
+        //1) Add Favorite charts
+        $favoriteCharts = $dashboardUtil->getFavorites();
+        if( count($favoriteCharts) > 0 ) {
+            //if( $title != 'Favorite charts' ) {
+            if( !$title ) {
+                //exit("redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts));
+                //echo "redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts)."<br>";
+                //return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all', 'title' => 'Favorites'));
+                return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all'));
+            }
+        }
 
         //chartType
         $useWarning = true;
@@ -62,7 +90,7 @@ class DashboardController extends OrderAbstractController
 //        }
         //exit('111');
         $chartTypesCount = 0;
-        $chartTypes = $filterform['chartType']->getData();
+        $chartTypes = $filterform["chartType"]->getData();
         if( $chartTypes ) {
             $chartTypesCount = count($chartTypes);
         }
@@ -78,7 +106,7 @@ class DashboardController extends OrderAbstractController
 
         $title = $request->query->get('title');
         if( !$title ) {
-            $title = "Dashboard";
+            $title = 'Dashboard';
         }
 
         return array(
@@ -477,6 +505,7 @@ class DashboardController extends OrderAbstractController
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
         }
 
+        $dashboardUtil = $this->container->get('dashboard_util');
         $em = $this->getDoctrine()->getManager();
 
         if( !$id ) {
@@ -523,7 +552,23 @@ class DashboardController extends OrderAbstractController
                 $counter++;
             }
 
-        } else {
+        }
+        elseif( $id === 'all' ) {
+            //echo "dashboard_single_favorite: id=$id <br>";
+            $counter = 1;
+            $favoriteCharts = $dashboardUtil->getFavorites();
+            $title = "Favorite charts";
+            $redirectParams['title'] = $title;
+            foreach($favoriteCharts as $favoriteChart) {
+                if( $this->isViewPermitted($favoriteChart) === false ) {
+                    continue;
+                }
+
+                $redirectParams['filter[chartType]['.$counter.']'] = $favoriteChart->getAbbreviation();
+                $counter++;
+            }
+        }
+        else {
             //single chart
             $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
             if( !$chart ) {
@@ -544,6 +589,9 @@ class DashboardController extends OrderAbstractController
             $redirectParams['title'] = $title;
             $redirectParams['filter[chartType][0]'] = $chart->getAbbreviation();
         }
+
+        //dump($redirectParams);
+        //exit("EOF dashboard_single_favorite: id=$id");
 
         //redirect to home page with preset filter with chart types
         return $this->redirectToRoute(

@@ -175,7 +175,59 @@ class DashboardUtil
     }
 
     public function getFilterFavorites() {
-        $user = $this->secTokenStorage->getToken()->getUser();
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//
+//        //get charts with this user in favoriteUsers
+//        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//
+//        $dql->leftJoin("list.favoriteUsers", "favoriteUsers");
+//
+//        $dql->where("list.type = :typedef OR list.type = :typeadd");
+//        $dql->andWhere("favoriteUsers.id = :userId");
+//
+//        $parameters = array(
+//            'typedef' => 'default',
+//            'typeadd' => 'user-added',
+//            'userId' => $user->getId()
+//        );
+//
+//        $dql->orderBy("list.orderinlist","ASC");
+//
+//        $query = $dql->getQuery();
+//
+//        $query->setParameters($parameters);
+//
+//        $charts = $query->getResult();
+
+        $charts = $this->getFavorites();
+
+        $chartArr = array();
+        $chartIdArr = array();
+
+        foreach($charts as $chart) {
+            //$chartArr[$chart->getName()] = $chart->getAbbreviation();
+            $chartArr[$chart->getId()] = $chart->getName();
+            $chartIdArr[] = $chart->getId();
+        }
+
+        //array merge
+        if( count($chartIdArr) > 1 ) {
+            $chartAllArr = array();
+            $chartIds = implode('-',$chartIdArr);
+            $chartAllArr['all-favorites-'.$chartIds] = 'All';
+            //$chartAllArr[$chartIds] = 'All';
+            $chartArr = $chartAllArr + $chartArr;
+        }
+
+        return $chartArr;
+    }
+
+    public function getFavorites($user=null) {
+        if( !$user ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        }
 
         //get charts with this user in favoriteUsers
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
@@ -201,25 +253,7 @@ class DashboardUtil
 
         $charts = $query->getResult();
 
-        $chartArr = array();
-        $chartIdArr = array();
-
-        foreach($charts as $chart) {
-            //$chartArr[$chart->getName()] = $chart->getAbbreviation();
-            $chartArr[$chart->getId()] = $chart->getName();
-            $chartIdArr[] = $chart->getId();
-        }
-
-        //array merge
-        if( count($chartIdArr) > 1 ) {
-            $chartAllArr = array();
-            $chartIds = implode('-',$chartIdArr);
-            $chartAllArr['all-favorites-'.$chartIds] = 'All';
-            //$chartAllArr[$chartIds] = 'All';
-            $chartArr = $chartAllArr + $chartArr;
-        }
-
-        return $chartArr;
+        return $charts;
     }
 
     public function getChartTypes() {
