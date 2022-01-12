@@ -26,6 +26,7 @@ class DashboardController extends OrderAbstractController
     /**
      * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      *
+     *
      * @Route("/", name="dashboard_home")
      * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
      */
@@ -39,26 +40,69 @@ class DashboardController extends OrderAbstractController
 
         $dashboardUtil = $this->container->get('dashboard_util');
 
-        $title = false;
-        if( $request->query->has('title') ) {
-            $title = true;
+        $initHomePage = true;
+//        $routeName = $request->get('_route');
+//        echo "routeName=$routeName <br>";
+//        if( $routeName == "dashboard_home" ) {
+//            $initHomePage = true;
+//        }
+        if(
+            $request->query->has('title') ||
+            $request->query->has('projectSpecialty') ||
+            $request->query->has('chartType') ||
+            $request->query->has('startDate') ||
+            $request->query->has('endDate')
+        ) {
+            $initHomePage = false;
         }
         //echo "title=$title<br>";
 
         //Redirect if filter is empty
-        //1) Add Favorite charts
-        $favoriteCharts = $dashboardUtil->getFavorites();
-        if( count($favoriteCharts) > 0 ) {
-            if( $title == false ) {
-                //exit("redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts));
-                //echo "redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts)."<br>";
-                //return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all', 'title' => 'Favorites'));
+        if( $initHomePage ) {
+            //1) Add Favorite charts
+            $favoriteCharts = $dashboardUtil->getFavorites();
+            if (count($favoriteCharts) > 0) {
                 return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all'));
             }
-        }
 
-        //2) If none, add Default Dashboard Topic
-        //3) If none, add Default Dashboard Charts
+            $userSecUtil = $this->container->get('user_security_utility');
+            //2) If none, add Default Dashboard Topic
+            $defaultTopic = $userSecUtil->getSiteSettingParameter('topic','dashboard');
+            if( $defaultTopic ) {
+                //exit("defaultTopic=$defaultTopic");
+                return $this->redirectToRoute('dashboard_single_topic_id', array('id' => $defaultTopic->getId()));
+            }
+
+            //3) If none, add Default Dashboard Charts
+            $defaultCharts = $userSecUtil->getSiteSettingParameter('charts','dashboard');
+            if( count($defaultCharts) > 0 ) {
+                $now = new \DateTime('now');
+                $endDateStr = $now->format('m/d/Y');
+                $startDateStr = $now->modify('-1 year')->format('m/d/Y');
+
+                $redirectParams = array(
+                    'filter[startDate]' => $startDateStr,
+                    'filter[endDate]' => $endDateStr,
+                    'filter[projectSpecialty][]' => 0,
+                    'title' => "Default Charts"
+                );
+                $count = 0;
+
+                foreach ($defaultCharts as $chart) {
+
+                    if( $this->isViewPermitted($chart) === false ) {
+                        //exit('chart '.$chart->getName().' not permitted');
+                        continue;
+                    }
+
+                    $redirectParams['filter[chartType]['.$count.']'] = $chart->getAbbreviation();
+                    $count++;
+                }
+
+                //redirect to home page with preset filter with chart types
+                return $this->redirectToRoute('dashboard_home', $redirectParams);
+            }//if $defaultCharts
+        }//if $initHomePage
 
 
         $filterform = $this->getFilter();
@@ -96,7 +140,7 @@ class DashboardController extends OrderAbstractController
         if( $chartTypesCount > 3 ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
-                'Please click Filter button to generate multiple charts'
+                "Please click 'Show' button to generate multiple charts"
             );
         }
 
@@ -213,6 +257,7 @@ class DashboardController extends OrderAbstractController
 
     /**
      * single dashboard topic. id - topic ID
+     * load the selected charts without any additional user interaction
      *
      * @Route("/topic/{id}", name="dashboard_single_topic_id")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
@@ -342,6 +387,7 @@ class DashboardController extends OrderAbstractController
 
     /**
      * charts belonging to a single organizational group. id - organizational group associated with the displayed charts
+     * load the selected charts without any additional user interaction
      *
      * @Route("/service/{id}", name="dashboard_single_service")
      * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
