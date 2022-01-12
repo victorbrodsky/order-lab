@@ -3719,15 +3719,42 @@ class VacReqUtil
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
-        //If you have worked here since [July 1st] or before,
-        // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-        $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued ".
-            $accruedDays." vacation days this academic year (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
-        //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
-        // you have accrued by multiplying the number of months since your start date by 2.
-        $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days".
-            " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
 
+        if(0) {
+            //If you have worked here since [July 1st] or before,
+            // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
+            $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued " .
+                $accruedDays . " vacation days this academic year (and will accrue " . $totalAccruedDays . " by " . $startAcademicYearDateStr . ").";
+            //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
+            // you have accrued by multiplying the number of months since your start date by 2.
+            $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days" .
+                " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
+        }
+
+        //Calculate May 30th as 1 month before End Year
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+        //shift $academicYearEnd by month back
+        $academicYearEnd->modify("-1 month"); //May 30th
+        //$academicYearEnd->modify("last day of previous month"); //May 31st
+        $academicYearEndString = $academicYearEnd->format("F jS");
+
+        //get max carry over days
+        $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
+        if( !$maxCarryOverVacationDays ) {
+            $maxCarryOverVacationDays = 10;
+        }
+
+        //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
+        //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
+        //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
+        $accruedDaysString = "Faculty accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
+        $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
+        $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
+        $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
+        $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
 
         //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
         // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
