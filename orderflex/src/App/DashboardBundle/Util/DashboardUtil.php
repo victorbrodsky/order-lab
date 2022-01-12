@@ -174,7 +174,7 @@ class DashboardUtil
         return $chartTypes;
     }
 
-    public function getFilterFavorites() {
+    public function getFilterFavorites_orig() {
 //        $user = $this->secTokenStorage->getToken()->getUser();
 //
 //        //get charts with this user in favoriteUsers
@@ -220,6 +220,33 @@ class DashboardUtil
             //$chartAllArr[$chartIds] = 'All';
             $chartArr = $chartAllArr + $chartArr;
         }
+
+        return $chartArr;
+    }
+    public function getFilterFavorites() {
+        $charts = $this->getFavorites();
+
+        $chartArr = array();
+        $chartIdArr = array();
+
+        if( count($charts) > 0 ) {
+            $chartArr['all'] = 'All';
+        }
+
+        foreach($charts as $chart) {
+            //$chartArr[$chart->getName()] = $chart->getAbbreviation();
+            $chartArr[$chart->getId()] = $chart->getName();
+            $chartIdArr[] = $chart->getId();
+        }
+
+        //array merge
+//        if( count($chartIdArr) > 1 ) {
+//            $chartAllArr = array();
+//            $chartIds = implode('-',$chartIdArr);
+//            $chartAllArr['all-favorites-'.$chartIds] = 'All';
+//            //$chartAllArr[$chartIds] = 'All';
+//            $chartArr = $chartAllArr + $chartArr;
+//        }
 
         return $chartArr;
     }

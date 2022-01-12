@@ -39,34 +39,30 @@ class DashboardController extends OrderAbstractController
 
         $dashboardUtil = $this->container->get('dashboard_util');
 
-        //2) If none, add Default Dashboard Topic
-        //3) If none, add Default Dashboard Charts
-
-
-        $filterform = $this->getFilter();
-        $filterform->handleRequest($request);
-
-        $title = NULL;
-//        if( isset($filterform["title"]) ) {
-//            $title = $filterform["title"]->getData();
-//        }
+        $title = false;
         if( $request->query->has('title') ) {
-            $title = $filterform["title"]->getData();
+            $title = true;
         }
-        echo "title=$title<br>";
+        //echo "title=$title<br>";
 
         //Redirect if filter is empty
         //1) Add Favorite charts
         $favoriteCharts = $dashboardUtil->getFavorites();
         if( count($favoriteCharts) > 0 ) {
-            //if( $title != 'Favorite charts' ) {
-            if( !$title ) {
+            if( $title == false ) {
                 //exit("redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts));
                 //echo "redirect to favorites, title=[".$title."], favorites=".count($favoriteCharts)."<br>";
                 //return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all', 'title' => 'Favorites'));
                 return $this->redirectToRoute('dashboard_single_favorite', array('id' => 'all'));
             }
         }
+
+        //2) If none, add Default Dashboard Topic
+        //3) If none, add Default Dashboard Charts
+
+
+        $filterform = $this->getFilter();
+        $filterform->handleRequest($request);
 
         //chartType
         $useWarning = true;
