@@ -42,6 +42,56 @@ class DashboardUtil
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
+    public function getChartViewCount($startDate,$endDate,$chart) {
+
+        if( $chart) {
+            return 0;
+        }
+
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->select("user.id");
+
+        $dql->innerJoin('logger.user', 'user');
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        //$dql->where("logger.siteName = 'translationalresearch'");
+        //$dql->where("logger.siteName = '".$site."'");
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Dashboard Chart Viewed";
+
+        $dql->andWhere("eventType.entityName = :entityName");
+        $dqlParameters['entityName'] = "ChartList";
+
+        $dql->andWhere("eventType.entityId = :entityId");
+        $dqlParameters['entityId'] = $chart->getId();
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        $endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        //$dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+
+        //echo "loggers=".count($loggers)."<br>";
+        //exit();
+
+        return count($loggers);
+    }
 
     //get topics
     public function getFilterTopics() {
@@ -248,7 +298,7 @@ class DashboardUtil
         return $charts;
     }
 
-    public function getChartTypes() {
+    public function getChartTypes( $asObject=false ) {
         //get chart types from DB ChartList
 //        $charts = $this->em->getRepository('AppDashboardBundle:ChartList')->findBy(
 //            array(
@@ -275,6 +325,10 @@ class DashboardUtil
         $query->setParameters($parameters);
 
         $charts = $query->getResult();
+
+        if( $asObject ) {
+            return $charts;
+        }
 
         $chartArr = array();
 
@@ -396,7 +450,7 @@ class DashboardUtil
             "64. Total amount of paid/due for issued invoices per month" => "total-amount-paid-unpaid-invoices-per-month",
             "65. Total amount of paid/due for issued invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year",
 
-            "66. Chart viewing stats" => "chart-view-stat",
+            "66. Chart viewing stats per month" => "chart-view-stat",
 
             "" => "",
             "" => "",
@@ -8046,12 +8100,57 @@ class DashboardUtil
             //exit('111');
         }
 
-        //"66. Chart viewing stats" => "chart-view-stat",
+        //"66. Chart viewing stats per month" => "chart-view-stat",
         if( $chartType == "chart-view-stat" ) {
             //Stacked Bar chart:
             //Shows how many times each dashboard chart was accessed (on the Y axis) per month (on the X axis).
             //Since there are so many charts, the legend might be good to show under the chart.
 
+            //$loginsResappArr = array();
+            //$totalLoginCount = 0;
+            //$loginCountResapp = 0;
+
+            $totalViewCount = 0;
+            $charts = $this->getChartTypes(true);
+
+//            $viewByChartArr = array();
+//            foreach($charts as $chart) {
+//                $viewByChartArr[$chart->getName()] = array();
+//            }
+
+            //$startDate->modify( 'first day of last month' );
+            $startDate->modify( 'first day of this month' );
+            do {
+                $startDateLabel = $startDate->format('M-Y');
+                $thisEndDate = clone $startDate;
+                //$thisEndDate->modify( 'first day of next month' );
+                $thisEndDate->modify('last day of this month');
+                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
+
+//                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp');
+//                $loginsResappArr[$startDateLabel] = $loginResappCount;
+//                $totalLoginCount += $loginResappCount;
+//                $loginCountResapp = $loginCountResapp + $loginResappCount;
+
+                foreach($charts as $chart) {
+                    //$viewByChartArr[$chart->getName()] = array();
+                    $thisViewCount = $this->getChartViewCount($startDate,$thisEndDate,$chart);
+                    $totalViewCount = $totalViewCount + $thisViewCount;
+                    $viewByChartArr[$startDateLabel] = array($chart->getName(),$thisViewCount);
+                }
+
+                $startDate->modify( 'first day of next month' );
+            } while( $startDate < $endDate );
+
+            //$combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
+            foreach($charts as $chart) {
+                $combinedData[$chart->getName()] = $viewByChartArr; //array();
+            }
+
+            $chartName = $chartName . " (" . $totalViewCount . " Total)";
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
         }
 
         if( $chartType == "" ) {

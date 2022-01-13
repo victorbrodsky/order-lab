@@ -213,8 +213,10 @@ class DashboardController extends OrderAbstractController
 
         $chartsArray = array();
 
+        $title = "Single chart (Not Implemented yet)";
+
         return array(
-            'title' => "Single chart",
+            'title' => $title,
             'chartsArray' => $chartsArray
         );
     }

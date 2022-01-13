@@ -1821,7 +1821,7 @@ class UserSecurityUtil {
 
             $objectUrl = $logger->getObjectType()->getUrl();
             if( !$objectUrl ) {
-                $message = "Object can not be shown. Please set up the 'Url' field in the 'Event Log Object Type' list for the object '".$logger->getObjectType()."'.";
+                $message = "Object can not be shown. Please set up the 'Url' field in the 'Event Object Type' list for the object '".$logger->getObjectType()."'.";
                 //exit($objectUrl);
 
                 $logger = $this->container->get('logger');
