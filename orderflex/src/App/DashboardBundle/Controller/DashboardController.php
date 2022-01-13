@@ -41,11 +41,6 @@ class DashboardController extends OrderAbstractController
         $dashboardUtil = $this->container->get('dashboard_util');
 
         $initHomePage = true;
-//        $routeName = $request->get('_route');
-//        echo "routeName=$routeName <br>";
-//        if( $routeName == "dashboard_home" ) {
-//            $initHomePage = true;
-//        }
         if(
             $request->query->has('title') ||
             $request->query->has('projectSpecialty') ||
@@ -69,7 +64,6 @@ class DashboardController extends OrderAbstractController
             //2) If none, add Default Dashboard Topic
             $defaultTopic = $userSecUtil->getSiteSettingParameter('topic','dashboard');
             if( $defaultTopic ) {
-                //exit("defaultTopic=$defaultTopic");
                 return $this->redirectToRoute('dashboard_single_topic_id', array('id' => $defaultTopic->getId()));
             }
 
@@ -91,7 +85,6 @@ class DashboardController extends OrderAbstractController
                 foreach ($defaultCharts as $chart) {
 
                     if( $this->isViewPermitted($chart) === false ) {
-                        //exit('chart '.$chart->getName().' not permitted');
                         continue;
                     }
 
@@ -331,59 +324,6 @@ class DashboardController extends OrderAbstractController
             $redirectParams
         );
     }
-//    /**
-//     * single dashboard topic. topicName - topic name
-//     *
-//     * @Route("/topic-name/{topicName}", name="dashboard_single_topic_name")
-//     * @Template("AppDashboardBundle/Dashboard/dashboard.html.twig")
-//     */
-//    public function singleTopicByNameAction( Request $request, $topicName ) {
-//
-//        //TODO: implement permission for a single chart
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-//            //ok
-//        } else {
-//            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        if( !$topicName ) {
-//            $error = "Topic name is not provided";
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                $error
-//            );
-//            return $this->redirect( $this->generateUrl('dashboard_home') );
-//        }
-//
-//        $topic = $em->getRepository('AppDashboardBundle:TopicList')->findByName($topicName);
-//        if( !$topic ) {
-//            $error = "Topic is not found by name '".$topicName."'";
-//            //throw new \Exception($error);
-//
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                $error
-//            );
-//
-//            return $this->redirect( $this->generateUrl('dashboard_home') );
-//        }
-//
-//        //TODO: find charts by $topic name
-//
-////        if( $this->isViewPermitted($chart) === false ) {
-////            exit('chart '.$chart->getName().' not permitted');
-////            continue;
-////        }
-//
-//        $chartsArray = array();
-//
-//        return array(
-//            'title' => "Single chart topic",
-//            'chartsArray' => $chartsArray
-//        );
-//    }
 
     /**
      * charts belonging to a single organizational group. id - organizational group associated with the displayed charts

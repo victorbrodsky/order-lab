@@ -69,7 +69,7 @@ class DashboardSiteParameterType extends AbstractType
 
         $builder->add('topic', EntityType::class, array(
             'class' => 'AppDashboardBundle:TopicList',
-            'choice_label' => 'name',
+            'choice_label' => 'getTreeName', //'getNodeNameWithRoot',
             'label' => 'Default Dashboard Topic:',
             'required'=> false,
             'multiple' => false,
