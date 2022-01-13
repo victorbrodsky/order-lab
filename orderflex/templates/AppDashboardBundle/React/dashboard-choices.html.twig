@@ -97,7 +97,17 @@
                     {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
                 </div>
                 <div class="col-xs-1">
-                    <button id="filter-btn" type="button" class="btn btn-default" onclick="plotlyGetChartsReact('dashboard')" data-spinner-color="{{ spinnerColor }}">Show</button>
+                    <button id="filter-btn"
+                            type="button"
+                            class="btn btn-default"
+                            onclick="plotlyGetChartsReact('dashboard')"
+                            data-spinner-color="{{ spinnerColor }}"
+                    >Show</button>
+                    <button id="clear-btn"
+                            type="button"
+                            class="btn btn-default"
+                            onclick="dashboardClearAllCharts()"
+                    >Clear</button>
                 </div>
             </div>
 

@@ -477,3 +477,9 @@ function favoriteChart(favoriteEl,chartId) {
 //     });
 // }
 
+function dashboardClearAllCharts() {
+    //console.log("dashboardClearAllCharts");
+    //var chartTypes = $("#filter_chartType").select2("val");
+    $("#filter_chartType").val(null).trigger('change');
+}
+

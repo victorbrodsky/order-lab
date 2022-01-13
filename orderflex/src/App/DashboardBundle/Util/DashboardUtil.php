@@ -396,6 +396,8 @@ class DashboardUtil
             "64. Total amount of paid/due for issued invoices per month" => "total-amount-paid-unpaid-invoices-per-month",
             "65. Total amount of paid/due for issued invoices per fiscal year" => "total-amount-paid-unpaid-invoices-per-year",
 
+            "66. Chart viewing stats" => "chart-view-stat",
+
             "" => "",
             "" => "",
         );
@@ -465,7 +467,7 @@ class DashboardUtil
         return $charts;
     }
 
-    public function getChartsByChartType( $chartType ) {
+    public function getChartsByChartType( $chartType, $single=false ) {
 
         //echo "getChartsByChartType: chartType=".$chartType."<br>";
         //exit("chartType=".$chartType);
@@ -491,6 +493,12 @@ class DashboardUtil
 
         $charts = $query->getResult();
         //echo "charts count=".count($charts)."<br>";
+
+        if( $single ) {
+            if( count($charts) > 0 ) {
+                return $charts[0];
+            }
+        }
 
         return $charts;
     }
@@ -2338,6 +2346,50 @@ class DashboardUtil
         //echo "chartType=$chartType <br>";
         //exit('111');
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        //$chartObject = $this->getChartsByChartType($chartType,true);
+        if( !$chartObject ) {
+            $error = "Logical error: chart not found by abbreviation [$chartType]";
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
+        }
+
+        if( $this->secAuth->isGranted('read', $chartObject) === false ) {
+            //get admin email
+            //$userSecUtil = $this->container->get('user_security_utility');
+            $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $error = "You do not have access to this chart '".$chartObject->getName().
+                "'. Please request access by contacting your site administrator $adminemail.";
+
+            //$flashBagStr = $this->getSessionFlashBag();
+            $permissionErrorStr = $this->getPermissionErrorSession($chartObject);
+            if( $permissionErrorStr ) {
+                $error = $error . " " . $permissionErrorStr;
+            }
+
+            //EventLog
+            $eventType = "Dashboard Chart Access Not Permitted";
+            $sitename = $this->container->getParameter('dashboard.sitename');
+            $event = "User ".$user." does not have access to the dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName();
+            //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
+            $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
+        }
+
+        //EventLog
+        $eventType = "Dashboard Chart Viewed";
+        $sitename = $this->container->getParameter('dashboard.sitename');
+        $event = "Dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName()."' viewed by ".$user;
+        //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
+        $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+
         $now = new \DateTime('now');
 
         if( !$endDate ) {
@@ -2409,32 +2461,6 @@ class DashboardUtil
 //            $chartName = str_replace("[[projectSpecialties]]", $projectSpecialtyAllowedStr);
 //        }
 
-        $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
-        if( !$chartObject ) {
-            $error = "Logical error: chart not found by abbreviation [$chartType]";
-            $chartsArray['warning'] = false;
-            $chartsArray['error'] = $error;
-            return $chartsArray;
-        }
-
-        if( $this->secAuth->isGranted('read', $chartObject) === false ) {
-            //get admin email
-            $userSecUtil = $this->container->get('user_security_utility');
-            $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
-            $error = "You do not have access to this chart '".$chartObject->getName().
-                "'. Please request access by contacting your site administrator $adminemail.";
-
-            //$flashBagStr = $this->getSessionFlashBag();
-            $permissionErrorStr = $this->getPermissionErrorSession($chartObject);
-            if( $permissionErrorStr ) {
-                $error = $error . " " . $permissionErrorStr;
-            }
-
-            $chartsArray['warning'] = false;
-            $chartsArray['error'] = $error;
-            return $chartsArray;
-        }
-
         $chartName = $this->getChartNameWithTop($chartName,$quantityLimit);
 
         //testing: add favorite icon
@@ -2453,7 +2479,7 @@ class DashboardUtil
         //1. Principal Investigators by Affiliation (Linked)
         if( $chartType == "pi-by-affiliation" ) {
 
-            $userSecUtil = $this->container->get('user_security_utility');
+            //$userSecUtil = $this->container->get('user_security_utility');
             //$piWcmPathologyCounter = 0;
             //$piWcmCounter = 0;
             //$piOtherCounter = 0;
@@ -8020,6 +8046,13 @@ class DashboardUtil
             //exit('111');
         }
 
+        //"66. Chart viewing stats" => "chart-view-stat",
+        if( $chartType == "chart-view-stat" ) {
+            //Stacked Bar chart:
+            //Shows how many times each dashboard chart was accessed (on the Y axis) per month (on the X axis).
+            //Since there are so many charts, the legend might be good to show under the chart.
+
+        }
 
         if( $chartType == "" ) {
 
