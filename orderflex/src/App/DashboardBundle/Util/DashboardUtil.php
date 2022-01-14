@@ -44,7 +44,7 @@ class DashboardUtil
 
     public function getChartViewCount($startDate,$endDate,$chart) {
 
-        if( $chart) {
+        if( !$chart) {
             return 0;
         }
 
@@ -54,7 +54,7 @@ class DashboardUtil
         $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
         $dql = $repository->createQueryBuilder("logger");
 
-        $dql->select("user.id");
+        $dql->select("logger");
 
         $dql->innerJoin('logger.user', 'user');
         $dql->innerJoin('logger.eventType', 'eventType');
@@ -65,10 +65,10 @@ class DashboardUtil
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Dashboard Chart Viewed";
 
-        $dql->andWhere("eventType.entityName = :entityName");
+        $dql->andWhere("logger.entityName = :entityName");
         $dqlParameters['entityName'] = "ChartList";
 
-        $dql->andWhere("eventType.entityId = :entityId");
+        $dql->andWhere("logger.entityId = :entityId");
         $dqlParameters['entityId'] = $chart->getId();
 
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
@@ -8112,11 +8112,20 @@ class DashboardUtil
 
             $totalViewCount = 0;
             $charts = $this->getChartTypes(true);
+            //$charts = array($charts[0],$charts[1]); //testing
+            $charts = array(
+                $charts[count($charts)-1],
+                $charts[count($charts)-2],
+                $charts[0],
+                //$charts[1],
+                //$charts[2]
+            ); //testing
 
-//            $viewByChartArr = array();
-//            foreach($charts as $chart) {
-//                $viewByChartArr[$chart->getName()] = array();
-//            }
+            $viewByChartArr = array();
+            $chartViewCountArr = array();
+            foreach($charts as $chart) {
+                $chartViewCountArr[$chart->getId()] = 0;
+            }
 
             //$startDate->modify( 'first day of last month' );
             $startDate->modify( 'first day of this month' );
@@ -8134,10 +8143,14 @@ class DashboardUtil
 //                $loginCountResapp = $loginCountResapp + $loginResappCount;
 
                 foreach($charts as $chart) {
+                    //$chartId = $chart->getId();
+                    //echo "chartId=$chartId <br>";
                     //$viewByChartArr[$chart->getName()] = array();
                     $thisViewCount = $this->getChartViewCount($startDate,$thisEndDate,$chart);
                     $totalViewCount = $totalViewCount + $thisViewCount;
-                    $viewByChartArr[$startDateLabel] = array($chart->getName(),$thisViewCount);
+                    $viewByChartArr[$startDateLabel] = $thisViewCount; //array($chart->getName(),$thisViewCount);
+                    //$chartViewCountArr[$chart->getId()] += $thisViewCount;
+                    $chartViewCountArr[$chart->getId()] = $chartViewCountArr[$chart->getId()] + $thisViewCount;
                 }
 
                 $startDate->modify( 'first day of next month' );
@@ -8145,12 +8158,31 @@ class DashboardUtil
 
             //$combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
             foreach($charts as $chart) {
-                $combinedData[$chart->getName()] = $viewByChartArr; //array();
+                $thisChartViewCounter = $chartViewCountArr[$chart->getId()];
+                $combinedData[$chart->getName()." (".$thisChartViewCounter." total views)"] = $viewByChartArr; //array();
             }
 
             $chartName = $chartName . " (" . $totalViewCount . " Total)";
 
-            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack");
+            $layoutArray = array(
+                'height' => $this->height,
+                'width' => $this->width,
+                'margin' => array('b' => 200),
+                'legend' => array(
+                    'orientation'=>"h"
+                )
+//            'yaxis' => array(
+//                'automargin' => true
+//            ),
+//            'xaxis' => array(
+//                'automargin' => true,
+//            ),
+//                'yaxis' => array(
+//                    'tickformat' => "d" //"digit"
+//                ),
+            );
+
+            $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
         }
 
         if( $chartType == "" ) {

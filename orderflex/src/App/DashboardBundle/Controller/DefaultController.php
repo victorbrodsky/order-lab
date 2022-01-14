@@ -122,6 +122,33 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit();
 
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $now = new \DateTime('now');
+        $endDate = $now;//->format('m/d/Y');
+        $thisEndDate = clone $endDate;
+        $startDate = $thisEndDate->modify('-1 month');//->format('m/d/Y');
+        $chartType = "chart-view-stat";
+        //echo "chartType=".$chartType."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $chart = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        $count = $dashboardUtil->getChartViewCount($startDate,$endDate,$chart);
+        exit($endDate->format('m/d/Y')."-".$startDate->format('m/d/Y').": ".$chart->getName().": count=$count");
+
+        $parametersArr = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'projectSpecialty' => NULL,
+            'showLimited' => NULL,
+            'chartType' => $chartType,
+            'productservice' => NULL,
+            'quantityLimit' => NULL
+        );
+
+        $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr);
+        dump($chartsArray);
+        exit();
+
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 
