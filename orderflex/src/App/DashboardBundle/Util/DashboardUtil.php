@@ -2442,7 +2442,7 @@ class DashboardUtil
         $sitename = $this->container->getParameter('dashboard.sitename');
         $event = "Dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName()."' viewed by ".$user;
         //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
-        $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+        //$userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType); //testing comment out
 
         $now = new \DateTime('now');
 
@@ -8113,13 +8113,13 @@ class DashboardUtil
             $totalViewCount = 0;
             $charts = $this->getChartTypes(true);
             //$charts = array($charts[0],$charts[1]); //testing
-            $charts = array(
-                $charts[count($charts)-1],
-                $charts[count($charts)-2],
-                $charts[0],
-                //$charts[1],
-                //$charts[2]
-            ); //testing
+//            $charts = array(
+//                $charts[count($charts)-1],
+//                $charts[count($charts)-2],
+//                $charts[0],
+//                $charts[56],
+//                $charts[57]
+//            ); //testing
 
             $viewByChartArr = array();
             $chartViewCountArr = array();
@@ -8134,7 +8134,7 @@ class DashboardUtil
                 $thisEndDate = clone $startDate;
                 //$thisEndDate->modify( 'first day of next month' );
                 $thisEndDate->modify('last day of this month');
-                $datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
+                //$datesArr[$startDateLabel] = array('startDate'=>$startDate->format('m/d/Y'),'endDate'=>$thisEndDate->format('m/d/Y'));
                 //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
 
 //                $loginResappCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'resapp');
@@ -8147,12 +8147,14 @@ class DashboardUtil
                     //echo "chartId=$chartId <br>";
                     //$viewByChartArr[$chart->getName()] = array();
                     $thisViewCount = $this->getChartViewCount($startDate,$thisEndDate,$chart);
-                    echo "thisViewCount=$thisViewCount <br>";
+                    //echo "thisViewCount=$thisViewCount <br>";
                     $totalViewCount = $totalViewCount + $thisViewCount;
-                    $viewByChartArr[$startDateLabel] = $thisViewCount; //array($chart->getName(),$thisViewCount);
                     $chartViewCountArr[$chart->getId()] += $thisViewCount;
                     //$chartViewCountArr[$chart->getId()] = $chartViewCountArr[$chart->getId()] + $thisViewCount;
-                }
+
+                    //$viewByChartArr[$startDateLabel] = $thisViewCount; //array($chart->getName(),$thisViewCount);
+                    $viewByChartArr[$chart->getId()][$startDateLabel] = $thisViewCount;
+                }//foreach chart
 
                 $startDate->modify( 'first day of next month' );
             } while( $startDate < $endDate );
@@ -8161,7 +8163,7 @@ class DashboardUtil
             $combinedData = array();
             foreach($charts as $chart) {
                 $thisChartViewCounter = $chartViewCountArr[$chart->getId()];
-                $combinedData[$chart->getName()." (".$thisChartViewCounter." total views)"] = $viewByChartArr; //array();
+                $combinedData[$chart->getName()." (".$thisChartViewCounter." total views)"] = $viewByChartArr[$chart->getId()];
             }
 
             $chartName = $chartName . " (" . $totalViewCount . " Total)";
@@ -8175,10 +8177,10 @@ class DashboardUtil
                     'orientation'=>"h"
                 ),
                 'yaxis' => array(
-                    'tickformat' => "digit", //"digit"
-                    //'showticklabels' => false,
-                    //'tickvals' => null,
-                    'automargin' => true
+                    'tickformat' => "d", //"digit", //"digit"
+                    'showticklabels' => false,
+                    'tickvals' => null,
+                    //'automargin' => true
                 ),
                 'xaxis' => array(
                     'tickformat' =>  "d",

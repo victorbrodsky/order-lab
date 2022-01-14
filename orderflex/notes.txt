@@ -710,3 +710,15 @@ if [ "$(command -v java)" ]; then
   echo "java is installed, so note that Java applications often bundle their libraries inside jar/war/ear files, so there still could be log4j in such applications.";
 fi;
 echo "If you see no output above this line, you are safe. Otherwise check the listed files and packages.";
+
+Generating CSR for SSL certificate:
+https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enable-https
+openssl genrsa -out view-test.key 2048
+openssl req -new -sha256 -key view-test.key -out view-test.csr
+
+
+
+
+
+
+
