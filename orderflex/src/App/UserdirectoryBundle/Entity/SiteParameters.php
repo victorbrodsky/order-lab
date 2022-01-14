@@ -55,6 +55,11 @@ class SiteParameters {
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+    private $version;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
     private $siteEmail;
 
     /**
@@ -1346,6 +1351,23 @@ class SiteParameters {
     {
         return $this->environment;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+    
 
     /**
      * @param mixed $aDLDAPServerAccountPassword

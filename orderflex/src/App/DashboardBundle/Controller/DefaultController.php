@@ -133,11 +133,11 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $chart = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
         $count = $dashboardUtil->getChartViewCount($startDate,$endDate,$chart);
-        exit($endDate->format('m/d/Y')."-".$startDate->format('m/d/Y').": ".$chart->getName().": count=$count");
+        //exit($endDate->format('m/d/Y')."-".$startDate->format('m/d/Y').": ".$chart->getName().": count=$count");
 
         $parametersArr = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'startDate' => $startDate->format('m/d/Y'),
+            'endDate' => $endDate->format('m/d/Y'),
             'projectSpecialty' => NULL,
             'showLimited' => NULL,
             'chartType' => $chartType,

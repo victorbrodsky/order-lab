@@ -83,6 +83,12 @@ class SiteParametersType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'version' )
+            $builder->add('version',null,array(
+                'label'=>'Version:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'siteEmail' )
         $builder->add('siteEmail',EmailType::class,array(
             'label'=>'Site Email:',

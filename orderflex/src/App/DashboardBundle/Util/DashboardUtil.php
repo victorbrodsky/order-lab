@@ -8147,16 +8147,18 @@ class DashboardUtil
                     //echo "chartId=$chartId <br>";
                     //$viewByChartArr[$chart->getName()] = array();
                     $thisViewCount = $this->getChartViewCount($startDate,$thisEndDate,$chart);
+                    echo "thisViewCount=$thisViewCount <br>";
                     $totalViewCount = $totalViewCount + $thisViewCount;
                     $viewByChartArr[$startDateLabel] = $thisViewCount; //array($chart->getName(),$thisViewCount);
-                    //$chartViewCountArr[$chart->getId()] += $thisViewCount;
-                    $chartViewCountArr[$chart->getId()] = $chartViewCountArr[$chart->getId()] + $thisViewCount;
+                    $chartViewCountArr[$chart->getId()] += $thisViewCount;
+                    //$chartViewCountArr[$chart->getId()] = $chartViewCountArr[$chart->getId()] + $thisViewCount;
                 }
 
                 $startDate->modify( 'first day of next month' );
             } while( $startDate < $endDate );
 
             //$combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
+            $combinedData = array();
             foreach($charts as $chart) {
                 $thisChartViewCounter = $chartViewCountArr[$chart->getId()];
                 $combinedData[$chart->getName()." (".$thisChartViewCounter." total views)"] = $viewByChartArr; //array();
@@ -8164,22 +8166,23 @@ class DashboardUtil
 
             $chartName = $chartName . " (" . $totalViewCount . " Total)";
 
+            //TODO: last chart count overwrite the count for each chart (compare to 57.)
             $layoutArray = array(
                 'height' => $this->height,
                 'width' => $this->width,
                 'margin' => array('b' => 200),
                 'legend' => array(
                     'orientation'=>"h"
+                ),
+                'yaxis' => array(
+                    'tickformat' => "digit", //"digit"
+                    //'showticklabels' => false,
+                    //'tickvals' => null,
+                    'automargin' => true
+                ),
+                'xaxis' => array(
+                    'tickformat' =>  "d",
                 )
-//            'yaxis' => array(
-//                'automargin' => true
-//            ),
-//            'xaxis' => array(
-//                'automargin' => true,
-//            ),
-//                'yaxis' => array(
-//                    'tickformat' => "d" //"digit"
-//                ),
             );
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
