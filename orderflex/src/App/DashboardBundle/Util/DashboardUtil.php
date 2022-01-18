@@ -923,6 +923,7 @@ class DashboardUtil
         return $res;    //implode(array_slice($parts, 0, $last_part)).$postfix;
     }
 
+    //NOT USED
     public function addValueToOther($arrTop,$prefix=": $",$arrayValueKey='value') {
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
@@ -1745,8 +1746,9 @@ class DashboardUtil
             $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
         }
         if( $endDate ) {
+            $thisEndDate = clone $endDate;
             if( $addOneEndDay ) {
-                $endDate->modify('+1 day');
+                $thisEndDate->modify('+1 day');
             }
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('request.createDate <= :endDate');
@@ -1764,7 +1766,7 @@ class DashboardUtil
             //echo "endDateCriterion=$endDateCriterion <br>";
             $dql->andWhere($endDateCriterion);
 
-            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+            $dqlParameters['endDate'] = $thisEndDate->format('Y-m-d'); //H:i:s
         }
 
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
@@ -2475,7 +2477,7 @@ class DashboardUtil
         $sitename = $this->container->getParameter('dashboard.sitename');
         $event = "Dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName()."' viewed by ".$user;
         //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
-        //$userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType); //testing comment out
+        $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
 
         $now = new \DateTime('now');
 
@@ -6032,6 +6034,7 @@ class DashboardUtil
                 //$covidResultStatArr[$startDateLabel] = count($covidInvoices);
 
             } while( $startDate < $endDate );
+            //exit(111);
 
             $combinedInvoicesData = array();
 
@@ -8146,39 +8149,39 @@ class DashboardUtil
             $totalViewCount = 0;
             $charts = $this->getChartTypes(true);
 
-            //testing 60,65,57,2,1
-            if(0) {
+//            //testing 60,65,57,2,1
+//            if(0) {
+////                $charts = array();
+////                //$charts[] = $this->getChartByPartialName("1.");
+////                //$charts[] = $this->getChartByPartialName("2.");
+////                $charts[] = $this->getChartByPartialName("39.");
+////                $charts[] = $this->getChartByPartialName("40.");
+////                //$charts[] = $this->getChartByPartialName("5.");
+////                //$charts[] = $this->getChartByPartialName("6.");
+////                $charts[] = $this->getChartByPartialName("57.");
+////                $charts[] = $this->getChartByPartialName("60.");
+////                $charts[] = $this->getChartByPartialName("65.");
+////                $charts[] = $this->getChartByPartialName("66.");
+//
 //                $charts = array();
-//                //$charts[] = $this->getChartByPartialName("1.");
-//                //$charts[] = $this->getChartByPartialName("2.");
-//                $charts[] = $this->getChartByPartialName("39.");
-//                $charts[] = $this->getChartByPartialName("40.");
-//                //$charts[] = $this->getChartByPartialName("5.");
-//                //$charts[] = $this->getChartByPartialName("6.");
-//                $charts[] = $this->getChartByPartialName("57.");
-//                $charts[] = $this->getChartByPartialName("60.");
-//                $charts[] = $this->getChartByPartialName("65.");
-//                $charts[] = $this->getChartByPartialName("66.");
-
-                $charts = array();
-                $exceptions = array(
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                    30, 31, 32, 33, 34,
-                    35, 36, 37, 38,
-                    39,
-                    40,
-                    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-                    51, 52,
-                    //53,54,55,56,57,58,60,61,62,63,64
-                );
-                for ($ii = 40; $ii <= 66; $ii++) {
-                    if (in_array($ii, $exceptions)) {
-                        continue;
-                    }
-                    $charts[] = $this->getChartByPartialName("$ii.");
-                }
-            }
+//                $exceptions = array(
+//                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+//                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+//                    30, 31, 32, 33, 34,
+//                    35, 36, 37, 38,
+//                    39,
+//                    40,
+//                    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+//                    51, 52,
+//                    //53,54,55,56,57,58,60,61,62,63,64
+//                );
+//                for ($ii = 40; $ii <= 66; $ii++) {
+//                    if (in_array($ii, $exceptions)) {
+//                        continue;
+//                    }
+//                    $charts[] = $this->getChartByPartialName("$ii.");
+//                }
+//            }//testing
 
 //            $charts = array($charts[1],$charts[56],$charts[59],$charts[65]); //testing
 //            $charts = array(

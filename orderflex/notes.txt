@@ -716,7 +716,9 @@ https://developers.google.com/web/fundamentals/security/encrypt-in-transit/enabl
 openssl genrsa -out view-test.key 2048
 openssl req -new -sha256 -key view-test.key -out view-test.csr
 
-
+Place key and cert to /etc/httpd/ssl/ as in /etc/httpd/conf.ssl/httpd-ssl.conf:
+SSLCertificateFile      /etc/httpd/ssl/view-test_med_cornell_edu_cert.cer
+SSLCertificateKeyFile   /etc/httpd/ssl/view-test.key
 
 
 
