@@ -77,7 +77,7 @@ class DashboardUtil
         $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
 
         $dql->andWhere('logger.creationdate <= :endDate');
-        $endDate->modify('+1 day');
+        //$endDate->modify('+1 day');
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
@@ -90,7 +90,10 @@ class DashboardUtil
         //echo "loggers=".count($loggers)."<br>";
         //exit();
 
-        return count($loggers);
+        $count = count($loggers);
+        $count = intval($count);
+
+        return $count;
     }
 
     //get topics
@@ -298,6 +301,35 @@ class DashboardUtil
         return $charts;
     }
 
+    public function getChartByPartialName( $partialName ) {
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $dql->orderBy("list.orderinlist","ASC");
+        //$dql->orderBy("list.id","ASC");
+
+        $dql->andWhere("list.name LIKE :partialName");
+        $parameters['partialName'] = "%".$partialName."%";
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $query->setMaxResults(1);
+
+        $chart = $query->getResult();
+
+        return $chart[0];
+    }
+
     public function getChartTypes( $asObject=false ) {
         //get chart types from DB ChartList
 //        $charts = $this->em->getRepository('AppDashboardBundle:ChartList')->findBy(
@@ -319,6 +351,7 @@ class DashboardUtil
         );
 
         $dql->orderBy("list.orderinlist","ASC");
+        //$dql->orderBy("list.id","ASC");
 
         $query = $dql->getQuery();
 
@@ -8112,7 +8145,42 @@ class DashboardUtil
 
             $totalViewCount = 0;
             $charts = $this->getChartTypes(true);
-            //$charts = array($charts[0],$charts[1]); //testing
+
+            //testing 60,65,57,2,1
+            if(0) {
+//                $charts = array();
+//                //$charts[] = $this->getChartByPartialName("1.");
+//                //$charts[] = $this->getChartByPartialName("2.");
+//                $charts[] = $this->getChartByPartialName("39.");
+//                $charts[] = $this->getChartByPartialName("40.");
+//                //$charts[] = $this->getChartByPartialName("5.");
+//                //$charts[] = $this->getChartByPartialName("6.");
+//                $charts[] = $this->getChartByPartialName("57.");
+//                $charts[] = $this->getChartByPartialName("60.");
+//                $charts[] = $this->getChartByPartialName("65.");
+//                $charts[] = $this->getChartByPartialName("66.");
+
+                $charts = array();
+                $exceptions = array(
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                    30, 31, 32, 33, 34,
+                    35, 36, 37, 38,
+                    39,
+                    40,
+                    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+                    51, 52,
+                    //53,54,55,56,57,58,60,61,62,63,64
+                );
+                for ($ii = 40; $ii <= 66; $ii++) {
+                    if (in_array($ii, $exceptions)) {
+                        continue;
+                    }
+                    $charts[] = $this->getChartByPartialName("$ii.");
+                }
+            }
+
+//            $charts = array($charts[1],$charts[56],$charts[59],$charts[65]); //testing
 //            $charts = array(
 //                $charts[count($charts)-1],
 //                $charts[count($charts)-2],
@@ -8147,17 +8215,20 @@ class DashboardUtil
                     //echo "chartId=$chartId <br>";
                     //$viewByChartArr[$chart->getName()] = array();
                     $thisViewCount = $this->getChartViewCount($startDate,$thisEndDate,$chart);
-                    //echo "thisViewCount=$thisViewCount <br>";
+//                    if( $chart->getName() == "66. Chart viewing stats per month" ) {
+//                        echo $chart . ": " . $startDate->format('d-M-Y') . "; " . $thisEndDate->format('d-M-Y') . "=>" . $thisViewCount . "<br>";
+//                    }
                     $totalViewCount = $totalViewCount + $thisViewCount;
                     $chartViewCountArr[$chart->getId()] += $thisViewCount;
                     //$chartViewCountArr[$chart->getId()] = $chartViewCountArr[$chart->getId()] + $thisViewCount;
-
                     //$viewByChartArr[$startDateLabel] = $thisViewCount; //array($chart->getName(),$thisViewCount);
                     $viewByChartArr[$chart->getId()][$startDateLabel] = $thisViewCount;
                 }//foreach chart
 
                 $startDate->modify( 'first day of next month' );
             } while( $startDate < $endDate );
+
+            //exit('111');
 
             //$combinedData["Residency Applications log in events ($loginCountResapp)"] = $loginsResappArr;
             $combinedData = array();

@@ -130,6 +130,9 @@ class DefaultController extends OrderAbstractController
         $chartType = "chart-view-stat";
         //echo "chartType=".$chartType."<br>";
 
+        $chart = $dashboardUtil->getChartByPartialName("1.");
+        exit("chart id=".$chart->getId());
+
         $em = $this->getDoctrine()->getManager();
         $chart = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
         $count = $dashboardUtil->getChartViewCount($startDate,$endDate,$chart);
