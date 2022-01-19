@@ -684,6 +684,7 @@ Install yarn: https://classic.yarnpkg.com/lang/en/docs/install/#centos-stable:
 2) curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
 3) sudo yum install yarn
 4) yarn --version
+DigitalOcean Ubuntu: apt install -y cmdtest
 
 https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
 New files (node.js dependencies, Node Package Manager (NPM)): yarn.lock, package.json

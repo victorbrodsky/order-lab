@@ -91,7 +91,7 @@
 	  {
         "type": "shell",
         "inline": [ 		   
-		   "echo @### Composer and deploy ###",
+		   "echo @### Composer and deploy using orderflex###",
            "cd /usr/local/bin/order-lab/orderflex",		  
 		   "composer self-update",
 		   "echo @### PostgreSQL Version after composer self-update ###",		

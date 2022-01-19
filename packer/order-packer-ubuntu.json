@@ -132,7 +132,7 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo @### Composer and deploy ###",
+		   "echo @### Composer and deploy using Scanorders2###",
            "cd /usr/local/bin/order-lab/Scanorders2",		  
 		   "composer self-update",
            "php -dmemory_limit=-1 /usr/local/bin/composer install",
