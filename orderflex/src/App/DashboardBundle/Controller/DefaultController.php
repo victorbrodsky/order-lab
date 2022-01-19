@@ -492,7 +492,7 @@ class DefaultController extends OrderAbstractController
      */
     public function resetChartViewCounterAction( Request $request ) {
 
-        //exit('resetChartViewCounterAction disable');
+        exit('resetChartViewCounterAction disable');
 
         $em = $this->getDoctrine()->getManager();
 
