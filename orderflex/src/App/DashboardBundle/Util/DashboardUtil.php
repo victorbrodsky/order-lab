@@ -95,6 +95,61 @@ class DashboardUtil
 
         return $count;
     }
+    public function getViewedCharts($startDate,$endDate) {
+        $dqlParameters = array();
+
+        //get the date from event log
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->select("DISTINCT(logger.entityId) as chartId");
+        //$dql->select("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        //$dql->where("logger.siteName = 'translationalresearch'");
+        //$dql->where("logger.siteName = '".$site."'");
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Dashboard Chart Viewed";
+
+        $dql->andWhere("logger.entityName = :entityName");
+        $dqlParameters['entityName'] = "ChartList";
+
+        //$dql->andWhere("logger.entityId = :entityId");
+        //$dqlParameters['entityId'] = $chart->getId();
+
+        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+        $dql->andWhere('logger.creationdate >= :startDate');
+        //$startDate->modify('-1 day');
+        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        $dql->andWhere('logger.creationdate <= :endDate');
+        //$endDate->modify('+1 day');
+        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        //$dql->groupBy('logger.id');
+        //$dql->groupBy('logger.entityId');
+
+        //$dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $chartIds = $query->getResult();
+
+        //echo "loggers=".count($chartIds)."<br>";
+
+        $charts = array();
+        foreach($chartIds as $chartId) {
+            //$chartId = $chartId['chartId'];
+            $charts[] = $this->em->getRepository('AppDashboardBundle:ChartList')->find($chartId['chartId']);
+            //echo "chart=".$chartId."<br>";
+        }
+        //exit();
+
+        return $charts;
+    }
 
     //get topics
     public function getFilterTopics() {
@@ -8147,33 +8202,20 @@ class DashboardUtil
             //$loginCountResapp = 0;
 
             $totalViewCount = 0;
-            $charts = $this->getChartTypes(true);
+            //$charts = $this->getChartTypes(true);
 
-//            //testing 60,65,57,2,1
+            $startDate->modify( 'first day of this month' );
+            $endDate->modify('last day of this month');
+            //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$endDate->format("d-M-Y")."<br>";
+            $charts = $this->getViewedCharts($startDate,$endDate);
+            //exit();
+
+//            //testing
 //            if(0) {
-////                $charts = array();
-////                //$charts[] = $this->getChartByPartialName("1.");
-////                //$charts[] = $this->getChartByPartialName("2.");
-////                $charts[] = $this->getChartByPartialName("39.");
-////                $charts[] = $this->getChartByPartialName("40.");
-////                //$charts[] = $this->getChartByPartialName("5.");
-////                //$charts[] = $this->getChartByPartialName("6.");
-////                $charts[] = $this->getChartByPartialName("57.");
-////                $charts[] = $this->getChartByPartialName("60.");
-////                $charts[] = $this->getChartByPartialName("65.");
-////                $charts[] = $this->getChartByPartialName("66.");
-//
 //                $charts = array();
 //                $exceptions = array(
 //                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 //                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-//                    30, 31, 32, 33, 34,
-//                    35, 36, 37, 38,
-//                    39,
-//                    40,
-//                    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-//                    51, 52,
-//                    //53,54,55,56,57,58,60,61,62,63,64
 //                );
 //                for ($ii = 40; $ii <= 66; $ii++) {
 //                    if (in_array($ii, $exceptions)) {
@@ -8183,15 +8225,6 @@ class DashboardUtil
 //                }
 //            }//testing
 
-//            $charts = array($charts[1],$charts[56],$charts[59],$charts[65]); //testing
-//            $charts = array(
-//                $charts[count($charts)-1],
-//                $charts[count($charts)-2],
-//                $charts[0],
-//                $charts[56],
-//                $charts[57]
-//            ); //testing
-
             $viewByChartArr = array();
             $chartViewCountArr = array();
             foreach($charts as $chart) {
@@ -8199,7 +8232,7 @@ class DashboardUtil
             }
 
             //$startDate->modify( 'first day of last month' );
-            $startDate->modify( 'first day of this month' );
+            //$startDate->modify( 'first day of this month' );
             do {
                 $startDateLabel = $startDate->format('M-Y');
                 $thisEndDate = clone $startDate;
