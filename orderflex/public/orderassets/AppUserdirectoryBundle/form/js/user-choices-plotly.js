@@ -12,13 +12,15 @@ $(document).ready(function() {
     //click filter button if number of charts less or equal 3
     var useWarning = $("#useWarning").val();
     var chartTypesLen = $('#filter_chartType').select2('data').length;
+    //console.log("1 chartTypesLen="+chartTypesLen);
     if( !useWarning ) {
+        //console.log("not set useWarning="+useWarning);
         chartTypesLen = 0;
     }
-    //console.log("chartTypesLen="+chartTypesLen);
-    if( chartTypesLen > 0 && chartTypesLen < 4 ) {
+    //console.log("2 chartTypesLen="+chartTypesLen);
+    if( chartTypesLen >= 0 && chartTypesLen < 4 ) {
         if (document.getElementById("filter-btn")) {
-            console.log("filter-btn auto clicked");
+            //console.log("filter-btn auto clicked");
             document.getElementById("filter-btn").click(); //chart-filter-btn
         }
     }

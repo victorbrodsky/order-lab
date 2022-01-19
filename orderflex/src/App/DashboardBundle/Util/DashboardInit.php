@@ -1398,6 +1398,18 @@ class DashboardInit
             exit("Error: not found: Call Log");
         }
 
+        //7b) Site Utilization > Dashboards
+        $charts7aArr = array();
+        $addChart7aArr = array("66. ");
+        $siteutilDashboards = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Dashboards",
+            $siteutil,
+            $mapper
+        );
+        if( !$siteutilDashboards ) {
+            exit("Error: not found: Dashboards");
+        }
+
         //8) 21- assign the appropriate Educational topic to charts 60 and 61
         $charts8Arr = array();
         $addChart8Arr = array("60. ", "61. ");
@@ -1454,6 +1466,9 @@ class DashboardInit
             //7) Site Utilization > Call Log
             $charts7Arr = $this->addSpecificTopic($chart,$siteutilCalllog,$addChart7Arr,$charts7Arr);
 
+            //7a) Site Utilization > Dashboards
+            $charts7aArr = $this->addSpecificTopic($chart,$siteutilDashboards,$addChart7aArr,$charts7aArr);
+
             //8) Educational->Fellowship Candidate Statistics
             $charts8Arr = $this->addSpecificTopic($chart,$educationalFellapp,$addChart8Arr,$charts8Arr);
 
@@ -1490,7 +1505,7 @@ class DashboardInit
 
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
-        +count($charts6Arr)+count($charts7Arr)+count($charts8Arr);
+        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr);
 
         if( $count > 0 ) {
             if( $testing ) {
@@ -1501,6 +1516,7 @@ class DashboardInit
                 dump($charts5Arr);
                 dump($charts6Arr);
                 dump($charts7Arr);
+                dump($charts7aArr);
                 dump($charts8Arr);
             } else {
                 $this->em->flush();

@@ -10368,8 +10368,9 @@ class AdminController extends OrderAbstractController
                 "Residency Candidate Statistics" => array()
             ),
             "Site Utilization" => array(
-                "Platform" => array() ,
-                "Call Log" => array()
+                "Platform" => array(),
+                "Call Log" => array(),
+                "Dashboards" => array()
             )
         );
 

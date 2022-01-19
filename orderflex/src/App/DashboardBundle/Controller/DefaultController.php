@@ -152,13 +152,13 @@ class DefaultController extends OrderAbstractController
 //        dump($chartsArray);
 //        exit();
 
-        $endDate = new \DateTime('now');
-        $startDate = clone $endDate;
-        $startDate = $startDate->modify('-1 year');
-        $dashboardUtil = $this->container->get('dashboard_util');
-        $charts = $dashboardUtil->getViewedCharts($startDate,$endDate);
-        dump($charts);
-        exit();
+//        $endDate = new \DateTime('now');
+//        $startDate = clone $endDate;
+//        $startDate = $startDate->modify('-1 year');
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $charts = $dashboardUtil->getViewedCharts($startDate,$endDate);
+//        dump($charts);
+//        exit();
 
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
