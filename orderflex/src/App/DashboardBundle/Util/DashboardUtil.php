@@ -103,12 +103,8 @@ class DashboardUtil
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("DISTINCT(logger.entityId) as chartId");
-        //$dql->select("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
-
-        //$dql->where("logger.siteName = 'translationalresearch'");
-        //$dql->where("logger.siteName = '".$site."'");
 
         $dql->andWhere("eventType.name = :eventTypeName");
         $dqlParameters['eventTypeName'] = "Dashboard Chart Viewed";
@@ -116,22 +112,14 @@ class DashboardUtil
         $dql->andWhere("logger.entityName = :entityName");
         $dqlParameters['entityName'] = "ChartList";
 
-        //$dql->andWhere("logger.entityId = :entityId");
-        //$dqlParameters['entityId'] = $chart->getId();
-
         //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
         $dql->andWhere('logger.creationdate >= :startDate');
-        //$startDate->modify('-1 day');
         $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
 
         $dql->andWhere('logger.creationdate <= :endDate');
-        //$endDate->modify('+1 day');
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
-        //$dql->groupBy('logger.id');
-        //$dql->groupBy('logger.entityId');
-
-        //$dql->orderBy("logger.id","DESC");
+        $dql->orderBy("logger.entityId","DESC");
         $query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
@@ -142,11 +130,8 @@ class DashboardUtil
 
         $charts = array();
         foreach($chartIds as $chartId) {
-            //$chartId = $chartId['chartId'];
             $charts[] = $this->em->getRepository('AppDashboardBundle:ChartList')->find($chartId['chartId']);
-            //echo "chart=".$chartId."<br>";
         }
-        //exit();
 
         return $charts;
     }
@@ -8208,7 +8193,6 @@ class DashboardUtil
             $endDate->modify('last day of this month');
             //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$endDate->format("d-M-Y")."<br>";
             $charts = $this->getViewedCharts($startDate,$endDate);
-            //exit();
 
 //            //testing
 //            if(0) {
@@ -8273,24 +8257,32 @@ class DashboardUtil
                 $combinedData[$chart->getName()." (".$thisChartViewCounter." total views)"] = $viewByChartArr[$chart->getId()];
             }
 
-            $chartName = $chartName . " (" . $totalViewCount . " Total)";
+            $chartName = $chartName . " (" . count($charts) . " charts viewed, " . $totalViewCount . " total views)";
 
-            //TODO: last chart count overwrite the count for each chart (compare to 57.)
             $layoutArray = array(
                 'height' => $this->height,
                 'width' => $this->width,
-                'margin' => array('b' => 200),
+                //'showlegend' => true,
+                'margin' => array(
+                    'b' => 200,
+                    //'l' => 500,
+                    //'r' => 100,
+                    //'t' => 500,
+                    //'pad' => 1
+                ),
                 'legend' => array(
                     'orientation'=>"h"
                 ),
                 'yaxis' => array(
                     'tickformat' => "d", //"digit", //"digit"
-                    'showticklabels' => false,
-                    'tickvals' => null,
-                    //'automargin' => true
+                    //'showticklabels' => true,
+                    //'tickvals' => null,
+                    'automargin' => true,
+                    //'titlefont' => array('size'=>30)
                 ),
                 'xaxis' => array(
                     'tickformat' =>  "d",
+                    'automargin' => true,
                 )
             );
 

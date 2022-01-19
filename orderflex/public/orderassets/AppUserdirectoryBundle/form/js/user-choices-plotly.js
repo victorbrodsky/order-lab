@@ -392,11 +392,6 @@ function plotlyAddChart(chartIndex,chartData) {
         'style="color:orangered;" ' +
         //' data-tooltip="Favorite Chart" ' +
         'onClick="favoriteChart(this,'+chartId+');"></span></div>';
-    //var favoriteEl = '<div>!!!!!!!!!!!!</div>';
-    //$( favoriteEl ).appendTo( "#"+divId );
-    //$( favoriteEl ).appendTo( "#start-test" );
-    //$(myPlot).find('.infolayer').find('.g-gtitle').append( favoriteEl );
-    //$('.modebar').append( favoriteEl );
     $('#'+divId).find('.modebar').prepend( favoriteEl );
 }
 

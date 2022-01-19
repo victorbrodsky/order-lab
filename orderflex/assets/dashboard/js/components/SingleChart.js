@@ -134,15 +134,6 @@ class SingleChart extends Component {
             'style="color:orangered;" ' +
             //' data-tooltip="Favorite Chart" ' +
             'onClick="favoriteChart(this,'+chartId+');"></span></div>';
-        //var favoriteEl = '<div>!!!!!!!!!!!!</div>';
-        //$( favoriteEl ).appendTo( "#"+chartDivId );
-        //$( favoriteEl ).appendTo( "#start-test" );
-        //$(plotElement).find('.infolayer').find('.g-gtitle').append( favoriteEl );
-        //$('.modebar').append( favoriteEl );
-
-        //$('#'+chartDivId).find('.modebar').prepend( favoriteEl );
-
-        //$('#'+plotElement.id).find('.modebar').prepend( favoriteEl );
         $(plotElement).find('.modebar').prepend( favoriteEl );
     }
 
