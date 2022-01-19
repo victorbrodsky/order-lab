@@ -486,4 +486,56 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
 
+
+    /**
+     * @Route("/reset-chart-view-counter", name="dashboard_reset-chart-view-counter")
+     */
+    public function resetChartViewCounterAction( Request $request ) {
+
+        //exit('resetChartViewCounterAction disable');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $now = new \DateTime('now');
+        $endDate = $now;
+        $startDate = $now->modify('-1 year');
+
+        //get the date from event log
+        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->select("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+
+        $dql->andWhere("eventType.name = :eventTypeName");
+        $dqlParameters['eventTypeName'] = "Dashboard Chart Viewed";
+
+        //$dql->andWhere("logger.entityName = :entityName");
+        //$dqlParameters['entityName'] = "ChartList";
+
+        //$dql->andWhere('logger.creationdate >= :startDate');
+        //$dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+
+        //$dql->andWhere('logger.creationdate <= :endDate');
+        //$dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+
+        $loggers = $query->getResult();
+        echo "loggers=".count($loggers)."<br>";
+
+        $count = 0;
+        foreach($loggers as $logger) {
+            $em->remove($logger);
+            $count++;
+        }
+
+        $em->flush();
+
+        exit('eof resetChartViewCounterAction: removed view eventlog='.$count);
+    }
+
 }

@@ -1901,7 +1901,7 @@ class DashboardInit
                 'quantityLimit' => NULL
             );
 
-            $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr);
+            $chartsArray = $dashboardUtil->getDashboardChart(NULL,$parametersArr,false);
             //dump($chartsArray); exit('111');
 
             if( isset($chartsArray['data']) ) {

@@ -2404,7 +2404,7 @@ class DashboardUtil
     }
 
     //////////// Main function to get chart data called by controller singleChartAction ("/single-chart/") ////////////
-    public function getDashboardChart( $request, $parametersArr=NULL ) {
+    public function getDashboardChart( $request, $parametersArr=NULL, $eventlog=true ) {
 
         //ini_set('memory_limit', '30000M');
         ini_set('max_execution_time', 1200); //1200 sec = 20 min; //600 seconds = 10 minutes; it will set back to original value after execution of this script
@@ -2501,11 +2501,13 @@ class DashboardUtil
             }
 
             //EventLog
-            $eventType = "Dashboard Chart Access Not Permitted";
-            $sitename = $this->container->getParameter('dashboard.sitename');
-            $event = "User ".$user." does not have access to the dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName();
-            //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
-            $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+            if( $eventlog ) {
+                $eventType = "Dashboard Chart Access Not Permitted";
+                $sitename = $this->container->getParameter('dashboard.sitename');
+                $event = "User " . $user . " does not have access to the dashboard chart with ID " . $chartObject->getId() . " '" . $chartObject->getName();
+                //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
+                $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+            }
 
             $chartsArray['warning'] = false;
             $chartsArray['error'] = $error;
@@ -2513,11 +2515,13 @@ class DashboardUtil
         }
 
         //EventLog
-        $eventType = "Dashboard Chart Viewed";
-        $sitename = $this->container->getParameter('dashboard.sitename');
-        $event = "Dashboard chart with ID ".$chartObject->getId()." '".$chartObject->getName()."' viewed by ".$user;
-        //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
-        $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+        if( $eventlog ) {
+            $eventType = "Dashboard Chart Viewed";
+            $sitename = $this->container->getParameter('dashboard.sitename');
+            $event = "Dashboard chart with ID " . $chartObject->getId() . " '" . $chartObject->getName() . "' viewed by " . $user;
+            //createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event')
+            $userSecUtil->createUserEditEvent($sitename, $event, $user, $chartObject, $request, $eventType);
+        }
 
         $now = new \DateTime('now');
 
