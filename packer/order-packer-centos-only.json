@@ -11,8 +11,20 @@
     "size": "2gb",
     "image": "centos-7-x64",
     "ssh_username": "{{user `ssh_name`}}"  
-  }]
+  }],
 
-
-
+	"provisioners": [
+	  {
+        "type": "shell",
+        "inline": [ 
+		   "echo @### Check OS Info before composer ###",
+		   "sudo hostnamectl",
+		   "echo @### Composer and deploy using orderflex###",
+           "cd /usr/local/bin/",	
+		   "git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",		   		   
+		   "echo @### Check OS Info before composer ###",
+		   "sudo hostnamectl",	             
+         ]    
+      } 
+    ]
 }
