@@ -24,7 +24,7 @@
 		   "echo @### Go to cd /usr/local/bin/ ###",
            "cd /usr/local/bin/",
 		   "echo @### Git clone ###",		   
-		   "git clone --single-branch https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",
+		   "git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",
 		   "echo @### Git pull master ###",
 		   "cd /usr/local/bin/order-lab",	   
 		   "echo @### Check OS Info before composer ###",
