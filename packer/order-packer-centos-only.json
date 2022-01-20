@@ -17,6 +17,8 @@
 	  {
         "type": "shell",
         "inline": [ 
+		   "echo @### Install Git ###",	
+		   "sudo yum install -y git",	
 		   "echo @### Check OS Info before composer ###",
 		   "sudo hostnamectl",
 		   "echo @### Go to cd /usr/local/bin/ ###",
