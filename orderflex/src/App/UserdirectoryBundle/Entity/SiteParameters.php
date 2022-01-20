@@ -30,7 +30,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_siteParameters")
+ * @ORM\Table(name="user_siteparameters")
  */
 class SiteParameters {
 

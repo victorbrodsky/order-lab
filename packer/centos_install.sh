@@ -232,6 +232,12 @@ f_install_util () {
 	#Install pdftotext: https://github.com/spatie/pdf-to-text
 	sudo yum install -y poppler-utils
 	
+	echo -e ${COLOR} Install Yarn ${NC}
+	curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+	curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+	sudo yum install -y yarn
+	yarn --version
+	
 	echo ""
     sleep 1
 }
