@@ -114,7 +114,7 @@
 		   "sudo yarn install --frozen-lockfile",
 		   "echo @### Check OS Info after yarn ###",
 		   "sudo hostnamectl",
-		   "git pull origin master",
+		   "echo @### Removed: git pull origin master ###",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 		   "echo @### Check OS Info before deploy_prod.sh ###",
