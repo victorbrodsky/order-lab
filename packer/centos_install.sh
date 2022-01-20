@@ -257,6 +257,9 @@ f_install_order () {
 	git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 	#git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 	
+	echo -e ${COLOR} List ORDER folder after clone ${NC}
+	ls /usr/local/bin/order-lab
+	
 	#chown -R apache:apache /var/www
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
