@@ -92,7 +92,12 @@
         "type": "shell",
         "inline": [ 		   
 		   "echo @### Composer and deploy using orderflex###",
-           "cd /usr/local/bin/order-lab/orderflex",		  
+           "cd /usr/local/bin/order-lab/orderflex",	
+
+		   "echo @### Run first deploy_prod.sh ###",
+		   "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",		   
+	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
+		   
 		   "composer self-update",
 		   "echo @### PostgreSQL Version after composer self-update ###",		
 		   "psql --version",
@@ -105,6 +110,10 @@
 		   "sudo hostnamectl",
 		   "echo @### PostgreSQL Version after composer install ###",		
 		   "psql --version",
+		   "echo @### Install yarn package.json ###",
+		   "sudo yarn install --frozen-lockfile",
+		   "echo @### Check OS Info after yarn ###",
+		   "sudo hostnamectl",
 		   "git pull",
            "git rev-parse HEAD",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",

@@ -51,6 +51,7 @@
 
 $useDb = true;
 //$useDb = false; //use when new fields are added to the "SiteParameters" entity
+//exit('start user_siteparameters');
 
 if( $useDb ) {
 
