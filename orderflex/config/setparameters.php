@@ -161,7 +161,8 @@ if( $useDb ) {
 
 if( $conn ) {
 
-    $table = 'user_siteParameters';
+    //$table = 'user_siteParameters';
+    $table = 'user_siteparameters';
 
     $schemaManager = $conn->getSchemaManager();
 //exit("3");

@@ -272,24 +272,24 @@ class DataBackupManagementController extends OrderAbstractController
 //            echo "env=".$res['environment']."<br>";
         }
 
-        if( 0 ) {
-            $config = new \Doctrine\DBAL\Configuration();
-            $connectionParams = array(
-                'dbname' => $dbname,
-                'user' => $uid,
-                'password' => $pwd,
-                'host' => $host,
-                'driver' => $driver,
-            );
-            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-
-            //testing
-            $sql = "SELECT * FROM user_siteParameters";
-            echo "sql=".$sql."<br>";
-            $params = $conn->query($sql); // Simple, but has several drawbacks
-            $res = $params->fetch();
-            echo "env=".$res['environment']."<br>";
-        }
+//        if( 0 ) {
+//            $config = new \Doctrine\DBAL\Configuration();
+//            $connectionParams = array(
+//                'dbname' => $dbname,
+//                'user' => $uid,
+//                'password' => $pwd,
+//                'host' => $host,
+//                'driver' => $driver,
+//            );
+//            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+//
+//            //testing
+//            $sql = "SELECT * FROM user_siteParameters";
+//            echo "sql=".$sql."<br>";
+//            $params = $conn->query($sql); // Simple, but has several drawbacks
+//            $res = $params->fetch();
+//            echo "env=".$res['environment']."<br>";
+//        }
 
         if( $conn ) {
             echo "Connection established.<br />";
