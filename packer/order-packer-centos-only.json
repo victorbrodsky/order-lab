@@ -26,7 +26,9 @@
 		   "echo @### Git clone ###",		   
 		   "git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",		   		   
 		   "echo @### Check OS Info before composer ###",
-		   "sudo hostnamectl"	             
+		   "sudo hostnamectl",
+		   "echo @### List ORDER folder after clone ###",
+	       "ls /usr/local/bin/order-lab"	   
          ]    
       } 
     ]
