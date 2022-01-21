@@ -254,7 +254,8 @@ f_install_order () {
 	echo -e ${COLOR} Clone ORDER and copy config and php.ini files, install composer ${NC}
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
 	cd /usr/local/bin/
-	git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+	#git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 	#git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
