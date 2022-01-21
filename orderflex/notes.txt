@@ -721,7 +721,10 @@ Place key and cert to /etc/httpd/ssl/ as stated in /etc/httpd/conf.ssl/httpd-ssl
 SSLCertificateFile      /etc/httpd/ssl/view-test_med_cornell_edu_cert.cer
 SSLCertificateKeyFile   /etc/httpd/ssl/view-test.key
 
-
+Removed from composer.json:
+"post-install-cmd": [
+            "@auto-scripts"
+        ],
 
 
 
