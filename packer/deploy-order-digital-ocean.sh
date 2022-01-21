@@ -203,7 +203,7 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 
 
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
-PACKEROUT = $(packer build "$ORDERPACKERJSON" | tail -1)
+PACKEROUT=$(packer build "$ORDERPACKERJSON" | tail -1)
 echo "*** PACKEROUT=$PACKEROUT ***"
 
 echo "*** Sleep for 120 sec ***"
