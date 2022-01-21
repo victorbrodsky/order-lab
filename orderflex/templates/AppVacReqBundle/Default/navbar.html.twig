@@ -137,7 +137,8 @@
                         </li>
                     {% endif %}
 
-                    {% if   is_granted('ROLE_VACREQ_ADMIN') or
+                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                            is_granted('ROLE_VACREQ_ADMIN') or
                             is_granted('ROLE_VACREQ_SUPERVISOR')
                     %}
                         <li id="nav-bar-floatingdayrequest" class="divider-vertical">
