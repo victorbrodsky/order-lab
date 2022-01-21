@@ -63,7 +63,7 @@ class FloatingDayController extends OrderAbstractController
         $floatingNote = "The Juneteenth Holiday may be used as a floating holiday 
         only if you have an NYPH appointment. You can request a floating holiday however, 
         it must be used in the same fiscal year ending June 30, 2022. It cannot be carried over";
-        $title = "Floating Day (Under Development)";
+        $title = "Floating Day (The page and functionality are under construction!)";
         $cycle = 'new';
 
         $form = $this->createRequestForm($entity,$cycle,$request);
