@@ -207,9 +207,12 @@ echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 #echo "*** PACKEROUT=$PACKEROUT ***"
 packer build "$ORDERPACKERJSON" | tee packerbuild.log
 
+#--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
-PACKEROUT=$(egrep -m1 -oe 'digitalocean.{8}' packerbuild.log)
-echo "*** PACKEROUT=$PACKEROUT ***"
+LASTLINE=$(tail -1 buildpacker.log)
+echo "*** Packer LASTLINE=$LASTLINE ***"
+IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
+IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
 
 echo "*** Sleep for 120 sec ***"
 sleep 120
@@ -218,11 +221,11 @@ echo "*** Getting image ID ***"
 echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
 echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter pressed
 
-LASTLINE=$(doctl compute image list | tail -1)
+#LASTLINE=$(doctl compute image list | tail -1)
 #echo "LASTLINE=$LASTLINE"
-vars=( $LASTLINE )
-IMAGEID=${vars[0]}
-IMAGENAME=${vars[1]}
+#vars=( $LASTLINE )
+#IMAGEID=${vars[0]}
+#IMAGENAME=${vars[1]}
 echo "image ID=$IMAGEID; name=$IMAGENAME"
 
 
