@@ -205,6 +205,8 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 packer build "$ORDERPACKERJSON"
 
+echo "*** Sleep for 120 sec ***"
+sleep 120
 
 echo "*** Getting image ID ***"
 echo "*** Doctl must be installed! https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/ ***"
