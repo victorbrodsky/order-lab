@@ -213,6 +213,7 @@ LASTLINE=$(tail -1 buildpacker.log)
 echo "*** Packer LASTLINE=$LASTLINE ***"
 IMAGENAME=$(tail -1 buildpacker.log |grep -oP "(?<=created: ').*(?=' )")
 IMAGEID=$(tail -1 buildpacker.log |grep -oP "(?<=ID: ).*(?=\))")
+echo "image ID=$IMAGEID; name=$IMAGENAME"
 
 echo "*** Sleep for 120 sec ***"
 sleep 120
@@ -226,7 +227,7 @@ echo "" | doctl auth init --access-token $apitoken #echo "" simulate enter press
 #vars=( $LASTLINE )
 #IMAGEID=${vars[0]}
 #IMAGENAME=${vars[1]}
-echo "image ID=$IMAGEID; name=$IMAGENAME"
+#echo "image ID=$IMAGEID; name=$IMAGENAME"
 
 
 echo "*** Post processing json file ***"
