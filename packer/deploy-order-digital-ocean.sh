@@ -205,7 +205,7 @@ sed -i -e "s/bash_sslprivatekey/$sslprivatekey/g" "$ORDERPACKERJSON"
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 #PACKEROUT=$(packer build "$ORDERPACKERJSON" | tail -1)
 #echo "*** PACKEROUT=$PACKEROUT ***"
-packer build "$ORDERPACKERJSON" | tee packerbuild.log
+packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
