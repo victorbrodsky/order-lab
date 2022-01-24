@@ -9723,10 +9723,10 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $listEntity->setAbbreviation($abbreviation);
-
             $listEntity = new PriceTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
