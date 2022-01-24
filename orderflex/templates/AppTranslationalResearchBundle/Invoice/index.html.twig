@@ -137,7 +137,7 @@
             <tr>
                 <td style="display: none">
                     <a target="_blank"
-                        href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}"
+                       href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}"
                     >{{ invoice.oid }}</a>
                 </td>
                 <td class="rowlink-skip" style="color:{{ idColor }}">
@@ -146,6 +146,10 @@
                        {#style="color:{{ idColor }}"#}
                     {#>{{ invoice.oid }}</a><br>#}
                     {{ transres_request_util.getInvoiceOidSplitWithUrls(invoice)|raw }}
+
+                    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                        (ID{{ invoice.id }})
+                    {% endif %}
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.getProjectIrbIacucNumber()|raw }}</td>

@@ -726,5 +726,7 @@ Removed from composer.json:
             "@auto-scripts"
         ],
 
-
+Digital Ocean:
+symfony GET runtime.d94b3b43.js 404 Not Found
+https://github.com/symfony/webpack-encore/issues/941
 

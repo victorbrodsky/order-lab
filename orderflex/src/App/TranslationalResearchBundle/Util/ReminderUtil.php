@@ -197,6 +197,7 @@ class ReminderUtil
         if( $testing ) {
             $dql->orWhere("invoice.id=1 OR invoice.id=2");
             //$dql->orWhere("invoice.id=1");
+            $dql->andWhere("invoice.id=4760");
         }
 
         $query = $this->em->createQuery($dql);

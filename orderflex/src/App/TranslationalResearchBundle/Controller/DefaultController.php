@@ -172,6 +172,10 @@ class DefaultController extends OrderAbstractController
         //dump($res);
         //exit('111');
 
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
+        $res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
+        exit($res);
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
