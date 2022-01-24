@@ -996,13 +996,13 @@ class AdminController extends OrderAbstractController
         $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
         $count_generateTransResPriceTypeList = $this->generateTransResPriceTypeList();
         $count_generateTransResProjectTypeList = $this->generateTransResProjectTypeList();
-        $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
+        $count_WorkQueueList = $this->generateWorkQueueList(); //after generateTransResProjectSpecialty()s
+        $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType(); //after generateWorkQueueList
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
         $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
         //$count_generateCrnEntryTagsList = $this->generateCrnEntryTagsList();
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
-        $count_WorkQueueList = $this->generateWorkQueueList(); //after generateTransResProjectSpecialty()s
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
 
