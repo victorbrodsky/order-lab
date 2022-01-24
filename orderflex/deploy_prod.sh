@@ -99,6 +99,9 @@ function prep(){
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
     #php $PROJECT_LOCAL_PATH/bin/console jrk:levenshtein:install
 
+    echo "*** Create a production build for Encore Webpack ***"
+    yarn encore production
+
     echo "*** Install assets ***"
     #php bin/console assets:install public
     php $PROJECT_LOCAL_PATH/bin/console assets:install
