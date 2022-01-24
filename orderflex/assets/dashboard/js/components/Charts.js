@@ -10,6 +10,8 @@ import SingleChart from './SingleChart';
 
 class Charts extends Component {
     constructor() {
+        console.log("Charts constructor");
+
         super();
         this.state = { charts: [], loading: true};
 
