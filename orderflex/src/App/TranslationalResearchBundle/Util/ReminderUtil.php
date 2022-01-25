@@ -219,7 +219,7 @@ class ReminderUtil
         );
 
         $invoices = $query->getResult();
-        //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
+        echo "$projectSpecialty count invoices=".count($invoices)."<br>";
 
         if( $showSummary ) {
             return $invoices;
