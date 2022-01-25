@@ -180,24 +180,26 @@ class ReminderUtil
         $dql->andWhere("invoice.status = :unpaid AND invoice.latestVersion = TRUE"); //Unpaid/Issued
         $params["unpaid"] = "Unpaid/Issued";
 
-        /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
-        //overDueDate = currentDate - invoiceDueDateMax;
-        $overDueDate = new \DateTime("-".$invoiceDueDateMax." months");
-        //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
-        $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
-        $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
-        ////////////// EOF //////////////
+        if( !$testing ) {
+            /////////1. (dueDate < currentDate - invoiceDueDateMax) //////////////
+            //overDueDate = currentDate - invoiceDueDateMax;
+            $overDueDate = new \DateTime("-" . $invoiceDueDateMax . " months");
+            //echo "overDueDate=".$overDueDate->format('Y-m-d H:i:s').$newline;
+            $dql->andWhere("invoice.dueDate IS NOT NULL AND invoice.dueDate < :overDueDate");
+            $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
+            ////////////// EOF //////////////
 
-        /////////.2 (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) ///////////
-        $overDueReminderDate = new \DateTime("-".$reminderInterval." months");
-        $dql->andWhere("invoice.invoiceLastReminderSentDate IS NULL OR invoice.invoiceLastReminderSentDate < :overDueReminderDate");
-        $params["overDueReminderDate"] = $overDueReminderDate->format('Y-m-d H:i:s');
-        ////////////// EOF //////////////
+            /////////.2 (invoiceLastReminderSentDate IS NULL OR invoiceLastReminderSentDate < currentDate - reminderInterval) ///////////
+            $overDueReminderDate = new \DateTime("-" . $reminderInterval . " months");
+            $dql->andWhere("invoice.invoiceLastReminderSentDate IS NULL OR invoice.invoiceLastReminderSentDate < :overDueReminderDate");
+            $params["overDueReminderDate"] = $overDueReminderDate->format('Y-m-d H:i:s');
+            ////////////// EOF //////////////
 
-        /////////3. (invoiceReminderCount < maxReminderCount) ////////////////////////
-        $dql->andWhere("invoice.invoiceReminderCount IS NULL OR invoice.invoiceReminderCount < :maxReminderCount");
-        $params["maxReminderCount"] = $maxReminderCount;
-        ////////////// EOF //////////////
+            /////////3. (invoiceReminderCount < maxReminderCount) ////////////////////////
+            $dql->andWhere("invoice.invoiceReminderCount IS NULL OR invoice.invoiceReminderCount < :maxReminderCount");
+            $params["maxReminderCount"] = $maxReminderCount;
+            ////////////// EOF //////////////
+        }
 
         if( $testing ) {
             $dql->orWhere("invoice.id=1 OR invoice.id=2");
