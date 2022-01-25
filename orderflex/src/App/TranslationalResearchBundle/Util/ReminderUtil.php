@@ -197,8 +197,8 @@ class ReminderUtil
         if( $testing ) {
             $dql->orWhere("invoice.id=1 OR invoice.id=2");
             //$dql->orWhere("invoice.id=1");
-            //$dql->andWhere("invoice.id=4760"); //dev
-            $dql->andWhere("invoice.id=4730"); //test
+            $dql->andWhere("invoice.id=4760"); //dev
+            //$dql->andWhere("invoice.id=4730"); //test
         }
 
         $query = $this->em->createQuery($dql);
@@ -308,6 +308,8 @@ class ReminderUtil
             //$piEmailArr = array('oli2002@med.cornell.edu');
             //$ccs = 'oli2002@med.cornell.edu';
             if( !$testing ) {
+                $piEmailArr = "oli2002@med.cornell.edu";
+                $invoiceReminderEmail = $piEmailArr;
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
             }
@@ -317,7 +319,9 @@ class ReminderUtil
             ////////////// EOF send email //////////////
 
             //EventLog
-            $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
+            if( !$testing ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $invoiceMsg, $systemuser, $invoice, null, $eventType);
+            }
 
             $resultArr[] = $invoice->getOid();
             $sentInvoices++;
