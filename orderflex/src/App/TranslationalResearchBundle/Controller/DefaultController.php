@@ -177,8 +177,8 @@ class DefaultController extends OrderAbstractController
         $email = "oli2002@med.cornell.edu";
         //$res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
-        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
+        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
         $invoicePDF = $invoice->getRecentPDF();
         $attachmentPath = $invoicePDF->getAttachmentEmailPath();
         $emailUtil->sendEmail($email, "Test Invoice", "Test Invoice", null, $email, $attachmentPath);
