@@ -175,7 +175,8 @@ class DefaultController extends OrderAbstractController
         $transresReminderUtil = $this->container->get('transres_reminder_util');
         //$res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
         $invoicePDF = $invoice->getRecentPDF();
         $attachmentPath = $invoicePDF->getAttachmentEmailPath();
         $res = $invoice->getId().": attachmentPath=$attachmentPath <br>";
