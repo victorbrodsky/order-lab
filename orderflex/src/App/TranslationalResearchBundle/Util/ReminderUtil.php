@@ -322,7 +322,7 @@ class ReminderUtil
                 $invoiceReminderSubjectReady = "Testing email - please ignore. ".$invoiceReminderSubjectReady;
                 $invoiceReminderBodyReady = "Testing email - please ignore. ".$invoiceReminderBodyReady;
             }
-            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            //                    $emails,     $subject,                     $message,              $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null
             $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
 
             $invoiceMsg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.

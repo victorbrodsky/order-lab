@@ -248,6 +248,11 @@ class EmailUtil {
             if( $attachmentFilename ) {
                 $attachment->setFilename($attachmentFilename);
             }
+            if( $attachment ) {
+                $logger->notice("Attachment exists; fromPath=".$attachmentPath);
+            } else {
+                $logger->notice("Attachment is NULL; fromPath=".$attachmentPath);
+            }
             $message->attach($attachment);
         }
 
@@ -262,7 +267,9 @@ class EmailUtil {
 
         $mailer = $this->getSwiftMailer();
         if( !$mailer ) {
-            $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body);
+            $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.
+                "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
+                "; attachmentPath=".$attachmentPath);
         }
         //echo "after transport newInstance <br>";
         //$logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
@@ -279,7 +286,9 @@ class EmailUtil {
             $emailRes = $e->getMessage() ;
         }
 
-        $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body);
+        $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail.
+            "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
+            "; attachmentPath=".$attachmentPath);
 
         return $emailRes;
     }
