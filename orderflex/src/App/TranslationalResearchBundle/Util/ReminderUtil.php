@@ -306,8 +306,10 @@ class ReminderUtil
             //testing:
             //$piEmailArr = array('oli2002@med.cornell.edu');
             //$ccs = 'oli2002@med.cornell.edu';
-            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath );
+            if( !$testing ) {
+                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
+            }
 
             $invoiceMsg = "Reminder email for the unpaid Invoice ".$invoice->getOid(). " has been sent to ".implode(";",$piEmailArr) . "; ccs:".$ccs.
             "<br>Subject: ".$invoiceReminderSubjectReady."<br>Body: ".$invoiceReminderBodyReady."<br>attachmentPath=".$attachmentPath;
