@@ -172,8 +172,8 @@ class DefaultController extends OrderAbstractController
         //dump($res);
         //exit('111');
 
-        $transresReminderUtil = $this->container->get('transres_reminder_util');
-        $res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
+        //$transresReminderUtil = $this->container->get('transres_reminder_util');
+        //$res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
 //        $emailUtil = $this->container->get('user_mailer_utility');
 //        $email = "oli2002@med.cornell.edu";
 //        //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
@@ -183,8 +183,7 @@ class DefaultController extends OrderAbstractController
 //        $attachmentPath = $invoicePDF->getAttachmentEmailPath();
 //        $emailUtil->sendEmail($email, "Test Invoice", "Test Invoice", null, $email, $attachmentPath);
 //        $res = $invoice->getId().": attachmentPath=$attachmentPath <br>";
-
-        exit($res);
+        //exit($res);
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
