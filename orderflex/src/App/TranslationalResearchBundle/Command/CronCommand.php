@@ -87,8 +87,8 @@ class CronCommand extends Command {
             }
             $results = "Unpaid invoices=".$invoiceCounter;
         }
-        //$output->writeln($results); //testing
-        //return true; //testing
+        $output->writeln($results); //testing
+        return true; //testing
         ////////////// EOF unpaid invoices //////////////
 
         ////////////// delayed projects //////////////

@@ -97,7 +97,7 @@ class ReminderUtil
         $sentInvoices = 0;
 
         //$testing = false;
-        //$testing = true;
+        $testing = true;
 
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
@@ -303,7 +303,8 @@ class ReminderUtil
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
                 $logger->notice("invoicePDF exists: invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
             }
-            $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
+            $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF.
+                "; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
 
             //replace [[...]]
             $transresRequest = $invoice->getTransresRequest();
