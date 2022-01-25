@@ -318,8 +318,8 @@ class ReminderUtil
                 $piEmailArr = array('oli2002@med.cornell.edu');
                 $invoiceReminderEmail = 'oli2002@med.cornell.edu';
                 $ccs = $invoiceReminderEmail;
-                $invoiceReminderSubjectReady = "Testing email. ".$invoiceReminderSubjectReady;
-                $invoiceReminderBodyReady = "Testing email. ".$invoiceReminderBodyReady;
+                $invoiceReminderSubjectReady = "Testing email - please ignore. ".$invoiceReminderSubjectReady;
+                $invoiceReminderBodyReady = "Testing email - please ignore. ".$invoiceReminderBodyReady;
             }
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
