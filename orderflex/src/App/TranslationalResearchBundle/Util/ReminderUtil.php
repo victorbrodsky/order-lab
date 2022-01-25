@@ -315,8 +315,9 @@ class ReminderUtil
             //$piEmailArr = array('oli2002@med.cornell.edu');
             //$ccs = 'oli2002@med.cornell.edu';
             if( $testing ) {
-                $piEmailArr = "oli2002@med.cornell.edu";
-                $invoiceReminderEmail = $piEmailArr;
+                $piEmailArr = array('oli2002@med.cornell.edu');
+                $invoiceReminderEmail = 'oli2002@med.cornell.edu';
+                $ccs = $invoiceReminderEmail;
             }
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
