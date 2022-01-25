@@ -205,7 +205,7 @@ class ReminderUtil
             $dql->orWhere("invoice.id=1 OR invoice.id=2");
             //$dql->orWhere("invoice.id=1");
             //$dql->andWhere("invoice.id=4760"); //dev
-            $dql->andWhere("invoice.id=4730"); //test
+            //$dql->andWhere("invoice.id=4730"); //test
         }
 
         $query = $this->em->createQuery($dql);
@@ -334,7 +334,9 @@ class ReminderUtil
             $sentInvoices++;
 
             //testing
-            //exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
+            if( $testing ) {
+                exit('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
+            }
         }//foreach $invoices
 
         if( $sentInvoices == 0 ) {
