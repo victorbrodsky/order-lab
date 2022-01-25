@@ -102,6 +102,11 @@ class ReminderUtil
         //$invoiceReminderSchedule: invoiceDueDateMax,reminderIntervalMonths,maxReminderCount (i.e. 3,3,5)
         $invoiceReminderSchedule = $transresUtil->getTransresSiteProjectParameter('invoiceReminderSchedule',null,$projectSpecialty); //6,9,12,15,18
 
+        //testing
+        if( $testing ) {
+            $invoiceReminderSchedule = "1,1,5";
+        }
+
         if( $invoiceReminderSchedule ) {
             $invoiceReminderScheduleArr = explode(",",$invoiceReminderSchedule);
             if( count($invoiceReminderScheduleArr) == 3 ) {
