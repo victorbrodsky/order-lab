@@ -163,6 +163,10 @@ if [ "$os" = "centosonly" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos-only.json"
 fi
+if [ "$os" = "centosbasiconly" ]
+  then 	
+	ORDERPACKERJSON="order-packer-centos-basic-only.json"
+fi
 if [ "$os" = "centos-without-composer" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos-without-composer.json"
