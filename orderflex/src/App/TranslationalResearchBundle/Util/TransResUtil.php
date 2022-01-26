@@ -3086,6 +3086,9 @@ class TransResUtil
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
 
+            //Add note about links via VPN
+            $body = $body.$break.$break."The links below are accessible while you are connected to the institution's network or by first connecting via VPN.";
+
             //To submit a work request associated with this project request, please visit the link below: LINK-TO-NEW-WORK-REQUEST-PAGE
             $linkNewRequest = $this->container->get('router')->generate(
                 'translationalresearch_request_new',
