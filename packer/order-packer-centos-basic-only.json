@@ -11,7 +11,7 @@
     "size": "2gb",
     "image": "centos-7-x64",
     "ssh_username": "{{user `ssh_name`}}"  
-  }]
+  }],
   
   "provisioners": [
   
@@ -69,23 +69,23 @@
 	},
 	  
 	  {
-          "type": "file",
-          "source": "bash_sslcertificate",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
-       },
+		  "type": "file",
+		  "source": "bash_sslcertificate",
+		  "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+	   },
 	   
 	   {
-          "type": "file",
-          "source": "bash_sslprivatekey",
-          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
-       },
+		  "type": "file",
+		  "source": "bash_sslprivatekey",
+		  "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
+	   },
 	   
 	   {
-        "type": "shell",
-        "inline": [ 
-           "echo @### PostgreSQL Version before final step ###",		
+		"type": "shell",
+		"inline": [ 
+		   "echo @### PostgreSQL Version before final step ###",		
 		   "psql --version"
-         ]    
+		 ]    
 	   }
       
    ]
