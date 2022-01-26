@@ -322,6 +322,9 @@ class ReminderUtil
                 $invoiceReminderSubjectReady = "Testing email - please ignore. ".$invoiceReminderSubjectReady;
                 $invoiceReminderBodyReady = "Testing email - please ignore. ".$invoiceReminderBodyReady;
             }
+            //TODO: get results on Monday after bulk reminder emails are sent. Check attachment url.
+            //https://swiftmailer.symfony.com/docs/messages.html
+            //Check allow_url_fopen, check permission
             //                    $emails,     $subject,                     $message,              $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null
             $emailUtil->sendEmail($piEmailArr, $invoiceReminderSubjectReady, $invoiceReminderBodyReady, $ccs, $invoiceReminderEmail, $attachmentPath);
 

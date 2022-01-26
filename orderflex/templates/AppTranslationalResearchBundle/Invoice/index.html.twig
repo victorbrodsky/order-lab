@@ -147,9 +147,10 @@
                     {#>{{ invoice.oid }}</a><br>#}
                     {{ transres_request_util.getInvoiceOidSplitWithUrls(invoice)|raw }}
 
-                    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                        (ID{{ invoice.id }})
-                    {% endif %}
+                    {#testing: get real invoice ID#}
+                    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                        {#(ID{{ invoice.id }})#}
+                    {#{% endif %}#}
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.getProjectIrbIacucNumber()|raw }}</td>

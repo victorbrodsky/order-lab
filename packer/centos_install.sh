@@ -179,7 +179,7 @@ f_install_util () {
 	
 	echo -e ${COLOR} Install libreoffice, ghostscript, pdftk ${NC}
 	#sudo yum update
-	sudo yum install -y xvfb libfontconfig	
+	#disable for testing: sudo yum install -y xvfb libfontconfig	
 	sudo yum install -y libreoffice	
 	sudo yum install -y ghostscript
 	#sudo yum install -y pdftk  
