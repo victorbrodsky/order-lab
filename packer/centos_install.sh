@@ -422,7 +422,7 @@ f_install_postgresql () {
 	sudo systemctl enable postgresql
 	sudo systemctl status postgresql
 	
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	echo -e ${COLOR} Create DB and create user $bashdbuser with password $bashdbpass ${NC}
 	sudo -Hiu postgres createdb scanorder
 	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"

@@ -76,12 +76,12 @@ f_install_postgresql12 () {
 	sudo yum -y install oidentd
 
 	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
-	echo @### Optionally initialize the database and enable automatic start ###	
+	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}	
 	sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
 	sudo systemctl enable postgresql-12
 	sudo systemctl start postgresql-12
 
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
+	echo -e ${COLOR} Create DB and create user $bashdbuser with password $bashdbpass ${NC}
 	sudo -Hiu postgres createdb scanorder
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
@@ -370,11 +370,13 @@ f_install_postgresql_9.2_12 () {
 	
 	sudo yum install -y postgresql-server postgresql-contrib
 	
-	sudo yum install -y oidentd
+	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#sudo yum install -y oidentd
+	sudo yum install -y authd
+	sudo yum install -y xinetd
 	
 	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
 	sudo postgresql-setup initdb
-	
 	echo -e ${COLOR} Start and enable postgresql ${NC}
 	sudo systemctl start postgresql
 	sudo systemctl enable postgresql
