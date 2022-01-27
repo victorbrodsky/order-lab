@@ -730,3 +730,12 @@ Digital Ocean:
 symfony GET runtime.d94b3b43.js 404 Not Found
 https://github.com/symfony/webpack-encore/issues/941
 
+Composer 2.2.0:
+"config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "third-party/required-plugin": true,
+            "my-organization/*": true,
+            "unnecessary/plugin": false
+        }
+    }
