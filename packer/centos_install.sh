@@ -73,7 +73,10 @@ f_install_postgresql12 () {
 	yum install -y postgresql12-server
 	#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
 
-	sudo yum -y install oidentd
+	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#sudo yum install -y oidentd
+	sudo yum install -y authd
+	sudo yum install -y xinetd
 
 	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
 	echo @### Optionally initialize the database and enable automatic start ###	
@@ -369,7 +372,10 @@ f_install_postgresql_9.2_12 () {
 	
 	sudo yum install -y postgresql-server postgresql-contrib
 	
-	sudo yum install -y oidentd
+	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#sudo yum install -y oidentd
+	sudo yum install -y authd
+	sudo yum install -y xinetd
 	
 	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
 	sudo postgresql-setup initdb
