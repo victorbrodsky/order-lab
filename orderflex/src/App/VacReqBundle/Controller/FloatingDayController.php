@@ -49,6 +49,7 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
@@ -60,10 +61,15 @@ class FloatingDayController extends OrderAbstractController
         $params['em'] = $em;
         //$params['supervisor'] = $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR');
 
-        $floatingNote = "The Juneteenth Holiday may be used as a floating holiday 
-        only if you have an NYPH appointment. You can request a floating holiday however, 
-        it must be used in the same fiscal year ending June 30, 2022. It cannot be carried over";
-        $title = "Floating Day (The page and functionality are under construction!)";
+//        $floatingNote = "The Juneteenth Holiday may be used as a floating holiday
+//        only if you have an NYPH appointment. You can request a floating holiday however,
+//        it must be used in the same fiscal year ending June 30, 2022. It cannot be carried over";
+        $floatingNote = $userSecUtil->getSiteSettingParameter('floatingDayNote','vacreq');
+
+        //$title = "Floating Day (The page and functionality are under construction!)";
+        $title = $userSecUtil->getSiteSettingParameter('floatingDayName','vacreq');
+        $title = $title . " - The page and functionality are under construction!";
+
         $cycle = 'new';
 
         $form = $this->createRequestForm($entity,$cycle,$request);

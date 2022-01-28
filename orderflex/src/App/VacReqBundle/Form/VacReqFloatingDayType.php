@@ -140,14 +140,31 @@ class VacReqFloatingDayType extends AbstractType
         ));
 
         //floatingDayType
-        $builder->add('floatingDayType', ChoiceType::class, array(
+//        $builder->add('floatingDayType', ChoiceType::class, array(
+//            'label' => "Floating Day:",
+//            'choices' => array("Juneteenth"=>"Juneteenth"),
+//            'required' => false,
+//            'data' => "Juneteenth",
+//            'mapped' => false,
+//            'attr' => array('class' => 'combobox'),
+//            //'disabled' => ($this->params['review'] ? true : false)
+//        ));
+        $builder->add('floatingDayType', EntityType::class, array(
+            'class' => 'AppVacReqBundle:VacReqFloatingTypeList',
             'label' => "Floating Day:",
-            'choices' => array("Juneteenth"=>"Juneteenth"),
             'required' => false,
-            'data' => "Juneteenth",
+            'multiple' => false,
             'mapped' => false,
             'attr' => array('class' => 'combobox'),
-            //'disabled' => ($this->params['review'] ? true : false)
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
         
         //worked
