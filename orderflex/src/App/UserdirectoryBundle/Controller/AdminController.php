@@ -7542,9 +7542,7 @@ class AdminController extends OrderAbstractController
             "1110" => array('ProjectTypeList','transresprojecttypes-list','Translational Research Project Type List'),
             "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Products/Services (Fee Schedule) List'),
             //"1050" => array('','-list'),
-
-            "1130" => array('VacReqFloatingTextList','vacreqfloatingtexts-list','Vacation Request Floating Text List'),
-            "1140" => array('VacReqFloatingTypeList','vacreqfloatingtypes-list','Vacation Request Floating Type List'),
+            //Don't add in the format above ("1120" => array ...). Add in format "transresrequestcategorytypes" => array(
 
             //Add scan order lists
             "ProjectTitleTree" => array('ProjectTitleTree','researchprojecttitles-list',"Project Titles"),
@@ -7634,6 +7632,9 @@ class AdminController extends OrderAbstractController
             "chartdatasources" => array('DataSourceList','chartdatasources-list','Chart Data Source List'),
             "chartupdatefrequencies" => array('UpdateFrequencyList','chartupdatefrequencies-list','Chart Update Frequency List'),
             "chartvisualizations" => array('VisualizationList','chartvisualizations-list','Chart Visualization List'),
+
+            "vacreqfloatingtexts" => array('VacReqFloatingTextList','vacreqfloatingtexts-list','Vacation Request Floating Text List'),
+            "vacreqfloatingtypes" => array('VacReqFloatingTypeList','vacreqfloatingtypes-list','Vacation Request Floating Type List'),
         );
 
         if( $withcustom ) {

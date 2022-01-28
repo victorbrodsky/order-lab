@@ -137,15 +137,18 @@
                         </li>
                     {% endif %}
 
-                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
-                            is_granted('ROLE_VACREQ_ADMIN') or
-                            is_granted('ROLE_VACREQ_SUPERVISOR')
-                    %}
-                        <li id="nav-bar-floatingdayrequest" class="divider-vertical">
-                            <a href="{{ path('vacreq_floating_day') }}">
-                                Floating Day (Clinical)
-                            </a>
-                        </li>
+                    {% set floatingDayName = user_security_utility.getSiteSettingParameter('floatingDayName',vacreq_sitename) %}
+                    {% if floatingDayName %}
+                        {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                                is_granted('ROLE_VACREQ_ADMIN') or
+                                is_granted('ROLE_VACREQ_SUPERVISOR')
+                        %}
+                            <li id="nav-bar-floatingdayrequest" class="divider-vertical">
+                                <a href="{{ path('vacreq_floating_day') }}">
+                                    {{ floatingDayName|raw }}
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
 
                 </ul>

@@ -98,6 +98,7 @@ class VacReqSiteParameterType extends AbstractType
         ));
         $builder->add('floatingRestrictDateRange', CheckboxType::class, array(
             'label' => 'Restrict Floating Date Range:',
+            'required' => false,
             'attr' => array('class' => 'form-control')
         ));
 
