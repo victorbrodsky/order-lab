@@ -42,6 +42,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //To specify http channel run it as: HTTP=1 ./bin/phpunit (dev)
 //To specify https channel (default) run it as: ./bin/phpunit (test,live)
 
+//Updated phpunit: php ./vendor/bin/phpunit
+
 class WebTestBase extends WebTestCase
 {
 

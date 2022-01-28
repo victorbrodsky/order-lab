@@ -1537,7 +1537,10 @@ class UserController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();  
         $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder('user');
+
         $dql->select('COUNT(DISTINCT user.id)');
+        //$dql->select('user');
+
         //$dql->select('COUNT(user.id)');
         
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
@@ -1567,10 +1570,15 @@ class UserController extends OrderAbstractController
         //echo "totalcriteriastr=".$totalcriteriastr."<br>";
         
         $dql->where($totalcriteriastr);
-        $query = $em->createQuery($dql);      
+        $query = $em->createQuery($dql);
 
-        $pending = $query->getSingleScalarResult();       
+        //$pending = 0;
+        $pending = $query->getSingleScalarResult();
         //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+        //$pendings = $query->getResult();
+        //$pending = count($pendings);
+        //dump($pending);
+        //exit('111');
         
         //echo "pending=".$pending."<br>";
         
