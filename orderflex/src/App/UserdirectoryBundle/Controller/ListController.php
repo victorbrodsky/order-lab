@@ -121,6 +121,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/", name="sites-list", methods={"GET"})
      * @Route("/list/event-object-types/", name="eventobjecttypes-list", methods={"GET"})
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes-list", methods={"GET"})
+     * @Route("/list/vacation-request-floating-texts/", name="vacreqfloatingtexts-list", methods={"GET"})
+     * @Route("/list/vacation-request-floating-types/", name="vacreqfloatingtypes-list", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty-list", methods={"GET"})
      * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication-list", methods={"GET"})
      * @Route("/list/object-types/", name="objecttypes-list", methods={"GET"})
@@ -752,6 +754,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/", name="sites_create", methods={"POST"})
      * @Route("/list/event-object-types/", name="eventobjecttypes_create", methods={"POST"})
      * @Route("/list/vacation-request-types/", name="vacreqrequesttypes_create", methods={"POST"})
+     * @Route("/list/vacation-request-floating-texts/", name="vacreqfloatingtexts_create", methods={"POST"})
+     * @Route("/list/vacation-request-floating-types/", name="vacreqfloatingtypes_create", methods={"POST"})
      * @Route("/list/healthcare-provider-specialties/", name="healthcareproviderspecialty_create", methods={"POST"})
      * @Route("/list/healthcare-provider-initial-communications/", name="healthcareprovidercommunication_create", methods={"POST"})
      * @Route("/list/object-types/", name="objecttypes_create", methods={"POST"})
@@ -1101,6 +1105,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/new", name="sites_new", methods={"GET"})
      * @Route("/list/event-object-types/new", name="eventobjecttypes_new", methods={"GET"})
      * @Route("/list/vacation-request-types/new", name="vacreqrequesttypes_new", methods={"GET"})
+     * @Route("/list/vacation-request-floating-texts/new", name="vacreqfloatingtexts_new", methods={"GET"})
+     * @Route("/list/vacation-request-floating-types/new", name="vacreqfloatingtypes_new", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/new", name="healthcareproviderspecialty_new", methods={"GET"})
      * @Route("/list/healthcare-provider-initial-communications/new", name="healthcareprovidercommunication_new", methods={"GET"})
      * @Route("/list/object-types/new", name="objecttypes_new", methods={"GET"})
@@ -1397,6 +1403,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/{id}", name="sites_show", methods={"GET"})
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_show", methods={"GET"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_show", methods={"GET"})
+     * @Route("/list/vacation-request-floating-texts/{id}", name="vacreqfloatingtexts_show", methods={"GET"})
+     * @Route("/list/vacation-request-floating-types/{id}", name="vacreqfloatingtypes_show", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_show", methods={"GET"})
      * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_show", methods={"GET"})
      * @Route("/list/object-types/{id}", name="objecttypes_show", methods={"GET"})
@@ -1686,6 +1694,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/{id}/edit", name="sites_edit", methods={"GET"})
      * @Route("/list/event-object-types/{id}/edit", name="eventobjecttypes_edit", methods={"GET"})
      * @Route("/list/vacation-request-types/{id}/edit", name="vacreqrequesttypes_edit", methods={"GET"})
+     * @Route("/list/vacation-request-floating-texts/{id}/edit", name="vacreqfloatingtexts_edit", methods={"GET"})
+     * @Route("/list/vacation-request-floating-types/{id}/edit", name="vacreqfloatingtypes_edit", methods={"GET"})
      * @Route("/list/healthcare-provider-specialties/{id}/edit", name="healthcareproviderspecialty_edit", methods={"GET"})
      * @Route("/list/healthcare-provider-initial-communications/{id}/edit", name="healthcareprovidercommunication_edit", methods={"GET"})
      * @Route("/list/object-types/{id}/edit", name="objecttypes_edit", methods={"GET"})
@@ -2026,6 +2036,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/{id}", name="sites_update", methods={"PUT"})
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_update", methods={"PUT"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_update", methods={"PUT"})
+     * @Route("/list/vacation-request-floating-texts/{id}", name="vacreqfloatingtexts_update", methods={"PUT"})
+     * @Route("/list/vacation-request-floating-types/{id}", name="vacreqfloatingtypes_update", methods={"PUT"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_update", methods={"PUT"})
      * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_update", methods={"PUT"})
      * @Route("/list/object-types/{id}", name="objecttypes_update", methods={"PUT"})
@@ -2999,6 +3011,16 @@ class ListController extends OrderAbstractController
                 $displayName = "Business/Vacation Request Types";
                 $bundleName = "VacReqBundle";
                 break;
+            case "vacreqfloatingtexts":
+                $className = "VacReqFloatingTextList";
+                $displayName = "Vacation Request Floating Text List";
+                $bundleName = "VacReqBundle";
+                break;
+            case "vacreqfloatingtypes":
+                $className = "VacReqFloatingTypeList";
+                $displayName = "Vacation Request Floating Type List";
+                $bundleName = "VacReqBundle";
+                break;
             case "healthcareproviderspecialty":
                 $className = "HealthcareProviderSpecialtiesList";
                 $displayName = "Healthcare Provider Specialties";
@@ -3779,6 +3801,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/sites/{id}", name="sites_delete", methods={"DELETE"})
      * @Route("/list/event-object-types/{id}", name="eventobjecttypes_delete", methods={"DELETE"})
      * @Route("/list/vacation-request-types/{id}", name="vacreqrequesttypes_delete", methods={"DELETE"})
+     * @Route("/list/vacation-request-floating-texts/{id}", name="vacreqfloatingtexts_delete", methods={"DELETE"})
+     * @Route("/list/vacation-request-floating-types/{id}", name="vacreqfloatingtypes_delete", methods={"DELETE"})
      * @Route("/list/healthcare-provider-specialties/{id}", name="healthcareproviderspecialty_delete", methods={"DELETE"})
      * @Route("/list/healthcare-provider-initial-communications/{id}", name="healthcareprovidercommunication_delete", methods={"DELETE"})
      * @Route("/list/object-types/{id}", name="objecttypes_delete", methods={"DELETE"})

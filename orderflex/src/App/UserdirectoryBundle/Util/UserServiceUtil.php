@@ -1248,6 +1248,11 @@ class UserServiceUtil {
 
         $logger->notice("Start generating VacReqSiteParameter");
 
+        $nowDate = new \DateTime();
+        $floatingDayNote =  "The Juneteenth Holiday may be used as a floating holiday ".
+                            "only if you have an NYPH appointment. You can request a floating holiday however, ".
+                            "it must be used in the same fiscal year ending June 30, ".$nowDate->format('Y').". ".
+                            "It cannot be carried over.";
 
         $types = array(
             //"academicYearStart" => null,
@@ -1260,6 +1265,9 @@ class UserServiceUtil {
             "maxCarryOverVacationDays" => 15,
             "noteForVacationDays" => null,
             "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 15",
+            "floatingDayName" => "Floating Day",
+            "floatingDayNote" => $floatingDayNote,
+            "floatingRestrictDateRange" => true,
         );
 
         $params = new VacReqSiteParameter();

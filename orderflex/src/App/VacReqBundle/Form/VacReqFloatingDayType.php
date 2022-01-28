@@ -152,7 +152,7 @@ class VacReqFloatingDayType extends AbstractType
         
         //worked
         $builder->add('worked', CheckboxType::class, array(
-            'label' => 'I have worked on Juneteenth:',
+            'label' => 'I have worked or plan to work on Juneteenth:',
             'mapped' => false,
             'required' => false,
             'attr' => array('class' => 'floatingday-worked'),
@@ -167,7 +167,7 @@ class VacReqFloatingDayType extends AbstractType
 
         //floatingDate
         $builder->add('floatingDate', DateType::class, array(
-            'label' => "The floating day I am requesting is:",
+            'label' => "The floating day I am requesting for this fiscal year is:",
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',

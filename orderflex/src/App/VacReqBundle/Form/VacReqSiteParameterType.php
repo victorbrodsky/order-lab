@@ -88,6 +88,19 @@ class VacReqSiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('floatingDayName', null, array(
+            'label' => 'Floating Day Link Name (i.e. Floating Day):',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('floatingDayNote', null, array(
+            'label' => 'Floating Day Note:',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('floatingRestrictDateRange', CheckboxType::class, array(
+            'label' => 'Restrict Floating Date Range:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Submit',

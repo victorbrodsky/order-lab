@@ -85,7 +85,31 @@ class VacReqSiteParameter
      */
     private $noteForCarryOverDays;
 
+    /**
+     * field titled “Floating Day Link Name” with a default value of “Floating Day”
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $floatingDayName;
 
+    //text field titled “Floating Day Note” with a default value of
+    // “The Juneteenth Holiday may be used as a floating holiday only
+    // if you have an NYPH appointment. You can request a floating holiday however,
+    // it must be used in the same fiscal year ending June 30, 2022.
+    // It cannot be carried over.”
+    /**
+     * field titled “Floating Day Note” with a default value of "The Juneteenth Holiday may be used as a floating holiday only..."
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $floatingDayNote;
+
+    /**
+     * checkbox field titled “Restrict Floating Date Range” and set the value to “checked” by default
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $floatingRestrictDateRange;
 
 
 
@@ -236,6 +260,54 @@ class VacReqSiteParameter
     public function setMaxVacationDays($maxVacationDays)
     {
         $this->maxVacationDays = $maxVacationDays;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloatingDayName()
+    {
+        return $this->floatingDayName;
+    }
+
+    /**
+     * @param mixed $floatingDayName
+     */
+    public function setFloatingDayName($floatingDayName)
+    {
+        $this->floatingDayName = $floatingDayName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloatingDayNote()
+    {
+        return $this->floatingDayNote;
+    }
+
+    /**
+     * @param mixed $floatingDayNote
+     */
+    public function setFloatingDayNote($floatingDayNote)
+    {
+        $this->floatingDayNote = $floatingDayNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloatingRestrictDateRange()
+    {
+        return $this->floatingRestrictDateRange;
+    }
+
+    /**
+     * @param mixed $floatingRestrictDateRange
+     */
+    public function setFloatingRestrictDateRange($floatingRestrictDateRange)
+    {
+        $this->floatingRestrictDateRange = $floatingRestrictDateRange;
     }
 
 

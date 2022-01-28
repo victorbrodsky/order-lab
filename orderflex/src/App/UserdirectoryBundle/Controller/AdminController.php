@@ -104,6 +104,8 @@ use App\UserdirectoryBundle\Entity\WeekDaysList;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
+use App\VacReqBundle\Entity\VacReqFloatingTextList;
+use App\VacReqBundle\Entity\VacReqFloatingTypeList;
 use App\VacReqBundle\Entity\VacReqRequestTypeList;
 //use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -961,6 +963,8 @@ class AdminController extends OrderAbstractController
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
         $logger->notice("Finished generateVacReqRequestTypeList");
+        $count_VacReqFloatingTextList = $this->generateVacReqFloatingTextList();
+        $count_VacReqFloatingTypeList = $this->generateVacReqFloatingTypeList();
 
         $adminRes = $this->generateAdministratorAction();
         $logger->notice("Finished generate AdministratorAction");
@@ -1105,6 +1109,8 @@ class AdminController extends OrderAbstractController
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
+            'VacReqFloatingTypeList count='.$count_VacReqFloatingTypeList.', '.
+            'VacReqFloatingTextList count='.$count_VacReqFloatingTextList.', '.
             'Administrator generation='.$adminRes.', '.
             'HealthcareProviderSpecialtiesList='.$count_HealthcareProviderSpecialtiesList.', '.
             'HealthcareProviderCommunicationsList='.$count_HealthcareProviderCommunicationsList.', '.
@@ -6586,6 +6592,65 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
+    public function generateVacReqFloatingTextList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "During this academic year I have worked on",
+            "During this academic year I will work on",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppVacReqBundle:VacReqFloatingTextList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new VacReqFloatingTextList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateVacReqFloatingTypeList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Juneteenth",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new VacReqFloatingTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
 
     public function generateHealthcareProviderSpecialtiesList() {
 
@@ -7477,6 +7542,9 @@ class AdminController extends OrderAbstractController
             "1110" => array('ProjectTypeList','transresprojecttypes-list','Translational Research Project Type List'),
             "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Products/Services (Fee Schedule) List'),
             //"1050" => array('','-list'),
+
+            "1130" => array('VacReqFloatingTextList','vacreqfloatingtexts-list','Vacation Request Floating Text List'),
+            "1140" => array('VacReqFloatingTypeList','vacreqfloatingtypes-list','Vacation Request Floating Type List'),
 
             //Add scan order lists
             "ProjectTitleTree" => array('ProjectTitleTree','researchprojecttitles-list',"Project Titles"),

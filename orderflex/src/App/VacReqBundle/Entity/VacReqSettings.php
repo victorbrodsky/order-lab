@@ -60,8 +60,7 @@ class VacReqSettings
      *      )
      **/
     private $emailUsers;
-
-
+    
 
 
     public function __construct($institution) {

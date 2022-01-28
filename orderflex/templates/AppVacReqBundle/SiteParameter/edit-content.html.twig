@@ -58,6 +58,12 @@
 
                 {{ formmacros.field(form.noteForCarryOverDays) }}
 
+                <hr>
+
+                {{ formmacros.field(form.floatingDayName) }}
+                {{ formmacros.field(form.floatingDayNote) }}
+                {{ formmacros.checkbox(form.floatingRestrictDateRange) }}
+
                 {% if cycle == "show" %}
                     <p>
                         <a class="btn btn-primary" href="{{ path('vacreq_siteparameters_edit_specific_site_parameters') }}">Edit</a>
