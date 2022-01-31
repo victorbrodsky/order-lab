@@ -15,42 +15,8 @@
  *  limitations under the License.
  */
 
-//include_once('setparameters_function.php');
-//include_once('setparameters_util.php');
-
-//function getDBParameter( $row, $originalParam, $name ) {
-////    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
-////        //keep it for MSSQL
-////    } else {
-////        $name = strtolower($name);
-////    }
-//
-//    //1) try as it is
-//    if( array_key_exists($name, $row) ) {
-//        //echo "1 parameter=".$row[$name]."<br>";
-//        return trim($row[$name]);
-//    }
-//
-//    //2) try with lowercase for postgresql
-//    $name = strtolower($name);
-//    if( array_key_exists($name, $row) ) {
-//        //echo "2 parameter=".$row[$name]."<br>";
-//        return trim($row[$name]);
-//    }
-//
-//    return $originalParam;
-//}
-//
-//function isWindows() {
-//    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
-//        //Windows
-//        return true;
-//    }
-//    return false;
-//}
-
 $useDb = true;
-//$useDb = false; //use when new fields are added to the "SiteParameters" entity
+$useDb = false; //use when new fields are added to the "SiteParameters" entity
 //exit('start user_siteparameters');
 
 if( $useDb ) {
@@ -272,17 +238,6 @@ if( $conn ) {
             $database_user_pacsvendor = null;
             $database_password_pacsvendor = null;
 
-            //set path to binary for knp_snappy
-            //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/App/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
-            //$knp_snappy_path = str_replace("/","\\\\",$knp_snappy_path);
-            //"\"C:\\Program Files (x86)\\pacsvendor\\pacsname\\htdocs\\order\\scanorder\\Scanorders2\\src\\App\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-            //$knp_snappy_path_pdf = '"\"'.$knp_snappy_path.'wkhtmltopdf.exe'.'\""';
-            //$knp_snappy_path_image = '"\"'.$knp_snappy_path.'wkhtmltoimage.exe'.'\""';
-            //$container->setParameter('knp_snappy.pdf.binary',$knp_snappy_path_pdf);
-            //$container->setParameter('knp_snappy.image.binary',$knp_snappy_path_image);
-            //echo "knp_snappy.pdf.binary=".$container->getParameter('knp_snappy.pdf.binary')."<br>";
-
-            //while( $row = $params->fetch() ) { //we have only 1 row of siteParameters
             if ($row) {
 
                 //print_r($row);

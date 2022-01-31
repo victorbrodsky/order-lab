@@ -777,3 +777,30 @@ twig/extensions abandoned => problem:
 
 
 
+$ composer.phar update
+Loading composer repositories with package information
+Restricting packages listed in "symfony/symfony" to "4.4.*"
+Updating dependencies
+Nothing to modify in lock file
+Installing dependencies from lock file (including require-dev)
+Nothing to install, update or remove
+Package bmatzner/fontawesome-bundle is abandoned, you should avoid using it. No replacement was suggested.
+Package phpoffice/phpexcel is abandoned, you should avoid using it. Use phpoffice/phpspreadsheet instead.
+Package swiftmailer/swiftmailer is abandoned, you should avoid using it. Use symfony/mailer instead.
+Package symfony/inflector is abandoned, you should avoid using it. Use EnglishInflector from the String component instead.
+Package twig/extensions is abandoned, you should avoid using it. No replacement was suggested.
+Generating optimized autoload files
+Class PHPExcel_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\bestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Exponential_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\exponentialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Linear_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\linearBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Logarithmic_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\logarithmicBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Polynomial_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\polynomialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Power_Best_Fit located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/phpoffice/phpexcel/Classes\PHPExcel\Shared\trend\powerBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class Oneup\UploaderBundle\Tests\Uploader\Chunk\TemplateHelperTest located in C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/vendor/oneup/uploader-bundle\Tests\Templating\TemplateHelperTest.php does not comply with psr-4 autoloading standard. Skipping.
+119 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+
+symfony/inflector is part of symfony 4.4
+
+
+
