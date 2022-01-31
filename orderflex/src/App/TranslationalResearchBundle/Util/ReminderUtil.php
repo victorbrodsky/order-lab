@@ -301,6 +301,7 @@ class ReminderUtil
             if ($invoicePDF) {
                 //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
+                //TODO: live server => $attachmentPath is empty
                 $logger->notice("invoicePDF exists: invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
             }
             $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF.

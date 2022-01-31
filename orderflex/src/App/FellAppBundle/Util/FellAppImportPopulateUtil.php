@@ -840,7 +840,7 @@ class FellAppImportPopulateUtil {
         $populatedFellowshipApplications = new ArrayCollection();
 
         ////////////////// Potential ERROR //////////////////
-        $logger->notice("document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+        //$logger->notice("Fellapp populateSpreadsheet: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
         if( !$highestRow || $highestRow < 3 ) {
             //Create error notification email
             $subject = "[ORDER] Error: Invalid number of rows in Fellowship Application Spreadsheet";
@@ -918,8 +918,8 @@ class FellAppImportPopulateUtil {
             if( !$googleFormId ) {
                 //echo $row.": skip ID is null <br>";
                 //$logger->warning($row.': Skip this fell application, because googleFormId does not exists. rowData='.$rowData.'; headers='.implode(";",$headers[0]));
-                $logger->warning('Skip this fell application, because googleFormId does not exists');
-                $logger->warning(implode("; ", $rowData[0]));
+                //$logger->warning('Skip this fell application, because googleFormId does not exists');
+                //$logger->warning(implode("; ", $rowData[0]));
                 continue; //skip this fell application, because googleFormId does not exists
             }
 
@@ -1048,7 +1048,7 @@ class FellAppImportPopulateUtil {
 
                 $fellowshipApplicationDb = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $fellowshipApplicationDb ) {
-                    $logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                    //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
 

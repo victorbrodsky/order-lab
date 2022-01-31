@@ -768,3 +768,12 @@ Working:
 "doctrine/orm": "2.8.4",
 
 Updated phpunit: php ./vendor/bin/phpunit
+
+Working: "twig/twig": "^2.12|^3.0",
+twig/extensions abandoned => problem:
+1) App\UserdirectoryBundle\Services\TwigDateRequestListener: $this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
+2) |time_diff
+"twig/extra-bundle": "^3.3": {% spaceless %} => |spaceless
+
+
+

@@ -387,7 +387,7 @@
         ]
     },
     "swiftmailer/swiftmailer": {
-        "version": "v6.2.3"
+        "version": "v6.3.0"
     },
     "symfony/apache-pack": {
         "version": "1.0",
@@ -677,12 +677,12 @@
         "version": "v4.4.2"
     },
     "symfony/swiftmailer-bundle": {
-        "version": "2.5",
+        "version": "3.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "2.5",
-            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
+            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
         },
         "files": [
             "./config/packages/dev/swiftmailer.yaml",
@@ -812,7 +812,7 @@
         "version": "1.2.1"
     },
     "twig/extensions": {
-        "version": "1.0",
+        "version": "1.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
@@ -824,7 +824,7 @@
         ]
     },
     "twig/extra-bundle": {
-        "version": "v3.0.1"
+        "version": "v3.3.7"
     },
     "twig/twig": {
         "version": "v3.0.1"
