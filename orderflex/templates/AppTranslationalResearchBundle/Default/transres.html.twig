@@ -2376,13 +2376,15 @@
         {#{% endif %}#}
     {#{% endspaceless %}#}
 
-    {% if value is defined and value != null %}
-        {% if value >= 0 %}
-            ${{value|number_format(2, '.', ',')}}
-        {% else %}
-            -${{value|abs|number_format(2, '.', ',')}}
+    {% apply spaceless %}
+        {% if value is defined and value != null %}
+            {% if value >= 0 %}
+                ${{value|number_format(2, '.', ',')}}
+            {% else %}
+                -${{value|abs|number_format(2, '.', ',')}}
+            {% endif %}
         {% endif %}
-    {% endif %}
+    {% endapply %}
 
     {#{{ "#}
         {#{% if value is defined and value != null %}#}
@@ -2407,14 +2409,15 @@
             {#{% endif %}#}
         {#{% endif %}#}
     {#{% endspaceless %}#}
-
-    {% if value is defined and value != null %}
-        {% if value >= 0 %}
-            ${{value|number_format(2, '.', ',')}}
-        {% else %}
-            {{ prefix }}${{value|abs|number_format(2, '.', ',')}}
+    {% apply spaceless %}
+        {% if value is defined and value != null %}
+            {% if value >= 0 %}
+                ${{value|number_format(2, '.', ',')}}
+            {% else %}
+                {{ prefix }}${{value|abs|number_format(2, '.', ',')}}
+            {% endif %}
         {% endif %}
-    {% endif %}
+    {% endapply %}
 
     {#{{ "#}
         {#{% if value is defined and value != null %}#}
