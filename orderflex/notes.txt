@@ -811,12 +811,25 @@ the session module's ini settings at this time in
 /usr/local/bin/order-lab/orderflex/vendor/symfony/http-foundation/Session/Storage/Handler/NativeFileSessionHandler.php
 on line 52
 
-
 "twig/extra-bundle": "^3.3",
 "twig/extensions": "^1.5",
 
 Upgrading twig/twig (v2.14.10 => v3.3.7):
 As of Twig 2.7, use the spaceless filter instead.
+
+Now composer issues:
+Package bmatzner/fontawesome-bundle is abandoned, you should avoid using it. No replacement was suggested.
+Package phpoffice/phpexcel is abandoned, you should avoid using it. Use phpoffice/phpspreadsheet instead.
+Package swiftmailer/swiftmailer is abandoned, you should avoid using it. Use symfony/mailer instead.
+Package symfony/inflector is abandoned, you should avoid using it. Use EnglishInflector from the String component instead.
+Generating optimized autoload files
+Class PHPExcel_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/bestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Exponential_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/exponentialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Linear_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/linearBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Logarithmic_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/logarithmicBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Polynomial_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/polynomialBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+Class PHPExcel_Power_Best_Fit located in ./vendor/phpoffice/phpexcel/Classes/PHPExcel/Shared/trend/powerBestFitClass.php does not comply with psr-0 autoloading standard. Skipping.
+
 
 Regex PhpStorm:
 Search any two words "for"+"if": (?=.*% for )(?=.* if )

@@ -2375,15 +2375,24 @@
             {#{% endif %}#}
         {#{% endif %}#}
     {#{% endspaceless %}#}
-    {{ "
-        {% if value is defined and value != null %}
-            {% if value >= 0 %}
-                ${{value|number_format(2, '.', ',')}}
-            {% else %}
-                -${{value|abs|number_format(2, '.', ',')}}
-            {% endif %}
+
+    {% if value is defined and value != null %}
+        {% if value >= 0 %}
+            ${{value|number_format(2, '.', ',')}}
+        {% else %}
+            -${{value|abs|number_format(2, '.', ',')}}
         {% endif %}
-    " | spaceless }}
+    {% endif %}
+
+    {#{{ "#}
+        {#{% if value is defined and value != null %}#}
+            {#{% if value >= 0 %}#}
+                {#${{value|number_format(2, '.', ',')}}#}
+            {#{% else %}#}
+                {#-${{value|abs|number_format(2, '.', ',')}}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+    {#" | spaceless }}#}
 {% endmacro %}
 
 {#  9800.33 =>  $9,800.33 #}
@@ -2398,14 +2407,25 @@
             {#{% endif %}#}
         {#{% endif %}#}
     {#{% endspaceless %}#}
-    {{ "
-        {% if value is defined and value != null %}
-            {% if value >= 0 %}
-                ${{value|number_format(2, '.', ',')}}
-            {% else %}
-                {{ prefix }}${{value|abs|number_format(2, '.', ',')}}
-            {% endif %}
+
+    {% if value is defined and value != null %}
+        {% if value >= 0 %}
+            ${{value|number_format(2, '.', ',')}}
+        {% else %}
+            {{ prefix }}${{value|abs|number_format(2, '.', ',')}}
         {% endif %}
-    " | spaceless }}
+    {% endif %}
+
+    {#{{ "#}
+        {#{% if value is defined and value != null %}#}
+            {#{% if value >= 0 %}#}
+                {#${{value|number_format(2, '.', ',')}}#}
+            {#{% else %}#}
+                {#{{ prefix }}${{value|abs|number_format(2, '.', ',')}}#}
+            {#{% endif %}#}
+        {#{% endif %}#}
+    {#" | spaceless }}#}
+
+
 {% endmacro %}
 
