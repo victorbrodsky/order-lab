@@ -303,7 +303,7 @@
         {% set refcount = 1 %}
         {% set refArr = [] %}
         {% for ref in resapp.references %}
-          {% if ref.name is not null or ref.documents|length > 0 %}
+        {% if ref.name is not null or ref.documents|length > 0 %}
 
             {% set refereeNameStr = ref.name %}
             {% if ref.name is null %}
@@ -349,7 +349,7 @@
 
             {% set refcount = refcount + 1 %}
 
-          {% endif %}
+        {% endif %}
         {% endfor %}
 
         {%if refArr|length > 0 %}

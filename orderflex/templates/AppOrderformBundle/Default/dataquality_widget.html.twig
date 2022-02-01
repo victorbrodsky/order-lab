@@ -16,15 +16,25 @@
 
 {#dataquality radio buttons#}
 {% block choice_widget_expanded %}
-    {% spaceless %}
+    {#{% spaceless %}#}
+        {#<div {{ block('widget_container_attributes') }}>#}
+            {#{% for child in form %}#}
+                {#<div class="radio_newline" align="left">#}
+                    {#{{ form_label(child) }}#}
+                    {#{{ form_widget(child) }}#}
+                {#</div>#}
+            {#{% endfor %}#}
+        {#</div>#}
+    {#{% endspaceless %}#}
+    {{ "
         <div {{ block('widget_container_attributes') }}>
             {% for child in form %}
-                <div class="radio_newline" align="left">
+                <div class='radio_newline' align='left'>
                     {{ form_label(child) }}
                     {{ form_widget(child) }}
                 </div>
             {% endfor %}
         </div>
-    {% endspaceless %}
+    " | spaceless }}
 {% endblock choice_widget_expanded %}
 

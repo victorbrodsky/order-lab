@@ -23,21 +23,36 @@
 {#{%- endblock form_row -%}#}
 
 {% block form_row %}
-    {% spaceless %}
+    {#{% spaceless %}#}
+        {#<div>#}
+            {#<p>#}
+                {#<div class="row">#}
+                    {#{{ form_errors(form) }}#}
+                    {#<div class="col-xs-6" align="right">#}
+                        {#{{ form_label(form) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-6" align="left">#}
+                        {#{{ form_widget(form) }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</p>#}
+        {#</div>#}
+    {#{% endspaceless %}#}
+    {{ "
         <div>
             <p>
-                <div class="row">
-                    {{ form_errors(form) }}
-                    <div class="col-xs-6" align="right">
-                        {{ form_label(form) }}
-                    </div>
-                    <div class="col-xs-6" align="left">
-                        {{ form_widget(form) }}
-                    </div>
+            <div class='row'>
+                {{ form_errors(form) }}
+                <div class='col-xs-6' align='right'>
+                    {{ form_label(form) }}
                 </div>
+                <div class='col-xs-6' align='left'>
+                    {{ form_widget(form) }}
+                </div>
+            </div>
             </p>
         </div>
-    {% endspaceless %}
+    "|spaceless }}
 {% endblock form_row %}
 
 

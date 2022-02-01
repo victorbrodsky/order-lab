@@ -312,7 +312,8 @@
         {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}
         {% set refcount = 1 %}
         {% set refArr = [] %}
-        {% for ref in fellapp.references if ref.name is not null or ref.documents|length > 0 %}
+        {% for ref in fellapp.references %}
+        {% if ref.name is not null or ref.documents|length > 0 %}
 
             {% set refereeNameStr = ref.name %}
             {% if ref.name is null %}
@@ -358,6 +359,7 @@
 
             {% set refcount = refcount + 1 %}
 
+        {% endif %}
         {% endfor %}
 
         {%if refArr|length > 0 %}

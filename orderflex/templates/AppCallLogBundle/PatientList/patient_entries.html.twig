@@ -106,7 +106,8 @@
             <tbody data-link="row" class="rowlink">
 
             {% set count = 0 %}
-            {% for message in messages if count < limit %}
+            {% for message in messages %}
+            {% if count < limit %}
 
                 {% set count = count + 1 %}
                 {% set trclassname = "" %}
@@ -216,6 +217,7 @@
                     {#</td>#}
                 {#</tr>#}
 
+            {% endif %}
             {% endfor %}
 
             </tbody>

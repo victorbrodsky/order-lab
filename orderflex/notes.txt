@@ -818,3 +818,6 @@ on line 52
 Upgrading twig/twig (v2.14.10 => v3.3.7):
 As of Twig 2.7, use the spaceless filter instead.
 
+Regex PhpStorm:
+Search any two words "for"+"if": (?=.*% for )(?=.* if )
+Search "one" or "two" or "three": \b(?:one|two|three)\b

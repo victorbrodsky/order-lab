@@ -535,7 +535,8 @@
                     {% set scoreCount = 0 %}
                     {% set tooltip = "" %}                      
                     {% set scoreStyle = 'style=font-weight:bold;' %}
-                    {% for interview in entity.interviews if interview.interviewer %}
+                    {% for interview in entity.interviews %}
+                    {% if interview.interviewer %}
                         {% if not interview.totalRank %}
                             {% set scoreStyle = "" %}                             
                             {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}#}
@@ -551,7 +552,8 @@
                                     {#"<br>Total Rank - "~interview.totalRank~#}
                                     {#"<br>Comment: "~interview.comment %}#}
                             {#{% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              #}
-                        {% endif %}                                                                 
+                        {% endif %}
+                    {% endif %}
                     {% endfor %}                                   
 
                     {% if entity.interviewScore %}
