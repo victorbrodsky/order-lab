@@ -798,9 +798,11 @@
 
                         <div class="user-publications-holder">
                             {% set publicationCount = 0 %}
-                            {% for publication in form.publications if publicationCount < publicationLimit %}
-                                {{ usermacros.publicationObject(publication,cycle,'user-publications','noprototype',sitename,entity) }}
-                                {% set publicationCount = publicationCount + 1 %}
+                            {% for publication in form.publications %}
+                                {% if publicationCount < publicationLimit %}
+                                    {{ usermacros.publicationObject(publication,cycle,'user-publications','noprototype',sitename,entity) }}
+                                    {% set publicationCount = publicationCount + 1 %}
+                                {% endif %}
                             {% endfor %}
                             {% do form.publications.setRendered %}
                             {{ usermacros.addNewObjectBtn( cycle, 'user-publications', 'Add Publication' ) }}

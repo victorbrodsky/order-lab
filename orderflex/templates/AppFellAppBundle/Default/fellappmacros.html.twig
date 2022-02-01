@@ -413,7 +413,8 @@
     {% set interviewsAwaitingArr = [] %}
     {% set currentUserHasReview = false %}
 
-    {% for interview in fellapp.interviews if interview.interviewer %}
+    {% for interview in fellapp.interviews %}
+    {% if interview.interviewer %}
         {% if not interview.totalRank %}
             {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
         {% endif %}
@@ -425,9 +426,11 @@
         %}
             {% set currentUserHasReview = true %}
         {% endif %}
+    {% endif %}
     {% endfor %}
 
-    {% for interview in fellapp.interviews if interview.interviewer %}
+    {% for interview in fellapp.interviews %}
+    {% if interview.interviewer %}
         {#{% if not interview.totalRank %}#}
             {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}#}
         {#{% else %}#}
@@ -463,6 +466,7 @@
                 {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
             {% endif %}
         {% endif %}
+    {% endif %}
     {% endfor %}
     {#EOF Calculating evaluation received and evaluation modal#}
 

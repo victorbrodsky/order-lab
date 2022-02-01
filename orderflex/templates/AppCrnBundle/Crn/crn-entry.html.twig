@@ -105,7 +105,8 @@
             <div id="crnentry-form" class="panel-collapse collapse">{#testing in#}
 
             {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
-            {% for encounter in patientForm.encounter if encounter.vars.value.status == 'valid' %}
+            {% for encounter in patientForm.encounter %}
+            {% if encounter.vars.value.status == 'valid' %}
 
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -182,6 +183,7 @@
                     </div> <!-- panel-collapse -->
                 </div> <!-- panel panel-primary -->
 
+            {% endif %}
             {% endfor %} {#encounter#}
 
         {% endfor %} {#end of patient#}

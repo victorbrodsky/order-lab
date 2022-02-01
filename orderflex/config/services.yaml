@@ -222,11 +222,11 @@ services:
 #    Monolog\Logger:
 #        autowire: false
 
-    oleg.twig.extension.date:
-        class: Twig_Extensions_Extension_Date
-        #arguments: ["@translator"]
-        tags:
-            - { name: 'twig.extension' }
+#    oleg.twig.extension.date:
+#        class: Twig_Extensions_Extension_Date
+#        #arguments: ["@translator"]
+#        tags:
+#            - { name: 'twig.extension' }
 
 
 oneup_uploader:

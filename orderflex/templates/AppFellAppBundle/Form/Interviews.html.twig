@@ -62,7 +62,8 @@
 
             {#form.interviews:{{ form.interviews|length }}#}
             <div class="fellapp-interviews-holder">
-                {% for interview in form.interviews if interview %}
+                {% for interview in form.interviews %}
+                {% if interview %}
 
                     {% set showInterview = false %}
                     {% if interview.interviewer and interview.vars.value.interviewer.id %}
@@ -77,6 +78,7 @@
                         {{ fellappmacros.interviewForm(interview, cycle, 'fellapp-interviews', 'noprototype', sitename, 1) }}
                     {% endif %}
 
+                {% endif %}
                 {% endfor %}
 
                 {% if cycle != "show" %}

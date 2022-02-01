@@ -57,16 +57,17 @@
 
     {% if acceptingApplication is defined %}
         <p>
-            <i>Last successful import:
-                {{ lastImportTimestamp|date('m/d/Y h:i A') }}
-                {{ serverTimeZone }}
-                ({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}
-            </i>
             {#<i>Last successful import:#}
                 {#{{ lastImportTimestamp|date('m/d/Y h:i A') }}#}
                 {#{{ serverTimeZone }}#}
-                {#({{ lastImportTimestamp }}) {{ acceptingApplication }}#}
+                {#({{ lastImportTimestamp|time_diff }}) {{ acceptingApplication }}#}
             {#</i>#}
+            <i>Last successful import:
+                {{ lastImportTimestamp|date('m/d/Y h:i A') }}
+                {{ serverTimeZone }}
+                ({{ lastImportTimestamp|ago }})
+                {{ acceptingApplication }}
+            </i>
         </p>
     {% endif %}
 
@@ -548,26 +549,24 @@
                     {% set scoreCount = 0 %}
                     {% set tooltip = "" %}                      
                     {% set scoreStyle = 'style=font-weight:bold;' %}
-                    {% for interview in entity.interviews if interview.interviewer %}
-                        {% if not interview.totalRank %}
-                            {% set scoreStyle = "" %}                             
-                            {#{% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview.interviewer]) %}#}
-                        {% else %}
-                            {% set scoreCount = scoreCount + 1 %} 
-                            {#{% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %} #}
-                            {#{% set interviewDescrStr =                                    #}
-                                    {#interviewerUrl~":<br>"~       #}
-                                    {#"Academic Rank - "~interview.academicRank~#}
-                                    {#"<br>Personality Rank - "~interview.personalityRank~#}
-                                    {#"<br>Potential Rank - "~interview.potentialRank~#}
-                                    {#"<br>Language Proficiency - "~interview.languageProficiency~#}
-                                    {#"<br>Total Rank - "~interview.totalRank~#}
-                                    {#"<br>Comment: "~interview.comment %}#}
-                            {#{% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}                              #}
-                        {% endif %}                                                                 
-                    {% endfor %}                                   
+                    {#{% for interview in entity.interviews if interview.interviewer %}#}
+                        {#{% if not interview.totalRank %}#}
+                            {#{% set scoreStyle = "" %}                             #}
+                        {#{% else %}#}
+                            {#{% set scoreCount = scoreCount + 1 %}#}
+                        {#{% endif %}                                                                 #}
+                    {#{% endfor %}#}
+                    {% for interview in entity.interviews %}
+                        {% if interview.interviewer %}
+                            {% if not interview.totalRank %}
+                                {% set scoreStyle = "" %}
+                            {% else %}
+                                {% set scoreCount = scoreCount + 1 %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
 
-                    {% if entity.interviewScore %}
+                {% if entity.interviewScore %}
                         {% set tooltip = scoreCount~' of '~entity.interviews|length~' interview evaluations received.' %}
                     {% endif %}
 {#                {% endif %}#}

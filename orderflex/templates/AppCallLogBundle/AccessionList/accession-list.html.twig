@@ -64,10 +64,8 @@
         </thead>
         <tbody data-link="row" class="rowlink">
 
-        {% for accessionNode in accessionNodes if accessionNode.accession %}
-
-            {#{% set mrnNumber = null %}#}
-            {#{% set mrnTypeId = null %}#}
+        {% for accessionNode in accessionNodes %}
+        {% if accessionNode.accession %}
 
             {% set accession = accessionNode.accession %}
             {% set patient = accession.obtainPatient() %}
@@ -78,14 +76,6 @@
                 {% set accessionType = accessionAccession.keytype %}
                 {% set accessionNumber = accessionAccession.accessionNumber %}
             {% endif %}
-
-            {#{% if patient %}#}
-                {#{% set mrn = patient.obtainValidField('mrn') %}#}
-                {#{% if mrn and mrn.field and mrn.keytype %}#}
-                    {#{% set mrnNumber = mrn.field %}#}
-                    {#{% set mrnTypeId = mrn.keytype.id %}#}
-                {#{% endif %}#}
-            {#{% endif %}#}
 
             {% set trclassname = "" %}
 
@@ -166,6 +156,7 @@
 
             </tr>
 
+        {% endif %}
         {% endfor %}
 
         </tbody>

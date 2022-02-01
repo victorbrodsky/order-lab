@@ -17,6 +17,7 @@
         "google/apiclient": "1.0.*@beta",
         "knplabs/knp-paginator-bundle": "^5.1",
         "knplabs/knp-snappy-bundle": "^1.7",
+        "knplabs/knp-time-bundle": "^1.17",
         "oneup/uploader-bundle": "^3.1",
         "paragonie/random_compat": "^2",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -53,9 +54,7 @@
         "symfony/workflow": "^4.4",
         "symfony/yaml": "^4.4",
         "tattali/calendar-bundle": "^1.1",
-        "twig/extensions": "^1.5",
         "twig/extra-bundle": "^3.3",
-        "twig/twig": "^2.12|^3.0",
         "twilio/sdk": "^6.4"
     },
     "require-dev": {

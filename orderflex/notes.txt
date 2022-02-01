@@ -800,7 +800,21 @@ Class Oneup\UploaderBundle\Tests\Uploader\Chunk\TemplateHelperTest located in C:
 119 packages you are using are looking for funding.
 Use the `composer fund` command to find out more!
 
+bmatzner/fontawesome-bundle
+phpoffice/phpexcel
+swiftmailer/swiftmailer is part of symfony 4.4
 symfony/inflector is part of symfony 4.4
+twig/extensions is abandoned in favor of Twig Core Extra extensions
+
+PHP Warning:  ini_set(): Headers already sent. You cannot change
+the session module's ini settings at this time in
+/usr/local/bin/order-lab/orderflex/vendor/symfony/http-foundation/Session/Storage/Handler/NativeFileSessionHandler.php
+on line 52
 
 
+"twig/extra-bundle": "^3.3",
+"twig/extensions": "^1.5",
+
+Upgrading twig/twig (v2.14.10 => v3.3.7):
+As of Twig 2.7, use the spaceless filter instead.
 

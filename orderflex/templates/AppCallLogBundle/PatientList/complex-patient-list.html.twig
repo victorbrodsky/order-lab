@@ -113,7 +113,8 @@
         </thead>
         <tbody data-link="row" class="rowlink">
 
-        {% for patientNode in patientNodes if patientNode.patient %}
+        {% for patientNode in patientNodes %}
+        {% if if patientNode.patient %}
 
             {% set patient = patientNode.patient %}
             {% set mrn = patient.obtainValidField('mrn') %}
@@ -213,6 +214,7 @@
 
             </tr>
 
+        {% endif %}
         {% endfor %}
 
         </tbody>

@@ -57,9 +57,23 @@ class TwigDateRequestListener {
             $timezone = $user->getPreferences()->getTimezone();
         }
 
+//        $extensions = $this->twig->getExtensions();
+//        foreach($extensions as $name => $extension) {
+//            //echo "$name => $extension <br>";
+//            echo "name=[$name] <br>";
+//            //echo "$extension <br>";
+//            //dump($extension);
+//        }
+        //$twigExtension = $this->twig->getExtension('Twig_Extension_CoreExtension');
+        //echo "twigExtension=$twigExtension<br>";
+        //exit('111');
+
         //$this->twig->getExtension('Core')->setTimezone($timezone);
-        $this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
-        //$this->twig->getExtension('Extension_Core')->setTimezone($timezone);
+        //$this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
+        //$this->twig->getExtension('CoreExtension')->setTimezone($timezone);
+
+        //https://twig.symfony.com/doc/1.x/filters/date.html
+        $this->twig->getExtension('\Twig\Extension\CoreExtension')->setTimezone($timezone); //new twig
     }
 
 }

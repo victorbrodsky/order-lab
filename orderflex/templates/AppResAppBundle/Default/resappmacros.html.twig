@@ -302,7 +302,8 @@
         {#lists letters of recommendation authors with links to the uploaded letter under the name if one is uploaded#}
         {% set refcount = 1 %}
         {% set refArr = [] %}
-        {% for ref in resapp.references if ref.name is not null or ref.documents|length > 0 %}
+        {% for ref in resapp.references %}
+          {% if ref.name is not null or ref.documents|length > 0 %}
 
             {% set refereeNameStr = ref.name %}
             {% if ref.name is null %}
@@ -348,6 +349,7 @@
 
             {% set refcount = refcount + 1 %}
 
+          {% endif %}
         {% endfor %}
 
         {%if refArr|length > 0 %}
@@ -402,7 +404,9 @@
     {% set interviewsArr = [] %}
     {% set interviewsAwaitingArr = [] %}
 
-    {% for interview in resapp.interviews if interview.interviewer %}
+    {% for interview in resapp.interviews %}
+    {% if interview.interviewer %}
+
         {% if not interview.totalRank %}
             {% set interviewsAwaitingArr = interviewsAwaitingArr|merge([interview]) %}
         {% else %}
@@ -426,6 +430,7 @@
             "<br>Comment: "~interview.comment|e %}
             {% set interviewsArr = interviewsArr|merge([interviewDescrStr]) %}
         {% endif %}
+    {% endif %}
     {% endfor %}
     {#EOF Calculating evaluation received and evaluation modal#}
 

@@ -182,6 +182,9 @@
             "./config/packages/knp_snappy.yaml"
         ]
     },
+    "knplabs/knp-time-bundle": {
+        "version": "1.17.0"
+    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -810,18 +813,6 @@
     },
     "theseer/tokenizer": {
         "version": "1.2.1"
-    },
-    "twig/extensions": {
-        "version": "1.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
-        },
-        "files": [
-            "./config/packages/twig_extensions.yaml"
-        ]
     },
     "twig/extra-bundle": {
         "version": "v3.3.7"

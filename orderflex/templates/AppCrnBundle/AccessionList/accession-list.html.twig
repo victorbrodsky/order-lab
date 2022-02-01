@@ -64,8 +64,8 @@
         </thead>
         <tbody data-link="row" class="rowlink">
 
-        {% for accessionNode in accessionNodes if accessionNode.accession %}
-
+        {% for accessionNode in accessionNodes %}
+        {% if accessionNode.accession %}
             {#{% set mrnNumber = null %}#}
             {#{% set mrnTypeId = null %}#}
 
@@ -166,6 +166,7 @@
 
             </tr>
 
+        {% endif %}
         {% endfor %}
 
         </tbody>

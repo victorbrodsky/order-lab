@@ -800,7 +800,8 @@
                             {% if headInfoArr.old is defined and headInfoArr.old %}
                                 {#it's not used: old!<br>#}
                                 {#Institutions#}
-                                {% for titleInfo in headInfoArr.titleInfo if titleInfo.name is defined %}
+                                {% for titleInfo in headInfoArr.titleInfo %}
+                                {% if titleInfo.name is defined %}
                                     <a href="{{
                                         path( employees_sitename~'_search_same_object',{
                                             'tablename':titleInfo['tablename'],
@@ -810,10 +811,12 @@
                                         }}">{{ titleInfo['name']|raw }}
                                     </a>
                                     <br>
+                                {% endif %}
                                 {% endfor %}
 
                                 {#Titles#}
-                                {% for titleInfo in headInfoArr.instInfo if titleInfo|length > 0 %}
+                                {% for titleInfo in headInfoArr.instInfo %}
+                                {% if titleInfo|length > 0 %}
                                     <a href="{{
                                         path( employees_sitename~'_search_same_object',{
                                             'tablename':titleInfo['tablename'],
@@ -823,6 +826,7 @@
                                         }}"><small>{{ titleInfo['name']|raw }}</small>
                                     </a>
                                     <br>
+                                {% endif %}
                                 {% endfor %}
                                 <br>
 
