@@ -33,17 +33,28 @@
     {#{% endspaceless %}#}
 {#{% endblock choice_widget_expanded %}#}
 {% block choice_widget_expanded %}
-    {{
-        "<div {{ block('widget_container_attributes') }}>
-            {% for child in form %}
-                <div class='radio_inline'>
-                    {{ form_widget(child) }}
-                    {{ form_label(child) }}
-                </div>
-            {% endfor %}
 
-        </div>"|spaceless
-    }}
+    <div {{ block('widget_container_attributes') }}>
+        {% for child in form %}
+            <div class='radio_inline'>
+                {{ form_widget(child) }}
+                {{ form_label(child) }}
+            </div>
+        {% endfor %}
+
+    </div>
+
+    {#{{#}
+        {#"<div {{ block('widget_container_attributes') }}>#}
+            {#{% for child in form %}#}
+                {#<div class='radio_inline'>#}
+                    {#{{ form_widget(child) }}#}
+                    {#{{ form_label(child) }}#}
+                {#</div>#}
+            {#{% endfor %}#}
+
+        {#</div>"|spaceless#}
+    {#}}#}
 {% endblock choice_widget_expanded %}
 
 {#'required' is fixed in master and v2.3 of symfony#}
@@ -70,7 +81,6 @@
 {#{% endblock widget_attributes %}#}
 {% block widget_attributes %}
 
-    {{ "
     id='{{ id }}' name='{{ full_name }}'
     {% if disabled %}
         disabled='disabled'
@@ -104,7 +114,41 @@
         {% endif %}
     {% endfor %}
 
-    "|spaceless }}
+    {#{{ "#}
+    {#id='{{ id }}' name='{{ full_name }}'#}
+    {#{% if disabled %}#}
+        {#disabled='disabled'#}
+    {#{% endif %}#}
+
+    {#{% if required == 'none' %}#}
+        {#not !!!!!!!!!#}
+    {#{% else %}#}
+        {#{% if required %}#}
+            {#required !!!!!!!!!#}
+            {#required='required'#}
+        {#{% endif %}#}
+    {#{% endif %}#}
+
+    {#{% if pattern is defined and pattern %}#}
+        {#pattern='{{ pattern }}'#}
+    {#{% endif %}#}
+
+    {#{% for attrname, attrvalue in attr %}#}
+        {#{% if attrname in ['placeholder', 'title'] %}#}
+            {#{{ attrname }}='{{ attrvalue|trans({}, translation_domain) }}'#}
+        {#{% else %}#}
+            {#{{ attrname }}='{{ attrvalue }}'#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
+
+    {#{% for attrname, attrvalue in attr %}#}
+        {#{% if attrname in ['placeholder', 'title'] %}#}
+            {#{{ attrname }}='{{ attrvalue }}'#}
+        {#{% else %}{{ attrname }}='{{ attrvalue }}'#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
+
+    {#"|spaceless }}#}
 
 {% endblock widget_attributes %}
 

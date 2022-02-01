@@ -57,11 +57,16 @@
                             {#<textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>#}
                         {#</div>#}
                     {#{% endspaceless %}#}
-                    {{ "
-                        <div class='textarea_widget'>
-                            <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
-                        </div>
-                    " | spaceless }}
+
+                    <div class='textarea_widget'>
+                        <textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>
+                    </div>
+
+                    {#{{ "#}
+                        {#<div class='textarea_widget'>#}
+                            {#<textarea {{ block('widget_attributes') }}>{{ slide.diagnosis }}</textarea>#}
+                        {#</div>#}
+                    {#" | spaceless }}#}
                 {% endblock textarea_widget %}
                 </td>
                               
