@@ -41,6 +41,14 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction(Request $request)
     {
+
+
+        $em = $this->getDoctrine()->getManager();
+        $calllogUtilForm = $this->container->get('calllog_util_form');
+        $encounter = $em->getRepository('AppOrderformBundle:Encounter')->find(29964); //29964;
+        $res = $calllogUtilForm->getEncounterPatientInfoHtml($encounter);
+        dump($res);
+
         return array('sitename' => $this->getParameter('calllog.sitename'));
     }
 
