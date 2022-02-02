@@ -219,14 +219,20 @@ class CallLogEditController extends CallEntryController
                 $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
             }
 
+            $latestMessageVersion = NULL;
             if( $messageLatest ) {
-                return $this->redirect($this->generateUrl($route, array(
-                    'messageOid' => $messageLatest->getOid(),
-                    'messageVersion' => $messageLatest->getVersion()
-                )));
+                $latestMessageVersion = $messageLatest->getVersion();
+                if( $messageLatest->getOid() && $latestMessageVersion ) {
+                    return $this->redirect($this->generateUrl($route, array(
+                        'messageOid' => $messageLatest->getOid(),
+                        'messageVersion' => $latestMessageVersion
+                    )));
+                }
             }
 
-            throw new \Exception( "Latest Message is not found by oid ".$messageOid );
+            //if message version is NULL we can try to recover by set version to 1 and save the message
+
+            throw new \Exception( "Latest Message is not found by oid ".$messageOid." or by version $latestMessageVersion" );
         }
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
