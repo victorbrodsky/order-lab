@@ -687,6 +687,8 @@ security:
        - { path: ^/dashboards/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
+#       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
 
 

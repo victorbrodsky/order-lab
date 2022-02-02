@@ -182,6 +182,13 @@ class TopicList extends BaseCompositeNode
      */
     private $topicComment;
 
+    /**
+     * Enable public access without requiring log in
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $publicAccess;
+
 
     //“Applicable Dashboard Chart Filter Fields:”: [multi-select with all “Dashboard Chart Filter Fields” created in step 4 below]
     //TODO: how filter fields will be implemented?
@@ -445,6 +452,22 @@ class TopicList extends BaseCompositeNode
     public function setTopicComment($topicComment)
     {
         $this->topicComment = $topicComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublicAccess()
+    {
+        return $this->publicAccess;
+    }
+
+    /**
+     * @param mixed $publicAccess
+     */
+    public function setPublicAccess($publicAccess)
+    {
+        $this->publicAccess = $publicAccess;
     }
 
 

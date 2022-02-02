@@ -35,7 +35,7 @@ class DashboardController extends OrderAbstractController
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
-            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+            //return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
         }
 
         $dashboardUtil = $this->container->get('dashboard_util');

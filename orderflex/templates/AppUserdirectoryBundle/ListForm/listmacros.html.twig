@@ -1259,6 +1259,10 @@
         {{ formmacros.field(form.requestedDate) }}
     {% endif %}
 
+    {% if form.publicAccess is defined %}
+        {{ formmacros.checkbox(form.publicAccess) }}
+    {% endif %}
+
     {% if form.topicComment is defined %}
         {{ formmacros.field(form.topicComment) }}
     {% endif %}

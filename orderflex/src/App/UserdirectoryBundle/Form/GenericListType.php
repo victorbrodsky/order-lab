@@ -1470,6 +1470,12 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'textarea form-control'),
             ));
 
+            $builder->add('publicAccess',null,array(
+                'label' => "Enable public access without requiring log in:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
             $this->commonChartFields($builder);
         } //if TopicList
 
