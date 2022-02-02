@@ -221,6 +221,11 @@ class CallLogEditController extends CallEntryController
 
             $latestMessageVersion = NULL;
             if( $messageLatest ) {
+                //if message version is NULL we can try to recover by set version to 1 and save the message
+                if( !$messageLatest->getVersion() ) {
+                    $messageLatest->setVersion(1);
+                    //$em->flush();
+                }
                 $latestMessageVersion = $messageLatest->getVersion();
                 if( $messageLatest->getOid() && $latestMessageVersion ) {
                     return $this->redirect($this->generateUrl($route, array(
@@ -229,8 +234,6 @@ class CallLogEditController extends CallEntryController
                     )));
                 }
             }
-
-            //if message version is NULL we can try to recover by set version to 1 and save the message
 
             throw new \Exception( "Latest Message is not found by oid=".$messageOid." or by version=$latestMessageVersion" );
         }
