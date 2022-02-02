@@ -85,6 +85,7 @@ class CallLogUtilForm
 
     public function getEncounterPatientInfoHtml( $encounter, $status )
     {
+        exit("encounter ID=".$encounter->getId());
         $userServiceUtil = $this->container->get('user_service_utility');
 
         $panelName = "Encounter Info";
