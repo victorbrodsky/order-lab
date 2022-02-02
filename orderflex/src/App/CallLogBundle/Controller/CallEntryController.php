@@ -3462,6 +3462,9 @@ class CallEntryController extends OrderAbstractController
                 'formbased' => $formbased
             );
         } else {
+
+            echo "encounter=".$encounter->getId();
+
             return array(
                 'cycle' => $cycle,
                 'title' => $title,
