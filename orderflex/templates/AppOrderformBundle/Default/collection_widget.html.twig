@@ -33,28 +33,17 @@
     {#{% endspaceless %}#}
 {#{% endblock choice_widget_expanded %}#}
 {% block choice_widget_expanded %}
+    {% apply spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <div class='radio_inline'>
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </div>
+            {% endfor %}
 
-    <div {{ block('widget_container_attributes') }}>
-        {% for child in form %}
-            <div class='radio_inline'>
-                {{ form_widget(child) }}
-                {{ form_label(child) }}
-            </div>
-        {% endfor %}
-
-    </div>
-
-    {#{{#}
-        {#"<div {{ block('widget_container_attributes') }}>#}
-            {#{% for child in form %}#}
-                {#<div class='radio_inline'>#}
-                    {#{{ form_widget(child) }}#}
-                    {#{{ form_label(child) }}#}
-                {#</div>#}
-            {#{% endfor %}#}
-
-        {#</div>"|spaceless#}
-    {#}}#}
+        </div>
+    {% endapply %}
 {% endblock choice_widget_expanded %}
 
 {#'required' is fixed in master and v2.3 of symfony#}
@@ -80,76 +69,40 @@
     {#{% endspaceless %}#}
 {#{% endblock widget_attributes %}#}
 {% block widget_attributes %}
-
-    id='{{ id }}' name='{{ full_name }}'
-    {% if disabled %}
-        disabled='disabled'
-    {% endif %}
-
-    {% if required == 'none' %}
-        not !!!!!!!!!
-    {% else %}
-        {% if required %}
-            required !!!!!!!!!
-            required='required'
+    {% apply spaceless %}
+        id='{{ id }}' name='{{ full_name }}'
+        {% if disabled %}
+            disabled='disabled'
         {% endif %}
-    {% endif %}
 
-    {% if pattern is defined and pattern %}
-        pattern='{{ pattern }}'
-    {% endif %}
-
-    {% for attrname, attrvalue in attr %}
-        {% if attrname in ['placeholder', 'title'] %}
-            {{ attrname }}='{{ attrvalue|trans({}, translation_domain) }}'
+        {% if required == 'none' %}
+            not !!!!!!!!!
         {% else %}
-            {{ attrname }}='{{ attrvalue }}'
+            {% if required %}
+                required !!!!!!!!!
+                required='required'
+            {% endif %}
         {% endif %}
-    {% endfor %}
 
-    {% for attrname, attrvalue in attr %}
-        {% if attrname in ['placeholder', 'title'] %}
-            {{ attrname }}='{{ attrvalue }}'
-        {% else %}{{ attrname }}='{{ attrvalue }}'
+        {% if pattern is defined and pattern %}
+            pattern='{{ pattern }}'
         {% endif %}
-    {% endfor %}
 
-    {#{{ "#}
-    {#id='{{ id }}' name='{{ full_name }}'#}
-    {#{% if disabled %}#}
-        {#disabled='disabled'#}
-    {#{% endif %}#}
+        {% for attrname, attrvalue in attr %}
+            {% if attrname in ['placeholder', 'title'] %}
+                {{ attrname }}='{{ attrvalue|trans({}, translation_domain) }}'
+            {% else %}
+                {{ attrname }}='{{ attrvalue }}'
+            {% endif %}
+        {% endfor %}
 
-    {#{% if required == 'none' %}#}
-        {#not !!!!!!!!!#}
-    {#{% else %}#}
-        {#{% if required %}#}
-            {#required !!!!!!!!!#}
-            {#required='required'#}
-        {#{% endif %}#}
-    {#{% endif %}#}
-
-    {#{% if pattern is defined and pattern %}#}
-        {#pattern='{{ pattern }}'#}
-    {#{% endif %}#}
-
-    {#{% for attrname, attrvalue in attr %}#}
-        {#{% if attrname in ['placeholder', 'title'] %}#}
-            {#{{ attrname }}='{{ attrvalue|trans({}, translation_domain) }}'#}
-        {#{% else %}#}
-            {#{{ attrname }}='{{ attrvalue }}'#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
-
-    {#{% for attrname, attrvalue in attr %}#}
-        {#{% if attrname in ['placeholder', 'title'] %}#}
-            {#{{ attrname }}='{{ attrvalue }}'#}
-        {#{% else %}{{ attrname }}='{{ attrvalue }}'#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
-
-    {#"|spaceless }}#}
-
+        {% for attrname, attrvalue in attr %}
+            {% if attrname in ['placeholder', 'title'] %}
+                {{ attrname }}='{{ attrvalue }}'
+            {% else %}{{ attrname }}='{{ attrvalue }}'
+            {% endif %}
+        {% endfor %}
+    {% endapply %}
 {% endblock widget_attributes %}
 
 
