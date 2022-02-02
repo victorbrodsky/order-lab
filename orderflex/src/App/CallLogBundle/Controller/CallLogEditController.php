@@ -41,7 +41,7 @@ class CallLogEditController extends CallEntryController
      * @Route("/delete/{messageOid}/{messageVersion}", name="calllog_delete", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/about.html.twig")
      */
-    public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
+    public function deleteMessageAction(Request $request, $messageOid, $messageVersion=NULL)
     {
         if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -224,7 +224,7 @@ class CallLogEditController extends CallEntryController
                 //if message version is NULL we can try to recover by set version to 1 and save the message
                 if( !$messageLatest->getVersion() ) {
                     $messageLatest->setVersion(1);
-                    //$em->flush();
+                    $em->flush();
                 }
                 $latestMessageVersion = $messageLatest->getVersion();
                 if( $messageLatest->getOid() && $latestMessageVersion ) {

@@ -3230,12 +3230,19 @@ class CallEntryController extends OrderAbstractController
                 $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
             }
 
+//            if( $messageLatest ) {
+//                exit("Message found, ID=".$messageLatest->getId());
+//            } else {
+//                exit("Message not found");
+//            }
+
             $latestMessageVersion = NULL;
             if( $messageLatest ) {
                 //if message version is NULL we can try to recover by set version to 1 and save the message
                 if( !$messageLatest->getVersion() ) {
+                    //exit("Set version to 1 <br>");
                     $messageLatest->setVersion(1);
-                    //$em->flush();
+                    $em->flush();
                 }
                 $latestMessageVersion = $messageLatest->getVersion();
                 if( $messageLatest->getOid() && $latestMessageVersion ) {
