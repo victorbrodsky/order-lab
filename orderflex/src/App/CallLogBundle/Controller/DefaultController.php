@@ -48,6 +48,7 @@ class DefaultController extends OrderAbstractController
         $encounter = $em->getRepository('AppOrderformBundle:Encounter')->find(29964); //29964;
         $res = $calllogUtilForm->getEncounterPatientInfoHtml($encounter);
         dump($res);
+        exit('111');
 
         return array('sitename' => $this->getParameter('calllog.sitename'));
     }

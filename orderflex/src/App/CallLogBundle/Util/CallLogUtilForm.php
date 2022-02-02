@@ -103,6 +103,7 @@ class CallLogUtilForm
             }
         }
         if( $date ) {
+            echo "date=".$date->format("d-m-Y")."<br>";
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
@@ -111,7 +112,6 @@ class CallLogUtilForm
             if( !$user_tz ) {
                 $user_tz = "America/New_York";
             }
-            exit ("user_tz=$user_tz <br>"); //testing
 
             if(0) {
                 //show as original submitted timezone
@@ -127,6 +127,7 @@ class CallLogUtilForm
                 //echo "dateField=" . $dateField->format("m/d/Y (T)") . "<br>";
 
                 $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                echo "1newDateTime=".$newDateTime->format("d-m-Y")."<br>";
 
                 //1) construct DateTime with $dateField and $dateTime
                 $newDateTime->setDate($dateField->format('Y'), $dateField->format('m'), $dateField->format('d'));
@@ -135,6 +136,10 @@ class CallLogUtilForm
                 //echo "newDateTime=" . $newDateTime->format("m/d/Y H:i (T)") . "<br>";
 
                 //$dateField = new \DateTime($newDateTime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+
+                $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                echo "2newDateTime=".$newDateTime->format("d-m-Y")."<br>";
+                //exit ("user_tz=$user_tz <br>"); //testing
 
                 //2) convert to $dateTimezone
                 $newDateTimeTz = $userServiceUtil->convertToTimezone($newDateTime, $dateTimezone);
