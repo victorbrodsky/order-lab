@@ -83,7 +83,7 @@ class CallLogUtilForm
         return $html;
     }
 
-    public function getEncounterPatientInfoHtml( $encounter, $status )
+    public function getEncounterPatientInfoHtml( $encounter, $status=NULL )
     {
         //exit("encounter ID=".$encounter->getId());
         $userServiceUtil = $this->container->get('user_service_utility');
