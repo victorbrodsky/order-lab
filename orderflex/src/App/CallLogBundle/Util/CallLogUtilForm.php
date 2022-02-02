@@ -110,6 +110,7 @@ class CallLogUtilForm
             if( !$dateTimezone ) {
                 $dateTimezone = "America/New_York";
             }
+
             //echo "Encounter dateTimezone=".$dateTimezone."<br>";
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $user_tz = $user->getPreferences()->getTimezone();
@@ -131,7 +132,7 @@ class CallLogUtilForm
                 //echo "dateField=" . $dateField->format("m/d/Y (T)") . "<br>";
 
                 $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
-                echo "1newDateTime=".$newDateTime->format("d-m-Y")."<br>";
+                //echo "1newDateTime=".$newDateTime->format("d-m-Y")."<br>";
 
                 //1) construct DateTime with $dateField and $dateTime
                 $newDateTime->setDate($dateField->format('Y'), $dateField->format('m'), $dateField->format('d'));
@@ -142,7 +143,7 @@ class CallLogUtilForm
                 //$dateField = new \DateTime($newDateTime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
 
                 $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
-                echo "2newDateTime=".$newDateTime->format("d-m-Y")."<br>";
+                //echo "2newDateTime=".$newDateTime->format("d-m-Y")."<br>";
                 //exit ("user_tz=$user_tz <br>"); //testing
 
                 //2) convert to $dateTimezone
