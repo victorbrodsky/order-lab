@@ -110,6 +110,7 @@ class CallLogUtilForm
             if( !$user_tz ) {
                 $user_tz = "America/New_York";
             }
+            echo "user_tz=$user_tz <br>"; //testing
 
             if(0) {
                 //show as original submitted timezone
