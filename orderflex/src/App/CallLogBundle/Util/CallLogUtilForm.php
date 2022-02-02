@@ -103,11 +103,14 @@ class CallLogUtilForm
             }
         }
         if( $date ) {
-            echo "Encounter date=".$date."<br>";
+            //echo "Encounter date=".$date."<br>";
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
-            echo "Encounter dateTimezone=".$dateTimezone."<br>";
+            if( !$dateTimezone ) {
+                $dateTimezone = "America/New_York";
+            }
+            //echo "Encounter dateTimezone=".$dateTimezone."<br>";
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             $user_tz = $user->getPreferences()->getTimezone();
             if( !$user_tz ) {
