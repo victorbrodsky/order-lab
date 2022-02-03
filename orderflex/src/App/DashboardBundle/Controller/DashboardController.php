@@ -35,7 +35,7 @@ class DashboardController extends OrderAbstractController
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
-            //return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
         }
 
         $dashboardUtil = $this->container->get('dashboard_util');
@@ -53,9 +53,9 @@ class DashboardController extends OrderAbstractController
         //echo "title=$title<br>";
 
         //check if user is not authenticated IS_AUTHENTICATED_FULLY
-        if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-            $initHomePage = false;
-        }
+//        if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+//            $initHomePage = false;
+//        }
 
         //Redirect if filter is empty
         if( $initHomePage ) {
@@ -104,12 +104,12 @@ class DashboardController extends OrderAbstractController
         }//if $initHomePage
 
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        //if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
             $filterform = $this->getFilter();
-        } else {
-            $filterform = $this->getFilterPublic();
-        }
+        //} else {
+        //    $filterform = $this->getFilterPublic();
+        //}
 
         //$filterform = $this->getFilter();
 
@@ -162,7 +162,7 @@ class DashboardController extends OrderAbstractController
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
             'useWarning' => $useWarning,
-            //'testflag' => "11111"
+            'public' => false
         );
     }
 
@@ -213,6 +213,65 @@ class DashboardController extends OrderAbstractController
         //////////// EOF Filter ////////////
 
         return $filterform;
+    }
+
+    /**
+     * @Route("/public", name="dashboard_public")
+     * @Template("AppDashboardBundle/React/dashboard-public.html.twig")
+     */
+    public function dashboardPublicChoicesAction( Request $request )
+    {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//            return $this->redirectToRoute('dashboard_home');
+//        }
+
+        $dashboardUtil = $this->container->get('dashboard_util');
+        $filterform = $this->getFilterPublic();
+        $filterform->handleRequest($request);
+
+        //chartType
+        $useWarning = true;
+        $autoLoad = $request->query->get('auto');
+        if( isset($autoLoad) ) {
+            if( $autoLoad ) {
+                //echo "auto is true <br>";
+                $useWarning = false;
+            } else {
+                //echo "auto is false <br>";
+            }
+        } else {
+            //echo "auto not set <br>";
+            //$useWarning = true;
+        }
+
+        $chartTypesCount = 0;
+        $chartTypes = $filterform["chartType"]->getData();
+        if( $chartTypes ) {
+            $chartTypesCount = count($chartTypes);
+        }
+        if( !$useWarning ) {
+            $chartTypesCount = 0;
+        }
+        if( $chartTypesCount > 3 ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                "Please click 'Show' button to generate multiple charts"
+            );
+        }
+
+        $title = $request->query->get('title');
+        if( !$title ) {
+            $title = 'Dashboard';
+        }
+
+        return array(
+            'title' => $title,
+            'filterform' => $filterform->createView(),
+            'chartsArray' => array(),
+            'spinnerColor' => '#85c1e9',
+            'useWarning' => $useWarning,
+            'public' => true
+        );
     }
 
     public function getFilterPublic( $showLimited=false, $withCompareType=false ) {
@@ -668,7 +727,6 @@ class DashboardController extends OrderAbstractController
 
     /**
      * @Route("/dashboard-toggle-favorite", name="dashboard_toggle_favorite", methods={"POST"}, options={"expose"=true})
-     * @Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      */
     public function dashboardToggleFavoriteAction( Request $request )
     {
