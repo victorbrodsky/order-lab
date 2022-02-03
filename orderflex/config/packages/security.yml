@@ -689,7 +689,9 @@ security:
        - { path: ^/dashboards/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
 #       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
 #       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
+      #https://stackoverflow.com/questions/21020550/symfony-access-control-for-site-root/21023494
+#       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
+       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
 
 

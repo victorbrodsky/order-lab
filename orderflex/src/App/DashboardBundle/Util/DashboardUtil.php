@@ -310,6 +310,11 @@ class DashboardUtil
     }
 
     public function getFavorites($user=null) {
+
+        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') ) {
+            return array();
+        }
+
         if( !$user ) {
             $user = $this->secTokenStorage->getToken()->getUser();
         }

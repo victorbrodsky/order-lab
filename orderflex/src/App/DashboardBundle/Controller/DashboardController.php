@@ -52,8 +52,14 @@ class DashboardController extends OrderAbstractController
         }
         //echo "title=$title<br>";
 
+        //check if user is not authenticated IS_AUTHENTICATED_FULLY
+        if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            $initHomePage = false;
+        }
+
         //Redirect if filter is empty
         if( $initHomePage ) {
+
             //1) Add Favorite charts
             $favoriteCharts = $dashboardUtil->getFavorites();
             if (count($favoriteCharts) > 0) {
@@ -98,7 +104,15 @@ class DashboardController extends OrderAbstractController
         }//if $initHomePage
 
 
-        $filterform = $this->getFilter();
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+            //ok
+            $filterform = $this->getFilter();
+        } else {
+            $filterform = $this->getFilterPublic();
+        }
+
+        //$filterform = $this->getFilter();
+
         $filterform->handleRequest($request);
 
         //chartType
@@ -148,7 +162,7 @@ class DashboardController extends OrderAbstractController
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
             'useWarning' => $useWarning,
-            'testflag' => "11111"
+            //'testflag' => "11111"
         );
     }
 
@@ -162,6 +176,55 @@ class DashboardController extends OrderAbstractController
         foreach($projectSpecialties as $projectSpecialty) {
             $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
         }
+
+        $endDate = new \DateTime('now');
+        $startDate = new \DateTime('now');
+        //set to today
+        //$endDate = $endDate->modify('-3 year');
+        $startDate = $startDate->modify('-1 year');//->format('m/d/Y');
+
+        $params = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            "projectSpecialty" => true,
+            "projectSpecialties" => $projectSpecialtiesWithAll,
+            "compareType" => false,
+            "showLimited" => true,
+            "category" => true
+        );
+
+        if( $withCompareType ) {
+            $params["compareType"] = true;
+        }
+
+        if( $showLimited ) {
+            $params["showLimited"] = $showLimited;
+        }
+
+        //chartTypes
+        $params["chartType"] = true;
+        $params["chartTypes"] = $dashboardUtil->getChartTypes();
+
+
+        $filterform = $this->createForm(FilterDashboardType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+        //////////// EOF Filter ////////////
+
+        return $filterform;
+    }
+
+    public function getFilterPublic( $showLimited=false, $withCompareType=false ) {
+        $transresUtil = $this->container->get('transres_util');
+        $dashboardUtil = $this->container->get('dashboard_util');
+        //////////// Filter ////////////
+        //default date range from today to 1 year back
+        $projectSpecialtiesWithAll = array('All'=>0);
+//        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
+//        foreach($projectSpecialties as $projectSpecialty) {
+//            $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
+//        }
 
         $endDate = new \DateTime('now');
         $startDate = new \DateTime('now');
