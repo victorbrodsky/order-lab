@@ -214,13 +214,13 @@
         });
 
         function validateVacReqFloatingDayForm(btn) {
-            console.log("validateVacReqFloatingDayForm");
+            //console.log("validateVacReqFloatingDayForm");
 
 
             var worked = $('.floatingday-worked').is(":checked"); //$('.floatingday-worked').val();
-            console.log("worked="+worked);
+            //console.log("worked="+worked);
             var floatingDate = $('.floatingDate').val();
-            console.log("floatingDate="+floatingDate);
+            //console.log("floatingDate="+floatingDate);
 
             if( worked && !floatingDate ) {
                 var error = "Please choose the requested floating day";
@@ -242,7 +242,7 @@
             //get select2 oleg_vacreqbundle_request_floatingDayType
             var floatingDayType = $('#oleg_vacreqbundle_request_floatingDayType').select2('data');
             if( floatingDayType ) {
-                console.log('floatingDayType=' + floatingDayType.text);
+                //console.log('floatingDayType=' + floatingDayType.text);
                 if (floatingDayType.text) {
                     $('#worked-on-floating-daytype').text(floatingDayType.text);
                 }
