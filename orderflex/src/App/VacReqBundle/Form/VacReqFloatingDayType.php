@@ -154,6 +154,7 @@ class VacReqFloatingDayType extends AbstractType
             'label' => "Floating Day:",
             'required' => false,
             'multiple' => false,
+            'data' => $this->params['defaultFloatingDayType'],
             'mapped' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function (EntityRepository $er) {
@@ -169,7 +170,7 @@ class VacReqFloatingDayType extends AbstractType
         
         //worked
         $builder->add('worked', CheckboxType::class, array(
-            'label' => 'I have worked or plan to work on Juneteenth:',
+            'label' => 'I have worked or plan to work on',
             'mapped' => false,
             'required' => false,
             'attr' => array('class' => 'floatingday-worked'),

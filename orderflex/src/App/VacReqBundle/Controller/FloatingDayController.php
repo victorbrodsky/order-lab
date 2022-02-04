@@ -194,6 +194,26 @@ class FloatingDayController extends OrderAbstractController
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );
+        
+        //set default floating day
+        $floatingDayType = NULL;
+        $parameters = array();
+        $repository = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList');
+        $dql = $repository->createQueryBuilder('list');
+        $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
+        $dql->orderBy("list.orderinlist","ASC");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
+        $query = $em->createQuery($dql);
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+        $floatingDayTypes = $query->getResult();
+        if( count($floatingDayTypes) > 0 ) {
+            $floatingDayType = $floatingDayTypes[0];
+        }
+
+        $params['defaultFloatingDayType'] = $floatingDayType;
 
         $disabled = false;
         $method = 'GET';

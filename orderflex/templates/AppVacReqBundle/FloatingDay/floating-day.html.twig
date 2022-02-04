@@ -113,7 +113,24 @@
     {#{{ formmacros.fieldDateLabel(form.floatingDate,'allow-future-date') }}#}
 
     {#“Floating Day Attestation Text” value (by default it will show the value “I have worked on”#}
-    {{ formmacros.field(form.worked) }}
+    {#{{ formmacros.field(form.worked) }}#}
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="right" style1="white-space: nowrap;">
+            {#{{ form_label(form.worked) }} <strong><div id="worked-on-floating-daytype"></div></strong>#}
+            <div>
+                <strong>
+                    <div style="display:inline-block; margin-right:3px;">{{ form.worked.vars.label }}</div>
+                    <div style="display:inline-block; color: darkblue;" id="worked-on-floating-daytype"></div>:
+                </strong>
+                {#<strong>11111111111111111111111111111111111111111111111 <div id="worked-on-floating-daytype"></div>:</strong>#}
+            </div>
+        </div>
+        <div class="col-xs-6" align="left">
+            {{ form_widget(form.worked) }}
+        </div>
+    </div>
+    </p>
 
     {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
     {{ formmacros.fieldDateLabel(form.floatingDate,'allow-future-date') }}
@@ -188,6 +205,12 @@
 
         $(document).ready(function() {
 
+            $('#oleg_vacreqbundle_request_floatingDayType').on("change", function(e) {
+                setWorkingFloatingDayType();
+            });
+
+            setWorkingFloatingDayType();
+
         });
 
         function validateVacReqFloatingDayForm(btn) {
@@ -214,6 +237,18 @@
 
             return true;
         }
+
+        function setWorkingFloatingDayType() {
+            //get select2 oleg_vacreqbundle_request_floatingDayType
+            var floatingDayType = $('#oleg_vacreqbundle_request_floatingDayType').select2('data');
+            if( floatingDayType ) {
+                console.log('floatingDayType=' + floatingDayType.text);
+                if (floatingDayType.text) {
+                    $('#worked-on-floating-daytype').text(floatingDayType.text);
+                }
+            }
+        }
+
 
     </script>
 {% endblock %}
