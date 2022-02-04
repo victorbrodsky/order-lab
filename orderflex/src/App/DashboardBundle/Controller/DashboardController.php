@@ -221,9 +221,9 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardPublicChoicesAction( Request $request )
     {
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-//            return $this->redirectToRoute('dashboard_home');
-//        }
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+            return $this->redirectToRoute('dashboard_home');
+        }
 
         $dashboardUtil = $this->container->get('dashboard_util');
         $filterform = $this->getFilterPublic();
@@ -277,7 +277,9 @@ class DashboardController extends OrderAbstractController
     public function getFilterPublic( $showLimited=false, $withCompareType=false ) {
         $transresUtil = $this->container->get('transres_util');
         $dashboardUtil = $this->container->get('dashboard_util');
+
         //////////// Filter ////////////
+
         //default date range from today to 1 year back
         $projectSpecialtiesWithAll = array('All'=>0);
 //        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
@@ -309,10 +311,13 @@ class DashboardController extends OrderAbstractController
             $params["showLimited"] = $showLimited;
         }
 
+        $publicCharts = $dashboardUtil->getPublicChartTypes();
         //chartTypes
         $params["chartType"] = true;
-        $params["chartTypes"] = $dashboardUtil->getChartTypes();
+        $params["chartTypes"] = $publicCharts;
 
+        //chartTypesShow
+        $params["chartTypesShow"] = $publicCharts;
 
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
             'method' => 'GET',

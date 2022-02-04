@@ -249,6 +249,11 @@
 
                 {% endif %}
 
+                {% if is_granted('IS_AUTHENTICATED_ANONYMOUSLY') %}
+                    {#Show login page link#}
+                    <li><a href="{{ path(dashboard_sitename~'_login') }}">Log In</a></li>
+                {% endif %}
+
             </ul>
 
 

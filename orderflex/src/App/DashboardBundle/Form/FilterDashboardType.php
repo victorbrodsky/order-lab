@@ -36,6 +36,10 @@ class FilterDashboardType extends AbstractType
     public function formConstructor( $params=null )
     {
         $this->params = $params;
+
+        if( isset($this->params['chartTypesShow']) == false ) {
+            $this->params['chartTypesShow'] = NULL;
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -115,6 +119,7 @@ class FilterDashboardType extends AbstractType
                 'choices' => $this->params['chartTypes'],
                 'multiple' => true,
                 'required' => false,
+                'data' => $this->params['chartTypesShow'],
                 'attr' => array('class' => 'combobox', 'placeholder' => "Chart Type")
             ));
         }

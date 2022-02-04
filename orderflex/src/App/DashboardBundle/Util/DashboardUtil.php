@@ -375,6 +375,43 @@ class DashboardUtil
         return $chart[0];
     }
 
+    public function getPublicChartTypes( $asObject=false ) {
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->leftJoin('list.topics','topics');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        $dql->andWhere("topics.publicAccess = TRUE");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        if( $asObject ) {
+            return $charts;
+        }
+
+        $chartArr = array();
+
+        foreach($charts as $chart) {
+            $chartArr[$chart->getName()] = $chart->getAbbreviation();
+        }
+
+        return $chartArr;
+    }
+
     public function getChartTypes( $asObject=false ) {
         //get chart types from DB ChartList
 //        $charts = $this->em->getRepository('AppDashboardBundle:ChartList')->findBy(

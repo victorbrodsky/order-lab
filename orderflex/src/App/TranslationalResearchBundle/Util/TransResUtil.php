@@ -5926,6 +5926,7 @@ class TransResUtil
         if( $this->secAuth->isGranted($adminRole) ) {
             return true;
         }
+        
         //check user's roles
         if( $user && $user->hasRole($adminRole) ) {
             return true;
