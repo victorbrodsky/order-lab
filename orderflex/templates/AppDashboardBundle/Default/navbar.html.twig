@@ -14,109 +14,8 @@
     limitations under the License.
 #}
 
-{#   navigation menu   #}
-
 {% import "AppDashboardBundle/Default/navbar.html.twig" as navbarmacros %}
 
-{#{% macro createFilterTopics_ORIG( filterTopics ) %}#}
-    {#{% for parentKey,values in filterTopics %}#}
-        {#<li class="dropdown-submenu">#}
-            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ parentKey }}</a>#}
-            {#<ul class="dropdown-menu">#}
-                {#{% for key,value in values %}#}
-                    {#{% set filterTopicUrl = value|replace({' ':'-'}) %}#}
-                    {#<li>#}
-                        {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
-                        {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':key}) }}">{{ value }}</a>#}
-                    {#</li>#}
-                {#{% endfor %}#}
-            {#</ul>#}
-        {#</li>#}
-    {#{% endfor %}#}
-{#{% endmacro %}#}
-{#{% macro createFilterTopics_TWOLEVEL( filterTopics ) %}#}
-    {#{% for topicArr in filterTopics %}#}
-        {#{% set id = topicArr[0] %}#}
-        {#{% set name = topicArr[1] %}#}
-        {#{% set childrens = topicArr[2] %}#}
-
-        {#{% if childrens|length > 0 %}#}
-            {#<li class="dropdown-submenu">#}
-                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>#}
-                {#{% if childrens|length > 0 %}#}
-                    {#<ul class="dropdown-menu">#}
-                        {#{% for childrenArr in childrens %}#}
-                            {#{% set id1 = childrenArr[0] %}#}
-                            {#{% set name1 = childrenArr[1] %}#}
-                            {#{% set childrens1 = childrenArr[2] %}#}
-                            {#<li>#}
-                                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>#}
-                            {#</li>#}
-                        {#{% endfor %}#}
-                    {#</ul>#}
-                {#{% endif %}#}
-            {#</li>#}
-        {#{% else %}#}
-            {#<li>#}
-                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>#}
-            {#</li>#}
-        {#{% endif %}#}
-
-        {#{% if 0 %}#}
-        {#<li class="dropdown-submenu">#}
-            {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ name }}</a>#}
-            {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>#}
-            {#{% if childrens|length > 0 %}#}
-                {#<ul class="dropdown-menu">#}
-                    {#{% for childrenArr in childrens %}#}
-                        {#{% set id1 = childrenArr[0] %}#}
-                        {#{% set name1 = childrenArr[1] %}#}
-                        {#{% set childrens1 = childrenArr[2] %}#}
-                        {#{% set filterTopicUrl = name1|replace({' ':'-'}) %}#}
-                        {#<li>#}
-                            {#<a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTopicUrl}) }}">{{ value }}</a>#}
-                            {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id1}) }}" target="_blank">{{ name1 }}</a>#}
-                        {#</li>#}
-
-                        {#{% for childrens1Arr in childrens1 %}#}
-                            {#{% set id2 = childrens1Arr[0] %}#}
-                            {#{% set name2 = childrens1Arr[1] %}#}
-                            {#{% set childrens2 = childrens1Arr[2] %}#}
-                            {#<li>#}
-                                {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id2}) }}">{{ name2 }}</a>#}
-                            {#</li>#}
-
-                            {#{% for childrens2Arr in childrens2 %}#}
-                                {#{% set id3 = childrens2Arr[0] %}#}
-                                {#{% set name3 = childrens2Arr[1] %}#}
-                                {#{% set childrens3 = childrens2Arr[2] %}#}
-                                {#<li>#}
-                                    {#<a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id3}) }}">{{ name3 }}</a>#}
-                                {#</li>#}
-                            {#{% endfor %}#}
-
-                        {#{% endfor %}#}
-
-                    {#{% endfor %}#}
-                {#</ul>#}
-            {#{% endif %}#}
-        {#</li>#}
-        {#{% endif %}#}
-
-    {#{% endfor %}#}
-{#{% endmacro %}#}
-{#{% macro createFilterTopicsSimpleTree(links) %}#}
-    {#{% for link in links %}#}
-        {#<li>#}
-            {#<a href="{{ link.href }}">{{ link.name }}</a>#}
-            {#{% if link.sublinks %}#}
-                {#<ul>#}
-                    {#{{ _self.menu_links(link.sublinks) }}#}
-                {#</ul>#}
-            {#{% endif %}#}
-        {#</li>#}
-    {#{% endfor %}#}
-{#{% endmacro %}#}
 {% macro createFilterTopics( filterTopics ) %}
     {% for topicArr in filterTopics %}
         {% set id = topicArr[0] %}
@@ -244,12 +143,14 @@
                     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
-                    <li id="nav-bar-dashboardhome" class="hidden-xs divider-vertical">
-                        <a href="{{ path(dashboard_sitename~'_home') }}">
-                            <span class="glyphicon glyphicon-stats"></span> Home
-                            {#<span class="fa fa-bar-chart-o"></span> Home#}
-                        </a>
-                    </li>
+                    {% if is_granted('ROLE_DASHBOARD_USER') %}
+                        <li id="nav-bar-dashboardhome" class="hidden-xs divider-vertical">
+                            <a href="{{ path(dashboard_sitename~'_home') }}">
+                                <span class="glyphicon glyphicon-stats"></span> Home
+                                {#<span class="fa fa-bar-chart-o"></span> Home#}
+                            </a>
+                        </li>
+                    {% endif %}
 
                     {#Favorites#}
                     {% set filterFavorites = dashboard_util.getFilterFavorites() %}

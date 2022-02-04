@@ -261,7 +261,7 @@ class DashboardController extends OrderAbstractController
 
         $title = $request->query->get('title');
         if( !$title ) {
-            $title = 'Dashboard';
+            $title = 'Public Dashboards';
         }
 
         return array(
