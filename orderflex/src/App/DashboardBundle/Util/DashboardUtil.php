@@ -152,8 +152,14 @@ class DashboardUtil
         //$filterTopics = $root->getIdBreadcrumbs();
         //$filterTopics = $root->printTree();
 
+        //TODO: show only public topics
+        $public = false;
+        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
+            $public = true;
+        }
+
         //$filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
-        $filterTopics = $root->getFullTreeAsEntity();
+        $filterTopics = $root->getFullTreeAsEntity(array(),array(),$public);
         
         return $filterTopics;
 
@@ -311,7 +317,7 @@ class DashboardUtil
 
     public function getFavorites($user=null) {
 
-        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') ) {
+        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
             return array();
         }
 
@@ -410,6 +416,40 @@ class DashboardUtil
         }
 
         return $chartArr;
+    }
+
+    public function isChartPublic( $chart ) {
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->leftJoin('list.topics','topics');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        $dql->andWhere("topics.publicAccess = TRUE");
+
+        $dql->andWhere("list.id = :chartId");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            'chartId' => $chart->getId()
+        );
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+
+        if( count($charts) > 0 ) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getChartTypes( $asObject=false ) {
@@ -581,12 +621,21 @@ class DashboardUtil
         //echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
 
+//        $public = false;
+//        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
+//            $public = true;
+//        }
+
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("topics = :topicId");
+
+//        if( $public == true ) {
+//            $dql->andWhere("topics.publicAccess = TRUE");
+//        }
 
         $dql->orderBy("list.orderinlist","ASC");
 
@@ -2529,7 +2578,8 @@ class DashboardUtil
             return $chartsArray;
         }
 
-        if( $this->secAuth->isGranted('read', $chartObject) === false ) {
+        //check !isChartPublic and read permission
+        if( $this->isChartPublic($chartObject) == false && $this->secAuth->isGranted('read', $chartObject) === false ) {
             //get admin email
             //$userSecUtil = $this->container->get('user_security_utility');
             $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');

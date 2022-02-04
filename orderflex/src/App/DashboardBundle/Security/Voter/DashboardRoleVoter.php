@@ -52,7 +52,7 @@ class DashboardRoleVoter extends BaseRoleVoter {
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";
         //echo 'dashboard attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
-        //return true;
+        //return true; //testing
 
         $user = $token->getUser();
 

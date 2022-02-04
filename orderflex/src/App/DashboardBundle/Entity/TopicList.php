@@ -471,6 +471,47 @@ class TopicList extends BaseCompositeNode
     }
 
 
+    //TODO: get public topics. How to show if parent is private? Show it as a flat tree?
+    //make a full tree as entity except root
+    public function getFullTreeAsEntity( $nodes=array(), $types=array(), $public=false ) {
+        //echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
+        if( count($types) > 0 ) {
+            if( in_array($this->getType(),$types) ) {
+                //ok: this type is in the provided types
+            } else {
+                //echo "Not in types:".$this."<br>";
+                return $nodes;
+            }
+        }
+
+        foreach( $this->getChildren() as $child ) {
+
+            if( count($types) > 0 ) {
+                if( in_array($child->getType(),$types) ) {
+                    //ok: this type is in the provided types
+                } else {
+                    //echo "Not in types:".$subCategory."<br>";
+                    continue;
+                }
+            }
+
+            //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
+            if( count($child->getChildren()) > 0 ) {
+                $childrenArr = array();
+                $childrenArr = $child->getFullTreeAsEntity($childrenArr,$types);
+            } else {
+                $childrenArr = array();
+            }//if/else children
+
+            $id = $child->getId();
+            $name = $child->getName();
+            $nodes[] = array($id,$name,$childrenArr);
+
+        }
+
+        return $nodes;
+    }
+
 
     //is used to construct parent's show path the same as in ListController.php
     public function getClassName()

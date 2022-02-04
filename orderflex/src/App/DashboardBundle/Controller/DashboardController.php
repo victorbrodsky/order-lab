@@ -355,11 +355,11 @@ class DashboardController extends OrderAbstractController
     public function singleOrigChartAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
-        }
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+//        }
 
         $dashboardUtil = $this->container->get('dashboard_util');
 
@@ -386,11 +386,11 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTopicByIdAction( Request $request, $id ) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
-        }
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
+//        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -712,6 +712,13 @@ class DashboardController extends OrderAbstractController
     }
 
     public function isViewPermitted($chart) {
+        
+        //check isChartPublic
+        $dashboardUtil = $this->container->get('dashboard_util');
+        if( $dashboardUtil->isChartPublic($chart) ) {
+            return true;
+        }
+        
         if( $this->get('security.authorization_checker')->isGranted('read', $chart) === true ) {
             return true;
         }

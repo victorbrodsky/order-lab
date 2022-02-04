@@ -688,6 +688,8 @@ security:
        - { path: ^/dashboards/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/public, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/single-chart/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/topic/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
 #       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
       #https://stackoverflow.com/questions/21020550/symfony-access-control-for-site-root/21023494

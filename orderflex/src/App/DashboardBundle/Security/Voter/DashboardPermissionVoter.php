@@ -137,6 +137,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
     protected function canView($subject, TokenInterface $token) {
         //exit('dashboard canView');
 
+        //return true; //testing
         //return false;
 
         $user = $token->getUser();
@@ -271,6 +272,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
 
     public function userHasChartAccessRoles($user,$chart) {
+        //return true; //testing
+
         $securityUtil = $this->container->get('user_security_utility');
 
         $sitename = $this->getSitename();
@@ -354,6 +357,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
 
     protected function canEdit($subject, TokenInterface $token) {
+        //return true; //testing
         //exit('dashboard canEdit');
 
         if( parent::canEdit($subject,$token) ) {
