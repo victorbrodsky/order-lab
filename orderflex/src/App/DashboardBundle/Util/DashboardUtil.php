@@ -156,6 +156,19 @@ class DashboardUtil
         $public = false;
         if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
             $public = true;
+            //get flat tree
+
+            //$nodes=array(), $nameMethod="getNodeNameWithParent", $asLabelValue=true, $types=array()
+            //$filterTopics = $root->printTreeSelectList(array(),"getName",false);
+            //$filterTopics = $root->getFullTreeAsEntity(array(),array(),$public);
+
+//            $publicTopics = array();
+//            foreach($filterTopics as $id => $name) {
+//                if( ) {
+//                    $publicTopics[] =
+//                }
+//
+//            }
         }
 
         //$filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
