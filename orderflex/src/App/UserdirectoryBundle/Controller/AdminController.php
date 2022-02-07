@@ -6569,6 +6569,7 @@ class AdminController extends OrderAbstractController
         $types = array(
             "Business Travel / Vacation Request" => "business-vacation",
             "Carry Over Request" => "carryover",
+            "Floating Dat" => "floatingday",
         );
 
         $count = 10;
