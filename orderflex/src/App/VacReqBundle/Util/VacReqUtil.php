@@ -858,8 +858,8 @@ class VacReqUtil
         if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
             //OK
         } else {
-            //exit("Not Cover Over request");
-            return "Not Cover Over request";
+            //exit("Not Carry Over request");
+            return "Not Carry Over request";
         }
 
         $newStatus = $entity->getStatus();

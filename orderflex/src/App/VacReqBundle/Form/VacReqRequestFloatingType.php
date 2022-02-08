@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormEvent;
 use App\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
-class VacReqFloatingDayType extends AbstractType
+class VacReqRequestFloatingType extends AbstractType
 {
 
     protected $params;
@@ -47,13 +47,7 @@ class VacReqFloatingDayType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
-
-        //enable status radio only for admin or for reviewer
-        $readOnly = true;
-        if( $this->params['roleAdmin'] ||
-            ($this->params['review'] == true && $this->params['roleCarryOverApprover']) ) {
-            $readOnly = false;
-        }
+        
 
 //        $builder->add('status', ChoiceType::class, array( //flipped
 //            //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
@@ -286,7 +280,7 @@ class VacReqFloatingDayType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\VacReqBundle\Entity\VacReqRequest',
+            'data_class' => 'App\VacReqBundle\Entity\VacReqRequestFloating',
             'form_custom_value' => null,
             //'csrf_protection' => false,
         ));
@@ -294,7 +288,7 @@ class VacReqFloatingDayType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'oleg_vacreqbundle_request';
+        return 'oleg_vacreqbundle_requestfloating';
     }
 
 

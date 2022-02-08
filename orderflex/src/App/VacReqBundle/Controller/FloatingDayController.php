@@ -22,7 +22,10 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use App\VacReqBundle\Entity\VacReqRequest;
+use App\VacReqBundle\Entity\VacReqRequestFloating;
+use App\VacReqBundle\Form\VacReqFilterType;
 use App\VacReqBundle\Form\VacReqFloatingDayType;
+use App\VacReqBundle\Form\VacReqRequestFloatingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -33,6 +36,152 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FloatingDayController extends OrderAbstractController
 {
+
+    /**
+     * @Route("/incoming-requests/floating-day", name="vacreq_floatingrequests", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/FloatingDay/index.html.twig")
+     */
+    public function incomingFloatingRequestsAction(Request $request)
+    {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //exit('incomingFloatingRequestsAction');
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routeName = $request->get('_route');
+        $sitename = $this->getParameter('vacreq.sitename');
+        $filtered = false;
+        $indexTitle = "Floating Day Incoming Requests";
+        $pageTitle = $indexTitle;
+        $requestTypeAbbreviation = "floatingday";
+
+        //////////////// create vacreq filter ////////////////
+        $params = array(
+            //'cycle' => 'show'
+            'routeName' => $routeName,
+            'filterShowUser' => true,
+            'requestTypeAbbreviation' => $requestTypeAbbreviation
+        );
+
+        $supervisorRole = false;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            $supervisorRole = true;
+        }
+        $params['supervisor'] = $supervisorRole;
+
+        //////////////////// get list of users with "unknown" user ////////////////////
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $dqlFilterUser = $repository->createQueryBuilder('user');
+        $dqlFilterUser->select('user');
+        $dqlFilterUser->leftJoin("user.infos","infos");
+        $dqlFilterUser->leftJoin("user.employmentStatus", "employmentStatus");
+        $dqlFilterUser->leftJoin("employmentStatus.employmentType", "employmentType");
+        //filter out system user
+        $dqlFilterUser->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
+        //filter out Pathology Fellowship Applicants
+        $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        //$dqlFilterUser->where("user.keytype IS NOT NULL");
+        $dqlFilterUser->orderBy("infos.lastName","ASC");
+        $queryFilterUser = $em->createQuery($dqlFilterUser);
+        $filterUsers = $queryFilterUser->getResult();
+        //echo "count=".count($filterUsers)."<br>";
+        //add unknown dummy user
+//        $unknown = new User();
+//        $unknown->setDisplayName("unknown");
+//        $em->persist($unknown);
+        //$filterUsers[] = $unknown;
+//        array_unshift($filterUsers, $unknown);
+        $params['filterUsers'] = $filterUsers;
+        //////////////////// EOF get list of users with "unknown" user ////////////////////
+
+        //get submitter groups: VacReqRequest, create
+        $groupParams = array();
+        $groupParams['statusArr'] = array('default','user-added');
+        if( $request->get('_route') == "vacreq_myrequests" ) {
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        }
+        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+                if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                    $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+                }
+            } else {
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+            }
+        }
+        if( $request->get('_route') == "vacreq_floatingrequests" ) {
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
+        }
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
+
+
+        $filterform = $this->createForm(VacReqFilterType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+        //////////////// EOF create vacreq filter ////////////////
+
+        //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+        $filterform->handleRequest($request);
+        
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql = $repository->createQueryBuilder("request");
+
+        $dql->select('request');
+
+        //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
+        //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+
+        $dql->leftJoin("request.user", "user");
+        //$dql->leftJoin("request.submitter", "submitter");
+        $dql->leftJoin("user.infos", "infos");
+        $dql->leftJoin("request.institution", "institution");
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        $paginationParams = array(
+            //'defaultSortFieldName' => 'request.firstDayAway', //createDate
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            $paginationParams
+        );
+        
+
+        return array(
+            'filterform' => $filterform,
+            'vacreqfilter' => $filterform->createView(),
+            'pagination' => $pagination,
+            'sitename' => $sitename,
+            'filtered' => $filtered,
+            'routename' => $routeName,
+            'title' => $indexTitle,
+            'pageTitle' => $pageTitle,
+            'requestTypeAbbreviation' => $requestTypeAbbreviation,
+            //'totalApprovedDaysString' => $params['totalApprovedDaysString']
+        );
+    }
 
     /**
      * @Route("/floating-day-request", name="vacreq_floating_day", methods={"GET"})
@@ -55,7 +204,7 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $entity = new VacReqRequest($user);
+        $entity = new VacReqRequestFloating($user);
         
         $params = array();
         $params['em'] = $em;
@@ -242,7 +391,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $form = $this->createForm(
-            VacReqFloatingDayType::class,
+            VacReqRequestFloatingType::class,
             $entity,
             array(
                 'form_custom_value' => $params,

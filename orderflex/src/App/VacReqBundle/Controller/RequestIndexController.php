@@ -37,8 +37,6 @@ class RequestIndexController extends OrderAbstractController
 {
 
     /**
-     * Creates a new VacReqRequest entity.
-     *
      * @Route("/my-requests/", name="vacreq_myrequests", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Request/index.html.twig")
      */
@@ -74,16 +72,49 @@ class RequestIndexController extends OrderAbstractController
 
 
     /**
-     * Creates a new VacReqRequest entity.
-     *
      * @Route("/incoming-requests/", name="vacreq_incomingrequests", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Request/index.html.twig")
      */
     public function incomingRequestsAction(Request $request)
     {
-
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //redirect to floating list
+        $em = $this->getDoctrine()->getManager();
+        $requestParams = $request->query->all();
+        if( $requestParams && array_key_exists("filter", $requestParams) ) {
+            if( array_key_exists("requestType", $requestParams["filter"]) ) {
+                $requestTypeId = $requestParams["filter"]["requestType"];
+                if( $requestTypeId ) {
+                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+                    if (!$requestType) {
+                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
+                    }
+                    echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+                    if( $requestType->getAbbreviation() == 'floatingday' ) {
+
+                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
+
+                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
+                        return $this->redirect(
+                            $this->generateUrl('vacreq_floatingrequests',
+                            array(
+                                'filter[requestType]' => $requestType->getId(), //'floatingday'
+                                //startdate
+                                //enddate
+                                //academicYear
+                                //user
+                                //submitter
+                                //organizationalInstitutions
+                            )
+                        ));
+                        exit('111');
+                    }
+                }
+            }
         }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -112,7 +143,7 @@ class RequestIndexController extends OrderAbstractController
         $routeName = $request->get('_route');
 
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
-        $dql =  $repository->createQueryBuilder("request");
+        $dql = $repository->createQueryBuilder("request");
 
         $dql->select('request as object');
 
