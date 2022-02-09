@@ -47,12 +47,66 @@ class RequestIndexController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        ///////// redirect to floating list /////////
+        $em = $this->getDoctrine()->getManager();
+        $requestParams = $request->query->all();
+        if( $requestParams && array_key_exists("filter", $requestParams) ) {
+            if( array_key_exists("requestType", $requestParams["filter"]) ) {
+                $requestTypeId = $requestParams["filter"]["requestType"];
+                if( $requestTypeId ) {
+                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+                    if (!$requestType) {
+                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
+                    }
+                    echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+                    if( $requestType->getAbbreviation() == 'floatingday' ) {
+
+                        $startdate = $requestParams["filter"]["startdate"];
+                        $enddate = $requestParams["filter"]["enddate"];
+                        $academicYear = $requestParams["filter"]["academicYear"];
+
+                        $subjectUser = NULL;
+                        if( isset($requestParams["filter"]["user"]) ) {
+                            $subjectUser = $requestParams["filter"]["user"];
+                        }
+
+                        $submitter = NULL;
+                        if( isset($requestParams["filter"]["submitter"]) ) {
+                            $submitter = $requestParams["filter"]["submitter"];
+                        }
+                        $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+
+                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
+
+                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
+                        return $this->redirect(
+                            $this->generateUrl('vacreq_myfloatingrequests',
+                                array(
+                                    'filter[requestType]' => $requestType->getId(),
+                                    'filter[startdate]' => $startdate,
+                                    'filter[enddate]' => $enddate,
+                                    'filter[academicYear]' => $enddate,
+                                    'filter[user]' => $subjectUser,
+                                    'filter[submitter]' => $submitter,
+                                    'filter[organizationalInstitutions]' => $organizationalInstitutions
+                                )
+                            ));
+                        //exit('111');
+                    }
+                }
+            }
+        }
+        ///////// EOF redirect to floating list /////////
+
         //$vacreqUtil = $this->get('vacreq_util');
 
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //calculate approved vacation days in total.
         //$totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
@@ -81,7 +135,7 @@ class RequestIndexController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //redirect to floating list
+        ///////// redirect to floating list /////////
         $em = $this->getDoctrine()->getManager();
         $requestParams = $request->query->all();
         if( $requestParams && array_key_exists("filter", $requestParams) ) {
@@ -102,7 +156,7 @@ class RequestIndexController extends OrderAbstractController
                         $subjectUser = $requestParams["filter"]["user"];
                         $submitter = $requestParams["filter"]["submitter"];
                         $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
-                        
+
                         //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
 
                         //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
@@ -118,11 +172,12 @@ class RequestIndexController extends OrderAbstractController
                                 'filter[organizationalInstitutions]' => $organizationalInstitutions
                             )
                         ));
-                        exit('111');
+                        //exit('111');
                     }
                 }
             }
         }
+        ///////// EOF redirect to floating list /////////
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 

@@ -108,32 +108,32 @@
 
         <hr>
 
-    {{ formmacros.field(form.floatingDayType) }}
+        {{ formmacros.field(form.floatingType) }}
 
-    {#{{ formmacros.fieldDateLabel(form.floatingDate,'allow-future-date') }}#}
+        {#{{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}#}
 
-    {#“Floating Day Attestation Text” value (by default it will show the value “I have worked on”#}
-    {#{{ formmacros.field(form.worked) }}#}
-    <p>
-    <div class="row">
-        <div class="col-xs-6" align="right" style1="white-space: nowrap;">
-            {#{{ form_label(form.worked) }} <strong><div id="worked-on-floating-daytype"></div></strong>#}
-            <div>
-                <strong>
-                    <div style="display:inline-block; margin-right:3px;">{{ form.worked.vars.label }}</div>
-                    <div style="display:inline-block; color: darkblue;" id="worked-on-floating-daytype"></div>:
-                </strong>
-                {#<strong>11111111111111111111111111111111111111111111111 <div id="worked-on-floating-daytype"></div>:</strong>#}
+        {#“Floating Day Attestation Text” value (by default it will show the value “I have worked on”#}
+        {#{{ formmacros.field(form.work) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right" style1="white-space: nowrap;">
+                {#{{ form_label(form.work) }} <strong><div id="work-on-floating-daytype"></div></strong>#}
+                <div>
+                    <strong>
+                        <div style="display:inline-block; margin-right:3px;">{{ form.work.vars.label }}</div>
+                        <div style="display:inline-block; color: darkblue;" id="work-on-floating-daytype"></div>:
+                    </strong>
+                    {#<strong>11111111111111111111111111111111111111111111111 <div id="work-on-floating-daytype"></div>:</strong>#}
+                </div>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(form.work) }}
             </div>
         </div>
-        <div class="col-xs-6" align="left">
-            {{ form_widget(form.worked) }}
-        </div>
-    </div>
-    </p>
+        </p>
 
-    {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
-    {{ formmacros.fieldDateLabel(form.floatingDate,'allow-future-date') }}
+        {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
+        {{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}
 
 
         {#{% if form.status is defined %}#}
@@ -142,6 +142,13 @@
 
         {#{{ form_rest(form) }}#}
         {{ form_row(form._token) }}
+
+        {% if form.save is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.save) }}
+            </p>
+        {% endif %}
 
     {{ form_end(form,{'render_rest': false}) }}
 
@@ -166,11 +173,11 @@
         <br>
     {% endif %}
 
-    {% if cycle == "new" %}
-        <p>
-            <button id="btnCreateVacReq" class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqFloatingDayForm(this)">Submit</button>
-        </p>
-    {% endif %}
+    {#{% if cycle == "new" %}#}
+        {#<p>#}
+            {#<button id="btnCreateVacReq" class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqFloatingDayForm(this)">Submit</button>#}
+        {#</p>#}
+    {#{% endif %}#}
 
     {% set statusPending = false %}
     {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
@@ -205,7 +212,7 @@
 
         $(document).ready(function() {
 
-            $('#oleg_vacreqbundle_request_floatingDayType').on("change", function(e) {
+            $('#oleg_vacreqbundle_requestfloating_floatingType').on("change", function(e) {
                 setWorkingFloatingDayType();
             });
 
@@ -214,37 +221,47 @@
         });
 
         function validateVacReqFloatingDayForm(btn) {
-            //console.log("validateVacReqFloatingDayForm");
+            console.log("validateVacReqFloatingDayForm");
 
 
-            var worked = $('.floatingday-worked').is(":checked"); //$('.floatingday-worked').val();
-            //console.log("worked="+worked);
-            var floatingDate = $('.floatingDate').val();
-            //console.log("floatingDate="+floatingDate);
+            var work = $('.floatingday-work').is(":checked"); //$('.floatingday-work').val();
+            //console.log("work="+work);
+            var floatingDay = $('.floatingDay').val();
+            //console.log("floatingDay="+floatingDay);
 
-            if( worked && !floatingDate ) {
-                var error = "Please choose the requested floating day";
+            if( !work ) {
+                var error = "Please select checkbox if you have worked or plan to work on the requested floating day";
                 $('#error-box').text(error).show();
-                return true;
+                return false;
             }
 
-            var error = "The page and functionality are under construction! "+
-                    "If a Floating Day of the selected type has already been approved for this same academic year: "+
-                    "A Floating day of [date] has already been approved for this [2021-2022] academic year by " +
-                    "ApproverFirstName ApproverLastName on MM/DD/YYYY and HH:MM. " +
-                    "Only one [floating day type] floating day can be approved per academic year";
-            $('#error-box').text(error).show();
+            if( work && !floatingDay ) {
+                var error = "Please choose the requested floating day";
+                $('#error-box').text(error).show();
+                return false;
+            }
 
+            //TODO: check if selected day has already been approved
+            if(0) {
+                var error = "The page and functionality are under construction! " +
+                        "If a Floating Day of the selected type has already been approved for this same academic year: " +
+                        "A Floating day of [date] has already been approved for this [2021-2022] academic year by " +
+                        "ApproverFirstName ApproverLastName on MM/DD/YYYY and HH:MM. " +
+                        "Only one [floating day type] floating day can be approved per academic year";
+                $('#error-box').text(error).show();
+            }
+
+            console.log("form is valid");
             return true;
         }
 
         function setWorkingFloatingDayType() {
-            //get select2 oleg_vacreqbundle_request_floatingDayType
-            var floatingDayType = $('#oleg_vacreqbundle_requestfloating_floatingDayType').select2('data');
-            if( floatingDayType ) {
-                console.log('floatingDayType=' + floatingDayType.text);
-                if (floatingDayType.text) {
-                    $('#worked-on-floating-daytype').text(floatingDayType.text);
+            //get select2 oleg_vacreqbundle_request_floatingType
+            var floatingType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('data');
+            if( floatingType ) {
+                console.log('floatingType=' + floatingType.text);
+                if (floatingType.text) {
+                    $('#work-on-floating-daytype').text(floatingType.text);
                 }
             }
         }

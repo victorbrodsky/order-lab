@@ -27,6 +27,7 @@ namespace App\VacReqBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -400,7 +401,118 @@ class VacReqRequestFloating
     }
 
 
+    public function printRequest( $container=null )
+    {
+        //$break = "\r\n";
+        $break = "<br>";
 
+        $res = "";
+
+        $res .= "Floating Day Request ID: ".$this->getId().$break;
+        $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+
+        $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
+        $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+
+        if( $this->getApprover() ) {
+            $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
+        }
+
+        if( $this->getApprovedRejectDate() ) {
+            $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
+        }
+        $res .= "Organizational Group: ".$this->getInstitution().$break;
+
+        $res .= "Phone Number for the person away: ".$this->getPhone().$break;
+        //$res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
+
+        $worked = "N/A";
+        if( $this->getWork() === true ) {
+            $worked = "Yes";
+        }
+        if( $this->getWork() === false ) {
+            $worked = "No";
+        }
+
+        $res .= "### Floating Day Request ###".$break;
+        $res .= "Status: ".$this->getStatus().$break;
+        $res .= "Floating Day Type: ".$this->getFloatingType().$break;
+        $res .= "I have worked or plan to work: ".$worked.$break;
+
+        if( $this->getApproverComment() ) {
+            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+        }
+
+        //$requestType = $this->getRequestType();
+//        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
+//            $res = "";
+//            if( $this->getDetailedStatus() ) {
+//                $res .= $this->getDetailedStatus() . $break;
+//            }
+//            $res .= "Request ID: ".$this->getId().$break;
+//            $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
+//
+//            //$res .= "Submitter: ".$this->getSubmitter().$break;
+//            //$res .= "Person Away: ".$this->getUser().$break;
+//            //$res .= "Approver: ".$this->getApprover().$break;
+//            $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
+//            $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
+//
+//            //getTentativeApprover
+//            if( $this->getTentativeApprover() ) {
+//                $res .= $this->createUseStrUrl($this->getTentativeApprover(), "Tentative Approver:", $container) . $break;
+//            }
+//
+//            if( $this->getApprover() ) {
+//                $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
+//            }
+//
+//            if( $this->getApprovedRejectDate() ) {
+//                $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
+//            }
+//            $res .= "Organizational Group: ".$this->getInstitution().$break;
+//
+//            $res .= $break;
+//            $res .= "### Carry Over Request ###".$break;
+//            $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
+//            $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
+//            $res .= "from: ".$this->getSourceYearRange().$break;
+//            $res .= "to: " . $this->getDestinationYearRange().$break;
+//        }
+
+        return $res;
+    }
+
+    //"Submitter: " . $this->getSubmitter() . (url)
+    public function createUseStrUrl( $user, $label, $container ) {
+        if( !$user ) {
+            return "";
+        }
+        if( !$container ) {
+            return $label . " " . $user . "";
+        }
+
+        $userUrl = $container->get('router')->generate(
+            'vacreq_showuser',
+            array(
+                'id' => $user->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $userStrUrl = $label . " " . $user . " (" . $userUrl . ")";
+
+        return $userStrUrl;
+    }
+
+    public function getEmailSubject() {
+        $subject = $this->getUser()->getUsernameOptimal() . " has submitted the " . $this->getRequestName() . " #" . $this->getId();
+        return $subject;
+    }
+
+    public function getRequestName() {
+        return "Floating Day Request";
+    }
 
     public function __toString()
     {

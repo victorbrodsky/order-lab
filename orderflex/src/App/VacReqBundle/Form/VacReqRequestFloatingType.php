@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -133,8 +134,8 @@ class VacReqRequestFloatingType extends AbstractType
             //'disabled' => ($this->params['review'] ? true : false)
         ));
 
-        //floatingDayType
-//        $builder->add('floatingDayType', ChoiceType::class, array(
+        //floatingType
+//        $builder->add('floatingType', ChoiceType::class, array(
 //            'label' => "Floating Day:",
 //            'choices' => array("Juneteenth"=>"Juneteenth"),
 //            'required' => false,
@@ -143,13 +144,13 @@ class VacReqRequestFloatingType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //            //'disabled' => ($this->params['review'] ? true : false)
 //        ));
-        $builder->add('floatingDayType', EntityType::class, array(
+        $builder->add('floatingType', EntityType::class, array(
             'class' => 'AppVacReqBundle:VacReqFloatingTypeList',
             'label' => "Floating Day:",
             'required' => false,
             'multiple' => false,
-            'data' => $this->params['defaultFloatingDayType'],
-            'mapped' => false,
+            'data' => $this->params['defaultFloatingType'],
+            //'mapped' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -163,11 +164,11 @@ class VacReqRequestFloatingType extends AbstractType
         ));
         
         //worked
-        $builder->add('worked', CheckboxType::class, array(
+        $builder->add('work', CheckboxType::class, array(
             'label' => 'I have worked or plan to work on',
-            'mapped' => false,
+            //'mapped' => false,
             'required' => false,
-            'attr' => array('class' => 'floatingday-worked'),
+            'attr' => array('class' => 'floatingday-work'),
         ));
 
         //organizationalInstitutions
@@ -177,14 +178,13 @@ class VacReqRequestFloatingType extends AbstractType
             $requiredInst = true;
         }
 
-        //floatingDate
-        $builder->add('floatingDate', DateType::class, array(
+        $builder->add('floatingDay', DateType::class, array(
             'label' => "The floating day I am requesting for this fiscal year is:",
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
-            'mapped' => false,
-            'attr' => array('class' => 'form-control datetimepicker floatingDate', 'placeholder' => 'Floating Date', 'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip')
+            //'mapped' => false,
+            'attr' => array('class' => 'form-control datetimepicker floatingDay', 'placeholder' => 'Floating Date', 'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip')
         ));
 
 //        echo "organizationalInstitutions count=".count($this->params['organizationalInstitutions'])."<br>";
@@ -227,53 +227,61 @@ class VacReqRequestFloatingType extends AbstractType
                 )
             );
 
-        //tentativeInstitution
-        if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
+//        $builder->add('save', SubmitType::class, [
+//            'attr' => ['class' => 'save'],
+//        ]);
+        $builder->add('save', SubmitType::class, array(
+            'label' => "Submit",
+            'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return validateVacReqFloatingDayForm(this);')
+        ));
 
-            //$readonlyTentativeInstitution = ($this->params['review'] ? true : false);
-
-            $requiredTentInst = false;
-            if (count($this->params['tentativeInstitutions']) == 1) {
-                //echo "set org inst <br>";
-                $requiredTentInst = true;
-            } else {
-                //$readonlyTentativeInstitution = false;
-            }
-            //$requiredTentInst = true;
-            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group');
-            if( $this->params['review'] ) {
-                $tentativeInstitutionAttr['readonly'] = true;
-            }
-            $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
-                'label' => "Tentative Approval:",
-                'required' => $requiredTentInst,
-                'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
-                'choices' => $this->params['tentativeInstitutions'],
-                //'choices_as_values' => true,
-                //'disabled' => ($this->params['review'] ? true : false)
-            ));
-            $builder->get('tentativeInstitution')
-                ->addModelTransformer(new CallbackTransformer(
-                    //original from DB to form: institutionObject to institutionId
-                        function ($originalInstitution) {
-                            //echo "originalInstitution=".$originalInstitution."<br>";
-                            if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
-                                return $originalInstitution->getId();
-                            }
-                            return $originalInstitution; //id
-                        },
-                        //reverse from form to DB: institutionId to institutionObject
-                        function ($submittedInstitutionObject) {
-                            //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
-                            if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
-                                return $institutionObject;
-                            }
-                            return null;
-                        }
-                    )
-                );
-        }//if tentativeInstitutions
+//        //tentativeInstitution
+//        if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
+//
+//            //$readonlyTentativeInstitution = ($this->params['review'] ? true : false);
+//
+//            $requiredTentInst = false;
+//            if (count($this->params['tentativeInstitutions']) == 1) {
+//                //echo "set org inst <br>";
+//                $requiredTentInst = true;
+//            } else {
+//                //$readonlyTentativeInstitution = false;
+//            }
+//            //$requiredTentInst = true;
+//            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group');
+//            if( $this->params['review'] ) {
+//                $tentativeInstitutionAttr['readonly'] = true;
+//            }
+//            $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
+//                'label' => "Tentative Approval:",
+//                'required' => $requiredTentInst,
+//                'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
+//                'choices' => $this->params['tentativeInstitutions'],
+//                //'choices_as_values' => true,
+//                //'disabled' => ($this->params['review'] ? true : false)
+//            ));
+//            $builder->get('tentativeInstitution')
+//                ->addModelTransformer(new CallbackTransformer(
+//                    //original from DB to form: institutionObject to institutionId
+//                        function ($originalInstitution) {
+//                            //echo "originalInstitution=".$originalInstitution."<br>";
+//                            if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
+//                                return $originalInstitution->getId();
+//                            }
+//                            return $originalInstitution; //id
+//                        },
+//                        //reverse from form to DB: institutionId to institutionObject
+//                        function ($submittedInstitutionObject) {
+//                            //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+//                            if ($submittedInstitutionObject) { //id
+//                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+//                                return $institutionObject;
+//                            }
+//                            return null;
+//                        }
+//                    )
+//                );
+//        }//if tentativeInstitutions
 
     }
 
