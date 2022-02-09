@@ -48,7 +48,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //exit('incomingFloatingRequestsAction');
-
+        $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
@@ -61,9 +61,10 @@ class FloatingDayController extends OrderAbstractController
         //////////////// create vacreq filter ////////////////
         $params = array(
             //'cycle' => 'show'
+            'em' => $em,
             'routeName' => $routeName,
             'filterShowUser' => true,
-            'requestTypeAbbreviation' => $requestTypeAbbreviation
+            'requestTypeAbbreviation' => $requestTypeAbbreviation,
         );
 
         $supervisorRole = false;
@@ -278,7 +279,7 @@ class FloatingDayController extends OrderAbstractController
         //echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         //include this request institution to the $tentativeInstitutions array
-        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
+        //$tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
 
         if( count($organizationalInstitutions) == 0 ) {
             //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/

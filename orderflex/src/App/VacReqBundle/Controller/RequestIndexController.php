@@ -96,19 +96,26 @@ class RequestIndexController extends OrderAbstractController
                     //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
                     if( $requestType->getAbbreviation() == 'floatingday' ) {
 
+                        $startdate = $requestParams["filter"]["startdate"];
+                        $enddate = $requestParams["filter"]["enddate"];
+                        $academicYear = $requestParams["filter"]["academicYear"];
+                        $subjectUser = $requestParams["filter"]["user"];
+                        $submitter = $requestParams["filter"]["submitter"];
+                        $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+                        
                         //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
 
                         //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
                         return $this->redirect(
                             $this->generateUrl('vacreq_floatingrequests',
                             array(
-                                'filter[requestType]' => $requestType->getId(), //'floatingday'
-                                //startdate
-                                //enddate
-                                //academicYear
-                                //user
-                                //submitter
-                                //organizationalInstitutions
+                                'filter[requestType]' => $requestType->getId(),
+                                'filter[startdate]' => $startdate,
+                                'filter[enddate]' => $enddate,
+                                'filter[academicYear]' => $enddate,
+                                'filter[user]' => $subjectUser,
+                                'filter[submitter]' => $submitter,
+                                'filter[organizationalInstitutions]' => $organizationalInstitutions
                             )
                         ));
                         exit('111');
