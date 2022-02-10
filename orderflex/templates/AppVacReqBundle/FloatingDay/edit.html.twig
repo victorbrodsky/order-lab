@@ -44,7 +44,6 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="requestType" value="{{ entity.getRequestTypeAbbreviation() }}" />
-    <input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         <input type="hidden" id="vacreq_admin" value="admin" />
@@ -70,18 +69,6 @@
                 {{ prefixStr }} <a href="{{ path(vacreq_sitename~'_accessrequest_list') }}" target="_blank">{{ accessreqs }} {{ postfixStr }}</a>
             </div>
         {% endif %}
-
-        {% if carryoverPendingRequests is defined and carryoverPendingRequests and carryoverPendingRequests > 0 %}
-            {% set prefixStr = "There is" %}
-            {% set postfixStr = "unprocessed Carry Over request." %}
-            {% if carryoverPendingRequests > 1 %}
-                {% set prefixStr = "There are" %}
-                {% set postfixStr = "unprocessed Carry Over requests." %}
-            {% endif %}
-            <div class="alert alert-warning">
-                {{ prefixStr }} <a href="{{ path(vacreq_sitename~'_incomingrequests',{'filter[requestType]':requestTypeCarryOverId}) }}" target="_blank">{{ carryoverPendingRequests }} {{ postfixStr }}</a>
-            </div>
-        {% endif %}
     {% endif %}
 
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
@@ -95,13 +82,6 @@
         </div>
     {% endif %}
 
-    {% if newCarryOverRequest is defined and newCarryOverRequest %}
-        <div class="alert alert-success">
-            <p>{{ newCarryOverRequest|raw }}</p>
-        </div>
-    {% endif %}
-
-
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
@@ -114,7 +94,7 @@
 
     <hr>
 
-    {{ form_start(form,{'attr': {'id': 'vacreq-request-form'}}) }}
+    {{ form_start(form,{'attr': {'id': 'vacreq-floating-request-form'}}) }}
 
         {#<div class="my-custom-class-for-errors">#}
             {#{{ form_errors(form) }}#}
@@ -892,7 +872,7 @@
                 return false;
             }
 
-            $('#vacreq-request-form').submit();
+            $('#vacreq-floating-request-form').submit();
         }
         function validateVacReqBusinessVacationForm(btn) {
 
@@ -1005,7 +985,7 @@
                 return false;
             }
 
-            $('#vacreq-request-form').submit();
+            $('#vacreq-floating-request-form').submit();
         }
 
 
@@ -1015,12 +995,6 @@
 
 {#Snapshot css#}
 {% block additionalcss %}
-    {#{% stylesheets#}
-        {#'orderassets/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/steve-snapshot.css') }}" />
 
 {% endblock %}

@@ -152,7 +152,7 @@ class VacReqUtil
         //echo "<br>institution=".$institution."<br>";
         //echo "tentative institution=".$entity->getTentativeInstitution()."<br>";
 
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
 
             //echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
             if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
@@ -300,7 +300,7 @@ class VacReqUtil
         }
 
         //CARRYOVER body
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
 
             $yearRange = $this->getCurrentAcademicYearRange();
             //$accruedDays = $this->getAccruedDaysUpToThisMonth();
@@ -407,7 +407,7 @@ class VacReqUtil
                 $message .= $break . $break . "To review " . $submitter->getUsernameShortest() . "'s past requests, please follow this link:" . $break;
                 $message .= $reviewUrl;
             }//$withLinks
-        }
+        }//if carryover
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site.";
         $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
@@ -855,7 +855,7 @@ class VacReqUtil
     //don't need parameter $originalCarryOverDays=NULL
     public function syncVacReqCarryOverRequest( $entity, $originalStatus ) {
 
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
             //OK
         } else {
             //exit("Not Carry Over request");
@@ -2349,7 +2349,7 @@ class VacReqUtil
 
         $academicYearArr = array();
 
-        if( $request->getRequestType() && $request->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $request->getRequestTypeAbbreviation() == "carryover" ) {
             if( $request->getSourceYear() && $request->getDestinationYear() ) {
                 $sourceYear = $request->getSourceYear();
                 $academicYearArr[] = $sourceYear."-".((int)$sourceYear+1);
@@ -3368,7 +3368,7 @@ class VacReqUtil
             }
 
             //Add approvers for a notification email for carry over request (if copy user is not in $approverEmailArr)
-            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                 //echo "getting carry over request approvers<br>";
                 $supervisors = $this->getUsersByGroupId($institution,"ROLE_VACREQ_SUPERVISOR");
                 foreach( $supervisors as $supervisor ) {

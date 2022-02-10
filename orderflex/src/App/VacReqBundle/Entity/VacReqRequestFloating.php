@@ -514,6 +514,10 @@ class VacReqRequestFloating
         return "Floating Day Request";
     }
 
+    public function getRequestTypeAbbreviation() {
+        return "floatingday";
+    }
+
     public function __toString()
     {
         //$break = "\r\n";

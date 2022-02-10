@@ -1491,4 +1491,11 @@ class VacReqRequest
 
         return $userStrUrl;
     }
+
+    public function getRequestTypeAbbreviation() {
+        if( $this->getRequestType() ) {
+            return $this->getRequestType()->getAbbreviation();
+        }
+        return NULL;
+    }
 }

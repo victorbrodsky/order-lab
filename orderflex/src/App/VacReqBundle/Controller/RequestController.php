@@ -258,7 +258,7 @@ class RequestController extends OrderAbstractController
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
 
-            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                 //You have successfully submitted request #1781 for X vacation days to be carried over from 20XX-20YY to 20YY-20ZZ.
                 $message .= "You have successfully submitted the request #".$entity->getId()." for ".$entity->getCarryOverDays();
                 $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().".";
@@ -290,7 +290,7 @@ class RequestController extends OrderAbstractController
             );
 
             //check if requested carry over days are already approved or denied
-            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                 //check if requested carry over days are already approved or denied
                 $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true); //new carryover request
                 $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
@@ -390,7 +390,7 @@ class RequestController extends OrderAbstractController
         $cycle = 'show';
 
         //get request type
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
             $title = "Request carry over of vacation days";
         } else {
             $title = "Vacation/Business Travel Request";
@@ -487,7 +487,7 @@ class RequestController extends OrderAbstractController
         //$originalCarryOverDays = $entity->getCarryOverDays();
 
         //check if requested carry over days are already approved or denied
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
             //check if requested carry over days are already approved or denied
             $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true);    //review carryover request
             $carryOverWarningMessage = $resCarryOverRequest['carryOverWarningMessage'];
@@ -504,7 +504,7 @@ class RequestController extends OrderAbstractController
         //check for overlapped date range
         //$overallStatus = $entity->getStatus();
         //$routeName = $request->get('_route');
-        if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
+        if( $entity->getRequestTypeAbbreviation() == "business-vacation" ) {
 
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
             //echo 'overlappedRequests count='.count($overlappedRequests)."<br>";
@@ -542,7 +542,7 @@ class RequestController extends OrderAbstractController
         }
 
         //check carry over days limit (edit). Should we have this only for "new" request?
-        if( $entity->getRequestType()->getAbbreviation() == "carryover"  ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
             if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
                 $userSecUtil = $this->container->get('user_security_utility');
@@ -580,7 +580,7 @@ class RequestController extends OrderAbstractController
             if( $routName == 'vacreq_review' ) { //review
                 ///////////////// review //////////////////////////
 
-                if( $entity->getRequestType() && $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                     ///////////////// carryover //////////////////////
 
                     $action = "Undefined Action";
@@ -701,7 +701,7 @@ class RequestController extends OrderAbstractController
 
                 $action = "updated";
 
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                     $eventType = 'Carry Over Request Updated';
                 } else {
                     $eventType = 'Business/Vacation Request Updated';
@@ -727,7 +727,7 @@ class RequestController extends OrderAbstractController
             );
 
             //get request type
-            if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+            if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                 $vacreqUtil->syncVacReqCarryOverRequest($entity,$originalStatus); //vacreq_review, vacreq_edit
             }
 
@@ -761,7 +761,7 @@ class RequestController extends OrderAbstractController
         }
 
         //get request type
-        if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
             $title = "Request carry over of vacation days";
         } else {
             $title = "Vacation/Business Travel Request";
@@ -931,12 +931,12 @@ class RequestController extends OrderAbstractController
 
                 $entity->setEntireStatus($status);
 
-                if( $entity->getRequestType()->getAbbreviation() == "business-vacation" ) {
+                if( $entity->getRequestTypeAbbreviation() == "business-vacation" ) {
                     if( $status != 'canceled' && $status != 'pending' ) {
                         $status = 'completed';
                     }
                 }
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                     //exit("status=".$status);
 
                     //#489 (41)
@@ -997,7 +997,7 @@ class RequestController extends OrderAbstractController
                 $em->persist($entity);
                 $em->flush();
 
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                     $vacreqUtil->syncVacReqCarryOverRequest($entity, $originalStatus); //vacreq_status_change, vacreq_status_email_change
                 }
 
@@ -1016,7 +1016,7 @@ class RequestController extends OrderAbstractController
                 }
 
                 $removeCarryoverStr = "";
-//                if( $entity->getRequestType()->getAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
+//                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
 //                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
 //                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
 //                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
@@ -1049,7 +1049,7 @@ class RequestController extends OrderAbstractController
                     $event
                 );
 
-                if( $entity->getRequestType()->getAbbreviation() == "carryover" ) {
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                     $eventType = 'Carry Over Request Updated';
                 } else {
                     $eventType = 'Business/Vacation Request Updated';

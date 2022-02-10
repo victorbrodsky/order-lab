@@ -225,7 +225,7 @@
     {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
 
     {% set carryOver = false %}
-    {% if entity.getRequestType() and entity.getRequestType().getAbbreviation() == "carryover" %}
+    {% if entity.getRequestType() and entity.getRequestTypeAbbreviation() == "carryover" %}
         {% set carryOver = true %}
     {% endif %}
 

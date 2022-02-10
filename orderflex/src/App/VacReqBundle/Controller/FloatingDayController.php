@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //vacreq site
 
@@ -921,8 +922,8 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $testing = true;
-        //$testing = false;
+        //$testing = true;
+        $testing = false;
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
@@ -996,7 +997,7 @@ class FloatingDayController extends OrderAbstractController
             $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
 
             //set confirmation email to approver and email users
-            $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+            $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
 
             //Event Log
             $event = $requestName . " for ".$entity->getUser()." has been submitted.".
@@ -1016,7 +1017,7 @@ class FloatingDayController extends OrderAbstractController
             );
 
             //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-            return $this->redirectToRoute('vacreq_floatingrequests');
+            return $this->redirectToRoute('vacreq_floating_show');
         }
         
         
@@ -1028,6 +1029,579 @@ class FloatingDayController extends OrderAbstractController
             'title' => $title,
             'floatingNote' => $floatingNote
         );
+    }
+
+    /**
+     * @Route("/show/floating/{id}", name="vacreq_floating_show", methods={"GET"})
+     *
+     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
+     */
+    public function showAction(Request $request, $id)
+    {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+            //exit('show: no permission');
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Floating Day Request by id='.$id);
+        }
+
+        if( false == $this->get('security.authorization_checker')->isGranted("read", $entity) ) {
+            //exit('show: no permission');
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+        //exit('show: ok permission');
+
+        //echo "req=".$entity->printRequest($this->container);
+        //exit('1');
+
+        $cycle = 'show';
+
+        //get request type
+        $title = "Floating Day Request";
+
+        $form = $this->createRequestForm($entity,$cycle,$request);
+
+        return array(
+            'entity' => $entity,
+            'cycle' => $cycle,
+            'form' => $form->createView(),
+            'title' => $title
+            //'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Edit: Displays a form to edit an existing VacReqRequest entity.
+     *
+     * @Route("/edit/floating/{id}", name="vacreq_floating_edit", methods={"GET", "POST"})
+     * @Route("/review/floating/{id}", name="vacreq_floating_review", methods={"GET", "POST"})
+     *
+     * @Template("AppVacReqBundle/FloatingDay/edit.html.twig")
+     */
+    public function editAction(Request $request, $id) {
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->get('vacreq_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Floating Day Request by id='.$id);
+        }
+
+        //check permission
+        $routName = $request->get('_route');
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if ($routName == 'vacreq_floating_review') {
+                if (false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity)) {
+                    //exit("vacreq_floating_review: no permission to changestatus");
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "no permission to review/change the status of this floating day request."
+                    );
+                    return $this->redirect($this->generateUrl('vacreq-nopermission'));
+                }
+            } else {
+                if (false == $this->get('security.authorization_checker')->isGranted("update", $entity)) {
+                    //exit('vacreq_edit: no permission to update');
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "no permission to update this floating day request."
+                    );
+                    return $this->redirect($this->generateUrl('vacreq-nopermission'));
+                }
+            }
+        }
+        //exit('testing: approval of carry over request OK'); //testing
+
+        $cycle = 'edit';
+        if( $routName == 'vacreq_floating_review' ) {
+            $cycle = 'review';
+        }
+
+        $changedInfoArr = array();
+
+        $originalTentativeStatus = $entity->getTentativeStatus();
+        $originalStatus = $entity->getStatus();
+        //$originalCarryOverDays = $entity->getCarryOverDays();
+
+//            $carryOverWarningMessage = null;
+//            $carryOverWarningMessageLog = null;
+
+        $form = $this->createRequestForm($entity,$cycle,$request);
+
+        $form->handleRequest($request);
+
+        //check for overlapped date range
+        $overlappedRequests = $this->checkFloatingRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
+        //echo 'overlappedRequests count='.count($overlappedRequests)."<br>";
+        if (count($overlappedRequests) > 0) {
+            //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+            $errorMsg = $this->getOverlappedMessage( $entity, $overlappedRequests, true ); //edit, review
+            $form->addError(new FormError($errorMsg));
+        } else {
+            //exit('no overlaps found');
+        }
+
+        if( $form->isSubmitted() && $form->isValid() ) { //edit, review
+
+            //exit("Review request");
+
+            /////////////// log status ////////////////////////
+            $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
+            $statusF = $entity->getStatus();
+            $statusMsg = $statusMsg . " status=".$statusF;
+            $logger->notice($statusMsg);
+            /////////////// EOF log status ////////////////////////
+
+            //exit('form is valid');
+            if( $routName == 'vacreq_floating_review' ) { //review
+                ///////////////// review //////////////////////////
+
+                //set final (global) status according to sub-requests status:
+                //only two possible actions: reject or approved
+                $entity->setFinalStatus(); //vacreq_floating_review
+
+                $overallStatus = $entity->getStatus();
+
+                if( $overallStatus == "pending" ) {
+                    $entity->setApprover(null);
+                } else {
+                    $entity->setApprover($user);
+                }
+                //exit('vacreq: overallStatus='.$overallStatus."; status=".$entity->getDetailedStatus());
+
+                //$entity->setExtraStatus(NULL);
+                $em->persist($entity);
+                $em->flush();
+
+                $eventType = 'Floating Day Request '.ucwords($overallStatus);
+                $action = $overallStatus;
+
+                //send respond email for the request changed by the form
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
+
+            }//$routName == 'vacreq_floating_review'
+            else
+            {
+                ///////////////// update vacreq_edit (edit page does not allow to change status) //////////////////////////
+
+                $entity->setUpdateUser($user);
+
+                /////////////// Add event log on edit (edit or add collection) ///////////////
+                /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+                $changedInfoArr = $vacreqUtil->setEventLogChanges($entity);
+
+                $em->persist($entity);
+                $em->flush();
+                //echo "1 business req=".$entity->getRequestBusiness()."<br>";
+                //exit('1');
+
+                $action = "updated";
+
+                $eventType = 'Floating Day Request Updated';
+
+            } //if else: review or update
+
+            if( $action == 'pending' ) {
+                $action = 'set to Pending';
+            }
+
+            //Event Log
+            //$break = "\r\n";
+            $break = "<br>";
+            $event = "Request ID #".$entity->getID()." for ".$entity->getUser()." has been ".$action." by ".$user.$break;
+            $event .= $entity->getDetailedStatus().$break.$break;
+            $userSecUtil = $this->container->get('user_security_utility');
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            //set event log for objects
+            if( count($changedInfoArr) > 0 ) {
+                //$user = $this->get('security.token_storage')->getToken()->getUser();
+                $event .= "Updated Data:".$break;
+                $event .= implode("<br>", $changedInfoArr);
+            }
+
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+
+            if( $routName == 'vacreq_floating_review' ) {
+                return $this->redirectToRoute('vacreq_floatingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
+            } else {
+                return $this->redirectToRoute('vacreq_floating_show', array('id' => $entity->getId()));
+            }
+
+        }
+
+        $review = false;
+        if( $request ) {
+            if( $request->get('_route') == 'vacreq_floating_review' ) {
+                $review = true;
+            }
+        }
+
+        //get request type
+        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
+            $title = "Request carry over of vacation days";
+        } else {
+            $title = "Vacation/Business Travel Request";
+        }
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'review' => $review,
+            'title' => $title,
+            'carryOverWarningMessage' => $carryOverWarningMessage
+            //'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * approved, rejected, pending, canceled
+     * @Route("/status/floating/{id}/{status}", name="vacreq_floating_status_change", methods={"GET"})
+     * @Route("/estatus/floating/{id}/{status}", name="vacreq_floating_status_email_change", methods={"GET"})
+     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
+     */
+    public function statusAction(Request $request, $id, $requestName, $status) {
+
+        //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
+        //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        //}
+
+        $logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $vacreqUtil = $this->get('vacreq_util');
+
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Request by id='.$id);
+        }
+
+        $originalStatus = $entity->getStatus();
+
+        /////////////// log status ////////////////////////
+        $logger->notice("RequestController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        /////////////// EOF log status ////////////////////////
+
+        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+            //Approvers can change status to anything
+        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+            //Owner can only set status to: canceled, pending
+            if( $status != "canceled" && $status != "pending" ) {
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
+                );
+                $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: request is not pending or canceled");
+                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            }
+        } else {
+            $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: user does not have permission to changestatus or update for this request");
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //if not pending and vacreq_status_email_change => redirect to incoming request page
+        if( $entity->getStatus() != "pending" && $routeName == 'vacreq_floating_status_email_change' ) {
+            $modificationDate = "";
+            $updateDate = $entity->getUpdateDate();
+            if( $updateDate ) {
+                $modificationDate = " on ".$updateDate->format('m/d/Y H:i:s');
+            }
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                //"This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+                "This ".$entity->getRequestName()." ID #" . $entity->getId()." is not pending anymore and has been modified by ".$entity->getUpdateUser().$modificationDate
+            );
+            return $this->redirectToRoute('vacreq_floatingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
+        }
+
+
+        //check for overlapped date range if a new status is approved
+        if( $status == "approved" ) {
+            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity); //check for statusAction
+            //exit("count=".count($overlappedRequests));
+            if (count($overlappedRequests) > 0) {
+
+                //If the dates overlap with the dates of another APPROVED request EXACTLY =>
+                //This request has been canceled as a duplicate." and set the status to "Canceled" instead of "Approved".
+                if( $vacreqUtil->hasOverlappedExactly( $entity, $overlappedRequests ) ) {
+
+                    //set status to cancel
+                    $status = 'canceled';
+
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true ); //change status: approved, rejected, pending, canceled
+                    $errorMsg .= "<br>This request has been canceled as a duplicate.<br>";
+
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $errorMsg
+                    );
+                } else {
+                    $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $errorMsg
+                    );
+                    return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
+                }
+
+            } else {
+                //exit('no overlaps found');
+            }
+        }
+
+
+        if( $status ) {
+
+            $statusSet = false;
+
+            if( $requestName == 'business' ) {
+                $businessRequest = $entity->getRequestBusiness();
+                if( $businessRequest ) {
+                    $businessRequest->setStatus($status);
+                    //set overall status
+                    if( $status == 'pending' ) {
+                        $entity->setStatus('pending');
+                    } else {
+                        $entity->setStatus('completed');
+                    }
+                    $statusSet = true;
+                }
+            }
+
+            if( $requestName == 'vacation' ) {
+                $vacationRequest = $entity->getRequestVacation();
+                if( $vacationRequest ) {
+                    $vacationRequest->setStatus($status);
+                    //set overall status
+                    if( $status == 'pending' ) {
+                        $entity->setStatus('pending');
+                    } else {
+                        $entity->setStatus('completed');
+                    }
+                    $statusSet = true;
+                }
+            }
+
+            if( $requestName == 'entire' ) {
+
+                $requestName = $entity->getRequestName(); //'business travel and vacation';
+
+                $entity->setEntireStatus($status);
+
+                if( $entity->getRequestTypeAbbreviation() == "business-vacation" ) {
+                    if( $status != 'canceled' && $status != 'pending' ) {
+                        $status = 'completed';
+                    }
+                }
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
+                    //exit("status=".$status);
+
+                    //#489 (41)
+                    if( $status == "approved" ) {
+                        //process carry over request days if request is approved
+                        $res = $vacreqUtil->processVacReqCarryOverRequest($entity); //change status
+                        if( $res && $res['exists'] == true ) {
+                            //warning for overwrite:
+                            //"FirstName LastName already has X days carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year on file.
+                            // This carry over request asks for N days to be carried over from 20YY-20ZZ academic year to the 20ZZ-20MM academic year.
+                            // Please enter the total amount of days that should be carried over 20YY-20ZZ academic year to the 20ZZ-20MM academic year: [ ]"
+                            //exit('exists days='.$res['days']);
+                            return $this->redirectToRoute('vacreq_review',array('id'=>$entity->getId()));
+                        }
+                        if( $res && $res['exists'] == false ) {
+                            //save
+                            $userCarryOver = $res['userCarryOver'];
+                            $em->persist($userCarryOver);
+                        }
+                    }
+
+                    //re-submit request
+                    //echo "statuses:".$status." && ".$originalStatus."<br>";
+                    if( $status == "pending" && $originalStatus == "canceled" ) {
+                        //re-set tentative status according to the submitter group
+                        //set tentativeStatus only for non executive submitter
+                        $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+                        //re-set tentative status according to the TentativeInstitution
+                        if( !$userExecutiveSubmitter && $entity->getTentativeInstitution() ) {
+                            $entity->setTentativeStatus('pending');
+                        } else {
+                            $entity->setTentativeStatus(NULL);
+                        }
+                    }
+
+//                    if( $status == "canceled" && $originalStatus == "approved" ) {
+//                        //TODO: reset user's VacReqUserCarryOver object?
+//                        //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+//                        $vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity);
+//                    }
+
+                }
+
+
+                $entity->setStatus($status);
+                $statusSet = true;
+            }
+
+            if( $statusSet ) {
+
+                if( $status == "pending" ) {
+                    $entity->setApprover(null);
+                } else {
+                    $entity->setApprover($user);
+                }
+
+                $entity->setExtraStatus(NULL);
+                $em->persist($entity);
+                $em->flush();
+
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
+                    $vacreqUtil->syncVacReqCarryOverRequest($entity, $originalStatus); //vacreq_status_change, vacreq_status_email_change
+                }
+
+                //return $this->redirectToRoute('vacreq_home');
+
+                //send respond confirmation email to a submitter
+                if( $status == 'canceled' ) {
+                    //an email should be sent to approver saying
+                    // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
+                    // and list all variable names and values in the email.
+                    $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
+                } else {
+                    $approversNameStr = null;
+                    //send confirmation email by express link to change status (email or link in the list)
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
+                }
+
+                $removeCarryoverStr = "";
+//                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
+//                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
+//                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
+//                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
+//                }
+                //exit("test");
+
+                //Flash
+                $statusStr = $status;
+                if( $status == 'pending' ) {
+                    $statusStr = 'set to Pending';
+                }
+
+                //re-submit request
+                if( $status == "pending" && $originalStatus == "canceled" ) {
+                    //send a confirmation email to approver
+                    $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
+                    $statusStr = 're-submitted';
+                }
+
+                $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+                $event .= ": ".$entity->getDetailedStatus().".";
+                if( $approversNameStr ) {
+                    $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
+                }
+
+                $event .= $removeCarryoverStr;
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+
+                if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
+                    $eventType = 'Carry Over Request Updated';
+                } else {
+                    $eventType = 'Business/Vacation Request Updated';
+                }
+
+                //Event Log
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+
+            }
+
+        }
+
+        //redirect to myrequests for owner
+        if( $entity->getUser()->getId() == $user->getId() ) {
+            return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+        }
+
+        $url = $request->headers->get('referer');
+        //exit('url='.$url);
+
+        //when status is changed from email, then the url is a system home page
+        if( $url && strpos($url, 'incoming-requests') !== false ) {
+            return $this->redirect($url);
+        }
+
+        //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        return $this->redirectToRoute('vacreq_floatingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
+    }
+
+
+
+
+    public function getOverlappedMessage( $subjectRequest, $overlappedRequests, $absolute=null, $short=false ) {
+        //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
+        $errorMsg = null;
+        //Your request includes dates (MM/DD/YYYY, MM/DD/YYYY, MM/DD/YYYY) already covered by your previous request(s) (Request ID LINK #1, Request ID LINK #2, Request ID LINK #3). Please exclude these dates from this request before re-submitting.
+        if( count($overlappedRequests) > 0 ) {
+            $dates = array();
+            $hrefs = array();
+            foreach( $overlappedRequests as $overlappedRequest ) {
+                //echo "overlapped re id=".$overlappedRequest->getId()."<br>";
+
+                $finalDay = $overlappedRequest->getFloatingDay();
+                $dates[] = $finalDay->format('m/d/Y');
+
+                if( $absolute ) {
+                    $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_URL;
+                } else {
+                    $absoluteFlag = null;
+                }
+                $link = $this->container->get('router')->generate(
+                    'vacreq_floating_show',
+                    array(
+                        'id' => $overlappedRequest->getId(),
+                    ),
+                    $absoluteFlag
+                //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                if( $absolute ) {
+                    $href = 'Request ID '.$overlappedRequest->getId()." ".$link;
+                } else {
+                    $href = '<a href="'.$link.'">Request ID '.$overlappedRequest->getId().'</a>';
+                }
+
+                $hrefs[] = $href;
+            }
+
+            $errorMsg = "This floating day request includes dates ".implode(", ",$dates)." already covered by your previous request(s) (".implode(", ",$hrefs).").";
+
+            if( !$short ) {
+                $errorMsg .= " Please exclude this day from this floating day request before submitting.";
+            }
+        }
+
+        return $errorMsg;
     }
 
     public function createRequestForm( $entity, $cycle, $request ) {
@@ -1173,7 +1747,7 @@ class FloatingDayController extends OrderAbstractController
 
         $params['review'] = false;
         if( $request ) {
-            if( $routeName == 'vacreq_review' ) {
+            if( $routeName == 'vacreq_floating_review' ) {
                 $params['review'] = true;
             }
         }
@@ -1190,6 +1764,120 @@ class FloatingDayController extends OrderAbstractController
         );
 
         return $form;
+    }
+
+    public function sendConfirmationEmailToFloatingApprovers( $entity, $sendCopy=true ) {
+        $vacreqUtil = $this->get('vacreq_util');
+        $subject = $entity->getEmailSubject();
+        $message = $this->createFloatingEmailBody($entity);
+        return $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
+    }
+    public function createFloatingEmailBody( $entity, $emailToUser=null, $addText=null, $withLinks=true ) {
+
+        //$break = "\r\n";
+        $break = "<br>";
+
+        $submitter = $entity->getUser();
+
+        //$message = "Dear " . $emailToUser->getUsernameOptimal() . "," . $break.$break;
+        $message = "Dear ###emailuser###," . $break.$break;
+
+        $requestName = $entity->getRequestName();
+
+        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
+        $message .= $break.$break.$entity->printRequest($this->container)."";
+
+        $reviewRequestUrl = $this->container->get('router')->generate(
+            'vacreq_floating_review',
+            array(
+                'id' => $entity->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $message .= $break . $break . "Please follow the link below to review ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $reviewRequestUrl . $break . $break;
+
+        //$message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
+
+        //href="{{ path(vacreq_sitename~'_status_email_change', { 'id': entity.id,  'requestName':requestName, 'status': 'approved' }) }}
+        //approved
+        $actionRequestUrl = $this->container->get('router')->generate(
+            'vacreq_floating_status_email_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'approved'
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $actionRequestUrl;
+
+        //rejected
+        $actionRequestUrl = $this->container->get('router')->generate(
+            'vacreq_floating_status_email_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'rejected'
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $actionRequestUrl;
+
+        $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site.";
+        $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
+
+        if( $addText ) {
+            $message = $addText.$break.$break.$message;
+        }
+
+        return $message;
+    }
+
+    public function checkFloatingRequestForOverlapDates( $user, $subjectRequest ) {
+        //$logger = $this->container->get('logger');
+        //get all user approved vacation requests
+        $requestTypeStr = "requestVacation";
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        
+        $dql->andWhere("requestVacation.status = 'approved'");
+        $dql->andWhere("user.id = :userId");
+        $dql->andWhere("request.id != :requestId");
+
+        $dql->orderBy('request.id');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('requestId', $subjectRequest->getId());
+
+        $requests = $query->getResult();
+        //EOF get all user approved vacation requests
+
+        $overlappedRequests = array();
+
+        $subjectDay = $subjectRequest->getFloatingDay();
+        //dump($subjectDateRange);
+        if( !$subjectDay ) {
+            return $overlappedRequests;
+        }
+
+        //$overlappedIds = array();
+        foreach( $requests as $request ) {
+            //echo 'check reqid='.$request->getId()."<br>";
+            $thisDay = $request->getFloatingDay();
+            if( $thisDay == $subjectDay ) {
+                $overlappedRequests[] = $request;
+            }
+        }//foreach requests
+
+        return $overlappedRequests;
     }
 
 }
