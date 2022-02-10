@@ -60,7 +60,7 @@ class RequestIndexController extends OrderAbstractController
                     if (!$requestType) {
                         throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
                     }
-                    echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
                     //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
                     if( $requestType->getAbbreviation() == 'floatingday' ) {
 
@@ -146,7 +146,7 @@ class RequestIndexController extends OrderAbstractController
                     if (!$requestType) {
                         throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
                     }
-                    echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
                     //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
                     if( $requestType->getAbbreviation() == 'floatingday' ) {
 

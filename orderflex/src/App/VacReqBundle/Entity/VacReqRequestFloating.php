@@ -135,6 +135,11 @@ class VacReqRequestFloating
 //     */
 //    private $requestType;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $academicYear;
+
 
 
     public function __construct($user=null) {
@@ -400,6 +405,37 @@ class VacReqRequestFloating
         $this->floatingDay = $floatingDay;
     }
 
+//    /**
+//     * @return mixed
+//     */
+//    public function getAcademicYear()
+//    {
+//        return $this->academicYear;
+//    }
+//
+//    /**
+//     * @param mixed $academicYear
+//     */
+//    public function setAcademicYear($academicYear)
+//    {
+//        $this->academicYear = $academicYear;
+//    }
+
+//    public function getFinalStartEndDates() {
+//        $dates['startDate'] = $this->getAcademicYear();
+//        $dates['endDate'];
+//
+//        return $dates;
+//    }
+    public function getFinalStartEndDates( $requestTypeStr=null ) {
+        $floatingDay = $this->getFloatingDay();
+        $res = array();
+        $res['startDate'] = $floatingDay;
+        $res['endDate'] = $floatingDay;
+        return $res;
+    }
+
+
 
     public function printRequest( $container=null )
     {
@@ -426,13 +462,7 @@ class VacReqRequestFloating
         $res .= "Phone Number for the person away: ".$this->getPhone().$break;
         //$res .= "Emergency Contact Info:".$break.implode($break,$this->getEmergencyConatcsArr()).$break.$break;
 
-        $worked = "N/A";
-        if( $this->getWork() === true ) {
-            $worked = "Yes";
-        }
-        if( $this->getWork() === false ) {
-            $worked = "No";
-        }
+        $worked = $this->getWorkStr();
 
         $res .= "### Floating Day Request ###".$break;
         $res .= "Status: ".$this->getStatus().$break;
@@ -482,6 +512,34 @@ class VacReqRequestFloating
 
         return $res;
     }
+    
+    public function getWorkStr() {
+        $worked = "N/A";
+        if( $this->getWork() === true ) {
+            $worked = "Yes";
+        }
+        if( $this->getWork() === false ) {
+            $worked = "No";
+        }
+        return $worked;
+    }
+
+    public function isOverallStatus( $status ) {
+        if( $this->getStatus() == $status ) {
+            return true;
+        }
+        return false;
+    }
+
+    //return pending or complete
+    public function getOverallStatus() {
+        $status = $this->getStatus();
+        return $status;
+    }
+    public function getDetailedStatus() {
+        return "Floating Day Request ".$this->getStatus();
+    }
+
 
     //"Submitter: " . $this->getSubmitter() . (url)
     public function createUseStrUrl( $user, $label, $container ) {
