@@ -38,24 +38,6 @@
         {{ vacreqmacros.myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
     {% endif %}
 
-    {#{% if routename == 'vacreq_incomingrequests' %}#}
-        {#incoming-requests#}
-        {#{% if requestTypeAbbreviation == 'carryover' %}#}
-            {#{% set colspanRequestInfo = 6 %}#}
-        {#{% else %}#}
-            {#{% set colspanRequestInfo = 9 %}#}
-        {#{% endif %}#}
-        {#{% set showUserInfo = true %}#}
-    {#{% else %}#}
-        {#my-requests#}
-        {#{% if requestTypeAbbreviation == 'carryover' %}#}
-            {#{% set colspanRequestInfo = 4 %}#}
-        {#{% else %}#}
-            {#{% set colspanRequestInfo = 7 %} #}{#2 fields less#}
-        {#{% endif %}#}
-        {#{% set showUserInfo = false %}#}
-    {#{% endif %}#}
-
     {% if routename == 'vacreq_floatingrequests' %}
         {% set showUserInfo = true %}
     {% else %}
@@ -83,6 +65,8 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Group', 'institution.name') }}</th>
 
+            <th>{{ knp_pagination_sortable(pagination, 'Status', 'request.status') }}</th>
+
             {% if showUserInfo %}
                 <th>{{ knp_pagination_sortable(pagination, 'Date Status Changed', 'request.approvedRejectDate') }}</th>
             {% endif %}
@@ -102,6 +86,22 @@
 
         {% for entity in pagination %}
 
+            {% set tdclassname = "" %}
+            {% if entity %}
+                {% if entity.getStatus() == 'pending' %}
+                    {% set tdclassname = "alert alert-warning" %}
+                {% endif %}
+                {% if entity.getStatus() == 'approved' %}
+                    {% set tdclassname = "alert alert-success" %}
+                {% endif %}
+                {% if entity.getStatus() == 'rejected' %}
+                    {% set tdclassname = "alert alert-danger" %}
+                {% endif %}
+                {% if entity.getStatus() == 'completed' %}
+                    {% set tdclassname = "" %}
+                {% endif %}
+            {% endif %}
+
             {#{% set entity = object['object'] %}#}
 
             {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
@@ -113,7 +113,7 @@
                 {% set onBehalfTooltip = null %}
             {% endif %}
 
-            <tr>
+            <tr class="{{ tdclassname }}">
 
                 {% if onBehalfTooltip %}
                     <td data-toggle="tooltip" title="{{ onBehalfTooltip }}" data-container="body">
@@ -147,6 +147,12 @@
                     {% endif %}
                 </td>
 
+                <td>
+                    {% if entity.status %}
+                        {{ entity.status }}
+                    {% endif %}
+                </td>
+
                 {% if showUserInfo %}
                     <td>
                         {% if entity.approvedRejectDate %}
@@ -174,6 +180,23 @@
                 {#Action#}
                 <td class="rowlink-skip" style="border-left: 2px solid gray;">
 
+                    {% set showApprove = false %}
+                    {% if not entity.isOverallStatus('approved') %}
+                        {% set showApprove = true %}
+                    {% endif %}
+
+                    {% set showReject = false %}
+                    {#{% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}#}
+                    {% if not entity.isOverallStatus('rejected') %}
+                        {% set showReject = true %}
+                    {% endif %}
+
+                    {% set showPending = false %}
+                    {#{% if not entity.isOverallStatus('approved') and entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}#}
+                    {% if entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}
+                        {% set showPending = true %}
+                    {% endif %}
+
                     {% if routename == 'vacreq_incomingrequests' %}
 
                         {{ vacreqmacros.vacreq_action( entity, vacreq_sitename ) }}
@@ -188,24 +211,16 @@
                             <ul class="dropdown-menu dropdown-menu-right">
 
                                 <li>
-                                    <a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}">View</a>
+                                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}" target="_blank">View User Details</a>
                                 </li>
 
-                                {#{% if requestTypeAbbreviation != 'carryover' %}#}
+                                <li>
+                                    <a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>
+                                </li>
 
-                                    {#The change of status from Approved should only be allowable to a new status "Cancelation Requested" by submitter#}
-                                    {#{% if entity.isOverallStatus('approved') and not entity.extraStatus %}#}
-                                        {#<li class="divider">#}
-                                        {#<li>#}
-                                            {#<a#}
-                                                {#general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."#}
-                                                {#href="{{ path(vacreq_sitename~'_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">#}
-                                                {#Request cancellation#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-
-                                {#{% endif %}#}
+                                <li>
+                                    <a href="{{ path(vacreq_sitename~'_floating_review', { 'id': entity.id }) }}" target="_blank">Review</a>
+                                </li>
 
 
                                 {% if not entity.isOverallStatus('canceled') and (entity.status == 'pending' or entity.getOverallStatus() == 'pending') %}
@@ -234,6 +249,37 @@
                                             general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'pending' }) }}">
                                                 Re-Submit
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% if showApprove or showReject or showPending %}
+                                    <li class="divider">
+                                {% endif %}
+
+                                {% if showApprove %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you would like to approve entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                                           href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'approved' }) }}">
+                                            Approve request
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if showReject %}
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you would like to reject entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                                            href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'rejected' }) }}">
+                                            Reject request
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if showPending %}
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you would like to set entire request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
+                                            href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'pending' }) }}">
+                                            Set request to "Pending approval"
                                         </a>
                                     </li>
                                 {% endif %}

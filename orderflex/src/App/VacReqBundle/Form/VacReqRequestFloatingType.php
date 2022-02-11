@@ -48,28 +48,34 @@ class VacReqRequestFloatingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
-        
 
-//        $builder->add('status', ChoiceType::class, array( //flipped
-//            //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-////                'choices' => array(
-////                    //'pending' => 'Pending',
-////                    'approved' => 'Approved',
-////                    'rejected' => 'Rejected'
-////                ),
-//            'choices' => array(
-//                //'pending' => 'Pending',
-//                'Approved' => 'approved',
-//                'Rejected' => 'rejected'
-//            ),
-//            //'choices_as_values' => true,
-//            'label' => false,   //"Status:",
-//            'expanded' => true,
-//            'multiple' => false,
-//            'required' => true,
-//            //'data' => 'pending',
-//            'attr' => array('class' => 'horizontal_type_wide', 'readonly'=>$readOnly), //horizontal_type
-//        ));
+        //enable status radio only for admin or for reviewer
+        $readOnly = true;
+        if( $this->params['roleAdmin'] || $this->params['review'] == true ) {
+            $readOnly = false;
+        }
+        
+        $builder->add('status', ChoiceType::class, array( //flipped
+            //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+            'choices' => array(
+                'Pending' => 'pending',
+                'Approved' => 'approved',
+                'Rejected' => 'rejected'
+            ),
+            'label' => "Status:",
+            'expanded' => true,
+            'multiple' => false,
+            'required' => true,
+            //'data' => 'pending',
+            'attr' => array('class' => 'horizontal_type_wide', 'readonly'=>$readOnly), //horizontal_type
+        ));
+
+        $builder->add('approverComment', TextareaType::class, array(
+            'label' => "Approver Comment:",
+            'required' => false,
+            //'disabled' => true,
+            'attr' => array('class' => 'textarea form-control', 'readonly'=>$readOnly),
+        ));
 
 
         if( $this->params['cycle'] == 'show' ) {

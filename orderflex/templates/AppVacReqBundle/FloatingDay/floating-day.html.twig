@@ -108,6 +108,13 @@
 
         <hr>
 
+        {% if form.status is defined %}
+            <div class="well well-sm">
+                {{ formmacros.field(form.status) }}
+                {{ formmacros.field(form.approverComment) }}
+            </div>
+        {% endif %}
+
         {{ formmacros.field(form.floatingType) }}
 
         {#{{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}#}
@@ -135,10 +142,6 @@
         {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
         {{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}
 
-
-        {#{% if form.status is defined %}#}
-            {#{{ formmacros.field(form.status) }}#}
-        {#{% endif %}#}
 
         {#{{ form_rest(form) }}#}
         {{ form_row(form._token) }}

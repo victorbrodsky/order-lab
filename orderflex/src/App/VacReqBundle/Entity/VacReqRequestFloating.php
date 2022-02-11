@@ -568,6 +568,35 @@ class VacReqRequestFloating
         return $subject;
     }
 
+    public function getRequestSubject() {
+        if( $this->getDetailedStatus() ) {
+            $subject = $this->getDetailedStatus() . " [Request ID #" . $this->getId() ."]";
+        } else {
+            $subject = "Request ID #" . $this->getId();
+        }
+
+        return $subject;
+    }
+
+    public function getRequestMessageHeader() {
+
+        $header = "ID #".$this->getId();
+
+        $statusF = null;
+        if( $this->hasVacationRequest() ) {
+            $statusF = $this->getStatus();
+        }
+        if( $statusF == 'pending' ) {
+            $statusF = 'set to Pending';
+        }
+
+        if( $statusF ) {
+            $header = "Floating Day Request has been ".$statusF;
+        }
+
+        return $header;
+    }
+
     public function getRequestName() {
         return "Floating Day Request";
     }

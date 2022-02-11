@@ -1168,7 +1168,7 @@ class FloatingDayController extends OrderAbstractController
 
                 //set final (global) status according to sub-requests status:
                 //only two possible actions: reject or approved
-                $entity->setFinalStatus(); //vacreq_floating_review
+                //$entity->setFinalStatus(); //vacreq_floating_review
 
                 $overallStatus = $entity->getStatus();
 
@@ -1288,12 +1288,13 @@ class FloatingDayController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
         }
 
+        $requestName = $entity->getRequestName();
         $originalStatus = $entity->getStatus();
 
         /////////////// log status ////////////////////////
@@ -1422,7 +1423,7 @@ class FloatingDayController extends OrderAbstractController
                     $event
                 );
 
-                $eventType = 'Business/Vacation Request Updated';
+                $eventType = 'Floating Day Request Updated';
 
                 //Event Log
                 $userSecUtil = $this->container->get('user_security_utility');
@@ -1434,7 +1435,8 @@ class FloatingDayController extends OrderAbstractController
 
         //redirect to myrequests for owner
         if( $entity->getUser()->getId() == $user->getId() ) {
-            return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+            //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+            return $this->redirectToRoute("vacreq_myfloatingrequests");
         }
 
         $url = $request->headers->get('referer');
@@ -1491,7 +1493,8 @@ class FloatingDayController extends OrderAbstractController
             $eventSubject
         );
 
-        return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+        //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+        return $this->redirectToRoute("vacreq_myfloatingrequests");
     }
 
 
