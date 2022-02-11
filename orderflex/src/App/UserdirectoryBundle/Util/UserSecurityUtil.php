@@ -1656,6 +1656,8 @@ class UserSecurityUtil {
             }
         }
         if( !$permissionExists ) {
+            //exit('create new permission='.$permissionListStr);//testing
+            //echo $role.': create new permission='.$permissionListStr."<br>";
             $rolePermission = new Permission();
             $rolePermission->setPermission($permission);
             $role->addPermission($rolePermission);
@@ -1665,15 +1667,25 @@ class UserSecurityUtil {
         //make sure object is set
         if( !$permission->getPermissionObjectList() ) {
             $permissionObject = $em->getRepository('AppUserdirectoryBundle:PermissionObjectList')->findOneByName($permissionObjectListStr);
-            $permission->setPermissionObjectList($permissionObject);
-            $count++;
+            if( $permissionObject ) {
+                $permission->setPermissionObjectList($permissionObject);
+                $count++;
+                echo 'set permission object: '.$permissionObjectListStr."<br>";
+            } else {
+                exit("Permission Object is not found by name=".$permissionObjectListStr);
+            }
         }
 
         //make sure action is set
         if( !$permission->getPermissionActionList() ) {
             $permissionAction = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findOneByName($permissionActionListStr);
-            $permission->setPermissionActionList($permissionAction);
-            $count++;
+            if( $permissionAction ) {
+                $permission->setPermissionActionList($permissionAction);
+                $count++;
+                echo 'set permission action: '.$permissionActionListStr."<br>";
+            } else {
+                exit("Permission Action is not found by name=".$permissionActionListStr);
+            }
         }
 
         return $count;

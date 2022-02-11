@@ -3441,6 +3441,12 @@ class VacReqUtil
             $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
         }
 
+        if( $request instanceof VacReqRequestFloating ) {
+            $changeset = $this->diffDoctrineObject($request);
+            $text = "("."Floating Day Request ID ".$request->getId().")";
+            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        }
+
         //exit('1');
         return $eventArr;
 

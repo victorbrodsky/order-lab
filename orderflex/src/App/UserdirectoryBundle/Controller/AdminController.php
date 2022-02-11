@@ -6840,6 +6840,8 @@ class AdminController extends OrderAbstractController
             "Submit a Vacation Request",
             "Approve a Vacation Request",
             "Approve a Carry Over Request",
+            "Approve a Floating Day Request",
+            "Submit a Floating Day Request",
 
             "Create Call Log Entry",
             "Edit Call Log Entry",
@@ -6912,6 +6914,7 @@ class AdminController extends OrderAbstractController
             "ResidencyApplication" => array("",array("resapp")),
 
             "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
+            "VacReqRequestFloating" => array("",array("vacreq")), //"Floating Day Request"
 
             //"Call Log Entry" => array("",array("calllog")),
             //"Complex Patient" => array("",array("calllog")), //TODEL
@@ -8076,6 +8079,42 @@ class AdminController extends OrderAbstractController
     }
 
 
+    /**
+     * http://hosthame/order/directory/admin/sync-vacreq-roles/
+     *
+     * @Route("/sync-vacreq-roles/", name="user_vacreq_roles", methods={"GET"})
+     */
+    public function syncVacreqRolesAction()
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+
+        $count = 0;
+
+        foreach( $roles as $role ) {
+            $thisCount = $this->addVacReqPermission( $role );
+            
+            if( $thisCount > 0 ) {
+                $em->persist($role);
+                $em->flush();
+            }
+
+            $count = $count + $thisCount;
+        }
+
+        
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Vacreq roles sync count='.$count
+        );
+
+        exit('EOF syncVacreqRolesAction. count='.$count);
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
 
     /**
      * http://hosthame/order/directory/admin/sync-db/
@@ -8084,6 +8123,10 @@ class AdminController extends OrderAbstractController
      */
     public function syncEventTypeListDbAction()
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
         $count = $this->syncEventTypeListDb();
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -8332,11 +8375,13 @@ class AdminController extends OrderAbstractController
         if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
             //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Floating Day Request","VacReqRequestFloating","changestatus");
         }
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create"
         if( strpos($role, "ROLE_VACREQ_SUBMITTER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Floating Day Request","VacReqRequestFloating","create");
         }
 
         //ROLE_VACREQ_SUPERVISOR: permission="Approve a Carry Over Request", object="VacReqRequest", action="changestatus-carryover"
@@ -8344,6 +8389,9 @@ class AdminController extends OrderAbstractController
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Carry Over Request","VacReqRequest","changestatus-carryover");
+
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Floating Day Request","VacReqRequestFloating","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Floating Day Request","VacReqRequestFloating","changestatus");
         }
 
         return $count;

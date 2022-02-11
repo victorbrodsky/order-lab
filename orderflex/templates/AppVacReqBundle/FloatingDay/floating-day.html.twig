@@ -143,12 +143,12 @@
         {#{{ form_rest(form) }}#}
         {{ form_row(form._token) }}
 
-        {% if form.save is defined %}
-            <br>
-            <p>
-                {{ form_widget(form.save) }}
-            </p>
-        {% endif %}
+        {#{% if form.save is defined %}#}
+            {#<br>#}
+            {#<p>#}
+                {#{{ form_widget(form.save) }}#}
+            {#</p>#}
+        {#{% endif %}#}
 
     {{ form_end(form,{'render_rest': false}) }}
 
@@ -173,11 +173,15 @@
         <br>
     {% endif %}
 
-    {#{% if cycle == "new" %}#}
-        {#<p>#}
-            {#<button id="btnCreateVacReq" class="btn btn-warning" name="btnCreate" type="button" onclick="validateVacReqFloatingDayForm(this)">Submit</button>#}
-        {#</p>#}
-    {#{% endif %}#}
+    {% if cycle == "new" %}
+        <p>
+            <button id="btnCreateVacReq"
+                    class="btn btn-warning"
+                    name="btnCreate"
+                    type="button"
+                    onclick="validateVacReqFloatingDayForm(this)">Submit</button>
+        </p>
+    {% endif %}
 
     {% set statusPending = false %}
     {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
@@ -186,11 +190,15 @@
 
     {% if cycle == "edit" or review %}
         <p>
-            <button id="btnCreateVacReq" class="btn btn-warning" name="btnUpdate" type="button" onclick="validateVacReqForm(this)">Update</button>
+            <button id="btnCreateVacReq"
+                    class="btn btn-warning"
+                    name="btnUpdate"
+                    type="button"
+                    onclick="validateVacReqFloatingDayForm(this)">Update</button>
             {% if review %}
-                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_incomingrequests') }}">Cancel</a>
+                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_floatingrequests') }}">Cancel</a>
             {% else %}
-                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_floating_show',{'id':entity.id}) }}">Cancel</a>
             {% endif %}
         </p>
     {% endif %}
@@ -198,7 +206,7 @@
     {#{% if cycle == "show" and statusPending %}#}
     {% if cycle == "show" %}
         <p>
-            <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+            <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_floating_edit',{'id':entity.id}) }}">Edit</a>
         </p>
     {% endif %}
 
@@ -252,7 +260,9 @@
             }
 
             console.log("form is valid");
-            return true;
+            //return true;
+
+            $('#vacreq-floatingday-form').submit();
         }
 
         function setWorkingFloatingDayType() {

@@ -115,7 +115,7 @@ class FloatingDayController extends OrderAbstractController
 //        //get submitter groups: VacReqRequest, create
 //        $groupParams = array();
 //        $groupParams['statusArr'] = array('default','user-added');
-//        if( $request->get('_route') == "vacreq_myrequests" ) {
+//        if( $request->get('_route') == "vacreq_myfloatingrequests" ) {
 //            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
 //        }
 //        if( $request->get('_route') == "vacreq_incomingrequests" ) {
@@ -286,7 +286,7 @@ class FloatingDayController extends OrderAbstractController
 //        //get submitter groups: VacReqRequest, create
 //        $groupParams = array();
 //        $groupParams['statusArr'] = array('default','user-added');
-//        if( $request->get('_route') == "vacreq_myrequests" ) {
+//        if( $request->get('_route') == "vacreq_myfloatingrequests" ) {
 //            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
 //        }
 //        if( $request->get('_route') == "vacreq_incomingrequests" ) {
@@ -1083,7 +1083,7 @@ class FloatingDayController extends OrderAbstractController
      * @Route("/edit/floating/{id}", name="vacreq_floating_edit", methods={"GET", "POST"})
      * @Route("/review/floating/{id}", name="vacreq_floating_review", methods={"GET", "POST"})
      *
-     * @Template("AppVacReqBundle/FloatingDay/edit.html.twig")
+     * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
      */
     public function editAction(Request $request, $id) {
         $logger = $this->container->get('logger');
@@ -1129,7 +1129,7 @@ class FloatingDayController extends OrderAbstractController
 
         $changedInfoArr = array();
 
-        $originalTentativeStatus = $entity->getTentativeStatus();
+        //$originalTentativeStatus = $entity->getTentativeStatus();
         $originalStatus = $entity->getStatus();
         //$originalCarryOverDays = $entity->getCarryOverDays();
 
@@ -1265,7 +1265,7 @@ class FloatingDayController extends OrderAbstractController
             'cycle' => $cycle,
             'review' => $review,
             'title' => $title,
-            'carryOverWarningMessage' => $carryOverWarningMessage
+            'carryOverWarningMessage' => NULL //$carryOverWarningMessage
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -1405,7 +1405,7 @@ class FloatingDayController extends OrderAbstractController
                 //re-submit request
                 if( $status == "pending" && $originalStatus == "canceled" ) {
                     //send a confirmation email to approver //sendConfirmationEmailToApprovers -> sendConfirmationEmailToFloatingApprovers
-                    $approversNameStr = $vacreqUtil->sendConfirmationEmailToFloatingApprovers( $entity );
+                    $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
                     $statusStr = 're-submitted';
                 }
 
@@ -1434,7 +1434,7 @@ class FloatingDayController extends OrderAbstractController
 
         //redirect to myrequests for owner
         if( $entity->getUser()->getId() == $user->getId() ) {
-            return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+            return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
         $url = $request->headers->get('referer');
@@ -1481,7 +1481,7 @@ class FloatingDayController extends OrderAbstractController
 
         //set confirmation email to approver and email users
         $vacreqUtil = $this->get('vacreq_util');
-        $approversNameStr = $vacreqUtil->sendConfirmationEmailToFloatingApprovers( $entity );
+        $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
 
         $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
 
@@ -1491,7 +1491,7 @@ class FloatingDayController extends OrderAbstractController
             $eventSubject
         );
 
-        return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
+        return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
     }
 
 
@@ -1772,23 +1772,26 @@ class FloatingDayController extends OrderAbstractController
 
     public function checkFloatingRequestForOverlapDates( $user, $subjectRequest ) {
         //$logger = $this->container->get('logger');
-        //get all user approved vacation requests
-        $requestTypeStr = "requestVacation";
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $em = $this->getDoctrine()->getManager();
+
+        //get all user approved vacation requests
+        //$requestTypeStr = "requestVacation";
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
         $dql->leftJoin("request.user", "user");
         
-        $dql->andWhere("requestVacation.status = 'approved'");
+        $dql->andWhere("request.status = 'approved'");
         $dql->andWhere("user.id = :userId");
         $dql->andWhere("request.id != :requestId");
 
         $dql->orderBy('request.id');
 
-        $query = $this->em->createQuery($dql);
+        $query = $em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
         $query->setParameter('requestId', $subjectRequest->getId());

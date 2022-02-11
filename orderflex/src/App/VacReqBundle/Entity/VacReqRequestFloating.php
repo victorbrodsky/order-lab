@@ -576,6 +576,24 @@ class VacReqRequestFloating
         return "floatingday";
     }
 
+    public function getArrayFields() {
+        $fieldsArr = array(
+            'phone','institution',
+            'status','approverComment',
+            'floatingDay','work','floatingType'
+
+        );
+        return $fieldsArr;
+    }
+    
+    public function hasBusinessRequest() {
+        return false;
+    }
+
+    public function hasVacationRequest() {
+        return false;
+    }
+    
     public function __toString()
     {
         //$break = "\r\n";

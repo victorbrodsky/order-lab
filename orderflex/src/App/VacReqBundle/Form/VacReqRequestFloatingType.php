@@ -226,14 +226,11 @@ class VacReqRequestFloatingType extends AbstractType
                     }
                 )
             );
-
-//        $builder->add('save', SubmitType::class, [
-//            'attr' => ['class' => 'save'],
-//        ]);
-        $builder->add('save', SubmitType::class, array(
-            'label' => "Submit",
-            'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return validateVacReqFloatingDayForm(this);')
-        ));
+        
+//        $builder->add('save', SubmitType::class, array(
+//            'label' => "Submit",
+//            'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return validateVacReqFloatingDayForm(this);')
+//        ));
 
 //        //tentativeInstitution
 //        if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
