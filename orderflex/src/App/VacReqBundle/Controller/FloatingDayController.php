@@ -257,70 +257,6 @@ class FloatingDayController extends OrderAbstractController
         }
         $params['supervisor'] = $supervisorRole;
 
-//        //////////////////// get list of users with "unknown" user ////////////////////
-//        $em = $this->getDoctrine()->getManager();
-//        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
-//        $dqlFilterUser = $repository->createQueryBuilder('user');
-//        $dqlFilterUser->select('user');
-//        $dqlFilterUser->leftJoin("user.infos","infos");
-//        $dqlFilterUser->leftJoin("user.employmentStatus", "employmentStatus");
-//        $dqlFilterUser->leftJoin("employmentStatus.employmentType", "employmentType");
-//        //filter out system user
-//        $dqlFilterUser->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
-//        //filter out Pathology Fellowship Applicants
-//        $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-//        //$dqlFilterUser->where("user.keytype IS NOT NULL");
-//        $dqlFilterUser->orderBy("infos.lastName","ASC");
-//        $queryFilterUser = $em->createQuery($dqlFilterUser);
-//        $filterUsers = $queryFilterUser->getResult();
-//        //echo "count=".count($filterUsers)."<br>";
-//        //add unknown dummy user
-////        $unknown = new User();
-////        $unknown->setDisplayName("unknown");
-////        $em->persist($unknown);
-//        //$filterUsers[] = $unknown;
-////        array_unshift($filterUsers, $unknown);
-//        $params['filterUsers'] = $filterUsers;
-//        //////////////////// EOF get list of users with "unknown" user ////////////////////
-//
-//        //get submitter groups: VacReqRequest, create
-//        $groupParams = array();
-//        $groupParams['statusArr'] = array('default','user-added');
-//        if( $request->get('_route') == "vacreq_myfloatingrequests" ) {
-//            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-//        }
-//        if( $request->get('_route') == "vacreq_incomingrequests" ) {
-//            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
-//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//                if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-//                    $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//                }
-//            } else {
-//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
-//            }
-//        }
-//        if( $request->get('_route') == "vacreq_floatingrequests" ) {
-//            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-//                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//            }
-//        }
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-//
-//        $userServiceUtil = $this->get('user_service_utility');
-//        $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
-//
-//
-//        $filterform = $this->createForm(VacReqFilterType::class, null,array(
-//            'method' => 'GET',
-//            'form_custom_value'=>$params
-//        ));
-//        //////////////// EOF create vacreq filter ////////////////
-//
-//        //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
-//        $filterform->handleRequest($request);
-
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
         $dql = $repository->createQueryBuilder("request");
 
@@ -358,7 +294,7 @@ class FloatingDayController extends OrderAbstractController
                             $addedNodes[] = $roleInst->getId();
                             //regular institution
                             $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
-                            selectNodesUnderParentNode($roleInst,"institution",false);
+                                selectNodesUnderParentNode($roleInst,"institution",false);
                             //regular tentativeInstitution
                             //$instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
                             //selectNodesUnderParentNode($roleInst,"tentativeInstitution",false);
@@ -366,6 +302,7 @@ class FloatingDayController extends OrderAbstractController
                     }
                     if( count($instCriterionArr) > 0 ) {
                         $instCriteriaStr = implode(" OR ",$instCriterionArr);
+                        //echo "instCriteriaStr = $instCriteriaStr <br>";exit('111');
                         $dql->andWhere($instCriteriaStr);
                     }
                 }
@@ -381,6 +318,7 @@ class FloatingDayController extends OrderAbstractController
 
         $limit = 30;
         $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             //'defaultSortFieldName' => 'request.firstDayAway', //createDate
@@ -735,7 +673,9 @@ class FloatingDayController extends OrderAbstractController
 //            }
 
             if( count($instWhereArr) > 0 ) {
+                //echo "instStr=".implode(" AND ", $instWhereArr)."<br>";
                 $dql->andWhere(implode(" AND ", $instWhereArr)); //OR
+                $dql->orWhere('institution IS NULL');
             }
         }
 
