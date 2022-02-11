@@ -944,7 +944,7 @@ class FloatingDayController extends OrderAbstractController
 
         //$title = "Floating Day (The page and functionality are under construction!)";
         $title = $userSecUtil->getSiteSettingParameter('floatingDayName','vacreq');
-        $title = $title . " - The page and functionality are under construction!";
+        //$title = $title . " - The page and functionality are under construction!";
 
         $cycle = 'new';
 
@@ -1000,6 +1000,7 @@ class FloatingDayController extends OrderAbstractController
             $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
 
             //Event Log
+            $eventType = "Floating Day Request Created";
             $event = $requestName . " for ".$entity->getUser()." has been submitted.".
                 " Confirmation email has been sent to ".$approversNameStr;
             $event = $event . $break.$break. $entity->printRequest();
@@ -1017,7 +1018,7 @@ class FloatingDayController extends OrderAbstractController
             );
 
             //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
-            return $this->redirectToRoute('vacreq_floating_show');
+            return $this->redirectToRoute('vacreq_floating_show',array('id' => $entity->getId()));
         }
         
         
