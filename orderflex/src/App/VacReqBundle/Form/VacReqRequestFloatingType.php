@@ -54,28 +54,30 @@ class VacReqRequestFloatingType extends AbstractType
         if( $this->params['roleAdmin'] || $this->params['review'] == true ) {
             $readOnly = false;
         }
-        
-        $builder->add('status', ChoiceType::class, array( //flipped
-            //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-            'choices' => array(
-                'Pending' => 'pending',
-                'Approved' => 'approved',
-                'Rejected' => 'rejected'
-            ),
-            'label' => "Status:",
-            'expanded' => true,
-            'multiple' => false,
-            'required' => true,
-            //'data' => 'pending',
-            'attr' => array('class' => 'horizontal_type_wide', 'readonly'=>$readOnly), //horizontal_type
-        ));
 
-        $builder->add('approverComment', TextareaType::class, array(
-            'label' => "Approver Comment:",
-            'required' => false,
-            //'disabled' => true,
-            'attr' => array('class' => 'textarea form-control', 'readonly'=>$readOnly),
-        ));
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('status', ChoiceType::class, array( //flipped
+                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                'choices' => array(
+                    'Pending' => 'pending',
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected'
+                ),
+                'label' => "Status:",
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                //'data' => 'pending',
+                'attr' => array('class' => 'horizontal_type_wide', 'readonly' => $readOnly), //horizontal_type
+            ));
+
+            $builder->add('approverComment', TextareaType::class, array(
+                'label' => "Approver Comment:",
+                'required' => false,
+                'disabled' => $readOnly,
+                'attr' => array('class' => 'textarea form-control'), //'readonly' => $readOnly
+            ));
+        }
 
 
         if( $this->params['cycle'] == 'show' ) {

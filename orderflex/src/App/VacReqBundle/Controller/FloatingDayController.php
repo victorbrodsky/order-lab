@@ -320,6 +320,10 @@ class FloatingDayController extends OrderAbstractController
         $query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
         $paginationParams = array(
             //'defaultSortFieldName' => 'request.firstDayAway', //createDate
             'defaultSortDirection' => 'DESC',
@@ -594,7 +598,9 @@ class FloatingDayController extends OrderAbstractController
                 $where .= " OR ";
             }
             if( $subjectUser ) {
-                $where .= "request.user=".$subjectUser->getId();
+                //$where .= "request.user=".$subjectUser->getId();
+                $where .= "request.user=:subjectUserId";
+                $dqlParameters['subjectUserId'] = $subjectUser->getId();
             } else {
                 $where .= "request.user IS NULL";
             }
@@ -609,7 +615,9 @@ class FloatingDayController extends OrderAbstractController
                 $where .= " OR ";
             }
             if( $submitter ) {
-                $where .= "request.submitter=".$submitter->getId();
+                //$where .= "request.submitter=".$submitter->getId();
+                $where .= "request.submitter=:submitterUserId";
+                $dqlParameters['submitterUserId'] = $submitter->getId();
             } else {
                 $where .= "request.submitter IS NULL";
             }
@@ -618,23 +626,32 @@ class FloatingDayController extends OrderAbstractController
             $filtered = true;
         }
 
+        //group is a single instintution
         if( $groups && $groups->getId() ) {
-            //echo "groupId=".$groups->getId()."<br>";
+            //echo "groupId=".$groups->getId()."<br>";exit('group is not NULL');
             $where = "";
             if( $where != "" ) {
                 $where .= " OR ";
             }
             if( $groups ) {
-                //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
-                //$where .= "institution=".$groups->getId();
-                //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
-                    $groups,
-                    "institution",
-                    array("Union", "Intersection", "Untrusted Intersection"),
-                    true,
-                    false
-                );
+
+                if(0) {
+                    //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
+                    //$where .= "institution=".$groups->getId();
+                    //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
+                    $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+                        $groups,
+                        "institution",
+                        array("Union", "Intersection", "Untrusted Intersection"),
+                        //array("Intersection"),
+                        true,
+                        false
+                    );
+                } else {
+                    $where .= "institution.id = :institutionId";
+                    $dqlParameters['institutionId'] = $groups->getId();
+                }
+                //echo "collaboration group where=".$where."<br>";
 //                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrUnderlyingCollaborationsByNode(
 //                    $groups,
 //                    "institution",
@@ -652,7 +669,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         if( $groups == null && $request->get('_route') == "vacreq_floatingrequests" ) {
-
+            //exit('group is NULL');
             $instWhereArr = array();
 
             $instArr = array();
@@ -662,15 +679,6 @@ class FloatingDayController extends OrderAbstractController
             if( count($instArr) > 0 ) {
                 $instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
             }
-
-//            $tentativeInstArr = array();
-//            foreach( $tentativeInstitutions as $instId => $instNameStr ) {
-//                //echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
-//                $tentativeInstArr[] = $instId;
-//            }
-//            if( count($tentativeInstArr) > 0 ) {
-//                $instWhereArr[] = "(tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ") OR tentativeInstitution.id is NULL)";
-//            }
 
             if( count($instWhereArr) > 0 ) {
                 //echo "instStr=".implode(" AND ", $instWhereArr)."<br>";

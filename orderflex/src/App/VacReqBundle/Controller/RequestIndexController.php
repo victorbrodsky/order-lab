@@ -654,7 +654,9 @@ class RequestIndexController extends OrderAbstractController
                 $where .= " OR ";
             }
             if( $subjectUser ) {
-                $where .= "request.user=".$subjectUser->getId();
+                //$where .= "request.user=".$subjectUser->getId();
+                $where .= "request.user=:subjectUserId";
+                $dqlParameters['subjectUserId'] = $subjectUser->getId();
             } else {
                 $where .= "request.user IS NULL";
             }
@@ -669,7 +671,9 @@ class RequestIndexController extends OrderAbstractController
                 $where .= " OR ";
             }
             if( $submitter ) {
-                $where .= "request.submitter=".$submitter->getId();
+                //$where .= "request.submitter=".$submitter->getId();
+                $where .= "request.submitter=:submitterUserId";
+                $dqlParameters['submitterUserId'] = $submitter->getId();
             } else {
                 $where .= "request.submitter IS NULL";
             }
@@ -685,16 +689,17 @@ class RequestIndexController extends OrderAbstractController
                 $where .= " OR ";
             }
             if( $groups ) {
-                //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
-                //$where .= "institution=".$groups->getId();
-                //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
-                    $groups,
-                    "institution",
-                    array("Union", "Intersection", "Untrusted Intersection"),
-                    true,
-                    false
-                );
+                if(0) {
+                    //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
+                    //$where .= "institution=".$groups->getId();
+                    //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
+                    $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+                        $groups,
+                        "institution",
+                        array("Union", "Intersection", "Untrusted Intersection"),
+                        true,
+                        false
+                    );
 //                $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrUnderlyingCollaborationsByNode(
 //                    $groups,
 //                    "institution",
@@ -702,6 +707,10 @@ class RequestIndexController extends OrderAbstractController
 //                //,true
 //                //,false
 //                );
+                } else {
+                    $where .= "institution.id = :institutionId";
+                    $dqlParameters['institutionId'] = $groups->getId();
+                }
             } else {
                 $where .= "institution IS NULL";
             }
