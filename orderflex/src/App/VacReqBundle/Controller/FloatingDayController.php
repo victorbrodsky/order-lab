@@ -57,142 +57,6 @@ class FloatingDayController extends OrderAbstractController
         );
 
         return $this->listRequests($params,$request);
-
-//        //exit('incomingFloatingRequestsAction');
-//        $em = $this->getDoctrine()->getManager();
-//        $vacreqUtil = $this->get('vacreq_util');
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $routeName = $request->get('_route');
-//        $sitename = $this->getParameter('vacreq.sitename');
-//        $filtered = false;
-//        $indexTitle = "Floating Day Incoming Requests";
-//        $pageTitle = $indexTitle;
-//        $requestTypeAbbreviation = "floatingday";
-//
-//        //////////////// create vacreq filter ////////////////
-//        $params = array(
-//            //'cycle' => 'show'
-//            'em' => $em,
-//            'routeName' => $routeName,
-//            'filterShowUser' => true,
-//            'requestTypeAbbreviation' => $requestTypeAbbreviation,
-//        );
-//
-//        $supervisorRole = false;
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
-//        ) {
-//            $supervisorRole = true;
-//        }
-//        $params['supervisor'] = $supervisorRole;
-//
-//        //////////////////// get list of users with "unknown" user ////////////////////
-//        $em = $this->getDoctrine()->getManager();
-//        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
-//        $dqlFilterUser = $repository->createQueryBuilder('user');
-//        $dqlFilterUser->select('user');
-//        $dqlFilterUser->leftJoin("user.infos","infos");
-//        $dqlFilterUser->leftJoin("user.employmentStatus", "employmentStatus");
-//        $dqlFilterUser->leftJoin("employmentStatus.employmentType", "employmentType");
-//        //filter out system user
-//        $dqlFilterUser->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
-//        //filter out Pathology Fellowship Applicants
-//        $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-//        //$dqlFilterUser->where("user.keytype IS NOT NULL");
-//        $dqlFilterUser->orderBy("infos.lastName","ASC");
-//        $queryFilterUser = $em->createQuery($dqlFilterUser);
-//        $filterUsers = $queryFilterUser->getResult();
-//        //echo "count=".count($filterUsers)."<br>";
-//        //add unknown dummy user
-////        $unknown = new User();
-////        $unknown->setDisplayName("unknown");
-////        $em->persist($unknown);
-//        //$filterUsers[] = $unknown;
-////        array_unshift($filterUsers, $unknown);
-//        $params['filterUsers'] = $filterUsers;
-//        //////////////////// EOF get list of users with "unknown" user ////////////////////
-//
-//        //get submitter groups: VacReqRequest, create
-//        $groupParams = array();
-//        $groupParams['statusArr'] = array('default','user-added');
-//        if( $request->get('_route') == "vacreq_myfloatingrequests" ) {
-//            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-//        }
-//        if( $request->get('_route') == "vacreq_incomingrequests" ) {
-//            if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
-//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//                if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-//                    $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//                }
-//            } else {
-//                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
-//            }
-//        }
-//        if( $request->get('_route') == "vacreq_floatingrequests" ) {
-//            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-//                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//            }
-//        }
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-//
-//        $userServiceUtil = $this->get('user_service_utility');
-//        $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
-//
-//
-//        $filterform = $this->createForm(VacReqFilterType::class, null,array(
-//            'method' => 'GET',
-//            'form_custom_value'=>$params
-//        ));
-//        //////////////// EOF create vacreq filter ////////////////
-//
-//        //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
-//        $filterform->handleRequest($request);
-//
-//        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
-//        $dql = $repository->createQueryBuilder("request");
-//
-//        $dql->select('request');
-//
-//        //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
-//        //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
-//
-//        $dql->leftJoin("request.user", "user");
-//        //$dql->leftJoin("request.submitter", "submitter");
-//        $dql->leftJoin("user.infos", "infos");
-//        $dql->leftJoin("request.institution", "institution");
-//
-//        $limit = 30;
-//        $query = $em->createQuery($dql);
-//
-//        $paginationParams = array(
-//            //'defaultSortFieldName' => 'request.firstDayAway', //createDate
-//            'defaultSortDirection' => 'DESC',
-//            'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
-//        );
-//
-//        $paginator  = $this->get('knp_paginator');
-//        $pagination = $paginator->paginate(
-//            $query,
-//            $request->query->get('page', 1),   /*page number*/
-//            $limit,                                         /*limit per page*/
-//            $paginationParams
-//        );
-//
-//
-//        return array(
-//            'filterform' => $filterform,
-//            'vacreqfilter' => $filterform->createView(),
-//            'pagination' => $pagination,
-//            'sitename' => $sitename,
-//            'filtered' => $filtered,
-//            'routename' => $routeName,
-//            'title' => $indexTitle,
-//            'pageTitle' => $pageTitle,
-//            'requestTypeAbbreviation' => $requestTypeAbbreviation,
-//            //'totalApprovedDaysString' => $params['totalApprovedDaysString']
-//        );
     }
 
 
@@ -202,7 +66,13 @@ class FloatingDayController extends OrderAbstractController
      */
     public function myFloatingRequestsAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+//        ) {
+//            exit('no permission');
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -768,47 +638,6 @@ class FloatingDayController extends OrderAbstractController
             if ($cancellationRequestApproved) {
                 $requestStatusCriterionArr[] = "request.status='canceled'";
             }
-
-//            if( $requestTypeAbbreviation == "business-vacation" ) {
-//                if ($completed) {
-//                    $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'";
-//                }
-//                if ($pending) {
-//                    $requestStatusCriterionArr[] = "requestBusiness.status='pending' OR requestVacation.status='pending'";
-//                }
-//                if ($rejected) {
-//                    $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected'";
-//                }
-//                if ($approved) {
-//                    $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
-//                }
-//                if ($cancellationRequest) {
-//                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Requested'";
-//                }
-//                if ($cancellationRequestApproved) {
-//                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Approved (Canceled)'";
-//                }
-//                if ($cancellationRequestRejected) {
-//                    $requestStatusCriterionArr[] = "request.extraStatus = 'Cancellation Denied (Approved)'";
-//                }
-//            }
-//            if( $requestTypeAbbreviation == "carryover" ) {
-//                if ($completed) {
-//                    $requestStatusCriterionArr[] = "request.status='rejected' OR request.status='approved'";
-//                }
-//                if ($pending) {
-//                    $requestStatusCriterionArr[] = "request.status='pending'";
-//                }
-//                if ($rejected) {
-//                    $requestStatusCriterionArr[] = "request.status='rejected'";
-//                }
-//                if ($approved) {
-//                    $requestStatusCriterionArr[] = "request.status='approved'";
-//                }
-//                if ($cancellationRequestApproved) {
-//                    $requestStatusCriterionArr[] = "request.status='canceled'";
-//                }
-//            }
 
             if( count($requestStatusCriterionArr) > 0 ) {
                 $dql->andWhere(implode(" OR ", $requestStatusCriterionArr));
@@ -1444,6 +1273,101 @@ class FloatingDayController extends OrderAbstractController
 
         //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         return $this->redirectToRoute("vacreq_myfloatingrequests");
+    }
+
+    /**
+     * @Route("/check-existed-floating-ajax", name="vacreq_check_existed_floating_ajax", methods={"GET","POST"}, options={"expose"=true})
+     */
+    public function checkExistedFloatingDayAjaxAction(Request $request) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $resArr = array(
+            'error' => true,
+            'errorMsg' => "Logical error to verify existing floating day on the server",
+        );
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //$newline = "\n";
+        $newline =  "<br>\n";
+        $invoice = NULL;
+
+        $floatingTypeId = $request->get('floatingTypeId');
+        $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
+        $subjectUserId = $request->get('subjectUserId');
+        echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
+
+        if( $floatingDay ) {
+            //TODO: convert to user timezone
+            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+            echo "floatingDayDate=".$floatingDayDate->format('d-M-Y')."<br>";
+        }
+
+        $parameters = array();
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql = $repository->createQueryBuilder('floating');
+        $dql->where("floating.floatingDay = :floatingDay AND userId = :userId AND floatingType=:floatingType");
+        $parameters['floatingDay'] = $floatingDayDate->format('Y-m-d'); //2022-02-23
+        $parameters['userId'] = $subjectUserId;
+        $parameters['floatingType'] = $floatingTypeId;
+        $query = $em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $floatingRequests = $query->getResult();
+
+        if( count($floatingRequests) > 0 ) {
+
+            $floatingType = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
+
+            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
+            if( count($academicYearArr) > 0 ) {
+                $academicYearStartStr = $academicYearArr[0];
+            } else {
+                $academicYearStartStr = "Unknown Academic Year";
+            }
+
+            $errorMsgArr = array();
+            foreach($floatingRequests as $floatingRequest) {
+                $floatingDay = $floatingRequest->getFloatingDay();
+                $approver = $floatingRequest->getApprover();
+                $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
+                if( $floatingDay && $approver && $approverDate ) {
+                    //$academicYear = ''; //[2021-2022]
+                    $errorMsg =
+                        "A Floating day of ".$floatingDay->format('m/d/Y').
+                        " has already been approved for this $academicYearStartStr academic year by " +
+                        $approver->getUsernameOptimal() +
+                        " on " + $approverDate->format('m/d/Y \a\t H:i') + ".";
+                        "Only one "+$floatingType->getName()+" floating day can be approved per academic year";
+                } else {
+                    $errorMsg = "Logical error to verify existing floating day";
+                }
+                $errorMsgArr[] = $errorMsg;
+            }
+            if( count($errorMsgArr) > 0 ) {
+                $resArr['error'] = true;
+                $resArr['errorMsg'] = implode(";",$errorMsgArrs);
+            }
+        } else {
+            $resArr['error'] = false;
+            $resArr['errorMsg'] = "";
+        }
+
+        dump($resArr);
+
+        exit("EOF checkExistedFloatingDayAjaxAction");
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($resArr));
+        return $response;
     }
 
 

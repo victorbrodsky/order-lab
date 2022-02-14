@@ -234,11 +234,34 @@
         function validateVacReqFloatingDayForm(btn) {
             console.log("validateVacReqFloatingDayForm");
 
+            var inst = $('#oleg_vacreqbundle_requestfloating_institution').select2('val');
+            console.log("inst=",inst);
+            if( !inst ) {
+                var error = "Please select organizational group";
+                $('#error-box').text(error).show();
+                return false;
+            }
 
-            var work = $('.floatingday-work').is(":checked"); //$('.floatingday-work').val();
+            var subjectUserId = $('#oleg_vacreqbundle_requestfloating_user').select2('val');
+            console.log("subjectUserId=",subjectUserId);
+            if( !subjectUserId ) {
+                var error = "Person away is not specified.";
+                $('#error-box').text(error).show();
+                return false;
+            }
+
+            var floatingDayType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('val');
+            console.log("floatingDayType=",floatingDayType);
+            if( !subjectUserId ) {
+                var error = "Floating day type is not specified.";
+                $('#error-box').text(error).show();
+                return false;
+            }
+
+            var work = $('.floatingday-work').is(":checked");
             //console.log("work="+work);
             var floatingDay = $('.floatingDay').val();
-            //console.log("floatingDay="+floatingDay);
+            console.log("floatingDay="+floatingDay);
 
             if( !work ) {
                 var error = "Please select checkbox if you have worked or plan to work on the requested floating day";
@@ -261,9 +284,31 @@
                         "Only one [floating day type] floating day can be approved per academic year";
                 $('#error-box').text(error).show();
             }
+            if(1) {
+//                var subjectUserId = $('#oleg_vacreqbundle_request_user').select2('val');
+//                console.log("subjectUserId="+subjectUserId);
+//                if( subjectUserId ) {
+                var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId);
+                if (checkRes) {
+                    if (checkRes.error == true) {
+                        if( checkRes.errorMsg ) {
+                            $('#error-box').text(checkRes.errorMsg).show();
+                        } else {
+                            var error = "Logical error to verify existing floating day";
+                            $('#error-box').text(error).show();
+                        }
+                        return false;
+                    }
+                }
+//                } else {
+//                    var error = "Person away is not specified.";
+//                    $('#error-box').text(error).show();
+//                    return false;
+//                }
+            }
 
             console.log("form is valid");
-            //return true;
+            return false; //testing
 
             $('#vacreq-floatingday-form').submit();
         }
@@ -277,6 +322,21 @@
                     $('#work-on-floating-daytype').text(floatingType.text);
                 }
             }
+        }
+
+        function checkExistedFloatingDay( floatingTypeId, floatingDay, subjectUserId ) {
+            var resData = null;
+            var thisAsyncflag = false;
+            var url = Routing.generate('vacreq_check_existed_floating_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: thisAsyncflag,
+                data: {floatingTypeId: floatingTypeId, floatingDay: floatingDay, subjectUserId: subjectUserId},
+            }).done(function(data) {
+                resData = data;
+            });
+            return resData;
         }
 
 

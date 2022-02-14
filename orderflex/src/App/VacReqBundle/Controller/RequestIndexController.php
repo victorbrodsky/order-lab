@@ -77,7 +77,11 @@ class RequestIndexController extends OrderAbstractController
                         if( isset($requestParams["filter"]["submitter"]) ) {
                             $submitter = $requestParams["filter"]["submitter"];
                         }
-                        $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+
+                        $organizationalInstitutions = NULL;
+                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
+                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+                        }
 
                         //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
 
