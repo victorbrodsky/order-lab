@@ -1310,7 +1310,8 @@ class FloatingDayController extends OrderAbstractController
         $parameters = array();
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
         $dql = $repository->createQueryBuilder('floating');
-        $dql->where("floating.floatingDay = :floatingDay AND userId = :userId AND floatingType=:floatingType");
+        $dql->where("floating.floatingDay = :floatingDay AND floating.user = :userId AND floating.floatingType=:floatingType");
+        $dql->andWhere("floating.status = 'approved'");
         $parameters['floatingDay'] = $floatingDayDate->format('Y-m-d'); //2022-02-23
         $parameters['userId'] = $subjectUserId;
         $parameters['floatingType'] = $floatingTypeId;
