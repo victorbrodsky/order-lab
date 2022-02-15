@@ -1302,19 +1302,30 @@ class FloatingDayController extends OrderAbstractController
         echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
 
         if( $floatingDay ) {
-            //TODO: convert to user timezone
+            //TODO: convert to UTC timezone to be able to compare to DB?
             $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
-            echo "floatingDayDate=".$floatingDayDate->format('d-M-Y')."<br>";
+            $floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
+            $floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
+            echo "floatingDayDateFrom=".$floatingDayDateFrom->format('Y-m-d H:i:s')."<br>";
+            echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
         }
 
         $parameters = array();
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
         $dql = $repository->createQueryBuilder('floating');
-        $dql->where("floating.floatingDay = :floatingDay AND floating.user = :userId AND floating.floatingType=:floatingType");
-        $dql->andWhere("floating.status = 'approved'");
-        $parameters['floatingDay'] = $floatingDayDate->format('Y-m-d'); //2022-02-23
+
+        $dql->where("floating.user = :userId AND floating.floatingType=:floatingType");
         $parameters['userId'] = $subjectUserId;
         $parameters['floatingType'] = $floatingTypeId;
+
+        //$dql->andWhere("floating.floatingDay = :floatingDay");
+        //$parameters['floatingDay'] = $floatingDayDate->format('Y-m-d'); //2022-02-23
+        $dql->andWhere("floating.floatingDay BETWEEN :floatingDayDateFrom AND :floatingDayDateTo");
+        $parameters['floatingDayDateFrom'] = $floatingDayDateFrom; //2022-02-23
+        $parameters['floatingDayDateTo'] = $floatingDayDateTo; //2022-02-23
+
+        $dql->andWhere("floating.status = 'approved'");
+
         $query = $em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
@@ -1322,23 +1333,27 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $floatingRequests = $query->getResult();
+        echo "floatingRequests=".count($floatingRequests)."<br>";
 
         if( count($floatingRequests) > 0 ) {
 
             $floatingType = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
 
-            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
-            if( count($academicYearArr) > 0 ) {
-                $academicYearStartStr = $academicYearArr[0];
-            } else {
-                $academicYearStartStr = "Unknown Academic Year";
-            }
+            $academicYearStartStr = "Unknown Academic Year";
+//            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
+//            if( count($academicYearArr) > 0 ) {
+//                $academicYearStartStr = $academicYearArr[0];
+//            } else {
+//                $academicYearStartStr = "Unknown Academic Year";
+//            }
 
             $errorMsgArr = array();
             foreach($floatingRequests as $floatingRequest) {
                 $floatingDay = $floatingRequest->getFloatingDay();
                 $approver = $floatingRequest->getApprover();
+                echo "ID=".$floatingRequest->getId()."<br>";
                 $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
+                echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y').", approver=$approver, approverDate=".$approverDate->format('d/m/Y')."<br>";
                 if( $floatingDay && $approver && $approverDate ) {
                     //$academicYear = ''; //[2021-2022]
                     $errorMsg =
@@ -1354,7 +1369,7 @@ class FloatingDayController extends OrderAbstractController
             }
             if( count($errorMsgArr) > 0 ) {
                 $resArr['error'] = true;
-                $resArr['errorMsg'] = implode(";",$errorMsgArrs);
+                $resArr['errorMsg'] = implode(";",$errorMsgArr);
             }
         } else {
             $resArr['error'] = false;

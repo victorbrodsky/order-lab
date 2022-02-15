@@ -173,7 +173,7 @@
 
                 <td>
                     {% if entity.floatingDay %}
-                        {{ entity.floatingDay|date('m/d/Y') }}
+                        {{ entity.floatingDay|date('m/d/Y','UTC') }}
                     {% endif %}
                 </td>
 
