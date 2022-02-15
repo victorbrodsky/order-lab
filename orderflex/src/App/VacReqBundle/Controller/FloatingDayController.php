@@ -49,6 +49,21 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //TODO: if request type is not set redirect with 'filter[requestType]' => $requestType->getId(),
+//        $requestParams = $request->query->all();
+//        if( $requestParams && array_key_exists("filter", $requestParams) ) {
+//            return $this->redirect(
+//                $this->generateUrl('vacreq_floatingrequests',
+//                    array(
+//                        'filter[requestType]' => $requestType->getId(),
+//                        'filter[startdate]' => $startdate,
+//                        'filter[enddate]' => $enddate,
+//                        'filter[academicYear]' => $enddate,
+//                        'filter[user]' => $subjectUser,
+//                        'filter[submitter]' => $submitter,
+//                        'filter[organizationalInstitutions]' => $organizationalInstitutions
+//                    )
+//                ));
+//        }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
