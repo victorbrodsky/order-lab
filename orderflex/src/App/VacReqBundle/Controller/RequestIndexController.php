@@ -50,62 +50,69 @@ class RequestIndexController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         ///////// redirect to floating list /////////
-        $em = $this->getDoctrine()->getManager();
-        $requestParams = $request->query->all();
-        if( $requestParams && array_key_exists("filter", $requestParams) ) {
-            if( array_key_exists("requestType", $requestParams["filter"]) ) {
-                $requestTypeId = $requestParams["filter"]["requestType"];
-                if( $requestTypeId ) {
-                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
-                    if (!$requestType) {
-                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
-                    }
-                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
-                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
-                    if( $requestType->getAbbreviation() == 'floatingday' ) {
-
-                        $startdate = $requestParams["filter"]["startdate"];
-                        $enddate = $requestParams["filter"]["enddate"];
-
-                        $academicYear = NULL;
-                        if( isset($requestParams["filter"]["academicYear"]) ) {
-                            $academicYear = $requestParams["filter"]["academicYear"];
-                        }
-
-                        $subjectUser = NULL;
-                        if( isset($requestParams["filter"]["user"]) ) {
-                            $subjectUser = $requestParams["filter"]["user"];
-                        }
-
-                        $submitter = NULL;
-                        if( isset($requestParams["filter"]["submitter"]) ) {
-                            $submitter = $requestParams["filter"]["submitter"];
-                        }
-
-                        $organizationalInstitutions = NULL;
-                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
-                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
-                        }
-
-                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
-
-                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
-                        return $this->redirect(
-                            $this->generateUrl('vacreq_myfloatingrequests',
-                                array(
-                                    'filter[requestType]' => $requestType->getId(),
-                                    'filter[startdate]' => $startdate,
-                                    'filter[enddate]' => $enddate,
-                                    'filter[academicYear]' => $academicYear,
-                                    'filter[user]' => $subjectUser,
-                                    'filter[submitter]' => $submitter,
-                                    'filter[organizationalInstitutions]' => $organizationalInstitutions
-                                )
-                            ));
-                        //exit('111');
-                    }
-                }
-            }
+//        $em = $this->getDoctrine()->getManager();
+//        $requestParams = $request->query->all();
+//        if( $requestParams && array_key_exists("filter", $requestParams) ) {
+//            if( array_key_exists("requestType", $requestParams["filter"]) ) {
+//                $requestTypeId = $requestParams["filter"]["requestType"];
+//                if( $requestTypeId ) {
+//                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+//                    if (!$requestType) {
+//                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
+//                    }
+//                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+//                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+//                    if( $requestType->getAbbreviation() == 'floatingday' ) {
+//
+//                        $startdate = $requestParams["filter"]["startdate"];
+//                        $enddate = $requestParams["filter"]["enddate"];
+//
+//                        $academicYear = NULL;
+//                        if( isset($requestParams["filter"]["academicYear"]) ) {
+//                            $academicYear = $requestParams["filter"]["academicYear"];
+//                        }
+//
+//                        $subjectUser = NULL;
+//                        if( isset($requestParams["filter"]["user"]) ) {
+//                            $subjectUser = $requestParams["filter"]["user"];
+//                        }
+//
+//                        $submitter = NULL;
+//                        if( isset($requestParams["filter"]["submitter"]) ) {
+//                            $submitter = $requestParams["filter"]["submitter"];
+//                        }
+//
+//                        $organizationalInstitutions = NULL;
+//                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
+//                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+//                        }
+//
+//                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
+//
+//                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
+//                        return $this->redirect(
+//                            $this->generateUrl('vacreq_myfloatingrequests',
+//                                array(
+//                                    'filter[requestType]' => $requestType->getId(),
+//                                    'filter[startdate]' => $startdate,
+//                                    'filter[enddate]' => $enddate,
+//                                    'filter[academicYear]' => $academicYear,
+//                                    'filter[user]' => $subjectUser,
+//                                    'filter[submitter]' => $submitter,
+//                                    'filter[organizationalInstitutions]' => $organizationalInstitutions
+//                                )
+//                            ));
+//                        //exit('111');
+//                    }
+//                }
+//            }
+//        }
+        $vacreqUtil = $this->get('vacreq_util');
+        $redirectArr = $vacreqUtil->redirectIndex($request);
+        if( $redirectArr ) {
+            return $this->redirect(
+                $this->generateUrl($redirectArr['routeName'],$redirectArr['params'])
+            );
         }
         ///////// EOF redirect to floating list /////////
 
@@ -144,67 +151,74 @@ class RequestIndexController extends OrderAbstractController
         }
 
         ///////// redirect to floating list /////////
-        $em = $this->getDoctrine()->getManager();
-        $requestParams = $request->query->all();
-        if( $requestParams && array_key_exists("filter", $requestParams) ) {
-            if( array_key_exists("requestType", $requestParams["filter"]) ) {
-                $requestTypeId = $requestParams["filter"]["requestType"];
-                if( $requestTypeId ) {
-                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
-                    if (!$requestType) {
-                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
-                    }
-                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
-                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
-                    if( $requestType->getAbbreviation() == 'floatingday' ) {
-
-                        $startdate = $requestParams["filter"]["startdate"];
-                        $enddate = $requestParams["filter"]["enddate"];
-
-                        //$academicYear = $requestParams["filter"]["academicYear"];
-                        $academicYear = NULL;
-                        if( isset($requestParams["filter"]["academicYear"]) ) {
-                            $academicYear = $requestParams["filter"]["academicYear"];
-                        }
-
-                        //$subjectUser = $requestParams["filter"]["user"];
-                        //$submitter = $requestParams["filter"]["submitter"];
-                        //$organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
-
-                        $subjectUser = NULL;
-                        if( isset($requestParams["filter"]["user"]) ) {
-                            $subjectUser = $requestParams["filter"]["user"];
-                        }
-
-                        $submitter = NULL;
-                        if( isset($requestParams["filter"]["submitter"]) ) {
-                            $submitter = $requestParams["filter"]["submitter"];
-                        }
-
-                        $organizationalInstitutions = NULL;
-                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
-                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
-                        }
-
-                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
-
-                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
-                        return $this->redirect(
-                            $this->generateUrl('vacreq_floatingrequests',
-                            array(
-                                'filter[requestType]' => $requestType->getId(),
-                                'filter[startdate]' => $startdate,
-                                'filter[enddate]' => $enddate,
-                                'filter[academicYear]' => $enddate,
-                                'filter[user]' => $subjectUser,
-                                'filter[submitter]' => $submitter,
-                                'filter[organizationalInstitutions]' => $organizationalInstitutions
-                            )
-                        ));
-                        //exit('111');
-                    }
-                }
-            }
+//        $em = $this->getDoctrine()->getManager();
+//        $requestParams = $request->query->all();
+//        if( $requestParams && array_key_exists("filter", $requestParams) ) {
+//            if( array_key_exists("requestType", $requestParams["filter"]) ) {
+//                $requestTypeId = $requestParams["filter"]["requestType"];
+//                if( $requestTypeId ) {
+//                    $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+//                    if (!$requestType) {
+//                        throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
+//                    }
+//                    //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
+//                    //$params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+//                    if( $requestType->getAbbreviation() == 'floatingday' ) {
+//
+//                        $startdate = $requestParams["filter"]["startdate"];
+//                        $enddate = $requestParams["filter"]["enddate"];
+//
+//                        //$academicYear = $requestParams["filter"]["academicYear"];
+//                        $academicYear = NULL;
+//                        if( isset($requestParams["filter"]["academicYear"]) ) {
+//                            $academicYear = $requestParams["filter"]["academicYear"];
+//                        }
+//
+//                        //$subjectUser = $requestParams["filter"]["user"];
+//                        //$submitter = $requestParams["filter"]["submitter"];
+//                        //$organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+//
+//                        $subjectUser = NULL;
+//                        if( isset($requestParams["filter"]["user"]) ) {
+//                            $subjectUser = $requestParams["filter"]["user"];
+//                        }
+//
+//                        $submitter = NULL;
+//                        if( isset($requestParams["filter"]["submitter"]) ) {
+//                            $submitter = $requestParams["filter"]["submitter"];
+//                        }
+//
+//                        $organizationalInstitutions = NULL;
+//                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
+//                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+//                        }
+//
+//                        //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
+//
+//                        //return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $fellapp->getId())) );
+//                        return $this->redirect(
+//                            $this->generateUrl('vacreq_floatingrequests',
+//                            array(
+//                                'filter[requestType]' => $requestType->getId(),
+//                                'filter[startdate]' => $startdate,
+//                                'filter[enddate]' => $enddate,
+//                                'filter[academicYear]' => $enddate,
+//                                'filter[user]' => $subjectUser,
+//                                'filter[submitter]' => $submitter,
+//                                'filter[organizationalInstitutions]' => $organizationalInstitutions
+//                            )
+//                        ));
+//                        //exit('111');
+//                    }
+//                }
+//            }
+//        }
+        $vacreqUtil = $this->get('vacreq_util');
+        $redirectArr = $vacreqUtil->redirectIndex($request);
+        if( $redirectArr ) {
+            return $this->redirect(
+                $this->generateUrl($redirectArr['routeName'],$redirectArr['params'])
+            );
         }
         ///////// EOF redirect to floating list /////////
 

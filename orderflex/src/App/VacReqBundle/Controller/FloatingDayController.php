@@ -64,6 +64,13 @@ class FloatingDayController extends OrderAbstractController
 //                    )
 //                ));
 //        }
+        $vacreqUtil = $this->get('vacreq_util');
+        $redirectArr = $vacreqUtil->redirectIndex($request);
+        if( $redirectArr ) {
+            return $this->redirect(
+                $this->generateUrl($redirectArr['routeName'],$redirectArr['params'])
+            );
+        }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -91,6 +98,14 @@ class FloatingDayController extends OrderAbstractController
 //        }
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $redirectArr = $vacreqUtil->redirectIndex($request);
+        if( $redirectArr ) {
+            return $this->redirect(
+                $this->generateUrl($redirectArr['routeName'],$redirectArr['params'])
+            );
         }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
