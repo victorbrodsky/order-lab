@@ -66,7 +66,11 @@ class RequestIndexController extends OrderAbstractController
 
                         $startdate = $requestParams["filter"]["startdate"];
                         $enddate = $requestParams["filter"]["enddate"];
-                        $academicYear = $requestParams["filter"]["academicYear"];
+
+                        $academicYear = NULL;
+                        if( isset($requestParams["filter"]["academicYear"]) ) {
+                            $academicYear = $requestParams["filter"]["academicYear"];
+                        }
 
                         $subjectUser = NULL;
                         if( isset($requestParams["filter"]["user"]) ) {
@@ -92,7 +96,7 @@ class RequestIndexController extends OrderAbstractController
                                     'filter[requestType]' => $requestType->getId(),
                                     'filter[startdate]' => $startdate,
                                     'filter[enddate]' => $enddate,
-                                    'filter[academicYear]' => $enddate,
+                                    'filter[academicYear]' => $academicYear,
                                     'filter[user]' => $subjectUser,
                                     'filter[submitter]' => $submitter,
                                     'filter[organizationalInstitutions]' => $organizationalInstitutions
@@ -156,10 +160,31 @@ class RequestIndexController extends OrderAbstractController
 
                         $startdate = $requestParams["filter"]["startdate"];
                         $enddate = $requestParams["filter"]["enddate"];
-                        $academicYear = $requestParams["filter"]["academicYear"];
-                        $subjectUser = $requestParams["filter"]["user"];
-                        $submitter = $requestParams["filter"]["submitter"];
-                        $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+
+                        //$academicYear = $requestParams["filter"]["academicYear"];
+                        $academicYear = NULL;
+                        if( isset($requestParams["filter"]["academicYear"]) ) {
+                            $academicYear = $requestParams["filter"]["academicYear"];
+                        }
+
+                        //$subjectUser = $requestParams["filter"]["user"];
+                        //$submitter = $requestParams["filter"]["submitter"];
+                        //$organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+
+                        $subjectUser = NULL;
+                        if( isset($requestParams["filter"]["user"]) ) {
+                            $subjectUser = $requestParams["filter"]["user"];
+                        }
+
+                        $submitter = NULL;
+                        if( isset($requestParams["filter"]["submitter"]) ) {
+                            $submitter = $requestParams["filter"]["submitter"];
+                        }
+
+                        $organizationalInstitutions = NULL;
+                        if( isset($requestParams["filter"]["organizationalInstitutions"]) ) {
+                            $organizationalInstitutions = $requestParams["filter"]["organizationalInstitutions"];
+                        }
 
                         //return $this->redirect( $this->generateUrl('vacreq_floatingrequests') );
 

@@ -48,6 +48,8 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        //TODO: if request type is not set redirect with 'filter[requestType]' => $requestType->getId(),
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
@@ -905,6 +907,7 @@ class FloatingDayController extends OrderAbstractController
             $cycle = 'review';
         }
 
+        $event = NULL;
         $changedInfoArr = array();
 
         //$originalTentativeStatus = $entity->getTentativeStatus();
@@ -935,8 +938,8 @@ class FloatingDayController extends OrderAbstractController
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
-            $statusF = $entity->getStatus();
-            $statusMsg = $statusMsg . " status=".$statusF;
+            $status = $entity->getStatus();
+            $statusMsg = $statusMsg . " status=".$status;
             $logger->notice($statusMsg);
             /////////////// EOF log status ////////////////////////
 
@@ -944,28 +947,35 @@ class FloatingDayController extends OrderAbstractController
             if( $routName == 'vacreq_floating_review' ) { //review
                 ///////////////// review //////////////////////////
 
-                //set final (global) status according to sub-requests status:
-                //only two possible actions: reject or approved
-                //$entity->setFinalStatus(); //vacreq_floating_review
+                if( $status && $originalStatus != $status ) {
 
-                $overallStatus = $entity->getStatus();
+                    //set final (global) status according to sub-requests status:
+                    //only two possible actions: reject or approved
+                    //$entity->setFinalStatus(); //vacreq_floating_review
 
-                if( $overallStatus == "pending" ) {
-                    $entity->setApprover(null);
-                } else {
-                    $entity->setApprover($user);
+                    $overallStatus = $entity->getStatus();
+
+                    if ($status == "pending") {
+                        $entity->setApprover(null);
+                        $entity->setApprovedRejectDate(null);
+                    }
+
+                    if ($status == "approved" || $status == "rejected") {
+                        $entity->setApprover($user);
+                        $entity->setApprovedRejectDate(new \DateTime());
+                    }
+                    //exit('vacreq: overallStatus='.$overallStatus."; status=".$entity->getDetailedStatus());
+
+                    //$entity->setExtraStatus(NULL);
+                    $em->persist($entity);
+                    $em->flush();
+
+                    $eventType = 'Floating Day Request ' . ucwords($status);
+                    $action = $status;
+
+                    //send respond email for the request changed by the form
+                    $vacreqUtil->sendSingleRespondEmailToSubmitter($entity, $user, $status);
                 }
-                //exit('vacreq: overallStatus='.$overallStatus."; status=".$entity->getDetailedStatus());
-
-                //$entity->setExtraStatus(NULL);
-                $em->persist($entity);
-                $em->flush();
-
-                $eventType = 'Floating Day Request '.ucwords($overallStatus);
-                $action = $overallStatus;
-
-                //send respond email for the request changed by the form
-                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $overallStatus );
 
             }//$routName == 'vacreq_floating_review'
             else
@@ -973,6 +983,7 @@ class FloatingDayController extends OrderAbstractController
                 ///////////////// update vacreq_edit (edit page does not allow to change status) //////////////////////////
 
                 $entity->setUpdateUser($user);
+                $entity->setUpdateDate(new \DateTime());
 
                 /////////////// Add event log on edit (edit or add collection) ///////////////
                 /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
@@ -993,27 +1004,31 @@ class FloatingDayController extends OrderAbstractController
                 $action = 'set to Pending';
             }
 
-            //Event Log
-            //$break = "\r\n";
-            $break = "<br>";
-            $event = "Request ID #".$entity->getID()." for ".$entity->getUser()." has been ".$action." by ".$user.$break;
-            $event .= $entity->getDetailedStatus().$break.$break;
-            $userSecUtil = $this->container->get('user_security_utility');
+            if( $status && $originalStatus != $status ) {
+                //Event Log
+                //$break = "\r\n";
+                $break = "<br>";
+                $event = "Request ID #" . $entity->getID() . " for " . $entity->getUser() . " has been " . $action . " by " . $user . $break;
+                $event .= $entity->getDetailedStatus() . $break . $break;
 
-            //Flash
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                $event
-            );
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
 
             //set event log for objects
             if( count($changedInfoArr) > 0 ) {
                 //$user = $this->get('security.token_storage')->getToken()->getUser();
-                $event .= "Updated Data:".$break;
+                $event = "Updated Floating Day Request:".$break;
                 $event .= implode("<br>", $changedInfoArr);
             }
 
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+            if( $event ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+            }
 
             if( $routName == 'vacreq_floating_review' ) {
                 return $this->redirectToRoute('vacreq_floatingrequests');
@@ -1021,7 +1036,7 @@ class FloatingDayController extends OrderAbstractController
                 return $this->redirectToRoute('vacreq_floating_show', array('id' => $entity->getId()));
             }
 
-        }
+        }//if form submitted
 
         $review = false;
         if( $request ) {
@@ -1030,12 +1045,7 @@ class FloatingDayController extends OrderAbstractController
             }
         }
 
-        //get request type
-        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
-            $title = "Request carry over of vacation days";
-        } else {
-            $title = "Vacation/Business Travel Request";
-        }
+        $title = "Floating Day Request";
 
         return array(
             'entity' => $entity,
@@ -1130,85 +1140,75 @@ class FloatingDayController extends OrderAbstractController
             }
         }
         
-        if( $status ) {
-
-            $statusSet = false;
+        if( $status && $originalStatus != $status ) {
 
             $entity->setStatus($status);
-            
-//            if( $status == 'pending' ) {
-//                $entity->setStatus('pending');
-//            } else {
-//                $entity->setStatus('completed');
-//            }
-            $statusSet = true;
 
-            if( $statusSet ) {
+            if( $status == "pending" ) {
+                $entity->setApprover(null);
+                $entity->setApprovedRejectDate(null);
+            }
 
-                if( $status == "pending" ) {
-                    $entity->setApprover(null);
-                } else {
-                    $entity->setApprover($user);
-                }
+            if( $status == "approved" || $status == "rejected" ) {
+                $entity->setApprover($user);
+                $entity->setApprovedRejectDate( new \DateTime());
+            }
 
-                //$entity->setExtraStatus(NULL);
-                $em->persist($entity);
-                $em->flush();
-                
-                //send respond confirmation email to a submitter
-                if( $status == 'canceled' ) {
-                    //an email should be sent to approver saying
-                    // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
-                    // and list all variable names and values in the email.
-                    $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
-                } else {
-                    $approversNameStr = null;
-                    //send confirmation email by express link to change status (email or link in the list)
-                    $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
-                }
+            //$entity->setExtraStatus(NULL);
+            $em->persist($entity);
+            $em->flush();
 
-                $removeCarryoverStr = "";
+            //send respond confirmation email to a submitter
+            if( $status == 'canceled' ) {
+                //an email should be sent to approver saying
+                // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
+                // and list all variable names and values in the email.
+                $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
+            } else {
+                $approversNameStr = null;
+                //send confirmation email by express link to change status (email or link in the list)
+                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
+            }
+
+            $removeCarryoverStr = "";
 //                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
 //                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
 //                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
 //                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
 //                }
-                //exit("test");
+            //exit("test");
 
-                //Flash
-                $statusStr = $status;
-                if( $status == 'pending' ) {
-                    $statusStr = 'set to Pending';
-                }
-
-                //re-submit request
-                if( $status == "pending" && $originalStatus == "canceled" ) {
-                    //send a confirmation email to approver //sendConfirmationEmailToApprovers -> sendConfirmationEmailToFloatingApprovers
-                    $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
-                    $statusStr = 're-submitted';
-                }
-
-                $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
-                $event .= ": ".$entity->getDetailedStatus().".";
-                if( $approversNameStr ) {
-                    $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
-                }
-
-                $event .= $removeCarryoverStr;
-
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
-
-                $eventType = 'Floating Day Request Updated';
-
-                //Event Log
-                $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
-
+            //Flash
+            $statusStr = $status;
+            if( $status == 'pending' ) {
+                $statusStr = 'set to Pending';
             }
 
+            //re-submit request
+            if( $status == "pending" && $originalStatus == "canceled" ) {
+                //send a confirmation email to approver //sendConfirmationEmailToApprovers -> sendConfirmationEmailToFloatingApprovers
+                $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
+                $statusStr = 're-submitted';
+            }
+
+            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
+            $event .= ": ".$entity->getDetailedStatus().".";
+            if( $approversNameStr ) {
+                $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
+            }
+
+            $event .= $removeCarryoverStr;
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+
+            $eventType = 'Floating Day Request Updated';
+
+            //Event Log
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
         }
 
         //redirect to myrequests for owner
@@ -1339,29 +1339,29 @@ class FloatingDayController extends OrderAbstractController
 
             $floatingType = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
 
-            $academicYearStartStr = "Unknown Academic Year";
+            $academicYearStartStr = "";
 //            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
 //            if( count($academicYearArr) > 0 ) {
-//                $academicYearStartStr = $academicYearArr[0];
-//            } else {
-//                $academicYearStartStr = "Unknown Academic Year";
+//                $academicYearStartStr = $academicYearArr[0]." ";
 //            }
 
             $errorMsgArr = array();
             foreach($floatingRequests as $floatingRequest) {
                 $floatingDay = $floatingRequest->getFloatingDay();
                 $approver = $floatingRequest->getApprover();
-                echo "ID=".$floatingRequest->getId()."<br>";
+                //echo "ID=".$floatingRequest->getId()."<br>";
                 $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
-                echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y').", approver=$approver, approverDate=".$approverDate->format('d/m/Y')."<br>";
+                //echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y')."<br>";
+                //echo "approver=$approver <br>";
+                //echo "approverDate=".$approverDate->format('d/m/Y')."<br>";
                 if( $floatingDay && $approver && $approverDate ) {
                     //$academicYear = ''; //[2021-2022]
                     $errorMsg =
                         "A Floating day of ".$floatingDay->format('m/d/Y').
-                        " has already been approved for this $academicYearStartStr academic year by " +
-                        $approver->getUsernameOptimal() +
-                        " on " + $approverDate->format('m/d/Y \a\t H:i') + ".";
-                        "Only one "+$floatingType->getName()+" floating day can be approved per academic year";
+                        " has already been approved for this " . $academicYearStartStr . "academic year by " .
+                        $approver->getUsernameOptimal() .
+                        " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
+                        "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
                 } else {
                     $errorMsg = "Logical error to verify existing floating day";
                 }
@@ -1451,6 +1451,12 @@ class FloatingDayController extends OrderAbstractController
             $roleApprover = true;
         }
 
+        $review = false;
+        if( $cycle == 'review' && ($admin || $roleApprover) ) {
+            $review = true;
+            //echo "review is true <br>";
+        }
+
         $groupParams = array();
 
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
@@ -1523,6 +1529,7 @@ class FloatingDayController extends OrderAbstractController
             'em' => $em,
             'user' => $entity->getUser(),
             'cycle' => $cycle,
+            'review' => $review,
             'roleAdmin' => $admin,
             'roleApprover' => $roleApprover,
             'organizationalInstitutions' => $userServiceUtil->flipArrayLabelValue($organizationalInstitutions),
@@ -1570,6 +1577,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         if( $cycle == 'review' ) {
+            //$disabled = true;
             $method = 'POST';
         }
 

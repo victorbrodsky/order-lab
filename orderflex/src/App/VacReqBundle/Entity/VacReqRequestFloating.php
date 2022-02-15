@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="vacreq_floating")
  */
 class VacReqRequestFloating
@@ -237,12 +238,19 @@ class VacReqRequestFloating
         return $this->updateDate;
     }
 
+//    /**
+//     * @param \DateTime $updateDate
+//     */
+//    public function setUpdateDate($updateDate)
+//    {
+//        $this->updateDate = $updateDate;
+//    }
     /**
-     * @param \DateTime $updateDate
+     * @ORM\PreUpdate
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate()
     {
-        $this->updateDate = $updateDate;
+        $this->updateDate = new \DateTime();
     }
 
     /**

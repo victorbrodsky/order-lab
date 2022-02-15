@@ -146,21 +146,21 @@
         {#{{ form_rest(form) }}#}
         {{ form_row(form._token) }}
 
-        {#{% if form.save is defined %}#}
-            {#<br>#}
-            {#<p>#}
-                {#{{ form_widget(form.save) }}#}
-            {#</p>#}
-        {#{% endif %}#}
+        {% if form.save is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.save) }}
+            </p>
+        {% endif %}
 
     {{ form_end(form,{'render_rest': false}) }}
 
-    <br>
+    {#<br>#}
 
 
-    <div id="error-box" class="alert alert-danger" style="display: none;"></div>
+    <div id="error-box" class="alert alert-danger" style="display: none; margin: 5px;"></div>
 
-    <br>
+    {#<br>#}
 
     {#{% if not form.vars.valid %}#}
     {#{% set formError = form_errors(form) %}#}
@@ -176,7 +176,7 @@
         <br>
     {% endif %}
 
-    {% if cycle == "new" %}
+    {% if cycle == "new" or cycle == "edit" %}
         <p>
             <button id="btnCreateVacReq"
                     class="btn btn-warning"
@@ -186,18 +186,28 @@
         </p>
     {% endif %}
 
-    {% set statusPending = false %}
-    {% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}
-        {% set statusPending = true %}
-    {% endif %}
+    {#{% if review %}#}
+        {#<p>#}
+            {#<button id="btnCreateVacReq"#}
+                    {#class="btn btn-warning"#}
+                    {#name="btnCreate"#}
+                    {#type="button"#}
+                    {#>Submit Review</button>#}
+        {#</p>#}
+    {#{% endif %}#}
+
+    {#{% set statusPending = false %}#}
+    {#{% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}#}
+        {#{% set statusPending = true %}#}
+    {#{% endif %}#}
 
     {% if cycle == "edit" or review %}
         <p>
-            <button id="btnCreateVacReq"
-                    class="btn btn-warning"
-                    name="btnUpdate"
-                    type="button"
-                    onclick="validateVacReqFloatingDayForm(this)">Update</button>
+            {#<button id="btnCreateVacReq"#}
+                    {#class="btn btn-warning"#}
+                    {#name="btnUpdate"#}
+                    {#type="button"#}
+                    {#onclick="validateVacReqFloatingDayForm(this)">Update</button>#}
             {% if review %}
                 <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_floatingrequests') }}">Cancel</a>
             {% else %}
@@ -223,6 +233,8 @@
 
         $(document).ready(function() {
 
+            console.log("cycle="+cycle);
+
             $('#oleg_vacreqbundle_requestfloating_floatingType').on("change", function(e) {
                 setWorkingFloatingDayType();
             });
@@ -233,6 +245,10 @@
 
         function validateVacReqFloatingDayForm(btn) {
             console.log("validateVacReqFloatingDayForm");
+
+            if( cycle == 'review' ) {
+                $('#vacreq-floatingday-form').submit();
+            }
 
             var inst = $('#oleg_vacreqbundle_requestfloating_institution').select2('val');
             console.log("inst=",inst);

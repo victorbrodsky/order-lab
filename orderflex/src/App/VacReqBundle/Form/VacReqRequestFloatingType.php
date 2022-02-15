@@ -56,6 +56,7 @@ class VacReqRequestFloatingType extends AbstractType
         }
 
         if( $this->params['cycle'] != 'new' ) {
+            //$readOnly = false;
             $builder->add('status', ChoiceType::class, array( //flipped
                 //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 'choices' => array(
@@ -79,6 +80,13 @@ class VacReqRequestFloatingType extends AbstractType
             ));
         }
 
+        if( $this->params['review'] == true ) {
+            //echo "show submit review button <br>";
+            $builder->add('save', SubmitType::class, array(
+                'label' => "Submit Review",
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+        }
 
         if( $this->params['cycle'] == 'show' ) {
             //approver
@@ -135,65 +143,12 @@ class VacReqRequestFloatingType extends AbstractType
             ));
         }
 
-        $builder->add('phone', null, array(
-            'label' => "Phone Number for the person away:",
-            'data' => "+1 123 456-7890",
-            'attr' => array('class' => 'form-control vacreq-phone'),
-            //'disabled' => ($this->params['review'] ? true : false)
-        ));
-
-        //floatingType
-//        $builder->add('floatingType', ChoiceType::class, array(
-//            'label' => "Floating Day:",
-//            'choices' => array("Juneteenth"=>"Juneteenth"),
-//            'required' => false,
-//            'data' => "Juneteenth",
-//            'mapped' => false,
-//            'attr' => array('class' => 'combobox'),
-//            //'disabled' => ($this->params['review'] ? true : false)
-//        ));
-        $builder->add('floatingType', EntityType::class, array(
-            'class' => 'AppVacReqBundle:VacReqFloatingTypeList',
-            'label' => "Floating Day:",
-            'required' => false,
-            'multiple' => false,
-            'data' => $this->params['defaultFloatingType'],
-            //'mapped' => false,
-            'attr' => array('class' => 'combobox'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
-        
-        //worked
-        $builder->add('work', CheckboxType::class, array(
-            'label' => 'I have worked or plan to work on',
-            //'mapped' => false,
-            'required' => false,
-            'attr' => array('class' => 'floatingday-work'),
-        ));
-
         //organizationalInstitutions
         $requiredInst = false;
         if( count($this->params['organizationalInstitutions']) == 1 ) {
             //echo "set org inst <br>";
             $requiredInst = true;
         }
-
-        $builder->add('floatingDay', DateType::class, array(
-            'label' => "The floating day I am requesting for this fiscal year is:",
-            'required' => false,
-            'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy',
-            //'mapped' => false,
-            'attr' => array('class' => 'form-control datetimepicker floatingDay', 'placeholder' => 'Floating Date', 'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip')
-        ));
 
 //        echo "organizationalInstitutions count=".count($this->params['organizationalInstitutions'])."<br>";
 //        foreach( $this->params['organizationalInstitutions'] as $tentativeInstitution ) {
@@ -234,59 +189,10 @@ class VacReqRequestFloatingType extends AbstractType
                     }
                 )
             );
-        
-//        $builder->add('save', SubmitType::class, array(
-//            'label' => "Submit",
-//            'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return validateVacReqFloatingDayForm(this);')
-//        ));
 
-//        //tentativeInstitution
-//        if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
-//
-//            //$readonlyTentativeInstitution = ($this->params['review'] ? true : false);
-//
-//            $requiredTentInst = false;
-//            if (count($this->params['tentativeInstitutions']) == 1) {
-//                //echo "set org inst <br>";
-//                $requiredTentInst = true;
-//            } else {
-//                //$readonlyTentativeInstitution = false;
-//            }
-//            //$requiredTentInst = true;
-//            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group');
-//            if( $this->params['review'] ) {
-//                $tentativeInstitutionAttr['readonly'] = true;
-//            }
-//            $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
-//                'label' => "Tentative Approval:",
-//                'required' => $requiredTentInst,
-//                'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
-//                'choices' => $this->params['tentativeInstitutions'],
-//                //'choices_as_values' => true,
-//                //'disabled' => ($this->params['review'] ? true : false)
-//            ));
-//            $builder->get('tentativeInstitution')
-//                ->addModelTransformer(new CallbackTransformer(
-//                    //original from DB to form: institutionObject to institutionId
-//                        function ($originalInstitution) {
-//                            //echo "originalInstitution=".$originalInstitution."<br>";
-//                            if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
-//                                return $originalInstitution->getId();
-//                            }
-//                            return $originalInstitution; //id
-//                        },
-//                        //reverse from form to DB: institutionId to institutionObject
-//                        function ($submittedInstitutionObject) {
-//                            //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
-//                            if ($submittedInstitutionObject) { //id
-//                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
-//                                return $institutionObject;
-//                            }
-//                            return null;
-//                        }
-//                    )
-//                );
-//        }//if tentativeInstitutions
+
+        //Only Floating day fields
+        $this->floatingDayFields($builder);
 
     }
 
@@ -304,5 +210,53 @@ class VacReqRequestFloatingType extends AbstractType
         return 'oleg_vacreqbundle_requestfloating';
     }
 
+    public function floatingDayFields( $builder ) {
+        $disable = false;
+        if( $this->params['review'] == true ) {
+            $disable = true;
+        }
+
+        $builder->add('phone', null, array(
+            'label' => "Phone Number for the person away:",
+            'data' => "+1 123 456-7890",
+            'disabled' => $disable,
+            'attr' => array('class' => 'form-control vacreq-phone'),
+        ));
+
+        $builder->add('floatingType', EntityType::class, array(
+            'class' => 'AppVacReqBundle:VacReqFloatingTypeList',
+            'label' => "Floating Day:",
+            'required' => false,
+            'multiple' => false,
+            'data' => $this->params['defaultFloatingType'],
+            'disabled' => $disable,
+            'attr' => array('class' => 'combobox'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('work', CheckboxType::class, array(
+            'label' => 'I have worked or plan to work on',
+            'required' => false,
+            'disabled' => $disable,
+            'attr' => array('class' => 'floatingday-work'),
+        ));
+
+        $builder->add('floatingDay', DateType::class, array(
+            'label' => "The floating day I am requesting for this fiscal year is:",
+            'required' => false,
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy',
+            'disabled' => $disable,
+            'attr' => array('class' => 'form-control datetimepicker floatingDay', 'placeholder' => 'Floating Date', 'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip')
+        ));
+    }
 
 }
