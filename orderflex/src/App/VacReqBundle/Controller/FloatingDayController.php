@@ -1369,11 +1369,15 @@ class FloatingDayController extends OrderAbstractController
 
             $floatingType = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
 
+            //getRequestAcademicYears
+            //getAcademicYearEdgeDateBetweenRequestStartEnd
+            //getRequestEdgeAcademicYearDate
             $academicYearStartStr = "";
 //            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
 //            if( count($academicYearArr) > 0 ) {
 //                $academicYearStartStr = $academicYearArr[0]." ";
 //            }
+            $academicYearStartStr = $this->getAcademicYearFromDate($floatingDay);
 
             $errorMsgArr = array();
             foreach($floatingRequests as $floatingRequest) {
@@ -1747,6 +1751,45 @@ class FloatingDayController extends OrderAbstractController
         }//foreach requests
 
         return $overlappedRequests;
+    }
+
+    //return the academic year of the floating date: 2021-2022
+    public function getAcademicYearFromDate( $dateStr ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //$finalStartEndDates = $request->getFinalStartEndDates();
+        //$finalStartDate = $finalStartEndDates['startDate'];
+        //$finalEndDate = $finalStartEndDates['endDate'];
+        //$startDateMD = $finalStartDate->format('m-d');
+        //$endDateMD = $finalEndDate->format('m-d');
+        $dateMD = $date->format('m-d');
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearStart String
+        $academicYearStartMD = $academicYearStart->format('m-d');
+
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+        //academicYearEnd String
+        $academicYearEndMD = $academicYearEnd->format('m-d');
+
+        $year = $date->format('Y');
+        if( $dateMD > $academicYearStartMD && $dateMD > $academicYearEndMD ) {
+            $year = $date->format('Y');
+        }
+
+        $nextYear = intval($year)+1;
+
+        $yearStr = $year."-".$nextYear;
+
+        return $yearStr;
     }
 
 }

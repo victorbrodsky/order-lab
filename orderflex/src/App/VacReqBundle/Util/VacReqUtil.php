@@ -5024,7 +5024,7 @@ class VacReqUtil
                         'filter[requestType]' => $requestType->getId(),
                         'filter[startdate]' => $startdate,
                         'filter[enddate]' => $enddate,
-                        'filter[academicYear]' => $enddate,
+                        'filter[academicYear]' => $academicYear,
                         'filter[user]' => $subjectUser,
                         'filter[submitter]' => $submitter,
                         'filter[organizationalInstitutions]' => $organizationalInstitutions
@@ -5092,7 +5092,7 @@ class VacReqUtil
                         'filter[requestType]' => $requestType->getId(),
                         'filter[startdate]' => $startdate,
                         'filter[enddate]' => $enddate,
-                        'filter[academicYear]' => $enddate,
+                        'filter[academicYear]' => $academicYear,
                         'filter[user]' => $subjectUser,
                         'filter[submitter]' => $submitter,
                         'filter[organizationalInstitutions]' => $organizationalInstitutions
