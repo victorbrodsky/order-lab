@@ -1314,17 +1314,18 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $resArr = array(
-            'error' => true,
-            'errorMsg' => "Logical error to verify existing floating day on the server",
-        );
+//        $resArr = array(
+//            'error' => true,
+//            'errorMsg' => "Logical error to verify existing floating day on the server",
+//        );
+        $resArr['error'] = false;
+        $resArr['errorMsg'] = "";
 
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         //$newline = "\n";
         $newline =  "<br>\n";
-        $invoice = NULL;
 
         $floatingTypeId = $request->get('floatingTypeId');
         $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
@@ -1354,7 +1355,7 @@ class FloatingDayController extends OrderAbstractController
         $parameters['floatingDayDateFrom'] = $floatingDayDateFrom; //2022-02-23
         $parameters['floatingDayDateTo'] = $floatingDayDateTo; //2022-02-23
 
-        $dql->andWhere("floating.status = 'approved'");
+        $dql->andWhere("(floating.status = 'pending' OR floating.status = 'approved')");
 
         $query = $em->createQuery($dql);
 
@@ -1383,34 +1384,76 @@ class FloatingDayController extends OrderAbstractController
 
             $errorMsgArr = array();
             foreach($floatingRequests as $floatingRequest) {
+                $status = $floatingRequest->getStatus();
                 $floatingDay = $floatingRequest->getFloatingDay();
                 $approver = $floatingRequest->getApprover();
                 //echo "ID=".$floatingRequest->getId()."<br>";
                 $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
+                $createDate = $floatingRequest->getCreateDate();
                 //echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y')."<br>";
                 //echo "approver=$approver <br>";
                 //echo "approverDate=".$approverDate->format('d/m/Y')."<br>";
-                if( $floatingDay && $approver && $approverDate ) {
-                    //$academicYear = ''; //[2021-2022]
-                    $errorMsg =
-                        "A Floating day of ".$floatingDay->format('m/d/Y').
-                        " has already been approved for this " . $yearRangeStr . " academic year by " .
-                        $approver->getUsernameOptimal() .
-                        " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
-                        "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
-                } else {
-                    $errorMsg = "Logical error to verify existing floating day";
+
+                $approverStr = "Unknown Approver";
+                if( $approver ) {
+                    $approverStr = $approver->getUsernameOptimal();
                 }
+
+                $approverDateStr = "Unknown Approved Date";
+                if( $approverDate ) {
+                    $approverDateStr = $approverDate->format('m/d/Y \a\t H:i');
+                }
+
+                $errorMsg = "Logical error to verify existing floating day";
+
+                if( $floatingDay ) { //&& $approver && $approverDate
+                    //$academicYear = ''; //[2021-2022]
+                    if ($status == 'pending') {
+                        $errorMsg =
+                            "A pending floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been requested for this " . $yearRangeStr . " academic year" .
+                            " on " . $createDate->format('m/d/Y \a\t H:i').". ".
+                            $newline.
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+                    if ($status == 'approved') {
+                        $errorMsg =
+                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+                            $approverStr .
+                            " on " . $approverDateStr . ". ".
+                            $newline.
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+//                    if ($status == 'canceled') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
+//                        "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+//                    if ($status == 'rejected') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been rejected for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".".
+//                            $newline.
+//                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+                }
+//                else {
+//                    $errorMsg = "Logical error to verify existing floating day";
+//                }
                 $errorMsgArr[] = $errorMsg;
-            }
+            }//foreach
+
             if( count($errorMsgArr) > 0 ) {
                 $resArr['error'] = true;
-                $resArr['errorMsg'] = implode(";",$errorMsgArr);
+                $resArr['errorMsg'] = implode($newline.$newline,$errorMsgArr);
             }
-        } else {
-            $resArr['error'] = false;
-            $resArr['errorMsg'] = "";
-        }
+        }//if( count($floatingRequests) > 0 )
 
         //dump($resArr);
         //exit("EOF checkExistedFloatingDayAjaxAction");
