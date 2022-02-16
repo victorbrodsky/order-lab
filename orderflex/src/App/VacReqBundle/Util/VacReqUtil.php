@@ -5236,23 +5236,230 @@ class VacReqUtil
         
         return $resArr;
     }
+
     //check if floating day already approved or pending in this academic year
     public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId ) {
 
+        $newline =  "<br>\n";
         $resArr['error'] = false;
         $resArr['errorMsg'] = "";
 
-        $yearRange = $this->getCurrentAcademicYearRange();
+        $floatingType = $this->em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($subjectUserId);
+
+        //startDate=2021-07-01
+        //endDate=2022-06-30
+        //yearRangeStr=2021-2022
+        //$yearRange = $this->getCurrentAcademicYearRange();
+        //$yearRangeStr = $this->getCurrentAcademicYearRange();
+
+//        if( $floatingDay ) {
+//            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+//            $floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
+//            $floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
+//            //echo "floatingDayDateFrom=".$floatingDayDateFrom->format('Y-m-d H:i:s')."<br>";
+//            //echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
+//        }
+
+        $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+
+        $yearRangeStr = $this->getAcademicYearByFloatingDay($floatingDayDate);
+        echo "yearRangeStr=$yearRangeStr <br>";
 
         //yearRange: "2021-2022"
-        $floatingDays = $this->getUserFloatingDay($user,$yearRange);
+        $floatingRequests = $this->getUserFloatingDay($user,$yearRangeStr);
 
-        if( count($floatingDays) > 0 ) {
-            $resArr['error'] = false;
-            $resArr['errorMsg'] = "";
-        }
+        if (count($floatingRequests) > 0) {
+            $errorMsgArr = array();
+            foreach ($floatingRequests as $floatingRequest) {
+                $status = $floatingRequest->getStatus();
+                $floatingDay = $floatingRequest->getFloatingDay();
+                $approver = $floatingRequest->getApprover();
+                //echo "ID=".$floatingRequest->getId()."<br>";
+                $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
+                $createDate = $floatingRequest->getCreateDate();
+                //echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y')."<br>";
+                //echo "approver=$approver <br>";
+                //echo "approverDate=".$approverDate->format('d/m/Y')."<br>";
+
+                $approverStr = "Unknown Approver";
+                if ($approver) {
+                    $approverStr = $approver->getUsernameOptimal();
+                }
+
+                $approverDateStr = "Unknown Approved Date";
+                if ($approverDate) {
+                    $approverDateStr = $approverDate->format('m/d/Y \a\t H:i');
+                }
+
+                $errorMsg = "Logical error to verify existing floating day";
+
+                if ($floatingDay) { //&& $approver && $approverDate
+                    //$academicYear = ''; //[2021-2022]
+                    if ($status == 'pending') {
+                        $errorMsg =
+                            "A pending Floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been requested for this " . $yearRangeStr . " academic year" .
+                            " on " . $createDate->format('m/d/Y \a\t H:i') . ". " .
+                            $newline .
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+                    if ($status == 'approved') {
+                        $errorMsg =
+                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+                            $approverStr .
+                            " on " . $approverDateStr . ". " .
+                            $newline .
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+//                    if ($status == 'canceled') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
+//                        "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+//                    if ($status == 'rejected') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been rejected for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".".
+//                            $newline.
+//                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+                }
+//                else {
+//                    $errorMsg = "Logical error to verify existing floating day";
+//                }
+                $errorMsgArr[] = $errorMsg;
+            }//foreach
+
+            if (count($errorMsgArr) > 0) {
+                $resArr['error'] = true;
+                $resArr['errorMsg'] = implode($newline . $newline, $errorMsgArr);
+            }
+        }//if( count($floatingRequests) > 0 )
 
         return $resArr;
+    }
+
+    public function getAcademicYearByFloatingDay( $floatingDayDate ) {
+
+        $academicYearArr = array();
+
+        //return "2014-2015, 2015-2016";
+        $academicYearStr = null;
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //academicYearStart: July 01
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd: June 30
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        $dates = $this->getCurrentAcademicYearStartEndDates();
+        $startDateStr = $dates['startDate']; //Y-m-d
+        $endDateStr = $dates['endDate']; //Y-m-d
+
+        $startDateStr = $startDateStr." 00:00:00";
+        $endDateStr = $endDateStr." 23:59:59";
+
+//        $dates = $request->getFinalStartEndDates();
+//        $startDate = $dates['startDate'];
+//        $endDate = $dates['endDate'];
+
+        //echo "startDate= ".$startDate->format('Y-m-d')."<br>";
+        //echo "endDate= ".$endDate->format('Y-m-d')."<br>";
+        echo "floatingDayDate= ".$floatingDayDate->format('Y-m-d H:i:s')."<br>";
+        echo "startDateStr= ".$startDateStr."<br>"; //2021-07-01
+        echo "endDateStr= ".$endDateStr."<br>"; //2022-06-30
+
+        $academicYearStartDate = \DateTime::createfromformat('Y-m-d H:i:s',$startDateStr);
+        //echo "academicYearStartDate1= ".$academicYearStartDate."<br>";
+        //$academicYearStartDate = strtotime($startDateStr);
+        $academicYearEndDate = \DateTime::createfromformat('Y-m-d H:i:s',$endDateStr);
+        echo "academicYearStartDate= ".$academicYearStartDate->format('Y-m-d H:i:s')."<br>";
+        echo "academicYearEndDate= ".$academicYearEndDate->format('Y-m-d H:i:s')."<br>";
+
+        //------July 01------day-------June 30--------//
+        //case 1: start and end dates are inside of academic year
+        if( $floatingDayDate >= $academicYearStartDate && $floatingDayDate <= $academicYearEndDate ) {
+            echo "case 1: date is inside of academic year <br>";
+        }
+
+        //---day---July 01-------------June 30--------//
+        //case 2: start date is before start of academic year
+        if( $floatingDayDate < $academicYearStartDate ) {
+            echo "case 2: date is before start of academic year <br>";
+        }
+
+        //------July 01-------------June 30---day-----//
+        //case 3: end date is after end of academic year
+        if( $floatingDayDate > $academicYearEndDate ) {
+            echo "case 3: date is after end of academic year <br>";
+            $endYear = $endYear + 1;
+        }
+
+        exit('111');
+
+        $startDateMD = $startDate->format('m-d');
+        $endDateMD = $endDate->format('m-d');
+
+        $startYear = $startDate->format('Y');
+        $endYear = $endDate->format('Y');
+
+        //calculate year difference (span)
+        //$yearDiff = $endYear - $startYear;
+        //$yearDiff = $yearDiff + 1;
+
+        $academicYearStartMD = $academicYearStart->format('m-d');
+        //$academicStartDateStr = $startYear."-".$academicYearStartMD;
+        //echo "academicStartDateStr= ".$academicStartDateStr."<br>";
+        //$academicStartDate = new \DateTime($academicStartDateStr);
+
+        //$endYear = $endYear + $yearDiff;
+        $academicYearEndMD = $academicYearEnd->format('m-d');
+        //$academicEndDateStr = $endYear."-".$academicYearEndMD;
+        //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
+        //$academicEndDate = new \DateTime($academicEndDateStr);
+
+        //case 1: start and end dates are inside of academic year
+        //if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
+        //echo "case 1: start and end dates are inside of academic year <br>";
+        //}
+
+        //case 2: start date is before start of academic year
+        if( $startDateMD < $academicYearStartMD ) {
+            //echo "case 2: start date is before start of academic year <br>";
+            $startYear = $startYear - 1;
+        }
+
+        //case 3: end date is after end of academic year
+        if( $endDateMD > $academicYearEndMD ) {
+            //echo "case 3: end date is after end of academic year <br>";
+            $endYear = $endYear + 1;
+        }
+
+        //$academicYearStr = "2014-2015, 2015-2016";
+        //$academicYearStr = $startYear . "-" . $endYear;
+
+        for( $year=$startYear; $year < $endYear; $year++ ) {
+            //$academicYearStr = $startYear . "-" . $endYear;
+            $endtyear = $year + 1;
+            $academicYearArr[] = $year."-".$endtyear;
+        }
+
+        //$academicYearStr = implode(", ",$academicYearArr);
+
+        return $academicYearArr;
     }
 
     //get approved floating day for the academical year specified by $yearRange (2015-2016 - current academic year)
