@@ -101,6 +101,10 @@
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
+            <th style="background-color: {{ backgroundColor }}">
+                {{ yearRange }} Floating Days
+            </th>
+
         {% endfor %}
 
         {% if is_granted('ROLE_VACREQ_ADMIN') %}
@@ -125,6 +129,9 @@
 
 
             {% for yearRange in yearRanges %}
+
+                {#yearRange=2021-2022#}
+
                 {% set backgroundColor = yearRangesColor[loop.index0] %}
 
                 {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange) %}
@@ -143,6 +150,9 @@
 
                 {% set nextYear = vacreq_util.getNextAcademicYearRange() %}
                 {% set carryOverDaysNextYear = vacreq_util.getUserCarryOverDays(submitter,nextYear) %}
+
+                {#yearRange={{ yearRange }}#}
+                {% set floatingDays = vacreq_util.getUserFloatingDay(submitter,yearRange) %}
 
                 {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
                 {#totalRemainingDays={{ totalRemainingDays }}#}
@@ -204,6 +214,12 @@
 
                 <td style="background-color: {{ backgroundColor }}">
                     {{ carryOverDaysPrevYear }}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {% for floatingDay in floatingDays %}
+                        {{ floatingDay.printRequestShort() }}
+                    {% endfor %}
                 </td>
 
             {% endfor %}

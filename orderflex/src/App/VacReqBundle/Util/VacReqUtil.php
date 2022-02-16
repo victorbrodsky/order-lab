@@ -5105,5 +5105,270 @@ class VacReqUtil
         return NULL;
     }
 
+    //check if exact floating day already approved or pending
+    public function getCheckExactExistedFloatingDay( $floatingTypeId, $floatingDay, $subjectUserId ) {
+
+        $newline =  "<br>\n";
+        $resArr['error'] = false;
+        $resArr['errorMsg'] = "";
+        
+        if( $floatingDay ) {
+            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+            $floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
+            $floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
+            //echo "floatingDayDateFrom=".$floatingDayDateFrom->format('Y-m-d H:i:s')."<br>";
+            //echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
+        }
+
+        $parameters = array();
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql = $repository->createQueryBuilder('floating');
+
+        $dql->where("floating.user = :userId AND floating.floatingType=:floatingType");
+        $parameters['userId'] = $subjectUserId;
+        $parameters['floatingType'] = $floatingTypeId;
+
+        //$dql->andWhere("floating.floatingDay = :floatingDay");
+        //$parameters['floatingDay'] = $floatingDayDate->format('Y-m-d'); //2022-02-23
+        $dql->andWhere("floating.floatingDay BETWEEN :floatingDayDateFrom AND :floatingDayDateTo");
+        $parameters['floatingDayDateFrom'] = $floatingDayDateFrom; //2022-02-23
+        $parameters['floatingDayDateTo'] = $floatingDayDateTo; //2022-02-23
+
+        $dql->andWhere("(floating.status = 'pending' OR floating.status = 'approved')");
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $floatingRequests = $query->getResult();
+        //echo "floatingRequests=".count($floatingRequests)."<br>";
+
+        if( count($floatingRequests) > 0 ) {
+
+            $floatingType = $this->em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
+
+            //getRequestAcademicYears
+            //getAcademicYearEdgeDateBetweenRequestStartEnd
+            //getRequestEdgeAcademicYearDate
+            //$yearRange = $this->getCurrentAcademicYearRange();
+            //$academicYearStartStr = "";
+//            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
+//            if( count($academicYearArr) > 0 ) {
+//                $academicYearStartStr = $academicYearArr[0]." ";
+//            }
+            //$academicYearStartStr = $this->getAcademicYearFromDate($floatingDay);
+            $yearRangeStr = $this->getCurrentAcademicYearRange();
+
+            $errorMsgArr = array();
+            foreach($floatingRequests as $floatingRequest) {
+                $status = $floatingRequest->getStatus();
+                $floatingDay = $floatingRequest->getFloatingDay();
+                $approver = $floatingRequest->getApprover();
+                //echo "ID=".$floatingRequest->getId()."<br>";
+                $approverDate = $floatingRequest->getApprovedRejectDate(); //MM/DD/YYYY and HH:MM.
+                $createDate = $floatingRequest->getCreateDate();
+                //echo $floatingRequest->getId().": floatingDay=".$floatingDay->format('d/m/Y')."<br>";
+                //echo "approver=$approver <br>";
+                //echo "approverDate=".$approverDate->format('d/m/Y')."<br>";
+
+                $approverStr = "Unknown Approver";
+                if( $approver ) {
+                    $approverStr = $approver->getUsernameOptimal();
+                }
+
+                $approverDateStr = "Unknown Approved Date";
+                if( $approverDate ) {
+                    $approverDateStr = $approverDate->format('m/d/Y \a\t H:i');
+                }
+
+                $errorMsg = "Logical error to verify existing floating day";
+
+                if( $floatingDay ) { //&& $approver && $approverDate
+                    //$academicYear = ''; //[2021-2022]
+                    if ($status == 'pending') {
+                        $errorMsg =
+                            "A pending Floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been requested for this " . $yearRangeStr . " academic year" .
+                            " on " . $createDate->format('m/d/Y \a\t H:i').". ".
+                            $newline.
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+                    if ($status == 'approved') {
+                        $errorMsg =
+                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+                            $approverStr .
+                            " on " . $approverDateStr . ". ".
+                            $newline.
+                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                    }
+//                    if ($status == 'canceled') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
+//                        "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+//                    if ($status == 'rejected') {
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " has already been rejected for this " . $yearRangeStr . " academic year by " .
+//                            $approver->getUsernameOptimal() .
+//                            " on " . $approverDate->format('m/d/Y \a\t H:i') . ".".
+//                            $newline.
+//                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
+//                    }
+                }
+//                else {
+//                    $errorMsg = "Logical error to verify existing floating day";
+//                }
+                $errorMsgArr[] = $errorMsg;
+            }//foreach
+
+            if( count($errorMsgArr) > 0 ) {
+                $resArr['error'] = true;
+                $resArr['errorMsg'] = implode($newline.$newline,$errorMsgArr);
+            }
+        }//if( count($floatingRequests) > 0 )
+        
+        return $resArr;
+    }
+    //check if floating day already approved or pending in this academic year
+    public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId ) {
+
+        $resArr['error'] = false;
+        $resArr['errorMsg'] = "";
+
+        $yearRange = $this->getCurrentAcademicYearRange();
+
+        //yearRange: "2021-2022"
+        $floatingDays = $this->getUserFloatingDay($user,$yearRange);
+
+        if( count($floatingDays) > 0 ) {
+            $resArr['error'] = false;
+            $resArr['errorMsg'] = "";
+        }
+
+        return $resArr;
+    }
+
+    //get approved floating day for the academical year specified by $yearRange (2015-2016 - current academic year)
+    //yearRange: "2021-2022"
+    public function getUserFloatingDay( $user, $yearRange ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        //echo "yearRange=".$yearRange."<br>";
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        //$floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
+        //$floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
+
+        //constract start and end date for DB select "Y-m-d"
+        //academicYearStart
+        $academicYearStartStr = $academicYearStart->format('m-d')." 00:00:00";
+
+        //years
+        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRange);
+        $previousYear = $yearRangeArr[0];
+        $currentYear = $yearRangeArr[1];
+
+        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
+        //echo "current academicYearStartStr=".$academicYearStartStr."<br>";
+        //academicYearEnd
+        $academicYearEndStr = $academicYearEnd->format('m-d')." 23:59:59";
+
+        $academicYearEndStr = $currentYear."-".$academicYearEndStr;
+        //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
+
+        //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
+        $floatingDays = $this->getFloatingDaysByYearByStatus($user,$academicYearStartStr,$academicYearEndStr,true,'approved');
+        //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+
+        return $floatingDays;
+    }
+    public function getFloatingDaysByYearByStatus( $user, $startStr=null, $endStr=null, $asObject=false, $status='approved' ) {
+
+        //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
+        //$numberOfDays = 0;
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql =  $repository->createQueryBuilder("request");
+
+        //if( $asObject ) {
+            $dql->select('request');
+        //} else {
+        //    $dql->select('DISTINCT user.id, request.floatingDay, request.floatingType');
+        //}
+
+        $dql->leftJoin("request.user", "user");
+
+        $dql->where("user.id = :userId AND request.status = :status");
+
+        // |----|year|-----start-----end-----|year+1|----|
+        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
+        //if( $type == "inside" && $startStr && $endStr ) {
+            //echo "range=".$startStr." > ".$endStr."<br>";
+            //$dql->andWhere("request.floatingDay >= '" . $startStr . "'" . " AND request.floatingDay <= " . "'" . $endStr . "'");
+        //}
+
+        $dql->andWhere("request.floatingDay BETWEEN :floatingDayDateFrom AND :floatingDayDateTo");
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+        //echo "dql=".$dql."<br>";
+
+        $query->setParameters( array(
+            'userId' => $user->getId(),
+            'status' => $status,
+            'floatingDayDateFrom' => $startStr,
+            'floatingDayDateTo' => $endStr
+        ));
+
+        if( $asObject ) {
+            $requests = $query->getResult();
+            return $requests;
+        } else {
+            //$numberOfDaysRes = $query->getOneOrNullResult();
+            $floatingDaysItems = $query->getResult();
+            $floatingDaysArr = array();
+            foreach($floatingDaysItems as $floatingDaysItem) {
+                //Juneteenth: 6/27/2022 (Approved)
+                $floatingDaysArr[] = $floatingDaysItem->printRequestShort();
+            }
+            return $floatingDaysArr;
+
+//            if( $numberOfDaysItems ) {
+//                //echo $status.": numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+//                //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+//                if( count($numberOfDaysItems) > 1 ) {
+//                    //$logger = $this->container->get('logger');
+//                    //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+//                }
+//                foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+//                    //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+//                    //echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
+//                    $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+//                }
+//                //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//            }
+
+
+        }
+
+        return NULL;
+    }
 
 }

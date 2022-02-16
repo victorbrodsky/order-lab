@@ -1313,25 +1313,35 @@ class FloatingDayController extends OrderAbstractController
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
-
-//        $resArr = array(
-//            'error' => true,
-//            'errorMsg' => "Logical error to verify existing floating day on the server",
-//        );
-        $resArr['error'] = false;
-        $resArr['errorMsg'] = "";
-
+        
         $vacreqUtil = $this->get('vacreq_util');
-        $em = $this->getDoctrine()->getManager();
-
-        //$newline = "\n";
-        $newline =  "<br>\n";
 
         $floatingTypeId = $request->get('floatingTypeId');
         $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
         $subjectUserId = $request->get('subjectUserId');
         //echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
+        
+        //$resArr = $vacreqUtil->getCheckExistedFloatingDay($floatingTypeId,$floatingDay,$subjectUserId);
+        $resArr = $vacreqUtil->getCheckExistedFloatingDayInAcademicYear($floatingTypeId,$floatingDay,$subjectUserId);
 
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($resArr));
+        return $response;
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$newline = "\n";
+        $newline =  "<br>\n";
+
+        //        $resArr = array(
+//            'error' => true,
+//            'errorMsg' => "Logical error to verify existing floating day on the server",
+//        );
+        $resArr['error'] = false;
+        $resArr['errorMsg'] = "";
+        
         if( $floatingDay ) {
             //TODO: convert to UTC timezone to be able to compare to DB?
             $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
@@ -1410,7 +1420,7 @@ class FloatingDayController extends OrderAbstractController
                     //$academicYear = ''; //[2021-2022]
                     if ($status == 'pending') {
                         $errorMsg =
-                            "A pending floating day of " . $floatingDay->format('m/d/Y') .
+                            "A pending Floating day of " . $floatingDay->format('m/d/Y') .
                             " has already been requested for this " . $yearRangeStr . " academic year" .
                             " on " . $createDate->format('m/d/Y \a\t H:i').". ".
                             $newline.

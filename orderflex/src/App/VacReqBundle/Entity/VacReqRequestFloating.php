@@ -443,7 +443,10 @@ class VacReqRequestFloating
         return $res;
     }
 
-
+    //Juneteenth: 6/27/2022 (Approved)
+    public function printRequestShort() {
+        return $this->getFloatingType().": ".$this->getFloatingDay()->format('m/d/Y')." (".ucfirst($this->getStatus()).")";
+    }
 
     public function printRequest( $container=null )
     {
