@@ -5261,6 +5261,9 @@ class VacReqUtil
 //            //echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
 //        }
 
+        $floatingDay = "06/29/2021";
+        $floatingDay = "08/29/2021";
+
         $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
 
         $yearRangeStr = $this->getAcademicYearByFloatingDay($floatingDayDate);
@@ -5395,13 +5398,13 @@ class VacReqUtil
             echo "case 1: date is inside of academic year <br>";
         }
 
-        //---day---July 01-------------June 30--------//
+        //----day----July 01-------------June 30--------//
         //case 2: start date is before start of academic year
         if( $floatingDayDate < $academicYearStartDate ) {
             echo "case 2: date is before start of academic year <br>";
         }
 
-        //------July 01-------------June 30---day-----//
+        //------July 01-------------June 30----day------//
         //case 3: end date is after end of academic year
         if( $floatingDayDate > $academicYearEndDate ) {
             echo "case 3: date is after end of academic year <br>";
