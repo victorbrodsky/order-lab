@@ -1329,15 +1329,15 @@ class FloatingDayController extends OrderAbstractController
         $floatingTypeId = $request->get('floatingTypeId');
         $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
         $subjectUserId = $request->get('subjectUserId');
-        echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
+        //echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
 
         if( $floatingDay ) {
             //TODO: convert to UTC timezone to be able to compare to DB?
             $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
             $floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
             $floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
-            echo "floatingDayDateFrom=".$floatingDayDateFrom->format('Y-m-d H:i:s')."<br>";
-            echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
+            //echo "floatingDayDateFrom=".$floatingDayDateFrom->format('Y-m-d H:i:s')."<br>";
+            //echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
         }
 
         $parameters = array();
@@ -1363,7 +1363,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $floatingRequests = $query->getResult();
-        echo "floatingRequests=".count($floatingRequests)."<br>";
+        //echo "floatingRequests=".count($floatingRequests)."<br>";
 
         if( count($floatingRequests) > 0 ) {
 
@@ -1372,12 +1372,14 @@ class FloatingDayController extends OrderAbstractController
             //getRequestAcademicYears
             //getAcademicYearEdgeDateBetweenRequestStartEnd
             //getRequestEdgeAcademicYearDate
-            $academicYearStartStr = "";
+            //$yearRange = $this->getCurrentAcademicYearRange();
+            //$academicYearStartStr = "";
 //            $academicYearArr = $vacreqUtil->getRequestAcademicYears($floatingDay);
 //            if( count($academicYearArr) > 0 ) {
 //                $academicYearStartStr = $academicYearArr[0]." ";
 //            }
-            $academicYearStartStr = $this->getAcademicYearFromDate($floatingDay);
+            //$academicYearStartStr = $this->getAcademicYearFromDate($floatingDay);
+            $yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
 
             $errorMsgArr = array();
             foreach($floatingRequests as $floatingRequest) {
@@ -1392,7 +1394,7 @@ class FloatingDayController extends OrderAbstractController
                     //$academicYear = ''; //[2021-2022]
                     $errorMsg =
                         "A Floating day of ".$floatingDay->format('m/d/Y').
-                        " has already been approved for this " . $academicYearStartStr . "academic year by " .
+                        " has already been approved for this " . $yearRangeStr . " academic year by " .
                         $approver->getUsernameOptimal() .
                         " on " . $approverDate->format('m/d/Y \a\t H:i') . ".";
                         "Only one " . $floatingType->getName() . " floating day can be approved per academic year";
@@ -1410,9 +1412,8 @@ class FloatingDayController extends OrderAbstractController
             $resArr['errorMsg'] = "";
         }
 
-        dump($resArr);
-
-        exit("EOF checkExistedFloatingDayAjaxAction");
+        //dump($resArr);
+        //exit("EOF checkExistedFloatingDayAjaxAction");
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -1753,43 +1754,43 @@ class FloatingDayController extends OrderAbstractController
         return $overlappedRequests;
     }
 
-    //return the academic year of the floating date: 2021-2022
-    public function getAcademicYearFromDate( $dateStr ) {
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //$finalStartEndDates = $request->getFinalStartEndDates();
-        //$finalStartDate = $finalStartEndDates['startDate'];
-        //$finalEndDate = $finalStartEndDates['endDate'];
-        //$startDateMD = $finalStartDate->format('m-d');
-        //$endDateMD = $finalEndDate->format('m-d');
-        $dateMD = $date->format('m-d');
-
-        //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearStart String
-        $academicYearStartMD = $academicYearStart->format('m-d');
-
-        //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
-        //academicYearEnd String
-        $academicYearEndMD = $academicYearEnd->format('m-d');
-
-        $year = $date->format('Y');
-        if( $dateMD > $academicYearStartMD && $dateMD > $academicYearEndMD ) {
-            $year = $date->format('Y');
-        }
-
-        $nextYear = intval($year)+1;
-
-        $yearStr = $year."-".$nextYear;
-
-        return $yearStr;
-    }
+//    //return the academic year of the floating date: 2021-2022
+//    public function getAcademicYearFromDate( $dateStr ) {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        //$finalStartEndDates = $request->getFinalStartEndDates();
+//        //$finalStartDate = $finalStartEndDates['startDate'];
+//        //$finalEndDate = $finalStartEndDates['endDate'];
+//        //$startDateMD = $finalStartDate->format('m-d');
+//        //$endDateMD = $finalEndDate->format('m-d');
+//        $dateMD = $date->format('m-d');
+//
+//        //academicYearStart
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearStart String
+//        $academicYearStartMD = $academicYearStart->format('m-d');
+//
+//        //academicYearEnd: June 30
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd String
+//        $academicYearEndMD = $academicYearEnd->format('m-d');
+//
+//        $year = $date->format('Y');
+//        if( $dateMD > $academicYearStartMD && $dateMD > $academicYearEndMD ) {
+//            $year = $date->format('Y');
+//        }
+//
+//        $nextYear = intval($year)+1;
+//
+//        $yearStr = $year."-".$nextYear;
+//
+//        return $yearStr;
+//    }
 
 }

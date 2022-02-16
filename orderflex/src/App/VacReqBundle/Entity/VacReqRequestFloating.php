@@ -472,10 +472,16 @@ class VacReqRequestFloating
 
         $worked = $this->getWorkStr();
 
+        $floatingDayStr = "";
+        if( $this->getFloatingDay() ) {
+            $floatingDayStr = $this->getFloatingDay()->format('m/d/Y');
+        }
+
         $res .= "### Floating Day Request ###".$break;
         $res .= "Status: ".$this->getStatus().$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
         $res .= "I have worked or plan to work: ".$worked.$break;
+        $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
 
         if( $this->getApproverComment() ) {
             $res .= "Approver Comment: ".$this->getApproverComment().$break;
@@ -635,20 +641,20 @@ class VacReqRequestFloating
     {
         //$break = "\r\n";
         $break = "<br>";
-        $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
+        //$transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
-        $worked = "N/A";
-        if( $this->getWork() === true ) {
-            $worked = "Yes";
-        }
-        if( $this->getWork() === false ) {
-            $worked = "No";
+        $worked = $this->getWorkStr();
+
+        $floatingDayStr = "";
+        if( $this->getFloatingDay() ) {
+            $floatingDayStr = $this->getFloatingDay()->format('m/d/Y');
         }
 
         $res = "### Floating Day Request ###".$break;
         $res .= "Status: ".$this->getStatus().$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
         $res .= "I have worked or plan to work: ".$worked.$break;
+        $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
 
         if( $this->getApproverComment() ) {
             $res .= "Approver Comment: ".$this->getApproverComment().$break;
