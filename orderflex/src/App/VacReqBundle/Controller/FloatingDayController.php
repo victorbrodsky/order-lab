@@ -766,6 +766,7 @@ class FloatingDayController extends OrderAbstractController
             //exit("Submitted floating day request");
 
             if( $testing == false ) {
+                //exit('111');//testing
                 $em->persist($entity);
                 $em->flush();
             }
@@ -1324,8 +1325,9 @@ class FloatingDayController extends OrderAbstractController
         //$resArr = $vacreqUtil->getCheckExistedFloatingDay($floatingTypeId,$floatingDay,$subjectUserId);
         $resArr = $vacreqUtil->getCheckExistedFloatingDayInAcademicYear($floatingTypeId,$floatingDay,$subjectUserId);
 
-        dump($resArr);
-        exit("EOF checkExistedFloatingDayAjaxAction");
+        //testing
+        //dump($resArr);
+        //exit("EOF checkExistedFloatingDayAjaxAction");
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

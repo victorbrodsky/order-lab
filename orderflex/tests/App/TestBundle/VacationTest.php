@@ -36,16 +36,46 @@ class VacationTest extends WebTestBase
     public function testgetAcademicYearByFloatingDay() {
         $this->logIn();
 
-        self::bootKernel();
+        //self::bootKernel();
 
         // returns the real and unchanged service container
-        $container = self::$kernel->getContainer();
+        //$container = self::$kernel->getContainer();
 
         // gets the special container that allows fetching private services
-        $container = self::$container;
+        //$container = self::$container;
 
         // Create a stub for the SomeClass class.
         //$stub = $this->createStub(SomeClass::class);
+
+        $vacreqUtil = self::$container->get('vacreq_util');
+
+        $floatingDays = array(
+            array("06/29/2019", "2018-2019"),
+            array("07/29/2019", "2019-2020"),
+            array("06/29/2020", "2019-2020"),
+            array("06/29/2021", "2020-2021"),
+            array("07/01/2021", "2021-2022"),
+            array("02/17/2022", "2021-2022"),
+            array("06/29/2022", "2021-2022"),
+            array("06/30/2022", "2021-2022"),
+            array("08/29/2022", "2022-2023"),
+            array("06/29/2023", "2022-2023"),
+            array("07/01/2023", "2023-2024"),
+            array("06/25/2024", "2023-2024"),
+            array("07/01/2024", "2024-2025"),
+        );
+
+        foreach($floatingDays as $floatingDayArr) {
+            $floatingDay = $floatingDayArr[0];
+            $expectedRes = $floatingDayArr[1];
+
+            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+
+            //$vacreqUtil = $this->get('vacreq_util');
+            $yearRangeStr = $vacreqUtil->getAcademicYearBySingleDate($floatingDayDate);
+            $this->assertTrue($yearRangeStr == $expectedRes);
+        }
+
 
     }
 
