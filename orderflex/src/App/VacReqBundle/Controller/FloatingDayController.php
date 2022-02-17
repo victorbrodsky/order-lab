@@ -93,7 +93,6 @@ class FloatingDayController extends OrderAbstractController
 //        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
 //            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
 //        ) {
-//            exit('no permission');
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {

@@ -79,6 +79,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $this->setCalendar( $calendarEvent, "requestBusiness", $startDate, $endDate, $filter );
         $this->setCalendar( $calendarEvent, "requestVacation", $startDate, $endDate, $filter );
+        $this->setFloatingCalendar( $calendarEvent, $startDate, $endDate, $filter );
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {
@@ -266,4 +267,167 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     }
 
+    public function setFloatingCalendar( $calendarEvent, $startDate, $endDate, $filter ) {
+
+        //echo "ID";
+        $dateformat = 'M d Y';
+
+        //$vacreqUtil = $this->container->get('vacreq_util');
+        //$requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
+
+        if( isset($filter['groupId']) ) {
+            $groupId = $filter['groupId'];
+        } else {
+            $groupId = NULL;
+        }
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql = $repository->createQueryBuilder('request');
+
+        $dql->select('request');
+
+        $dql->andWhere('request.status = :statusApproved OR request.status = :statusPending');
+        $dql->andWhere('(request.floatingDay BETWEEN :startDate and :endDate)');
+
+        //$dql->andWhere('request.institution = :groupId');
+        if( $groupId ) {
+            $dql->leftJoin("request.institution","institution");
+            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
+            $instStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+            //echo "instStr=".$instStr."<br>";
+            $dql->andWhere($instStr);
+        }
+
+        //select user, distinct start, end dates
+        //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('statusPending', 'pending');
+        $query->setParameter('statusApproved', 'approved');
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
+        $requests = $query->getResult();
+
+        //floating day color
+        $backgroundColor = "#527b50";
+        $requestName = "Floating Day";
+
+        //$getMethod = "get".$requestTypeStr;
+
+        // $companyEvents and $companyEvent in this example
+        // represent entities from your database, NOT instances of EventEntity
+        // within this bundle.
+        //
+        // Create EventEntity instances and populate it's properties with data
+        // from your own entities/database values.
+
+        $requestArr = array();
+
+        foreach( $requests as $requestFull ) {
+
+            //$request = $requestFull->$getMethod(); //sub request
+            //echo "ID=".$request->getId();
+
+            //check if dates not exact
+            $subjectUserId = $requestFull->getUser()->getId()."-".$requestFull->getId();
+            //init array with key as user id
+            if( !array_key_exists($subjectUserId, $requestArr) ) {
+                $requestArr[$subjectUserId] = array();
+            }
+            //check if date is already exists
+            if( in_array($requestFull->getFloatingDay(), $requestArr[$subjectUserId]) ) {
+                continue;
+            } else {
+                array_push($requestArr[$subjectUserId], $requestFull->getFloatingDay());
+            }
+
+            //isGranted by action might be heavy method
+            $fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
+            if( $fast ) {
+                //$url = null;
+                $url = $this->container->get('router')->generate(
+                    'vacreq_showuser',
+                    array(
+                        'id' => $requestFull->getUser()->getId()
+                    )
+                );
+            } else {
+                if ($this->container->get('security.authorization_checker')->isGranted("read", $requestFull)) {
+                    $url = $this->container->get('router')->generate(
+                        'vacreq_floating_show',
+                        array(
+                            'id' => $requestFull->getId()
+                        )
+                    );
+                } else {
+                    $url = $this->container->get('router')->generate(
+                        'vacreq_showuser',
+                        array(
+                            'id' => $requestFull->getUser()->getId()
+                        )
+                    );
+                }
+            }
+
+            //$userNameLink = '<a href="'.$url.'">'.$requestFull->getUser().'</a>';
+
+            // create an event with a start/end time, or an all day event
+            $title = "";
+            //$title .= "(ID ".$requestFull->getId().") ";
+            //$title .= "(EID ".$requestFull->getExportId().") ";
+            $title .= $requestFull->getUser() . " " . $requestName;
+            //$title .= $userNameLink . " " . $requestName;
+
+            //$finalStartEndDates = $request->getFinalStartEndDates();
+            //$startDate = $request->getStartDate();
+            //$endDate = $request->getEndDate();
+            $floatingDate = $requestFull->getFloatingDay();
+            $title .= " (" . $floatingDate->format($dateformat);
+            //$title .= ", back on ".$requestFull->getFirstDayBackInOffice()->format($dateformat).")";
+            $title .= ")";
+
+            if( $requestFull->getStatus() == 'pending' ) {
+                $backgroundColorCalendar = "#fcf8e3";
+                $title = $title." Pending Approval";
+            } else {
+                $backgroundColorCalendar = $backgroundColor;
+            }
+
+            //$title = "EventID=".$request->getId();
+            //echo $title;
+
+            $eventEntity = new Event($title, $startDate, $endDate);
+
+            //optional calendar event settings
+            $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event
+            //$eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
+            //$eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
+
+            $eventEntity->setOptions([
+                'backgroundColor' => $backgroundColorCalendar,
+                'textColor' => '#2F4F4F',
+            ]);
+
+            if( $url ) {
+                //$eventEntity->setUrl($url); // url to send user to when event label is clicked
+                $eventEntity->addOption(
+                    'url',
+                    $url
+                );
+            }
+
+            //finally, add the event to the CalendarEvent for displaying on the calendar
+            $calendarEvent->addEvent($eventEntity);
+
+//            $calendarEvent->addEvent(new Event(
+//                'Event 1',
+//                new \DateTime('Tuesday this week'),
+//                new \DateTime('Wednesdays this week')
+//            ));
+
+        }//foreach
+
+    }
 }

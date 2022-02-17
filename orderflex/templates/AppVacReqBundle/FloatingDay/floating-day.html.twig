@@ -268,7 +268,7 @@
 
             var floatingDayType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('val');
             console.log("floatingDayType=",floatingDayType);
-            if( !subjectUserId ) {
+            if( !floatingDayType ) {
                 var error = "Floating day type is not specified.";
                 $('#error-box').html(error).show();
                 return false;
