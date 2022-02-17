@@ -254,7 +254,7 @@
             console.log("inst=",inst);
             if( !inst ) {
                 var error = "Please select organizational group";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
                 return false;
             }
 
@@ -262,7 +262,7 @@
             console.log("subjectUserId=",subjectUserId);
             if( !subjectUserId ) {
                 var error = "Person away is not specified.";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
                 return false;
             }
 
@@ -270,7 +270,7 @@
             console.log("floatingDayType=",floatingDayType);
             if( !subjectUserId ) {
                 var error = "Floating day type is not specified.";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
                 return false;
             }
 
@@ -281,13 +281,13 @@
 
             if( !work ) {
                 var error = "Please select checkbox if you have worked or plan to work on the requested floating day";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
                 return false;
             }
 
             if( work && !floatingDay ) {
                 var error = "Please choose the requested floating day";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
                 return false;
             }
 
@@ -298,7 +298,7 @@
                         "A Floating day of [date] has already been approved for this [2021-2022] academic year by " +
                         "ApproverFirstName ApproverLastName on MM/DD/YYYY and HH:MM. " +
                         "Only one [floating day type] floating day can be approved per academic year";
-                $('#error-box').text(error).show();
+                $('#error-box').html(error).show();
             }
             if(1) {
 //                var subjectUserId = $('#oleg_vacreqbundle_request_user').select2('val');
@@ -308,17 +308,17 @@
                 if (checkRes) {
                     if (checkRes.error == true) {
                         if( checkRes.errorMsg ) {
-                            $('#error-box').text(checkRes.errorMsg).show();
+                            $('#error-box').html(checkRes.errorMsg).show();
                         } else {
                             var error = "Logical error to verify existing floating day";
-                            $('#error-box').text(error).show();
+                            $('#error-box').html(error).show();
                         }
                         return false;
                     }
                 }
 //                } else {
 //                    var error = "Person away is not specified.";
-//                    $('#error-box').text(error).show();
+//                    $('#error-box').html(error).show();
 //                    return false;
 //                }
             }

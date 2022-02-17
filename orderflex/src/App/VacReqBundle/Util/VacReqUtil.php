@@ -5241,6 +5241,8 @@ class VacReqUtil
     public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId ) {
 
         $newline =  "<br>\n";
+        //$newline =  "\n";
+
         $resArr['error'] = false;
         $resArr['errorMsg'] = "";
 
