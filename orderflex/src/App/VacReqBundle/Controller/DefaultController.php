@@ -46,6 +46,41 @@ class DefaultController extends OrderAbstractController
 //        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter,"infos.lastName",false);
 //        echo "submitters=".count($submitters)."<br>";
 //        exit('111');
+
+
+        $floatingDays = array(
+            array("06/29/2019", "2018-2019"),
+            array("07/29/2019", "2019-2020"),
+            array("06/29/2020", "2019-2020"),
+            array("06/29/2021", "2020-2021"),
+            array("07/01/2021", "2021-2022"),
+            array("02/17/2022", "2021-2022"),
+            array("06/29/2022", "2021-2022"),
+            array("06/30/2022", "2021-2022"),
+            array("08/29/2022", "2022-2023"),
+            array("06/29/2023", "2022-2023"),
+            array("07/01/2023", "2023-2024"),
+            array("06/25/2024", "2023-2024"),
+            array("07/01/2024", "2024-2025"),
+        );
+
+        foreach($floatingDays as $floatingDayArr) {
+            $floatingDay = $floatingDayArr[0];
+            $expectedRes = $floatingDayArr[1];
+
+            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
+
+            $vacreqUtil = $this->get('vacreq_util');
+            $yearRangeStr = $vacreqUtil->getAcademicYearBySingleDate($floatingDayDate);
+            echo "yearRangeStr: $floatingDay => $yearRangeStr == $expectedRes ";
+            if( $yearRangeStr == $expectedRes ) {
+                echo "OK <br>";
+            } else {
+                echo "NOTOK <br>";
+            }
+        }
+        exit('111');
+
         
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }

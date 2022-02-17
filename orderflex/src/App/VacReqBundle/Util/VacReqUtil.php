@@ -5261,13 +5261,13 @@ class VacReqUtil
 //            //echo "floatingDayDateTo=".$floatingDayDateTo->format('Y-m-d H:i:s')."<br>";
 //        }
 
-        $floatingDay = "06/29/2021";
-        $floatingDay = "08/29/2021";
+        //$floatingDay = "06/29/2021";
+        //$floatingDay = "08/29/2021";
 
         $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
 
-        $yearRangeStr = $this->getAcademicYearByFloatingDay($floatingDayDate);
-        echo "yearRangeStr=$yearRangeStr <br>";
+        $yearRangeStr = $this->getAcademicYearBySingleDate($floatingDayDate);
+        //echo "yearRangeStr=$yearRangeStr <br>";
 
         //yearRange: "2021-2022"
         $floatingRequests = $this->getUserFloatingDay($user,$yearRangeStr);
@@ -5349,7 +5349,7 @@ class VacReqUtil
         return $resArr;
     }
 
-    public function getAcademicYearByFloatingDay( $floatingDayDate ) {
+    public function getAcademicYearBySingleDate( $floatingDayDate ) {
 
         $academicYearArr = array();
 
@@ -5381,88 +5381,137 @@ class VacReqUtil
 
         //echo "startDate= ".$startDate->format('Y-m-d')."<br>";
         //echo "endDate= ".$endDate->format('Y-m-d')."<br>";
-        echo "floatingDayDate= ".$floatingDayDate->format('Y-m-d H:i:s')."<br>";
-        echo "startDateStr= ".$startDateStr."<br>"; //2021-07-01
-        echo "endDateStr= ".$endDateStr."<br>"; //2022-06-30
+        //echo "floatingDayDate= ".$floatingDayDate->format('Y-m-d H:i:s')."<br>";
+        //echo "startDateStr= ".$startDateStr."<br>"; //2021-07-01
+        //echo "endDateStr= ".$endDateStr."<br>"; //2022-06-30
 
         $academicYearStartDate = \DateTime::createfromformat('Y-m-d H:i:s',$startDateStr);
-        //echo "academicYearStartDate1= ".$academicYearStartDate."<br>";
-        //$academicYearStartDate = strtotime($startDateStr);
         $academicYearEndDate = \DateTime::createfromformat('Y-m-d H:i:s',$endDateStr);
-        echo "academicYearStartDate= ".$academicYearStartDate->format('Y-m-d H:i:s')."<br>";
-        echo "academicYearEndDate= ".$academicYearEndDate->format('Y-m-d H:i:s')."<br>";
+        //echo "academicYearStartDate= ".$academicYearStartDate->format('Y-m-d H:i:s')."<br>";
+        //echo "academicYearEndDate= ".$academicYearEndDate->format('Y-m-d H:i:s')."<br>";
+
+        $startYear = $academicYearStartDate->format('Y');
+        $endYear = $academicYearEndDate->format('Y');
+        $singleDayYear = $floatingDayDate->format('Y');
+
+        $startYear = intval($startYear);
+        $endYear = intval($endYear);
+        $singleDayYear = intval($singleDayYear);
+
+        //diff between academic year and date year
+        //count number of leaps
+        $diffYear = abs($singleDayYear - $startYear);
+        //echo "<br>diffYear= ".$diffYear."<br>";
 
         //------July 01------day-------June 30--------//
         //case 1: start and end dates are inside of academic year
         if( $floatingDayDate >= $academicYearStartDate && $floatingDayDate <= $academicYearEndDate ) {
-            echo "case 1: date is inside of academic year <br>";
+            //echo "case 1: date is inside of academic year => current academic year <br>";
+            return $startYear."-".$endYear;
         }
 
         //----day----July 01-------------June 30--------//
         //case 2: start date is before start of academic year
         if( $floatingDayDate < $academicYearStartDate ) {
-            echo "case 2: date is before start of academic year <br>";
+            //echo "case 2: date is before start of academic year => previous academic year <br>";
+            $startYear = $startYear - 1;
+            $endYear = $endYear - 1;
+
+            //count number of leaps
+            $leaps = 0;
+            for ($x = 1; $x <= $diffYear; $x++) {
+                //echo "The number is: $x <br>";
+                $academicYearStartDate->modify("- 1 year");
+                if( $floatingDayDate < $academicYearStartDate ) {
+                    $leaps++;
+                }
+            }
+            //echo "leaps: $leaps <br>";
+
+            $startYear = $startYear - $leaps;
+            $endYear = $endYear - $leaps;
+
+            return $startYear."-".$endYear;
         }
 
         //------July 01-------------June 30----day------//
         //case 3: end date is after end of academic year
         if( $floatingDayDate > $academicYearEndDate ) {
-            echo "case 3: date is after end of academic year <br>";
+            //echo "case 3: date is after end of academic year => next academic year <br>";
+            $startYear = $startYear + 1;
             $endYear = $endYear + 1;
+
+            //count number of leaps
+            $leaps = 0;
+            for ($x = 1; $x <= $diffYear; $x++) {
+                //echo "The number is: $x <br>";
+                $academicYearEndDate->modify("+ 1 year");
+                if( $floatingDayDate > $academicYearEndDate ) {
+                    $leaps++;
+                }
+            }
+            //echo "leaps: $leaps <br>";
+
+            $startYear = $startYear + $leaps;
+            $endYear = $endYear + $leaps;
+
+            return $startYear."-".$endYear;
         }
 
-        exit('111');
+        return NULL;
 
-        $startDateMD = $startDate->format('m-d');
-        $endDateMD = $endDate->format('m-d');
-
-        $startYear = $startDate->format('Y');
-        $endYear = $endDate->format('Y');
-
-        //calculate year difference (span)
-        //$yearDiff = $endYear - $startYear;
-        //$yearDiff = $yearDiff + 1;
-
-        $academicYearStartMD = $academicYearStart->format('m-d');
-        //$academicStartDateStr = $startYear."-".$academicYearStartMD;
-        //echo "academicStartDateStr= ".$academicStartDateStr."<br>";
-        //$academicStartDate = new \DateTime($academicStartDateStr);
-
-        //$endYear = $endYear + $yearDiff;
-        $academicYearEndMD = $academicYearEnd->format('m-d');
-        //$academicEndDateStr = $endYear."-".$academicYearEndMD;
-        //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
-        //$academicEndDate = new \DateTime($academicEndDateStr);
-
-        //case 1: start and end dates are inside of academic year
-        //if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
-        //echo "case 1: start and end dates are inside of academic year <br>";
-        //}
-
-        //case 2: start date is before start of academic year
-        if( $startDateMD < $academicYearStartMD ) {
-            //echo "case 2: start date is before start of academic year <br>";
-            $startYear = $startYear - 1;
-        }
-
-        //case 3: end date is after end of academic year
-        if( $endDateMD > $academicYearEndMD ) {
-            //echo "case 3: end date is after end of academic year <br>";
-            $endYear = $endYear + 1;
-        }
-
-        //$academicYearStr = "2014-2015, 2015-2016";
-        //$academicYearStr = $startYear . "-" . $endYear;
-
-        for( $year=$startYear; $year < $endYear; $year++ ) {
-            //$academicYearStr = $startYear . "-" . $endYear;
-            $endtyear = $year + 1;
-            $academicYearArr[] = $year."-".$endtyear;
-        }
-
-        //$academicYearStr = implode(", ",$academicYearArr);
-
-        return $academicYearArr;
+//        exit('111');
+//
+//        $startDateMD = $startDate->format('m-d');
+//        $endDateMD = $endDate->format('m-d');
+//
+//        $startYear = $startDate->format('Y');
+//        $endYear = $endDate->format('Y');
+//
+//        //calculate year difference (span)
+//        //$yearDiff = $endYear - $startYear;
+//        //$yearDiff = $yearDiff + 1;
+//
+//        $academicYearStartMD = $academicYearStart->format('m-d');
+//        //$academicStartDateStr = $startYear."-".$academicYearStartMD;
+//        //echo "academicStartDateStr= ".$academicStartDateStr."<br>";
+//        //$academicStartDate = new \DateTime($academicStartDateStr);
+//
+//        //$endYear = $endYear + $yearDiff;
+//        $academicYearEndMD = $academicYearEnd->format('m-d');
+//        //$academicEndDateStr = $endYear."-".$academicYearEndMD;
+//        //echo "academicEndDateStr= ".$academicEndDateStr."<br>";
+//        //$academicEndDate = new \DateTime($academicEndDateStr);
+//
+//        //case 1: start and end dates are inside of academic year
+//        //if( $startDateMD >= $academicYearStartMD && $endDateMD <= $academicYearEndMD ) {
+//        //echo "case 1: start and end dates are inside of academic year <br>";
+//        //}
+//
+//        //case 2: start date is before start of academic year
+//        if( $startDateMD < $academicYearStartMD ) {
+//            //echo "case 2: start date is before start of academic year <br>";
+//            $startYear = $startYear - 1;
+//        }
+//
+//        //case 3: end date is after end of academic year
+//        if( $endDateMD > $academicYearEndMD ) {
+//            //echo "case 3: end date is after end of academic year <br>";
+//            $endYear = $endYear + 1;
+//        }
+//
+//        //$academicYearStr = "2014-2015, 2015-2016";
+//        //$academicYearStr = $startYear . "-" . $endYear;
+//
+//        for( $year=$startYear; $year < $endYear; $year++ ) {
+//            //$academicYearStr = $startYear . "-" . $endYear;
+//            $endtyear = $year + 1;
+//            $academicYearArr[] = $year."-".$endtyear;
+//        }
+//
+//        //$academicYearStr = implode(", ",$academicYearArr);
+//
+//        return $academicYearArr;
     }
 
     //get approved floating day for the academical year specified by $yearRange (2015-2016 - current academic year)
