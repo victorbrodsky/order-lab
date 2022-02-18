@@ -1150,7 +1150,7 @@ class FloatingDayController extends OrderAbstractController
                 //"This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
                 "This ".$entity->getRequestName()." ID #" . $entity->getId()." is not pending anymore and has been modified by ".$entity->getUpdateUser().$modificationDate
             );
-            return $this->redirectToRoute('vacreq_floatingrequests');
+            return $this->redirectToRoute('vacreq_floatingrequests'); //,array('')
         }
 
 
@@ -1164,7 +1164,7 @@ class FloatingDayController extends OrderAbstractController
                     'warning',
                     $errorMsg
                 );
-                return $this->redirectToRoute('vacreq_show',array('id'=>$entity->getId()));
+                return $this->redirectToRoute('vacreq_floating_show',array('id'=>$entity->getId()));
             } else {
                 //exit('no overlaps found');
             }

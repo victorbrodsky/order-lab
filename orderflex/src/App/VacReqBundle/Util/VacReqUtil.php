@@ -4960,7 +4960,14 @@ class VacReqUtil
         }
 
         if( !$requestType ) {
-            return NULL;
+            //return NULL;
+            if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" ) {
+                $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation('business-vacation');
+            }
+
+            if( $routeName == "vacreq_floatingrequests" || $routeName == "vacreq_myfloatingrequests" ) {
+                $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation('floatingday');
+            }
         }
 
         if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" ) {
