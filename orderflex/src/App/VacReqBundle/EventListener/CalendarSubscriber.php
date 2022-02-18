@@ -311,7 +311,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $requests = $query->getResult();
 
         //floating day color
-        $backgroundColor = "#527b50";
+        $backgroundColor = "#219e3d"; //"#77d39b";
         $requestName = "Floating Day";
 
         //$getMethod = "get".$requestTypeStr;
@@ -325,22 +325,23 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $requestArr = array();
 
-        foreach( $requests as $requestFull ) {
+        foreach( $requests as $floatingRequest ) {
 
-            //$request = $requestFull->$getMethod(); //sub request
+            $floatingDay = $floatingRequest->getFloatingDay();
+            //$request = $floatingRequest->$getMethod(); //sub request
             //echo "ID=".$request->getId();
 
             //check if dates not exact
-            $subjectUserId = $requestFull->getUser()->getId()."-".$requestFull->getId();
+            $subjectUserId = $floatingRequest->getUser()->getId()."-".$floatingRequest->getId();
             //init array with key as user id
             if( !array_key_exists($subjectUserId, $requestArr) ) {
                 $requestArr[$subjectUserId] = array();
             }
             //check if date is already exists
-            if( in_array($requestFull->getFloatingDay(), $requestArr[$subjectUserId]) ) {
+            if( in_array($floatingDay, $requestArr[$subjectUserId]) ) {
                 continue;
             } else {
-                array_push($requestArr[$subjectUserId], $requestFull->getFloatingDay());
+                array_push($requestArr[$subjectUserId], $floatingDay);
             }
 
             //isGranted by action might be heavy method
@@ -350,45 +351,44 @@ class CalendarSubscriber implements EventSubscriberInterface
                 $url = $this->container->get('router')->generate(
                     'vacreq_showuser',
                     array(
-                        'id' => $requestFull->getUser()->getId()
+                        'id' => $floatingRequest->getUser()->getId()
                     )
                 );
             } else {
-                if ($this->container->get('security.authorization_checker')->isGranted("read", $requestFull)) {
+                if ($this->container->get('security.authorization_checker')->isGranted("read", $floatingRequest)) {
                     $url = $this->container->get('router')->generate(
                         'vacreq_floating_show',
                         array(
-                            'id' => $requestFull->getId()
+                            'id' => $floatingRequest->getId()
                         )
                     );
                 } else {
                     $url = $this->container->get('router')->generate(
                         'vacreq_showuser',
                         array(
-                            'id' => $requestFull->getUser()->getId()
+                            'id' => $floatingRequest->getUser()->getId()
                         )
                     );
                 }
             }
 
-            //$userNameLink = '<a href="'.$url.'">'.$requestFull->getUser().'</a>';
+            //$userNameLink = '<a href="'.$url.'">'.$floatingRequest->getUser().'</a>';
 
             // create an event with a start/end time, or an all day event
             $title = "";
             //$title .= "(ID ".$requestFull->getId().") ";
             //$title .= "(EID ".$requestFull->getExportId().") ";
-            $title .= $requestFull->getUser() . " " . $requestName;
+            $title .= $floatingRequest->getUser() . " " . $requestName;
             //$title .= $userNameLink . " " . $requestName;
 
-            //$finalStartEndDates = $request->getFinalStartEndDates();
-            //$startDate = $request->getStartDate();
-            //$endDate = $request->getEndDate();
-            $floatingDate = $requestFull->getFloatingDay();
-            $title .= " (" . $floatingDate->format($dateformat);
-            //$title .= ", back on ".$requestFull->getFirstDayBackInOffice()->format($dateformat).")";
+            $startDate = $floatingDay;
+            $endDate = $floatingDay;
+
+            $title .= " (" . $floatingDay->format($dateformat);
+            //$title .= ", back on ".$floatingRequest->getFirstDayBackInOffice()->format($dateformat).")";
             $title .= ")";
 
-            if( $requestFull->getStatus() == 'pending' ) {
+            if( $floatingRequest->getStatus() == 'pending' ) {
                 $backgroundColorCalendar = "#fcf8e3";
                 $title = $title." Pending Approval";
             } else {
