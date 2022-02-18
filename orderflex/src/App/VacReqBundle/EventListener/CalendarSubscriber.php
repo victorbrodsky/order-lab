@@ -19,7 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-//Based on depreciated tattali/calendar-bundle
+//Based on tattali/calendar-bundle
 
 class CalendarSubscriber implements EventSubscriberInterface
 {
@@ -38,29 +38,6 @@ class CalendarSubscriber implements EventSubscriberInterface
             CalendarEvents::SET_DATA => 'onCalendarSetData',
         ];
     }
-
-//    public function onCalendarSetData_ORIG(CalendarEvent $calendar)
-//    {
-//        //exit('111');
-//
-//        $start = $calendar->getStart();
-//        $end = $calendar->getEnd();
-//        $filters = $calendar->getFilters();
-//
-//        // You may want to make a custom query from your database to fill the calendar
-//
-//        $calendar->addEvent(new Event(
-//            'Event 1',
-//            new \DateTime('Tuesday this week'),
-//            new \DateTime('Wednesdays this week')
-//        ));
-//
-//        // If the end date is null or not defined, it creates a all day event
-//        $calendar->addEvent(new Event(
-//            'All day event',
-//            new \DateTime('Friday this week')
-//        ));
-//    }
 
     public function onCalendarSetData(CalendarEvent $calendarEvent) {
 
