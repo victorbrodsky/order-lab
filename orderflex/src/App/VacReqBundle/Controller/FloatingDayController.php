@@ -716,7 +716,7 @@ class FloatingDayController extends OrderAbstractController
 
 
     /**
-     * @Route("/floating-day-request", name="vacreq_floating_day", methods={"GET","POST"})
+     * @Route("/floating-day", name="vacreq_floating_day", methods={"GET","POST"})
      * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
      */
     public function FloatingDayAction(Request $request) {
@@ -1697,7 +1697,9 @@ class FloatingDayController extends OrderAbstractController
     public function sendConfirmationEmailToFloatingApprovers( $entity, $sendCopy=true ) {
         $vacreqUtil = $this->get('vacreq_util');
         $subject = $entity->getEmailSubject();
+        //echo "subject=$subject <br>";
         $message = $this->createFloatingEmailBody($entity);
+        //echo "message=$message <br>";
         return $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
     public function createFloatingEmailBody( $entity, $emailToUser=null, $addText=null, $withLinks=true ) {

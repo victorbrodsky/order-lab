@@ -145,6 +145,7 @@ class VacReqUtil
 //            //echo "tentativeInstitution <br>";
 //        }
 
+        //echo "institution=$institution <br>";
         if( !$institution ) {
             return null;
         }
@@ -3398,6 +3399,9 @@ class VacReqUtil
             //$emailUtil->sendEmail($approverEmailArr, $subject, $message, $emailUserEmailArr, null);
         //}
 
+        //dump($approversNameArr);
+        //exit('eof sendGeneralEmailToApproversAndEmailUsers');
+
         return implode(", ",$approversNameArr);
     }
 
@@ -4969,6 +4973,10 @@ class VacReqUtil
                 $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation('floatingday');
             }
         }
+
+        //if( !$requestType ) {
+        //    exit('No request type');
+        //}
 
         if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" ) {
             if( $requestType->getAbbreviation() == 'floatingday' ) {
