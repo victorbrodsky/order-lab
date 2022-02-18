@@ -311,7 +311,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $requests = $query->getResult();
 
         //floating day color
-        $backgroundColor = "#219e3d"; //"#77d39b";
+        $backgroundColor = "#77d39b"; //"#77d39b";
         $requestName = "Floating Day";
 
         //$getMethod = "get".$requestTypeStr;
