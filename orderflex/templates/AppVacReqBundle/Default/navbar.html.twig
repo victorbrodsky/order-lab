@@ -141,12 +141,33 @@
                     {% if floatingDayName %}
                         {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
                                 is_granted('ROLE_VACREQ_ADMIN') or
-                                is_granted('ROLE_VACREQ_SUPERVISOR')
+                                is_granted('ROLE_VACREQ_SUPERVISOR') or
+                                is_granted('ROLE_VACREQ_APPROVER')
                         %}
                             <li id="nav-bar-floatingdayrequest" class="divider-vertical">
-                                <a href="{{ path('vacreq_floating_day') }}">
-                                    {{ floatingDayName|raw }}
-                                </a>
+                                {#<a href="{{ path('vacreq_floating_day') }}">#}
+                                    {#{{ floatingDayName|raw }}#}
+                                {#</a>#}
+
+                                {% set pendingFloatingRequests = vacreq_util.getTotalFloatingPendingRequests(app.user) %}
+                                {% set floatingRequestTypeId = vacreq_util.getFloatingRequestTypeId() %}
+                                {% if
+                                    pendingFloatingRequests is defined and
+                                    pendingFloatingRequests > 0 and
+                                    (is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') or is_granted('ROLE_VACREQ_ADMIN') )
+                                %}
+                                    <a id="incoming-orders-menu-title" href="{{ path('vacreq_incomingrequests') }}">{{ floatingDayName|raw }}</a><!--
+                                            --><a id="incoming-orders-menu-badge"
+                                                  class="element-with-tooltip-always"
+                                                  title="Pending Approval" data-toggle="tooltip"
+                                                  data-placement="bottom"
+                                                  href="{{ path('vacreq_floatingrequests',{'filter[pending]':1,'filter[requestType]':floatingRequestTypeId}) }}"
+                                ><span class="badge">{{ pendingFloatingRequests }}</span></a>
+                                {% else %}
+                                    <a href="{{ path('vacreq_floating_day') }}">
+                                        {{ floatingDayName|raw }}
+                                    </a>
+                                {% endif %}
                             </li>
                         {% endif %}
                     {% endif %}

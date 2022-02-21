@@ -483,7 +483,7 @@ class VacReqRequestFloating
         $res .= "### Floating Day Request ###".$break;
         $res .= "Status: ".$this->getStatus().$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
-        $res .= "I have worked or plan to work: ".$worked.$break;
+        $res .= "I have worked or plan to work on this day: ".$worked.$break;
         $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
 
         if( $this->getApproverComment() ) {
@@ -656,7 +656,7 @@ class VacReqRequestFloating
         $res = "### Floating Day Request ###".$break;
         $res .= "Status: ".$this->getStatus().$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
-        $res .= "I have worked or plan to work: ".$worked.$break;
+        $res .= "I have worked or plan to work on this day: ".$worked.$break;
         $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
 
         if( $this->getApproverComment() ) {

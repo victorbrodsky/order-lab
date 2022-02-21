@@ -227,7 +227,7 @@
                                     <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to Cancel this entire request with ID #{{ entity.id }}?"
+                                            general-data-confirm="Are you sure you would like to Cancel this 'Floating Day' request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'canceled' }) }}">
                                                 Cancel (withdraw entire request)
                                         </a>
@@ -235,7 +235,7 @@
                                     {#<li class="divider">#}
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
+                                            general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this 'Floating Day' request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_floating_send_reminder_email', { 'id': entity.id }) }}">
                                             Send Reminder Email to Approvers
                                         </a>
@@ -246,7 +246,7 @@
                                     <li class="divider">
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to Re-Submit this entire request with ID #{{ entity.id }}?"
+                                            general-data-confirm="Are you sure you would like to Re-Submit this 'Floating Day' request with ID #{{ entity.id }}?"
                                             href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'pending' }) }}">
                                                 Re-Submit
                                         </a>
@@ -259,7 +259,7 @@
 
                                 {% if showApprove %}
                                     <li>
-                                        <a general-data-confirm="Are you sure you would like to approve entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                                        <a general-data-confirm="Are you sure you would like to approve this 'Floating Day' request with ID #{{ entity.id }} for {{ entity.user }}?"
                                            href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'approved' }) }}">
                                             Approve request
                                         </a>
@@ -268,7 +268,7 @@
                                 {% if showReject %}
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to reject entire request with ID #{{ entity.id }} for {{ entity.user }}?"
+                                            general-data-confirm="Are you sure you would like to reject this 'Floating Day' request with ID #{{ entity.id }} for {{ entity.user }}?"
                                             href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'rejected' }) }}">
                                             Reject request
                                         </a>
@@ -277,7 +277,7 @@
                                 {% if showPending %}
                                     <li>
                                         <a
-                                            general-data-confirm="Are you sure you would like to set entire request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
+                                            general-data-confirm="Are you sure you would like to set this 'Floating Day' request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
                                             href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'pending' }) }}">
                                             Set request to "Pending approval"
                                         </a>

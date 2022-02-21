@@ -784,7 +784,9 @@ class ApproverController extends OrderAbstractController
 
             if( $count > 0 ) {
                 //Event Log
-                $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+                //$event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+                //New Business/Vacation Group TEST has been created.
+                $event = "New Business/Vacation Group ".$institution->getName()." has been created.";
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
 
@@ -1343,7 +1345,8 @@ class ApproverController extends OrderAbstractController
 
         if( $count > 0 ) {
             //Event Log
-            $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+            //$event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+            $event = "New Business/Vacation Group ".$institution->getName()." has been created.";
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
 

@@ -226,7 +226,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $paginationParams = array(
-            //'defaultSortFieldName' => 'request.firstDayAway', //createDate
+            'defaultSortFieldName' => 'request.createDate', //createDate
             'defaultSortDirection' => 'DESC',
             'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );

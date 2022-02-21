@@ -502,6 +502,10 @@ function setVacReqNavBar() {
         id = 'carryoverrequest';
     }
 
+    if( full.indexOf("/vacation-request/floating-day") !== -1 ) {
+        id = 'floatingdayrequest';
+    }
+
     id = commonNavBar(full,id);
 
     if( full.indexOf("/vacation-request/re-identify") !== -1 ) {

@@ -261,7 +261,7 @@
             var inst = $('#oleg_vacreqbundle_requestfloating_institution').select2('val');
             console.log("inst=",inst);
             if( !inst ) {
-                var error = "Please select organizational group";
+                var error = "Please select the organizational group";
                 $('#error-box').html(error).show();
                 return false;
             }
@@ -288,13 +288,13 @@
             console.log("floatingDay="+floatingDay);
 
             if( !work ) {
-                var error = "Please select checkbox if you have worked or plan to work on the requested floating day";
+                var error = "If you have worked or plan to work on the specified floating day, please mark the checkbox above.";
                 $('#error-box').html(error).show();
                 return false;
             }
 
             if( work && !floatingDay ) {
-                var error = "Please choose the requested floating day";
+                var error = "Please enter the date for the requested day off.";
                 $('#error-box').html(error).show();
                 return false;
             }

@@ -264,11 +264,7 @@ class VacReqRequestFloatingType extends AbstractType
                 'data-calendarenddate' => $this->params['calendarEndDate']
             )
         ));
-
-//        if( $this->params['floatingRestrictDateRange'] === true ) {
-//            //show the user the following message in the red well: “Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).”
-//
-//        }
+        
     }
 
 }

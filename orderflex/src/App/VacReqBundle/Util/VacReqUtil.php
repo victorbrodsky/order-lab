@@ -4224,6 +4224,59 @@ class VacReqUtil
         return null;
     }
 
+    //Get pending (non-approved, non-rejected) floating requests for the logged in approver
+    public function getTotalFloatingPendingRequests( $approver, $groupId=null, $status = "pending" ) {
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+
+        $dql->where("request.status = :status");
+
+        $queryParameters = array(
+            'status' => $status
+        );
+
+        if( $groupId ) {
+            $dql->andWhere("request.institution = :groupId");
+            $queryParameters['groupId'] = $groupId;
+        } else {
+            //get approver groups
+            $groupParams = array('asObject' => true);
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
+            $groupRoles = $this->getGroupsByPermission($approver, $groupParams);
+            $groupIds = array();
+            foreach ($groupRoles as $role) {
+                $groupIds[] = $role->getId();
+            }
+            if ($groupIds and count($groupIds) > 0) {
+                $dql->andWhere("request.institution IN (" . implode(",", $groupIds) . ")");
+            }
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+        //echo "dql=".$dql."<br>";
+
+        $query->setParameters($queryParameters);
+
+        $requests = $query->getResult();
+
+        return count($requests);
+    }
+
+    public function getFloatingRequestTypeId() {
+        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("floatingday");
+        if( $requestType ) {
+            return $requestType->getId();
+        }
+        return NULL;
+    }
+
     public function convertDateTimeToStr($datetime) {
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
         $dateStr = $transformer->transform($datetime);
