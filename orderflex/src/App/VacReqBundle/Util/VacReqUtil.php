@@ -5594,4 +5594,39 @@ class VacReqUtil
         return NULL;
     }
 
+    public function getFloatingDayRangeNote() {
+        //Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $floatingRestrictDateRange = $userSecUtil->getSiteSettingParameter('floatingRestrictDateRange','vacreq');
+        if( $floatingRestrictDateRange === NULL ) {
+            $floatingRestrictDateRange = true;
+        }
+
+        $calendarStartDate = NULL;
+        $calendarEndDate = NULL;
+        if( $floatingRestrictDateRange === true ) {
+            //echo "floatingRestrictDateRange is TRUE <br>";
+            $dates = $this->getCurrentAcademicYearStartEndDates(true);
+            $startDate = $dates['startDate']; //Y-m-d
+            $endDate = $dates['endDate']; //Y-m-d
+
+            //$calendarStartDateStr = $startDateStr." 00:00:00";
+            //$calendarEndDateStr = $endDateStr." 23:59:59";
+
+            //$calendarStartDate = \DateTime::createFromFormat('Y-m-d', $calendarStartDateStr);
+            //$calendarEndDate = \DateTime::createFromFormat('Y-m-d', $calendarEndDateStr);
+
+            $calendarStartDate = $startDate->format('m/d/Y');
+            $calendarEndDate = $endDate->format('m/d/Y');
+
+            return "Please make sure the date for your ".
+                "requested day off occurs during the current fiscal year ".
+                $calendarStartDate . " and " . $calendarEndDate;
+        }
+
+        return NULL;
+    }
+
 }

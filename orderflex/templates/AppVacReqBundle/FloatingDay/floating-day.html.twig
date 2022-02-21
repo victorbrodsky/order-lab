@@ -139,6 +139,14 @@
         </div>
         </p>
 
+        {#Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).#}
+        {% set floatingDayRangeNote = vacreq_util.getFloatingDayRangeNote() %}
+        {% if floatingDayRangeNote %}
+            <div class="alert alert-info" role="alert">
+                {{ floatingDayRangeNote|raw }}
+            </div>
+        {% endif %}
+
         {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
         {{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}
 

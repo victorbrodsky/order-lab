@@ -1616,6 +1616,33 @@ class FloatingDayController extends OrderAbstractController
         //echo "roleApprover=".$roleApprover."<br>";
         //echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
 
+        $floatingRestrictDateRange = $userSecUtil->getSiteSettingParameter('floatingRestrictDateRange','vacreq');
+        if( $floatingRestrictDateRange === NULL ) {
+            //throw new \InvalidArgumentException('floatingRestrictDateRange is not defined in Site Parameters.');
+            //exit('floatingRestrictDateRange is not defined in Site Parameters:'.$floatingRestrictDateRange);
+            $floatingRestrictDateRange = true;
+        }
+
+        $calendarStartDate = NULL;
+        $calendarEndDate = NULL;
+        if( $floatingRestrictDateRange === true ) {
+            //echo "floatingRestrictDateRange is TRUE <br>";
+            $dates = $vacreqUtil->getCurrentAcademicYearStartEndDates(true);
+            $startDate = $dates['startDate']; //Y-m-d
+            $endDate = $dates['endDate']; //Y-m-d
+
+            //$calendarStartDateStr = $startDateStr." 00:00:00";
+            //$calendarEndDateStr = $endDateStr." 23:59:59";
+
+            //$calendarStartDate = \DateTime::createFromFormat('Y-m-d', $calendarStartDateStr);
+            //$calendarEndDate = \DateTime::createFromFormat('Y-m-d', $calendarEndDateStr);
+
+            $calendarStartDate = $startDate->format('m/d/Y');
+            $calendarEndDate = $endDate->format('m/d/Y');
+        } else {
+            //echo "floatingRestrictDateRange is FALSE <br>";
+        }
+
         $params = array(
             'container' => $this->container,
             'em' => $em,
@@ -1629,6 +1656,9 @@ class FloatingDayController extends OrderAbstractController
             'holidaysUrl' => $holidaysUrl,
             'maxCarryOverVacationDays' => $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq'),
             'noteForCarryOverDays' => $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq'),
+            'floatingRestrictDateRange' => $floatingRestrictDateRange,
+            'calendarStartDate' => $calendarStartDate,
+            'calendarEndDate' => $calendarEndDate,
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );

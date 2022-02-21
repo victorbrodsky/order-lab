@@ -768,19 +768,40 @@ function initSingleDatepicker( datepickerElement ) {
             datepickerMultidate = true;
         }
 
+        //calendarStartDate calendarEndDate
+        //printF(datepickerElement,"datepickerElement:");
+        //console.log('datepickerElement:',datepickerElement);
+        var calendarStartDate = datepickerElement.find('input').data("calendarstartdate");
+        //console.log('calendarStartDate='+calendarStartDate);
+        //calendarStartDate = new Date(); //testing
+        //calendarStartDate.setDate(calendarStartDate.getDate() - 2); //testing
+        var startDate = false;
+        if( calendarStartDate ) {
+            startDate = calendarStartDate;
+        }
+        var calendarEndDate = datepickerElement.find('input').data("calendarenddate");
+        //console.log('endDate='+endDate);
+        //endDate = new Date(); //testing
+        //endDate.setDate(endDate.getDate() + 2); //testing
+        if( calendarEndDate ) {
+            endDate = calendarEndDate;
+        }
+
+
         //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
         datepickerElement.datepicker({
             autoclose: true,
             clearBtn: true,
             todayBtn: datepickertodayBtn,
             todayHighlight: true,
+            startDate: startDate,
             endDate: endDate,
             orientation: "auto", //"auto top"
             ////minDate: new Date(1902, 1, 1)   //null
             format: datepickerFormat,
             minViewMode: datepickerMinViewMode,
             viewMode: datepickerViewMode,
-            multidate: datepickerMultidate
+            multidate: datepickerMultidate,
         });
 
         calendarIconBtn.prop('disabled', false);

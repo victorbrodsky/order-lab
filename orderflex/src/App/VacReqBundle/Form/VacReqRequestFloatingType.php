@@ -249,14 +249,26 @@ class VacReqRequestFloatingType extends AbstractType
             'attr' => array('class' => 'floatingday-work'),
         ));
 
+        //use $floatingRestrictDateRange to limit to the current academic year
         $builder->add('floatingDay', DateType::class, array(
             'label' => "The floating day I am requesting for this fiscal year is:",
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'disabled' => $disable,
-            'attr' => array('class' => 'form-control datetimepicker floatingDay', 'placeholder' => 'Floating Date', 'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip')
+            'attr' => array(
+                'class' => 'form-control datetimepicker floatingDay',
+                'placeholder' => 'Floating Date',
+                'title'=>'The floating day I am requesting', 'data-toggle'=>'tooltip',
+                'data-calendarstartdate' => $this->params['calendarStartDate'],
+                'data-calendarenddate' => $this->params['calendarEndDate']
+            )
         ));
+
+//        if( $this->params['floatingRestrictDateRange'] === true ) {
+//            //show the user the following message in the red well: “Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).”
+//
+//        }
     }
 
 }
