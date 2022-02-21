@@ -221,6 +221,7 @@ class CalendarSubscriber implements EventSubscriberInterface
             $eventEntity->setOptions([
                 'backgroundColor' => $backgroundColorCalendar,
                 'textColor' => '#2F4F4F',
+                'classNames' => 'calendar-custom-class',
             ]);
 
             if( $url ) {
@@ -288,7 +289,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $requests = $query->getResult();
 
         //floating day color
-        $backgroundColor = "#77d39b"; //"#77d39b";
+        $backgroundColor = "#d80000"; //"#77d39b";
         $requestName = "Floating Day";
 
         //$getMethod = "get".$requestTypeStr;
@@ -352,10 +353,14 @@ class CalendarSubscriber implements EventSubscriberInterface
             //$userNameLink = '<a href="'.$url.'">'.$floatingRequest->getUser().'</a>';
 
             // create an event with a start/end time, or an all day event
+            //[Floating Day Type] Floating Day (Away) for FirstName LastName
             $title = "";
             //$title .= "(ID ".$requestFull->getId().") ";
             //$title .= "(EID ".$requestFull->getExportId().") ";
-            $title .= $floatingRequest->getUser() . " " . $requestName;
+            $title .= $floatingRequest->getFloatingType() .
+                " Floating Day (Away) for " .
+                $floatingRequest->getUser()->getUsernameOptimal();
+                //" " . $requestName;
             //$title .= $userNameLink . " " . $requestName;
 
             $startDate = $floatingDay;
@@ -384,7 +389,9 @@ class CalendarSubscriber implements EventSubscriberInterface
 
             $eventEntity->setOptions([
                 'backgroundColor' => $backgroundColorCalendar,
-                'textColor' => '#2F4F4F',
+                'textColor' => '#d1e6e6', //'#2F4F4F',
+                'classNames' => 'calendar-custom-class',
+                //'overlap' => true
             ]);
 
             if( $url ) {
