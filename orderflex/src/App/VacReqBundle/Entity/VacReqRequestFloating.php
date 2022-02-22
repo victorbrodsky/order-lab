@@ -640,6 +640,10 @@ class VacReqRequestFloating
         return false;
     }
     
+    public function getExtraStatus() {
+        return NULL;
+    }
+    
     public function __toString()
     {
         //$break = "\r\n";

@@ -197,10 +197,9 @@
                         {% set showPending = true %}
                     {% endif %}
 
-                    {% if routename == 'vacreq_incomingrequests' %}
-
-                        {{ vacreqmacros.vacreq_action( entity, vacreq_sitename ) }}
-
+                    {#{% if routename == 'vacreq_incomingrequests' %}#}
+                    {% if routename == 'vacreq_floatingrequests' %}
+                        {{ vacreqmacros.vacreq_floating_action( entity, vacreq_sitename ) }}
                     {% else %}
 
                         <div class="btn-group">
@@ -218,12 +217,13 @@
                                     <a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>
                                 </li>
 
-                                <li>
-                                    <a href="{{ path(vacreq_sitename~'_floating_review', { 'id': entity.id }) }}" target="_blank">Review</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path(vacreq_sitename~'_floating_review', { 'id': entity.id }) }}" target="_blank">Review</a>#}
+                                {#</li>#}
 
-
-                                {% if not entity.isOverallStatus('canceled') and (entity.status == 'pending' or entity.getOverallStatus() == 'pending') %}
+                                {% if not entity.isOverallStatus('canceled') and
+                                    (entity.status == 'pending' or entity.getOverallStatus() == 'pending')
+                                %}
                                     <li class="divider">
                                     <li>
                                         <a

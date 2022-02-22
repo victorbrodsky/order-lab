@@ -838,6 +838,7 @@ class RequestController extends OrderAbstractController
             }
         } else {
             $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: user does not have permission to changestatus or update for this request");
+            //exit("nopermission statusAction: ".$status);
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 

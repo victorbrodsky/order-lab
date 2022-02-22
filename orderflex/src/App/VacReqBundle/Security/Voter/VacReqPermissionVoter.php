@@ -27,6 +27,7 @@ namespace App\VacReqBundle\Security\Voter;
 
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
+use App\VacReqBundle\Entity\VacReqRequestFloating;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -106,9 +107,17 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             //echo "parent canEdit: NO <br>";
         }
 
-        //author can not edit
+        //author can not edit?
         if( $this->isAuthor($subject, $token) ) {
+            //echo "author can not edit? <br>";
+
+            //status == pending => can edit
+            if( $subject->getOverallStatus() === 'pending' ) {
+                return true;
+            }
+
             return false;
+            //return true;
         }
 
         return $this->checkLocalPermission($subject, $token);
@@ -140,6 +149,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             //check for tentative pre-approval: use tentativeInstitution
             //echo "canChangeStatus: has tentative approver role? <br>";
             $tentative = true;
+            if( $subject instanceof VacReqRequestFloating ) {
+                $tentative = false;
+            }
             if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
                 //exit("canChangeStatus: has tentative approver role => ok");
                 return true;
@@ -156,6 +168,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
         //check for tentative pre-approval: use tentativeInstitution
         $tentative = true;
+        if( $subject instanceof VacReqRequestFloating ) {
+            $tentative = false;
+        }
         if( $this->hasApproverRoleInstitution($subject,$token,$tentative) ) {
             //exit("canChangeStatus: can change status!");
             return true;
@@ -254,6 +269,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
                 $groupParams = array('asObject'=>true);
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+
+                $groupParams['permissions'][] = array('objectStr'=>'VacReqRequestFloating','actionStr'=>'changestatus');
+
                 $groupInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
             }
 

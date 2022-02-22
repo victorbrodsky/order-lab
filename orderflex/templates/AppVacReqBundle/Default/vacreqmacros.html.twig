@@ -225,7 +225,7 @@
     {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
 
     {% set carryOver = false %}
-    {% if entity.getRequestType() and entity.getRequestTypeAbbreviation() == "carryover" %}
+    {% if entity.getRequestTypeAbbreviation() == "carryover" %}
         {% set carryOver = true %}
     {% endif %}
 
@@ -252,7 +252,7 @@
     {% endif %}
 
     {% set showCancellation = false %}
-    {% if entity.extraStatus == 'Cancellation Requested' and not carryOver %}
+    {% if entity.getExtraStatus() == 'Cancellation Requested' and not carryOver %}
         {% set showCancellation = true %}
     {% endif %}
 
@@ -347,9 +347,13 @@
             {% endif %}
 
 
-            {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestBusiness, "business", vacreq_sitename ) }}
+            {% if entity.requestBusiness is defined %}
+                {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestBusiness, "business", vacreq_sitename ) }}
+            {% endif %}
 
-            {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestVacation, "vacation", vacreq_sitename ) }}
+            {% if entity.requestVacation is defined %}
+                {{ vacreqmacros.vacreq_ParticularRequestAction( entity, entity.requestVacation, "vacation", vacreq_sitename ) }}
+            {% endif %}
 
             {#{% endif %}#}
 
@@ -420,6 +424,133 @@
         {% endif %}
 
     {% endif %}
+
+{% endmacro %}
+
+{% macro vacreq_floating_action( entity, vacreq_sitename ) %}
+
+    {% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+    {% set showApprove = false %}
+    {% if not entity.isOverallStatus('approved') %}
+        {% set showApprove = true %}
+    {% endif %}
+
+    {% set showReject = false %}
+    {#{% if not entity.isOverallStatus('approved') and not entity.isOverallStatus('rejected') %}#}
+    {% if not entity.isOverallStatus('rejected') %}
+        {% set showReject = true %}
+    {% endif %}
+
+    {% set showPending = false %}
+    {#{% if not entity.isOverallStatus('approved') and entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}#}
+    {% if entity.status != 'pending' and entity.getOverallStatus() != 'pending' %}
+        {% set showPending = true %}
+    {% endif %}
+
+    {% set showCancel = false %}
+    {% if not entity.isOverallStatus('canceled') %}
+        {% set showCancel = true %}
+    {% endif %}
+
+    {% set showCancellation = false %}
+    {% if entity.getExtraStatus() == 'Cancellation Requested' %}
+        {% set showCancellation = true %}
+    {% endif %}
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Action <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-right">
+
+            <li>
+                <a href="{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}" target="_blank">View User Details</a>
+            </li>
+
+            <li>
+                <a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>
+            </li>
+
+            <li>
+                <a href="{{ path(vacreq_sitename~'_floating_review', { 'id': entity.id }) }}" target="_blank">Review</a>
+            </li>
+
+            {#<li class="divider"></li>#}
+            {#{% if entity.status != 'completed' and entity.getOverallStatus() != 'completed' %}#}
+
+            {% if showApprove or showReject or showPending %}
+                <li class="divider">
+            {% endif %}
+
+            {% if showApprove %}
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to approve this 'Floating Day' request with ID #{{ entity.id }} for {{ entity.user }}?"
+                        href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'approved' }) }}">
+                        Approve entire request
+                    </a>
+                </li>
+            {% endif %}
+            {% if showReject %}
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to reject this 'Floating Day' request with ID #{{ entity.id }} for {{ entity.user }}?"
+                        href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'rejected' }) }}">
+                        Reject entire request
+                    </a>
+                </li>
+            {% endif %}
+            {% if showPending %}
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to set this 'Floating Day' request with ID #{{ entity.id }} to 'pending approval' for {{ entity.user }}?"
+                        href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'pending' }) }}">
+                        Set entire request to "Pending approval"
+                    </a>
+                </li>
+            {% endif %}
+            {% if showCancel %}
+                <li>
+                    <a
+                        general-data-confirm="Are you sure you would like to Cancel this 'Floating Day' request with ID #{{ entity.id }}?"
+                        href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'canceled' }) }}">
+                        Cancel (withdraw entire request)
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_VACREQ_ADMIN') %}
+                    <li>
+                        <a
+                            general-data-confirm="Are you sure you would like to send a reminder email to your division approvers to process this request with ID #{{ entity.id }}?"
+                            href="{{ path(vacreq_sitename~'_floating_send_reminder_email', { 'id': entity.id }) }}">
+                            Send Reminder Email to Approvers (visible to Admin)
+                        </a>
+                    </li>
+                {% endif %}
+
+            {% endif %}
+            {#{% if showCancellation %}#}
+                {#<li>#}
+                    {#<a#}
+                            {#general-data-confirm="Are you sure you would like to approve cancellation of this this 'Floating Day' request with ID #{{ entity.id }}?"#}
+                            {#href="{{ path(vacreq_sitename~'_status_cancellation-request_change', { 'id': entity.id, 'status': 'cancellation-request-approved' }) }}">#}
+                        {#Cancellation Approved (Canceled)#}
+                    {#</a>#}
+                {#</li>#}
+                {#<li>#}
+                    {#<a#}
+                            {#general-data-confirm="Are you sure you would like to reject cancellation of this this 'Floating Day' request with ID #{{ entity.id }}?"#}
+                            {#href="{{ path(vacreq_sitename~'_status_cancellation-request_change', { 'id': entity.id, 'status': 'cancellation-request-rejected' }) }}">#}
+                        {#Cancellation Denied (Approved)#}
+                    {#</a>#}
+                {#</li>#}
+            {#{% endif %}#}
+
+        </ul>
+
+    </div>
 
 {% endmacro %}
 

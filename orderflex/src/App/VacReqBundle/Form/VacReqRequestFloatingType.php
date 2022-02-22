@@ -55,10 +55,18 @@ class VacReqRequestFloatingType extends AbstractType
             $readOnly = false;
         }
 
+//        $readOnly = true;
+//        $readOnly = false;
+//        if( $readOnly == true ) {
+//            echo "readOnly true <br>";
+//        }
+//        if( $readOnly == false ) {
+//            echo "readOnly false <br>";
+//        }
+
         if( $this->params['cycle'] != 'new' ) {
-            //$readOnly = false;
             $builder->add('status', ChoiceType::class, array( //flipped
-                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 'choices' => array(
                     'Pending' => 'pending',
                     'Approved' => 'approved',
@@ -69,7 +77,8 @@ class VacReqRequestFloatingType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 //'data' => 'pending',
-                'attr' => array('class' => 'horizontal_type_wide', 'readonly' => $readOnly), //horizontal_type
+                //'attr' => array('class' => 'horizontal_type_wide', 'readonly' => $readOnly), //horizontal_type
+                'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
             ));
 
             $builder->add('approverComment', TextareaType::class, array(

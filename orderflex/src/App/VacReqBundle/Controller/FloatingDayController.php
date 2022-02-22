@@ -1100,6 +1100,7 @@ class FloatingDayController extends OrderAbstractController
         //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
+        //exit("statusAction: ".$status);
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
@@ -1135,8 +1136,10 @@ class FloatingDayController extends OrderAbstractController
             }
         } else {
             $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: user does not have permission to changestatus or update for this request");
+            exit("nopermission statusAction: ".$status); //testing
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
+        //exit("OK permission statusAction: ".$status);
 
         //if not pending and vacreq_status_email_change => redirect to incoming request page
         if( $entity->getStatus() != "pending" && $routeName == 'vacreq_floating_status_email_change' ) {
@@ -1225,7 +1228,7 @@ class FloatingDayController extends OrderAbstractController
             $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() .
                 " has been " . $statusStr . " by " . $user;
             //$event .= ": ".$entity->getDetailedStatus().".";
-            
+
             if( $approversNameStr ) {
                 $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
             }
@@ -1245,7 +1248,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //redirect to myrequests for owner
-        if( $entity->getUser()->getId() == $user->getId() ) {
+        if( 0 && $entity->getUser()->getId() == $user->getId() ) {
             //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
             return $this->redirectToRoute("vacreq_myfloatingrequests");
         }
@@ -1539,7 +1542,9 @@ class FloatingDayController extends OrderAbstractController
         $admin = false;
         if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $admin = true;
+            //echo "admin! <br>";
         }
+        //echo "admin=$admin <br>";exit();
 
         $roleApprover = false;
         if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
