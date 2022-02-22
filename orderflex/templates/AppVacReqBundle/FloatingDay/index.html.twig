@@ -199,9 +199,10 @@
 
                     {#{% if routename == 'vacreq_incomingrequests' %}#}
                     {% if routename == 'vacreq_floatingrequests' %}
+                        {#use vacreq_floatingrequests action#}
                         {{ vacreqmacros.vacreq_floating_action( entity, vacreq_sitename ) }}
                     {% else %}
-
+                        {#use other action#}
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 Action <span class="caret"></span>
