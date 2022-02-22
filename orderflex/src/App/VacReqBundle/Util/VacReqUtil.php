@@ -5002,14 +5002,14 @@ class VacReqUtil
     public function redirectIndex( $request ) {
         $routeName = $request->get('_route');
         $requestType = NULL;
-        $requestTypeSet = false;
+        $requestTypeOriginal = false;
         $redirect = false;
         $toRouteName = $routeName;
 
         $requestParams = $request->query->all();
         if( $requestParams && array_key_exists("filter", $requestParams) ) {
             if (array_key_exists("requestType", $requestParams["filter"])) {
-                $requestTypeSet = true;
+                $requestTypeOriginal = true;
                 $requestTypeId = $requestParams["filter"]["requestType"];
                 if( $requestTypeId ) {
                     $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
@@ -5070,8 +5070,9 @@ class VacReqUtil
         ///////// EOF get filter ////////////
 
         if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" ) {
-            if( $requestType->getAbbreviation() == 'floatingday' ) {
 
+            //requests list => floating list
+            if( $requestType->getAbbreviation() == 'floatingday' ) {
                 //if( $requestType->getAbbreviation() == 'carryover' ) {
                     $organizationalInstitutions = NULL;
                 //}
@@ -5082,70 +5083,31 @@ class VacReqUtil
                 }
 
                 $redirect = true;
-
-//                return array(
-//                    "routeName" => $toRouteName,
-//                    "params" => array(
-//                        'filter[requestType]' => $requestType->getId(),
-//                        'filter[startdate]' => $startdate,
-//                        'filter[enddate]' => $enddate,
-//                        'filter[academicYear]' => $academicYear,
-//                        'filter[user]' => $subjectUser,
-//                        'filter[submitter]' => $submitter,
-//                        'filter[organizationalInstitutions]' => $organizationalInstitutions
-//                    )
-//                );
-                //);
             }//if( $requestType->getAbbreviation() == 'floatingday' ) {
+
         }//if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" )
         
         
         if( $routeName == "vacreq_floatingrequests" || $routeName == "vacreq_myfloatingrequests" ) {
-            if( $requestType->getAbbreviation() == 'carryover' || $requestType->getAbbreviation() == 'business-vacation' ) {
 
+            //floating list => requests list
+            if( $requestType->getAbbreviation() == 'carryover' || $requestType->getAbbreviation() == 'business-vacation' ) {
                 $toRouteName = 'vacreq_incomingrequests';
                 if( $routeName == "vacreq_myfloatingrequests" ) {
                     $toRouteName = 'vacreq_myrequests';
                 }
 
                 $redirect = true;
-
-//                return array(
-//                    "routeName" => $toRouteName,
-//                    "params" => array(
-//                        'filter[requestType]' => $requestType->getId(),
-//                        'filter[startdate]' => $startdate,
-//                        'filter[enddate]' => $enddate,
-//                        'filter[academicYear]' => $academicYear,
-//                        'filter[user]' => $subjectUser,
-//                        'filter[submitter]' => $submitter,
-//                        'filter[organizationalInstitutions]' => $organizationalInstitutions
-//                    )
-//                );
             } //if requestType->getAbbreviation() 'carryover' || 'business-vacation' ) {
 
-            if( $requestType->getAbbreviation() == 'floatingday' && $requestTypeSet === false ) {
-                //return NULL;
-
+            //floating list without request type => floating list with request type
+            if( $requestType->getAbbreviation() == 'floatingday' && $requestTypeOriginal === false ) {
                 $toRouteName = 'vacreq_incomingrequests';
                 if( $routeName == "vacreq_myfloatingrequests" ) {
                     $toRouteName = 'vacreq_myrequests';
                 }
 
                 $redirect = true;
-
-                return array(
-                    "routeName" => $toRouteName,
-                    "params" => array(
-                        'filter[requestType]' => $requestType->getId(),
-                        'filter[startdate]' => $startdate,
-                        'filter[enddate]' => $enddate,
-                        'filter[academicYear]' => $academicYear,
-                        'filter[user]' => $subjectUser,
-                        'filter[submitter]' => $submitter,
-                        'filter[organizationalInstitutions]' => $organizationalInstitutions
-                    )
-                );
             }
         }
 

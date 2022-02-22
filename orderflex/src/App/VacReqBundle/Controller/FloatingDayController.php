@@ -1039,7 +1039,8 @@ class FloatingDayController extends OrderAbstractController
                 //$break = "\r\n";
                 $break = "<br>";
                 $event = "Request ID #" . $entity->getID() . " for " . $entity->getUser() . " has been " . $action . " by " . $user . $break;
-                $event .= $entity->getDetailedStatus() . $break . $break;
+                //$event .= $entity->getDetailedStatus();
+                $event .= $break . $break;
 
                 //Flash
                 $this->get('session')->getFlashBag()->add(
@@ -1221,8 +1222,10 @@ class FloatingDayController extends OrderAbstractController
                 $statusStr = 're-submitted';
             }
 
-            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() . " has been " . $statusStr . " by " . $user;
-            $event .= ": ".$entity->getDetailedStatus().".";
+            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() .
+                " has been " . $statusStr . " by " . $user;
+            //$event .= ": ".$entity->getDetailedStatus().".";
+            
             if( $approversNameStr ) {
                 $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
             }
