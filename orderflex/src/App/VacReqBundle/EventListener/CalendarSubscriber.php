@@ -289,7 +289,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         $requests = $query->getResult();
 
         //floating day color
-        $backgroundColor = "#d80000"; //"#77d39b";
+        $backgroundColor = "#8c0000"; //"#77d39b";
         $requestName = "Floating Day";
 
         //$getMethod = "get".$requestTypeStr;
@@ -372,9 +372,11 @@ class CalendarSubscriber implements EventSubscriberInterface
 
             if( $floatingRequest->getStatus() == 'pending' ) {
                 $backgroundColorCalendar = "#fcf8e3";
+                $textColor = '#2F4F4F';
                 $title = $title." Pending Approval";
             } else {
                 $backgroundColorCalendar = $backgroundColor;
+                $textColor = '#d1e6e6';
             }
 
             //$title = "EventID=".$request->getId();
@@ -389,8 +391,9 @@ class CalendarSubscriber implements EventSubscriberInterface
 
             $eventEntity->setOptions([
                 'backgroundColor' => $backgroundColorCalendar,
-                'textColor' => '#d1e6e6', //'#2F4F4F',
+                'textColor' => $textColor, //'#d1e6e6', //'#2F4F4F',
                 'classNames' => 'calendar-custom-class',
+                //'tooltip' => "tttttt"
                 //'overlap' => true
             ]);
 

@@ -111,8 +111,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         if( $this->isAuthor($subject, $token) ) {
             //echo "author can not edit? <br>";
 
-            //status == pending => can edit
-            if( $subject->getOverallStatus() === 'pending' ) {
+            //status == pending/canceled => can edit
+            if( $subject->getOverallStatus() === 'pending' || $subject->getOverallStatus() === 'canceled' ) {
                 return true;
             }
 

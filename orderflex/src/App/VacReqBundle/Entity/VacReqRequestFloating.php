@@ -94,6 +94,12 @@ class VacReqRequestFloating
     private $status;
 
     /**
+     * extraStatus: cancellation-request, "Cancellation Requested", "Cancellation Approved (Canceled)", "Cancellation Denied (Approved)"
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $extraStatus;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
@@ -299,6 +305,22 @@ class VacReqRequestFloating
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtraStatus()
+    {
+        return $this->extraStatus;
+    }
+
+    /**
+     * @param mixed $extraStatus
+     */
+    public function setExtraStatus($extraStatus)
+    {
+        $this->extraStatus = $extraStatus;
     }
 
     /**
@@ -599,16 +621,14 @@ class VacReqRequestFloating
 
         $header = "ID #".$this->getId();
 
-        $statusF = null;
-        if( $this->hasVacationRequest() ) {
-            $statusF = $this->getStatus();
-        }
-        if( $statusF == 'pending' ) {
-            $statusF = 'set to Pending';
+        $status = $this->getStatus();
+
+        if( $status == 'pending' ) {
+            $status = 'set to Pending';
         }
 
-        if( $statusF ) {
-            $header = "Floating Day Request has been ".$statusF;
+        if( $status ) {
+            $header = "Floating Day Request has been ".$status;
         }
 
         return $header;
@@ -639,10 +659,8 @@ class VacReqRequestFloating
     public function hasVacationRequest() {
         return false;
     }
-    
-    public function getExtraStatus() {
-        return NULL;
-    }
+
+
     
     public function __toString()
     {

@@ -46,7 +46,11 @@ class VacReqFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //visible only for my request and incoming requests for SUPERVISOR users
-        if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
+        if( $this->params['routeName'] == 'vacreq_myrequests' ||
+            $this->params['routeName'] == 'vacreq_myfloatingrequests' ||
+            $this->params['supervisor'] ||
+            $this->params['approverRole']
+        ) {
             $builder->add('requestType', EntityType::class, array(
                 'class' => 'AppVacReqBundle:VacReqRequestTypeList',
                 'choice_label' => 'name',

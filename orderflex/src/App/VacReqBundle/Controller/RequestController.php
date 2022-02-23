@@ -1108,7 +1108,7 @@ class RequestController extends OrderAbstractController
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'You can not submit a Cancellation Requested for a not already approved request.'
+                'You can not submit a Cancellation Requested for not approved request.'
             );
             return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }

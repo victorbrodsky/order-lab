@@ -3116,6 +3116,22 @@ class VacReqUtil
 
         return false;
     }
+    
+    public function isAdminSupervisorApprover($entity) {
+        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return true;
+        }
+
+        if( $this->security->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            return true;
+        }
+
+        if( $this->security->isGranted('changestatus', $entity) ) {
+            return true;
+        }
+
+        return false;
+    }
 
     public function getSubmitterPhone($user) {
 

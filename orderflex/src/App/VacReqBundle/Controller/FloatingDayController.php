@@ -996,7 +996,8 @@ class FloatingDayController extends OrderAbstractController
                     }
                     //exit('vacreq: overallStatus='.$overallStatus."; status=".$entity->getDetailedStatus());
 
-                    //$entity->setExtraStatus(NULL);
+                    $entity->setExtraStatus(NULL);
+
                     $em->persist($entity);
                     $em->flush();
 
@@ -1129,14 +1130,22 @@ class FloatingDayController extends OrderAbstractController
                 //Flash
                 $this->get('session')->getFlashBag()->add(
                     'warning',
-                    "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
+                    "You can not change status of this ".$entity->getRequestName().
+                    " with ID #".$entity->getId()." to ".$status.
+                    ": Reason: request is not pending or canceled"
                 );
                 $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: request is not pending or canceled");
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
             }
         } else {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You can not change status of this ".$entity->getRequestName().
+                " with ID #".$entity->getId()." to ".$status
+            );
             $logger->error($user." has no permission to change status to ".$status." for request ID #".$entity->getId().". Reason: user does not have permission to changestatus or update for this request");
-            exit("nopermission statusAction: ".$status); //testing
+            //exit("nopermission statusAction: ".$status); //testing
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
         //exit("OK permission statusAction: ".$status);
@@ -1188,7 +1197,8 @@ class FloatingDayController extends OrderAbstractController
                 $entity->setApprovedRejectDate( new \DateTime());
             }
 
-            //$entity->setExtraStatus(NULL);
+            $entity->setExtraStatus(NULL);
+
             $em->persist($entity);
             $em->flush();
 
@@ -1248,20 +1258,215 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //redirect to myrequests for owner
-        if( 0 && $entity->getUser()->getId() == $user->getId() ) {
-            //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
-            return $this->redirectToRoute("vacreq_myfloatingrequests");
+        if( $entity->getUser()->getId() == $user->getId() ) {
+            //if not admin or approver
+            if( $vacreqUtil->isAdminSupervisorApprover($entity) === false ) {
+                return $this->redirectToRoute("vacreq_myfloatingrequests");
+            }
         }
 
         $url = $request->headers->get('referer');
         //exit('url='.$url);
 
         //when status is changed from email, then the url is a system home page
-        if( $url && strpos($url, 'incoming-requests') !== false ) {
+        if( $url && strpos($url, 'vacreq_floatingrequests') !== false ) {
             return $this->redirect($url);
         }
 
         //return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
+        return $this->redirectToRoute('vacreq_floatingrequests');
+    }
+
+    /**
+     * submitter can submit a "cancellation-request" for an entire, already approved request
+     * @Route("/status-cancellation-request/floating/{id}", name="vacreq_floating_status_cancellation-request", methods={"GET"})
+     */
+    public function statusCancellationRequestAction(Request $request, $id) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Floating Request by id='.$id);
+        }
+
+        //check permissions
+        if(
+            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            $entity->getUser()->getId() != $user->getId() //author can request cancellation
+        ) {
+            //exit("No permission");
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        if( !$entity->isOverallStatus('approved') ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You can not submit a Cancellation Requested for not approved floating request.'
+            );
+            return $this->redirectToRoute("vacreq_myfloatingrequests");
+        }
+
+        $entity->setExtraStatus("Cancellation Requested");
+        $em->flush();
+
+        $requestName = $entity->getRequestName();
+        $userNameOptimal = $entity->getUser()->getUsernameOptimal();
+        $eventSubject = $userNameOptimal." is requesting cancellation of a ".ucwords($requestName)." ID #" . $entity->getId();
+
+        //send email to an approver
+        //$break = "\r\n";
+        $break = "<br>";
+
+        //The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
+        //cancellation-request => cancellation-request-approved
+        //cancellation-request => cancellation-request-rejected
+
+        //set confirmation email to approver and email users
+        $approveLink = $this->container->get('router')->generate(
+            'vacreq_floating_status_cancellation-request_email_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'cancellation-request-approved'
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $rejectLink = $this->container->get('router')->generate(
+            'vacreq_floating_status_cancellation-request_email_change',
+            array(
+                'id' => $entity->getId(),
+                'status' => 'cancellation-request-rejected'
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $message = "Dear ###emailuser###," . $break.$break;
+
+        //FirstName LastName is no longer planning to be away and is requesting cancellation of the following
+        // Business Travel / Vacation request approved on XX/XX/XXXX:
+        $message .= $userNameOptimal." is no longer planning to be away and is requesting cancellation of the following ";
+        $message .= ucwords($requestName)." approved on ".$entity->getApprovedRejectDate()->format('m/d/Y H:i:s').":".$break;
+
+        //[all form field titles and their values, 1 per line]
+        $message .= $break.$entity->printRequest($this->container)."".$break;
+
+        //To approve cancellation of this request, please follow this link
+        // (the days in this request will no longer count towards FirstName LastName's vacation / business travel):
+        $message .= "To approve cancellation of this floating request, please follow this link ".$break;
+        $message .= $approveLink;
+
+        //To reject cancellation of this request, please follow this link
+        // (the days in this request will still count towards FirstName LastName's vacation / business travel):
+        $message .= $break.$break."To reject cancellation of this floating request, please follow this link ".$break;
+        $message .= $rejectLink;
+
+        $vacreqUtil = $this->get('vacreq_util');
+        $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
+
+        $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        $eventType = 'Floating Day Request Updated';
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+
+        return $this->redirectToRoute("vacreq_myfloatingrequests");
+    }
+    /**
+     * approver can change a status of a "cancellation-request" for an entire, already approved request
+     * The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
+     * cancellation-request => cancellation-request-approved => canceled
+     * cancellation-request => cancellation-request-rejected => approved
+     *
+     * @Route("/cancellation-request/status/floating/{id}/{status}", name="vacreq_floating_status_cancellation-request_change", methods={"GET"})
+     * @Route("/cancellation-request/estatus/floating/{id}/{status}", name="vacreq_floating_status_cancellation-request_email_change", methods={"GET"})
+     */
+    public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
+        $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Floating Request by id=' . $id);
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("FloatingDayRequestController statusCancellationRequestChaneAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+
+        //check permissions
+        if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        //if not Cancellation Requested and vacreq_status_cancellation-request_email_change => redirect to incoming request page
+        if( $entity->getExtraStatus() != "Cancellation Requested" && $routeName == 'vacreq_floating_status_cancellation-request_email_change' ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "This cancellation request for ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
+            );
+            return $this->redirectToRoute('vacreq_floatingrequests');
+        }
+
+        //cancellation-request-approved => canceled
+        //cancellation-request-rejected => approved
+        if( $status == "cancellation-request-approved" ) {
+            $entity->setExtraStatus("Cancellation Approved (Canceled)");
+            $status = "canceled";
+            $entity->setStatus($status);
+        }
+        if( $status == "cancellation-request-rejected" ) {
+            $entity->setExtraStatus("Cancellation Denied (Approved)");
+            //$status = "approved"; //for approved => the overall status is completed
+            //$entity->setStatus("completed");
+            //$entity->setEntireStatus($status);
+        }
+
+        $entity->setApprover($user);
+        $em->flush();
+
+        $requestName = $entity->getRequestName();
+        $userNameOptimal = $entity->getUser()->getUsernameOptimal();
+        $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " (" . $userNameOptimal . ") by " . $user;
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $eventSubject
+        );
+
+        $eventType = 'Floating Day Request Updated';
+
+        //Event Log
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+
+        //set confirmation email to submitter and email users
+        $vacreqUtil = $this->get('vacreq_util');
+        //$break = "\r\n";
+        $break = "<br>";
+        $message = $eventSubject . $break . $break . $entity->printRequest($this->container);
+        $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, null, $message );
+
+        $url = $request->headers->get('referer');
+
+        //when status is changed from email, then the url is a system home page
+        if( $url && strpos($url, 'incoming-requests') !== false ) {
+            return $this->redirect($url);
+        }
+
         return $this->redirectToRoute('vacreq_floatingrequests');
     }
 
@@ -1271,7 +1476,7 @@ class FloatingDayController extends OrderAbstractController
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1307,8 +1512,15 @@ class FloatingDayController extends OrderAbstractController
             $eventSubject
         );
 
-        //return $this->redirectToRoute("vacreq_myfloatingrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
-        return $this->redirectToRoute("vacreq_myfloatingrequests");
+        //redirect to myrequests for owner
+        if( $entity->getUser()->getId() == $user->getId() ) {
+            //if not admin or approver
+            if( $vacreqUtil->isAdminSupervisorApprover($entity) === false ) {
+                return $this->redirectToRoute("vacreq_myfloatingrequests");
+            }
+        }
+
+        return $this->redirectToRoute("vacreq_floatingrequests");
     }
 
     /**
