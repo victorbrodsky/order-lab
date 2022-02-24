@@ -1214,7 +1214,9 @@ class ApproverController extends OrderAbstractController
             'groupName' => $group."",
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
-            'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays()
+            'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays(),
+            'trFontSize' => "10px",
+            'fontWeight' => "normal"
         );
     }
 

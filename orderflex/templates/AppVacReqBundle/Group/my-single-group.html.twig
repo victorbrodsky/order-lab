@@ -54,34 +54,66 @@
 {% if submittersExist %}
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
-    <thead>
-    <tr>
+    {#{% set trFontSize = "10px" %}#}
+    {#{% set fontWeight = "normal" %}#}
 
-        <th>
+    <thead style="font-size: {{ trFontSize }};">
+
+    <tr>
+        <th style="border-bottom:none; text-align:center; vertical-align: top;" rowspan="2">
             Employee
         </th>
+    {% for yearRange in yearRanges %}
+        {% set backgroundColor = yearRangesColor[loop.index0] %}
+            <th style="background-color: {{ backgroundColor }}; text-align: center;"
+                colspan="9" align="center">
+                {{ yearRange }}
+            </th>
+    {% endfor %}
+
+        {% if is_granted('ROLE_VACREQ_ADMIN') %}
+            <th style="border-bottom:none; text-align:center; vertical-align: top;" rowspan="2">
+                Action
+            </th>
+        {% endif %}
+    </tr>
+
+    <tr style="font-size: {{ trFontSize }};">
+
+        {#<th style="border-top:none;">#}
+            {#Employee#}
+        {#</th>#}
 
         {% for yearRange in yearRanges %}
 
+            {% set yearRange = null %}
+
             {% set backgroundColor = yearRangesColor[loop.index0] %}
 
-            <th style="background-color: {{ backgroundColor }}">
+            {#<tr>#}
+                {#{% set backgroundColor = null %}#}
+                {#<th style="background-color: {{ backgroundColor }}" colspan="9">#}
+                    {#{{ yearRange }}#}
+                {#</th>#}
+            {#</tr>#}
+
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Business Travel
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Business Travel Days Pending Approval
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Vacation
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Vacation Days Pending Approval
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Total
             </th>
 
@@ -89,29 +121,29 @@
                 {#{{ yearRange }} Pending Approval Days#}
             {#</th>#}
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Remaining Vacation Days
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Carried Over Vacation Days To Next Year
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
-            <th style="background-color: {{ backgroundColor }}">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
                 {{ yearRange }} Floating Days
             </th>
 
         {% endfor %}
 
-        {% if is_granted('ROLE_VACREQ_ADMIN') %}
-        <th>
-            Action
-        </th>
-        {% endif %}
+        {#{% if is_granted('ROLE_VACREQ_ADMIN') %}#}
+        {#<th>#}
+            {#Action#}
+        {#</th>#}
+        {#{% endif %}#}
 
     </tr>
     </thead>
