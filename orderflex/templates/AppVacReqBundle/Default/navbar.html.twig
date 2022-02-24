@@ -156,7 +156,7 @@
                                     pendingFloatingRequests > 0 and
                                     (is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') or is_granted('ROLE_VACREQ_ADMIN') )
                                 %}
-                                    <a id="incoming-orders-menu-title" href="{{ path('vacreq_incomingrequests') }}">{{ floatingDayName|raw }}</a><!--
+                                    <a id="incoming-orders-menu-title" href="{{ path('vacreq_floating_day') }}">{{ floatingDayName|raw }}</a><!--
                                             --><a id="incoming-orders-menu-badge"
                                                   class="element-with-tooltip-always"
                                                   title="Pending Approval" data-toggle="tooltip"

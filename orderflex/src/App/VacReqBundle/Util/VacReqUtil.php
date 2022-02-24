@@ -5146,7 +5146,7 @@ class VacReqUtil
         return NULL;
     }
 
-    //check if exact floating day already approved or pending
+    //check if exact floating day already approved or pending (NOT USED)
     public function getCheckExactExistedFloatingDay( $floatingTypeId, $floatingDay, $subjectUserId ) {
 
         $newline =  "<br>\n";
@@ -5279,7 +5279,7 @@ class VacReqUtil
     }
 
     //check if floating day already approved or pending in this academic year
-    public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId ) {
+    public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId, $statusArr=array('approved') ) {
 
         $newline =  "<br>\n";
         //$newline =  "\n";
@@ -5313,7 +5313,8 @@ class VacReqUtil
         //echo "yearRangeStr=$yearRangeStr <br>";
 
         //yearRange: "2021-2022"
-        $floatingRequests = $this->getUserFloatingDay($user,$yearRangeStr);
+        $floatingRequests = $this->getUserFloatingDay($user,$yearRangeStr,$statusArr);
+        //echo "floatingRequests=".count($floatingRequests)."<br>";
 
         if (count($floatingRequests) > 0) {
             $errorMsgArr = array();
@@ -5506,7 +5507,7 @@ class VacReqUtil
 
     //get approved floating day for the academical year specified by $yearRange (2015-2016 - current academic year)
     //yearRange: "2021-2022"
-    public function getUserFloatingDay( $user, $yearRange ) {
+    public function getUserFloatingDay( $user, $yearRange, $statusArr=array('approved') ) {
         $userSecUtil = $this->container->get('user_security_utility');
         //echo "yearRange=".$yearRange."<br>";
 
@@ -5541,11 +5542,16 @@ class VacReqUtil
         $academicYearEndStr = $currentYear."-".$academicYearEndStr;
         //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
-        //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
-        $floatingDays = $this->getFloatingDaysByYearByStatus($user,$academicYearStartStr,$academicYearEndStr,true,'approved');
-        //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+        $totalFloatingDays = array();
 
-        return $floatingDays;
+        foreach($statusArr as $status) {
+            //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
+            $floatingDays = $this->getFloatingDaysByYearByStatus($user,$academicYearStartStr,$academicYearEndStr,true,$status);
+            //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+            $totalFloatingDays = array_merge($totalFloatingDays,$floatingDays);
+        }
+
+        return $totalFloatingDays;
     }
     public function getFloatingDaysByYearByStatus( $user, $startStr=null, $endStr=null, $asObject=false, $status='approved' ) {
 

@@ -254,6 +254,9 @@
         function validateVacReqFloatingDayForm(btn) {
             console.log("validateVacReqFloatingDayForm");
 
+            var lbtn = Ladda.create( document.getElementById("btnCreateVacReq") );
+            lbtn.start();
+
             if( cycle == 'review' ) {
                 $('#vacreq-floatingday-form').submit();
             }
@@ -263,6 +266,7 @@
             if( !inst ) {
                 var error = "Please select the organizational group";
                 $('#error-box').html(error).show();
+                lbtn.stop();
                 return false;
             }
 
@@ -271,6 +275,7 @@
             if( !subjectUserId ) {
                 var error = "Person away is not specified.";
                 $('#error-box').html(error).show();
+                lbtn.stop();
                 return false;
             }
 
@@ -279,6 +284,7 @@
             if( !floatingDayType ) {
                 var error = "Floating day type is not specified.";
                 $('#error-box').html(error).show();
+                lbtn.stop();
                 return false;
             }
 
@@ -290,12 +296,14 @@
             if( !work ) {
                 var error = "If you have worked or plan to work on the specified floating day, please mark the checkbox above.";
                 $('#error-box').html(error).show();
+                lbtn.stop();
                 return false;
             }
 
             if( work && !floatingDay ) {
                 var error = "Please enter the date for the requested day off.";
                 $('#error-box').html(error).show();
+                lbtn.stop();
                 return false;
             }
 
@@ -321,6 +329,7 @@
                             var error = "Logical error to verify existing floating day";
                             $('#error-box').html(error).show();
                         }
+                        lbtn.stop();
                         return false;
                     }
                 }
@@ -332,7 +341,8 @@
             }
 
             console.log("form is valid");
-            //return false; //testing
+            lbtn.stop(); //testing
+            return false; //testing
 
             $('#vacreq-floatingday-form').submit();
         }
@@ -355,11 +365,13 @@
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
+                dataType: 'json',
                 async: thisAsyncflag,
                 data: {floatingTypeId: floatingTypeId, floatingDay: floatingDay, subjectUserId: subjectUserId},
             }).done(function(data) {
                 resData = data;
             });
+            console.log("resData:",resData);
             return resData;
         }
 

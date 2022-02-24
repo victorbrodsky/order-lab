@@ -1215,7 +1215,7 @@ class ApproverController extends OrderAbstractController
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
             'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays(),
-            'trFontSize' => "11px",
+            'trFontSize' => "10px",
             'fontWeight' => "normal"
         );
     }

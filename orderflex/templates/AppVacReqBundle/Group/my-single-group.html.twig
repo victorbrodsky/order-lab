@@ -184,7 +184,7 @@
                 {% set carryOverDaysNextYear = vacreq_util.getUserCarryOverDays(submitter,nextYear) %}
 
                 {#yearRange={{ yearRange }}#}
-                {% set floatingDays = vacreq_util.getUserFloatingDay(submitter,yearRange) %}
+                {% set floatingDays = vacreq_util.getUserFloatingDay(submitter,yearRange,['pending','approved']) %}
 
                 {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
                 {#totalRemainingDays={{ totalRemainingDays }}#}
@@ -251,6 +251,9 @@
                 <td style="background-color: {{ backgroundColor }}">
                     {% for floatingDay in floatingDays %}
                         {{ floatingDay.printRequestShort() }}
+                        {% if not loop.last %}
+                            <hr style="margin-top: 5px; margin-bottom: 5px;">
+                        {% endif %}
                     {% endfor %}
                 </td>
 
@@ -258,9 +261,8 @@
 
             {% if is_granted('ROLE_VACREQ_ADMIN') %}
                 <td class="rowlink-skip">
-                    {#action#}
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
                             Action <span class="caret"></span>
                         </button>
 
