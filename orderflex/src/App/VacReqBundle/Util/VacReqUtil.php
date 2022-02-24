@@ -5346,6 +5346,7 @@ class VacReqUtil
                     if ($status == 'pending') {
                         $errorMsg =
                             "A pending Floating day of " . $floatingDay->format('m/d/Y') .
+                            " with ID #" . $floatingRequest->getId() .
                             " has already been requested for this " . $yearRangeStr . " academic year" .
                             " on " . $createDate->format('m/d/Y \a\t H:i') . ". " .
                             $newline .
@@ -5354,6 +5355,7 @@ class VacReqUtil
                     if ($status == 'approved') {
                         $errorMsg =
                             "A Floating day of " . $floatingDay->format('m/d/Y') .
+                            " with ID #" . $floatingRequest->getId() .
                             " has already been approved for this " . $yearRangeStr . " academic year by " .
                             $approverStr .
                             " on " . $approverDateStr . ". " .
