@@ -795,7 +795,10 @@ class FloatingDayController extends OrderAbstractController
                 );
             }
 
-            $subject = $requestName." ID #".$entity->getId()." Confirmation";
+            //$subject = $requestName." ID #".$entity->getId()." Confirmation";
+            //Juneteenth Floating Day Request Confirmation (#3)
+            $subject = $requestName." Confirmation (#".$entity->getId().")";
+
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
 
             $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";
@@ -1807,7 +1810,7 @@ class FloatingDayController extends OrderAbstractController
         $subject = $entity->getEmailSubject();
         //echo "subject=$subject <br>";
         $message = $this->createFloatingEmailBody($entity);
-        //echo "message=$message <br>";
+        //echo "message=$message <br>";exit('111');
         return $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
     public function createFloatingEmailBody( $entity, $emailToUser=null, $addText=null, $withLinks=true ) {
@@ -1822,7 +1825,7 @@ class FloatingDayController extends OrderAbstractController
 
         $requestName = $entity->getRequestName();
 
-        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
+        $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for your review.";
         $message .= $break.$break.$entity->printRequest($this->container)."";
 
         $reviewRequestUrl = $this->container->get('router')->generate(
@@ -1832,8 +1835,8 @@ class FloatingDayController extends OrderAbstractController
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please follow the link below to review ".$requestName." ID #".$entity->getId().":" . $break;
-        $message .= $reviewRequestUrl . $break . $break;
+        $message .= $break . $break . "Please follow the link below to review this ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $reviewRequestUrl; // . $break . $break;
 
         //$message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
 
@@ -1847,7 +1850,7 @@ class FloatingDayController extends OrderAbstractController
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please follow the link below to Approve the ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $break . $break . "Please follow the link below to Approve this ".$requestName." ID #".$entity->getId().":" . $break;
         $message .= $actionRequestUrl;
 
         //rejected
@@ -1859,7 +1862,7 @@ class FloatingDayController extends OrderAbstractController
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please follow the link below to Reject the ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $break . $break . "Please follow the link below to Reject this ".$requestName." ID #".$entity->getId().":" . $break;
         $message .= $actionRequestUrl;
 
         $message .= $break.$break."To approve or reject requests, Division Approvers must be on site or using vpn when off site.";

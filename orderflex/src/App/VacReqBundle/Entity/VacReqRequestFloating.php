@@ -477,7 +477,7 @@ class VacReqRequestFloating
 
         $res = "";
 
-        $res .= "Floating Day Request ID: ".$this->getId().$break;
+        $res .= $this->getRequestName()." ID #".$this->getId().$break;
         $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
 
         $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
@@ -488,7 +488,7 @@ class VacReqRequestFloating
         }
 
         if( $this->getApprovedRejectDate() ) {
-            $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
+            $res .= "Reviewed and response issued on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
         }
         $res .= "Organizational Group: ".$this->getInstitution().$break;
 
@@ -502,8 +502,16 @@ class VacReqRequestFloating
             $floatingDayStr = $this->getFloatingDay()->format('m/d/Y');
         }
 
-        $res .= "### Floating Day Request ###".$break;
-        $res .= "Status: ".$this->getStatus().$break;
+        $status = $this->getStatus();
+        $statusStr = ucwords($status);
+        if( $status == 'pending' ) {
+            $statusStr = $statusStr . " review";
+        }
+
+        $res .= $break;
+        $res .= "### ".$this->getRequestName()." ###".$break;
+        $res .= $break;
+        $res .= "Status: ".$statusStr.$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
         $res .= "I have worked or plan to work on this day: ".$worked.$break;
         $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
@@ -511,43 +519,6 @@ class VacReqRequestFloating
         if( $this->getApproverComment() ) {
             $res .= "Approver Comment: ".$this->getApproverComment().$break;
         }
-
-        //$requestType = $this->getRequestType();
-//        if( $requestType && $requestType->getAbbreviation() == "carryover" ) {
-//            $res = "";
-//            if( $this->getDetailedStatus() ) {
-//                $res .= $this->getDetailedStatus() . $break;
-//            }
-//            $res .= "Request ID: ".$this->getId().$break;
-//            $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
-//
-//            //$res .= "Submitter: ".$this->getSubmitter().$break;
-//            //$res .= "Person Away: ".$this->getUser().$break;
-//            //$res .= "Approver: ".$this->getApprover().$break;
-//            $res .= $this->createUseStrUrl($this->getSubmitter(),"Submitter:",$container).$break;
-//            $res .= $this->createUseStrUrl($this->getUser(),"Person Away:",$container).$break;
-//
-//            //getTentativeApprover
-//            if( $this->getTentativeApprover() ) {
-//                $res .= $this->createUseStrUrl($this->getTentativeApprover(), "Tentative Approver:", $container) . $break;
-//            }
-//
-//            if( $this->getApprover() ) {
-//                $res .= $this->createUseStrUrl($this->getApprover(), "Approver:", $container) . $break;
-//            }
-//
-//            if( $this->getApprovedRejectDate() ) {
-//                $res .= "Approved/Rejected on: " . $this->getApprovedRejectDate()->format('m-d-Y') . $break;
-//            }
-//            $res .= "Organizational Group: ".$this->getInstitution().$break;
-//
-//            $res .= $break;
-//            $res .= "### Carry Over Request ###".$break;
-//            $res .= "Tentative Organizational Group: ".$this->getTentativeInstitution().$break;
-//            $res .= "Carry Over Days: ".$this->getCarryOverDays().$break;
-//            $res .= "from: ".$this->getSourceYearRange().$break;
-//            $res .= "to: " . $this->getDestinationYearRange().$break;
-//        }
 
         return $res;
     }
@@ -576,7 +547,7 @@ class VacReqRequestFloating
         return $status;
     }
     public function getDetailedStatus() {
-        return "Floating Day Request ".$this->getStatus();
+        return $this->getRequestName()." ".$this->getStatus();
     }
 
 
@@ -603,7 +574,10 @@ class VacReqRequestFloating
     }
 
     public function getEmailSubject() {
-        $subject = $this->getUser()->getUsernameOptimal() . " has submitted the " . $this->getRequestName() . " #" . $this->getId();
+        //$subject = $this->getUser()->getUsernameOptimal() . " has submitted the " . $this->getRequestName() . " #" . $this->getId();
+        //Juneteenth Floating Day Request from Victor Brodsky, MD (#3)
+        $subject = $this->getRequestName()." from ".$this->getUser()->getUsernameOptimal()." (#".$this->getId().")";
+        //exit('$subject='.$subject);
         return $subject;
     }
 
@@ -628,14 +602,18 @@ class VacReqRequestFloating
         }
 
         if( $status ) {
-            $header = "Floating Day Request has been ".$status;
+            $header = $this->getRequestName()." has been ".$status;
         }
 
         return $header;
     }
 
     public function getRequestName() {
-        return "Floating Day Request";
+        $requestName = "Floating Day Request";
+        if( $this->getFloatingType() ) {
+            $requestName = $this->getFloatingType()." ".$requestName;
+        }
+        return $requestName;
     }
 
     public function getRequestTypeAbbreviation() {
@@ -675,8 +653,15 @@ class VacReqRequestFloating
             $floatingDayStr = $this->getFloatingDay()->format('m/d/Y');
         }
 
-        $res = "### Floating Day Request ###".$break;
-        $res .= "Status: ".$this->getStatus().$break;
+        $status = $this->getStatus();
+        $statusStr = ucwords($status);
+        if( $status == 'pending' ) {
+            $statusStr = $statusStr . " review";
+        }
+
+        $res = "### ".$this->getRequestName()." ###".$break;
+        $res .= $break;
+        $res .= "Status: ".$statusStr.$break;
         $res .= "Floating Day Type: ".$this->getFloatingType().$break;
         $res .= "I have worked or plan to work on this day: ".$worked.$break;
         $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
@@ -684,8 +669,6 @@ class VacReqRequestFloating
         if( $this->getApproverComment() ) {
             $res .= "Approver Comment: ".$this->getApproverComment().$break;
         }
-
-        return $res;
     }
 
 }
