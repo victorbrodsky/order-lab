@@ -478,7 +478,7 @@ class VacReqRequestFloating
         $res = "";
 
         if( $this->getApproverComment() ) {
-            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+            $res .= "Approver Comment: ".$this->getApproverComment().$break.$break;
         }
 
         $res .= $this->getRequestName()." ID #".$this->getId().$break;
