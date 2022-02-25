@@ -477,6 +477,10 @@ class VacReqRequestFloating
 
         $res = "";
 
+        if( $this->getApproverComment() ) {
+            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+        }
+
         $res .= $this->getRequestName()." ID #".$this->getId().$break;
         $res .= "Submitted on: ".$this->getCreateDate()->format('m-d-Y').$break;
 
@@ -516,9 +520,9 @@ class VacReqRequestFloating
         $res .= "I have worked or plan to work on this day: ".$worked.$break;
         $res .= "The floating day I am requesting for this fiscal year is: ".$floatingDayStr.$break;
 
-        if( $this->getApproverComment() ) {
-            $res .= "Approver Comment: ".$this->getApproverComment().$break;
-        }
+//        if( $this->getApproverComment() ) {
+//            $res .= "Approver Comment: ".$this->getApproverComment().$break;
+//        }
 
         return $res;
     }

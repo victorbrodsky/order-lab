@@ -237,7 +237,7 @@ class VacReqUtil
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $message .= $break . $break . "Please follow the link below to review ".$requestName." ID #".$entity->getId().":" . $break;
+        $message .= $break . $break . "Please follow the link below to review this ".$requestName." ID #".$entity->getId().":" . $break;
         $message .= $reviewRequestUrl . $break . $break;
 
         //$message .= $break . "Please click on the URLs below for quick actions to approve or reject ".$requestName." ID #".$entity->getId().".";
@@ -5630,6 +5630,7 @@ class VacReqUtil
 
     public function getFloatingDayRangeNote() {
         //Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).
+        //Please make sure the date for the requested day off occurs during the current fiscal year between 07/01/2021 and 06/30/2022
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -5655,9 +5656,15 @@ class VacReqUtil
             $calendarStartDate = $startDate->format('m/d/Y');
             $calendarEndDate = $endDate->format('m/d/Y');
 
-            return "Please make sure the date for your ".
-                "requested day off occurs during the current fiscal year ".
+//            $note = "Please make sure the date for your ".
+//                "requested day off occurs during the current fiscal year ".
+//                $calendarStartDate . " and " . $calendarEndDate;
+
+            $note = "Please make sure the date for the requested ".
+                "day off occurs during the current fiscal year between ".
                 $calendarStartDate . " and " . $calendarEndDate;
+
+            return $note;
         }
 
         return NULL;

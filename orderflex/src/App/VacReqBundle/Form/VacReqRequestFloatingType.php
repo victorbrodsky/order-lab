@@ -252,7 +252,7 @@ class VacReqRequestFloatingType extends AbstractType
         ));
 
         $builder->add('work', CheckboxType::class, array(
-            'label' => 'I have worked or plan to work on',
+            'label' => 'This person has worked or plans to work on',
             'required' => false,
             'disabled' => $disable,
             'attr' => array('class' => 'floatingday-work'),
@@ -260,7 +260,7 @@ class VacReqRequestFloatingType extends AbstractType
 
         //use $floatingRestrictDateRange to limit to the current academic year
         $builder->add('floatingDay', DateType::class, array(
-            'label' => "The floating day I am requesting for this fiscal year is:",
+            'label' => "The floating day requested for this fiscal year is:",
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
