@@ -5344,6 +5344,23 @@ class VacReqUtil
                 if ($floatingDay) { //&& $approver && $approverDate
                     //$academicYear = ''; //[2021-2022]
                     if ($status == 'pending') {
+
+//                        <a
+//                            general-data-confirm="Are you sure you would like to Cancel this 'Floating Day' request with ID #{{ entity.id }}?"
+//                            href="{{ path(vacreq_sitename~'_floating_status_change', { 'id': entity.id, 'status': 'canceled' }) }}">
+//                            Cancel (withdraw entire request)
+//                        </a>
+
+//                        $statusChangeUrl = $this->container->get('router')->generate(
+//                            'vacreq_floating_status_change',
+//                            array(
+//                                'id' => $floatingRequest->getId(),
+//                                'status' => 'canceled'
+//                            )
+//                        //UrlGeneratorInterface::ABSOLUTE_URL
+//                        );
+//                        $link = '<a href="'.$statusChangeUrl.'">Are you sure you would like to Cancel this "Floating Day" request with ID #'.$floatingRequest->getId().'</a>';
+
                         $errorMsg =
                             "A pending Floating day of " . $floatingDay->format('m/d/Y') .
                             " with ID #" . $floatingRequest->getId() .
