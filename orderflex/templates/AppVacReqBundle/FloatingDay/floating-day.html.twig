@@ -231,9 +231,9 @@
         </p>
     {% endif %}
 
-    <a general-data-confirm="Test confirmation" href="www.google.com">
-    test
-    </a>
+    {#<a general-data-confirm="Test confirmation" href="www.google.com">#}
+    {#test#}
+    {#</a>#}
 
 {% endblock %}
 
@@ -244,7 +244,7 @@
 
         $(document).ready(function() {
 
-            console.log("cycle="+cycle);
+            //console.log("cycle="+cycle);
 
             $('#oleg_vacreqbundle_requestfloating_floatingType').on("change", function(e) {
                 setWorkingFloatingDayType();
@@ -255,7 +255,7 @@
         });
 
         function validateVacReqFloatingDayForm(btn) {
-            console.log("validateVacReqFloatingDayForm");
+            //console.log("validateVacReqFloatingDayForm");
 
             var lbtn = Ladda.create( document.getElementById("btnCreateVacReq") );
             lbtn.start();
@@ -265,7 +265,7 @@
             }
 
             var inst = $('#oleg_vacreqbundle_requestfloating_institution').select2('val');
-            console.log("inst=",inst);
+            //console.log("inst=",inst);
             if( !inst ) {
                 var error = "Please select the organizational group";
                 $('#error-box').html(error).show();
@@ -274,7 +274,7 @@
             }
 
             var subjectUserId = $('#oleg_vacreqbundle_requestfloating_user').select2('val');
-            console.log("subjectUserId=",subjectUserId);
+            //console.log("subjectUserId=",subjectUserId);
             if( !subjectUserId ) {
                 var error = "Person away is not specified.";
                 $('#error-box').html(error).show();
@@ -283,7 +283,7 @@
             }
 
             var floatingDayType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('val');
-            console.log("floatingDayType=",floatingDayType);
+            //console.log("floatingDayType=",floatingDayType);
             if( !floatingDayType ) {
                 var error = "Floating day type is not specified.";
                 $('#error-box').html(error).show();
@@ -294,7 +294,7 @@
             var work = $('.floatingday-work').is(":checked");
             //console.log("work="+work);
             var floatingDay = $('.floatingDay').val();
-            console.log("floatingDay="+floatingDay);
+            //console.log("floatingDay="+floatingDay);
 
             if( !work ) {
                 var error = "If you have worked or plan to work on the specified floating day, please mark the checkbox above.";
@@ -325,7 +325,7 @@
 //                if( subjectUserId ) {
                 var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId);
                 if (checkRes) {
-                    console.log("checkRes:",checkRes);
+                    //console.log("checkRes:",checkRes);
                     if (checkRes.error == true) {
                         if( checkRes.errorMsg ) {
                             $('#error-box').html(checkRes.errorMsg).show();
@@ -346,9 +346,9 @@
                 }
             }
 
-            console.log("form is valid");
+            //console.log("form is valid");
             lbtn.stop(); //testing
-            return false; //testing
+            //return false; //testing
 
             $('#vacreq-floatingday-form').submit();
         }
@@ -357,7 +357,7 @@
             //get select2 oleg_vacreqbundle_request_floatingType
             var floatingType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('data');
             if( floatingType ) {
-                console.log('floatingType=' + floatingType.text);
+                //console.log('floatingType=' + floatingType.text);
                 if (floatingType.text) {
                     $('#work-on-floating-daytype').text(floatingType.text);
                 }
@@ -377,7 +377,7 @@
             }).done(function(data) {
                 resData = data;
             });
-            console.log("resData:",resData);
+            //console.log("resData:",resData);
             return resData;
         }
 

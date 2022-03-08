@@ -760,9 +760,8 @@ class FloatingDayController extends OrderAbstractController
 
         $form->handleRequest($request);
 
-
         if( $form->isSubmitted() && $form->isValid() ) { //new
-            exit("Submitted floating day request"); //testing action
+            //exit("Submitted floating day request"); //testing action
 
             if( $testing == false ) {
                 //exit('111');//testing
@@ -1104,7 +1103,7 @@ class FloatingDayController extends OrderAbstractController
         //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
-        exit("statusAction: ".$status); //testing action
+        //exit("statusAction: ".$status); //testing action
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
@@ -1285,6 +1284,9 @@ class FloatingDayController extends OrderAbstractController
      * @Route("/status-cancellation-request/floating/{id}", name="vacreq_floating_status_cancellation-request", methods={"GET"})
      */
     public function statusCancellationRequestAction(Request $request, $id) {
+
+        //exit("statusCancellationRequestAction ID ".$id); //testing action
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 

@@ -5340,9 +5340,9 @@ class VacReqUtil
                     $approverDateStr = $approverDate->format('m/d/Y \a\t H:i');
                 }
 
-                $personAwayStr1 = "Unknown Person";
+                $personAwayStr = "Unknown Person";
                 if ($personAway) {
-                    $personAwayStr1 = $personAway->getUsernameOptimal();
+                    $personAwayStr = $personAway->getUsernameOptimal();
                 }
 
                 $errorMsg = "Logical error to verify existing floating day";
@@ -5365,28 +5365,28 @@ class VacReqUtil
                             )
                             //UrlGeneratorInterface::ABSOLUTE_URL
                         );
-                        $link = '<a href="'.$statusChangeUrl.'">Are you sure you would like to Cancel this "Floating Day" request with ID #'.$floatingRequest->getId().'</a>';
 
-                        $link = '<a href="'.$statusChangeUrl.'">this link</a>';
-
-                        $link =
-                        '<a
-                            general-data-confirm="Are you sure you would like to Cancel this Floating Day request with ID #{{ entity.id }}?"
-                            href="{{ path(vacreq_floating_status_change, { \'id\': entity.id, \'status\': \'canceled\' }) }}">
-                            Cancel (withdraw entire request)
-                        </a>';
+//                        $link = '<a href="'.$statusChangeUrl.'">Are you sure you would like to Cancel this "Floating Day" request with ID #'.$floatingRequest->getId().'</a>';
+//                        $link = '<a href="'.$statusChangeUrl.'">this link</a>';
+//                        $link =
+//                        '<a
+//                            general-data-confirm="Are you sure you would like to Cancel this Floating Day request with ID #{{ entity.id }}?"
+//                            href="{{ path(vacreq_floating_status_change, { \'id\': entity.id, \'status\': \'canceled\' }) }}">
+//                            Cancel (withdraw entire request)
+//                        </a>';
 
                         //<a general-data-confirm="Are you sure you would like to Cancel this 'Floating Day' request with ID #10?" href="/order/index_dev.php/vacation-request/status/floating/10/canceled">
                         //Cancel (withdraw entire request)
                         //</a>
                         $link =
                             '<a
+                            class="btn btn-default"
                             general-data-confirm="Are you sure you would like to cancel this '.
                             $floatingType->getName().' floating Day request with ID #'.
                             $floatingRequest->getId().'?"
                             href="'.$statusChangeUrl.'">
                             Cancel of the '.$floatingDay->format('m/d/Y').
-                            ' '.$floatingType->getName().' Juneteenth floating day
+                            ' '.$floatingType->getName().' floating day
                             </a>';
 
 //                        $errorMsg =
@@ -5406,20 +5406,76 @@ class VacReqUtil
                         $yearRangeStr." academic year for ".$personAwayStr." on ".
                         $createDate->format('m/d/Y \a\t H:i').", but it is still pending review. ".$newline.
                         "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
+                        $newline.
                         "To submit a new floating day request for the same academic year, ".
                         "you would first need to cancel of this previous request ". //request cancellation
                         "by clicking ".$link //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                         ;
                     }
                     if ($status == 'approved') {
+
+                        $statusChangeUrl = $this->container->get('router')->generate(
+                            'vacreq_floating_status_cancellation-request',
+                            array(
+                                'id' => $floatingRequest->getId(),
+                                'status' => 'cancellation-request'
+                            )
+                            //UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+
+//                        <a
+//                            general-data-confirm="Are you sure you would like to Request cancellation for this entire, already approved request with ID #{{ entity.id }}? Your division approver will get an notification email and will approve or reject this cancellation request."
+//                            href="{{ path(vacreq_sitename~'_floating_status_cancellation-request', { 'id': entity.id, 'status': 'cancellation-request' }) }}">
+//                            Request cancellation
+//                        </a>
+
+                        $link =
+                            '<a
+                            class="btn btn-default"
+                            general-data-confirm="Are you sure you would like to Request cancellation this, '.
+                            'already approved '.
+                            $floatingType->getName(). ' floating day request with ID #'.
+                            $floatingRequest->getId(). '?"
+                            href="'.$statusChangeUrl.'">
+                            Request cancelation of the '.$floatingDay->format('m/d/Y').
+                            ' '.$floatingType->getName().' floating day
+                            </a>';
+
+//                        $errorMsg =
+//                            "A Floating day of " . $floatingDay->format('m/d/Y') .
+//                            " with ID #" . $floatingRequest->getId() .
+//                            " has already been approved for this " . $yearRangeStr . " academic year by " .
+//                            $approverStr .
+//                            " on " . $approverDateStr . ". " .
+//                            $newline .
+//                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+
+//                        $errorMsg =
+//                            "A ".$floatingType->getName()." floating day request for ".
+//                            $floatingDay->format('m/d/Y')." has already been submitted for this ".
+//                            $yearRangeStr." academic year for ".
+//                            $personAwayStr." on ".$floatingDay->format('m/d/Y').
+//                            ", but it is still pending review.".$newline.
+//                            "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
+//                            $newline.
+//                            "To submit a new floating day request for the same academic year, ".
+//                            "you would first need to request cancellation of this previous request ".
+//                            "by clicking ".$link
+//                        ;
+
                         $errorMsg =
-                            "A Floating day of " . $floatingDay->format('m/d/Y') .
-                            " with ID #" . $floatingRequest->getId() .
-                            " has already been approved for this " . $yearRangeStr . " academic year by " .
-                            $approverStr .
-                            " on " . $approverDateStr . ". " .
-                            $newline .
-                            "Only one " . $floatingType->getName() . " floating day can be approved per academic year.";
+                            "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
+                            " has already been approved for this ".$yearRangeStr.
+                            " academic year by ".$approverStr.
+                            " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
+                            $newline.
+                            "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
+                            $newline.
+                            "To submit a new floating day request for the same academic year, ".
+                            "you would first need to request cancellation ".
+                            "of this previous request by clicking ".$link; //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                        ;
+
                     }
 //                    if ($status == 'canceled') {
 //                        $errorMsg =
