@@ -231,6 +231,9 @@
         </p>
     {% endif %}
 
+    <a general-data-confirm="Test confirmation" href="www.google.com">
+    test
+    </a>
 
 {% endblock %}
 
@@ -322,9 +325,11 @@
 //                if( subjectUserId ) {
                 var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId);
                 if (checkRes) {
+                    console.log("checkRes:",checkRes);
                     if (checkRes.error == true) {
                         if( checkRes.errorMsg ) {
                             $('#error-box').html(checkRes.errorMsg).show();
+                            generalConfirmAction();
                         } else {
                             var error = "Logical error to verify existing floating day";
                             $('#error-box').html(error).show();
@@ -333,16 +338,17 @@
                         return false;
                     }
                 }
-//                } else {
-//                    var error = "Person away is not specified.";
-//                    $('#error-box').html(error).show();
-//                    return false;
-//                }
+                else {
+                    var error = "Unknown Logical Error";
+                    $('#error-box').html(error).show();
+                    lbtn.stop();
+                    return false;
+                }
             }
 
             console.log("form is valid");
             lbtn.stop(); //testing
-            //return false; //testing
+            return false; //testing
 
             $('#vacreq-floatingday-form').submit();
         }

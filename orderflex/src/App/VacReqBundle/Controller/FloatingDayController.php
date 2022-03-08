@@ -762,7 +762,7 @@ class FloatingDayController extends OrderAbstractController
 
 
         if( $form->isSubmitted() && $form->isValid() ) { //new
-            exit("Submitted floating day request");
+            exit("Submitted floating day request"); //testing action
 
             if( $testing == false ) {
                 //exit('111');//testing
@@ -1104,7 +1104,7 @@ class FloatingDayController extends OrderAbstractController
         //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
-        //exit("statusAction: ".$status);
+        exit("statusAction: ".$status); //testing action
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
