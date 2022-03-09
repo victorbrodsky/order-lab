@@ -5377,21 +5377,21 @@ class VacReqUtil
                         $linkMsg = "Cancel of the ".$floatingDay->format('m/d/Y').
                             " ".$floatingType->getName()." floating day";
 
-                        $link =
-                            '<a
-                            class="btn btn-default"
-                            general-data-confirm="Are you sure you would like to cancel this '.
-                            $floatingType->getName().' floating Day request with ID #'.
-                            $floatingRequest->getId().'?"
-                            href="'.$statusChangeUrl.'">
-                            Cancel of the '.$floatingDay->format('m/d/Y').
-                            ' '.$floatingType->getName().' floating day
-                            </a>';
+//                        $link =
+//                            '<a
+//                            class="btn btn-default"
+//                            general-data-confirm="Are you sure you would like to cancel this '.
+//                            $floatingType->getName().' floating Day request with ID #'.
+//                            $floatingRequest->getId().'?"
+//                            href="'.$statusChangeUrl.'">
+//                            Cancel of the '.$floatingDay->format('m/d/Y').
+//                            ' '.$floatingType->getName().' floating day
+//                            </a>';
 
                         $link =
                         '<a
-                           class="btn btn-default status-change-action"
-                           data-confirm='.$confirm.'
+                           class="btn btn-default status-change-action1"
+                           general-data-confirm='.$confirm.'
                            href="javascript:changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\')">'.$linkMsg.'
                         </a>';
 

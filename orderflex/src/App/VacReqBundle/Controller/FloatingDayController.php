@@ -1275,7 +1275,18 @@ class FloatingDayController extends OrderAbstractController
 //            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 //        }
 //        //////////////// EOF change status ////////////////////////
-        $res = $this->changeFloatingStatus($entity,$status);
+        $resArr = $this->changeFloatingStatus($entity,$status,$request);
+
+        //duplicate check for overlapped requests
+        if( isset($resArr['error']) && $resArr['error'] === true ) {
+            if (isset($resArr['errorType']) && $resArr['errorType'] === 'overlapped') {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $resArr['message']
+                );
+                return $this->redirectToRoute('vacreq_floating_show', array('id' => $entity->getId()));
+            }
+        }
 
         //redirect to myrequests for owner
         if( $entity->getUser()->getId() == $user->getId() ) {
@@ -1350,16 +1361,19 @@ class FloatingDayController extends OrderAbstractController
             return $response;
         }
 
-        $res = $this->changeFloatingStatus($entity,$status);
+        $resArr = $this->changeFloatingStatus($entity,$status,$request);
 
-        if( $res ) {
-            $resArr = array(
-                'error' => false,
-                'message' => ""
-            );
-            $response->setContent(json_encode($resArr));
-            return $response;
-        }
+//        if( $res ) {
+//            $resArr = array(
+//                'error' => false,
+//                'message' => ""
+//            );
+//            $response->setContent(json_encode($resArr));
+//            return $response;
+//        }
+
+        dump($resArr);
+        exit('111');
 
         //$response = new Response();
         //$response->headers->set('Content-Type', 'application/json');
@@ -1367,7 +1381,14 @@ class FloatingDayController extends OrderAbstractController
         return $response;
     }
 
-    public function changeFloatingStatus($entity,$status) {
+    public function changeFloatingStatus($entity,$status,$request=NULL) {
+
+        //$logger = $this->container->get('logger');
+        $em = $this->getDoctrine()->getManager();
+        //$routeName = $request->get('_route');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $vacreqUtil = $this->get('vacreq_util');
+
         //////////////// change status ////////////////////////
         $requestName = $entity->getRequestName();
         $originalStatus = $entity->getStatus();
@@ -1378,12 +1399,20 @@ class FloatingDayController extends OrderAbstractController
             //exit("count=".count($overlappedRequests));
             if (count($overlappedRequests) > 0) {
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $errorMsg
-                );
+//                $this->get('session')->getFlashBag()->add(
+//                    'warning',
+//                    $errorMsg
+//                );
                 //return $this->redirectToRoute('vacreq_floating_show',array('id'=>$entity->getId()));
-                return false;
+                //return false;
+
+                $resArr = array(
+                    'error' => true,
+                    'errorType' => 'overlapped',
+                    'message' => $errorMsg
+                );
+                return $resArr;
+
             } else {
                 //exit('no overlaps found');
             }
@@ -1462,11 +1491,22 @@ class FloatingDayController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 
-            return true;
+            //return true;
+            $resArr = array(
+                'error' => false,
+                'errorType' => NULL,
+                'message' => ""
+            );
+            return $resArr;
         }
         //////////////// EOF change status ////////////////////////
 
-        return false;
+        $resArr = array(
+            'error' => true,
+            'errorType' => NULL,
+            'message' => "Unknown error: status has not been changed"
+        );
+        return $resArr;
     }
 
     /**

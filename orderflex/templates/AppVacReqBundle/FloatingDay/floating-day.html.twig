@@ -383,6 +383,23 @@
 
         function changeFloatingStatusAjax(id,status) {
             console.log("id:"+id+", status="+status);
+            var resData = null;
+            var thisAsyncflag = false;
+            var url = Routing.generate('vacreq_floating_status_ajax_change');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: thisAsyncflag,
+                data: {id: id, status: status},
+            }).done(function(data) {
+                resData = data;
+            });
+            console.log("resData:",resData);
+
+            return false;
+
+            return resData;
         }
 
     </script>
