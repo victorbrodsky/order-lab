@@ -1309,9 +1309,9 @@ class FloatingDayController extends OrderAbstractController
     }
 
     /**
-     * @Route("/status-ajax/floating/{id}/{status}", name="vacreq_floating_status_ajax_change", methods={"GET","POST"}, options={"expose"=true})
+     * @Route("/status-ajax/floating", name="vacreq_floating_status_ajax_change", methods={"GET","POST"}, options={"expose"=true})
      */
-    public function statusAjaxAction( Request $request, $id, $status ) {
+    public function statusAjaxAction( Request $request ) {
 
         $resArr = array(
             'error' => false,
@@ -1320,6 +1320,18 @@ class FloatingDayController extends OrderAbstractController
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+
+        $id = $request->get('id');
+        $status = $request->get('status'); //format: floatingDay=02/23/2022
+
+        //////// testing //////////
+        $resArr = array(
+            'error' => true,
+            'message' => "Testing"
+        );
+        $response->setContent(json_encode($resArr));
+        return $response;
+        //////// EOF testing //////////
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 

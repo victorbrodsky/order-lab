@@ -1204,6 +1204,7 @@ function generalConfirmAction() {
 
             var footer = $(this).closest('.modal-footer');
             footer.html('Please wait ...');
+            //alert('111');
 
             //post process function, for example click all buttons on transres review page to update specific fields
             if(1) {

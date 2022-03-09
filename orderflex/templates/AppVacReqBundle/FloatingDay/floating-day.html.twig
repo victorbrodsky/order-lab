@@ -382,10 +382,15 @@
         }
 
         function changeFloatingStatusAjax(id,status) {
-            console.log("id:"+id+", status="+status);
+            console.log("changeFloatingStatusAjax: id:"+id+", status="+status);
+            //alert("changeFloatingStatusAjax: id:"+id+", status="+status);
+            //return false;
+
             var resData = null;
             var thisAsyncflag = false;
             var url = Routing.generate('vacreq_floating_status_ajax_change');
+            console.log("url:"+url);
+
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
@@ -393,13 +398,30 @@
                 async: thisAsyncflag,
                 data: {id: id, status: status},
             }).done(function(data) {
-                resData = data;
+                //resData = data;
+                console.log("Done: id:"+id+", status="+status);
+
+                //if data.error == false
+                //remove modal
+                //remove this error box
+
             });
             console.log("resData:",resData);
 
+            //alert("resData:"+resData);
             return false;
 
-            return resData;
+            //return resData;
+        }
+        function refreshpage(id,status) {
+            console.log("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+            //alert("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+            //exit('111');
+            return false;
+            return;
+        }
+        function vacreqdonothing(id,status) {
+            return "222";
         }
 
     </script>

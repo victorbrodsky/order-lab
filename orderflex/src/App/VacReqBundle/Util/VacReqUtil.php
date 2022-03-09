@@ -5388,12 +5388,23 @@ class VacReqUtil
 //                            ' '.$floatingType->getName().' floating day
 //                            </a>';
 
+                        //general-data-callback="vacreqdonothing"
+
                         $link =
                         '<a
                            class="btn btn-default status-change-action1"
-                           general-data-confirm='.$confirm.'
-                           href="javascript:changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\')">'.$linkMsg.'
+                           general-data-confirm="'.$confirm.'"                       
+                           href="javascript:vacreqdonothing('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
                         </a>';
+
+                        //href="javascript:changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
+                        $link = '<a'.
+                           ' class="btn btn-default vacreq-status-change-action"'.
+                           ' general-data-confirm="'.$confirm.'"'.
+                           ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\');"'.
+                            '>'.
+                            $linkMsg.
+                        '</a>';
 
                         $errorMsg =
                             "<div class='well alert alert-info error-holder'>".
