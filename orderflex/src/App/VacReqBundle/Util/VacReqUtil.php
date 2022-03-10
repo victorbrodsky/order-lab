@@ -5414,15 +5414,33 @@ class VacReqUtil
                     }
                     if( $status == 'approved' ) {
 
+                        if( $extraStatus && strtolower($extraStatus) == strtolower('Cancellation Requested') ) {
+                            $errorMsg =
+                                "<div id='warning-existing-".$floatingRequest->getId()."'".
+                                " class='well alert alert-info error-holder'>".
+                                "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
+                                " has already been approved for this ".$yearRangeStr.
+                                " academic year by ".$approverStr.
+                                " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
+                                $newline.
+                                "The cancelation request has already been submitted for this approved floating day.".
+                                $newline.
+                                "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
+                                $newline.
+                                "To submit a new floating day request for the same academic year, ".
+                                "this previous request must be canceled first by the group's approver.".
+                                "</div>".
+                                "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
+                                "</div>"
+                            ;
+                        } else {
+                            $confirm = "Are you sure you would like to Request cancellation this,".
+                                " already approved ".
+                                $floatingType->getName(). " floating day request with ID #".
+                                $floatingRequest->getId(). "?";
 
-
-                        $confirm = "Are you sure you would like to Request cancellation this,".
-                            " already approved ".
-                            $floatingType->getName(). " floating day request with ID #".
-                            $floatingRequest->getId(). "?";
-
-                        $linkMsg = "Request cancelation of the ".$floatingDay->format('m/d/Y').
-                            " ".$floatingType->getName()." floating day";
+                            $linkMsg = "Request cancelation of the ".$floatingDay->format('m/d/Y').
+                                " ".$floatingType->getName()." floating day";
 
 //                        $statusChangeUrl = $this->container->get('router')->generate(
 //                            'vacreq_floating_status_cancellation_request',
@@ -5444,34 +5462,36 @@ class VacReqUtil
 //                            ' '.$floatingType->getName().' floating day
 //                            </a>';
 
-                        $routeName = "'vacreq_floating_status_cancellation_request_ajax'";
-                        $toStatus = "'cancellation-request'";
+                            $routeName = "'vacreq_floating_status_cancellation_request_ajax'";
+                            $toStatus = "'cancellation-request'";
 
-                        $link = '<a'.
-                            ' class="btn btn-default vacreq-status-change-action"'.
-                            ' general-data-confirm="'.$confirm.'"'.
-                            ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().','.$toStatus.','.$routeName.');"'.
-                            '>'.
-                            $linkMsg.
-                        '</a>';
+                            $link = '<a'.
+                                ' class="btn btn-default vacreq-status-change-action"'.
+                                ' general-data-confirm="'.$confirm.'"'.
+                                ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().','.$toStatus.','.$routeName.');"'.
+                                '>'.
+                                $linkMsg.
+                                '</a>';
 
-                        $errorMsg =
-                            "<div id='warning-existing-".$floatingRequest->getId()."'".
-                            " class='well alert alert-info error-holder'>".
-                            "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
-                            " has already been approved for this ".$yearRangeStr.
-                            " academic year by ".$approverStr.
-                            " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
-                            $newline.
-                            "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
-                            $newline.
-                            "To submit a new floating day request for the same academic year, ".
-                            "you would first need to request cancellation ".
-                            "of this previous request by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
-                            "</div>".
-                            "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
-                            "</div>"
-                        ;
+                            $errorMsg =
+                                "<div id='warning-existing-".$floatingRequest->getId()."'".
+                                " class='well alert alert-info error-holder'>".
+                                "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
+                                " has already been approved for this ".$yearRangeStr.
+                                " academic year by ".$approverStr.
+                                " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
+                                $newline.
+                                "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
+                                $newline.
+                                "To submit a new floating day request for the same academic year, ".
+                                "you would first need to request cancellation ".
+                                "of this previous request by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                                "</div>".
+                                "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
+                                "</div>"
+                            ;
+                        }//if else
+
                     }
 //                    if ($status == 'canceled') {
 //                        $errorMsg =
