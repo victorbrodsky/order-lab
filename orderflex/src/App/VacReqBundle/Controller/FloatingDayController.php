@@ -1184,98 +1184,6 @@ class FloatingDayController extends OrderAbstractController
             }
         }
 
-//        //////////////// change status ////////////////////////
-//        //check for overlapped date range if a new status is approved
-//        if( $status == "approved" ) {
-//            $overlappedRequests = $this->checkFloatingRequestForOverlapDates($entity->getUser(), $entity); //check for statusAction
-//            //exit("count=".count($overlappedRequests));
-//            if (count($overlappedRequests) > 0) {
-//                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
-//                $this->get('session')->getFlashBag()->add(
-//                    'warning',
-//                    $errorMsg
-//                );
-//                return $this->redirectToRoute('vacreq_floating_show',array('id'=>$entity->getId()));
-//            } else {
-//                //exit('no overlaps found');
-//            }
-//        }
-//
-//        if( $status && $originalStatus != $status ) {
-//
-//            $entity->setStatus($status);
-//
-//            if( $status == "pending" ) {
-//                $entity->setApprover(null);
-//                $entity->setApprovedRejectDate(null);
-//            }
-//
-//            if( $status == "approved" || $status == "rejected" ) {
-//                $entity->setApprover($user);
-//                $entity->setApprovedRejectDate( new \DateTime());
-//            }
-//
-//            $entity->setExtraStatus(NULL);
-//
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            //send respond confirmation email to a submitter
-//            if( $status == 'canceled' ) {
-//                //an email should be sent to approver saying
-//                // "FirstName LastName canceled/withdrew their business travel / vacation request described below:"
-//                // and list all variable names and values in the email.
-//                $approversNameStr = $vacreqUtil->sendCancelEmailToApprovers( $entity, $user, $status );
-//            } else {
-//                $approversNameStr = null;
-//                //send confirmation email by express link to change status (email or link in the list)
-//                $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
-//            }
-//
-//            $removeCarryoverStr = "";
-////                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
-////                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
-////                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
-////                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
-////                }
-//            //exit("test");
-//
-//            //Flash
-//            $statusStr = $status;
-//            if( $status == 'pending' ) {
-//                $statusStr = 'set to Pending';
-//            }
-//
-//            //re-submit request
-//            if( $status == "pending" && $originalStatus == "canceled" ) {
-//                //send a confirmation email to approver //sendConfirmationEmailToApprovers -> sendConfirmationEmailToFloatingApprovers
-//                $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
-//                $statusStr = 're-submitted';
-//            }
-//
-//            $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() .
-//                " has been " . $statusStr . " by " . $user;
-//            //$event .= ": ".$entity->getDetailedStatus().".";
-//
-//            if( $approversNameStr ) {
-//                $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
-//            }
-//
-//            $event .= $removeCarryoverStr;
-//
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                $event
-//            );
-//
-//            $eventType = 'Floating Day Request Updated';
-//
-//            //Event Log
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
-//        }
-//        //////////////// EOF change status ////////////////////////
-
         $resArr = $this->changeFloatingStatus($entity,$status,$request);
 
         //duplicate check for overlapped requests
@@ -1321,15 +1229,6 @@ class FloatingDayController extends OrderAbstractController
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-
-//        //////// testing //////////
-//        $resArr = array(
-//            'error' => true,
-//            'message' => "Testing"
-//        );
-//        $response->setContent(json_encode($resArr));
-//        return $response;
-//        //////// EOF testing //////////
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1381,20 +1280,6 @@ class FloatingDayController extends OrderAbstractController
 
         $resArr = $this->changeFloatingStatus($entity,$status,$request,$testing);
 
-//        if( $res ) {
-//            $resArr = array(
-//                'error' => false,
-//                'message' => ""
-//            );
-//            $response->setContent(json_encode($resArr));
-//            return $response;
-//        }
-
-        //dump($resArr);
-        //exit('111');
-
-        //$response = new Response();
-        //$response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($resArr));
         return $response;
     }
@@ -1407,9 +1292,6 @@ class FloatingDayController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
-//        $testing = false;
-//        $testing = true;
-
         //////////////// change status ////////////////////////
         $requestName = $entity->getRequestName();
         $originalStatus = $entity->getStatus();
@@ -1420,12 +1302,6 @@ class FloatingDayController extends OrderAbstractController
             //exit("count=".count($overlappedRequests));
             if (count($overlappedRequests) > 0) {
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
-//                $this->get('session')->getFlashBag()->add(
-//                    'warning',
-//                    $errorMsg
-//                );
-                //return $this->redirectToRoute('vacreq_floating_show',array('id'=>$entity->getId()));
-                //return false;
 
                 $resArr = array(
                     'error' => true,
@@ -1472,14 +1348,6 @@ class FloatingDayController extends OrderAbstractController
                 $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
             }
 
-            //$removeCarryoverStr = "";
-//                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
-//                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
-//                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
-//                    $removeCarryoverStr = " ".$vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity).".";
-//                }
-            //exit("test");
-
             //Flash
             $statusStr = $status;
             if( $status == 'pending' ) {
@@ -1500,8 +1368,6 @@ class FloatingDayController extends OrderAbstractController
             if( $approversNameStr ) {
                 $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
             }
-
-            //$event .= $removeCarryoverStr;
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -1558,11 +1424,7 @@ class FloatingDayController extends OrderAbstractController
             $entity->getUser()->getId() != $user->getId() //author can request cancellation
         ) {
             //exit("No permission");
-//            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
-//                return false;
-//            } else {
-                return $this->redirect($this->generateUrl('vacreq-nopermission'));
-//            }
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
         if( !$entity->isOverallStatus('approved') ) {
@@ -1571,84 +1433,8 @@ class FloatingDayController extends OrderAbstractController
                 'notice',
                 'You can not submit a Cancellation Requested for not approved floating request.'
             );
-
-//            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
-//                return false;
-//            } else {
-                return $this->redirectToRoute("vacreq_myfloatingrequests");
-//            }
+            return $this->redirectToRoute("vacreq_myfloatingrequests");
         }
-
-//        $entity->setExtraStatus("Cancellation Requested");
-//        $em->flush();
-//
-//        $requestName = $entity->getRequestName();
-//        $userNameOptimal = $entity->getUser()->getUsernameOptimal();
-//        $eventSubject = $userNameOptimal." is requesting cancellation of a ".ucwords($requestName)." ID #" . $entity->getId();
-//
-//        //send email to an approver
-//        //$break = "\r\n";
-//        $break = "<br>";
-//
-//        //The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
-//        //cancellation-request => cancellation-request-approved
-//        //cancellation-request => cancellation-request-rejected
-//
-//        //set confirmation email to approver and email users
-//        $approveLink = $this->container->get('router')->generate(
-//            'vacreq_floating_status_cancellation_request_email_change',
-//            array(
-//                'id' => $entity->getId(),
-//                'status' => 'cancellation-request-approved'
-//            ),
-//            UrlGeneratorInterface::ABSOLUTE_URL
-//        );
-//
-//        $rejectLink = $this->container->get('router')->generate(
-//            'vacreq_floating_status_cancellation_request_email_change',
-//            array(
-//                'id' => $entity->getId(),
-//                'status' => 'cancellation-request-rejected'
-//            ),
-//            UrlGeneratorInterface::ABSOLUTE_URL
-//        );
-//
-//        $message = "Dear ###emailuser###," . $break.$break;
-//
-//        //FirstName LastName is no longer planning to be away and is requesting cancellation of the following
-//        // Business Travel / Vacation request approved on XX/XX/XXXX:
-//        $message .= $userNameOptimal." is no longer planning to be away and is requesting cancellation of the following ";
-//        $message .= ucwords($requestName)." approved on ".$entity->getApprovedRejectDate()->format('m/d/Y H:i:s').":".$break;
-//
-//        //[all form field titles and their values, 1 per line]
-//        $message .= $break.$entity->printRequest($this->container)."".$break;
-//
-//        //To approve cancellation of this request, please follow this link
-//        // (the days in this request will no longer count towards FirstName LastName's vacation / business travel):
-//        $message .= "To approve cancellation of this floating request, please follow this link ".$break;
-//        $message .= $approveLink;
-//
-//        //To reject cancellation of this request, please follow this link
-//        // (the days in this request will still count towards FirstName LastName's vacation / business travel):
-//        $message .= $break.$break."To reject cancellation of this floating request, please follow this link ".$break;
-//        $message .= $rejectLink;
-//
-//        $vacreqUtil = $this->get('vacreq_util');
-//        $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
-//
-//        $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
-//
-//        //Flash
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            $eventSubject
-//        );
-//
-//        $eventType = 'Floating Day Request Updated';
-//
-//        //Event Log
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         $testing = false;
         //$testing = true;
@@ -1678,15 +1464,6 @@ class FloatingDayController extends OrderAbstractController
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-
-//        //////// testing //////////
-//        $resArr = array(
-//            'error' => true,
-//            'message' => "Testing"
-//        );
-//        $response->setContent(json_encode($resArr));
-//        return $response;
-//        //////// EOF testing //////////
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1738,15 +1515,6 @@ class FloatingDayController extends OrderAbstractController
 
         $eventSubject = $this->statusCancelationRequest($entity,$request,$testing);
 
-//        if( $res ) {
-//            $resArr = array(
-//                'error' => false,
-//                'message' => ""
-//            );
-//            $response->setContent(json_encode($resArr));
-//            return $response;
-//        }
-
         if( $eventSubject ) {
             $resArr = array(
                 'error' => false,
@@ -1754,11 +1522,6 @@ class FloatingDayController extends OrderAbstractController
             );
         }
 
-        //dump($resArr);
-        //exit('111');
-
-        //$response = new Response();
-        //$response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($resArr));
         return $response;
     }
@@ -1828,12 +1591,6 @@ class FloatingDayController extends OrderAbstractController
         $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
 
         $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
-
-//        //Flash
-//        $this->get('session')->getFlashBag()->add(
-//            'notice',
-//            $eventSubject
-//        );
 
         $eventType = 'Floating Day Request Updated';
 

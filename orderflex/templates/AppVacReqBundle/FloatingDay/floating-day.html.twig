@@ -382,7 +382,7 @@
         }
 
         function changeFloatingStatusAjax(id,status,routeName) {
-            console.log("changeFloatingStatusAjax: id:"+id+", status="+status);
+            //console.log("changeFloatingStatusAjax: id:"+id+", status="+status);
             //alert("changeFloatingStatusAjax: id:"+id+", status="+status);
             //return false;
 
@@ -390,7 +390,7 @@
             var thisAsyncflag = true;
             //var url = Routing.generate('vacreq_floating_status_ajax_change');
             var url = Routing.generate(routeName);
-            console.log("url:"+url);
+            //console.log("url:"+url);
 
             $.ajax({
                 url: url,
@@ -400,15 +400,15 @@
                 data: {id: id, status: status},
             }).done(function(data) {
                 //resData = data;
-                console.log("Done: id:"+id+", status="+status);
+                //console.log("Done: id:"+id+", status="+status);
 
                 //if data.error == false
                 if( data.error == true ) {
-                    console.log("Case: error");
+                    //console.log("Case: error");
                     $('#error-existing-'+id).html(data.message).show();
                 } else
                 if( data.error == false ) {
-                    console.log("Case: no error");
+                    //console.log("Case: no error");
 
 //                    if( status == 'cancellation-request' ) {
 //                        status = 'requesting cancellation';
@@ -423,7 +423,7 @@
                     //remove/update this error box
                     $('#warning-existing-'+id).html(msg);
                 } else {
-                    console.log("Case: Unknown error");
+                    //console.log("Case: Unknown error");
                     $('#error-existing-'+id).html("Unknown error").show();
                 }
 
