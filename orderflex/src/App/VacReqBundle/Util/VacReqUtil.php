@@ -5407,7 +5407,8 @@ class VacReqUtil
                         '</a>';
 
                         $errorMsg =
-                            "<div class='well alert alert-info error-holder'>".
+                            "<div id='warning-existing-".$floatingRequest->getId()."'".
+                            " class='well alert alert-info error-holder'>".
                             "A ".$floatingType->getName()." floating day request for ".
                             $floatingDay->format('m/d/Y')." has already been submitted for this ".
                             $yearRangeStr." academic year for ".$personAwayStr." on ".
@@ -5417,7 +5418,10 @@ class VacReqUtil
                             "To submit a new floating day request for the same academic year, ".
                             "you would first need to cancel of this previous request ". //request cancellation
                             "by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
-                            "</div>";
+                            "</div>".
+                            "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
+                            "</div>"
+                        ;
                     }
                     if ($status == 'approved') {
 

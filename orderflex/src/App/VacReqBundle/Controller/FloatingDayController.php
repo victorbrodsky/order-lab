@@ -1321,17 +1321,19 @@ class FloatingDayController extends OrderAbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
+//        //////// testing //////////
+//        $resArr = array(
+//            'error' => true,
+//            'message' => "Testing"
+//        );
+//        $response->setContent(json_encode($resArr));
+//        return $response;
+//        //////// EOF testing //////////
+
+        $em = $this->getDoctrine()->getManager();
+
         $id = $request->get('id');
         $status = $request->get('status'); //format: floatingDay=02/23/2022
-
-        //////// testing //////////
-        $resArr = array(
-            'error' => true,
-            'message' => "Testing"
-        );
-        $response->setContent(json_encode($resArr));
-        return $response;
-        //////// EOF testing //////////
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1373,7 +1375,10 @@ class FloatingDayController extends OrderAbstractController
             return $response;
         }
 
-        $resArr = $this->changeFloatingStatus($entity,$status,$request);
+        $testing = false;
+        $testing = true;
+
+        $resArr = $this->changeFloatingStatus($entity,$status,$request,$testing);
 
 //        if( $res ) {
 //            $resArr = array(
@@ -1384,8 +1389,8 @@ class FloatingDayController extends OrderAbstractController
 //            return $response;
 //        }
 
-        dump($resArr);
-        exit('111');
+        //dump($resArr);
+        //exit('111');
 
         //$response = new Response();
         //$response->headers->set('Content-Type', 'application/json');
@@ -1393,13 +1398,16 @@ class FloatingDayController extends OrderAbstractController
         return $response;
     }
 
-    public function changeFloatingStatus($entity,$status,$request=NULL) {
+    public function changeFloatingStatus($entity,$status,$request=NULL,$testing=false) {
 
         //$logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         //$routeName = $request->get('_route');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
+
+//        $testing = false;
+//        $testing = true;
 
         //////////////// change status ////////////////////////
         $requestName = $entity->getRequestName();
@@ -1446,8 +1454,10 @@ class FloatingDayController extends OrderAbstractController
 
             $entity->setExtraStatus(NULL);
 
-            $em->persist($entity);
-            $em->flush();
+            if( $testing === false ) {
+                $em->persist($entity);
+                $em->flush();
+            }
 
             //send respond confirmation email to a submitter
             if( $status == 'canceled' ) {
@@ -1500,8 +1510,10 @@ class FloatingDayController extends OrderAbstractController
             $eventType = 'Floating Day Request Updated';
 
             //Event Log
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+            if( $testing === false ) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+            }
 
             //return true;
             $resArr = array(

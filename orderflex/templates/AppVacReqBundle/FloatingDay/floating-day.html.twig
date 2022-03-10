@@ -386,8 +386,8 @@
             //alert("changeFloatingStatusAjax: id:"+id+", status="+status);
             //return false;
 
-            var resData = null;
-            var thisAsyncflag = false;
+            //var resData = null;
+            var thisAsyncflag = true;
             var url = Routing.generate('vacreq_floating_status_ajax_change');
             console.log("url:"+url);
 
@@ -402,11 +402,33 @@
                 console.log("Done: id:"+id+", status="+status);
 
                 //if data.error == false
-                //remove modal
-                //remove this error box
+                if( data.error == true ) {
+                    console.log("Case: error");
+                    $('#error-existing-'+id).html(data.message).show();
+                } else
+                if( data.error == false ) {
+                    console.log("Case: no error");
+                    //remove modal
+                    //$('#generalDataConfirmModal').remove();
+//                    $('.modal').modal('hide').data('bs.modal', null );
+//                    $('.modal').remove();
+//                    $("#generalDataConfirmModal").remove();
+
+                    //remove/update this error box
+                    $('#warning-existing-'+id).html('Floating day request ID #'+id+' has been '+status);
+                } else {
+                    console.log("Case: Unknown error");
+                    $('#error-existing-'+id).html("Unknown error").show();
+                }
+
+                $('.modal').modal('hide').data('bs.modal', null );
+                $('.modal').remove();
+                $( '.modal-backdrop' ).remove();
+                $( 'body' ).removeClass( "modal-open" );
+                $("#generalDataConfirmModal").remove();
 
             });
-            console.log("resData:",resData);
+            //console.log("resData:",resData);
 
             //alert("resData:"+resData);
             return false;
