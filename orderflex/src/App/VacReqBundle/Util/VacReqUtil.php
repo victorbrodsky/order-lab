@@ -5398,7 +5398,8 @@ class VacReqUtil
                         $errorMsg =
                             "<div id='warning-existing-".$floatingRequest->getId()."'".
                             " class='well alert alert-info error-holder'>".
-                            "A ".$floatingType->getName()." floating day request for ".
+                            "A ".$floatingType->getName()." floating day request ID #".
+                            $floatingRequest->getId()." for ".
                             $floatingDay->format('m/d/Y')." has already been submitted for this ".
                             $yearRangeStr." academic year for ".$personAwayStr." on ".
                             $createDate->format('m/d/Y \a\t H:i').", but it is still pending review. ".$newline.
@@ -5418,7 +5419,8 @@ class VacReqUtil
                             $errorMsg =
                                 "<div id='warning-existing-".$floatingRequest->getId()."'".
                                 " class='well alert alert-info error-holder'>".
-                                "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
+                                "A ".$floatingType->getName()." floating day ID #".
+                                $floatingRequest->getId()." of ".$floatingDay->format('m/d/Y').
                                 " has already been approved for this ".$yearRangeStr.
                                 " academic year by ".$approverStr.
                                 " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
@@ -5476,7 +5478,8 @@ class VacReqUtil
                             $errorMsg =
                                 "<div id='warning-existing-".$floatingRequest->getId()."'".
                                 " class='well alert alert-info error-holder'>".
-                                "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
+                                "A ".$floatingType->getName()." floating day ID #".
+                                $floatingRequest->getId()." of ".$floatingDay->format('m/d/Y').
                                 " has already been approved for this ".$yearRangeStr.
                                 " academic year by ".$approverStr.
                                 " for ".$personAwayStr." on ".$createDate->format('m/d/Y \a\t H:i').".".
