@@ -5350,14 +5350,14 @@ class VacReqUtil
                 if ($floatingDay) { //&& $approver && $approverDate
                     //$academicYear = ''; //[2021-2022]
                     if ($status == 'pending') {
-                        $statusChangeUrl = $this->container->get('router')->generate(
-                            'vacreq_floating_status_change',
-                            array(
-                                'id' => $floatingRequest->getId(),
-                                'status' => 'canceled'
-                            )
-                            //UrlGeneratorInterface::ABSOLUTE_URL
-                        );
+//                        $statusChangeUrl = $this->container->get('router')->generate(
+//                            'vacreq_floating_status_change',
+//                            array(
+//                                'id' => $floatingRequest->getId(),
+//                                'status' => 'canceled'
+//                            )
+//                            //UrlGeneratorInterface::ABSOLUTE_URL
+//                        );
 
 //                        <a
 //                            general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
@@ -5390,18 +5390,22 @@ class VacReqUtil
 
                         //general-data-callback="vacreqdonothing"
 
-                        $link =
-                        '<a
-                           class="btn btn-default status-change-action1"
-                           general-data-confirm="'.$confirm.'"                       
-                           href="javascript:vacreqdonothing('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
-                        </a>';
+//                        $link =
+//                        '<a
+//                           class="btn btn-default status-change-action1"
+//                           general-data-confirm="'.$confirm.'"
+//                           href="javascript:vacreqdonothing('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
+//                        </a>';
 
                         //href="javascript:changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
+
+                        $routeName = "'vacreq_floating_status_ajax_change'";
+                        $toStatus = "'canceled'";
+
                         $link = '<a'.
                            ' class="btn btn-default vacreq-status-change-action"'.
                            ' general-data-confirm="'.$confirm.'"'.
-                           ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\');"'.
+                           ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().','.$toStatus.','.$routeName.');"'.
                             '>'.
                             $linkMsg.
                         '</a>';
@@ -5426,7 +5430,7 @@ class VacReqUtil
                     if ($status == 'approved') {
 
                         $statusChangeUrl = $this->container->get('router')->generate(
-                            'vacreq_floating_status_cancellation-request',
+                            'vacreq_floating_status_cancellation_request',
                             array(
                                 'id' => $floatingRequest->getId(),
                                 'status' => 'cancellation-request'
@@ -5434,17 +5438,36 @@ class VacReqUtil
                             //UrlGeneratorInterface::ABSOLUTE_URL
                         );
 
-                        $link =
-                            '<a
-                            class="btn btn-default"
-                            general-data-confirm="Are you sure you would like to Request cancellation this, '.
-                            'already approved '.
-                            $floatingType->getName(). ' floating day request with ID #'.
-                            $floatingRequest->getId(). '?"
-                            href="'.$statusChangeUrl.'">
-                            Request cancelation of the '.$floatingDay->format('m/d/Y').
-                            ' '.$floatingType->getName().' floating day
-                            </a>';
+                        $confirm = "Are you sure you would like to Request cancellation this,".
+                            " already approved ".
+                            $floatingType->getName(). " floating day request with ID #".
+                            $floatingRequest->getId(). "?";
+
+                        $linkMsg = "Request cancelation of the ".$floatingDay->format('m/d/Y').
+                            " ".$floatingType->getName()." floating day";
+
+//                        $link =
+//                            '<a
+//                            class="btn btn-default"
+//                            general-data-confirm="Are you sure you would like to Request cancellation this, '.
+//                            'already approved '.
+//                            $floatingType->getName(). ' floating day request with ID #'.
+//                            $floatingRequest->getId(). '?"
+//                            href="'.$statusChangeUrl.'">
+//                            Request cancelation of the '.$floatingDay->format('m/d/Y').
+//                            ' '.$floatingType->getName().' floating day
+//                            </a>';
+
+                        $routeName = "'vacreq_floating_status_cancellation_request_ajax'";
+                        $toStatus = "'cancellation-request'";
+
+                        $link = '<a'.
+                            ' class="btn btn-default vacreq-status-change-action"'.
+                            ' general-data-confirm="'.$confirm.'"'.
+                            ' general-data-callback="changeFloatingStatusAjax('.$floatingRequest->getId().','.$toStatus.','.$routeName.');"'.
+                            '>'.
+                            $linkMsg.
+                        '</a>';
 
                         $errorMsg =
                             "<div class='well alert alert-info error-holder'>".

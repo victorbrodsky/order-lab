@@ -381,14 +381,15 @@
             return resData;
         }
 
-        function changeFloatingStatusAjax(id,status) {
+        function changeFloatingStatusAjax(id,status,routeName) {
             console.log("changeFloatingStatusAjax: id:"+id+", status="+status);
             //alert("changeFloatingStatusAjax: id:"+id+", status="+status);
             //return false;
 
             //var resData = null;
             var thisAsyncflag = true;
-            var url = Routing.generate('vacreq_floating_status_ajax_change');
+            //var url = Routing.generate('vacreq_floating_status_ajax_change');
+            var url = Routing.generate(routeName);
             console.log("url:"+url);
 
             $.ajax({
@@ -435,16 +436,16 @@
 
             //return resData;
         }
-        function refreshpage(id,status) {
-            console.log("changeFloatingStatusAjax Test: id:"+id+", status="+status);
-            //alert("changeFloatingStatusAjax Test: id:"+id+", status="+status);
-            //exit('111');
-            return false;
-            return;
-        }
-        function vacreqdonothing(id,status) {
-            return "222";
-        }
+//        function refreshpage(id,status) {
+//            console.log("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+//            //alert("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+//            //exit('111');
+//            return false;
+//            return;
+//        }
+//        function vacreqdonothing(id,status) {
+//            return "222";
+//        }
 
     </script>
 {% endblock %}

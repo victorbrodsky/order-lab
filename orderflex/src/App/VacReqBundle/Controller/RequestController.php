@@ -1197,7 +1197,7 @@ class RequestController extends OrderAbstractController
      * @Route("/cancellation-request/status/{id}/{status}", name="vacreq_status_cancellation-request_change", methods={"GET"})
      * @Route("/cancellation-request/estatus/{id}/{status}", name="vacreq_status_cancellation-request_email_change", methods={"GET"})
      */
-    public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
+    public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -1209,7 +1209,7 @@ class RequestController extends OrderAbstractController
         }
 
         $logger = $this->container->get('logger');
-        $logger->notice("RequestController statusCancellationRequestChaneAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        $logger->notice("RequestController statusCancellationRequestChangeAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
 
         //check permissions
         if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
