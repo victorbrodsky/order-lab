@@ -3418,7 +3418,13 @@ class VacReqUtil
         //dump($approversNameArr);
         //exit('eof sendGeneralEmailToApproversAndEmailUsers');
 
-        return implode(", ",$approversNameArr);
+        $approversNameStr = implode(", ",$approversNameArr);
+
+        if( !$approversNameStr ) {
+            $approversNameStr = " None (No Approvers found for $institution)";
+        }
+
+        return $approversNameStr;
     }
 
 
@@ -5320,6 +5326,7 @@ class VacReqUtil
             $errorMsgArr = array();
             foreach ($floatingRequests as $floatingRequest) {
                 $status = $floatingRequest->getStatus();
+                $extraStatus = $floatingRequest->getExtraStatus();
                 $floatingDay = $floatingRequest->getFloatingDay();
                 $approver = $floatingRequest->getApprover();
                 $personAway = $floatingRequest->getUser();
@@ -5350,25 +5357,6 @@ class VacReqUtil
                 if ($floatingDay) { //&& $approver && $approverDate
                     //$academicYear = ''; //[2021-2022]
                     if ($status == 'pending') {
-//                        $statusChangeUrl = $this->container->get('router')->generate(
-//                            'vacreq_floating_status_change',
-//                            array(
-//                                'id' => $floatingRequest->getId(),
-//                                'status' => 'canceled'
-//                            )
-//                            //UrlGeneratorInterface::ABSOLUTE_URL
-//                        );
-
-//                        <a
-//                            general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
-//                            general-data-callback="refreshpage"
-//                            href="{{ path('resapp_status', { 'id': entity.id, 'status': 'complete' }, true) }}">Mark as Complete
-//                        </a>
-//                        <a
-//                           class="approve-action"
-//                           data-confirm="Are you sure you want to Approve?"
-//                           href="javascript:approveUserRequest( {{loop.index0}} )">Approve
-//                        </a>
 
                         $confirm = "Are you sure you would like to cancel this ".
                             $floatingType->getName()." floating Day request with ID #".
@@ -5377,6 +5365,14 @@ class VacReqUtil
                         $linkMsg = "Cancel of the ".$floatingDay->format('m/d/Y').
                             " ".$floatingType->getName()." floating day";
 
+//                        $statusChangeUrl = $this->container->get('router')->generate(
+//                            'vacreq_floating_status_change',
+//                            array(
+//                                'id' => $floatingRequest->getId(),
+//                                'status' => 'canceled'
+//                            )
+//                            //UrlGeneratorInterface::ABSOLUTE_URL
+//                        );
 //                        $link =
 //                            '<a
 //                            class="btn btn-default"
@@ -5387,17 +5383,6 @@ class VacReqUtil
 //                            Cancel of the '.$floatingDay->format('m/d/Y').
 //                            ' '.$floatingType->getName().' floating day
 //                            </a>';
-
-                        //general-data-callback="vacreqdonothing"
-
-//                        $link =
-//                        '<a
-//                           class="btn btn-default status-change-action1"
-//                           general-data-confirm="'.$confirm.'"
-//                           href="javascript:vacreqdonothing('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
-//                        </a>';
-
-                        //href="javascript:changeFloatingStatusAjax('.$floatingRequest->getId().',\'canceled\');">'.$linkMsg.'
 
                         $routeName = "'vacreq_floating_status_ajax_change'";
                         $toStatus = "'canceled'";
@@ -5427,16 +5412,9 @@ class VacReqUtil
                             "</div>"
                         ;
                     }
-                    if ($status == 'approved') {
+                    if( $status == 'approved' ) {
 
-                        $statusChangeUrl = $this->container->get('router')->generate(
-                            'vacreq_floating_status_cancellation_request',
-                            array(
-                                'id' => $floatingRequest->getId(),
-                                'status' => 'cancellation-request'
-                            )
-                            //UrlGeneratorInterface::ABSOLUTE_URL
-                        );
+
 
                         $confirm = "Are you sure you would like to Request cancellation this,".
                             " already approved ".
@@ -5446,6 +5424,14 @@ class VacReqUtil
                         $linkMsg = "Request cancelation of the ".$floatingDay->format('m/d/Y').
                             " ".$floatingType->getName()." floating day";
 
+//                        $statusChangeUrl = $this->container->get('router')->generate(
+//                            'vacreq_floating_status_cancellation_request',
+//                            array(
+//                                'id' => $floatingRequest->getId(),
+//                                'status' => 'cancellation-request'
+//                            )
+//                        //UrlGeneratorInterface::ABSOLUTE_URL
+//                        );
 //                        $link =
 //                            '<a
 //                            class="btn btn-default"
@@ -5470,7 +5456,8 @@ class VacReqUtil
                         '</a>';
 
                         $errorMsg =
-                            "<div class='well alert alert-info error-holder'>".
+                            "<div id='warning-existing-".$floatingRequest->getId()."'".
+                            " class='well alert alert-info error-holder'>".
                             "A ".$floatingType->getName()." floating day of ".$floatingDay->format('m/d/Y').
                             " has already been approved for this ".$yearRangeStr.
                             " academic year by ".$approverStr.
@@ -5481,7 +5468,10 @@ class VacReqUtil
                             "To submit a new floating day request for the same academic year, ".
                             "you would first need to request cancellation ".
                             "of this previous request by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
-                            "</div>";
+                            "</div>".
+                            "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
+                            "</div>"
+                        ;
                     }
 //                    if ($status == 'canceled') {
 //                        $errorMsg =

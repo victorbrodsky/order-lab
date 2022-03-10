@@ -409,19 +409,25 @@
                 } else
                 if( data.error == false ) {
                     console.log("Case: no error");
-                    //remove modal
-                    //$('#generalDataConfirmModal').remove();
-//                    $('.modal').modal('hide').data('bs.modal', null );
-//                    $('.modal').remove();
-//                    $("#generalDataConfirmModal").remove();
+
+//                    if( status == 'cancellation-request' ) {
+//                        status = 'requesting cancellation';
+//                    }
+
+                    var msg = 'Floating day request ID #'+id+' has been '+status + '. ';
+
+                    if( data.message  ) {
+                        msg = data.message;
+                    }
 
                     //remove/update this error box
-                    $('#warning-existing-'+id).html('Floating day request ID #'+id+' has been '+status);
+                    $('#warning-existing-'+id).html(msg);
                 } else {
                     console.log("Case: Unknown error");
                     $('#error-existing-'+id).html("Unknown error").show();
                 }
 
+                //remove modal
                 $('.modal').modal('hide').data('bs.modal', null );
                 $('.modal').remove();
                 $( '.modal-backdrop' ).remove();

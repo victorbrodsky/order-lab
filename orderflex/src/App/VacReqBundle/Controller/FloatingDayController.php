@@ -1275,6 +1275,7 @@ class FloatingDayController extends OrderAbstractController
 //            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
 //        }
 //        //////////////// EOF change status ////////////////////////
+
         $resArr = $this->changeFloatingStatus($entity,$status,$request);
 
         //duplicate check for overlapped requests
@@ -1376,7 +1377,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $resArr = $this->changeFloatingStatus($entity,$status,$request,$testing);
 
@@ -1471,7 +1472,7 @@ class FloatingDayController extends OrderAbstractController
                 $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, $status );
             }
 
-            $removeCarryoverStr = "";
+            //$removeCarryoverStr = "";
 //                if( $entity->getRequestTypeAbbreviation() == "carryover" && $status == "canceled" && $originalStatus == "approved" ) {
 //                    //TODO: reset user's VacReqUserCarryOver object? Take care of this case by syncVacReqCarryOverRequest
 //                    //reset user's VacReqUserCarryOver object: remove VacReqCarryOver for this canceled request year
@@ -1493,14 +1494,14 @@ class FloatingDayController extends OrderAbstractController
             }
 
             $event = ucwords($requestName)." ID #" . $entity->getId() . " for " . $entity->getUser() .
-                " has been " . $statusStr . " by " . $user;
+                " has been " . $statusStr . " by " . $user . ".<br>";
             //$event .= ": ".$entity->getDetailedStatus().".";
 
             if( $approversNameStr ) {
                 $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
             }
 
-            $event .= $removeCarryoverStr;
+            //$event .= $removeCarryoverStr;
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -1519,7 +1520,7 @@ class FloatingDayController extends OrderAbstractController
             $resArr = array(
                 'error' => false,
                 'errorType' => NULL,
-                'message' => ""
+                'message' => $event
             );
             return $resArr;
         }
@@ -1536,7 +1537,6 @@ class FloatingDayController extends OrderAbstractController
     /**
      * submitter can submit a "cancellation-request" for an entire, already approved request
      * @Route("/status-cancellation-request/floating/{id}", name="vacreq_floating_status_cancellation_request", methods={"GET"})
-     * @Route("/status-cancellation-request-from-ajax/floating/{id}", name="vacreq_floating_status_cancellation_request_from_ajax", methods={"GET"})
      */
     public function statusCancellationRequestAction(Request $request, $id) {
 
@@ -1544,7 +1544,7 @@ class FloatingDayController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1558,11 +1558,11 @@ class FloatingDayController extends OrderAbstractController
             $entity->getUser()->getId() != $user->getId() //author can request cancellation
         ) {
             //exit("No permission");
-            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
-                return false;
-            } else {
+//            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
+//                return false;
+//            } else {
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
-            }
+//            }
         }
 
         if( !$entity->isOverallStatus('approved') ) {
@@ -1572,11 +1572,11 @@ class FloatingDayController extends OrderAbstractController
                 'You can not submit a Cancellation Requested for not approved floating request.'
             );
 
-            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
-                return false;
-            } else {
+//            if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
+//                return false;
+//            } else {
                 return $this->redirectToRoute("vacreq_myfloatingrequests");
-            }
+//            }
         }
 
 //        $entity->setExtraStatus("Cancellation Requested");
@@ -1650,10 +1650,17 @@ class FloatingDayController extends OrderAbstractController
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
-        $res = $this->statusCancelationRequest($entity,$request,$testing);
+        $testing = false;
+        //$testing = true;
 
-        if( $routeName == 'vacreq_floating_status_cancellation_request_from_ajax' ) {
-            return true;
+        $eventSubject = $this->statusCancelationRequest($entity,$request,$testing);
+
+        //Flash
+        if( $eventSubject ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $eventSubject
+            );
         }
 
         return $this->redirectToRoute("vacreq_myfloatingrequests");
@@ -1727,9 +1734,9 @@ class FloatingDayController extends OrderAbstractController
         }
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
-        $resArr = $this->statusCancelationRequest($entity,$request,$testing);
+        $eventSubject = $this->statusCancelationRequest($entity,$request,$testing);
 
 //        if( $res ) {
 //            $resArr = array(
@@ -1739,6 +1746,13 @@ class FloatingDayController extends OrderAbstractController
 //            $response->setContent(json_encode($resArr));
 //            return $response;
 //        }
+
+        if( $eventSubject ) {
+            $resArr = array(
+                'error' => false,
+                'message' => $eventSubject
+            );
+        }
 
         //dump($resArr);
         //exit('111');
@@ -1750,8 +1764,14 @@ class FloatingDayController extends OrderAbstractController
     }
 
     public function statusCancelationRequest( $entity, $request, $testing=false ) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
         $entity->setExtraStatus("Cancellation Requested");
-        $em->flush();
+
+        if( $testing === false ) {
+            $em->flush();
+        }
 
         $requestName = $entity->getRequestName();
         $userNameOptimal = $entity->getUser()->getUsernameOptimal();
@@ -1809,19 +1829,22 @@ class FloatingDayController extends OrderAbstractController
 
         $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
 
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $eventSubject
-        );
+//        //Flash
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $eventSubject
+//        );
 
         $eventType = 'Floating Day Request Updated';
 
         //Event Log
         $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
-        return true;
+        if( $testing === false ) {
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
+        }
+
+        return $eventSubject;
     }
 
     /**
