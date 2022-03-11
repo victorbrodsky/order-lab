@@ -42,7 +42,13 @@
 
 {% block content %}
 
+    {% set floatingRequestId = null %}
+    {% if entity is defined and entity %}
+        {% set floatingRequestId = entity.getId() %}
+    {% endif %}
+
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="floating-request-id" value="{{ floatingRequestId }}" />
 
     {% if floatingNote is defined and floatingNote %}
         <div class="alert alert-info" role="alert">
@@ -323,7 +329,11 @@
 //                var subjectUserId = $('#oleg_vacreqbundle_request_user').select2('val');
 //                console.log("subjectUserId="+subjectUserId);
 //                if( subjectUserId ) {
-                var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId);
+
+                var floatingRequestId = $('#floating-request-id').val();
+                console.log("floatingRequestId="+floatingRequestId);
+
+                var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId, floatingRequestId);
                 if (checkRes) {
                     //console.log("checkRes:",checkRes);
                     if (checkRes.error == true) {
@@ -347,7 +357,7 @@
             }
 
             //console.log("form is valid");
-            lbtn.stop(); //testing
+            //lbtn.stop(); //testing
             //return false; //testing
 
             $('#vacreq-floatingday-form').submit();
@@ -364,7 +374,8 @@
             }
         }
 
-        function checkExistedFloatingDay( floatingTypeId, floatingDay, subjectUserId ) {
+        function checkExistedFloatingDay( floatingTypeId, floatingDay, subjectUserId, floatingRequestId ) {
+            console.log("floatingRequestId="+floatingRequestId);
             var resData = null;
             var thisAsyncflag = false;
             var url = Routing.generate('vacreq_check_existed_floating_ajax');
@@ -373,7 +384,7 @@
                 timeout: _ajaxTimeout,
                 dataType: 'json',
                 async: thisAsyncflag,
-                data: {floatingTypeId: floatingTypeId, floatingDay: floatingDay, subjectUserId: subjectUserId},
+                data: {floatingTypeId: floatingTypeId, floatingDay: floatingDay, subjectUserId: subjectUserId, floatingRequestId: floatingRequestId},
             }).done(function(data) {
                 resData = data;
             });

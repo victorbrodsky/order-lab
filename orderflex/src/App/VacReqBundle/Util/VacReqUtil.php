@@ -5285,7 +5285,8 @@ class VacReqUtil
     }
 
     //check if floating day already approved or pending in this academic year
-    public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId, $statusArr=array('approved') ) {
+    //$exceptEntityId - except this Floating Request entity.
+    public function getCheckExistedFloatingDayInAcademicYear( $floatingTypeId, $floatingDay, $subjectUserId, $statusArr=array('approved'), $exceptEntityId=null ) {
 
         $newline =  "<br>\n";
         //$newline =  "\n";
@@ -5325,6 +5326,11 @@ class VacReqUtil
         if (count($floatingRequests) > 0) {
             $errorMsgArr = array();
             foreach ($floatingRequests as $floatingRequest) {
+                
+                if( $exceptEntityId && $exceptEntityId == $floatingRequest->getId() ) {
+                    continue;
+                }
+                
                 $status = $floatingRequest->getStatus();
                 $extraStatus = $floatingRequest->getExtraStatus();
                 $floatingDay = $floatingRequest->getFloatingDay();

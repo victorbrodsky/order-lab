@@ -1466,9 +1466,16 @@ class FloatingDayController extends OrderAbstractController
         $response->headers->set('Content-Type', 'application/json');
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $id = $request->get('id');
         $status = $request->get('status'); //format: floatingDay=02/23/2022
+
+        if( $status && $status == 'cancellation-request' ) {
+            $statusStr = "Cancelation Request";
+        } else {
+            $statusStr = $status;
+        }
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1482,32 +1489,50 @@ class FloatingDayController extends OrderAbstractController
             return $response;
         }
 
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
-            //Approvers can change status to anything
-        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
-            //Owner can only set status to: canceled, pending
-            if( $status != "canceled" && $status != "pending" ) {
-                $errorMsg = "You can not change status of this ".$entity->getRequestName().
-                    " with ID #".$entity->getId()." to ".$status.
-                    ": Reason: request is not pending or canceled";
+//        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+//            //Approvers can change status to anything
+//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+//            //Owner can only set status to: canceled, pending
+//            if( $status != "canceled" && $status != "pending" ) {
+//                $errorMsg = "You can not change status of this ".$entity->getRequestName().
+//                    " with ID #".$entity->getId()." to ".$statusStr.
+//                    ": Reason: request is not pending or canceled";
+//
+//                $resArr = array(
+//                    'error' => true,
+//                    'message' => $errorMsg
+//                );
+//                $response->setContent(json_encode($resArr));
+//                return $response;
+//            }
+//        } else {
+//            $errorMsg = "You can not change status of this ".$entity->getRequestName().
+//                " with ID #".$entity->getId()." to ".$statusStr;
+//
+//            $resArr = array(
+//                'error' => true,
+//                'message' => $errorMsg
+//            );
+//            $response->setContent(json_encode($resArr));
+//            return $response;
+//        }
 
-                $resArr = array(
-                    'error' => true,
-                    'message' => $errorMsg
-                );
-                $response->setContent(json_encode($resArr));
-                return $response;
-            }
-        } else {
-            $errorMsg = "You can not change status of this ".$entity->getRequestName().
-                " with ID #".$entity->getId()." to ".$status;
+        //check permissions
+        if(
+            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            $entity->getUser()->getId() != $user->getId() //author can request cancellation
+        ) {
+            //exit("No permission");
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
 
-            $resArr = array(
-                'error' => true,
-                'message' => $errorMsg
+        if( !$entity->isOverallStatus('approved') ) {
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'You can not submit a Cancellation Requested for not approved floating request.'
             );
-            $response->setContent(json_encode($resArr));
-            return $response;
+            return $this->redirectToRoute("vacreq_myfloatingrequests");
         }
 
         $testing = false;
@@ -1759,12 +1784,13 @@ class FloatingDayController extends OrderAbstractController
         $floatingTypeId = $request->get('floatingTypeId');
         $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
         $subjectUserId = $request->get('subjectUserId');
+        $floatingRequestId = $request->get('floatingRequestId');
         //echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
 
         $statusArr = array('pending','approved');
         
         //$resArr = $vacreqUtil->getCheckExistedFloatingDay($floatingTypeId,$floatingDay,$subjectUserId);
-        $resArr = $vacreqUtil->getCheckExistedFloatingDayInAcademicYear($floatingTypeId,$floatingDay,$subjectUserId,$statusArr);
+        $resArr = $vacreqUtil->getCheckExistedFloatingDayInAcademicYear($floatingTypeId,$floatingDay,$subjectUserId,$statusArr,$floatingRequestId);
 
         //testing
         //dump($resArr);
