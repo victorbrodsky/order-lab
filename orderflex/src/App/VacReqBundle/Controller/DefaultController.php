@@ -20,6 +20,7 @@ namespace App\VacReqBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -103,6 +104,176 @@ class DefaultController extends OrderAbstractController
 //            'vacReqRequests' => $vacReqRequests
 //        );
 //    }
+
+    /**
+     * @Route("/help", name="vacreq_help_page")
+     * @Template("AppVacReqBundle/Default/help.html.twig")
+     */
+    public function helpAction( Request $request ) {
+
+        $title = "Help";
+        $filename = "floating-day-request.pdf";
+
+        //$bundleFileName = '@AppTranslationalResearchBundle/Resources/public/images/'.$filename;
+        $bundleFileName = "orderassets\\AppVacReqBundle\\help\\".$filename;
+
+        return $this->viewDiskFileMethod($filename,$bundleFileName);
+
+
+        if(0) {
+            return array(
+                'sitename' => $this->getParameter('vacreq.sitename'),
+                'title' => $title,
+                'bundleFileName' => $bundleFileName,
+                'fileName' => $filename,
+            );
+        }
+        if(0) {
+            $size = null;//$document->getSize();
+
+            $downloader = new LargeFileDownloader();
+            $downloader->downloadLargeFile($bundleFileName, $filename, $size);
+
+            exit;
+        }
+    }
+    public function viewDiskFileMethod($filename,$bundleFileName) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $originalname = null;
+        $size = null;
+        $viewType = null;
+
+        $response = new Response();
+
+        $downloader = new LargeFileDownloader();
+        $downloader->downloadLargeFile($bundleFileName, $filename, $size, true, "view", $viewType);
+        exit;
+
+//        if( $document ) {
+//
+//            //event log
+//            //if( $viewType != 'snapshot' ) {
+//            if( strpos($viewType, 'snapshot') === false ) {
+//                $user = $this->get('security.token_storage')->getToken()->getUser();
+//                $eventDescription = "Document has been viewed by " . $user;
+//                $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
+//            }
+//
+//            if( strpos($viewType, 'snapshot') === false ) {
+//                $originalname = $document->getOriginalnameClean();
+//                $abspath = $document->getAbsoluteUploadFullPath();
+//                $size = $document->getSize();
+//                //echo "not snapshot abspath=$abspath <br>";
+//                //exit('exit notsnapshot');
+//            } else {
+//
+//                $viewTypeArr = explode("-", $viewType);
+//                if (count($viewTypeArr) > 1) {
+//                    $resize = $viewTypeArr[1];
+//                } else {
+//                    $resize = null;
+//                }
+//                //$resize = null; //testing: disable resize images
+//
+//                //TODO: resize thumbnails http://127.0.0.1/order/fellowship-applications/generate-thumbnails
+//                //get small thumbnail - i.e. used for the fellowship application list //small-18sec, original-25sec
+//                if( $resize == "small" ) {
+//                    $originalname = $document->getOriginalnameClean();
+//                    //$size = $document->getSize();
+//                    //$size = $document->getSizeBySize($resize);
+//                    //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+//                    $abspath = $document->getFileSystemPath($resize);
+//                    //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
+//                    if( file_exists($abspath) ) {
+//                        //echo "The file $abspath exists <br>";
+//                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+//                    } else {
+//                        //echo "The file $abspath does not exists <br>";
+//                        //try to re-generate thumbnails for jpg and jpeg
+//                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+//                            $userServiceUtil = $this->container->get('user_service_utility');
+//                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
+//                            if( $destRes ) {
+//                                $logger = $this->container->get('logger');
+//                                $logger->notice("Try to re-generate small thumbnail for $originalname. destRes=" . $destRes);
+//                            }
+//                        }
+//
+//                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+//                    }
+//                    $size = $document->getSizeBySize($resize);
+//                    //exit('exit small: '.$abspath."; size=".$size);
+//                }
+//                //get small thumbnail - i.e. used for the fellowship application view
+//                elseif( $resize == "medium" ) {
+//                    $originalname = $document->getOriginalnameClean();
+//                    //$size = $document->getSize();
+//                    //$size = $document->getSizeBySize($resize);
+//                    //$abspath = $document->getAbsoluteUploadFullPath($resize,true);
+//                    $abspath = $document->getFileSystemPath($resize);
+//                    if( file_exists($abspath) ) {
+//                        //echo "The file $abspath exists <br>";
+//                        $abspath = $document->getAbsoluteUploadFullPath($resize,true);
+//                    } else {
+//                        //echo "The file $abspath does not exists <br>";
+//                        //try to re-generate thumbnails
+//                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+//                            $userServiceUtil = $this->container->get('user_service_utility');
+//                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
+//                            if( $destRes ) {
+//                                $logger = $this->container->get('logger');
+//                                $logger->notice("Try to re-generate medium thumbnail for $originalname. destRes=" . $destRes);
+//                            }
+//                        }
+//
+//                        $abspath = $document->getAbsoluteUploadFullPath($resize);
+//                    }
+//                    $size = $document->getSizeBySize($resize);
+//                    //exit('exit medium: '.$abspath);
+//                } else {
+//                    //default
+//                    $originalname = $document->getOriginalnameClean();
+//                    $abspath = $document->getAbsoluteUploadFullPath();
+//                    $size = $document->getSize();
+//                    //echo "default abspath=$abspath <br>";
+//                }
+//            }
+//
+//            //There is no small, medium size for PDF. PDF is not resize and always the same size.
+//            if( !$size ) {
+//                $size = $document->getSize();
+//            }
+//
+//            //abspath=http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg
+//            //$abspath = "http://127.0.0.1/order/Uploaded/fellapp/FellowshipApplicantUploads/small-1557157978ID1J9qjngqM1Bt_PZedHfJtX1S_sALg8YS-.jpg";
+//            //echo "abspath=$abspath <br>";
+//            //exit(111);
+//            //$logger = $this->container->get('logger');
+//            //$logger->notice("abspath=$abspath");
+//            if( $abspath || $originalname || $size ) {
+//                //echo "abspath=".$abspath."<br>";
+//                //echo "originalname=".$originalname."<br>";
+//                //echo "$abspath: size=".$size."<br>";
+//                //exit(111);
+//                $downloader = new LargeFileDownloader();
+//                ////$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
+//                //$viewType = null; //viewType allow to resize file, but it does not work properly, so disable it by setting to null
+//                $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
+//            } else {
+//                exit ("File $originalname is not available");
+//            }
+//
+//            exit;
+//        } else {
+//            $response->setContent('error');
+//        }
+//
+//        return $response;
+    }
 
 
     /**

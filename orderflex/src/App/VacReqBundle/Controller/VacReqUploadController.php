@@ -61,6 +61,9 @@ class VacReqUploadController extends UploadController {
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('vacreq.sitename'),$eventtype,$viewType);
     }
+    
 
+
+    
 
 } 
