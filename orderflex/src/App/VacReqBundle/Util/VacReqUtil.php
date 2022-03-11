@@ -5412,7 +5412,7 @@ class VacReqUtil
                             "Only one ".$floatingType->getName()." floating day can be approved per academic year. ".
                             $newline.
                             "To submit a new floating day request for the same academic year, ".
-                            "you would first need to cancel of this previous request ". //request cancellation
+                            "you would first need to cancel this previous request ". //request cancellation
                             "by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                             "</div>".
                             "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
@@ -5494,7 +5494,7 @@ class VacReqUtil
                                 $newline.
                                 "To submit a new floating day request for the same academic year, ".
                                 "you would first need to request cancellation ".
-                                "of this previous request by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                                "this previous request by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                                 "</div>".
                                 "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
                                 "</div>"
