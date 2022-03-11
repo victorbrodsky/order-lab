@@ -5368,8 +5368,8 @@ class VacReqUtil
                             $floatingType->getName()." floating Day request with ID #".
                             $floatingRequest->getId()."?";
 
-                        $linkMsg = "Cancel of the ".$floatingDay->format('m/d/Y').
-                            " ".$floatingType->getName()." floating day";
+                        $linkMsg = "Cancel the ".$floatingDay->format('m/d/Y').
+                            " ".$floatingType->getName()." floating day request";
 
 //                        $statusChangeUrl = $this->container->get('router')->generate(
 //                            'vacreq_floating_status_change',
@@ -5413,7 +5413,7 @@ class VacReqUtil
                             $newline.
                             "To submit a new floating day request for the same academic year, ".
                             "you would first need to cancel of this previous request ". //request cancellation
-                            "by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                            "by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                             "</div>".
                             "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
                             "</div>"
@@ -5448,7 +5448,7 @@ class VacReqUtil
                                 $floatingRequest->getId(). "?";
 
                             $linkMsg = "Request cancelation of the ".$floatingDay->format('m/d/Y').
-                                " ".$floatingType->getName()." floating day";
+                                " ".$floatingType->getName()." floating day request";
 
 //                        $statusChangeUrl = $this->container->get('router')->generate(
 //                            'vacreq_floating_status_cancellation_request',
@@ -5494,7 +5494,7 @@ class VacReqUtil
                                 $newline.
                                 "To submit a new floating day request for the same academic year, ".
                                 "you would first need to request cancellation ".
-                                "of this previous request by clicking ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                                "of this previous request by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                                 "</div>".
                                 "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
                                 "</div>"
