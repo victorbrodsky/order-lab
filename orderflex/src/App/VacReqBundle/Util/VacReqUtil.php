@@ -5494,7 +5494,7 @@ class VacReqUtil
                                 $newline.
                                 "To submit a new floating day request for the same academic year, ".
                                 "you would first need to request cancellation ".
-                                "this previous request by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
+                                "of this previous request by pressing ".$link. //[Request cancelation of the 10/19/2022 Juneteenth floating day]."
                                 "</div>".
                                 "<div id='error-existing-".$floatingRequest->getId()."' class='alert alert-warning' style='display:none;'>".
                                 "</div>"
