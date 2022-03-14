@@ -4581,37 +4581,6 @@ class VacReqUtil
         return $ids;
     }
 
-    //get unique users with vacreq requests
-    public function getVacReqUsers() {
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
-        $dql = $repository->createQueryBuilder("request");
-
-        $dql->select('DISTINCT request.user');
-
-        //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
-        //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
-
-        $dql->leftJoin("request.user", "user");
-        //$dql->leftJoin("request.submitter", "submitter");
-        //$dql->leftJoin("user.infos", "infos");
-        //$dql->leftJoin("request.institution", "institution");
-        //$dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
-
-        $dql->leftJoin("request.requestBusiness", "requestBusiness");
-        $dql->leftJoin("request.requestVacation", "requestVacation");
-
-        //$dql->leftJoin("request.requestType", "requestType");
-
-        $query = $dql->getQuery();
-
-        $users = $query->getResult();
-
-        echo "users=".count($users)."<br>";
-        exit('111');
-
-        return $users;
-    }
-
     public function createtListExcel( $ids ) {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -5052,7 +5021,95 @@ class VacReqUtil
         return 0;
     }
 
-    public function createtSummaryReportByNameSpout( $ids, $fileName, $yearRangeStr ) {
+    //get unique users with vacreq requests
+    public function getVacReqUsers() {
+
+        if(0) {
+            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+            $dql = $repository->createQueryBuilder("request");
+
+            //$dql->select('request, DISTINCT user as users');
+            //$dql->select('DISTINCT request.user');
+            //$dql->select('user');
+            $dql->select('request');
+
+            //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
+            //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+
+            $dql->leftJoin("request.user", "user");
+            //$dql->leftJoin("request.submitter", "submitter");
+            //$dql->leftJoin("user.infos", "infos");
+            //$dql->leftJoin("request.institution", "institution");
+            //$dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
+
+            //$dql->leftJoin("request.requestBusiness", "requestBusiness");
+            //$dql->leftJoin("request.requestVacation", "requestVacation");
+
+            //$dql->leftJoin("request.requestType", "requestType");
+
+            //$dql->groupBy('request,user.id');
+            //$dql->groupBy('request.id,user.id');
+            //$dql->groupBy('user.id');
+
+            $query = $dql->getQuery();
+            $requests = $query->getResult();
+            $uniqueUsers = array();
+            foreach ($requests as $request) {
+                $thisUser = $request->getUser();
+                $uniqueUsers[$thisUser->getId()] = 1;
+            }
+            echo "uniqueUsers=" . count($uniqueUsers) . "<br>";
+        }
+
+        //WITH  request.id <> request2.id
+        //WHERE duser.id = user.id
+        //INNER JOIN request.user user
+
+//        $str =
+//              "SELECT fosuser.id".
+//              " FROM AppVacReqBundle:VacReqRequest request".
+//              " INNER JOIN AppUserdirectoryBundle:User fosuser"
+//              ." ON request.user = fosuser.id"
+//              ." WHERE request.user IS NOT NULL"
+//        ;
+
+        //When you include fields from the joined entity in the SELECT clause you get a fetch join
+        $str =
+            "SELECT DISTINCT user.id as id".
+            " FROM AppVacReqBundle:VacReqRequest request".
+            " INNER JOIN request.user user"
+            //." ON request.user = fosuser.id"
+            ." WHERE user IS NOT NULL"
+        ;
+
+        //$str = 'SELECT DISTINCT user.id FROM AppVacReqBundle:VacReqRequest r INNER JOIN r.user user';
+
+        $query = $this->em->createQuery($str);
+
+        $query->setMaxResults(3); //testing
+
+        $users = $query->getResult();
+        $ids = array_map('current', $users);
+        //echo "ids=".count($ids)."<br>";
+
+//        //dump($users);
+//        dump($ids);
+//        exit('222');
+//
+//        foreach($users as $user) {
+//            echo "user=".$user."<br>";
+//        }
+//
+//        echo "users=".count($users)."<br>";
+        //exit('111');
+
+        return $ids;
+    }
+
+    public function createtSummaryReportByNameSpout( $userIds, $fileName, $yearRangeStr ) {
+
+        //echo "userIds=".count($userIds)."<br>";
+        //exit('1');
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
@@ -5114,17 +5171,17 @@ class VacReqUtil
         $totalNumberVacationDays = 0;
 
         $row = 2;
-        foreach( explode("-",$ids) as $vacreqId ) {
+        foreach( $userIds as $userId ) {
 
-            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
-            if( !$vacreq ) {
+            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            if( !$user ) {
                 continue;
             }
 
-            //check if author can have access to view this request
-            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
-                continue; //skip this applicant because the current user does not permission to view this applicant
-            }
+//            //check if author can have access to view this request
+//            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+//                continue; //skip this applicant because the current user does not permission to view this applicant
+//            }
 
             $data = array();
 

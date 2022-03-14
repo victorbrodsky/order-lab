@@ -320,7 +320,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * @Route("/download-summary-report-spreadsheet/", name="vacreq_download_summary_report_spreadsheet", methods={"POST"})
+     * @Route("/download-summary-report-spreadsheet/", name="vacreq_download_summary_report_spreadsheet", methods={"GET","POST"})
      */
     public function downloadSummaryReportExcelAction( Request $request ) {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
@@ -337,7 +337,7 @@ class DefaultController extends OrderAbstractController
         $fileName = "SummaryReportByName".".xlsx";
 
         $yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
-        echo "yearRangeStr=".$yearRangeStr."<br>";
+        //echo "yearRangeStr=".$yearRangeStr."<br>";
 
         //$yearRanges = array();
         //$yearRanges[] = $vacreqUtil->getCurrentAcademicYearRange();
@@ -345,13 +345,12 @@ class DefaultController extends OrderAbstractController
         //$yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange(1);
 
         //ids - users ids with vacreq requests
-        $users = $vacreqUtil->getVacReqUsers();
-
-
-        $ids = null;
-
+        $userIds = $vacreqUtil->getVacReqUsers();
+        //echo "userIds=".count($userIds)."<br>";
+        //exit('1');
+        
         //Spout
-        $vacreqUtil->createtSummaryReportByNameSpout($ids, $fileName,$yearRangeStr);
+        $vacreqUtil->createtSummaryReportByNameSpout($userIds, $fileName,$yearRangeStr);
 
         exit();
     }
