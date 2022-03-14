@@ -408,7 +408,20 @@ class RequestIndexController extends OrderAbstractController
                         <input class="btn" type="submit" value="download in Excel">
                         </form>';
 
+                    //TODO: Summary Report By Name, make in the same line
+                    $downloadUrl2 = $this->container->get('router')->generate(
+                        'vacreq_download_summary_report_spreadsheet',
+                        array(),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $downloadLink2 =
+                        '<form action="'.$downloadUrl2.'" method="post">
+                        <input type="hidden" name="ids" value="'.implode("-", $matchingIds).'">
+                        <input class="btn" type="submit" value="download in Excel by faculty member">
+                        </form>';
+
                     $pageTitle = $indexTitle . " <p>" . $downloadLink . "</p>";
+                    $pageTitle = $pageTitle . " <p>" . $downloadLink2 . "</p>";
                 }
             }
         }

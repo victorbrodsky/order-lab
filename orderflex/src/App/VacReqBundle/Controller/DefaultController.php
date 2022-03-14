@@ -320,6 +320,43 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
+     * @Route("/download-summary-report-spreadsheet/", name="vacreq_download_summary_report_spreadsheet", methods={"POST"})
+     */
+    public function downloadSummaryReportExcelAction( Request $request ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $vacreqUtil = $this->get('vacreq_util');
+
+
+        //$ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $fileName = "SummaryReportByName".".xlsx";
+
+        $yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
+        echo "yearRangeStr=".$yearRangeStr."<br>";
+
+        //$yearRanges = array();
+        //$yearRanges[] = $vacreqUtil->getCurrentAcademicYearRange();
+        //$yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
+        //$yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange(1);
+
+        //ids - users ids with vacreq requests
+        $users = $vacreqUtil->getVacReqUsers();
+
+
+        $ids = null;
+
+        //Spout
+        $vacreqUtil->createtSummaryReportByNameSpout($ids, $fileName,$yearRangeStr);
+
+        exit();
+    }
+
+    /**
      * http://127.0.0.1/order/index_dev.php/vacation-request/multiple-carry-over-requests
      *
      * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")

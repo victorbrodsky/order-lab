@@ -4581,6 +4581,37 @@ class VacReqUtil
         return $ids;
     }
 
+    //get unique users with vacreq requests
+    public function getVacReqUsers() {
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        $dql = $repository->createQueryBuilder("request");
+
+        $dql->select('DISTINCT request.user');
+
+        //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
+        //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+
+        $dql->leftJoin("request.user", "user");
+        //$dql->leftJoin("request.submitter", "submitter");
+        //$dql->leftJoin("user.infos", "infos");
+        //$dql->leftJoin("request.institution", "institution");
+        //$dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
+
+        $dql->leftJoin("request.requestBusiness", "requestBusiness");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        //$dql->leftJoin("request.requestType", "requestType");
+
+        $query = $dql->getQuery();
+
+        $users = $query->getResult();
+
+        echo "users=".count($users)."<br>";
+        exit('111');
+
+        return $users;
+    }
+
     public function createtListExcel( $ids ) {
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -5019,6 +5050,165 @@ class VacReqUtil
         }
 
         return 0;
+    }
+
+    public function createtSummaryReportByNameSpout( $ids, $fileName, $yearRangeStr ) {
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        //$writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterEntityFactory::createXLSXWriter();
+        $writer->openToBrowser($fileName);
+
+        $headerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("E0E0E0"))
+            ->build();
+
+        $requestStyle = (new StyleBuilder())
+            ->setFontSize(10)
+            //->setShouldWrapText()
+            ->build();
+
+        $border = (new BorderBuilder())
+            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+            ->build();
+        $footerStyle = (new StyleBuilder())
+            ->setFontBold()
+            //->setFontItalic()
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText()
+            ->setBackgroundColor(Color::toARGB("EBF1DE"))
+            ->setBorder($border)
+            ->build();
+
+        $spoutRow = WriterEntityFactory::createRowFromArray(
+            [
+                'ID',                  //0 - A
+                'Person',              //1 - B
+                'Academic Year',       //2 - C
+                'Group',               //3 - D
+
+                'Business Days',       //4 - E
+                'Start Date',          //5 - F
+                'End Date',            //6 - G
+                'Status',              //7 - H
+
+                'Vacation Days',       //8 - I
+                'Start Date',          //9 - J
+                'End Date',            //10 - K
+                'Status',              //11 - L
+
+            ],
+            $headerStyle
+        );
+        $writer->addRow($spoutRow);
+        
+        $totalNumberBusinessDays = 0;
+        $totalNumberVacationDays = 0;
+
+        $row = 2;
+        foreach( explode("-",$ids) as $vacreqId ) {
+
+            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
+            if( !$vacreq ) {
+                continue;
+            }
+
+            //check if author can have access to view this request
+            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
+            }
+
+            $data = array();
+
+            //$ews->setCellValue('A'.$row, $vacreq->getId());
+            $data[0] = $vacreq->getId();
+
+            $academicYearArr = $this->getRequestAcademicYears($vacreq);
+            if( count($academicYearArr) > 0 ) {
+                $academicYear = $academicYearArr[0];
+            } else {
+                $academicYear = null;
+            }
+
+            //$ews->setCellValue('B'.$row, $vacreq->getUser());
+            $data[1] = $vacreq->getUser()."";
+            //$ews->setCellValue('C'.$row, $academicYear);
+            $data[2] = $academicYear;
+
+            //Group
+            //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
+            $data[3] = $vacreq->getInstitution()."";
+
+            $businessRequest = $vacreq->getRequestBusiness();
+            if( $businessRequest ) {
+                //$numberBusinessDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$businessRequest,array('E','F','G','H'));
+                $numberBusinessDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$businessRequest,array(4,5,6,7));
+                if( $numberBusinessDays ) {
+                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
+                }
+            } else {
+                $data[4] = NULL;
+                $data[5] = NULL;
+                $data[6] = NULL;
+                $data[7] = NULL;
+            }
+            //print_r($data);
+
+            $vacationRequest = $vacreq->getRequestVacation();
+            if( $vacationRequest ) {
+                //$numberVacationDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$vacationRequest,array('I','J','K','L'));
+                $numberVacationDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$vacationRequest,array(8,9,10,11));
+                if( $numberVacationDays ) {
+                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
+                }
+            } else {
+                $data[8] = NULL;
+                $data[9] = NULL;
+                $data[10] = NULL;
+                $data[11] = NULL;
+            }
+
+            //print_r($data);
+            //exit('111');
+
+            //$writer->addRowWithStyle($data,$requestStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+            $writer->addRow($spoutRow);
+            //$row = $row + 1;
+        }//foreach
+
+        $data = array();
+        $data[0] = NULL;
+        $data[2] = NULL;
+        $data[3] = NULL;
+        $data[5] = NULL;
+        $data[6] = NULL;
+        $data[7] = NULL;
+
+        //$ews->setCellValue('B'.$row, "Total"); //1
+        $data[1] = "Total";
+        //$ews->setCellValue('E'.$row, $totalNumberBusinessDays); //4
+        $data[4] = $totalNumberBusinessDays;
+        //$ews->setCellValue('I'.$row, $totalNumberVacationDays); //8
+        $data[8] = $totalNumberVacationDays;
+        //$writer->addRowWithStyle($data,$footerStyle);
+        $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+        $writer->addRow($spoutRow);
+
+        //set color light green to the last Total row
+        //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+        //exit("ids=".$fellappids);
+
+        $writer->close();
     }
 
     public function redirectIndex( $request ) {
