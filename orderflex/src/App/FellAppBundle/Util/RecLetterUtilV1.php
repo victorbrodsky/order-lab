@@ -14,7 +14,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class RecLetterUtil {
+class RecLetterUtilV1 {
 
     protected $em;
     protected $container;
@@ -675,8 +675,8 @@ class RecLetterUtil {
 //        $emailUtil->sendEmail( $emails, $subject, $body, $ccs );
 //        //test
 
-        //$filesize = $file->getFileSize();
-        $filesize = $file->getSize();
+        $filesize = $file->getFileSize();
+        //$filesize = $file->getSize();
         if( $filesize == 0 ) {
             $logger->error("Error processing reference letter with title=".$file->getTitle().": size is zero, filesize=".$filesize);
             //Send email to admin

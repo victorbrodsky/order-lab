@@ -3004,14 +3004,41 @@ class FellAppController extends OrderAbstractController {
      * @param apiDriveService $service Drive API service instance.
      * @param string $fileId ID of the file to print metadata for.
      */
-    function printFile($service, $fileId) {
+    function printFileV1($service, $fileId) {
         $file = null;
         try {
             $file = $service->files->get($fileId);
 
             print "Title: " . $file->getTitle()."<br>";
+            //print "Title: " . $file->getName()."<br>";
             print "ID: " . $file->getId()."<br>";
             print "Size: " . $file->getFileSize()."<br>";
+            //print "Size: " . $file->getSize()."<br>";
+            //print "URL: " . $file->getDownloadUrl()."<br>";
+            print "Description: " . $file->getDescription()."<br>";
+            print "MIME type: " . $file->getMimeType()."<br>"."<br>";
+
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+        return $file;
+    }
+    /**
+     * Print a file's metadata.
+     *
+     * @param apiDriveService $service Drive API service instance.
+     * @param string $fileId ID of the file to print metadata for.
+     */
+    function printFile($service, $fileId) {
+        $file = null;
+        try {
+            $file = $service->files->get($fileId);
+
+            //print "Title: " . $file->getTitle()."<br>";
+            print "Title: " . $file->getName()."<br>";
+            print "ID: " . $file->getId()."<br>";
+            //print "Size: " . $file->getFileSize()."<br>";
+            print "Size: " . $file->getSize()."<br>";
             //print "URL: " . $file->getDownloadUrl()."<br>";
             print "Description: " . $file->getDescription()."<br>";
             print "MIME type: " . $file->getMimeType()."<br>"."<br>";

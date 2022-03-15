@@ -39,7 +39,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //Test specific ftest file: php bin/phpunit tests/App/TestBundle/TrpTest.php
 
-//To specify http channel run it as: HTTP=1 ./bin/phpunit (dev)
+//To specify http channel run it as: HTTP=1 ./vendor/bin/phpunit -d memory_limit=-1 (dev)
 //To specify https channel (default) run it as: ./bin/phpunit (test,live)
 
 //Updated phpunit: php ./vendor/bin/phpunit

@@ -11,6 +11,9 @@
     "box/spout": {
         "version": "v3.1.0"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.5"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -99,6 +102,9 @@
     "fabiang/sasl": {
         "version": "v1.0.1"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.7"
+    },
     "friendsofsymfony/comment-bundle": {
         "version": "v2.4.0"
     },
@@ -185,6 +191,9 @@
     "knplabs/knp-time-bundle": {
         "version": "1.17.0"
     },
+    "laminas/laminas-code": {
+        "version": "4.5.1"
+    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -206,12 +215,6 @@
     "nikic/php-parser": {
         "version": "v4.3.0"
     },
-    "ocramius/package-versions": {
-        "version": "1.5.1"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
-    },
     "oneup/uploader-bundle": {
         "version": "2.0",
         "recipe": {
@@ -230,9 +233,6 @@
     },
     "phar-io/version": {
         "version": "3.1.0"
-    },
-    "php": {
-        "version": "7.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -831,11 +831,5 @@
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }

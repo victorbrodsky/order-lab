@@ -111,22 +111,35 @@ class DashboardTest extends WebTestBase
 
     public function testHomePageAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/dashboards/');
+        //$crawler = $this->client->request('GET', '/dashboards/');
+        $crawler = $this->client->request('GET', '/dashboards/?filter[startDate]=03/15/2021&filter[endDate]=03/15/2022&filter[projectSpecialty][]=0&title=Favorite charts');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Favorites")')->count()
 //        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Topic")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Service")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Type")')->count()
+//        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Topic")')->count()
+            $crawler->filter('html:contains("Favorite charts")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Service")')->count()
+            $crawler->filter('html:contains("Show")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Type")')->count()
+            $crawler->filter('html:contains("Clear")')->count()
         );
     }
 

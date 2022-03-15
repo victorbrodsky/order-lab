@@ -5086,7 +5086,7 @@ class VacReqUtil
 
         $query = $this->em->createQuery($str);
 
-        $query->setMaxResults(3); //testing
+        //$query->setMaxResults(50); //testing
 
         $users = $query->getResult();
         $ids = array_map('current', $users);
@@ -5145,24 +5145,26 @@ class VacReqUtil
             ->setBorder($border)
             ->build();
 
+        $columns = array(
+            'Person',                   //0 - A
+            'Email',                    //1 - B
+            'Group',                    //3 - D
+            //'Approvers',                            //Name(s)ofApprover(s)
+
+            'Approved Vacation Days',               //TotalNumberOfApprovedVacationDaysDuringSelectedFiscalYear
+            'Approved Business Days',               //TotalNumberOfBusinessTripDaysDuringSelectedFiscalYear
+            'Approved Vacation and Business Days',  //TotalNumberOfApprovedDaysAway(VacationAndBusiness)DuringSelectedFiscalYear
+            'Pending Vacation Days',                //TotalNumberOfRequestedVacationDaysForSelectedYearPendingApproval
+            'Total Number of Vacation Requests',    //TotalNumberOfVacationRequests
+
+            'Approved Carry Over Days',             //TotalNumberOfApprovedCarriedOverDaysFromLastYear
+            'Approved Floating Days',               //TotalNumberOfApprovedFloatingDaysDuringSelectedFiscalYear
+
+            //LinksToEachRequestForReview
+        );
+
         $spoutRow = WriterEntityFactory::createRowFromArray(
-            [
-                'ID',                  //0 - A
-                'Person',              //1 - B
-                'Academic Year',       //2 - C
-                'Group',               //3 - D
-
-                'Business Days',       //4 - E
-                'Start Date',          //5 - F
-                'End Date',            //6 - G
-                'Status',              //7 - H
-
-                'Vacation Days',       //8 - I
-                'Start Date',          //9 - J
-                'End Date',            //10 - K
-                'Status',              //11 - L
-
-            ],
+            $columns,
             $headerStyle
         );
         $writer->addRow($spoutRow);
@@ -5185,53 +5187,53 @@ class VacReqUtil
 
             $data = array();
 
-            //$ews->setCellValue('A'.$row, $vacreq->getId());
-            $data[0] = $vacreq->getId();
+            $data[array_search('Person', $columns)] = $user."";
+            $data[array_search('Email', $columns)] = $user->getSingleEmail();
 
-            $academicYearArr = $this->getRequestAcademicYears($vacreq);
-            if( count($academicYearArr) > 0 ) {
-                $academicYear = $academicYearArr[0];
-            } else {
-                $academicYear = null;
-            }
 
-            //$ews->setCellValue('B'.$row, $vacreq->getUser());
-            $data[1] = $vacreq->getUser()."";
-            //$ews->setCellValue('C'.$row, $academicYear);
-            $data[2] = $academicYear;
+            $groups = "";
+            $data[array_search('Group', $columns)] = $groups;
 
-            //Group
-            //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
-            $data[3] = $vacreq->getInstitution()."";
+//            //Group
+//            //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
+//            $data[3] = $vacreq->getInstitution()."";
 
-            $businessRequest = $vacreq->getRequestBusiness();
-            if( $businessRequest ) {
-                //$numberBusinessDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$businessRequest,array('E','F','G','H'));
-                $numberBusinessDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$businessRequest,array(4,5,6,7));
-                if( $numberBusinessDays ) {
-                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
-                }
-            } else {
-                $data[4] = NULL;
-                $data[5] = NULL;
-                $data[6] = NULL;
-                $data[7] = NULL;
-            }
-            //print_r($data);
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'vacation',$yearRangeStr);
+            $approvedVacDays = $vacationDaysRes['numberOfDays'];
+            $data[array_search('Approved Vacation Days', $columns)] = $approvedVacDays;
 
-            $vacationRequest = $vacreq->getRequestVacation();
-            if( $vacationRequest ) {
-                //$numberVacationDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$vacationRequest,array('I','J','K','L'));
-                $numberVacationDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$vacationRequest,array(8,9,10,11));
-                if( $numberVacationDays ) {
-                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
-                }
-            } else {
-                $data[8] = NULL;
-                $data[9] = NULL;
-                $data[10] = NULL;
-                $data[11] = NULL;
-            }
+            $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'business',$yearRangeStr);
+            $approvedBusDays = $businessDaysRes['numberOfDays'];
+            $data[array_search('Approved Business Days', $columns)] = $approvedBusDays;
+
+//            $businessRequest = $vacreq->getRequestBusiness();
+//            if( $businessRequest ) {
+//                //$numberBusinessDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$businessRequest,array('E','F','G','H'));
+//                $numberBusinessDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$businessRequest,array(4,5,6,7));
+//                if( $numberBusinessDays ) {
+//                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
+//                }
+//            } else {
+//                $data[4] = NULL;
+//                $data[5] = NULL;
+//                $data[6] = NULL;
+//                $data[7] = NULL;
+//            }
+//            //print_r($data);
+//
+//            $vacationRequest = $vacreq->getRequestVacation();
+//            if( $vacationRequest ) {
+//                //$numberVacationDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$vacationRequest,array('I','J','K','L'));
+//                $numberVacationDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$vacationRequest,array(8,9,10,11));
+//                if( $numberVacationDays ) {
+//                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
+//                }
+//            } else {
+//                $data[8] = NULL;
+//                $data[9] = NULL;
+//                $data[10] = NULL;
+//                $data[11] = NULL;
+//            }
 
             //print_r($data);
             //exit('111');
@@ -5249,6 +5251,8 @@ class VacReqUtil
         $data[5] = NULL;
         $data[6] = NULL;
         $data[7] = NULL;
+        $data[8] = NULL;
+        $data[9] = NULL;
 
         //$ews->setCellValue('B'.$row, "Total"); //1
         $data[1] = "Total";

@@ -1355,7 +1355,7 @@ class FormNodeUtil
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
     //$table = false will generate xml string
-    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9 ) {
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname="", $withValue=true, $colspan=9 ) {
         if( !$holderEntity ) {
             return null;
         }
@@ -3450,7 +3450,7 @@ class FormNodeUtil
         return $this->addFormToHolder($parent,$holderName,$sections,$parentMessageCategoryName);
     }
     //$parent,"Other","Pathology Call Log Entry","Service Category","What would you call this service?"
-    public function createOtherSection( $parent, $holderName, $parentMessageCategoryName=null, $sectionName, $fieldName ) {
+    public function createOtherSection( $parent, $holderName, $parentMessageCategoryName=null, $sectionName=null, $fieldName=null ) {
         $sections = array();
 
         //Add add a "Form Section" titled "Issue Category" in the "Other [Form]".

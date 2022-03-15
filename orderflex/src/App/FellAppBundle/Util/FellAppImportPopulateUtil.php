@@ -252,7 +252,7 @@ class FellAppImportPopulateUtil {
     }
 
     //Return array of not existed fellowship applications on DB
-    public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
+    public function getNotExistedApplicationByGoogleIdV1($filesGoogleDrive) {
         //$logger = $this->container->get('logger');
 
         $notExistedArr = array();
@@ -264,6 +264,29 @@ class FellAppImportPopulateUtil {
                 $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
                 if( !$fellowshipApplicationDb ) {
                     $notExistedArr[] = $file->getTitle();
+                }
+            }
+        }
+
+        //$notExistedArr[] = "Test Application"; //testing
+
+        //$logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
+
+        return $notExistedArr;
+    }
+    //Return array of not existed fellowship applications on DB
+    public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
+        //$logger = $this->container->get('logger');
+
+        $notExistedArr = array();
+
+        foreach($filesGoogleDrive as $file) {
+            $fileTitle = $file->getName();
+            //$logger->notice("Checking fellapp by title: ".$fileTitle);
+            if( $fileTitle ) {
+                $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
+                if( !$fellowshipApplicationDb ) {
+                    $notExistedArr[] = $file->getName();
                 }
             }
         }

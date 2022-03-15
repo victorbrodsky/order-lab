@@ -928,9 +928,9 @@ abstract class ObjectAbstract
 
         return $res;
     }
-    function var_dump_ret($mixed = null) {
+    function var_dump_ret($mixedArr = null) {
         ob_start();
-        print_r($mixed);
+        print_r($mixedArr);
         $content = ob_get_contents();
         ob_end_clean();
         return $content;
