@@ -859,6 +859,8 @@ Error calling GET https://www.googleapis.com/drive/v3/files?q=%270B2FwyaXvFk1efm
 +in+parents+and+trashed%3Dfalse+and+title%3D%27config.json%27: (400) Invalid Value
 
 abandoned : https://packagist.org/packages/phpoffice/phpexcel
+The project has not be maintained for years and must not be used anymore. All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+
 Compile Error: Array and string offset access syntax with curly braces is no longer supported
 in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\phpoffice\phpexcel\Classes\PHPExcel\Shared\String.php (line 529)
 
