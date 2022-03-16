@@ -865,5 +865,6 @@ Compile Error: Array and string offset access syntax with curly braces is no lon
 in C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\phpoffice\phpexcel\Classes\PHPExcel\Shared\String.php (line 529)
 
 \PhpOffice\
+remove "phpoffice/phpexcel": "^1.8",
 
 

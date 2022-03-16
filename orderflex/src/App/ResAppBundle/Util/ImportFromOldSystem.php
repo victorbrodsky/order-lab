@@ -95,10 +95,15 @@ class ImportFromOldSystem {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
+
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
             $logger->error($event);
@@ -385,9 +390,13 @@ class ImportFromOldSystem {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
@@ -648,9 +657,13 @@ class ImportFromOldSystem {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
@@ -1340,9 +1353,13 @@ class ImportFromOldSystem {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
@@ -1458,9 +1475,13 @@ class ImportFromOldSystem {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();

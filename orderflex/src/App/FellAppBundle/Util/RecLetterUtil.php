@@ -1028,6 +1028,8 @@ class RecLetterUtil {
             //$testing = true;
             if( $testing ) {
                 $emails = $ccAdminEmails = 'oli2002@med.cornell.edu'; //testing
+
+                //echo "body=$body <br>";
             }
 
             $emailUtil->sendEmail( $emails, $subject, $body, $ccAdminEmails );

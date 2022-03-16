@@ -678,19 +678,21 @@ class EmailUtil {
 
         exit('not allowed');
 
-        ///// Test 1) new reference letter ////////
-        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
-        $references = $fellapp->getReferences();
-        $reference = $references->first();
-        $letters = $reference->getDocuments();
-        $uploadedLetterDb = $letters->first();
-        $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp,$uploadedLetterDb);
+        if(0) {
+            ///// Test 1) new reference letter ////////
+            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+            $references = $fellapp->getReferences();
+            $reference = $references->first();
+            $letters = $reference->getDocuments();
+            $uploadedLetterDb = $letters->first();
+            $res = $fellappRecLetterUtil->sendRefLetterReceivedNotificationEmail($fellapp, $uploadedLetterDb);
 
-        $fellappType = $fellapp->getFellowshipSubspecialty();
-        $res = "ID=".$fellapp->getId().", fellappType=".$fellappType.": res=".$res."<br>";
-        echo "Test1: $res<br>";
-        /////////////////////////
+            $fellappType = $fellapp->getFellowshipSubspecialty();
+            $res = "ID=" . $fellapp->getId() . ", fellappType=" . $fellappType . ": res=" . $res . "<br>";
+            echo "Test1: $res<br>";
+            /////////////////////////
+        }
 
 
         ////// Test 2) send invoice sendInvoicePDFByEmail /////////

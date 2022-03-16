@@ -92,19 +92,23 @@ class FellAppImportPopulateUtil {
     //3d)   unlink sheet file from folder
     //
     //4)  Process backup sheet on Google Drive
-    public function processFellAppFromGoogleDrive() {
+    public function processFellAppFromGoogleDrive( $testing=false, $limit=false ) {
 
-        //1) Import sheets from Google Drive Folder
-        $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder();
+        //1) Import sheets from Google Drive Folder and add new sheets to DataFile DB
+        $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder($testing,$limit);
 
         //2) Populate applications from DataFile DB object
-        $populatedCount = $this->populateApplicationsFromDataFile();
+        $populatedCount = $this->populateApplicationsFromDataFile($testing,$limit);
 
-        //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
-        $deletedSheetCount = $this->deleteSuccessfullyImportedApplications();
+        $deletedSheetCount = 0;
+        $populatedBackupApplications = 0;
+        if( $testing == false ) {
+            //3) Delete old sheet and uploads from Google Drive if deleteOldAplicationsFellApp is true
+            $deletedSheetCount = $this->deleteSuccessfullyImportedApplications();
 
-        //4)  Process backup sheet on Google Drive
-        $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
+            //4)  Process backup sheet on Google Drive if backupFileIdFellApp is true
+            $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
+        }
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $generatedReport = $fellappRepGen->tryRun(); //run hard run report generation
@@ -117,7 +121,7 @@ class FellAppImportPopulateUtil {
             //get number of not existing fellapp in DB
             //compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
             $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
-            if( count($notExistedApplications) > 0 ) {
+            if( $notExistedApplications && count($notExistedApplications) > 0 ) {
                 $notExistedApplicationsStr = "The following fellowship applications on google drive have not been imported to the order's DB".
                     "<br>".
                     implode("; ",$notExistedApplications);
@@ -139,7 +143,10 @@ class FellAppImportPopulateUtil {
             $userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
             $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
+
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $result, $systemUser, null, null, $eventTypeStr);
+            }
         }
 
         ///////////////// get not existed fellowship applications on DB //////////////////////
@@ -173,7 +180,9 @@ class FellAppImportPopulateUtil {
             $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
+            }
             ////////////////// EOF ERROR //////////////////
         }
         ///////////////// EOF: get not existed fellowship applications on DB //////////////////////
@@ -200,7 +209,7 @@ class FellAppImportPopulateUtil {
                     //TODO: compare if all files on GD have corrsponding application in DB based on 'ID' and 'googleformid' ("name_email_2021-04-05_09_16_33")
                     $notExistedApplications = $this->getNotExistedApplicationByGoogleId($filesGoogleDrive);
 
-                    if (count($notExistedApplications) > 0) {
+                    if( count($notExistedApplications) > 0 ) {
 
                         $notExistedApplicationsStr = implode("; ", $notExistedApplications);
 
@@ -301,7 +310,7 @@ class FellAppImportPopulateUtil {
     //1)  Import sheets from Google Drive
     //1a)   import all sheets from Google Drive folder
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    public function importSheetsFromGoogleDriveFolder() {
+    public function importSheetsFromGoogleDriveFolder( $testing=false, $limit=false ) {
 
         if( !$this->checkIfFellappAllowed("Import from Google Drive") ) {
             return null;
@@ -318,7 +327,9 @@ class FellAppImportPopulateUtil {
         if( !$service ) {
             $event = "Google API service failed!";
             $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Error');
+            }
             $this->sendEmailToSystemEmail($event, $event);
             return null;
         }
@@ -331,7 +342,7 @@ class FellAppImportPopulateUtil {
         }
 
         //get all files in google folder
-        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service,"Fellowship Application Spreadsheet");
+        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service,"Fellowship Application Spreadsheet",$testing,$limit);
 
         $logger->notice("Processed " . count($filesGoogleDrive) . " files with applicant data from Google Drive");
 
@@ -342,7 +353,7 @@ class FellAppImportPopulateUtil {
     //2a)   for each sheet with not "completed" status in DataFile:
     //      populate application by populateSingleFellApp($sheet) (this function add report generation to queue)
     //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
-    public function populateApplicationsFromDataFile() {
+    public function populateApplicationsFromDataFile( $testing=false, $limit=false ) {
 
         $logger = $this->container->get('logger');
 
@@ -370,6 +381,12 @@ class FellAppImportPopulateUtil {
 
         foreach( $datafiles as $datafile ) {
 
+            if( $limit ) {
+                if( $populatedCount >= $limit ) {
+                    return $populatedCount;
+                }
+            }
+
             if( $datafile->getCreationDate() ) {
                 $datafileCreationDateStr = $datafile->getCreationDate()->format('d-m-Y H:i:s');
             } else {
@@ -387,9 +404,16 @@ class FellAppImportPopulateUtil {
 
             $logger->notice("Start processing datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
                 ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
-            
-            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile );
-            $count = count($populatedFellowshipApplications);
+
+            //use populateSpreadsheet() - main method to create fellapp entity from a spreadsheet
+                                                                            //$document,               $datafile=null, $deleteSourceRow=false, $testing=false
+            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile, false, $testing );
+
+            if( $populatedFellowshipApplications ) {
+                $count = count($populatedFellowshipApplications);
+            } else {
+                $count = 0;
+            }
 
             if( $count > 0 ) {
                 //this method process a sheet with a single application => $populatedFellowshipApplications has only one element
@@ -399,7 +423,8 @@ class FellAppImportPopulateUtil {
 
                     $datafile->setFellapp($populatedFellowshipApplication);
                     $datafile->setStatus("completed");
-                    $this->em->flush($datafile);
+                    //$this->em->flush($datafile);
+                    $this->em->flush();
 
                     //$logger->notice("Status changed to 'completed' for data file ID ".$datafile->getId());
 
@@ -549,7 +574,10 @@ class FellAppImportPopulateUtil {
 
         //1) get backup file on GoogleDrive
         $backupFile = $service->files->get($backupFileIdFellApp);
-        $modifiedDate = $backupFile->getModifiedDate(); //datetime
+        //dump($backupFile);
+        //exit('111');
+        //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
+        $modifiedDate = $backupFile->getModifiedTime(); //V3
 
         $intervalDays = 0;
 
@@ -579,7 +607,11 @@ class FellAppImportPopulateUtil {
 
         $populatedBackupApplications = $this->populateSingleFellApp($backupDb, null, true);
 
-        return count($populatedBackupApplications);
+        if( $populatedBackupApplications ) {
+            return count($populatedBackupApplications);
+        }
+
+        return 0;
     }
 
 
@@ -590,15 +622,25 @@ class FellAppImportPopulateUtil {
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
      */
-    public function processFilesInFolder( $folderId, $service, $documentType="Fellowship Application Spreadsheet" ) {
+    public function processFilesInFolder( $folderId, $service, $documentType="Fellowship Application Spreadsheet", $testing=false, $limit=false ) {
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $files = $googlesheetmanagement->retrieveFilesByFolderId($folderId,$service);
         //echo "files count=".count($files)."<br>";
 
+        $newFiles = array();
+        $counter = 0;
         foreach( $files as $file ) {
             //echo 'File Id: ' . $file->getId() . "<br>";
-            $this->processSingleFile( $file->getId(), $service, $documentType );
+            $fileDb = $this->processSingleFile( $file->getId(), $service, $documentType, $testing );
+
+            if( $limit && $fileDb ) {
+                $counter++;
+                $newFiles[] = $file;
+                if( $counter >= $limit ) {
+                    return $newFiles;
+                }
+            }
         }
 
         return $files; //google drive files
@@ -606,7 +648,7 @@ class FellAppImportPopulateUtil {
 
 
     //Download file from Google Drive to server and link it to a new Document DB
-    public function processSingleFile( $fileId, $service, $documentType ) {
+    public function processSingleFile( $fileId, $service, $documentType, $testing=false ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -627,7 +669,11 @@ class FellAppImportPopulateUtil {
         $dataFile = null;
 
         if( $fileDb ) {
-            $this->em->flush($fileDb);
+
+            if( $testing == false ) {
+                $this->em->flush($fileDb);
+            }
+
             if( $documentType != "Fellowship Application Backup Spreadsheet" ) {
                 $dataFile = $this->addFileToDataFileDB($fileDb);
             }
@@ -640,12 +686,18 @@ class FellAppImportPopulateUtil {
         } else {
             $event = $documentType . " download failed!";
             $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Error');
+            }
+
             $this->sendEmailToSystemEmail($event, $event);
         }
 
         if( $dataFile ) {
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Import of ' . $documentType);
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Import of ' . $documentType);
+            }
         }
 
         return $fileDb;
@@ -696,7 +748,7 @@ class FellAppImportPopulateUtil {
 
 
     //2) populate a single fellowship application from spreadsheet to DB (using uploaded files from Google Drive)
-    public function populateSingleFellApp( $document, $datafile=null, $deleteSourceRow=false ) {
+    public function populateSingleFellApp( $document, $datafile=null, $deleteSourceRow=false, $testing=false ) {
 
         $logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -720,7 +772,8 @@ class FellAppImportPopulateUtil {
 //            $inputFileName = $path . "/" . $inputFileName;
 //        }
         //2b) populate applicants
-        $populatedFellowshipApplications = $this->populateSpreadsheet($document,$datafile,$deleteSourceRow);
+        //main method to create fellapp entity from a spreadsheet
+        $populatedFellowshipApplications = $this->populateSpreadsheet($document,$datafile,$deleteSourceRow,$testing);
 
 //        if( $populatedCount && $populatedCount > 0 ) {
 //            //set applicantData from 'active' to 'populated'
@@ -747,8 +800,8 @@ class FellAppImportPopulateUtil {
     }
 
 
-    /////////////// populate methods /////////////////
-    public function populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false ) {
+    /////////////// populate methods: create fellapp from a spreadsheet ($document) /////////////////
+    public function populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false ) {
 
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
@@ -781,16 +834,24 @@ class FellAppImportPopulateUtil {
         }
 
         //$logger->notice("Getting source sheet with filename=".$inputFileName);
+        //echo "Getting source sheet with filename=".$inputFileName."<br>";
+        //$inputFileName = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded/fellapp/Spreadsheets\1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18";
 
         try {
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
+
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
             $logger->error($event);
@@ -888,16 +949,25 @@ class FellAppImportPopulateUtil {
             $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Fellowship Application Creation Failed');
+            if( $testing == false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Fellowship Application Creation Failed');
+            }
 
             ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
-            $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=".$datafile->getId()." and associated documentId=".$document->getId());
+            $datafileId = NULL;
+            if( $datafile ) {
+                $datafileId = $datafile->getId();
+            }
+            $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=".$datafileId." and associated documentId=".$document->getId());
             unlink($inputFileName);
             $em->remove($document);
             if( $datafile ) {
                 $em->remove($datafile);
             }
-            $em->flush();
+
+            if( $testing == false ) {
+                $em->flush();
+            }
             return false;
         }
         ////////////////// EOF Potential ERROR //////////////////
@@ -1000,7 +1070,7 @@ class FellAppImportPopulateUtil {
 
             //getFellowshipSubspecialty
             //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
-            if( count($errorMsgArr) > 0 ) {
+            if( $errorMsgArr && count($errorMsgArr) > 0 ) {
 
                 //delete erroneous spreadsheet from filesystem and $document from DB
                 if( file_exists($inputFileName) ) {
@@ -1010,7 +1080,10 @@ class FellAppImportPopulateUtil {
                     if( $datafile ) {
                         $em->remove($datafile);
                     }
-                    $em->flush();
+
+                    if( $testing == false ) {
+                        $em->flush();
+                    }
                     //delete file
                     unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
                     $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
@@ -1020,7 +1093,10 @@ class FellAppImportPopulateUtil {
                     " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
                     ": " . implode("; ",$errorMsgArr);
 
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+                if( $testing == false ) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                }
+
                 $logger->error($event);
 
                 //send email
@@ -1108,8 +1184,10 @@ class FellAppImportPopulateUtil {
 
                 //create logger which must be deleted on successefull creation of application
                 $eventAttempt = "Attempt of creating Fellowship Applicant " . $displayName . " with unique Google Applicant ID=" . $googleFormId;
-                $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $eventAttempt, $systemUser, null, null, 'Fellowship Application Creation Failed');
 
+                if( $testing == false ) {
+                    $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $eventAttempt, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                }
 
                 //check if the user already exists in DB by $googleFormId
                 $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
@@ -1491,7 +1569,7 @@ class FellAppImportPopulateUtil {
 
                 //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
                 //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
-                if( count($errorMsgArr) > 0 ) {
+                if( $errorMsgArr && count($errorMsgArr) > 0 ) {
 
                     //delete erroneous spreadsheet from filesystem and $document from DB
                     if( file_exists($inputFileName) ) {
@@ -1502,7 +1580,10 @@ class FellAppImportPopulateUtil {
                             $em->remove($datafile);
                         }
                         //$em->flush($document);
-                        $em->flush();
+
+                        if( $testing == false ) {
+                            $em->flush();
+                        }
                         //delete file
                         unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
                         $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
@@ -1513,7 +1594,10 @@ class FellAppImportPopulateUtil {
                         " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
                         ": " . implode("; ",$errorMsgArr);
 
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+                    if( $testing == false ) {
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                    }
+
                     $logger->error($event);
 
                     //send email
@@ -1537,15 +1621,21 @@ class FellAppImportPopulateUtil {
 
                 //exit('end applicant');
 
-                $em->persist($user);
-                $em->flush();
+                if( $testing == false ) {
+                    $em->persist($user);
+                    $em->flush();
+                }
 
                 //everything looks fine => remove creation attempt log
                 $em->remove($eventLogAttempt);
-                $em->flush();
+                if( $testing == false ) {
+                    $em->flush();
+                }
 
                 $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,'Fellowship Application Created');
+                if( $testing == false ) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, $fellowshipApplication, null, 'Fellowship Application Created');
+                }
 
                 //add application pdf generation to queue
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
@@ -1607,7 +1697,10 @@ class FellAppImportPopulateUtil {
                                 $event = "Error: Fellowship Application with Google Applicant ID=".$googleFormId." Application ID " . $fellowshipApplication->getId() . "failed to delete from Google Drive";
                                 $eventTypeStr = "Failed Deleted Fellowship Application Backup From Google Drive";
                             }
-                            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,$eventTypeStr);
+
+                            if( $testing == false ) {
+                                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, $fellowshipApplication, null, $eventTypeStr);
+                            }
                             $logger->notice($event);
 
                         }//if
